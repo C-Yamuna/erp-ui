@@ -284,7 +284,7 @@ export class SiLoanDocumentsComponent {
         formValid: !this.siDocumentDetailsForm.valid ? true : false,
         data: this.siLoanDocumentsModel,
         // isDisable: this.documentsData.length <= 0 ? true : false || this.uploadFlag,
-        isDisable: !this.saveAndNextEnable,
+        isDisable:  this.buttonDisabled,
         stepperIndex: 8,
       });
   }
@@ -425,7 +425,7 @@ export class SiLoanDocumentsComponent {
                 this.siproductId = this.responseModel.data[0].siProductId;
               }
             
-              if(this.responseModel.data[0].admissionNo != null && this.responseModel.data[0].admissionNumber != undefined){
+              if(this.responseModel.data[0].admissionNo != null && this.responseModel.data[0].admissionNo != undefined){
                 this.admissionNumber = this.responseModel.data[0].admissionNo;
               }
               if(this.responseModel.data[0].memberTypeName != null && this.responseModel.data[0].memberTypeName != undefined){
