@@ -1,0 +1,297 @@
+<p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
+    [hideTransitionOptions]="'500ms'"></p-messages>
+<div class="col-12">
+    <div class="row">
+        <div class="d-flex justify-content-between top-header-section">
+            <div class="main-heading mt-1 justify-content-start">{{'INVESTMENTS_TRANSACTIONS.INVESTMENTS' | translate}}
+                <i class="fa fa-angle-right font-bold mr-3 ml-3"></i>
+                {{'INVESTMENTS_TRANSACTIONS.INTEREST_PAYMENT' | translate}}
+            </div>
+        </div>
+        <div class="col-12 p-0">
+            <div class="row">
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 left-sidecard">
+                    <!--  left side screen start -->
+                    <div class="col-12 basic-view side-card-style">
+                        <div class="col-12 inner-border">
+                            <div class="side-card-header-border">
+                                <div class="row">
+                                    <div class="col-10 py-0">
+                                        <h6 class="side-card-header">{{'INVESTMENTS_TRANSACTIONS.INVESTMENT_DETAILS'
+                                            | translate}}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
+                                    <div class="row">
+                                        <div
+                                            class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                            <span class="basicdata-icons icon-size"></span>
+                                            <div>
+                                                <p class="label-view text-fontwt">{{'INVESTMENTS_TRANSACTIONS.PRODUCT' |
+                                                    translate}}</p>
+                                                <p class="label-input-text">
+                                                    {{investmentApplicationDetailsModel.productName}}</p>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                            <span class="basicdata-icons icon-size"></span>
+                                            <div>
+                                                <p class="label-view text-fontwt">{{'INVESTMENTS_TRANSACTIONS.BANK_NAME'
+                                                    | translate}}
+                                                </p>
+                                                <p class="label-input-text">
+                                                    {{investmentApplicationDetailsModel.bankName}}</p>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                            <span class="basicdata-icons icon-size"></span>
+                                            <div>
+                                                <p class="label-view text-fontwt">
+                                                    {{'INVESTMENTS_TRANSACTIONS.ACCOUNT_NUMBER' |
+                                                    translate}}</p>
+                                                <p class="label-input-text">
+                                                    {{investmentApplicationDetailsModel.accountNumber}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                            <span class="basicdata-icons icon-size"></span>
+                                            <div>
+                                                <p class="label-view text-fontwt">
+                                                    {{'INVESTMENTS_TRANSACTIONS.DEPOSIT_AMOUNT' | translate}}</p>
+                                                <p class="label-input-text">
+                                                    {{investmentApplicationDetailsModel.depositAmount}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                            <span class="basicdata-icons icon-size"></span>
+                                            <div>
+                                                <p class="label-view text-fontwt">{{'INVESTMENTS_TRANSACTIONS.ROI' |
+                                                    translate}}</p>
+                                                <p class="label-input-text">
+                                                    {{investmentApplicationDetailsModel.roi}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                            <span class="basicdata-icons icon-size"></span>
+                                            <div>
+                                                <p class="label-view text-fontwt">
+                                                    {{'INVESTMENTS_TRANSACTIONS.DEPOSIT_DATE' | translate}}</p>
+                                                <p class="label-input-text">
+                                                    {{investmentApplicationDetailsModel.depositDate}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                            <span class="basicdata-icons icon-size"></span>
+                                            <div>
+                                                <p class="label-view text-fontwt">
+                                                    {{'INVESTMENTS_TRANSACTIONS.DEPOSIT_TYPE' | translate}}</p>
+                                                <p class="label-input-text">
+                                                    {{depositTypeName}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                            <span class="basicdata-icons icon-size"></span>
+                                            <div>
+                                                <p class="label-view text-fontwt">
+                                                    {{'INVESTMENTS_TRANSACTIONS.TENURE_IN_YEARS' | translate}}</p>
+                                                <p class="label-input-text">
+                                                    {{investmentApplicationDetailsModel.tenureInYears}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                            <span class="basicdata-icons icon-size"></span>
+                                            <div>
+                                                <p class="label-view text-fontwt">
+                                                    {{'INVESTMENTS_TRANSACTIONS.MATURITY_INTEREST_AMOUNT' | translate}}
+                                                </p>
+                                                <p class="label-input-text">
+                                                    {{investmentApplicationDetailsModel.maturityInterest}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                            <span class="basicdata-icons icon-size"></span>
+                                            <div>
+                                                <p class="label-view text-fontwt">
+                                                    {{'INVESTMENTS_TRANSACTIONS.MATURITY_AMOUNT' | translate}}</p>
+                                                <p class="label-input-text">
+                                                    {{investmentApplicationDetailsModel.maturityAmount}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                            <span class="basicdata-icons icon-size"></span>
+                                            <div>
+                                                <p class="label-view text-fontwt">
+                                                    {{'INVESTMENTS_TRANSACTIONS.INTEREST_PAYMENT_FREQUENCY' |
+                                                    translate}}</p>
+                                                <p class="label-input-text">
+                                                    {{investmentApplicationDetailsModel.interestOrInstallmentFrequencyName}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--  left side screen end-->
+                <!--  right side screen start -->
+                <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10 right-sidecard">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="col-12 p-0">
+                                <div class=" global-card-bg-color view-carddata icon-size">
+                                    <div class="col-12">
+                                        <form [formGroup]="interestPaymentForm" id="proj_stakeholder_form">
+                                            <div class="flex justify-content-between py-2">
+                                                <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                                    <h6 class="sub-heading mt-1">{{'INVESTMENTS_TRANSACTIONS.INTEREST_PAYMENT' | translate}}</h6>
+                                                </div>
+                                                <div class="col-xl-7 col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                                                    <div class="col-12 p-0">
+                                                        <div class="d-flex justify-content-end search-input-style">
+                                                            <div class="input-group search-box d-flex justify-content-end">
+                                                                <div class="search">
+                                                                    <span class="p-input-icon-right">
+                                                                        <i class="pi pi-search global-search-icon"></i>
+                                                                        <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                                                        placeholder="Search" class="searchbox"
+                                                                        #searchInput (input)="dt.filterGlobal(searchInput.value, 'contains')">
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                        
+                                                            <p-button (click)="addInlineRow()" label="Add" icon="fa fa-plus" iconPos="left"
+                                                                id="add_btn" [disabled]="addButton"> </p-button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="globel-border-top-color"></div>
+                                            <p-table #dt [value]="interestPaymentList"  dataKey="id" editMode="row"
+                                            styleClass="p-datatable-striped" [rows]="5" [paginator]="true" [showJumpToPageDropdown]="true"
+                                            [showPageLinks]="false" [pageLinks]="1" [responsive]="true" rowExpandMode="single">
+                                            <ng-template pTemplate="header">
+                                                    <tr>
+                                                        <th><span class="red">*</span> {{'INVESTMENTS_TRANSACTIONS.INTEREST_AMOUNT' | translate}}</th>
+                                                        <th><span class="red">*</span> {{'INVESTMENTS_TRANSACTIONS.INTEREST_POSTING_DATE' | translate}}</th>
+                                                        <th> {{'INVESTMENTS_TRANSACTIONS.STATUS' | translate}}</th>
+                                                        <th class="width-15em">{{'INVESTMENTS_TRANSACTIONS.ACTION' | translate}}</th>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+                                                    <tr [pEditableRow]="rowData">
+                                                        <td>
+                                                            <p-cellEditor>
+                                                                <ng-template pTemplate="input">
+                                                                    <input pInputText type="text" [(ngModel)]="rowData.interestAmount" 
+                                                                    formControlName="interestAmount" pKeyFilter="num">
+                                                                </ng-template>
+                                                                <ng-template pTemplate="output">{{rowData.interestAmount}}</ng-template>
+                                                            </p-cellEditor>
+                                                        </td>
+                                                        <td>
+                                                            <p-cellEditor>
+                                                                <ng-template pTemplate="input">
+                                                                    <p-calendar [showIcon]="true" formControlName="interestPostingDate"
+                                                                        dateFormat="{{orgnizationSetting.calendar}}" [appendTo]="'body'"
+                                                                        [(ngModel)]="rowData.interestPostingDate">
+                                                                    </p-calendar>
+                                                                </ng-template>
+                                                                <ng-template pTemplate="output">{{rowData.interestPostingDate}}</ng-template>
+                                                            </p-cellEditor>
+                                                        </td>
+                                                        <td>
+                                                            <p-cellEditor>
+                                                                <ng-template pTemplate="input">
+                                                                    <!-- <p-dropdown placeholder="{{'ERP.SELECT'| translate}}" formControlName="status"
+                                                                        [options]="statusList" [(ngModel)]="rowData.status" [appendTo]="'body'">
+                                                                    </p-dropdown> -->
+                                                                    <div class="status-style statussubmissionforapproval">
+                                                                        Submission for Approval
+                                                                    </div> 
+                                                                </ng-template>
+                                                                <ng-template pTemplate="output">
+                                                                    <div *ngIf="rowData.statusName == 'Submission for Approval'">
+                                                                        <div class="status-style statussubmissionforapproval">
+                                                                            {{ rowData.statusName}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div *ngIf="rowData.statusName == 'Approved'">
+                                                                        <div class="status-style statusactive">
+                                                                            {{ rowData.statusName}}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div *ngIf="rowData.statusName == 'Rejected'">
+                                                                        <div class="status-style statusreject">
+                                                                            {{ rowData.statusName}}
+                                                                        </div>
+                                                                    </div>
+                                                                </ng-template>
+                                                            </p-cellEditor>
+                                                        </td>
+                                                        <td>
+                                                            <div class="global-action-btn flex align-items-center justify-content-center">
+                                                            <p-button *ngIf="editing"   [disabled]="!interestPaymentForm.valid" (click)="addOrUpdate(rowData)" pSaveEditableRow id="prj_stakehlder_bt_cancel"  label="{{'INVESTMENTS_TRANSACTIONS.SAVE'|translate }}" class="action-save">
+                                                            </p-button>
+                                                            <p-button *ngIf="editing" (click)="onRowEditCancel()" pCancelEditableRow id="prj_stakehlder_bt_cancel" label="{{'INVESTMENTS_TRANSACTIONS.CANCEL'|translate }}" class="action-delete">
+                                                            </p-button>
+                                                            <p-button *ngIf="!editing"  (click)="editInlineRow()" pInitEditableRow  id="prj_stakehlder_bt_edit" [disabled]="addButton" label="{{'INVESTMENTS_TRANSACTIONS.EDIT' | translate}}" 
+                                                                class='action-edit' [disabled]="rowData.statusName == 'Approved' || rowData.statusName == 'Rejected'"></p-button>
+                                                            <p-button *ngIf="!editing"  (click)="deleteInlineRow(rowData)" pDeleteEditableRow  id="prj_stakehlder_bt_edit" [disabled]="addButton" label="{{'INVESTMENTS_TRANSACTIONS.DELETE' | translate}}" 
+                                                                class='action-delete' [disabled]="rowData.statusName == 'Approved' || rowData.statusName == 'Rejected'" ></p-button>
+                                                            </div>
+                                                        </td>
+                                                        
+                                                    </tr>
+                                                </ng-template>
+                                            </p-table>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 margtop-3rem">
+                            <p-button class="action-view pull-right" label="Back" (click)="navigateBack()"></p-button>
+                        </div>
+                    </div>
+                </div>
+                <!--  right side screen end-->
+            </div>
+        </div>
+    </div>
+</div>
+<p-dialog [closable]="false" [(visible)]="displayDialog" [responsive]="true" styleClass="delete-popup">
+    <div class="col-12">
+        <i class="fa fa-times-circle text-center" aria-hidden="true"></i>
+        <p class="text-center popup-header">{{'MEMBERSHIPCONFIG.ARE_YOU_SURE_TO_DELETE' | translate}}</p>
+        <p class="text-center pop-subheader">{{'MEMBERSHIPCONFIG.DO_YOU_REALLY_TO_DELETE_THESE_RECORDS' | translate}}
+        </p>
+    </div>
+    <div class="col-12 text-center p-2">
+        <p-button pRipple class="yes-button" label="{{'MEMBERSHIPCONFIG.DELETE' | translate}}"
+            (click)="delete()"></p-button>
+        <p-button pRipple class="no-button" label="{{'MEMBERSHIPCONFIG.CANCEL' | translate}}"
+            (click)="cancel()"></p-button>
+    </div>
+</p-dialog>

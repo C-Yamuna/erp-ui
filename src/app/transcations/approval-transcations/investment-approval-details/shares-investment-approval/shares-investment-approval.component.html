@@ -1,0 +1,158 @@
+<p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
+    [hideTransitionOptions]="'500ms'"></p-messages>
+<div class="col-12">
+    <div class="row">
+        <div class="d-flex justify-content-between top-header-section">
+            <div class="main-heading mt-1 justify-content-start" *ngIf="!isShowSubmit">
+                {{'INVESTMENTS_TRANSACTIONS.INVESTMENTS' | translate}}
+                <i class="fa fa-angle-right font-bold mr-3 ml-3"></i>{{'ERP.VIEW' | translate}}
+            </div>
+            <div class="main-heading mt-1 justify-content-start" *ngIf="isShowSubmit">
+                {{'INVESTMENTS_TRANSACTIONS.INVESTMENTS' | translate}}
+                <i class="fa fa-angle-right font-bold mr-3 ml-3"></i>{{'ERP.APPROVE' | translate}}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 p-0">
+        <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                <!-- <p-scrollPanel styleClass="scroll-class"> -->
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="col-12 p-0">
+                                <div class="global-card-bg-color view-carddata icon-size">
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="d-flex">
+                                                    <span class="card-icon"><i class="fa fa-id-badge"></i></span>
+                                                    <h6 class="sub-heading">{{'INVESTMENTS_TRANSACTIONS.SHARE_DETAILS' |
+                                                        translate}}</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 px-0">
+                                            <div class="row">
+                                                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">
+                                                    <h6 class="label-view">{{'INVESTMENTS_TRANSACTIONS.PRODUCT' |
+                                                        translate}}</h6>
+                                                    <p class="label-input-text">{{sharesInvestmentsModel.productName}}
+                                                    </p>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">
+                                                    <h6 class="label-view">{{'INVESTMENTS_TRANSACTIONS.BANK_NAME' |
+                                                        translate}}</h6>
+                                                    <p class="label-input-text">{{sharesInvestmentsModel.bankName}}</p>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">
+                                                    <h6 class="label-view">{{'INVESTMENTS_TRANSACTIONS.BRANCH' |
+                                                        translate}}</h6>
+                                                    <p class="label-input-text">{{sharesInvestmentsModel.branchName}}
+                                                    </p>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">
+                                                    <h6 class="label-view">{{'INVESTMENTS_TRANSACTIONS.PURCHASE_DATE' |
+                                                        translate}}</h6>
+                                                    <p class="label-input-text">
+                                                        {{sharesInvestmentsModel.sharesPurchasedDate}}</p>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">
+                                                    <h6 class="label-view">
+                                                        {{'INVESTMENTS_TRANSACTIONS.SHARES_CERTIFICATE_NO' | translate}}
+                                                    </h6>
+                                                    <p class="label-input-text">
+                                                        {{sharesInvestmentsModel.shareCertificateNumber}}</p>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">
+                                                    <h6 class="label-view">
+                                                        {{'INVESTMENTS_TRANSACTIONS.NO_OF_SHARES_PURCHASED' |
+                                                        translate}}</h6>
+                                                    <p class="label-input-text">
+                                                        {{sharesInvestmentsModel.noOfSharesPurchased}}</p>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">
+                                                    <h6 class="label-view">
+                                                        {{'INVESTMENTS_TRANSACTIONS.EACH_SHARE_AMOUNT' | translate}}
+                                                    </h6>
+                                                    <p class="label-input-text">
+                                                        {{sharesInvestmentsModel.eachShareAmount}}</p>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">
+                                                    <div class="form-label">
+                                                        <h6 class="label-view">{{
+                                                            'INVESTMENTS_TRANSACTIONS.SHARES_CERTIFICATE' | translate }}
+                                                        </h6>
+                                                        <div class="uplodad-style align-items-center">
+                                                            <div class="col-12  d-flex p-1"
+                                                                *ngFor="let img of shareCertificateCopyFile">
+                                                                <div
+                                                                    *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                                    <a href="{{img.imageValue}}"> <img
+                                                                            src="{{img.imageValue}}" width="22"
+                                                                            height="22"></a>
+                                                                </div>
+                                                                <div *ngIf="img.fileType=='pdf'">
+                                                                    <a href="{{img.imageValue}}"> <img
+                                                                            src="assets\images\pdf.png" width="22"
+                                                                            height="22"></a>
+                                                                </div>
+                                                                <div class="label-input-text docname-texteclipse mt-1"
+                                                                    pTooltip="{{img.fileName}}"
+                                                                    tooltipPosition="bottom">
+                                                                    {{img.fileName}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <!-- </p-scrollPanel> -->
+            </div>
+        </div>
+    </div>
+    <div class="col-12 viewbottom-footer icon-size">
+        <div class="row">
+            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4">
+                <div class="form-label">
+                    <span class=""> {{ 'INVESTMENTS_TRANSACTIONS.SIGNED_COPY' | translate }} </span>
+                    <div class="uplodad-style align-items-center">
+                        <div class="col-12  d-flex p-1" *ngFor="let img of signedCopyFile">
+                            <div *ngIf="img.fileType=='pdf'">
+                                <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22" height="22"></a>
+                            </div>
+                            <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                {{img.fileName}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4">
+                <div class="form-label">
+                    <label>{{'ERP.REMARKS' | translate}}</label>
+                    <textarea type="text" class="form-control" pInputTextarea placeholder="Enter Remarks Here"
+                        [(ngModel)]="remarks" [disabled]="!isShowSubmit"></textarea>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4">
+                <div class="form-label">
+                    <label> <span class="red">*</span> {{'ERP.STATUS' | translate}}</label>
+                    <p-dropdown [options]="statusList" placeholder="Select" [disabled]="!isShowSubmit"
+                        [(ngModel)]="status" (onChange)="onChangeStatus(status)"></p-dropdown>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4 pt-4">
+                <p-button class="pull-right" *ngIf="isShowSubmit" label="{{'TERMDEPOSITSTRANSACTION.SUBMIT' | translate}}"
+                (click)="submit()" [disabled]="submitFlag"></p-button>
+                <p-button class="pull-right" (click)="navigateToBack()" label="Back"></p-button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,1565 @@
+<div class="col-12">
+    <!-- <p-card class="m-4"> -->
+    <h6 class="sub-heading">{{'LOAN_TRANSACTION.MORTAGAGE_DETAILS' | translate}}</h6>
+    <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
+        [hideTransitionOptions]="'500ms'"></p-messages>
+        <div class="stepper-top-section-strip">
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-12">
+                    <div class="form-group">
+                        <span>{{'LOAN_TRANSACTION.PRODUCT_NAME' | translate}}</span>
+                        <p class="mb-0">{{ciProductName}}</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-12">
+                    <div class="form-group">
+                        <span>{{'LOAN_TRANSACTION.ACCOUNT_TYPE' | translate}}</span>
+                        <p class="mb-0">{{operationTypeName}}</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-12">
+                    <div class="form-group">
+                        <span>{{'LOAN_TRANSACTION.ACCOUNT_NUMBER' | translate}}</span>
+                        <p class="mb-0">{{ciLoanApplicationModel.accountNumber}}</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-12">
+                    <div class="form-group">
+                        <span>{{'LOAN_TRANSACTION.REQUEST_AMOUNT' | translate}}</span>
+                        <p class="mb-0">{{ciLoanApplicationModel.requestedAmount}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <div class="col-12"></div>
+        <!-- <form [formGroup]="collateralForm"> -->
+            <div class="col-12 p-0">
+                <div class="col-12 p-0 bg-label-colorfull">
+                    <div class="row g-3">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="form-label">
+                           <label><span class="red">*</span> {{'LOAN_TRANSACTION.COLLATERAL_TYPE' | translate}}</label>
+                    <p-dropdown id="collateraltype" placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}"
+                        [options]="collateraltypeOptionsList" [(ngModel)]="collateralType"
+                        (onChange)="onChange($event.value)"
+                        [disabled]="(ciLoanApplicationModel.collateralType != undefined && ciLoanApplicationModel.collateralType != null) || (addButtonService)">
+                    </p-dropdown>
+                    <!-- <p-dropdown *ngIf="isEdit" id="collateraltype" placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}"
+                        [options]="collateraltypeOptionsList" [(ngModel)]="collateralType"
+                        (onChange)="onChange($event.value)" [disabled]="true">
+                    </p-dropdown> -->
+                </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        </div>
+        <!-- </form> -->
+
+        <!-- GOLD Form -->
+        <div *ngIf="showGoldform">
+                <form [formGroup]="ciGoldMortgageForm" id="proj_stakeholder_form">
+                    <div class="flex justify-content-between">
+                        <div class="xl:col-5 lg:col-5 md:col-12 sm:col-12 pl-0">
+                        </div>
+                        <div class="xl:col-7 lg:col-7 md:col-12 sm:col-12 pr-0">
+                            <div class="col-12 p-0">
+                                <div class="d-flex justify-content-end search-input-style">
+                                    <div class="input-group search-box d-flex justify-content-end">
+                                        <div class="search">
+                                            <span class="p-input-icon-right">
+                                                <i class="pi pi-search global-search-icon"></i>
+                                                <input type="text" pInputText class="searchbox"
+                                                    placeholder="Search" />
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <p-button (click)="addGoldLoanMortgage()" label="{{ 'ADD' | translate }}"
+                                        icon="fa fa-plus" iconPos="left" [disabled]="addButtonService"
+                                        id="bunit_bt_submit"></p-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="globel-border-top-color"></div>
+
+                    <p-table #gold [value]="ciGoldLoanMortgageList" dataKey="id" editMode="row"
+                        styleClass="p-datatable-striped" [rows]="5" [paginator]="true"
+                        [showJumpToPageDropdown]="true" [showPageLinks]="false" [pageLinks]="1"
+                        [responsive]="true" rowExpandMode="single"
+                        [globalFilterFields]="['itemName', 'netWeight', 'grossWeight', 'carats', 'value', 'remarks']">
+                        <ng-template pTemplate="header" let-goldColumns>
+                            <tr>
+                                <th>{{'LOAN_TRANSACTION.ORNAMENT_DESCRTIPTION' |
+                                    translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.ORNAMENTS_COUNT' | translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.ORNAMENT_QUALITY_IN_KDM' |
+                                    translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.ORNAMENT_GROSS_WEIGHT_IN_GM' |
+                                    translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.ORNAMENT_NET_WEIGHT_IN_GM' |
+                                    translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.VALUE_PER_GRAM_IN_RS' | translate}}
+                                </th>
+                                <th>{{'LOAN_TRANSACTION.ORNAMENT_NET_VALUE_IN_RS' |
+                                    translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.ACTION'|translate }}</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-row let-editing="editing" let-ri="rowIndex">
+                            <tr [pEditableRow]="row">
+                                <td>
+                                            {{row.ornamentDescription}}
+                                       
+                                </td>
+                                <td>
+                                    
+                                            {{row.ornamentsCount}}
+                                        
+                                </td>
+                                <td>
+                                    
+                                            {{row.ornamentQualityInKdm}}
+                                       
+                                </td>
+                                <td>
+                                    
+                                            {{row.ornamentGrossWeightInGm}}
+                                       
+                                </td>
+                                <td>
+                                   
+                                            {{row.ornamentNetWeightInGm}}
+                                       
+                                </td>
+                                <td>
+                                    
+                                            {{row.valuePerGramInRs}}
+                                       
+                                </td>
+                                <td>
+                                    
+                                            {{row.ornamentNetValueInRs}}
+                                        
+                                </td>
+                                <td style="text-align:center" class="action-button">
+                                    <div class="global-action-btn flex align-items-center justify-content-center">
+                                        <p-button label="{{'LOAN_TRANSACTION.EDIT' | translate}}" 
+                                            pInitEditableRow [disabled]="editDeleteDisable"
+                                            (click)="editGoldLoanMortgage(row)" id="prj_stakehlder_bt_edit"
+                                            class="action-edit"></p-button>
+                                        <p-button label="{{'LOAN_TRANSACTION.DELETE' | translate}}" 
+                                            [disabled]="editDeleteDisable" (click)="deleteGoldLoanMortgage(row)"
+                                            id="prj_stakehlder_bt_edit"
+                                            class="action-delete"></p-button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </form>
+        </div>
+
+        <!-- LAND Form -->
+        <div *ngIf="showLandform">
+                <form [formGroup]="ciLandMortgageForm" id="proj_stakeholder_form">
+                    <div class="flex justify-content-between">
+                        <div class="xl:col-5 lg:col-5 md:col-12 sm:col-12 pl-0">
+                        </div>
+                        <div class="xl:col-7 lg:col-7 md:col-12 sm:col-12 pr-0">
+                            <div class="col-12 p-0">
+                                <div class="d-flex justify-content-end search-input-style">
+                                    <div class="input-group search-box d-flex justify-content-end">
+                                        <div class="search">
+                                            <span class="p-input-icon-right">
+                                                <i class="pi pi-search global-search-icon"></i>
+                                                <input type="text" pInputText class="searchbox"
+                                                    placeholder="Search" />
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <p-button type="submit" (click)="addLandLoanMortgage()" label="Add"
+                                        icon="fa fa-plus" iconPos="left" id="add_btn"
+                                        [disabled]="addButtonService"></p-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="globel-border-top-color"></div>
+
+                    <p-table #land [value]="ciLandLoanMortgageList" dataKey="id" editMode="row"
+                        styleClass="p-datatable-striped" [rows]="5" [paginator]="true"
+                        [showJumpToPageDropdown]="true" [showPageLinks]="false" [pageLinks]="1"
+                        [responsive]="true" rowExpandMode="single"
+                        [globalFilterFields]="['passbookNumber', 'surveyNo', 'landType', 'landUnits', 'landSubUnits', 'value', 'declaredLandUnits', 'declaredLandSubUnits' ,'remarks']">
+                        <ng-template pTemplate="header" let-goldColumns>
+                            <tr>
+                                <th>{{'LOAN_TRANSACTION.VILLAGE' | translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.PASSBOOK_NO' | translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.KHATA_BOOK_NUMBER' | translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.SURVEY_NO' | translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.TOTAL_LAND_IN_UNITS' | translate}}
+                                </th>
+                                <th>{{'LOAN_TRANSACTION.TOTAL_LAND_IN_SUB_UNITS' |
+                                    translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.LAND_VALUE_PER_UNIT' | translate}}
+                                </th>
+                                <!-- <th>{{'LOAN_TRANSACTION.TOTAL_LAND_VALUE' | translate}}
+                                </th> -->
+                                <!-- <th>{{'LOAN_TRANSACTION.MORTGAGED_LAND_IN_UNITS' |
+                                    translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.MORTGAGE_LAND_IN_SUB_UNITS' |
+                                    translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.MORTGAGE_LAND_VALUE_PER_UNIT' |
+                                    translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.TOTAL_MORTGAGE_LAND_VALUE' |
+                                    translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.MORTGAGE_DEED_NUMBER' | translate}}
+                                </th>
+                                <th>{{'LOAN_TRANSACTION.MOTGAGE_DEED_DATE' | translate}}
+                                </th>
+                                <th>{{'LOAN_TRANSACTION.LAND_OWNERSHIP' | translate}}</th> -->
+                                <th class="width-6rem">{{'LOAN_TRANSACTION.ACTION'|translate }}</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-row let-editing="editing" let-ri="rowIndex">
+                            <tr [pEditableRow]="row">
+                                <td>
+                                    
+                                            {{row.villageName}}
+                                      
+                                </td>
+                                <td>
+                                    
+                                            {{row.passbookNumber}}
+                                      
+                                </td>
+                                <td>
+                                    
+                                            {{row.khataNumber}}
+                                       
+                                </td>
+                                <td>
+                                    
+                                            {{row.surveyNumber}}
+                                        
+                                </td>
+                                <td>
+                                   
+                                            {{row.totalLandInUnits}}
+                                       
+                                </td>
+                                <td>
+                                    
+                                            {{row.totalLandInSubUnits}}
+                                      
+                                </td>
+                                <td>
+                                   
+                                            {{row.landValuePerUnit}}
+                                       
+                                </td>
+                                <!-- <td>
+                                   
+                                            {{row.totalLandValue}}
+                                       
+                                </td> -->
+
+                                <!-- <td>
+                                   
+                                            {{row.mortgageLandInUnits}}
+                                        
+                                </td> -->
+
+                                <!-- <td>
+                                    
+                                            {{row.mortgageLandInSubUnits}}
+                                       
+                                </td>
+
+                                <td>
+                                    
+                                            {{row.mortgageLandValuePerUnit}}
+                                       
+                                </td>
+
+                                <td>
+                                    
+                                            {{row.totalMortgageLandValue}}
+                                       
+                                </td>
+
+                                <td>
+                                    
+                                            {{row.mortgageDeedNumber}}
+                                        
+                                </td>
+
+                                <td>
+                                   
+                                            {{row.mortgageDeedDateVal}}
+                                       
+                                </td>
+
+                                <td>
+                                   
+                                            {{row.landOwnershipName}}
+                                       
+                                </td> -->
+
+                                <td style="text-align:center" class="action-button">
+                                    <div
+                                        class="global-action-btn flex align-items-center justify-content-center">
+                                        <p-button label="{{'LOAN_TRANSACTION.EDIT' | translate}}"
+                                            pInitEditableRow [disabled]="editDeleteDisable"
+                                            (click)="editLandLoanMortgage(row)" id="prj_stakehlder_bt_edit"
+                                            class="action-edit"></p-button>
+                                        <p-button label="{{'LOAN_TRANSACTION.DELETE' | translate}}"
+                                            [disabled]="editDeleteDisable" (click)="deleteLandLoanMortgage(row)"
+                                            id="prj_stakehlder_bt_edit"
+                                            class="action-delete"></p-button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </form>
+            </div>
+
+        <!-- BOND Form -->
+        <div *ngIf="showBondform">
+                <form [formGroup]="ciBondMortgageForm" id="proj_stakeholder_form">
+                    <div class="flex justify-content-between">
+                        <div class="xl:col-5 lg:col-5 md:col-12 sm:col-12 pl-0">
+                        </div>
+                        <div class="xl:col-7 lg:col-7 md:col-12 sm:col-12 pr-0">
+                            <div class="col-12 p-0">
+                                <div class="d-flex justify-content-end search-input-style">
+                                    <div class="input-group search-box d-flex justify-content-end">
+                                        <div class="search">
+                                            <span class="p-input-icon-right">
+                                                <i class="pi pi-search global-search-icon"></i>
+                                                <input type="text" pInputText class="searchbox"
+                                                    placeholder="Search" />
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <p-button type="submit" (click)="addBondLoanMortgage()" label="Add"
+                                        icon="fa fa-plus" iconPos="left" id="add_btn"
+                                        [disabled]="addButtonService"></p-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="globel-border-top-color"></div>
+
+                    <p-table #bond [value]="ciBondLoanMortgageList" dataKey="id" editMode="row"
+                        styleClass="p-datatable-striped" [rows]="5" [paginator]="true"
+                        [showJumpToPageDropdown]="true" [showPageLinks]="false" [pageLinks]="1"
+                        [responsive]="true" rowExpandMode="single"
+                        [globalFilterFields]="['bondNumber', 'faceValue', 'surrenderValue', 'remarks']">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>{{'LOAN_TRANSACTION.BOND_TYPE' | translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.BOND_NUMBER' | translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.BOND_ISSUED_DATE' | translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.BOND_ISSUED_BY' | translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.BOND_MATURITY_DATE' | translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.BOND_MATURITY_VALUE_IN_RS' |
+                                    translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.BOND_PRINCIPLE_AMOUNT' |
+                                        translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.ACTION'|translate }}</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-row let-editing="editing" let-ri="rowIndex">
+                            <tr [pEditableRow]="row">
+                                <td>
+                                            {{row.bondTypeName}}
+                                        
+                                </td>
+                                <td>
+                                   
+                                            {{row.bondNumber}}
+                                      
+                                </td>
+                                <td>
+                                    
+                                            {{row.bondIssuedDateVal}}
+                                        
+                                </td>
+                                <td>
+                                    
+                                            {{row.bondIssuedBy}}
+                                       
+                                </td>
+                                <td>
+                                    
+                                            {{row.bondMaturityDateVal}}
+                                      
+                                </td>
+                                <td>
+                                    
+                                            {{row.bondMaturityValueInRs}}
+                                        
+                                </td>
+                                <td class="inner-addon">
+                                    
+                                            {{row.bondPrincipleAmount}}
+                                        
+                                </td>
+                                <td style="text-align:center" class="action-button">
+                                    <div
+                                        class="global-action-btn flex align-items-center justify-content-center">
+                                        <p-button label="{{'LOAN_TRANSACTION.EDIT' | translate}}"
+                                            pInitEditableRow [disabled]="editDeleteDisable"
+                                            (click)="editBondLoanMortgage(row)" id="prj_stakehlder_bt_edit"
+                                            class="action-edit"></p-button>
+                                        <p-button label="{{'LOAN_TRANSACTION.DELETE' | translate}}"
+                                            [disabled]="editDeleteDisable" (click)="deleteBondLoanMortgage(row)"
+                                            id="prj_stakehlder_bt_edit"
+                                            class="action-delete"></p-button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </form>
+        </div>
+
+        <!-- VEHICLE Form -->
+        <div *ngIf="showVehicleform">
+            <form [formGroup]="ciVehicleMortgageForm" id="proj_stakeholder_form">
+                <div class="row g-3 mt-n1">
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-label">
+                            <label>
+                                <span class="red">*</span> {{'LOAN_TRANSACTION.VECHICLE_MARKER_OR_BRAND'|translate}}
+                            </label>
+                            <input autocomplete="off" pInputText id="bunit_txt_name" formControlName="vehicleMakerOrBrand"
+                                [(ngModel)]="ciVehicleMortgageLoanModel.vehicleMakerOrBrand" type="text">
+                            <p-message severity="error" text="Enter Valid Name"
+                                *ngIf="!ciVehicleMortgageForm.controls['vehicleMakerOrBrand'].valid && ciVehicleMortgageForm.controls['vehicleMakerOrBrand'].dirty">
+                            </p-message>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-label">
+                            <label>
+                                <span class="red">*</span> {{'LOAN_TRANSACTION.VEHICLE_MODEL'|translate}}
+                            </label>
+                            <input autocomplete="off" pInputText id="bunit_txt_name" formControlName="vehicleModel"
+                                [(ngModel)]="ciVehicleMortgageLoanModel.vehicleModel" type="text">
+                            <p-message severity="error" text="Enter Valid Name"
+                                *ngIf="!ciVehicleMortgageForm.controls['vehicleModel'].valid && ciVehicleMortgageForm.controls['vehicleModel'].dirty">
+                            </p-message>
+                        </div>
+                    </div>
+        
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-label">
+                            <label>
+                                <span class="red">*</span> {{'LOAN_TRANSACTION.VEHICLE_REGNUMBER'|translate}}
+                            </label>
+                            <input autocomplete="off" pInputText id="bunit_txt_name" formControlName="vehicleRegNumber"
+                                [(ngModel)]="ciVehicleMortgageLoanModel.vehicleRegNumber" type="text">
+                            <p-message severity="error" text="Enter Valid Number"
+                                *ngIf="!ciVehicleMortgageForm.controls['vehicleRegNumber'].valid && ciVehicleMortgageForm.controls['vehicleRegNumber'].dirty">
+                            </p-message>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-label">
+                            <label>
+                                <span class="red">*</span> {{'LOAN_TRANSACTION.VEHICLE_COST'|translate}}
+                            </label>
+                            <input autocomplete="off" pInputText id="bunit_txt_name" formControlName="vehicleCost"
+                                [(ngModel)]="ciVehicleMortgageLoanModel.vehicleCost" type="text">
+                            <p-message severity="error" text="Enter Valid Amount"
+                                *ngIf="!ciVehicleMortgageForm.controls['vehicleCost'].valid && ciVehicleMortgageForm.controls['vehicleCost'].dirty">
+                            </p-message>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-label">
+                            <label>
+                                <span class="red">*</span> {{'LOAN_TRANSACTION.HYPOTHECATION'|translate}}
+                            </label>
+                            <input autocomplete="off" pInputText id="bunit_txt_name" formControlName="hypothecation"
+                                [(ngModel)]="ciVehicleMortgageLoanModel.hypothecation" type="text">
+                            <p-message severity="error" text="Enter Valid Number"
+                                *ngIf="!ciVehicleMortgageForm.controls['hypothecation'].valid && ciVehicleMortgageForm.controls['hypothecation'].dirty">
+                            </p-message>
+                        </div>
+                    </div>
+        
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-label">
+                            <label>
+                                <span class="red">*</span> {{'LOAN_TRANSACTION.INSURANCHE_NUMBER'|translate}}
+        
+                            </label>
+                            <input autocomplete="off" pInputText id="bunit_txt_name" formControlName="insuranceNumber"
+                                [(ngModel)]="ciVehicleMortgageLoanModel.insuranceNumber" type="text">
+                            <p-message severity="error" text="Enter Valid Number"
+                                *ngIf="!ciVehicleMortgageForm.controls['insuranceNumber'].valid && ciVehicleMortgageForm.controls['insuranceNumber'].dirty">
+                            </p-message>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-label">
+                            <label>
+                                <span class="red">*</span> {{'LOAN_TRANSACTION.INSURANCE_AMOUNT'|translate}}
+        
+                            </label>
+                            <input autocomplete="off" pInputText id="bunit_txt_name" formControlName="insuranceAmount"
+                                [(ngModel)]="ciVehicleMortgageLoanModel.insuranceAmount" type="text">
+                            <p-message severity="error" text="Enter Valid Amount"
+                                *ngIf="!ciVehicleMortgageForm.controls['insuranceAmount'].valid && ciVehicleMortgageForm.controls['insuranceAmount'].dirty">
+                            </p-message>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-label">
+                            <label>
+                                <span class="red">*</span> {{'LOAN_TRANSACTION.VEHICLE_STATUS'|translate}}
+                            </label>
+                            <p-dropdown id="state_txt_status" placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}"
+                                [options]="vehicleStatusList" formControlName="vehicleStatus"
+                                [(ngModel)]="ciVehicleMortgageLoanModel.vehicleStatus"></p-dropdown>
+                        </div>
+                    </div>
+                    <!-- <div class="col-12 btn-footer px-0">
+                        <div class="col-12 d-flex justify-content-end px-0 mt-1 group-button-bottom">
+                            <p-button label="{{'LOAN_TRANSACTION.SAVE'|translate }}" [disabled]="!ciVehicleMortgageForm.valid"
+                                (click)="saveVehicleLoanMortgage(ciVehicleMortgageLoanModel)"></p-button>
+                        </div>
+                    </div> -->
+                </div>
+        
+            </form>
+        </div>
+
+        <!-- STORAGE Form -->
+        <div *ngIf="showStorageform">
+                <form [formGroup]="ciStorageMortgageForm" id="proj_stakeholder_form">
+                    <div class="flex justify-content-between">
+                        <div class="xl:col-5 lg:col-5 md:col-12 sm:col-12 pl-0">
+                        </div>
+                        <div class="xl:col-7 lg:col-7 md:col-12 sm:col-12 pr-0">
+                            <div class="col-12 p-0">
+                                <div class="d-flex justify-content-end search-input-style">
+                                    <div class="input-group search-box d-flex justify-content-end">
+                                        <div class="search">
+                                            <span class="p-input-icon-right">
+                                                <i class="pi pi-search global-search-icon"></i>
+                                                <input type="text" pInputText class="searchbox"
+                                                    placeholder="Search" />
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <p-button type="submit" (click)="addStorageLoanMortgage()" label="Add"
+                                        icon="fa fa-plus" iconPos="left" id="add_btn"
+                                        [disabled]="addButtonService"></p-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="globel-border-top-color"></div>
+
+                    <p-table #storage [value]="ciStorageLoanMortgageList" dataKey="id" editMode="row"
+                        styleClass="p-datatable-striped" [rows]="5" [paginator]="true"
+                        [showJumpToPageDropdown]="true" [showPageLinks]="false" [pageLinks]="1"
+                        [responsive]="true" rowExpandMode="single"
+                        [globalFilterFields]="['name', 'quantity', 'totalWeight', 'netWeight', 'value', 'remarks']">
+                        <ng-template pTemplate="header" let-goldColumns>
+                            <tr>
+                                <th>{{'LOAN_TRANSACTION.COMMODITY' | translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.NWR_STORAGE_RECEIPT_NUMBER' |
+                                    translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.DATE_OF_ISSUE' | translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.NUMBER_OF_UNTIS_STORED' | translate}}
+                                </th>
+                                <th>{{'LOAN_TRANSACTION.PER_UNIT_COST_IN_RS' | translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.NET_VALUE_IN_RS' | translate}}</th>
+                                <th class="width-6rem">{{'LOAN_TRANSACTION.ACTION'|translate }}</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-row let-editing="editing" let-ri="rowIndex">
+                            <tr [pEditableRow]="row">
+                                <td>
+                                            {{row.commodity}}
+                                </td>
+                                <td>
+                                    
+                                            {{row.nwrStorageReceiptNumber}}
+                                       
+                                </td>
+                                <td>
+                                    
+                                            {{row.dateOfIssueVal}}
+                                        
+                                </td>
+                                <td>
+                                    
+                                            {{row.numberOfUnitsStored}}
+                                        
+                                </td>
+                                <td>
+                                    
+                                            {{row.perUnitCostInRs}}
+                                       
+                                </td>
+                                <td>
+                                    
+                                            {{row.netValueInRs}}
+                                       
+                                </td>
+                                <td style="text-align:center" class="action-button">
+                                    <div
+                                    class="global-action-btn flex align-items-center justify-content-center">
+                                    <p-button label="{{'LOAN_TRANSACTION.EDIT' | translate}}"
+                                        pInitEditableRow [disabled]="editDeleteDisable"
+                                        (click)="editStorageLoanMortgage(row)" id="prj_stakehlder_bt_edit"
+                                        class="action-edit"></p-button>
+                                    <p-button label="{{'LOAN_TRANSACTION.DELETE' | translate}}"
+                                        [disabled]="editDeleteDisable"
+                                        (click)="deleteStorageLoanMortgage(row)" id="prj_stakehlder_bt_edit"
+                                        class="action-delete"></p-button>
+                                </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </form>
+        </div>
+
+        <!-- property -->
+        <div *ngIf="showpropertyForm">
+            <form [formGroup]="propertyDetailsForm" id="proj_stakeholder_form">
+                <div class="flex justify-content-between">
+                    <div class="xl:col-5 lg:col-5 md:col-12 sm:col-12 pl-0">
+                    </div>
+                    <div class="xl:col-7 lg:col-7 md:col-12 sm:col-12 pr-0">
+                        <div class="col-12 p-0">
+                            <div class="d-flex justify-content-end search-input-style">
+                                <div class="input-group search-box d-flex justify-content-end">
+                                    <div class="search">
+                                        <span class="p-input-icon-right">
+                                            <i class="pi pi-search global-search-icon"></i>
+                                            <input type="text" pInputText class="searchbox" placeholder="Search" />
+                                        </span>
+                                    </div>
+                                </div>
+                                <p-button type="submit" (click)="addPropertyLoanMortgage()" label="Add" icon="fa fa-plus"
+                                    iconPos="left" id="add_btn" [disabled]="addButtonService"></p-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="globel-border-top-color"></div>
+        
+                <p-table #property [value]="ciPropertyMortgageList" dataKey="id" editMode="row"
+                    styleClass="p-datatable-striped" [rows]="5" [paginator]="true" [showJumpToPageDropdown]="true"
+                    [showPageLinks]="false" [pageLinks]="1" [responsive]="true" rowExpandMode="single"
+                    [globalFilterFields]="['name', 'quantity', 'totalWeight', 'netWeight', 'value', 'remarks']">
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th>{{'LOAN_TRANSACTION.SITE' | translate}}</th>
+                            <th>{{'LOAN_TRANSACTION.LOCATION' | translate}}</th>
+                            <th>{{'LOAN_TRANSACTION.SQUARE_YARDS' | translate}}</th>
+                            <th>{{'LOAN_TRANSACTION.SURVEY_NUMBER' | translate}}</th>
+                            <th>{{'LOAN_TRANSACTION.VALUE_OF_PROPERTY' | translate}}</th>
+                            <th>{{'LOAN_TRANSACTION.NAME_OF_PROPERTY' | translate}}</th>
+                            <th>{{'LOAN_TRANSACTION.EXTENT_OF_PROPERTY' | translate}}</th>
+                            <th >{{'LOAN_TRANSACTION.ACTION'|translate }}</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-row let-editing="editing" let-ri="rowIndex">
+                        <tr [pEditableRow]="row">
+                            <td>
+                                        {{row.site}}
+                            </td>
+                            <td>
+                                        {{row.location}}
+                            </td>
+                            <td>
+                                        {{row.squareYards}}
+                            </td>
+                            <td>
+                                        {{row.propertySurveyNumber}}
+                            </td>
+                            <td>
+                                        {{row.valueOfProperty}}
+                            </td>
+                            <td>
+                                        {{row.nameOfProperty}}
+                            </td>
+                            <td>
+                                        {{row.extentOfProperty}}
+                                  
+                            </td>
+                            <td style="text-align:center" class="action-button">
+                                <div
+                                class="global-action-btn flex align-items-center justify-content-center">
+                                <p-button label="{{'LOAN_TRANSACTION.EDIT' | translate}}"
+                                    pInitEditableRow [disabled]="editDeleteDisable"
+                                    (click)="editProperty(row)" id="prj_stakehlder_bt_edit"
+                                    class="action-edit"></p-button>
+                                <p-button label="{{'LOAN_TRANSACTION.DELETE' | translate}}" 
+                                    [disabled]="editDeleteDisable"
+                                    (click)="deleteProperyLoanMortgage(row)" id="prj_stakehlder_bt_edit"
+                                    class="action-delete"></p-button>
+                            </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </form>
+        </div>
+        
+        <!-- surety Or Guarantoi -->
+        <!-- <div *ngIf="showSuretyForm">
+            <form [formGroup]="suretyForm" id="proj_stakeholder_form">
+                <div class="flex justify-content-between">
+                    <div class="xl:col-5 lg:col-5 md:col-12 sm:col-12 pl-0">
+                    </div>
+                    <div class="xl:col-7 lg:col-7 md:col-12 sm:col-12 pr-0">
+                        <div class="col-12 p-0">
+                            <div class="d-flex justify-content-end search-input-style">
+                                <div class="input-group search-box d-flex justify-content-end">
+                                    <div class="search">
+                                        <span class="p-input-icon-right">
+                                            <i class="pi pi-search global-search-icon"></i>
+                                            <input type="text" pInputText class="searchbox" placeholder="Search" />
+                                        </span>
+                                    </div>
+                                </div>
+                                <p-button type="submit" (click)="addStorageLoanMortgage()" label="Add" icon="fa fa-plus"
+                                    iconPos="left" id="add_btn" [disabled]="addButtonService"></p-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="globel-border-top-color"></div>
+        
+                <p-table #storage [value]="ciSuretyOrGuarantoMortgageList" dataKey="id" editMode="row"
+                    styleClass="p-datatable-striped" [rows]="5" [paginator]="true" [showJumpToPageDropdown]="true"
+                    [showPageLinks]="false" [pageLinks]="1" [responsive]="true" rowExpandMode="single"
+                    [globalFilterFields]="['name', 'quantity', 'totalWeight', 'netWeight', 'value', 'remarks']">
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th><span class="red">*</span>{{'LOAN_TRANSACTION.ADMISSION_NO' | translate}}</th>
+                            <th><span class="red">*</span>{{'LOAN_TRANSACTION.MEMBER_NAME' | translate}}</th>
+                            <th><span class="red">*</span>{{'LOAN_TRANSACTION.ADMISSION_DATE' | translate}}</th>
+                            <th><span class="red">*</span>{{'LOAN_TRANSACTION.MOBILE_NUMBER' | translate}}</th>
+                            <th><span class="red">*</span>{{'LOAN_TRANSACTION.VILLAGE' | translate}}</th>
+                            <th class="width-6rem">{{'LOAN_TRANSACTION.ACTION'|translate }}</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-row let-editing="editing" let-ri="rowIndex">
+                        <tr [pEditableRow]="row">
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <p-dropdown placeholder="Select" [options]="aClassMemList" [(ngModel)]="row.admissionNumber" [filter]="true"
+                                            filterBy="memName,admissionNumber" optionLabel="admissionNumber" (completeMethod)="searchAdmissionNumber($event)"
+                                            (onChange)="getAclassmemDataByadmissionNumber(row)" formControlName="admissionNumber" [appendTo]="'body'">
+                                            <ng-template let-option pTemplate="item">
+                                                <div class="font-bold">{{ option.memName }}</div>
+                                                <div>{{ option.admissionNumber }}</div>
+                                                <div>{{ option.memberTypeName }}</div>
+                                            </ng-template>
+                                     </p-dropdown>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{row.admissionNum}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <input autocomplete="off" pInputText type="text" 
+                                            formControlName="memName" [(ngModel)]="row.memName">
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{row.memName}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <p-inputMask mask="99/99/9999" formControlName="admissionDate"
+                                            [(ngModel)]="row.admissionDateVal" placeholder="dd/mm/yyyy"
+                                            slotChar="dd/mm/yyyy" class="date-transform" >
+                                        </p-inputMask>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{row.admissionDateVal}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <input autocomplete="off" pInputText type="text" 
+                                            formControlName="memMobile" [(ngModel)]="row.memMobile">
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{row.memMobile}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <input autocomplete="off" pInputText type="text" 
+                                            formControlName="villageId"
+                                            [(ngModel)]="row.villageName">
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{row.villageName}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+
+                            <td style="text-align:center" class="action-button">
+                                <button pButton type="button" icon="fa fa-save"
+                                    [disabled]="!suretyForm.valid"
+                                    (click)="saveOrUpdateSurety(row)" pSaveEditableRow
+                                    id="prj_stakehlder_bt_cancel" tooltipPosition="top"
+                                    pTooltip="{{'LOAN_TRANSACTION.SAVE'|translate }}" class="action-save">
+                                </button>
+                                <button pButton type="button" icon="fa fa-times"
+                                    pCancelEditableRow id="prj_stakehlder_bt_cancel" class="action-times ml-2"
+                                    tooltipPosition="top" (click)="suretyCancel()"
+                                    pTooltip="{{'LOAN_TRANSACTION.CANCEL'|translate }}">
+                                </button>
+                                <button pButton type="button" pInitEditableRow
+                                    [disabled]="addSuretyButton" (click)="editsurety(row)"
+                                    tooltipPosition="top" pTooltip="{{'LOAN_TRANSACTION.EDIT' | translate}}"
+                                    icon="fa fa-pencil" id="prj_stakehlder_bt_edit"
+                                    class='action-pencil'></button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </form>
+        </div> -->
+
+        <!-- OTHER Form -->
+        <div *ngIf="showOtherform">
+                <form [formGroup]="ciOtherMortgageForm" id="proj_stakeholder_form">
+                    <div class="flex justify-content-between">
+                        <div class="xl:col-5 lg:col-5 md:col-12 sm:col-12 pl-0">
+                        </div>
+                        <div class="xl:col-7 lg:col-7 md:col-12 sm:col-12 pr-0">
+                            <div class="col-12 p-0">
+                                <div class="d-flex justify-content-end search-input-style">
+                                    <div class="input-group search-box d-flex justify-content-end">
+                                        <div class="search">
+                                            <span class="p-input-icon-right">
+                                                <i class="pi pi-search global-search-icon"></i>
+                                                <input type="text" pInputText class="searchbox"
+                                                    placeholder="Search" />
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <p-button type="submit" (click)="addOtherLoanMortgage()" label="Add"
+                                        icon="fa fa-plus" iconPos="left" id="add_btn"
+                                        [disabled]="addButtonService"></p-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="globel-border-top-color"></div>
+
+                    <p-table #other [value]="ciOtherLoanMortgageList" dataKey="id" editMode="row"
+                        styleClass="p-datatable-striped" [rows]="5" [paginator]="true"
+                        [showJumpToPageDropdown]="true" [showPageLinks]="false" [pageLinks]="1"
+                        [responsive]="true" rowExpandMode="single"
+                        [globalFilterFields]="['name', 'noOfUnits', 'value', 'remarks']">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>{{'LOAN_TRANSACTION.NAME' | translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.NO_OF_UNITS' | translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.VALUE' | translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.REMARKS' | translate}}</th>
+                                <th >{{'LOAN_TRANSACTION.ACTION' | translate}}</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-row let-editing="editing" let-ri="rowIndex">
+                            <tr [pEditableRow]="row">
+                                <td>
+                                    {{row.name}}
+                                </td>
+                                <td>
+                                   {{row.noOfUnits}}
+                                </td>
+                                <td>
+                                    {{row.value}}
+                                </td>
+                                <td>
+                                    {{row.remarks}}
+                                </td>
+                                <td>
+                                    <div
+                                        class="global-action-btn flex align-items-center justify-content-center">
+                                        <p-button label="{{'LOAN_TRANSACTION.EDIT' | translate}}"
+                                            pInitEditableRow [disabled]="editDeleteDisable"
+                                            (click)="editOtherLoanMortgage(row)" id="prj_stakehlder_bt_edit"
+                                            class="action-edit"></p-button>
+                                        <p-button label="{{'LOAN_TRANSACTION.DELETE' | translate}}" 
+                                            [disabled]="editDeleteDisable"
+                                            (click)="deleteOtherLoanMortgage(row)" id="prj_stakehlder_bt_edit"
+                                            class="action-delete"></p-button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </form>
+        </div>
+
+    </div>
+</div>
+
+<!-- gold pop up -->
+<p-dialog header="Gold Mortgage" [(visible)]="goldMortgagePopUp" styleClass="moredetails-style" [closable]="false">
+    <div class="popup-basic-details">
+        <form [formGroup]="ciGoldMortgageForm" id="proj_stakeholder_form">
+            <div class="row g-3 mt-n1">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.ORNAMENT_DESCRTIPTION' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="ornamentDescription"
+                            [(ngModel)]="ciGoldMortgageLoanModel.ornamentDescription">
+                        <p-message severity="error" text="Enter Valid ornamentDescription"
+                            *ngIf="!ciGoldMortgageForm.controls['ornamentDescription'].valid && ciGoldMortgageForm.controls['ornamentDescription'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.ORNAMENTS_COUNT' | translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="ornamentsCount"
+                            [(ngModel)]="ciGoldMortgageLoanModel.ornamentsCount">
+                        <p-message severity="error" text="Enter Valid ornaments Count"
+                            *ngIf="!ciGoldMortgageForm.controls['ornamentsCount'].valid && ciGoldMortgageForm.controls['ornamentsCount'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+
+
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.ORNAMENT_QUALITY_IN_KDM' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="ornamentQualityInKdm"
+                            [(ngModel)]="ciGoldMortgageLoanModel.ornamentQualityInKdm">
+                        <p-message severity="error" text="Enter Valid ornament ornament Quality In Kdm"
+                            *ngIf="!ciGoldMortgageForm.controls['ornamentQualityInKdm'].valid && ciGoldMortgageForm.controls['ornamentQualityInKdm'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.ORNAMENT_GROSS_WEIGHT_IN_GM' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="ornamentGrossWeightInGm"
+                            [(ngModel)]="ciGoldMortgageLoanModel.ornamentGrossWeightInGm">
+                        <p-message severity="error" text="Enter Valid ornament Gross Weight In Gm"
+                            *ngIf="!ciGoldMortgageForm.controls['ornamentGrossWeightInGm'].valid && ciGoldMortgageForm.controls['ornamentGrossWeightInGm'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.ORNAMENT_NET_WEIGHT_IN_GM' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="ornamentNetWeightInGm"
+                            [(ngModel)]="ciGoldMortgageLoanModel.ornamentNetWeightInGm">
+                        <p-message severity="error" text="Enter Valid ornament Net Weight In Gm"
+                            *ngIf="!ciGoldMortgageForm.controls['ornamentNetWeightInGm'].valid && ciGoldMortgageForm.controls['ornamentNetWeightInGm'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.VALUE_PER_GRAM_IN_RS' | translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="valuePerGramInRs"
+                            [(ngModel)]="ciGoldMortgageLoanModel.valuePerGramInRs">
+                        <p-message severity="error" text="Enter Valid value Per Gram In Rs"
+                            *ngIf="!ciGoldMortgageForm.controls['valuePerGramInRs'].valid && ciGoldMortgageForm.controls['valuePerGramInRs'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.ORNAMENT_NET_VALUE_IN_RS' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="ornamentNetValueInRs"
+                            [(ngModel)]="ciGoldMortgageLoanModel.ornamentNetValueInRs">
+                        <p-message severity="error" text="Enter Valid ornament Net Value In Rs"
+                            *ngIf="!ciGoldMortgageForm.controls['ornamentNetValueInRs'].valid && ciGoldMortgageForm.controls['ornamentNetValueInRs'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+
+                <div class="col-12 btn-footer px-0">
+                    <div class="col-12 d-flex justify-content-end px-0 mt-1 group-button-bottom">
+                        <p-button label="{{'LOAN_TRANSACTION.SAVE'|translate }}" [disabled]="!ciGoldMortgageForm.valid"
+                            (click)="saveGoldLoanMortgage(ciGoldMortgageLoanModel)"></p-button>
+                        <p-button label="{{'LOAN_TRANSACTION.CANCEL'|translate }}"
+                            (click)="cancelGoldLoanMortgage()"></p-button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</p-dialog>
+
+<!-- land pop up -->
+<p-dialog header="Land Mortgage" [(visible)]="landMortgagePopUp" styleClass="moredetails-style" [closable]="false">
+    <div class="popup-basic-details">
+        <form [formGroup]="ciLandMortgageForm" id="proj_stakeholder_form">
+            <div class="row g-3 mt-n1">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.VILLAGE' |
+                            translate}}</label>
+                        <p-dropdown id="bunit_txt_status" placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}"
+                            [filter]="true" [options]="villagesList" formControlName="village"
+                            [(ngModel)]="ciLandMortgageLoanModel.villageId" [appendTo]="'body'"></p-dropdown>
+
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.PASSBOOK_NO' | translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="passbookNumber"
+                            [(ngModel)]="ciLandMortgageLoanModel.passbookNumber" minlength="1" maxlength="16">
+                        <!-- (focusout)="duplicatePassbookCheck(row.passbookNumber)" -->
+                        <p-message severity="error" text="Enter Valid pass book Number"
+                            *ngIf="!ciLandMortgageForm.controls['passbookNumber'].valid && ciLandMortgageForm.controls['passbookNumber'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.KHATA_BOOK_NUMBER' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="khataNumber"
+                            [(ngModel)]="ciLandMortgageLoanModel.khataNumber" minlength="1" maxlength="20">
+                        <p-message severity="error" text="Enter Valid khata Number"
+                            *ngIf="!ciLandMortgageForm.controls['khataNumber'].valid && ciLandMortgageForm.controls['khataNumber'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.SURVEY_NO' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" minlength="1" maxlength="16"
+                            formControlName="surveyNumber" [(ngModel)]="ciLandMortgageLoanModel.surveyNumber">
+                        <p-message severity="error" text="Enter Valid survey Number"
+                            *ngIf="!ciLandMortgageForm.controls['surveyNumber'].valid && ciLandMortgageForm.controls['surveyNumber'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.TOTAL_LAND_IN_UNITS' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="totalLandInUnits"
+                            [(ngModel)]="ciLandMortgageLoanModel.totalLandInUnits">
+                        <p-message severity="error" text="Enter Valid total Land In Units"
+                            *ngIf="!ciLandMortgageForm.controls['totalLandInUnits'].valid && ciLandMortgageForm.controls['totalLandInUnits'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.TOTAL_LAND_IN_SUB_UNITS' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="totalLandInSubUnits"
+                            [(ngModel)]="ciLandMortgageLoanModel.totalLandInSubUnits">
+                        <p-message severity="error" text="Enter Valid total Land In Sub Units"
+                            *ngIf="!ciLandMortgageForm.controls['totalLandInSubUnits'].valid && ciLandMortgageForm.controls['totalLandInSubUnits'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.LAND_VALUE_PER_UNIT' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="landValuePerUnit"
+                            [(ngModel)]="ciLandMortgageLoanModel.landValuePerUnit">
+                        <p-message severity="error" text="Enter Valid mortgage Land Value Per Unit"
+                            *ngIf="!ciLandMortgageForm.controls['landValuePerUnit'].valid && ciLandMortgageForm.controls['landValuePerUnit'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.TOTAL_LAND_VALUE' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="totalLandValue"
+                            [(ngModel)]="ciLandMortgageLoanModel.totalLandValue">
+                        <p-message severity="error" text="Enter Valid total total Mortgage Land Value"
+                            *ngIf="!ciLandMortgageForm.controls['totalLandValue'].valid && ciLandMortgageForm.controls['totalLandValue'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.MORTGAGED_LAND_IN_UNITS' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="mortgageLandInUnits"
+                            [(ngModel)]="ciLandMortgageLoanModel.mortgageLandInUnits">
+                        <p-message severity="error" text="Enter Valid mortgage Land In Units"
+                            *ngIf="!ciLandMortgageForm.controls['mortgageLandInUnits'].valid && ciLandMortgageForm.controls['mortgageLandInUnits'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.MORTGAGE_LAND_IN_SUB_UNITS' |
+                            translate}}</label>
+                            <input autocomplete="off" pInputText type="text" 
+                            formControlName="mortgageLandInSubUnits"
+                            [(ngModel)]="ciLandMortgageLoanModel.mortgageLandInSubUnits">
+                        <p-message severity="error" text="Enter Valid mortgage Land In Sub Units"
+                            *ngIf="!ciLandMortgageForm.controls['mortgageLandInSubUnits'].valid && ciLandMortgageForm.controls['mortgageLandInSubUnits'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.MORTGAGE_LAND_VALUE_PER_UNIT' |
+                            translate}}</label>
+                            <input autocomplete="off" pInputText type="text" 
+                            formControlName="mortgageLandValuePerUnit"
+                            [(ngModel)]="ciLandMortgageLoanModel.mortgageLandValuePerUnit">
+                        <p-message severity="error" text="Enter Valid mortgage Land Value Per Unit"
+                            *ngIf="!ciLandMortgageForm.controls['mortgageLandValuePerUnit'].valid && ciLandMortgageForm.controls['mortgageLandValuePerUnit'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.TOTAL_MORTGAGE_LAND_VALUE' |
+                            translate}}</label>
+                            <input autocomplete="off" pInputText type="text" 
+                            formControlName="totalMortgageLandValue"
+                            [(ngModel)]="ciLandMortgageLoanModel.totalMortgageLandValue">
+                        <p-message severity="error" text="Enter Valid total Mortgage Land Value"
+                            *ngIf="!ciLandMortgageForm.controls['totalMortgageLandValue'].valid && ciLandMortgageForm.controls['totalMortgageLandValue'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.MORTGAGE_DEED_NUMBER' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" 
+                            formControlName="mortgageDeedNumber"
+                            [(ngModel)]="ciLandMortgageLoanModel.mortgageDeedNumber">
+                        <p-message severity="error" text="Enter Valid mortgage Deed Number"
+                            *ngIf="!ciLandMortgageForm.controls['mortgageDeedNumber'].valid && ciLandMortgageForm.controls['mortgageDeedNumber'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.MOTGAGE_DEED_DATE' |
+                            translate}}</label>
+                        <p-calendar formControlName="mortgageDeedDate" [showIcon]="true" dateFormat="{{orgnizationSetting.calendar}}"
+                            [(ngModel)]="ciLandMortgageLoanModel.mortgageDeedDateVal" [appendTo]="'body'">
+                        </p-calendar>
+                    </div>
+                </div>
+               
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.LAND_OWNERSHIP' |
+                            translate}}</label>
+                        <p-dropdown id="bunit_txt_status" placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}"
+                            [filter]="true" [options]="landOwnershipTypesList" formControlName="ownershipType"
+                            [(ngModel)]="ciLandMortgageLoanModel.landOwnership" [appendTo]="'body'"></p-dropdown>
+
+                    </div>
+                </div>
+                <div class="col-12 btn-footer px-0">
+                    <div class="col-12 d-flex justify-content-end px-0 mt-1 group-button-bottom">
+                        <p-button label="{{'LOAN_TRANSACTION.SAVE'|translate }}" [disabled]="!ciLandMortgageForm.valid"
+                            (click)="saveLandLoanMortgage(ciLandMortgageLoanModel)"></p-button>
+                        <p-button label="{{'LOAN_TRANSACTION.CANCEL'|translate }}"
+                            (click)="cancelLandLoanMortgage()"></p-button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</p-dialog>
+
+
+<!-- band pop up -->
+<p-dialog header="Bond Mortgage" [(visible)]="bondMortgagePopUp" styleClass="moredetails-style" [closable]="false">
+    <div class="popup-basic-details">
+        <form [formGroup]="ciBondMortgageForm" id="proj_stakeholder_form">
+            <div class="row g-3 mt-n1">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.BOND_TYPE' |
+                            translate}}</label>
+                        <p-dropdown id="bunit_txt_status" placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}"
+                            [filter]="true" [options]="bondTypesList" formControlName="bondType"
+                            [(ngModel)]="ciBondsMortgageLoanModel.bondType" [appendTo]="'body'"></p-dropdown>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.BOND_NUMBER' | translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="bondNumber"
+                            [(ngModel)]="ciBondsMortgageLoanModel.bondNumber">
+                        <p-message severity="error" text="Enter Valid bond Number"
+                            *ngIf="!ciBondMortgageForm.controls['bondNumber'].valid && ciBondMortgageForm.controls['bondNumber'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.BOND_ISSUED_DATE' |
+                            translate}}</label>
+                        <p-calendar formControlName="bondIssuedDate" [showIcon]="true" dateFormat="{{orgnizationSetting.calendar}}"
+                            [(ngModel)]="ciBondsMortgageLoanModel.bondIssuedDateVal" [appendTo]="'body'">
+                        </p-calendar>
+                            <p-message severity="error" text="Enter Valid bond Issued Date"
+                                *ngIf="!ciBondMortgageForm.controls['bondIssuedDate'].valid && ciBondMortgageForm.controls['bondIssuedDate'].dirty">
+                            </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.BOND_ISSUED_BY' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="bondIssuedBy"
+                            [(ngModel)]="ciBondsMortgageLoanModel.bondIssuedBy" pKeyFilter="alphanum">
+                        <p-message severity="error" text="Enter Valid bond Issued By"
+                            *ngIf="!ciBondMortgageForm.controls['bondIssuedBy'].valid && ciBondMortgageForm.controls['bondIssuedBy'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.BOND_MATURITY_DATE' |
+                            translate}}</label>
+                        <p-calendar formControlName="bondMaturityDate" [showIcon]="true" dateFormat="{{orgnizationSetting.calendar}}"
+                            [(ngModel)]="ciBondsMortgageLoanModel.bondMaturityDateVal" [appendTo]="'body'">
+                        </p-calendar>
+                        <p-message severity="error" text="Enter Valid bond Maturit Date"
+                            *ngIf="!ciBondMortgageForm.controls['bondMaturityDate'].valid && ciBondMortgageForm.controls['bondMaturityDate'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.BOND_MATURITY_VALUE_IN_RS' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="bondMaturityValueInRs"
+                            [(ngModel)]="ciBondsMortgageLoanModel.bondMaturityValueInRs">
+                        <p-message severity="error" text="Enter Valid bond Maturity Value In Rs"
+                            *ngIf="!ciBondMortgageForm.controls['bondMaturityValueInRs'].valid && ciBondMortgageForm.controls['bondMaturityValueInRs'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.BOND_PRINCIPLE_AMOUNT' |
+                            translate}}</label>
+                        <input pInputText type="text" formControlName="bondPrincipleAmount"
+                            [(ngModel)]="ciBondsMortgageLoanModel.bondPrincipleAmount">
+                        <p-message severity="error" text="Enter Valid bond Principle Amount"
+                            *ngIf="!ciBondMortgageForm.controls['bondPrincipleAmount'].valid && ciBondMortgageForm.controls['bondPrincipleAmount'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-12 btn-footer px-0">
+                    <div class="col-12 d-flex justify-content-end px-0 mt-1 group-button-bottom">
+                        <p-button label="{{'LOAN_TRANSACTION.SAVE'|translate }}" [disabled]="!ciBondMortgageForm.valid"
+                            (click)="saveBondLoanMortgage(ciBondsMortgageLoanModel)"></p-button>
+                        <p-button label="{{'LOAN_TRANSACTION.CANCEL'|translate }}"
+                            (click)="cancelBondLoanMortgage()"></p-button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</p-dialog>
+
+<!-- Storage pop up -->
+<p-dialog header="Storage Mortgage" [(visible)]="storagePopUp" styleClass="moredetails-style" [closable]="false">
+    <div class="popup-basic-details">
+        <form [formGroup]="ciStorageMortgageForm" id="proj_stakeholder_form">
+            <div class="row g-3 mt-n1">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.COMMODITY' |
+                            translate}}</label>
+                            <input autocomplete="off" pInputText type="text" 
+                            formControlName="commodity" [(ngModel)]="ciStorageMortgageLoanModel.commodity">
+                            <p-message severity="error" text="Enter Valid bond Number"
+                            *ngIf="!ciStorageMortgageForm.controls['commodity'].valid && ciStorageMortgageForm.controls['commodity'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.NWR_STORAGE_RECEIPT_NUMBER' | translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="nwrStorageReceiptNumber"
+                            [(ngModel)]="ciStorageMortgageLoanModel.nwrStorageReceiptNumber">
+                        <p-message severity="error" text="Enter Valid nwrStorageReceiptNumber"
+                            *ngIf="!ciStorageMortgageForm.controls['nwrStorageReceiptNumber'].valid && ciStorageMortgageForm.controls['nwrStorageReceiptNumber'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.DATE_OF_ISSUE' |
+                            translate}}</label>
+                        <p-calendar formControlName="dateOfIssue" [showIcon]="true" dateFormat="{{orgnizationSetting.calendar}}"
+                            [(ngModel)]="ciStorageMortgageLoanModel.dateOfIssueVal" [appendTo]="'body'">
+                        </p-calendar>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.NUMBER_OF_UNTIS_STORED' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="numberOfUnitsStored"
+                            [(ngModel)]="ciStorageMortgageLoanModel.numberOfUnitsStored">
+                        <p-message severity="error" text="Enter Valid numberOfUnitsStored"
+                            *ngIf="!ciStorageMortgageForm.controls['numberOfUnitsStored'].valid && ciStorageMortgageForm.controls['numberOfUnitsStored'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+               
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.PER_UNIT_COST_IN_RS' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="perUnitCostInRs"
+                            [(ngModel)]="ciStorageMortgageLoanModel.perUnitCostInRs">
+                        <p-message severity="error" text="Enter Valid perUnitCostInRs"
+                            *ngIf="!ciStorageMortgageForm.controls['perUnitCostInRs'].valid && ciStorageMortgageForm.controls['perUnitCostInRs'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.NET_VALUE_IN_RS' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="netValueInRs" [(ngModel)]="ciStorageMortgageLoanModel.netValueInRs">
+                        <p-message severity="error" text="Enter Valid netValueInRs"
+                            *ngIf="!ciStorageMortgageForm.controls['netValueInRs'].valid && ciStorageMortgageForm.controls['netValueInRs'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-12 btn-footer px-0">
+                    <div class="col-12 d-flex justify-content-end px-0 mt-1 group-button-bottom">
+                        <p-button label="{{'LOAN_TRANSACTION.SAVE'|translate }}" [disabled]="!ciStorageMortgageForm.valid"
+                            (click)="saveStorageLoanMortgage(ciStorageMortgageLoanModel)"></p-button>
+                        <p-button label="{{'LOAN_TRANSACTION.CANCEL'|translate }}" (click)="cancelStorageLoanMortgage()"></p-button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</p-dialog>
+
+
+<!-- Property pop up -->
+<p-dialog header="Property Mortgage" [(visible)]="propertyPopUp" styleClass="moredetails-style" [closable]="false">
+    <div class="popup-basic-details">
+        <form [formGroup]="propertyDetailsForm" id="proj_stakeholder_form">
+            <div class="row g-3 mt-n1">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.SITE' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="site"
+                            [(ngModel)]="ciPropertyMortgageLoanModel.site">
+                        <p-message severity="error" text="Enter Valid site"
+                            *ngIf="!propertyDetailsForm.controls['site'].valid && propertyDetailsForm.controls['site'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.LOCATION' | translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="location"
+                            [(ngModel)]="ciPropertyMortgageLoanModel.location">
+                        <p-message severity="error" text="Enter Valid bond Number"
+                            *ngIf="!propertyDetailsForm.controls['location'].valid && propertyDetailsForm.controls['location'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.SQUARE_YARDS' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="squareYards"
+                            [(ngModel)]="ciPropertyMortgageLoanModel.squareYards">
+                        <p-message severity="error" text="Enter Valid squareYards"
+                            *ngIf="!propertyDetailsForm.controls['squareYards'].valid && propertyDetailsForm.controls['squareYards'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.SURVEY_NUMBER' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="propertySurveyNumber"
+                            [(ngModel)]="ciPropertyMortgageLoanModel.propertySurveyNumber">
+                        <p-message severity="error" text="Enter Valid propertySurveyNumber"
+                            *ngIf="!propertyDetailsForm.controls['propertySurveyNumber'].valid && propertyDetailsForm.controls['propertySurveyNumber'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.VALUE_OF_PROPERTY' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="valueOfProperty"
+                            [(ngModel)]="ciPropertyMortgageLoanModel.valueOfProperty">
+                        <p-message severity="error" text="Enter Valid valueOfProperty"
+                            *ngIf="!propertyDetailsForm.controls['valueOfProperty'].valid && propertyDetailsForm.controls['valueOfProperty'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.NAME_OF_PROPERTY' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="nameOfProperty"
+                            [(ngModel)]="ciPropertyMortgageLoanModel.nameOfProperty">
+                        <p-message severity="error" text="Enter Valid nameOfProperty"
+                            *ngIf="!propertyDetailsForm.controls['nameOfProperty'].valid && propertyDetailsForm.controls['nameOfProperty'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.EXTENT_OF_PROPERTY' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="extentOfProperty"
+                            [(ngModel)]="ciPropertyMortgageLoanModel.extentOfProperty">
+                        <p-message severity="error" text="Enter Valid bond Principle Amount"
+                            *ngIf="!propertyDetailsForm.controls['extentOfProperty'].valid && propertyDetailsForm.controls['extentOfProperty'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-12 btn-footer px-0">
+                    <div class="col-12 d-flex justify-content-end px-0 mt-1 group-button-bottom">
+                        <p-button label="{{'LOAN_TRANSACTION.SAVE'|translate }}" [disabled]="!propertyDetailsForm.valid"
+                            (click)="saveOrUpdateProperty(ciPropertyMortgageLoanModel)"></p-button>
+                        <p-button label="{{'LOAN_TRANSACTION.CANCEL'|translate }}"
+                            (click)="propertyCancel()"></p-button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</p-dialog>
+
+
+<!-- Other pop up -->
+<p-dialog header="Other Mortgage" [(visible)]="otherMortgagePopUp" styleClass="moredetails-style" [closable]="false">
+    <div class="popup-basic-details">
+        <form [formGroup]="ciOtherMortgageForm" id="proj_stakeholder_form">
+            <div class="row g-3 mt-n1">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.NAME' |
+                            translate}}</label>
+                            <input pInputText type="text" [(ngModel)]="ciOthersMortgageLoanModel.name"
+                            formControlName="name">
+                            <p-message severity="error" text="Enter Valid name"
+                            *ngIf="!ciOtherMortgageForm.controls['name'].valid && ciOtherMortgageForm.controls['name'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.NO_OF_UNITS' | translate}}</label>
+                        <input pInputText type="text" [(ngModel)]="ciOthersMortgageLoanModel.noOfUnits"
+                                                formControlName="noOfUnits">
+                        <p-message severity="error" text="Enter Valid noOfUnits"
+                            *ngIf="!ciOtherMortgageForm.controls['noOfUnits'].valid && ciOtherMortgageForm.controls['noOfUnits'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.VALUE' |
+                            translate}}</label>
+                            <input pInputText type="text" [(ngModel)]="ciOthersMortgageLoanModel.value"
+                            formControlName="value">
+                            <p-message severity="error" text="Enter Valid remarks"
+                                *ngIf="!ciOtherMortgageForm.controls['remarks'].valid && ciOtherMortgageForm.controls['remarks'].dirty">
+                            </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label>{{'LOAN_TRANSACTION.REMARKS' |
+                            translate}}</label>
+                            <input pInputText type="text" [(ngModel)]="ciOthersMortgageLoanModel.remarks"
+                            formControlName="remarks">
+                        <p-message severity="error" text="Enter Valid remarks"
+                            *ngIf="!ciOtherMortgageForm.controls['remarks'].valid && ciOtherMortgageForm.controls['remarks'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-12 btn-footer px-0">
+                    <div class="col-12 d-flex justify-content-end px-0 mt-1 group-button-bottom">
+                        <p-button label="{{'LOAN_TRANSACTION.SAVE'|translate }}" [disabled]="!ciOtherMortgageForm.valid"
+                        (click)="saveOtherLoanMortgage(ciOthersMortgageLoanModel)"></p-button>
+                        <p-button label="{{'LOAN_TRANSACTION.CANCEL'|translate }}"
+                        (click)="cancelOtherLoanMortgage()"></p-button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</p-dialog>

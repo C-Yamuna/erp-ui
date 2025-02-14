@@ -1,0 +1,339 @@
+<div class="col-12">
+
+    <div class="stepper-top-section-strip">
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-group">
+                    <span>{{'ERP.PRODUCT' | translate}}</span>
+                    <p class="mb-0">{{saoLoanApplicatonModel.saoProductName}}</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-group">
+                    <span>{{'ERP.OPERATION_TYPE' | translate}}</span>
+                    <p class="mb-0">{{saoLoanApplicatonModel.operationTypeName}}</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-group">
+                    <span>{{'ERP.LOAN_ACCOUNT_NO' | translate}}</span>
+                    <p class="mb-0">{{saoLoanApplicatonModel.accountNumber}}</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-group">
+                    <span>{{'ERP.REQUEST_AMOUNT' | translate}}</span>
+                    <p class="mb-0">{{saoLoanApplicatonModel.requestedAmount}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12"></div>
+    <h6 class="sub-heading">{{'ERP.MORTAGAGE_DETAILS' | translate}}</h6>
+
+    <form [formGroup]="Collateralform" id="exit_types_form">
+        <div class="flex justify-content-between py-2">
+            <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-xs-5">
+            </div>
+            <div class="col-xl-7 col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                <div class="col-12 p-0">
+                    <div class="d-flex justify-content-end search-input-style">
+                        <div class="input-group search-box d-flex justify-content-end">
+                            <div class="search">
+                                <span class="p-input-icon-right">
+                                    <i class="pi pi-search global-search-icon"></i>
+                                    <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                        placeholder="Search" class="searchbox" #searchInput
+                                        (input)="dt.filterGlobal(searchInput.value, 'contains')">
+                                </span>
+                            </div>
+                        </div>
+                        <p-button (click)="addData()" label="{{ 'ADD' | translate }}" icon="fa fa-plus" iconPos="left"
+                            [disabled]="addButton" id="bunit_bt_submit"></p-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="globel-border-top-color"></div>
+        <p-table #dt [value]="gridList" dataKey="id" editMode="row" styleClass="p-datatable-striped"
+            [rows]="5" [paginator]="true" [showJumpToPageDropdown]="true" [showPageLinks]="false" [pageLinks]="1"
+            [responsive]="true" rowExpandMode="single"
+            [globalFilterFields]="['passbookNumber', 'surveyNo', 'landType', 'landUnits', 'landSubUnits', 'value', 'declaredLandUnits', 'declaredLandSubUnits' ,'remarks']">
+            <ng-template pTemplate="header" let-goldColumns>
+                <tr>
+                    <th>{{'LOAN_TRANSACTION.VILLAGE' | translate}}</th>
+                    <th>{{'LOAN_TRANSACTION.PASSBOOK_NO' | translate}}</th>
+                    <th>{{'LOAN_TRANSACTION.KHATA_BOOK_NUMBER' | translate}}</th>
+                    <th>{{'LOAN_TRANSACTION.SURVEY_NO' | translate}}</th>
+                    <th>{{'LOAN_TRANSACTION.TOTAL_LAND_IN_UNITS' | translate}}
+                    </th>
+                    <th>{{'LOAN_TRANSACTION.TOTAL_LAND_IN_SUB_UNITS' |
+                        translate}}</th>
+                    <th>{{'LOAN_TRANSACTION.LAND_VALUE_PER_UNIT' | translate}}
+                    </th>
+                    <!-- <th>{{'LOAN_TRANSACTION.TOTAL_LAND_VALUE' | translate}}
+                                </th> -->
+                    <!-- <th>{{'LOAN_TRANSACTION.MORTGAGED_LAND_IN_UNITS' |
+                                    translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.MORTGAGE_LAND_IN_SUB_UNITS' |
+                                    translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.MORTGAGE_LAND_VALUE_PER_UNIT' |
+                                    translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.TOTAL_MORTGAGE_LAND_VALUE' |
+                                    translate}}</th>
+                                <th>{{'LOAN_TRANSACTION.MORTGAGE_DEED_NUMBER' | translate}}
+                                </th>
+                                <th>{{'LOAN_TRANSACTION.MOTGAGE_DEED_DATE' | translate}}
+                                </th>
+                                <th>{{'LOAN_TRANSACTION.LAND_OWNERSHIP' | translate}}</th> -->
+                    <th class="width-6rem">{{'LOAN_TRANSACTION.ACTION'|translate }}</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row let-editing="editing" let-ri="rowIndex">
+                <tr [pEditableRow]="row">
+                    <td>
+                        {{row.villageName}}
+                    </td>
+                    <td>
+                        {{row.passbookNumber}}
+                    </td>
+                    <td>
+                        {{row.khataNumber}}
+                    </td>
+                    <td>
+                        {{row.surveyNumber}}
+                    </td>
+                    <td>
+                        {{row.totalLandInUnits}}
+                    </td>
+                    <td>
+                        {{row.totalLandInSubUnits}}
+                    </td>
+                    <td>
+                        {{row.landValuePerUnit}}
+                    </td>
+                   
+                    <td style="text-align:center" class="action-button">
+                        <div class="global-action-btn flex align-items-center justify-content-center">
+                            <p-button label="{{'LOAN_TRANSACTION.EDIT' | translate}}" pInitEditableRow
+                                [disabled]="editDeleteDisable" (click)="editLandLoanMortgage(row)"
+                                id="prj_stakehlder_bt_edit" class="action-edit"></p-button>
+                            <p-button label="{{'LOAN_TRANSACTION.DELETE' | translate}}" [disabled]="editDeleteDisable"
+                                (click)="deletDilogBox(row)" id="prj_stakehlder_bt_edit"
+                                class="action-delete"></p-button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <div class="col-12 margtop-3rem"></div>
+
+    </form>
+
+
+</div>
+<!-- land pop up -->
+<p-dialog header="Land Mortgage" [(visible)]="landMortgagePopUp" styleClass="moredetails-style" [closable]="false">
+    <div class="popup-basic-details">
+        <form [formGroup]="Collateralform" id="proj_stakeholder_form">
+            <div class="row g-3 mt-n1">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.VILLAGE' |
+                            translate}}</label>
+                        <p-dropdown id="bunit_txt_status" placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}"
+                            [filter]="true" [options]="villagesList" formControlName="village"
+                            [(ngModel)]="saoLoanLandMortageDetailsModel.villageId" [appendTo]="'body'"></p-dropdown>
+
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.PASSBOOK_NO' | translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="passbookNumber"
+                            [(ngModel)]="saoLoanLandMortageDetailsModel.passbookNumber" minlength="1" maxlength="16">
+                        <!-- (focusout)="duplicatePassbookCheck(row.passbookNumber)" -->
+                        <p-message severity="error" text="Enter Valid pass book Number"
+                            *ngIf="!Collateralform.controls['passbookNumber'].valid && Collateralform.controls['passbookNumber'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.KHATA_BOOK_NUMBER' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="khataNumber"
+                            [(ngModel)]="saoLoanLandMortageDetailsModel.khataNumber" minlength="1" maxlength="20">
+                        <p-message severity="error" text="Enter Valid khata Number"
+                            *ngIf="!Collateralform.controls['khataNumber'].valid && Collateralform.controls['khataNumber'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.SURVEY_NO' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" minlength="1" maxlength="16"
+                            formControlName="surveyNumber" [(ngModel)]="saoLoanLandMortageDetailsModel.surveyNumber">
+                        <p-message severity="error" text="Enter Valid survey Number"
+                            *ngIf="!Collateralform.controls['surveyNumber'].valid && Collateralform.controls['surveyNumber'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.TOTAL_LAND_IN_UNITS' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="totalLandInUnits"
+                            [(ngModel)]="saoLoanLandMortageDetailsModel.totalLandInUnits">
+                        <p-message severity="error" text="Enter Valid total Land In Units"
+                            *ngIf="!Collateralform.controls['totalLandInUnits'].valid && Collateralform.controls['totalLandInUnits'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.TOTAL_LAND_IN_SUB_UNITS' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="totalLandInSubUnits"
+                            [(ngModel)]="saoLoanLandMortageDetailsModel.totalLandInSubUnits">
+                        <p-message severity="error" text="Enter Valid total Land In Sub Units"
+                            *ngIf="!Collateralform.controls['totalLandInSubUnits'].valid && Collateralform.controls['totalLandInSubUnits'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.LAND_VALUE_PER_UNIT' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="landValuePerUnit"
+                            [(ngModel)]="saoLoanLandMortageDetailsModel.landValuePerUnit">
+                        <p-message severity="error" text="Enter Valid mortgage Land Value Per Unit"
+                            *ngIf="!Collateralform.controls['landValuePerUnit'].valid && Collateralform.controls['landValuePerUnit'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.TOTAL_LAND_VALUE' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="totalLandValue"
+                            [(ngModel)]="saoLoanLandMortageDetailsModel.totalLandValue">
+                        <p-message severity="error" text="Enter Valid total total Mortgage Land Value"
+                            *ngIf="!Collateralform.controls['totalLandValue'].valid && Collateralform.controls['totalLandValue'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.MORTGAGED_LAND_IN_UNITS' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" formControlName="mortgageLandInUnits"
+                            [(ngModel)]="saoLoanLandMortageDetailsModel.mortgageLandInUnits">
+                        <p-message severity="error" text="Enter Valid mortgage Land In Units"
+                            *ngIf="!Collateralform.controls['mortgageLandInUnits'].valid && Collateralform.controls['mortgageLandInUnits'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.MORTGAGE_LAND_IN_SUB_UNITS' |
+                            translate}}</label>
+                            <input autocomplete="off" pInputText type="text" 
+                            formControlName="mortgageLandInSubUnits"
+                            [(ngModel)]="saoLoanLandMortageDetailsModel.mortgageLandInSubUnits">
+                        <p-message severity="error" text="Enter Valid mortgage Land In Sub Units"
+                            *ngIf="!Collateralform.controls['mortgageLandInSubUnits'].valid && Collateralform.controls['mortgageLandInSubUnits'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.MORTGAGE_LAND_VALUE_PER_UNIT' |
+                            translate}}</label>
+                            <input autocomplete="off" pInputText type="text" 
+                            formControlName="mortgageLandValuePerUnit"
+                            [(ngModel)]="saoLoanLandMortageDetailsModel.mortgageLandValuePerUnit">
+                        <p-message severity="error" text="Enter Valid mortgage Land Value Per Unit"
+                            *ngIf="!Collateralform.controls['mortgageLandValuePerUnit'].valid && Collateralform.controls['mortgageLandValuePerUnit'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.TOTAL_MORTGAGE_LAND_VALUE' |
+                            translate}}</label>
+                            <input autocomplete="off" pInputText type="text" 
+                            formControlName="totalMortgageLandValue"
+                            [(ngModel)]="saoLoanLandMortageDetailsModel.totalMortgageLandValue">
+                        <p-message severity="error" text="Enter Valid total Mortgage Land Value"
+                            *ngIf="!Collateralform.controls['totalMortgageLandValue'].valid && Collateralform.controls['totalMortgageLandValue'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.MORTGAGE_DEED_NUMBER' |
+                            translate}}</label>
+                        <input autocomplete="off" pInputText type="text" 
+                            formControlName="mortgageDeedNumber"
+                            [(ngModel)]="saoLoanLandMortageDetailsModel.mortgageDeedNumber">
+                        <p-message severity="error" text="Enter Valid mortgage Deed Number"
+                            *ngIf="!Collateralform.controls['mortgageDeedNumber'].valid && Collateralform.controls['mortgageDeedNumber'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.MOTGAGE_DEED_DATE' |
+                            translate}}</label>
+                        <p-calendar formControlName="mortgageDeedDate" [showIcon]="true" dateFormat="{{orgnizationSetting.calendar}}"
+                            [(ngModel)]="saoLoanLandMortageDetailsModel.mortgageDeedDateVal" [appendTo]="'body'">
+                        </p-calendar>
+                    </div>
+                </div>
+               
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.LAND_OWNERSHIP' |
+                            translate}}</label>
+                        <p-dropdown id="bunit_txt_status" placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}"
+                            [filter]="true" [options]="landOwnershipTypesList" formControlName="ownershipType"
+                            [(ngModel)]="saoLoanLandMortageDetailsModel.landOwnership" [appendTo]="'body'"></p-dropdown>
+
+                    </div>
+                </div>
+                <div class="col-12 btn-footer px-0">
+                    <div class="col-12 d-flex justify-content-end px-0 mt-1 group-button-bottom">
+                        <p-button label="{{'LOAN_TRANSACTION.CANCEL'|translate }}"
+                            (click)="cancelLandLoanMortgage()"></p-button>
+                        <p-button label="{{'LOAN_TRANSACTION.SAVE'|translate }}" [disabled]="!Collateralform.valid"
+                            (click)="addOrUpdateLandDetails(saoLoanLandMortageDetailsModel)"></p-button>
+                        
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</p-dialog>
+
+<!-- delete dialog box -->
+<p-dialog [(visible)]="displayDialog" [closable]="false" styleClass="delete-popup" [responsive]="true">
+    <div class="col-12">
+        <i class="fa fa-times-circle text-center" aria-hidden="true"></i>
+
+        <p class="text-center popup-header">{{'ERP.ARE_YOU_SURE_TO_DELETE' | translate}}</p>
+        <p class="text-center pop-subheader">{{'ERP.DO_YOU_REALLY_TO_DELETE_THESE_RECORDS' | translate}}</p>
+
+    </div>
+    <div class="col-12 text-center p-2">
+        <p-button pRipple class="yes-button" label="{{'ERP.DELETE' | translate}}" (click)="submitDelete()"></p-button>
+        <p-button pRipple class="no-button" label="{{'ERP.CANCEL' | translate}}"
+            (click)="cancelForDialogBox()"></p-button>
+    </div>
+</p-dialog>

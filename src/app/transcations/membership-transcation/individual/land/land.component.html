@@ -1,0 +1,457 @@
+<div class="col-12">
+    <!-- <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
+    [hideTransitionOptions]="'500ms'"></p-messages> -->
+    <p-messages label="Info" life="4000" [(value)]="msgs"></p-messages>
+    <div class="stepper-top-section-strip">
+        <div class="row">
+            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+                <div class="form-group">
+                    <span>{{'ERP.MEMBER_TYPE' | translate}}</span>
+                    <p class="mb-0">{{ memberBasicDetailsModel.memberTypeName }}&nbsp;({{
+                        memberBasicDetailsModel.subProductName }})</p>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+                <div class="form-group">
+                    <span>{{'ERP.NAME' | translate}}</span>
+                    <p class="mb-0">{{memberBasicDetailsModel.name}}</p>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+                <div class="form-group">
+                    <span>{{'ERP.GENDER' | translate}}</span>
+                    <p class="mb-0">{{memberBasicDetailsModel.genderName}}</p>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+                <div class="form-group">
+                    <span>{{'ERP.QUALIFICATON' | translate}}</span>
+                    <p class="mb-0">{{memberBasicDetailsModel.qualificationName}}</p>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+                <div class="form-group">
+                    <span>{{'ERP.MOBILE_NUMBER' | translate}}</span>
+                    <p class="mb-0">{{memberBasicDetailsModel.mobileNumber}}</p>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+                <div class="form-group">
+                    <span>{{'ERP.AADHAR_NUMBER' | translate}}</span>
+                    <p class="mb-0">{{memberBasicDetailsModel.aadharNumber}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12"></div>
+    <h6 class="sub-heading">{{'ERP.LAND_DETAILS' | translate}}<span class="admission-text">(Admission
+        Number : {{memberBasicDetailsModel.admissionNumber}})</span></h6>
+    <form [formGroup]="customerLandDetailsForm" id="exit_types_form">
+        <div class="mt-n1  bg-label-colorfull">
+            <div class="row g-3">
+                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-12 chip-styles">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.PASSBOOK_NO' |
+                            translate}}</label>
+                            <p-chips (onAdd)="handleAdd($event)" formControlName="passbookNumber"
+                                        (onRemove)="handleRemove(($event))" [(ngModel)]="passbookList"></p-chips>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-12 chip-styles">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.KHATA_BOOK_NUMBER' |
+                            translate}}</label>
+                            <p-chips (onAdd)="handleKhataNumberAdd($event)" formControlName="khataNumber"
+                            (onRemove)="handleKhatabookRemove(($event))" [(ngModel)]="khatabookList"></p-chips>
+                        
+                    </div>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-xs-12">
+                    <div class="form-label">
+                        <span class=""> {{ 'MEMBERSHIP_TRANSACTION.DOCUMENT_COPY'| translate }} </span>
+                        <div class="uplodad-style align-items-center">
+                            <!-- Upload Button Column -->
+                            <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                                id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".pdf"
+                                (onSelect)="docUploader($event,fileUpload )">
+                            </p-fileUpload>
+                            <div class="col-12 d-flex p-1 contant-body" *ngFor="let img of docFilesList">
+                                <div *ngIf="img.fileType=='pdf'">
+                                    <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22" height="22"></a>
+                                </div>
+                                <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                    {{img.fileName}}
+                                </div>
+        
+                            </div>
+                        </div>
+                    </div>
+        
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="col-12"></div>
+
+    <div class="flex row justify-content-between py-2">
+        <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5">
+            <h6 class="sub-heading mt-1">{{'MEMBERSHIP_TRANSACTION.SURVEY_DETAILS' | translate}}</h6>
+        </div>
+        <div class="col-xl-7 col-lg-7 col-md-7 col-sm-7">
+            <div class="col-12 p-0">
+                <div class="d-flex justify-content-end search-input-style">
+                    <div class="input-group search-box d-flex justify-content-end">
+                        <div class="search">
+                            <span class="p-input-icon-right">
+                                <i class="pi pi-search global-search-icon"></i>
+                                <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                    placeholder="Search" class="searchbox" #searchInput
+                                    (input)="dt.filterGlobal(searchInput.value, 'contains')">
+                            </span>
+                        </div>
+                    </div>
+                        <p-button label="Add" icon="fa fa-plus" iconPos="left" id="addButtonFocus"
+                            [disabled]="!customerLandDetailsForm.valid || isEditDisable" (click)="displayDialogBox()"></p-button>
+                </div>
+
+            </div>
+        </div>
+        </div>
+        <div class="globel-border-top-color"></div>
+            <p-table #dt [columns]="columns" [value]="gridListData" dataKey="id" editMode="row"
+                styleClass="p-datatable-striped" [rows]="5" [paginator]="true" [showJumpToPageDropdown]="true"
+                [showPageLinks]="false" [pageLinks]="1" [responsive]="true" rowExpandMode="single">
+                <!-- <ng-template pTemplate="caption" let-columns>
+
+                </ng-template> -->
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th>
+                            {{'MEMBERSHIP_TRANSACTION.VILLAGE' | translate}}
+                        </th>
+                        <th>
+                            {{'MEMBERSHIP_TRANSACTION.PASSBOOK_NO' | translate}}
+                        </th>
+                        <th>
+                            {{'MEMBERSHIP_TRANSACTION.KHATA_BOOK_NUMBER' | translate}}
+                        </th>
+                        <th>
+                            {{'MEMBERSHIP_TRANSACTION.SURVEY_NO' | translate}}
+                        </th>
+
+                        <th>
+                            {{'MEMBERSHIP_TRANSACTION.LAND' | translate}} (in {{measuringUnit}})
+                        </th>
+                        <th>
+                            {{'MEMBERSHIP_TRANSACTION.LAND' | translate}} (in {{measuringSubUnit}})
+                        </th>
+
+                        <th>
+                            {{'MEMBERSHIP_TRANSACTION.LAND_TYPE' | translate}}
+                        </th>
+                        <th>
+                            {{'MEMBERSHIP_TRANSACTION.LAND_OWNERSHIP' | translate}}
+                        </th>
+
+                        <th>
+                            {{'MEMBERSHIP_TRANSACTION.SOURCE' | translate}}
+                        </th>
+                        <th pResizableColumn class="width-15em">{{'MEMBERSHIP_TRANSACTION.ACTION' | translate}}</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                    <tr [pSelectableRow]="rowData">
+                        <td *ngFor="let col of columns">
+                            {{rowData[col.field]}}
+                        </td>
+                        <td>
+                            <div class="global-action-btn flex align-items-center justify-content-start">
+                                <p-button label="{{'ERP.EDIT' | translate}}" id="edit_btn" class="action-view"
+                                [disabled]="isEditDisable" (click)="editSurveyLandDetails(rowData)"></p-button>
+
+                               <!-- <a *ngIf="isEdit" (click)="showDeleteDialogBox(rowData)">
+                                    <button class="action-pencil" pTooltip="{{'ERP.DELETE' | translate}}" tooltipPosition="top" pButton
+                                        type="button" icon="fa fa-trash" id="edit_btn" *ngIf="rowData.source ==null"></button>
+                                </a> -->
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="summary">
+                    <h3 class="NData" *ngIf="gridListData.length == 0">
+                        <i class="fa fa-meh-o" aria-hidden="true"></i>
+                        {{'MEMBERSHIP_TRANSACTION.NO_DATA' | translate}}
+                    </h3>
+                </ng-template>
+            </p-table>
+    </div>
+
+<!-- group promoters details dialog -->
+<p-dialog [closable]="false" [(visible)]="displayDialog" id="dccb_addEditDialog" [responsive]="true" showEffect="fade"
+    [modal]="true" [style]="{'width':'80%',height:'auto'}">
+    <p-header>{{'MEMBERSHIP_TRANSACTION.ADD' | translate}}</p-header>
+        <div class="col-12 p-0">
+            <form [formGroup]="landSurveyDetailsForm" id="dialogue_form">
+                <div class=" mt-n1 bg-label-colorfull">
+                    <div class="row g-3">
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                            <div class="form-label">
+                                <label>
+                                    <span class="red">*</span> {{'MEMBERSHIP_TRANSACTION.VILLAGE' | translate}}</label>
+                                <p-dropdown id="bunit_txt_status" placeholder="Select" [options]="villagesList"
+                                    formControlName="villageId" [(ngModel)]="customerSurveyDetails.villageId"
+                                    (onChange)="checkDuplicateSurveyNoInTable(customerSurveyDetails)" [appendTo]="'body'">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 ">
+                            <div class="form-label">
+                                <label>
+                                    <span class="red">*</span> {{'MEMBERSHIP_TRANSACTION.PASSBOOK_NO'
+                                    | translate}}</label>
+                                <p-dropdown id="bunit_txt_status" placeholder="Select" [options]="passbookList"
+                                    formControlName="passbookNumber" [(ngModel)]="customerSurveyDetails.passbookNumber"
+                                    [appendTo]="'body'">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 ">
+                            <div class="form-label">
+                                <label>
+                                    <span class="red">*</span> {{'MEMBERSHIP_TRANSACTION.KHATA_BOOK_NUMBER'
+                                    | translate}}</label>
+                                <p-dropdown id="bunit_txt_status" placeholder="{{'ERP.SELECT' |translate}}"
+                                    [options]="khatabookList" formControlName="khataNumber"
+                                    [(ngModel)]="customerSurveyDetails.khataNumber"
+                                    (onChange)="checkDuplicateSurveyNoInTable(customerSurveyDetails)" [appendTo]="'body'">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                            <div class="form-label">
+                                <label>
+                                    <span class="red">*</span> {{'MEMBERSHIP_TRANSACTION.SURVEY_NO'
+                                    | translate}}</label>
+                                <input autocomplete="off" pInputText formControlName="surveyNumber"
+                                    [(ngModel)]="customerSurveyDetails.surveyNumber" type="text" name="land_survey"
+                                    (focusout)="checkDuplicateSurveyNoInTable(customerSurveyDetails)">
+                                <p-message severity="error" text="Enter Valid Survey Number"
+                                    *ngIf="!landSurveyDetailsForm.controls['surveyNumber'].valid && landSurveyDetailsForm.controls['surveyNumber'].dirty">
+                                </p-message>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                            <div class="form-label">
+                                <label>
+                                    <span class="red">*</span> {{'MEMBERSHIP_TRANSACTION.TITLE_DEED_NO'
+                                    | translate}}</label>
+                                <input autocomplete="off" pInputText id="title" formControlName="titleDeedNumber"
+                                    [(ngModel)]="customerSurveyDetails.titleDeedNumber" type="text">
+                                <p-message severity="error" text="Enter Valid Number"
+                                    *ngIf="!landSurveyDetailsForm.controls['titleDeedNumber'].valid && landSurveyDetailsForm.controls['titleDeedNumber'].dirty">
+                                </p-message>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                            <div class="form-label">
+                                <label>
+                                    <span class="red">*</span> {{'MEMBERSHIP_TRANSACTION.LAND' | translate}} (in
+                                    {{measuringUnit}})</label>
+                                <input autocomplete="off" pInputText id="title" formControlName="totalLand"
+                                    [(ngModel)]="customerSurveyDetails.totalLand" type="text" pKeyFilter="pint">
+                                <p-message severity="error" text="Enter Valid Number"
+                                    *ngIf="!landSurveyDetailsForm.controls['totalLand'].valid && landSurveyDetailsForm.controls['totalLand'].dirty">
+                                </p-message>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                            <div class="form-label">
+                                <label>
+                                    <span class="red">*</span> {{'MEMBERSHIP_TRANSACTION.LAND' | translate}} (in
+                                    {{measuringSubUnit}})</label>
+        
+                                <input autocomplete="off" pInputText id="bunit_txt_name" formControlName="totalLandInSubUnits"
+                                    [(ngModel)]="customerSurveyDetails.totalLandInSubUnits" type="text">
+                                <p-message severity="error" text="Enter Valid Number"
+                                    *ngIf="!landSurveyDetailsForm.controls['totalLandInSubUnits'].valid && landSurveyDetailsForm.controls['totalLandInSubUnits'].dirty">
+                                </p-message>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                            <div class="form-label">
+                                <label>
+                                    <span class="red">*</span>
+                                    {{'MEMBERSHIP_TRANSACTION.CULTIVABLE_LAND' | translate}} (in {{measuringUnit}})</label>
+                                <input autocomplete="off" pInputText id="bunit_txt_name" formControlName="cultivableLand"
+                                    [(ngModel)]="customerSurveyDetails.cultivableLand" type="text" pKeyFilter="pint">
+                                <p-message severity="error" text="Enter Valid Number"
+                                    *ngIf="!landSurveyDetailsForm.controls['cultivableLand'].valid && landSurveyDetailsForm.controls['cultivableLand'].dirty">
+                                </p-message>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                            <div class="form-label">
+                                <label>
+                                    <span class="red">*</span>
+                                    {{'MEMBERSHIP_TRANSACTION.CULTIVABLE_LAND' | translate}} (in {{measuringSubUnit}})</label>
+                                <input autocomplete="off" pInputText id="bunit_txt_name"
+                                    formControlName="cultivableLandInSubUnits"
+                                    [(ngModel)]="customerSurveyDetails.cultivableLandInSubUnits" type="text">
+                                <p-message severity="error" text="Enter Valid Number"
+                                    *ngIf="!landSurveyDetailsForm.controls['cultivableLandInSubUnits'].valid && landSurveyDetailsForm.controls['cultivableLandInSubUnits'].dirty">
+                                </p-message>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                            <div class="form-label">
+                                <label>
+                                    <span class="red">*</span>
+                                    {{'MEMBERSHIP_TRANSACTION.UNDER_CULTIVATION' | translate}} (in {{measuringUnit}})
+                                </label>
+                                <input autocomplete="off" pInputText id="bunit_txt_name" formControlName="underCultivationLand"
+                                    [(ngModel)]="customerSurveyDetails.underCultivationLand" type="text">
+                                <p-message severity="error" text="Enter Valid Number"
+                                    *ngIf="!landSurveyDetailsForm.controls['underCultivationLand'].valid && landSurveyDetailsForm.controls['underCultivationLand'].dirty">
+                                </p-message>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                            <div class="form-label">
+                                <label>
+                                    <span class="red">*</span>
+                                    {{'MEMBERSHIP_TRANSACTION.UNDER_CULTIVATION' | translate}} (in {{measuringSubUnit}})
+                                </label>
+                                <input autocomplete="off" pInputText id="bunit_txt_name"
+                                    formControlName="underCultivationLandInSubUnits"
+                                    [(ngModel)]="customerSurveyDetails.underCultivationLandInSubUnits" type="text">
+                                <p-message severity="error" text="Enter Valid Number"
+                                    *ngIf="!landSurveyDetailsForm.controls['underCultivationLandInSubUnits'].valid && landSurveyDetailsForm.controls['underCultivationLandInSubUnits'].dirty">
+                                </p-message>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 ">
+                            <div class="form-label">
+                                <label>
+                                    <span class="red">*</span> {{'MEMBERSHIP_TRANSACTION.SOIL_TYPE' |
+                                    translate}}</label>
+                                <p-dropdown id="bunit_txt_status" placeholder="{{'ERP.SELECT' |translate}}"
+                                    [options]="soilTypesList" formControlName="soilType"
+                                    [(ngModel)]="customerSurveyDetails.soilType" [appendTo]="'body'"></p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 ">
+                            <div class="form-label">
+                                <label>
+                                    <span class="red">*</span> {{'MEMBERSHIP_TRANSACTION.LAND_TYPE' |
+                                    translate}}</label>
+                                <p-dropdown id="bunit_txt_status" placeholder="Select" [options]="landTypesList"
+                                    formControlName="landType" [(ngModel)]="customerSurveyDetails.landType"
+                                    [appendTo]="'body'"></p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 ">
+                            <div class="form-label">
+                                <label>
+                                    <span class="red">*</span> {{'MEMBERSHIP_TRANSACTION.IRRIGATION_TYPE'
+                                    | translate}}</label>
+                                <p-dropdown id="bunit_txt_status" placeholder="Select" [options]="irrigationTypesList"
+                                    formControlName="irrigationType" [(ngModel)]="customerSurveyDetails.irrigationType"
+                                    [appendTo]="'body'">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 ">
+                            <div class="form-label">
+                                <label>
+                                    <span class="red">*</span> {{'MEMBERSHIP_TRANSACTION.SOURCE'
+                                    | translate}}</label>
+                                <p-dropdown id="bunit_txt_status" placeholder="Select" [options]="waterSourceTypeList"
+                                    formControlName="waterSourceId" [(ngModel)]="customerSurveyDetails.waterSourceId"
+                                    [appendTo]="'body'">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 ">
+                            <div class="form-label">
+                                <label>
+                                    <span class="red">*</span> {{'MEMBERSHIP_TRANSACTION.LAND_OWNERSHIP'
+                                    | translate}}</label>
+                                <p-dropdown id="bunit_txt_status" placeholder="Select" [options]="landOwnershipsList"
+                                    formControlName="landOwnership" [(ngModel)]="customerSurveyDetails.landOwnership"
+                                    [appendTo]="'body'">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                            <div class="form-label">
+                                <label>
+                                    {{'MEMBERSHIP_TRANSACTION.EAST_BOUNDARY'
+                                    | translate}}
+                                </label>
+                                <input autocomplete="off" pInputText id="bunit_txt_name" formControlName="eastBoundary"
+                                    [(ngModel)]="customerSurveyDetails.eastBoundary" type="text">
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                            <div class="form-label">
+                                <label>
+                                    {{'MEMBERSHIP_TRANSACTION.WEST_BOUNDARY'
+                                    | translate}}
+                                </label>
+                                <input autocomplete="off" pInputText id="bunit_txt_name" formControlName="westBoundary"
+                                    [(ngModel)]="customerSurveyDetails.westBoundary" type="text">
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                            <div class="form-label">
+                                <label>
+                                    {{'MEMBERSHIP_TRANSACTION.NORTH_BOUNDARY'
+                                    | translate}}
+                                </label>
+                                <input autocomplete="off" pInputText id="bunit_txt_name" formControlName="northBoundary"
+                                    [(ngModel)]="customerSurveyDetails.northBoundary" type="text">
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                            <div class="form-label">
+                                <label>
+                                    {{'MEMBERSHIP_TRANSACTION.SOUTH_BOUNDARY'
+                                    | translate}}
+                                </label>
+                                <input autocomplete="off" pInputText id="bunit_txt_name" formControlName="southBoundary"
+                                    [(ngModel)]="customerSurveyDetails.southBoundary" type="text">
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                            <div class="form-label">
+                                <label>
+                                    <span class="red">*</span> {{'MEMBERSHIP_TRANSACTION.LAND_VALUE_PER_ACRE'
+                                    | translate}}
+                                </label>
+        
+                                <!-- <input autocomplete="off" pInputText id="bunit_txt_name" formControlName="acerValue"
+                                        [(ngModel)]="customerSurveyDetails.acerValue" type="text"> -->
+        
+                                <p-inputNumber id="bunit_txt_name" formControlName="acerValue"
+                                    [(ngModel)]="customerSurveyDetails.acerValue" mode="currency" inputId="currency-india"
+                                    currency="INR" locale="en-IN">
+                                </p-inputNumber>
+                                <p-message severity="error" text="Enter Valid Number"
+                                    *ngIf="!landSurveyDetailsForm.controls['acerValue'].valid && landSurveyDetailsForm.controls['acerValue'].dirty">
+                                </p-message>
+                            </div>
+                        </div>
+                        <div class="col-12 btn-footer px-0">
+                            <div class="col-12 d-flex justify-content-end px-0 mt-1 group-button-bottom">
+                                <p-button label="{{'MEMBERSHIP_TRANSACTION.CANCEL' | translate}}"
+                                    (click)="navigateToLandDetails()" id="bunit_bt_cancel"></p-button>
+                                <p-button label="{{'MEMBERSHIP_TRANSACTION.SUBMIT' | translate}}" id="dccb_bt_submit"
+                                    (click)="submitsurveyDetails()" [disabled]="!landSurveyDetailsForm.valid"></p-button>
+        
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+</p-dialog>
