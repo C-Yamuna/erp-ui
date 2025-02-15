@@ -13,6 +13,9 @@ import { CommonFunctionsService } from 'src/app/shared/commonfunction.service';
 import { TranslateService } from '@ngx-translate/core';
 import { SaoCollectionService } from './shared/sao-collection.service';
 import { DatePipe } from '@angular/common';
+import { IndividualMemberDetailsModel } from '../../sao-stepper/membership-basic-details/shared/membership-basic-details.model';
+import { FileUploadService } from 'src/app/shared/file-upload.service';
+import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-constants';
 interface Transaction {
   charges: number;
   interest: number;
@@ -72,12 +75,14 @@ export class SaoLoanCollectionsComponent {
   branchId: any;
   saoLoanCollectionList: any[] = [];
   totalDue: any;
- 
+  photoCopyFlag: boolean = false;
+  memberPhotoCopyZoom: boolean = false;
+  individualMemberDetailsModel: IndividualMemberDetailsModel = new IndividualMemberDetailsModel();
   
   constructor(private router: Router,private saoLoanApplicationService : SaoLoanApplicationService,private commonComponent: CommonComponent,
     private activateRoute: ActivatedRoute,private encryptDecryptService: EncryptDecryptService, private formBuilder: FormBuilder
     , private commonFunctionsService: CommonFunctionsService,private translate: TranslateService,private saoCollectionService: SaoCollectionService
-    , private datePipe: DatePipe,
+    , private datePipe: DatePipe,private fileUploadService: FileUploadService,
   ){
     this.paymentOptions = [
       { label: 'Cash', value: 1 },
@@ -215,21 +220,39 @@ export class SaoLoanCollectionsComponent {
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
             this.saoLoanApplicationModel = this.responseModel.data[0];
-
             if (this.saoLoanApplicationModel.loanApprovedDate != null && this.saoLoanApplicationModel.loanApprovedDate != undefined)
               this.saoLoanApplicationModel.loanApprovedDateVal = this.datePipe.transform(this.saoLoanApplicationModel.loanApprovedDate, this.orgnizationSetting.datePipe);
             
             if (this.saoLoanApplicationModel.loanDueDate != null && this.saoLoanApplicationModel.loanDueDate != undefined)
               this.saoLoanApplicationModel.loanDueDateVal = this.datePipe.transform(this.saoLoanApplicationModel.loanDueDate, this.orgnizationSetting.datePipe);
-           
+            
+              this.individualMemberDetailsModel = this.saoLoanApplicationModel.individualMemberDetailsDTO;
+
+            if (this.individualMemberDetailsModel.dob != null && this.individualMemberDetailsModel.dob != undefined) {
+              this.individualMemberDetailsModel.dobVal = this.datePipe.transform(this.individualMemberDetailsModel.dob, this.orgnizationSetting.datePipe);
+            }
+            if (this.individualMemberDetailsModel.admissionDate != null && this.individualMemberDetailsModel.admissionDate != undefined) {
+              this.individualMemberDetailsModel.admissionDateVal = this.datePipe.transform(this.individualMemberDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
+            }
+            if (this.individualMemberDetailsModel.photoCopyPath != null && this.individualMemberDetailsModel.photoCopyPath != undefined) {
+              this.individualMemberDetailsModel.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.individualMemberDetailsModel.photoCopyPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.individualMemberDetailsModel.photoCopyPath);
+              this.photoCopyFlag = true;
+            }
+            if (this.individualMemberDetailsModel.signatureCopyPath != null && this.individualMemberDetailsModel.signatureCopyPath != undefined) {
+              this.individualMemberDetailsModel.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.individualMemberDetailsModel.signatureCopyPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.individualMemberDetailsModel.signatureCopyPath);
+            }
+            if(this.saoLoanCollectionsModel.transactionDate == null || this.saoLoanCollectionsModel.transactionDate == undefined){
+              this.saoLoanCollectionsModel.transactionDateVal = this.commonFunctionsService.currentDate();
+            }
+            if(this.saoLoanApplicationModel.totalDisbursedAmount != null&& this.saoLoanApplicationModel.totalDisbursedAmount != undefined)
+              this.saoLoanCollectionsModel.totaolDueAmount = this.saoLoanApplicationModel.totalDisbursedAmount - this.saoLoanApplicationModel.totalCollectionAmount;
+            else
+              this.saoLoanCollectionsModel.totaolDueAmount = this.saoLoanApplicationModel.totalDisbursedAmount;
+
             if (this.saoLoanApplicationModel.saoCollectionDTOList != undefined && this.saoLoanApplicationModel.saoCollectionDTOList != null
               && this.saoLoanApplicationModel.saoCollectionDTOList.length > 0) {
               this.saoLoanCollectionList = this.saoLoanApplicationModel.saoCollectionDTOList;
 
-              if(this.saoLoanCollectionsModel.transactionDate == null || this.saoLoanCollectionsModel.transactionDate == undefined){
-                this.saoLoanCollectionsModel.transactionDateVal = this.commonFunctionsService.currentDate();
-              }
-             
               for (let collection of this.saoLoanCollectionList) {
                 if (this.saoLoanApplicationModel.accountNumber != null)
                   collection.accountNumber = this.saoLoanApplicationModel.accountNumber;
@@ -240,7 +263,7 @@ export class SaoLoanCollectionsComponent {
                 if (collection.transactionDate != null && collection.transactionDate != undefined)
                   collection.transactionDateVal = this.datePipe.transform(collection.transactionDate, this.orgnizationSetting.datePipe);
                 
-                if(collection.totaolDueAmount != null&& collection.totaolDueAmount != undefined)
+                if(this.saoLoanApplicationModel.totalDisbursedAmount != null&& this.saoLoanApplicationModel.totalDisbursedAmount != undefined)
                   this.saoLoanCollectionsModel.totaolDueAmount = this.saoLoanApplicationModel.totalDisbursedAmount - this.saoLoanApplicationModel.totalCollectionAmount;
                 else
                   this.saoLoanCollectionsModel.totaolDueAmount = this.saoLoanApplicationModel.totalDisbursedAmount;
@@ -294,5 +317,8 @@ export class SaoLoanCollectionsComponent {
   }
   onClickMemberIndividualMoreDetails(){
     this.showForm = true
+  }
+  onClickMemberPhotoCopy() {
+    this.memberPhotoCopyZoom = true;
   }
 }

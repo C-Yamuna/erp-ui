@@ -75,7 +75,7 @@ export class SavingsBankCommunicationComponent implements OnInit {
       permenentVillage: ['', [Validators.required]],
       permenentAddressOne: ['', ],
       permenentAddressTwo: ['', ],
-      permenentPinCode: ['', [Validators.pattern(applicationConstants.PINCODE_PATTERN), Validators.compose([Validators.required])]],
+      permenentPinCode:['', [Validators.required]],
       checked: [''],
     })
   }

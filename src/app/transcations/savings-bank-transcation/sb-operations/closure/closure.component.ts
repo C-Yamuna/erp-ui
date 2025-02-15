@@ -70,6 +70,7 @@ export class ClosureComponent {
   institutionFlag: boolean = false;
   rdAccountFlag :boolean = false;
   termLoanFlag :boolean = false;
+  isStanderedInstrctionsActive: boolean = false;;
   
 
   constructor(private router: Router, private formBuilder: FormBuilder, private commonFunctionsService: CommonFunctionsService,
@@ -255,14 +256,23 @@ this.memberPhotoCopyZoom = false;
         this.membershipBasicRequiredDetails.admissionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetails.admissionDate, this.orgnizationSetting.datePipe);
       }
       if (this.membershipBasicRequiredDetails.photoCopyPath != null && this.membershipBasicRequiredDetails.photoCopyPath != undefined) {
-        this.membershipBasicRequiredDetails.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetails.photoCopyPath, ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetails.photoCopyPath);
-
+        if (this.membershipBasicRequiredDetails.isNewMember) {
+          this.membershipBasicRequiredDetails.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetails.photoCopyPath, ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetails.photoCopyPath);
+        }
+        else {
+          this.membershipBasicRequiredDetails.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetails.photoCopyPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetails.photoCopyPath);
+        }
       }
       else {
         this.photoCopyFlag = false;
       }
       if (this.membershipBasicRequiredDetails.signatureCopyPath != null && this.membershipBasicRequiredDetails.signatureCopyPath != undefined) {
-        this.membershipBasicRequiredDetails.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetails.signatureCopyPath, ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetails.signatureCopyPath);
+        if (this.membershipBasicRequiredDetails.isNewMember) {
+          this.membershipBasicRequiredDetails.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetails.signatureCopyPath, ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetails.signatureCopyPath);
+        }
+        else {
+          this.membershipBasicRequiredDetails.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetails.signatureCopyPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetails.signatureCopyPath);
+        }
       }
       else {
         this.signatureCopyFlag = false;
@@ -358,6 +368,7 @@ this.memberPhotoCopyZoom = false;
     this.savingBankApplicationModel.filesDTOList = [];
     this.savingBankApplicationModel.closureSignedCopy = null;
     let files: FileUploadModel = new FileUploadModel();
+
     for (let file of event.files) {
       let reader = new FileReader();
       reader.onloadend = (e) => {
@@ -370,6 +381,7 @@ this.memberPhotoCopyZoom = false;
         let index = this.multipleFilesList.findIndex(x => x.fileName == files.fileName);
         if (index === -1) {
           this.multipleFilesList.push(files);
+          this.savingBankApplicationModel.multipartFileList.push(files);
           this.savingBankApplicationModel.filesDTOList.push(files); // Add to filesDTOList array
         }
         let timeStamp = this.commonComponent.getTimeStamp();
@@ -444,10 +456,11 @@ this.memberPhotoCopyZoom = false;
     this.termLoanLinkedAccountsList = [];
     this.standingInstructionsService.getSbStandaredeInstructionsByAccountNumber(accounNumber).subscribe((data: any) => {
       this.responseModel = data;
-      if (this.responseModel != null && this.responseModel != undefined && this.responseModel.status != null && this.responseModel.status != undefined && this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+      if (this.responseModel.status != undefined && this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
           this.standingInstructionsList = this.responseModel.data;
-          this.standingInstructionsList = this.responseModel.data.map((sb: any) => {
+          this.standingInstructionsList = this.responseModel.data.filter((obj:any)=> obj.status = applicationConstants.ACTIVE).map((sb: any) => {
+            this.isStanderedInstrctionsActive = true;
             if (sb != null && sb != undefined && sb.startDate != null && sb.startDate != undefined) {
               sb.startDate = this.datePipe.transform(sb.startDate, this.orgnizationSetting.datePipe);
             }

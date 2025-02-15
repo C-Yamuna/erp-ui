@@ -179,6 +179,7 @@ export class CompoundInterestLoanComponent {
       this.commonComponent.stopSpinner();
     });
   }
+  
   createaccount(){
     this.commonFunctionsService.setStorageValue(applicationConstants.B_CLASS_MEMBER_CREATION, false);
     this.router.navigate([Loantransactionconstant.COMPOUND_INTEREST_LOANS_MEMBERSHIP_DETAILS] ,{ queryParams: { falg: this.encryptDecryptService.encrypt(true)}});

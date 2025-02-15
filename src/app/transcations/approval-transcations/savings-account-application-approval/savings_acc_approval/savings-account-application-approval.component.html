@@ -331,15 +331,22 @@
                                 <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
                                     <span class="basicdata-icons icon-size"><i class="fa fa-address-card-o"></i></span>
                                     <div>
-                                        <p class="label-view text-fontwt">{{'ERP.TAN_NUMBER' | translate}}</p>
+                                        <p class="label-view text-fontwt">{{'ERP.TAN_NO' | translate}}</p>
                                         <p class="label-input-text">{{membershipInstitutionDetailsModel.tanNumber}}</p>
                                     </div>
                                 </div>
                                 <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
                                     <span class="basicdata-icons icon-size"><i class="fa fa-address-card-o"></i></span>
                                     <div>
-                                        <p class="label-view text-fontwt">{{'ERP.PAN' | translate}}</p>
+                                        <p class="label-view text-fontwt">{{'ERP.PAN_NO' | translate}}</p>
                                         <p class="label-input-text">{{membershipInstitutionDetailsModel.panNumber}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-address-card-o"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.GST_NO' | translate}}</p>
+                                        <p class="label-input-text">{{membershipInstitutionDetailsModel.gstNumber}}</p>
                                     </div>
                                 </div>
                                 <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
@@ -1368,93 +1375,94 @@
 </div>
 
 <!-- institution Promoter details dialog -->
-<p-dialog header="More Basic Details" [(visible)]="institutionPromoterFlag" styleClass="moredetails-style">
-    <div class="col-12 view-morepopup">
-        <div class="d-flex justify-content-center px-3 py-0 mb-2">
-            <img src="assets/images/no-image.jpg" class="image-user">
-            <!-- <p class="active-status"></p> -->
-            <img src="assets/images/no-image.jpg" class="image-sign">
+<div class="view-moredetails-popup">
+    <p-dialog header="More Basic Details" [(visible)]="institutionPromoterFlag" styleClass="moredetails-style">
+        <div class="col-12 view-morepopup">
+            <div class="d-flex justify-content-center px-3 py-0 mb-2">
+                <img src="assets/images/no-image.jpg" class="image-user">
+                <!-- <p class="active-status"></p> -->
+                <img src="assets/images/no-image.jpg" class="image-sign">
+            </div>
         </div>
-    </div>
-    <div class="col-12 text-center popup-basic-details mt-5 pt-3">
-        <span class="fw-semibold">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
-        <p class="fw-bold">{{membershipInstitutionDetailsModel.tempAdmissionNumber}}</p>
-    </div>
-    <div class="col-12 popup-basic-details">
-        <div class="row">
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.NAME' | translate}}</span>
-                    <p class="label-input-text">{{membershipInstitutionDetailsModel.name}}</p>
+        <div class="col-12 text-center popup-basic-details mt-5 pt-3">
+            <span class="fw-semibold">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
+            <p class="fw-bold">{{membershipInstitutionDetailsModel.tempAdmissionNumber}}</p>
+        </div>
+        <div class="col-12 popup-basic-details">
+            <div class="row">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.NAME' | translate}}</span>
+                        <p class="label-input-text">{{membershipInstitutionDetailsModel.name}}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
-                    <p class="label-input-text">{{membershipInstitutionDetailsModel.tempAdmissionNumber}}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
+                        <p class="label-input-text">{{membershipInstitutionDetailsModel.tempAdmissionNumber}}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.MEMBER_TYPE' | translate}}</span>
-                    <p class="label-input-text">{{membershipInstitutionDetailsModel.memberTypeName}}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.MEMBER_TYPE' | translate}}</span>
+                        <p class="label-input-text">{{membershipInstitutionDetailsModel.memberTypeName}}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.ADMISSION_DATE' | translate}}</span>
-                    <p class="label-input-text">{{membershipInstitutionDetailsModel.admissionDateVal}}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.ADMISSION_DATE' | translate}}</span>
+                        <p class="label-input-text">{{membershipInstitutionDetailsModel.admissionDateVal}}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.REGISTERED_DATE' | translate}}</span>
-                    <p class="label-input-text">{{membershipInstitutionDetailsModel.registrationDateVal}}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.REGISTERED_DATE' | translate}}</span>
+                        <p class="label-input-text">{{membershipInstitutionDetailsModel.registrationDateVal}}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.CONTACT' | translate}}</span>
-                    <p class="label-input-text">{{membershipInstitutionDetailsModel.pocNumber}}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.CONTACT' | translate}}</span>
+                        <p class="label-input-text">{{membershipInstitutionDetailsModel.pocNumber}}</p>
+                    </div>
                 </div>
-            </div>
-            <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
                 <div class="form-group">
                     <span class="label-view">{{'ERP.EMAIL' | translate}}</span>
                     <p class="label-input-text">{{membershipInstitutionDetailsModel.emailId}}</p>
                 </div>
             </div> -->
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.PAN' | translate}}</span>
-                    <p class="label-input-text">{{membershipInstitutionDetailsModel.panNumber}}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.PAN_NO' | translate}}</span>
+                        <p class="label-input-text">{{membershipInstitutionDetailsModel.panNumber}}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.TAN' | translate}}</span>
-                    <p class="label-input-text">{{membershipInstitutionDetailsModel.tanNumber}}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.TAN_NO' | translate}}</span>
+                        <p class="label-input-text">{{membershipInstitutionDetailsModel.tanNumber}}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.GST_NUMER' | translate}}</span>
-                    <p class="label-input-text">{{membershipInstitutionDetailsModel.gstNumber}}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.GST_NO' | translate}}</span>
+                        <p class="label-input-text">{{membershipInstitutionDetailsModel.gstNumber}}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.KYC' | translate}}</span>
-                    <p class="label-input-text">{{isKycApproved}}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.KYC' | translate}}</span>
+                        <p class="label-input-text">{{isKycApproved}}</p>
+                    </div>
                 </div>
+
+
             </div>
-               
-           
         </div>
-    </div>
-    <div class="col-12"></div>
-    <h6 class="super-sub-heading">{{'ERP.INSTITUTION_PROMOTER_DETAILS' | translate}}</h6>
-   
+        <div class="col-12"></div>
+        <h6 class="super-sub-heading">{{'ERP.INSTITUTION_PROMOTER_DETAILS' | translate}}</h6>
+
         <div class="globel-border-top-color"></div>
         <p-table #dt [columns]="columns" [value]="institionPromotersList" dataKey="id" styleClass="p-datatable-striped"
             [rows]="5" [paginator]="true" [showJumpToPageDropdown]="true" [showPageLinks]="false" [pageLinks]="1"
@@ -1476,155 +1484,160 @@
 
         <div class="col-12"></div>
 
-    
-</p-dialog>
+
+    </p-dialog>
+</div>
+
 
 <!-- group prmoter details dialog -->
-<p-dialog header="More Basic Details" [(visible)]="groupPromotersPopUpFlag" styleClass="moredetails-style">
-    <div class="col-12 view-morepopup">
-        <div class="d-flex justify-content-center px-3 py-0 mb-2">
-            <img src="assets/images/no-image.jpg" class="image-user">
-            <!-- <p class="active-status"></p> -->
-            <img src="assets/images/no-image.jpg" class="image-sign">
+<div class="view-moredetails-popup">
+    <p-dialog header="More Basic Details" [(visible)]="groupPromotersPopUpFlag" styleClass="moredetails-style">
+        <div class="col-12 view-morepopup">
+            <div class="d-flex justify-content-center px-3 py-0 mb-2">
+                <img src="assets/images/no-image.jpg" class="image-user">
+                <!-- <p class="active-status"></p> -->
+                <img src="assets/images/no-image.jpg" class="image-sign">
+            </div>
         </div>
-    </div>
-    <div class="col-12 text-center popup-basic-details mt-5 pt-3">
-        <span class="fw-semibold">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
-        <p class="fw-bold">{{memberGroupDetailsModel.tempAdmissionNumber}}</p>
-    </div>
-    <div class="col-12 popup-basic-details">
-        <div class="row">
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.NAME' | translate}}</span>
-                    <p class="label-input-text">{{memberGroupDetailsModel.name}}</p>
+        <div class="col-12 text-center popup-basic-details mt-5 pt-3">
+            <span class="fw-semibold">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
+            <p class="fw-bold">{{memberGroupDetailsModel.tempAdmissionNumber}}</p>
+        </div>
+        <div class="col-12 popup-basic-details">
+            <div class="row">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.NAME' | translate}}</span>
+                        <p class="label-input-text">{{memberGroupDetailsModel.name}}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
-                    <p class="label-input-text">{{memberGroupDetailsModel.tempAdmissionNumber}}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
+                        <p class="label-input-text">{{memberGroupDetailsModel.tempAdmissionNumber}}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.MEMBER_TYPE' | translate}}</span>
-                    <p class="label-input-text">{{memberGroupDetailsModel.memberTypeName}}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.MEMBER_TYPE' | translate}}</span>
+                        <p class="label-input-text">{{memberGroupDetailsModel.memberTypeName}}</p>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.REGISTERED_DATE' | translate}}</span>
-                    <p class="label-input-text">{{memberGroupDetailsModel.registrationDateVal}}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.REGISTERED_DATE' | translate}}</span>
+                        <p class="label-input-text">{{memberGroupDetailsModel.registrationDateVal}}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.ADMISSION_DATE' | translate}}</span>
-                    <p class="label-input-text">{{memberGroupDetailsModel.admissionDateVal}}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.ADMISSION_DATE' | translate}}</span>
+                        <p class="label-input-text">{{memberGroupDetailsModel.admissionDateVal}}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.CONTACT' | translate}}</span>
-                    <p class="label-input-text">{{memberGroupDetailsModel.pocNumber}}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.CONTACT' | translate}}</span>
+                        <p class="label-input-text">{{memberGroupDetailsModel.pocNumber}}</p>
+                    </div>
                 </div>
-            </div>
-            <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
                                 <div class="form-group">
                                     <span class="label-view">{{'ERP.EMAIL' | translate}}</span>
                                     <p class="label-input-text">{{memberGroupDetailsModel.emailId}}</p>
                                 </div>
                             </div> -->
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.TAN_NUMBER' | translate}}</span>
-                    <p class="label-input-text">{{memberGroupDetailsModel.tanNumber}}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.TAN_NUMBER' | translate}}</span>
+                        <p class="label-input-text">{{memberGroupDetailsModel.tanNumber}}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.PAN' | translate}}</span>
-                    <p class="label-input-text">{{memberGroupDetailsModel.panNumber}}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.PAN' | translate}}</span>
+                        <p class="label-input-text">{{memberGroupDetailsModel.panNumber}}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.GST' | translate}}</span>
-                    <p class="label-input-text">{{memberGroupDetailsModel.gstNumber}}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.GST' | translate}}</span>
+                        <p class="label-input-text">{{memberGroupDetailsModel.gstNumber}}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.KYC' | translate}}</span>
-                    <p class="label-input-text">{{isKycApproved}}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.KYC' | translate}}</span>
+                        <p class="label-input-text">{{isKycApproved}}</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-12"></div>
-    <h6 class="super-sub-heading">{{'ERP.GROUP_PROMOTER_DETAILS' | translate}}</h6>
-    <div class="globel-border-top-color"></div>
-    <p-table #dt [columns]="groupPrmoters" [value]="groupPrmotersList" editMode="row" styleClass="p-datatable-striped"
-        [rows]="5" [paginator]="true" [showJumpToPageDropdown]="true" [showPageLinks]="false" [pageLinks]="1"
-        [responsive]="true" rowExpandMode="single"
-        [globalFilterFields]="['surname', 'name', 'operatorTypeName', 'dob', 'age', 'genderName', 'maritalStatusName', 'mobileNumber', 'aadharNumber', 'emailId', 'startDate']">
-        <ng-template pTemplate="header">
-            <tr>
-                <th *ngFor="let promoter of groupPrmoters ">{{promoter.header | translate}}</th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-row let-editing="editing" let-ri="rowIndex">
-            <tr>
-                <td *ngFor="let promoter of groupPrmoters ">{{row[promoter.field]}}</td>
-            </tr>
-        </ng-template>
-    </p-table>
-    <!-- <ng-template pTemplate="footer">
+        <div class="col-12"></div>
+        <h6 class="super-sub-heading">{{'ERP.GROUP_PROMOTER_DETAILS' | translate}}</h6>
+        <div class="globel-border-top-color"></div>
+        <p-table #dt [columns]="groupPrmoters" [value]="groupPrmotersList" editMode="row"
+            styleClass="p-datatable-striped" [rows]="5" [paginator]="true" [showJumpToPageDropdown]="true"
+            [showPageLinks]="false" [pageLinks]="1" [responsive]="true" rowExpandMode="single"
+            [globalFilterFields]="['surname', 'name', 'operatorTypeName', 'dob', 'age', 'genderName', 'maritalStatusName', 'mobileNumber', 'aadharNumber', 'emailId', 'startDate']">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th *ngFor="let promoter of groupPrmoters ">{{promoter.header | translate}}</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row let-editing="editing" let-ri="rowIndex">
+                <tr>
+                    <td *ngFor="let promoter of groupPrmoters ">{{row[promoter.field]}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <!-- <ng-template pTemplate="footer">
                     <p-button class="pull-right" label="{{'ERP.CLOSE' | translate}}"(click)="close()"></p-button>
                 </ng-template> -->
 
-    <div class="col-12"></div>
+        <div class="col-12"></div>
 
 
-</p-dialog>
+    </p-dialog>
+</div>
+
 
 <!--photo Copy dialog -->
 <p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="memberPhotoCopyZoom">
     <div class="col-12">
-                <div class="row">
-                    <div class="col-6">
-                        <div 
-                            *ngFor="let img of membershipBasicRequiredDetails.multipartFileListForPhotoCopy">
-                            <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
-                                <a href="{{img.imageValue}}">
-                                    <img src="{{img.imageValue}}" class="popup-images">
-                                </a>
-                            </div>
-                        </div>
-                        <div *ngIf="membershipBasicRequiredDetails.multipartFileListForPhotoCopy == null || membershipBasicRequiredDetails.multipartFileListForPhotoCopy == undefined">
-                            <img src="assets/images/no-image.jpg" (click)="onClickMemberPhotoCopy()" class="image-user">
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div 
-                            *ngFor="let img of membershipBasicRequiredDetails.multipartFileListForsignatureCopyPath">
-                            <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
-                                <a href="{{img.imageValue}}">
-                                    <img src="{{img.imageValue}}" class="popup-images">
-                                </a>
-                            </div>
-                        </div>
-                        <div *ngIf="membershipBasicRequiredDetails.multipartFileListForsignatureCopyPath == null || membershipBasicRequiredDetails.multipartFileListForsignatureCopyPath == undefined">
-                            <img src="assets/images/no-file.jpg" (click)="onClickMemberPhotoCopy()" class="image-sign">
-                        </div>
+        <div class="row">
+            <div class="col-6">
+                <div *ngFor="let img of membershipBasicRequiredDetails.multipartFileListForPhotoCopy">
+                    <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                        <a href="{{img.imageValue}}">
+                            <img src="{{img.imageValue}}" class="popup-images">
+                        </a>
                     </div>
                 </div>
+                <div
+                    *ngIf="membershipBasicRequiredDetails.multipartFileListForPhotoCopy == null || membershipBasicRequiredDetails.multipartFileListForPhotoCopy == undefined">
+                    <img src="assets/images/no-image.jpg" (click)="onClickMemberPhotoCopy()" class="image-user">
                 </div>
-                <div class="col-12">
-                    <div class="d-flex justify-content-end">
-        <p-button class="action-edit" label="{{'ERP.CLOSE' | translate}}" (click)="closePhoto()"></p-button>
+            </div>
+            <div class="col-6">
+                <div *ngFor="let img of membershipBasicRequiredDetails.multipartFileListForsignatureCopyPath">
+                    <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                        <a href="{{img.imageValue}}">
+                            <img src="{{img.imageValue}}" class="popup-images">
+                        </a>
+                    </div>
+                </div>
+                <div
+                    *ngIf="membershipBasicRequiredDetails.multipartFileListForsignatureCopyPath == null || membershipBasicRequiredDetails.multipartFileListForsignatureCopyPath == undefined">
+                    <img src="assets/images/no-file.jpg" (click)="onClickMemberPhotoCopy()" class="image-sign">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="d-flex justify-content-end">
+            <p-button class="action-edit" label="{{'ERP.CLOSE' | translate}}" (click)="closePhoto()"></p-button>
         </div>
     </div>
 </p-dialog>

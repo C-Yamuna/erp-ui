@@ -160,18 +160,18 @@ export class SbTransactionsComponent {
       { field: '', header: 'Amount' },
     ];
 
-    this.groupPrmoters = [ //promoter grid feilds for group and institution
-      { field: 'surname', header: 'DEMANDDEPOSITS.SURNAME' },
-      { field: 'name', header: 'DEMANDDEPOSITS.NAME' },
-      { field: 'operatorTypeName', header: 'DEMANDDEPOSITS.OPERATION_TYPE_NAME' },
-      { field: 'memDobVal', header: 'DEMANDDEPOSITS.MEMBER_DATE_OF_BIRTH' },
-      { field: 'age', header: 'DEMANDDEPOSITS.AGE' },
-      { field: 'genderName', header: 'DEMANDDEPOSITS.GENDER' },
-      { field: 'maritalStatusName', header: 'DEMANDDEPOSITS.MARITAL_STATUS' },
-      { field: 'mobileNumber', header: 'DEMANDDEPOSITS.MOBILE_NUMBER' },
-      { field: 'emailId', header: 'DEMANDDEPOSITS.EMAIL' },
-      { field: 'aadharNumber', header: 'DEMANDDEPOSITS.AADHAR' },
-      { field: 'startDate', header: 'DEMANDDEPOSITS.START_DATE' },
+    this.groupPrmoters = [
+      { field: 'surname', header: 'Surname' },
+      { field: 'name', header: 'Name' },
+      { field: 'operatorTypeName', header: 'Operation Type' },
+      { field: 'memDobVal', header: 'Date of Birth' },
+      { field: 'age', header: 'Age' },
+      { field: 'genderTypeName', header: 'Gender' },
+      { field: 'maritalStatusName', header: 'Marital Status' },
+      { field: 'mobileNumber', header: 'Mobile Number' },
+      { field: 'emailId', header: 'Email' },
+      { field: 'aadharNumber', header: 'Aadhar Number' },
+      { field: 'startDateVal', header: 'Start Date' },
     ];
   }
 
@@ -302,15 +302,23 @@ export class SbTransactionsComponent {
                   this.membershipBasicRequiredDetails.admissionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetails.admissionDate, this.orgnizationSetting.datePipe);
                 }
                 if (this.membershipBasicRequiredDetails.photoCopyPath != null && this.membershipBasicRequiredDetails.photoCopyPath != undefined) {
-                  this.membershipBasicRequiredDetails.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetails.photoCopyPath ,ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetails.photoCopyPath  );
-                  
+                  if (this.membershipBasicRequiredDetails.isNewMember) {
+                    this.membershipBasicRequiredDetails.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetails.photoCopyPath, ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetails.photoCopyPath);
+                  }
+                  else {
+                    this.membershipBasicRequiredDetails.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetails.photoCopyPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetails.photoCopyPath);
+                  }                  
                 }
                 else{
                   this.photoCopyFlag = false;
                 }
                 if (this.membershipBasicRequiredDetails.signatureCopyPath != null && this.membershipBasicRequiredDetails.signatureCopyPath != undefined) {
-                    this.membershipBasicRequiredDetails.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetails.signatureCopyPath ,ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetails.signatureCopyPath  );
-                }
+                  if(this.membershipBasicRequiredDetails.isNewMember){
+                    this.membershipBasicRequiredDetails.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetails.signatureCopyPath, ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetails.signatureCopyPath);
+                  }
+                  else {
+                    this.membershipBasicRequiredDetails.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetails.signatureCopyPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetails.signatureCopyPath);
+                  }                   }
                 else{
                   this.signatureCopyFlag = false;
                 }
@@ -344,6 +352,14 @@ export class SbTransactionsComponent {
                 }
                 if (this.memberGroupDetailsModel.groupPromoterList != null && this.memberGroupDetailsModel.groupPromoterList != undefined && this.memberGroupDetailsModel.groupPromoterList.length > 0) {
                   this.groupPrmotersList=this.memberGroupDetailsModel.groupPromoterList ;
+                  for( let groupPromoters of this.groupPrmotersList){
+                    if(groupPromoters.dob != null && groupPromoters.dob != undefined){
+                      groupPromoters.memDobVal = this.datePipe.transform(groupPromoters.dob, this.orgnizationSetting.datePipe);
+                    }
+                    if(groupPromoters.startDate != null && groupPromoters.startDate != undefined){
+                      groupPromoters.startDateVal = this.datePipe.transform(groupPromoters.startDate, this.orgnizationSetting.datePipe);
+                    }
+                  }
                 }
               }
               //institution
@@ -357,6 +373,14 @@ export class SbTransactionsComponent {
                 }
                 if (this.membershipInstitutionDetailsModel.institutionPromoterList != null && this.membershipInstitutionDetailsModel.institutionPromoterList != undefined && this.membershipInstitutionDetailsModel.institutionPromoterList.length > 0) {
                   this.institionPromotersList=this.membershipInstitutionDetailsModel.institutionPromoterList ;
+                  for( let institution of this.institionPromotersList){
+                    if(institution.dob != null && institution.dob != undefined){
+                      institution.memDobVal = this.datePipe.transform(institution.dob, this.orgnizationSetting.datePipe);
+                    }
+                    if(institution.startDate != null && institution.startDate != undefined){
+                      institution.startDateVal = this.datePipe.transform(institution.startDate, this.orgnizationSetting.datePipe);
+                    }
+                  }
                 }
                 if (this.membershipInstitutionDetailsModel.isKycApproved != null && this.membershipInstitutionDetailsModel.isKycApproved != undefined) {
                   this.isKycApproved = applicationConstants.KYC_APPROVED_NAME;
@@ -606,7 +630,7 @@ export class SbTransactionsComponent {
       this.memberPhotoCopyZoom = false;
       this.membreIndividualFlag = false;
       this.cancel();
-      this.refreshAllforms();
+     
   }
 
   /**
@@ -737,8 +761,11 @@ export class SbTransactionsComponent {
    */
   cancel(){
     // this.router.navigate([savingsbanktransactionconstant.SB_TRANSACTION]);
+    this.refreshAllforms();
+    let transactionType = this.sbTransactionModel.transactionType;
     this.sbTransactionModel = new SbTransaction();
     this.sbTransactionModel.trnasactionDateVal= this.commonFunctionsService.currentDate();
+    this.sbTransactionModel.transactionType = transactionType;
     if(this.sbAccId != null && this.sbAccId != undefined){
       this.getSbAccountDetailsById(this.sbAccId);
     }

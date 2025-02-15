@@ -29,6 +29,7 @@ export class SaoLoanDisbursmentComponent {
   showSubmitButton: boolean = true;
   disbursement: any[] = [];
   visible: boolean = false;
+  confirmDisable: boolean = false;
   responseModel!: Responsemodel;
   gridList: any[] = [];
   isEdit: any;
@@ -45,6 +46,7 @@ export class SaoLoanDisbursmentComponent {
   submitDisable:boolean = false;
   paymentOptions:any;
   totalDisbursmentAmount: any;
+  statusLabel: boolean = false;
   constructor(private router: Router, private formBuilder: FormBuilder, private saoDisbursementService: SaoDisbursementService, private saoLoanApplicationService: SaoLoanApplicationService,
     private encryptService: EncryptDecryptService, private commonComponent: CommonComponent, private commonFunctionsService: CommonFunctionsService, private translate: TranslateService,
      private activateRoute: ActivatedRoute, private datePipe: DatePipe,private fileUploadService: FileUploadService,
@@ -117,10 +119,10 @@ export class SaoLoanDisbursmentComponent {
           this.saoLoanApplicationModel.loanDueDateVal = this.datePipe.transform(this.saoLoanApplicationModel.loanDueDate, this.orgnizationSetting.datePipe);
         
         if(this.saoLoanApplicationModel.sanctionAmount != null && this.saoLoanApplicationModel.sanctionAmount != undefined && 
-          this.saoLoanApplicationModel.disbursedAmount != null){
-          this.disbursmentDueAmont = this.saoLoanApplicationModel.sanctionAmount - this.saoLoanApplicationModel.disbursedAmount;
+          this.saoLoanApplicationModel.totalDisbursedAmount != null){
+          this.disbursmentDueAmont = this.saoLoanApplicationModel.sanctionAmount - this.saoLoanApplicationModel.totalDisbursedAmount;
         }else{
-          this.disbursmentDueAmont = this.saoLoanApplicationModel.disbursedAmount;
+          this.disbursmentDueAmont = this.saoLoanApplicationModel.totalDisbursedAmount;
         }
         this.individualMemberDetailsModel = this.saoLoanApplicationModel.individualMemberDetailsDTO;
         if (this.individualMemberDetailsModel.dob != null && this.individualMemberDetailsModel.dob != undefined) {
@@ -168,7 +170,7 @@ export class SaoLoanDisbursmentComponent {
    
   }
   view(rowData: any) {
-    // this.submitDisable = true;
+    this.confirmDisable = true;
     this.visible = true;
     this.disbursementModel = rowData;
     if (this.disbursementModel.disbursementDate != null && this.disbursementModel.disbursementDate != undefined) {
@@ -188,8 +190,8 @@ export class SaoLoanDisbursmentComponent {
     if (this.disbursementModel.transactionDateVal != null && this.disbursementModel.transactionDateVal != undefined) {
       this.disbursementModel.transactionDate = this.commonFunctionsService.getUTCEpochWithTime(this.disbursementModel.transactionDateVal);
     }
-    this.disbursementModel.statusName = applicationConstants.APPROVED;
-
+    this.disbursementModel.statusName = applicationConstants.SUBMISSION_FOR_APPROVAL;
+    this.disbursementModel.status = 5;
     this.saoDisbursementService.updateSaoDisbursement(this.disbursementModel).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
@@ -214,7 +216,14 @@ export class SaoLoanDisbursmentComponent {
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         this.gridList = this.responseModel.data;
         this.disbursementModel = this.responseModel.data;
-       
+        if(this.disbursementModel.statusName != null && this.disbursementModel.statusName != null ){
+         if( this.disbursementModel.statusName == applicationConstants.SUBMISSION_FOR_APPROVAL)
+            this.statusLabel = false;
+          else{
+            this.statusLabel = true;
+          }
+        }
+        
         if (null != this.gridList && undefined != this.gridList && this.gridList.length > 0) {
           this.totalDisbursmentAmount = 0; 
           this.gridList = this.gridList.filter((data: any) => null != data.disbursementDate && null != data.transactionDate).map(disbursment => {

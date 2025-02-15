@@ -12,6 +12,8 @@ import { Responsemodel } from 'src/app/shared/responsemodel';
 import { applicationConstants } from 'src/app/shared/applicationConstants';
 import { SaoLoanApplication } from '../../shared/sao-loan-application.model';
 import { IndividualMemberDetailsModel, MemInstitutionModel, MemberShipGroupDetailsModel } from '../../sao-stepper/membership-basic-details/shared/membership-basic-details.model';
+import { SaoProductDetails } from '../../sao-stepper/sao-product-details/shared/sao-product-details.model';
+import { SaoProductDefinitionsService } from '../../sao-product-definition/shared/sao-product-definitions.service';
 
 @Component({
   selector: 'app-sao-closure',
@@ -28,13 +30,15 @@ export class SaoClosureComponent {
   responseModel!: Responsemodel;
   memberTypeName: any;
   showForm: boolean = false;
+  saoProductDetailsModel: SaoProductDetails = new SaoProductDetails();
   saoLoanApplicationModel: SaoLoanApplication = new SaoLoanApplication();
   individualMemberDetailsModel: IndividualMemberDetailsModel = new IndividualMemberDetailsModel();
   memberShipGroupDetailsModel : MemberShipGroupDetailsModel = new MemberShipGroupDetailsModel();
   memInstitutionModel : MemInstitutionModel = new MemInstitutionModel();
   constructor(private router: Router, private formBuilder: FormBuilder, 
     private encryptService: EncryptDecryptService, private commonComponent: CommonComponent, private commonFunctionsService: CommonFunctionsService, private translate: TranslateService,
-     private activateRoute: ActivatedRoute, private datePipe: DatePipe,private saoLoanApplicationService: SaoLoanApplicationService)
+     private activateRoute: ActivatedRoute, private datePipe: DatePipe,private saoLoanApplicationService: SaoLoanApplicationService,
+      private saoProductDefinitionsService: SaoProductDefinitionsService)
   {}
   isBasicDetails: boolean = false;
   isHistory: boolean = false;
@@ -135,7 +139,9 @@ export class SaoClosureComponent {
             this.individualMemberDetailsModel.dobVal = this.datePipe.transform(this.individualMemberDetailsModel.dob, this.orgnizationSetting.datePipe);
           }
         }
-
+        if (this.saoLoanApplicationModel.saoProductId != null && this.saoLoanApplicationModel.saoProductId != undefined) {
+          this.getProductDetailsById(this.saoLoanApplicationModel.saoProductId);
+        }
         if (this.saoLoanApplicationModel.memberGroupDetailsDTO != null && this.saoLoanApplicationModel.memberGroupDetailsDTO != undefined) {
           this.memberShipGroupDetailsModel = this.saoLoanApplicationModel.memberGroupDetailsDTO;
         }
@@ -175,5 +181,36 @@ showHistoryDialog(position: string) {
 }
 onClickMemberIndividualMoreDetails(){
   this.showForm = true
+}
+getProductDetailsById(id: any) {
+  this.saoProductDefinitionsService.getPreviewDetailsByProductId(id).subscribe((data: any) => {
+    this.responseModel = data;
+    if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+      this.saoProductDetailsModel = this.responseModel.data[0];
+
+      if (this.saoProductDetailsModel.minLoanPeriod != undefined && this.saoProductDetailsModel.minLoanPeriod != null)
+        this.saoLoanApplicationModel.minLoanPeriod = this.saoProductDetailsModel.minLoanPeriod;
+
+      if (this.saoProductDetailsModel.maxLoanPeriod != undefined && this.saoProductDetailsModel.maxLoanPeriod != null)
+        this.saoLoanApplicationModel.maxLoanPeriod = this.saoProductDetailsModel.maxLoanPeriod;
+      
+     
+      if (this.saoProductDetailsModel.interestPostingFrequencyName != undefined && this.saoProductDetailsModel.interestPostingFrequencyName != null)
+        this.saoLoanApplicationModel.repaymentFrequencyName = this.saoProductDetailsModel.interestPostingFrequencyName;
+
+      if (this.saoProductDetailsModel.saoInterestPolicyConfigDtoList != null && this.saoProductDetailsModel.saoInterestPolicyConfigDtoList != undefined) {
+
+        if (this.saoProductDetailsModel.saoInterestPolicyConfigDtoList[0].penalInterest != undefined && this.saoProductDetailsModel.saoInterestPolicyConfigDtoList[0].penalInterest != null)
+          this.saoLoanApplicationModel.penalInterest = this.saoProductDetailsModel.saoInterestPolicyConfigDtoList[0].penalInterest;
+
+        if (this.saoProductDetailsModel.saoInterestPolicyConfigDtoList[0].iod != undefined && this.saoProductDetailsModel.saoInterestPolicyConfigDtoList[0].iod != null)
+          this.saoLoanApplicationModel.iod = this.saoProductDetailsModel.saoInterestPolicyConfigDtoList[0].iod;
+
+        if (this.saoProductDetailsModel.saoInterestPolicyConfigDtoList[0].roi != undefined && this.saoProductDetailsModel.saoInterestPolicyConfigDtoList[0].roi != null)
+          this.saoLoanApplicationModel.effectiveRoi = this.saoProductDetailsModel.saoInterestPolicyConfigDtoList[0].roi;
+
+      }
+    }
+  });
 }
 }

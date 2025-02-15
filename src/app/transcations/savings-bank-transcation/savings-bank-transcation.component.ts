@@ -71,7 +71,7 @@ export class SavingsBankTranscationComponent {
       // { label: "Chequebook issue", value: 4 },
       // { label: "Debit card issue ", value: 5 },
       { label: "Closure ", value: 6 },
-      { label: "Death Claim ", value: 7 },
+      // { label: "Death Claim ", value: 7 },
     ]
     this.savingsbank = [
       { field: 'accountNumber', header: 'Account Number' },

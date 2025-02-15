@@ -246,10 +246,10 @@
                             <div class="uplodad-style align-items-center">
                                 <!-- Upload Button Column -->
                                 
-                                <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                                <p-fileUpload #fileUploadIndividualPhoto class="qua-upld file-attach semi-bold" name="myfile[]"
                                     id="apply-leave_fileUp_attach" chooseLabel=" " name="file"
                                     accept=".png,.jpg,.jpeg" (onRemove)="fileRemoeEvent('individualPhotoCopy')" 
-                                    (onSelect)="fileUploader($event,fileUpload,'individualPhotoCopy')" >
+                                    (onSelect)="fileUploader($event,fileUploadIndividualPhoto,fileUploadIndividualSign ,'individualPhotoCopy')" >
                                 </p-fileUpload>
                                 <div  class="col-12  d-flex p-1 contant-body" *ngFor="let img of membershipBasicRequiredDetails.multipartFileListForPhotoCopy">
                                     <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
@@ -270,9 +270,9 @@
                             <span class=""> <span class="red">*</span>{{ 'ERP.UPLOAD_SIGNATURE' | translate }} </span>
                             <div class="uplodad-style align-items-center">
                                 <!-- Upload Button Column -->
-                                <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                                <p-fileUpload #fileUploadIndividualSign class="qua-upld file-attach semi-bold" name="myfile[]"
                                 id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".png,.jpg,.jpeg" (onRemove)="fileRemoeEvent('individualSighnedCopy')"
-                                (onSelect)="fileUploader($event,fileUpload ,'individualSighnedCopy')">
+                                (onSelect)="fileUploader($event,fileUploadIndividualPhoto,fileUploadIndividualSign ,'individualSighnedCopy')">
                                 </p-fileUpload>
                                 <div class="col-12  d-flex p-1 contant-body" *ngFor="let img of membershipBasicRequiredDetails.multipartFileListForsignatureCopyPath">
                                     <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
@@ -905,9 +905,9 @@
                     <div class="form-label">
                         <div class="ml-2"><span class="red">*</span>{{'ERP.UPLOAD_IMAGE' | translate}}</div>
                         <div class="uplodad-style align-items-center">
-                            <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                            <p-fileUpload #fileUploadPhotoPromoter class="qua-upld file-attach semi-bold" name="myfile[]"
                                 id="apply-leave_fileUp_attach" chooseLabel=" " name="file" formControlName="photoUpload" accept=".png,.jpg,.jpeg" (onRemove)="fileRemoeEvent('promoterPhot')" 
-                                (onSelect)="fileUploaderForPromoters($event,fileUpload ,'groupPromoterImage')">
+                                (onSelect)="fileUploaderForPromoters($event,fileUploadPhotoPromoter, fileUpload,'groupPromoterImage')">
                             </p-fileUpload>
                             <div class="col-12  d-flex p-1 contant-body"
                                 *ngFor="let img of promoterDetailsModel.multipartFileListForPhotoCopyPath">
@@ -926,7 +926,7 @@
                         <div class="uplodad-style align-items-center">
                             <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
                                 id="apply-leave_fileUp_attach" chooseLabel=" " formControlName="signatureUpload" name="file" accept=".png,.jpg,.jpeg" (onRemove)="fileRemoeEvent('promoterSignature' )" 
-                                (onSelect)="fileUploaderForPromoters($event,fileUpload ,'groupPromoterSignature')" > 
+                                (onSelect)="fileUploaderForPromoters($event,fileUploadPhotoPromoter,fileUpload ,'groupPromoterSignature')" > 
                             </p-fileUpload>
                             <div class="col-12  d-flex p-1 contant-body"
                                 *ngFor="let img of promoterDetailsModel.multipartFileListForSignatureCopyPath">
@@ -1104,9 +1104,9 @@
                     <div class="form-label">
                         <div class="ml-2"><span class="red">*</span>{{'ERP.UPLOAD_IMAGE' | translate}}</div>
                         <div class="uplodad-style align-items-center">
-                            <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                            <p-fileUpload #fileUploadPromotePhoto class="qua-upld file-attach semi-bold" name="myfile[]"
                                 id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".png,.jpg,.jpeg" (onRemove)="fileRemoeEvent('promoterPhot')"
-                                (onSelect)="fileUploaderForInstitutionPromoters($event,fileUpload ,'institutionPromoterImage')">
+                                (onSelect)="fileUploaderForInstitutionPromoters($event,fileUploadInstitutionPromoterSign,fileUploadPromotePhoto,'institutionPromoterImage')">
                             </p-fileUpload>
                             <div class="col-12  d-flex p-1 contant-body"
                                 *ngFor="let img of institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath">
@@ -1123,9 +1123,9 @@
                     <div class="form-label">
                         <div class="ml-2"><span class="red">*</span>{{'ERP.UPLOAD_SIGNATURE' | translate}}</div>
                         <div class="uplodad-style align-items-center">
-                            <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                            <p-fileUpload #fileUploadInstitutionPromoterSign class="qua-upld file-attach semi-bold" name="myfile[]"
                                 id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".png,.jpg,.jpeg" (onRemove)="fileRemoeEvent('promoterSignature')"
-                                (onSelect)="fileUploaderForInstitutionPromoters($event,fileUpload ,'insitutionPromoterSignature')" > 
+                                (onSelect)="fileUploaderForInstitutionPromoters($event,fileUploadInstitutionPromoterSign,fileUploadPromotePhoto,'insitutionPromoterSignature')" > 
                             </p-fileUpload>
                             <div class="col-12  d-flex p-1 contant-body"
                                 *ngFor="let img of institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath">

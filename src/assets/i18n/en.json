@@ -705,6 +705,7 @@
     "ADD_ANOTHER_DOCUMENT": "Add Document",
     "SOCIETY_ADMISSION_NUMBER":"Society Admission Number",
     "INSTITUTION_TYPE": "Institution Type",
+    "REQUESTED_DOCUMENT_COPY": "Requested Document Copy",
     "PREVIOUS_ACCOUNT_NUMBER":"Previous Account Number"
     
   },

@@ -212,13 +212,13 @@
                                 <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="admissionFee" [(ngModel)]="  membershipBasicDetailsModel.admissionFee" placeholder="Enter Admission Fee">
                             </div>
                         </div>
-                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 pt-4">
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                             <div class="form-label">
-                                <p-checkbox [binary]="true" formControlName="isStaff"
-                                    [(ngModel)]="  membershipBasicDetailsModel.isStaff"
-                                    inputId="binary"></p-checkbox>
-                                    <span class="mt-2" for="username">&nbsp;&nbsp;{{'ERP.IS_STAFF' | translate}}</span>
-                        </div>
+                                <label><span class="red">*</span>{{'ERP.IS_STAFF' | translate}}
+                                </label>
+                                <p-dropdown placeholder="{{'ERP.SELECT' | translate}}" [options]="statusList" formControlName="isStaff"
+                                    [(ngModel)]="membershipBasicDetailsModel.isStaff"></p-dropdown>
+                            </div>
                         </div>
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
                             <div class="form-label">

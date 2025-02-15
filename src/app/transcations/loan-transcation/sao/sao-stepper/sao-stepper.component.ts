@@ -1690,9 +1690,9 @@ export class SaoStepperComponent {
       this.navigateTo(this.activeIndex, this.loanId);
     }
     else if (activeIndex == 6) {
-      // if(this.memberTypeName != MemberShipTypesData.INDIVIDUAL){
-      //   this.activeIndex = this.activeIndex - 1;
-      // }
+      if(this.memberTypeName != MemberShipTypesData.INDIVIDUAL){
+        this.activeIndex = this.activeIndex - 1;
+      }
       this.navigateTo(this.activeIndex, this.loanId);
     }
     else if (activeIndex == 7) {

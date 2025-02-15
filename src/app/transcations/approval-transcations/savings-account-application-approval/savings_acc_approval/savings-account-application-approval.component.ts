@@ -390,7 +390,12 @@ export class SavingsAccountApplicationApprovalComponent {
           if(this.nomineeDetailsModel.name != null && this.nomineeDetailsModel.name != undefined && this.nomineeDetailsModel.surname != null && this.nomineeDetailsModel.surname != undefined )
               this.nomineeMemberFullName = this.nomineeDetailsModel.name + this.nomineeDetailsModel.surname ; 
             if(this.nomineeDetailsModel.signedNomineeForm != null && this.nomineeDetailsModel.signedNomineeForm != undefined){
-              this.nomineeDetailsModel.nomineeSighnedFormMultiPartList =  this.fileUploadService.getFile(this.nomineeDetailsModel.signedNomineeForm , ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.nomineeDetailsModel.signedNomineeForm);
+              if(this.nomineeDetailsModel.nomineeType == 2){
+                this.nomineeDetailsModel.nomineeSighnedFormMultiPartList =  this.fileUploadService.getFile(this.nomineeDetailsModel.signedNomineeForm , ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.nomineeDetailsModel.signedNomineeForm);
+              }
+              else {
+                this.nomineeDetailsModel.nomineeSighnedFormMultiPartList =  this.fileUploadService.getFile(this.nomineeDetailsModel.signedNomineeForm , ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.nomineeDetailsModel.signedNomineeForm);
+              }
             }
           if (this.viewSavingBankModel.sbGuardianDetailsDTO != null && this.viewSavingBankModel.sbGuardianDetailsDTO != undefined){
             

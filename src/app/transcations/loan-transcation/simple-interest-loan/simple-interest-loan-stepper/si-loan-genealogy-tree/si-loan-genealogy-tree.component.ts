@@ -182,7 +182,7 @@ export class SiLoanGenealogyTreeComponent {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.siLoanApplicationModel = this.responseModel.data[0];
           
-            if (this.responseModel.data[0].admissionNo != null && this.responseModel.data[0].admissionNo != undefined) {
+            if (this.responseModel.data[0].admissionNo != null && this.responseModel.data[0].admissionNumber != undefined) {
               this.admissionNumber = this.responseModel.data[0].admissionNo;
             }
 

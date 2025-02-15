@@ -74,6 +74,9 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" formControlName="name" [(ngModel)]="rowData.name">
+                                <p-message severity="error" text="Enter Valid Name"
+                                    *ngIf="!genealogyForm.controls['name'].valid && genealogyForm.controls['name'].dirty">
+                                </p-message>
                             </ng-template>
                             <ng-template pTemplate="output">{{rowData.name}}</ng-template>
                         </p-cellEditor>

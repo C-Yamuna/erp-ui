@@ -93,7 +93,8 @@
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
-                                <label><span class="red">*</span>Document Number</label>
+                                    <label *ngIf="!isPanNumber"><span class="red">*</span>Document Number</label>
+                                    <label *ngIf="isPanNumber"><span class="red">*</span>Pan Number(AFZPK7190K)</label>
                                 <input id="documentNumber" type="text" formControlName="docNumber" pInputText
                                     [(ngModel)]="savingsBankKycModel.documentNumber" placeholder="Enter Document Number">
                             <p-message severity="error" text="Enter Valid Name"
@@ -178,7 +179,8 @@
                     </div>
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="form-label">
-                            <label><span class="red">*</span>Document Number</label>
+                                <label *ngIf="!isPanNumber"><span class="red">*</span>Document Number</label>
+                                <label *ngIf="isPanNumber"><span class="red">*</span>Pan Number(AFZPK7190K)</label>
                             <input id="documentNumber" type="text" formControlName="docNumber" pInputText
                                 [(ngModel)]="savingsBankKycModel.documentNumber" placeholder="Enter Document Number">
                                 <p-message severity="error" text="Enter Valid doc Number"
@@ -215,11 +217,15 @@
                                 <!-- Uploaded Files Display Column -->
 
                                 <div class="col-12 d-flex p-1 contant-body" *ngFor="let img of savingsBankKycModel.multipartFileList">
-                                    <!-- <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                                        <a href="{{img.imageValue}}">
-                                                                    <img src="{{img.imageValue}}">
-                                                                </a>
-                                                                </div>&nbsp;&nbsp; -->
+                                    <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                        <a href="{{img.imageValue}}">
+                                            <img src="{{img.imageValue}}"width="22" height="22">
+                                        </a>
+                                    </span>
+                                    <span *ngIf="img.fileType=='pdf'">
+                                        <a href="{{img.imageValue}}"> <img src="assets/images/pdficon-img.png" width="22"
+                                                height="22"></a>
+                                    </span>    
                                     <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
                                         {{img.fileName}}
                                     </div>

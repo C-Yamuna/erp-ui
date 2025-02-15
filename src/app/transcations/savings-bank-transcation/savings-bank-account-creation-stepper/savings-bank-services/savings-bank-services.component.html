@@ -131,7 +131,7 @@
                                             <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
                                                     id="apply-leave_fileUp_attach" chooseLabel=" " name="file"
                                                     accept=".png,.jpg,.jpeg,.pdf" (onRemove)="fileRemoeEvent()" 
-                                                    (onSelect)="fileUploader($event,fileUpload)" >
+                                                    (onSelect)="fileUploader($event,fileUpload ,row)" >
                                             </p-fileUpload>
                                         </div>
                                         <div  class="col-12  d-flex p-1 contant-body" *ngFor="let img of row.requestedDocPathMultipartFileList">

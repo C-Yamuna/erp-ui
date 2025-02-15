@@ -9,6 +9,7 @@ export const CommonStatusData = {
     PENDING: 'Pending',
     ACTIVE: 'Active',
     CLOSED: 'Closed',
+    SCHEDULED:'Scheduled',
     FORECLOSURE: 'Foreclosure',
     DUE: 'Due'
 
@@ -83,3 +84,8 @@ export const sbStandingDestitnationAccountType={
    TO_RECURRING_DEPOSIT : "To Recurring Deposit",
     TO_TERM_LOAN : "To Term Loan"
 }
+
+export const DOCUMENT_TYPES={
+    AADHAR : "Aadhar Card",
+    PANNUMBER : "PAN Card"
+ }

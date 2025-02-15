@@ -398,16 +398,15 @@
 
             <p-table #dt [value]="disbursmentScheduleList" dataKey="id" editMode="row" styleClass="p-datatable-striped"
                 [rows]="5" [paginator]="true" [showJumpToPageDropdown]="true" [showPageLinks]="false" [pageLinks]="1"
-                [responsive]="true" rowExpandMode="single" [globalFilterFields]="['disbursementNumber', 'typeName', 'disbursementLimit', 'minDaysForDisbursement',
-                                    'disbursementOrder','remarks']">
+                [responsive]="true" rowExpandMode="single" [globalFilterFields]="['disbursementOrder', 'typeName', 'disbursementLimit'
+                                    ,'remarks']">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th><span class="red">*</span>{{'ERP.DISBURSEMENT_NUMBER' | translate}}</th>
+                        <th><span class="red">*</span>{{'ERP.DISBURSEMENT_ORDER' | translate}}</th>
                         <th><span class="red">*</span>{{'ERP.DISBURSMENT_TYPE' | translate}}</th>
                         <th><span class="red">*</span>{{'ERP.AMOUNT' | translate}}</th>
                         <th><span class="red">*</span>{{'ERP.DISBURSEMENT_LIMIT' | translate}}</th>
-                        <th><span class="red">*</span>{{'ERP.MINIMUM_DAYS_FOR_DISBURSMENT' | translate}}</th>
-                        <th><span class="red">*</span>{{'ERP.DISBURSEMENT_ORDER' | translate}}</th>
+                        <!-- <th><span class="red">*</span>{{'ERP.MINIMUM_DAYS_FOR_DISBURSMENT' | translate}}</th> -->
                         <th>{{'ERP.REMARKS' | translate}}</th>
                         <!-- <th>{{'ERP.STATUS' | translate}}</th> -->
                         <th class="width-15em">{{'ERP.ACTION' | translate}}</th>
@@ -416,16 +415,16 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
                     <tr [pEditableRow]="rowData">
+                        
                         <td>
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
-                                    <input pInputText type="text" formControlName="disbursementNumber"
-                                        [(ngModel)]="rowData.disbursementNumber" [disabled]="true">
+                                    <input pInputText type="text" formControlName="disbursementOrder"
+                                        [(ngModel)]="rowData.disbursementOrder">
                                 </ng-template>
-                                <ng-template pTemplate="output">{{rowData.disbursementNumber}}</ng-template>
+                                <ng-template pTemplate="output">{{rowData.disbursementOrder}}</ng-template>
                             </p-cellEditor>
                         </td>
-
                         <td>
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
@@ -439,10 +438,10 @@
                         <td>
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
-                                    <input pInputText type="text" formControlName="amount"
-                                        [(ngModel)]="rowData.amount" [disabled]="true">
+                                    <input pInputText type="text" formControlName="disbursementAmount"
+                                        [(ngModel)]="rowData.disbursementAmount" [disabled]="true">
                                 </ng-template>
-                                <ng-template pTemplate="output">{{rowData.amount}}</ng-template>
+                                <ng-template pTemplate="output">{{rowData.disbursementAmount}}</ng-template>
                             </p-cellEditor>
                         </td>
                         <td>
@@ -454,7 +453,7 @@
                                 <ng-template pTemplate="output">{{rowData.disbursementLimit}}</ng-template>
                             </p-cellEditor>
                         </td>
-                        <td>
+                        <!-- <td>
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
                                     <input pInputText type="text" formControlName="minDaysForDisbursement"
@@ -463,15 +462,7 @@
                                 <ng-template pTemplate="output">{{rowData.minDaysForDisbursement}}</ng-template>
                             </p-cellEditor>
                         </td>
-                        <td>
-                            <p-cellEditor>
-                                <ng-template pTemplate="input">
-                                    <input pInputText type="text" formControlName="disbursementOrder"
-                                        [(ngModel)]="rowData.disbursementOrder">
-                                </ng-template>
-                                <ng-template pTemplate="output">{{rowData.disbursementOrder}}</ng-template>
-                            </p-cellEditor>
-                        </td>
+                        -->
                         <td>
                             <p-cellEditor>
                                 <ng-template pTemplate="input">

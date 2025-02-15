@@ -18,7 +18,7 @@ import { CiKycService } from './shared/ci-kyc.service';
 import { MembershipDetailsService } from '../ci-membership-details/shared/membership-details.service';
 import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-constants';
 import { Table } from 'primeng/table';
-import { MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
+import { DOCUMENT_TYPES, MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-ci-kyc',
@@ -111,6 +111,7 @@ export class CiKycComponent {
   mandatoryDoxsTextShow: boolean = false;
   saveAndNextEnable : boolean = false;
   kycPhotoCopyZoom: boolean = false;
+  isPanNumber: boolean = false;;
 
   constructor(private router: Router, 
     private formBuilder: FormBuilder, 
@@ -127,7 +128,7 @@ export class CiKycComponent {
         'docNumber': ['', [ Validators.compose([Validators.required])]],
         'docTypeName': ['',  Validators.compose([Validators.required])],
         'fileUpload': ['', ],
-        'nameAsPerDocument':[Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS),Validators.compose([Validators.required])],
+        'nameAsPerDocument':[Validators.pattern(applicationConstants.ALPHA_NAME_PATTERN),Validators.compose([Validators.required])],
         'promoter': ['', ],
       });
     }
@@ -203,8 +204,14 @@ export class CiKycComponent {
       this.multipleFilesList = [];
       this.ciLoanKycModel.filesDTOList = [];
       this.ciLoanKycModel.kycFilePath = null;
+      this.ciLoanKycModel.multipartFileList = [];
       let files: FileUploadModel = new FileUploadModel();
-      for (let file of event.files) {
+
+      let selectedFiles = [...event.files];
+      // Clear file input before processing files
+      fileUpload.clear();
+
+      for (let file of selectedFiles) {
         let reader = new FileReader();
         reader.onloadend = (e) => {
           this.isFileUploaded = applicationConstants.TRUE;
@@ -217,6 +224,7 @@ export class CiKycComponent {
           let index = this.multipleFilesList.findIndex(x => x.fileName == files.fileName);
           if (index === -1) {
             this.multipleFilesList.push(files);
+            this.ciLoanKycModel.multipartFileList.push(files);
             this.ciLoanKycModel.filesDTOList.push(files); // Add to filesDTOList array
           }
           let timeStamp = this.commonComponent.getTimeStamp();
@@ -225,7 +233,6 @@ export class CiKycComponent {
           let index1 = event.files.findIndex((x: any) => x === file);
           fileUpload.remove(event, index1);
           fileUpload.clear();
-          
         }
         reader.readAsDataURL(file);
       }
@@ -632,6 +639,9 @@ export class CiKycComponent {
                     this.isFileUploaded = applicationConstants.TRUE;
                   }
                 }
+                if(this.ciLoanKycModel.kycDocumentTypeName != null && this.ciLoanKycModel.kycDocumentTypeName != undefined){
+                  this.documentNumberDynamicValidation(this.ciLoanKycModel.kycDocumentTypeName );
+                }
               }
             }
           }
@@ -787,31 +797,40 @@ export class CiKycComponent {
       
     }
   
-    /**
-     * @implements kyc module deuplicate
-     * @param kycDocTypeId 
-     * @author jyothi.naidana
-     */
-    kycModelDuplicateCheck(ciLoanKycModel:any){
-      if(this.kycModelList != null && this.kycModelList != undefined && this.kycModelList.length > 0){
-        let duplicate
-        if(this.ciLoanApplicationModel.memberTypeName != MemberShipTypesData.INDIVIDUAL){
-          duplicate = this.kycModelList.find((obj:any) => obj && obj.kycDocumentTypeId === ciLoanKycModel.kycDocTypeId && obj.promoterId ===  ciLoanKycModel.promoterId);
-        }
-        else {
-          duplicate = this.kycModelList.find((obj:any) => obj && obj.kycDocumentTypeId === ciLoanKycModel.kycDocTypeId );
-        }
-     
-      if (duplicate != null && duplicate != undefined) {
-        this.kycForm.reset();
-        this.msgs = [];
-        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "duplicate Kyc Types"}];
-        setTimeout(() => {
-          this.msgs = [];
-        }, 3000);
-      } 
+  /**
+   * @implements kyc module deuplicate
+   * @param kycDocTypeId 
+   * @author jyothi.naidana
+   */
+  kycModelDuplicateCheck(ciLoanKycModel: any) {
+    if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0) {
+      let filteredObj = this.documentNameList.find((data: any) => null != data && this.ciLoanKycModel.kycDocumentTypeId != null && data.value == this.ciLoanKycModel.kycDocumentTypeId);
+      if (filteredObj != null && undefined != filteredObj && filteredObj.label != null && filteredObj.label != undefined) {
+        this.ciLoanKycModel.kycDocumentTypeName = filteredObj.label;
+        this.documentNumberDynamicValidation(this.ciLoanKycModel.kycDocumentTypeName );
+      }
+      
     }
-    }
+    
+    //   if(this.kycModelList != null && this.kycModelList != undefined && this.kycModelList.length > 0){
+    //     let duplicate
+    //     if(this.ciLoanApplicationModel.memberTypeName != MemberShipTypesData.INDIVIDUAL){
+    //       duplicate = this.kycModelList.find((obj:any) => obj && obj.kycDocumentTypeId === ciLoanKycModel.kycDocTypeId && obj.promoterId ===  ciLoanKycModel.promoterId);
+    //     }
+    //     else {
+    //       duplicate = this.kycModelList.find((obj:any) => obj && obj.kycDocumentTypeId === ciLoanKycModel.kycDocTypeId );
+    //     }
+
+    //   if (duplicate != null && duplicate != undefined) {
+    //     this.kycForm.reset();
+    //     this.msgs = [];
+    //     this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "duplicate Kyc Types"}];
+    //     setTimeout(() => {
+    //       this.msgs = [];
+    //     }, 3000);
+    //   } 
+    // }
+  }
   
      /**
      * @author jyothi.naidana
@@ -824,6 +843,38 @@ export class CiKycComponent {
       }
      
     }
+
+  /**
+   * @implements document number dynamic Vaildation
+   * @author jyothi.naidana
+   */
+  documentNumberDynamicValidation(docTypeName: any) {
+    if (DOCUMENT_TYPES.AADHAR == this.ciLoanKycModel.kycDocumentTypeName) {
+      const controlTow = this.kycForm.get('docNumber');
+      if (controlTow) {
+        controlTow.setValidators([
+          Validators.required,
+          Validators.pattern(applicationConstants.AADHAR_PATTERN)
+        ]);
+        controlTow.updateValueAndValidity();
+      }
+      this.isPanNumber = false;
+    }
+    else if (DOCUMENT_TYPES.PANNUMBER == this.ciLoanKycModel.kycDocumentTypeName) {
+      const controlTow = this.kycForm.get('docNumber');
+      if (controlTow) {
+        controlTow.setValidators([
+          Validators.required,
+          Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN)
+        ]);
+        controlTow.updateValueAndValidity();
+      }
+      this.isPanNumber = true;
+    }
+    else {
+      this.isPanNumber = false;
+    }
+  }
   
     /**
      * @author jyothi.naidana
@@ -868,4 +919,5 @@ export class CiKycComponent {
     kycclosePhotoCopy() {
       this.kycPhotoCopyZoom = false;
     }
+   
 }

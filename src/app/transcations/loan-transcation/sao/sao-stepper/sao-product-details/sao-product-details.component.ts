@@ -15,6 +15,9 @@ import { SaoProductDefinitionsService } from '../../sao-product-definition/share
 import { IndividualMemberDetailsModel } from '../membership-basic-details/shared/membership-basic-details.model';
 import { MembershipBasicDetailsService } from '../membership-basic-details/shared/membership-basic-details.service';
 import { SaoLoanDisbursementScheduleService } from '../../../shared/sao-loans/sao-loan-disbursement-schedule.service';
+import { SaoLoanDisbursement } from '../../sao-operations/sao-loan-disbursment/shared/sao-loan-disbursement.model';
+import { SaoDisbursementService } from '../../../shared/sao-loans/sao-disbursement.service';
+import { CommonStatusData } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-sao-product-details',
@@ -64,13 +67,14 @@ export class SaoProductDetailsComponent {
   saveAndNextDisable: boolean = false;
   scheduleRecordsCount: any;
   
+  saoLoanDisbursementModel: SaoLoanDisbursement = new SaoLoanDisbursement();
+  // saoLoanDisbursementScheduleModel: SaoLoanDisbursementScheduleModel = new SaoLoanDisbursementScheduleModel();
 
-  saoLoanDisbursementScheduleModel: SaoLoanDisbursementScheduleModel = new SaoLoanDisbursementScheduleModel();
   insurenceFlag: boolean = false;
   constructor(private router: Router, private formBuilder: FormBuilder, private saoProductDefinitionsService: SaoProductDefinitionsService, private activateRoute: ActivatedRoute,
     private commonComponent: CommonComponent, private encryptDecryptService: EncryptDecryptService, private saoLoanApplicationService: SaoLoanApplicationService,
     private commonFunctionsService: CommonFunctionsService, private datePipe: DatePipe, private membershipBasicDetailsService: MembershipBasicDetailsService,
-    private saoLoanDisbursementScheduleService: SaoLoanDisbursementScheduleService
+    private saoLoanDisbursementService: SaoDisbursementService
   ) {
 
     this.apllicationdetailsform = this.formBuilder.group({
@@ -105,12 +109,11 @@ export class SaoProductDetailsComponent {
     })
 
     this.schedulerForm = this.formBuilder.group({
-      'disbursementNumber': ['', Validators.required],
-      'typeName':  ['', Validators.required],
-      'amount': ['', Validators.required],
-      'disbursementLimit':  ['', Validators.required],
-      'minDaysForDisbursement':  ['', Validators.required],
       'disbursementOrder': ['', Validators.required],
+      'typeName':  ['', Validators.required],
+      'disbursementAmount': ['', Validators.required],
+      'disbursementLimit':  ['', Validators.required],
+      // 'minDaysForDisbursement':  ['', Validators.required],
       'remarks': ['',],
       'statusName': ['',],
     })
@@ -220,8 +223,8 @@ export class SaoProductDetailsComponent {
                 if (this.saoLoanApplicatonModel.saoProductId != null && this.saoLoanApplicatonModel.saoProductId != undefined) {
                   this.getProductDetailsById(this.saoLoanApplicatonModel.saoProductId);
                 }
-                if (this.saoLoanApplicatonModel.saoLoanDisbursementScheduleDTOList != null) {
-                  this.disbursmentScheduleList = this.saoLoanApplicatonModel.saoLoanDisbursementScheduleDTOList;
+                if (this.saoLoanApplicatonModel.saoDisbursementDTOList != null) {
+                  this.disbursmentScheduleList = this.saoLoanApplicatonModel.saoDisbursementDTOList;
                 }
                 if (this.saoLoanApplicatonModel.plannedDisbursements != null && this.saoLoanApplicatonModel.plannedDisbursements != undefined) {
                   this.scheduleRecordsCount = this.saoLoanApplicatonModel.plannedDisbursements;
@@ -334,7 +337,7 @@ export class SaoProductDetailsComponent {
     // Generate disbursement number
     const newRow = {
       securityType: '',
-      disbursementNumber: this.generateDisbursementNumber(), // Automatically set disbursement number
+      disbursementOrder: this.generateDisbursementNumber(), // Automatically set disbursement number
     };
   
     this.dt.value.unshift(newRow);  // Insert the new row
@@ -357,13 +360,13 @@ export class SaoProductDetailsComponent {
     this.addButton = false;
     this.editDeleteDisable = false;
     rowData.saoLoanApplicationId = this.savedId;
-    if (!rowData.disbursementNumber) {
-      rowData.disbursementNumber = this.generateDisbursementNumber();
+    if (!rowData.disbursementOrder) {
+      rowData.disbursementOrder = this.generateDisbursementNumber();
     }
-    this.saoLoanDisbursementScheduleModel = rowData;
+    this.saoLoanDisbursementModel = rowData;
     if (rowData.id != undefined) {
 
-      this.saoLoanDisbursementScheduleService.updateSaoLoanDisbursementSchedule(this.saoLoanDisbursementScheduleModel).subscribe((res: any) => {
+      this.saoLoanDisbursementService.updateSaoDisbursement(this.saoLoanDisbursementModel).subscribe((res: any) => {
         this.responseModel = res;
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           this.getSaoLoanApplicationDetailsById(this.savedId);
@@ -381,8 +384,8 @@ export class SaoProductDetailsComponent {
         this.msgs = [{ severity: 'error', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST }];
       })
     } else {
-      this.saoLoanDisbursementScheduleModel.statusName =  applicationConstants.SUBMISSION_FOR_APPROVAL;
-      this.saoLoanDisbursementScheduleService.addSaoLoanDisbursementSchedule(this.saoLoanDisbursementScheduleModel).subscribe((res: any) => {
+      this.saoLoanDisbursementModel.statusName =  CommonStatusData.SCHEDULED;
+      this.saoLoanDisbursementService.addSaoDisbursement(this.saoLoanDisbursementModel).subscribe((res: any) => {
         this.responseModel = res;
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           this.getSaoLoanApplicationDetailsById(this.savedId);
@@ -416,12 +419,12 @@ export class SaoProductDetailsComponent {
   editSchedulerDetailsRow(row: any) {
     this.addButton = false;
     this.editDeleteDisable = false;
-    this.saoLoanDisbursementScheduleModel = row;
-    this.saoLoanDisbursementScheduleModel.saoLoanApplicationId = this.savedId;
-    this.saoLoanDisbursementScheduleService.getSaoLoanDisbursementScheduleById(this.saoLoanDisbursementScheduleModel.id).subscribe((response: any) => {
+    this.saoLoanDisbursementModel = row;
+    this.saoLoanDisbursementModel.saoLoanApplicationId = this.savedId;
+    this.saoLoanDisbursementService.getSaoDisbursementById(this.saoLoanDisbursementModel.id).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-        this.saoLoanDisbursementScheduleModel = this.responseModel.data;
+        this.saoLoanDisbursementModel = this.responseModel.data;
 
       }
       this.getSaoLoanApplicationDetailsById(this.savedId);

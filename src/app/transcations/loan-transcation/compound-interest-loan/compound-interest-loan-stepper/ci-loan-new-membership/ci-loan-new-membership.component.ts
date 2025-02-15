@@ -111,6 +111,8 @@ export class CiLoanNewMembershipComponent {
   isFileUploadedPromoterSignature: boolean = false;
 
   groupOrInstitutionDisable : boolean = false;
+  statusList: any []= [];
+  
   constructor(private router: Router,
     private formBuilder: FormBuilder,
     private ciLoanApplicationService: CiLoanApplicationService,
@@ -138,7 +140,7 @@ export class CiLoanNewMembershipComponent {
         caste:  ['',Validators.compose([Validators.required])],
         email: ['', [Validators.pattern(applicationConstants.EMAIL_PATTERN)]],
         admissionDate: ['',Validators.compose([Validators.required])],
-        isStaff: [''],
+        isStaff: ['',Validators.compose([Validators.required])],
         fileUpload:[''],
         admissionFee:['']
       })
@@ -196,6 +198,7 @@ export class CiLoanNewMembershipComponent {
       this.showForm = this.commonFunctionsService.getStorageValue(applicationConstants.B_CLASS_MEMBER_CREATION);
       this.orgnizationSetting = this.commonComponent.orgnizationSettings()
       this.maritalStatusList = this.commonComponent.maritalStatusList();
+      this.statusList = this.commonComponent.requiredlist();
     
       this.genderList = [
         { label: 'Male', value: 1 },

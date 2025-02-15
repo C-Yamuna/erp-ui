@@ -109,17 +109,17 @@ export class StandingInstructionComponent {
         "remarks":new FormControl('', ),
       });
       this.groupPrmoters = [
-        { field: 'surname', header: 'DEMANDDEPOSITS.SUR_NAME' },
-        { field: 'name', header: 'DEMANDDEPOSITS.NAME' },
-        { field: 'operatorTypeName', header: 'DEMANDDEPOSITS.OPEARION_TYPE' },
-        { field: 'memDobVal', header: 'DEMANDDEPOSITS.MEMBER_DOB' },
-        { field: 'age', header: 'DEMANDDEPOSITS.AGE' },
-        { field: 'genderName', header: 'DEMANDDEPOSITS.GENDER_NAME' },
-        { field: 'maritalStatusName', header: 'DEMANDDEPOSITS.MARITAL_STATUS' },
-        { field: 'mobileNumber', header: 'DEMANDDEPOSITS.MOBILE_NUMBER' },
-        { field: 'emailId', header: 'DEMANDDEPOSITS.EMAIL' },
-        { field: 'aadharNumber', header: 'DEMANDDEPOSITS.AADHAR_NUMBER' },
-        { field: 'startDate', header: 'DEMANDDEPOSITS.START_DATE' },
+        { field: 'surname', header: 'Surname' },
+        { field: 'name', header: 'Name' },
+        { field: 'operatorTypeName', header: 'Operation Type' },
+        { field: 'memDobVal', header: 'Date of Birth' },
+        { field: 'age', header: 'Age' },
+        { field: 'genderTypeName', header: 'Gender' },
+        { field: 'maritalStatusName', header: 'Marital Status' },
+        { field: 'mobileNumber', header: 'Mobile Number' },
+        { field: 'emailId', header: 'Email' },
+        { field: 'aadharNumber', header: 'Aadhar Number' },
+        { field: 'startDateVal', header: 'Start Date' },
       ];
     }
   }
@@ -213,15 +213,24 @@ backbutton(){
                 this.membershipBasicRequiredDetails.admissionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetails.admissionDate, this.orgnizationSetting.datePipe);
               }
               if (this.membershipBasicRequiredDetails.photoCopyPath != null && this.membershipBasicRequiredDetails.photoCopyPath != undefined) {
-                this.membershipBasicRequiredDetails.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetails.photoCopyPath, ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetails.photoCopyPath);
-
+                if(this.membershipBasicRequiredDetails.isNewMember){
+                  this.membershipBasicRequiredDetails.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetails.photoCopyPath, ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetails.photoCopyPath);
+                }
+                else {
+                  this.membershipBasicRequiredDetails.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetails.photoCopyPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetails.photoCopyPath);
+                }
               }
               else {
                 this.photoCopyFlag = false;
               }
               if (this.membershipBasicRequiredDetails.signatureCopyPath != null && this.membershipBasicRequiredDetails.signatureCopyPath != undefined) {
-                this.membershipBasicRequiredDetails.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetails.signatureCopyPath, ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetails.signatureCopyPath);
-              }
+                if(this.membershipBasicRequiredDetails.isNewMember){
+                  this.membershipBasicRequiredDetails.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetails.signatureCopyPath, ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetails.signatureCopyPath);
+                }
+                else {
+                  this.membershipBasicRequiredDetails.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetails.signatureCopyPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetails.signatureCopyPath);
+                }
+               }
               else {
                 this.signatureCopyFlag = false;
               }
@@ -255,6 +264,15 @@ backbutton(){
               }
               if (this.memberGroupDetailsModel.groupPromoterList != null && this.memberGroupDetailsModel.groupPromoterList != undefined && this.memberGroupDetailsModel.groupPromoterList.length > 0) {
                 this.groupPrmotersList = this.memberGroupDetailsModel.groupPromoterList;
+                this.groupPrmotersList = this.savingBankApplicationModel.groupDetailsDTO.groupPromoterList;
+                for( let groupPromoters of this.groupPrmotersList){
+                  if(groupPromoters.dob != null && groupPromoters.dob != undefined){
+                    groupPromoters.memDobVal = this.datePipe.transform(groupPromoters.dob, this.orgnizationSetting.datePipe);
+                  }
+                  if(groupPromoters.startDate != null && groupPromoters.startDate != undefined){
+                    groupPromoters.startDateVal = this.datePipe.transform(groupPromoters.startDate, this.orgnizationSetting.datePipe);
+                  }
+                }
               }
             }
             //institution
@@ -268,6 +286,14 @@ backbutton(){
               }
               if (this.membershipInstitutionDetailsModel.institutionPromoterList != null && this.membershipInstitutionDetailsModel.institutionPromoterList != undefined && this.membershipInstitutionDetailsModel.institutionPromoterList.length > 0) {
                 this.institionPromotersList = this.membershipInstitutionDetailsModel.institutionPromoterList;
+                for( let institution of this.institionPromotersList){
+                  if(institution.dob != null && institution.dob != undefined){
+                    institution.memDobVal = this.datePipe.transform(institution.dob, this.orgnizationSetting.datePipe);
+                  }
+                  if(institution.startDate != null && institution.startDate != undefined){
+                    institution.startDateVal = this.datePipe.transform(institution.startDate, this.orgnizationSetting.datePipe);
+                  }
+                }
               }
               if (this.membershipInstitutionDetailsModel.isKycApproved != null && this.membershipInstitutionDetailsModel.isKycApproved != undefined && this.membershipInstitutionDetailsModel.isKycApproved) {
                 this.isKycApproved = applicationConstants.KYC_APPROVED_NAME;
@@ -527,7 +553,8 @@ this.memberPhotoCopyZoom = false;
         else {
           this.msgs = [];
           this.commonComponent.stopSpinner();
-          this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+          this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
+          this.cancelOrRefresh();
           setTimeout(() => {
             this.msgs = [];
           }, 2000);
@@ -565,7 +592,8 @@ this.memberPhotoCopyZoom = false;
         else {
           this.msgs = [];
           this.commonComponent.stopSpinner();
-          this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+          this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
+          this.cancelOrRefresh();
           setTimeout(() => {
             this.msgs = [];
           }, 2000);
@@ -669,8 +697,14 @@ this.memberPhotoCopyZoom = false;
       this.multipleFilesList = [];
       this.standingInstruction.filesDTOList = [];
       this.standingInstruction.signedCopyPath = null;
+      this.standingInstruction.multipartFileListForDocument = [];
       let files: FileUploadModel = new FileUploadModel();
-      for (let file of event.files) {
+
+      let selectedFiles = [...event.files];
+        // Clear file input before processing files
+      fileUpload.clear();
+
+      for (let file of selectedFiles) {
         let reader = new FileReader();
         reader.onloadend = (e) => {
           let files = new FileUploadModel();
@@ -683,6 +717,7 @@ this.memberPhotoCopyZoom = false;
           if (index === -1) {
             this.multipleFilesList.push(files);
             this.standingInstruction.filesDTOList.push(files); // Add to filesDTOList array
+            this.standingInstruction.multipartFileListForDocument.push(files);
           }
           let timeStamp = this.commonComponent.getTimeStamp();
           this.standingInstruction.filesDTOList[0].fileName = "SB_STANADERED_INSTRUCTIONS" + this.sbAccId + "_" +timeStamp+ "_"+ file.name ;

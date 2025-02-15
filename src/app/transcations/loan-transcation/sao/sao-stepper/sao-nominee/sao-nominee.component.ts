@@ -53,6 +53,8 @@ export class SaoNomineeComponent {
   nomineeTypeDisable: boolean = false;
   flag: boolean = false;
   uploadFileData: any;
+  isFileUploadedNominee: boolean = false;
+  isSaveAndNextEnable : boolean = false;
   constructor(private router: Router, private formBuilder: FormBuilder,private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService
     ,private saoLoanApplicationService: SaoLoanApplicationService, private saoLoanNomineeDetailsService:SaoLoanNomineeDetailsService,private commonComponent: CommonComponent,
     private membershipBasicDetailsService: MembershipBasicDetailsService,private datePipe: DatePipe,private fileUploadService :FileUploadService
@@ -68,7 +70,7 @@ export class SaoNomineeComponent {
       nomineeDob: new FormControl(['', ],),
       remarks: new FormControl('', ),
       nomineeTypeName: ['', Validators.required],
-      nomineeFilePath: new FormControl('', ),
+      // nomineeFilePath: new FormControl('', ),
     });
     
 
@@ -110,10 +112,11 @@ export class SaoNomineeComponent {
   updateData() {
     this.saoNomineeModel.saoLoanApplicationId = this.loanId;
     this.saoNomineeModel.admissionNumber = this.admissionNumber;
+    this.isSaveAndNextEnable = (!this.nomineeForm.valid) || (!this.isFileUploadedNominee);
     this.saoLoanApplicationService.changeData({
       formValid: !this.nomineeForm.valid ? true : false,
       data: this.saoNomineeModel,
-      isDisable: (!this.nomineeForm.valid),
+      isDisable: this.isSaveAndNextEnable,
       // isDisable:false,
       stepperIndex: 5,
     });
@@ -171,6 +174,90 @@ export class SaoNomineeComponent {
     this.nomineeValidatorsFormNotRequired();
   } 
 }
+// onChange(event: any ,flag :boolean) {
+//   if (event == 1) {//new nominee
+//     this.newNomineeType(flag);
+//   }
+//   else if (event == 2) {//same as membership nominee
+//     this.samAsMemberNimineeType(flag);
+//   }
+//   else if (event == 3) {//no nominee
+//     this.noNimineeType(flag);
+//   } 
+// }
+newNomineeType(flag:boolean){
+  this.newNominee = true;
+    this.noNominee = false;
+    //onchange on update
+    if(flag){
+      let nomineeId = null;
+      if(this.saoNomineeModel != null && this.saoNomineeModel != undefined && this.saoNomineeModel.id  != null && this.saoNomineeModel.id  != undefined){
+        nomineeId = this.saoNomineeModel.id ;
+      }
+      this.saoNomineeModel = new SaoNominee();
+      if(nomineeId != null && nomineeId != undefined){
+        this.saoNomineeModel.id = nomineeId;
+      }
+    }
+    this.saoNomineeModel.nomineeType = 1;
+    this.nomineeValidatorsRequired();
+}
+samAsMemberNimineeType(flag:boolean){
+  this.newNominee = true;
+  this.noNominee = false;
+  //onchange on update
+  if(flag){
+    let nomineeId = null;
+    if(this.saoNomineeModel != null && this.saoNomineeModel != undefined && this.saoNomineeModel.id  != null && this.saoNomineeModel.id  != undefined){
+      nomineeId = this.saoNomineeModel.id ;
+    }
+    this.saoNomineeModel = new SaoNominee();
+    if(nomineeId != null && nomineeId != undefined){
+      this.saoNomineeModel.id = nomineeId;
+    }
+    if(this.admissionNumber != null && this.admissionNumber != undefined){
+      this.getNomineeFromMemberModule(this.admissionNumber);
+    }
+  }
+  this.saoNomineeModel.nomineeType = 2;
+  this.nomineeFormValidation();
+}
+noNimineeType(flag : boolean){
+  this.noNominee = true;
+  this.newNominee = false;
+  this.sameAsMembershipNominee = false;
+  if(flag){
+    let nomineeId = null;//onchange on update
+    let remarks = null;
+    let signedNomineeForm = null;
+    if(this.saoNomineeModel != null && this.saoNomineeModel != undefined){
+      if(this.saoNomineeModel.id  != null && this.saoNomineeModel.id  != undefined){
+        nomineeId = this.saoNomineeModel.id ;
+      }
+      if(this.saoNomineeModel.remarks  != null && this.saoNomineeModel.remarks  != undefined){
+        remarks = this.saoNomineeModel.remarks ;
+      }
+      if(this.saoNomineeModel.nomineeFilePath  != null && this.saoNomineeModel.nomineeFilePath  != undefined){
+        signedNomineeForm = this.saoNomineeModel.nomineeFilePath ;
+        this.saoNomineeModel.nomineeFilePath = this.fileUploadService.getFile(this.saoNomineeModel.nomineeFilePath , ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.saoNomineeModel.nomineeFilePath);
+      }
+    }
+    this.saoNomineeModel = new SaoNominee();
+    if(nomineeId != null && nomineeId != undefined){
+      this.saoNomineeModel.id = nomineeId;
+    }
+    if(remarks != null && remarks != undefined){
+      this.saoNomineeModel.remarks = remarks;
+    }
+    this.saoNomineeModel.nomineeType = 3;
+    if(signedNomineeForm != null && signedNomineeForm != undefined){
+    this.saoNomineeModel.nomineeFilePath = signedNomineeForm;
+    }
+  }
+  this.nomineeValidatorsFormNotRequired();
+  // this.newNominee = false;
+}
+
 nomineeValidatorsRequired(){
   this.nomineeForm.get('relationTypeName')?.enable();
   this.nomineeForm.get('nomineeName')?.enable();
@@ -293,8 +380,17 @@ getNomineeFromMemberModule(admissionNumber : any){
           if(this.responseModel.data[0].relationTypeName != null && this.responseModel.data[0].relationTypeName != undefined){
             this.saoNomineeModel.relationTypeName = this.responseModel.data[0].relationTypeName;
           }
+          if(this.responseModel.data[0].nomineeFilePath != null && this.responseModel.data[0].nomineeFilePath != undefined){
+            this.saoNomineeModel.nomineeFilePath = this.responseModel.data[0].nomineeFilePath;
+          }
+          if (this.responseModel.data[0].nomineeFilePath != null && this.responseModel.data[0].nomineeFilePath != undefined) {
+            this.saoNomineeModel.nomineeFilePath = this.responseModel.data[0].nomineeFilePath;
+            this.saoNomineeModel.nomineeFilePathList = this.fileUploadService.getFile(this.saoNomineeModel.nomineeFilePath  , ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.saoNomineeModel.nomineeFilePath );
+            this.isFileUploadedNominee = applicationConstants.TRUE;
+          }
+          this.saoNomineeModel.nomineeType = 2;
+
         }
-        this.saoNomineeModel.nomineeType = 2;
         this.saoNomineeModel.id = null;
       } else {
         this.commonComponent.stopSpinner();
@@ -344,13 +440,30 @@ getAllRelationTypes(){
           if(this.responseModel.data[0].admissionNo != null && this.responseModel.data[0].admissionNo != undefined){
             this.admissionNumber = this.responseModel.data[0].admissionNo;
           }
+          // if(this.responseModel.data[0].saoLoanNomineeDetailsDTO != null && this.responseModel.data[0].saoLoanNomineeDetailsDTO != undefined){
+          //   this.saoNomineeModel = this.responseModel.data[0].saoLoanNomineeDetailsDTO;
+          //   if(this.saoNomineeModel.nomineeFilePath != null && this.saoNomineeModel.nomineeFilePath != undefined){
+          //     this.saoNomineeModel.nomineeFilePathList =  this.fileUploadService.getFile(this.saoNomineeModel.nomineeFilePath , ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.saoNomineeModel.nomineeFilePath);
+          //   }
+          // }
           if(this.responseModel.data[0].saoLoanNomineeDetailsDTO != null && this.responseModel.data[0].saoLoanNomineeDetailsDTO != undefined){
             this.saoNomineeModel = this.responseModel.data[0].saoLoanNomineeDetailsDTO;
             if(this.saoNomineeModel.nomineeFilePath != null && this.saoNomineeModel.nomineeFilePath != undefined){
-              this.saoNomineeModel.nomineeFilePathList =  this.fileUploadService.getFile(this.saoNomineeModel.nomineeFilePath , ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.saoNomineeModel.nomineeFilePath);
+              if(this.saoNomineeModel.nomineeType != null && this.saoNomineeModel.nomineeType != undefined){
+                if(this.saoNomineeModel.nomineeType != 2){
+                  this.saoNomineeModel.nomineeFilePathList =  this.fileUploadService.getFile(this.saoNomineeModel.nomineeFilePath , ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.saoNomineeModel.nomineeFilePath);
+                }
+                else {
+                  this.saoNomineeModel.nomineeFilePathList =  this.fileUploadService.getFile(this.saoNomineeModel.nomineeFilePath , ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.saoNomineeModel.nomineeFilePath);
+                }
+                this.isFileUploadedNominee = applicationConstants.TRUE;
+              }
+              
             }
           }
-         
+          else {
+            this.isFileUploadedNominee = applicationConstants.FALSE;
+          }
           if(this.saoNomineeModel.nomineeType != null && this.saoNomineeModel.nomineeType != undefined){
             this.onChange(this.saoNomineeModel.nomineeType,this.flag);
             this.nomineeTypeDisable = true;
@@ -365,11 +478,11 @@ getAllRelationTypes(){
               this.sameAsMembershipNominee = false;
             }
           }
-          if(this.saoNomineeModel != null && this.saoNomineeModel != undefined){
-            if(this.saoNomineeModel.nomineeFilePath != null && this.saoNomineeModel.nomineeFilePath != undefined){
-              this.saoNomineeModel.nomineeFilePathList =  this.fileUploadService.getFile(this.saoNomineeModel.nomineeFilePath , ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.saoNomineeModel.nomineeFilePath);
-            }
-          }
+          // if(this.saoNomineeModel != null && this.saoNomineeModel != undefined){
+          //   if(this.saoNomineeModel.nomineeFilePath != null && this.saoNomineeModel.nomineeFilePath != undefined){
+          //     this.saoNomineeModel.nomineeFilePathList =  this.fileUploadService.getFile(this.saoNomineeModel.nomineeFilePath , ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.saoNomineeModel.nomineeFilePath);
+          //   }
+          // }
          
         }
       }
@@ -396,7 +509,9 @@ getAllRelationTypes(){
     if(this.saoNomineeModel != null && this.saoNomineeModel != undefined && this.isEdit && this.saoNomineeModel.filesDTOList == null || this.saoNomineeModel.filesDTOList == undefined){
       this.saoNomineeModel.filesDTOList = [];
     }
-    
+    if (filePathName === "Nominee") {
+      this.isFileUploadedNominee = applicationConstants.FALSE;
+    }
     this.saoNomineeModel.nomineeFilePath = null;
     let files: FileUploadModel = new FileUploadModel();
     for (let file of event.files) {
@@ -413,6 +528,7 @@ getAllRelationTypes(){
           // Add to filesDTOList array
         let timeStamp = this.commonComponent.getTimeStamp();
         if (filePathName === "Nominee") {
+          this.isFileUploadedNominee = applicationConstants.TRUE;
           this.saoNomineeModel.filesDTOList.push(files); 
           this.saoNomineeModel.nomineeFilePath = null;
           this.saoNomineeModel.filesDTOList[this.saoNomineeModel.filesDTOList.length-1].fileName = "SAO_NOMINEE" + this.loanId + "_" + timeStamp + "_" + file.name;
@@ -427,6 +543,7 @@ getAllRelationTypes(){
   }
   fileRemoeEvent(fileName :any){
     if(fileName == "Nominee"){
+      this.isFileUploadedNominee = applicationConstants.FALSE;
       if(this.saoNomineeModel.filesDTOList != null && this.saoNomineeModel.filesDTOList != undefined && this.saoNomineeModel.filesDTOList.length > 0){
         let removeFileIndex = this.saoNomineeModel.filesDTOList.findIndex((obj:any) => obj && obj.fileName === this.saoNomineeModel.nomineeFilePath);
         this.saoNomineeModel.filesDTOList[removeFileIndex] = null;

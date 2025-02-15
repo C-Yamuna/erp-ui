@@ -580,12 +580,19 @@ export class SavingsBankServicesComponent implements OnInit{
    * @param fileUpload
    * @author jyothi.naidana
    */
-  fileUploader(event:any ,fileUpload: FileUpload ){
+  fileUploader(event:any ,fileUpload: FileUpload ,rowData:any ){
     this.multipleFilesList = [];
     this.savingsBankServiceModel.filesDTOList = [];
     this.savingsBankServiceModel.requestDocPath = null;
+    this.savingsBankServiceModel.requestedDocPathMultipartFileList = [];
+    rowData.requestedDocPathMultipartFileList = [];
     let files: FileUploadModel = new FileUploadModel();
-    for (let file of event.files) {
+
+    let selectedFiles = [...event.files];
+    // Clear file input before processing files
+    fileUpload.clear();
+  
+    for (let file of selectedFiles) {
       let reader = new FileReader();
       reader.onloadend = (e) => {
         let files = new FileUploadModel();
@@ -597,7 +604,9 @@ export class SavingsBankServicesComponent implements OnInit{
         let index = this.multipleFilesList.findIndex(x => x.fileName == files.fileName);
         if (index === -1) {
           this.multipleFilesList.push(files);
+          this.savingsBankServiceModel.requestedDocPathMultipartFileList.push(files);
           this.savingsBankServiceModel.filesDTOList.push(files); // Add to filesDTOList array
+          rowData.requestedDocPathMultipartFileList.push(files);
         }
         let timeStamp = this.commonComponent.getTimeStamp();
         this.savingsBankServiceModel.filesDTOList[0].fileName = "SB_SERVICE" + this.sbAccId + "_" +timeStamp+ "_"+ file.name ;

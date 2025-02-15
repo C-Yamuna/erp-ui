@@ -124,7 +124,7 @@
                                             <!-- Upload Button Column -->
             
                                             <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
-                                                chooseLabel=" " formControlName="nomineeFilePath" id="apply-leave_fileUp_attach"
+                                                chooseLabel=" "  id="apply-leave_fileUp_attach"
                                                 name="file" accept=".png,.jpg,.jpeg,.pdf" (onRemove)="fileRemoeEvent('Nominee')"
                                                 (onSelect)="fileUploader($event,fileUpload,'Nominee')">
                                             </p-fileUpload>
@@ -168,7 +168,7 @@
                                             <!-- Upload Button Column -->
             
                                             <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
-                                                chooseLabel=" " formControlName="nomineeFilePath" id="apply-leave_fileUp_attach"
+                                                chooseLabel=" "  id="apply-leave_fileUp_attach"
                                                 name="file" accept=".png,.jpg,.jpeg,.pdf" (onRemove)="fileRemoeEvent('Nominee')"
                                                 (onSelect)="fileUploader($event,fileUpload,'Nominee')">
                                             </p-fileUpload>
@@ -188,7 +188,7 @@
                                     </div>
                                     <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                         <div class="form-label">
-                                        <label>{{'ERP.REMARKS' | translate}}</label>
+                                        <label><span class="red">*</span>{{'ERP.REMARKS' | translate}}</label>
             
                                         <textarea type="text" class="form-control" formControlName="remarks" pInputTextarea
                                             [(ngModel)]="saoNomineeModel.remarks" placeholder="Enter Remarks Here"></textarea>

@@ -93,10 +93,11 @@
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
-                                <label><span class="red">*</span>Document Number</label>
+                                    <label *ngIf="!isPanNumber"><span class="red">*</span>Document Number</label>
+                                    <label *ngIf="isPanNumber"><span class="red">*</span>Pan Number(AFZPK7190K)</label>
                                 <input id="documentNumber" type="text" formControlName="docNumber" pInputText
                                     [(ngModel)]="ciLoanKycModel.documentNumber" placeholder="Enter Document Number">
-                            <p-message severity="error" text="Enter Valid Name"
+                            <p-message severity="error" text="Enter Valid Document Number"
                                 *ngIf="!kycForm.controls['docNumber'].valid && kycForm.controls['docNumber'].dirty">
                             </p-message>
                             </div>
@@ -105,7 +106,7 @@
                                     <label><span class="red">*</span>Name as per Document</label>
                                     <input id="documentNumber" type="text" formControlName="nameAsPerDocument" pInputText
                                         [(ngModel)]="ciLoanKycModel.nameAsPerDocument" placeholder="Enter Document Number">
-                                    <p-message severity="error" text="Enter Valid Name"
+                                    <p-message severity="error" text="Enter Valid Document Name"
                                         *ngIf="!kycForm.controls['nameAsPerDocument'].valid && kycForm.controls['nameAsPerDocument'].dirty">
                                     </p-message>
                                 </div>
@@ -178,7 +179,8 @@
                     </div>
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="form-label">
-                            <label><span class="red">*</span>Document Number</label>
+                            <label *ngIf="!isPanNumber"><span class="red">*</span>Document Number</label>
+                            <label *ngIf="isPanNumber"><span class="red">*</span>Pan Number(AFZPK7190K)</label>
                             <input id="documentNumber" type="text" formControlName="docNumber" pInputText
                                 [(ngModel)]="ciLoanKycModel.documentNumber" placeholder="Enter Document Number">
                                 <p-message severity="error" text="Enter Valid doc Number"
@@ -191,7 +193,7 @@
                         <label><span class="red">*</span>Name as per Document</label>
                         <input id="documentNumber" type="text" formControlName="nameAsPerDocument" pInputText
                             [(ngModel)]="ciLoanKycModel.nameAsPerDocument" placeholder="Enter Document Number">
-                            <p-message severity="error" text="Enter Valid Name"
+                            <p-message severity="error" text="Enter Valid Document Name"
                                 *ngIf="!kycForm.controls['nameAsPerDocument'].valid && kycForm.controls['nameAsPerDocument'].dirty">
                             </p-message>
                         </div>

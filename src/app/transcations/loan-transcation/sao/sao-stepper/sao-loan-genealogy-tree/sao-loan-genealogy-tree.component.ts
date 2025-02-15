@@ -49,7 +49,7 @@ export class SaoLoanGenealogyTreeComponent {
    )
   { 
     this.genealogyForm = this.formBuilder.group({
-      'name': ['', Validators.required],
+      'name': new FormControl('', [Validators.required,Validators.pattern(applicationConstants.NEW_NAME_PATTERN)]),
       'relationWithApplicantName': ['', Validators.required],
       'remarks': new FormControl(''),
       // 'statusName' : ['', Validators.required]

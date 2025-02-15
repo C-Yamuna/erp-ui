@@ -148,7 +148,9 @@ export class SaoLoanApplication {
   
     saoFieldVerificationDetailsDTOList:any[] = [];
   
-    saoLoanDisbursementScheduleDTOList:any[] = [];
+    // saoLoanDisbursementScheduleDTOList:any[] = [];
+
+    saoDisbursementDTOList: any[] = [];
   
     saoLoanGenealogyTreeDTOList:any[] = [];
   

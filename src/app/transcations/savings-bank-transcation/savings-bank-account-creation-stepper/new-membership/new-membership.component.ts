@@ -1257,20 +1257,26 @@ export class NewMembershipComponent {
    * @param fileUpload 
    * @author jyothi.naidana
    */
-  fileUploader(event: any, fileUpload: FileUpload, filePathName: any) {
-    
+  fileUploader(event: any, fileUploadPhoto: FileUpload, fileUploadSign: FileUpload, filePathName: any) {
     this.multipleFilesList = [];
     if(this.isEdit && this.membershipBasicRequiredDetails.filesDTOList == null || this.membershipBasicRequiredDetails.filesDTOList == undefined){
       this.membershipBasicRequiredDetails.filesDTOList = [];
     }
+    let selectedFiles = [...event.files];
     if (filePathName === "individualPhotoCopy") {
       this.isFileUploadedPhoto = applicationConstants.FALSE;
+      this.membershipBasicRequiredDetails.multipartFileListForPhotoCopy = [];
+      // Clear file input before processing files
+      fileUploadPhoto.clear();
     }
     if (filePathName === "individualSighnedCopy") {
       this.isFileUploadedsignature = applicationConstants.FALSE;
+      this.membershipBasicRequiredDetails.multipartFileListForsignatureCopyPath = [];
+      fileUploadSign.clear();
     }
+   
     let files: FileUploadModel = new FileUploadModel();
-    for (let file of event.files) {
+    for (let file of selectedFiles) {
       let reader = new FileReader();
       reader.onloadend = (e) => {
         let timeStamp = this.commonComponent.getTimeStamp();
@@ -1286,14 +1292,14 @@ export class NewMembershipComponent {
           this.isFileUploadedPhoto = applicationConstants.TRUE;
           this.membershipBasicRequiredDetails.filesDTOList.push(files);
           this.membershipBasicRequiredDetails.photoCopyPath = null;
-          this.membershipBasicRequiredDetails.multipartFileListForPhotoCopy = [];
+          this.membershipBasicRequiredDetails.multipartFileListForPhotoCopy.push(files);
           this.membershipBasicRequiredDetails.filesDTOList[this.membershipBasicRequiredDetails.filesDTOList.length - 1].fileName = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
           this.membershipBasicRequiredDetails.photoCopyPath = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
         }
         if (filePathName === "individualSighnedCopy") {
           this.isFileUploadedsignature = applicationConstants.TRUE;
           this.membershipBasicRequiredDetails.filesDTOList.push(files);
-          this.membershipBasicRequiredDetails.multipartFileListForsignatureCopyPath = [];
+          this.membershipBasicRequiredDetails.multipartFileListForsignatureCopyPath.push(files);
           this.membershipBasicRequiredDetails.signatureCopyPath = null;
           this.membershipBasicRequiredDetails.filesDTOList[this.membershipBasicRequiredDetails.filesDTOList.length - 1].fileName = "Individual_Member_signed_copy" + "_" + timeStamp + "_" + file.name;
           this.membershipBasicRequiredDetails.signatureCopyPath = "Individual_Member_signed_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
@@ -1661,101 +1667,110 @@ getMemberDetailsByAdmissionNUmber(admissionNumber: any ) {
    * @param fileUpload 
    * @param filePathName 
    */
-  fileUploaderForPromoters(event: any, fileUpload: FileUpload, filePathName: any) {
+  fileUploaderForPromoters(event: any, fileUploadPhotoPromoter: FileUpload,fileUpload: FileUpload, filePathName: any) {
     this.multipleFilesList = [];
     if(this.isEdit && this.promoterDetailsModel.filesDTOList == null || this.promoterDetailsModel.filesDTOList == undefined){
       this.promoterDetailsModel.filesDTOList = [];
     }
+    let selectedFiles = [...event.files];
     if (filePathName === "groupPromoterImage") {
       this.isFileUploadedPromoterPhoto = applicationConstants.FALSE;
+      this.promoterDetailsModel.multipartFileListForPhotoCopyPath = [];
+      fileUploadPhotoPromoter.clear();
     }
     if (filePathName === "groupPromoterSignature") {
       this.isFileUploadedPromoterSignature = applicationConstants.FALSE;
+      this.promoterDetailsModel.multipartFileListForSignatureCopyPath = [];
+      fileUpload.clear();
     }
     let files: FileUploadModel = new FileUploadModel();
-    for (let file of event.files) {
+    for (let file of selectedFiles) {
       let reader = new FileReader();
       reader.onloadend = (e) => {
         let timeStamp = this.commonComponent.getTimeStamp();
         let files = new FileUploadModel();
         this.uploadFileData = e.currentTarget;
-        files.fileName = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
         files.fileType = file.type.split('/')[1];
         files.value = this.uploadFileData.result.split(',')[1];
         files.imageValue = this.uploadFileData.result;
-        this.multipleFilesList.push(files);
-         
+
         if (filePathName === "groupPromoterImage") {
+          files.fileName = "Group_Promoter_Photo_copy" + "_" + timeStamp + "_" + file.name;
           this.isFileUploadedPromoterPhoto = applicationConstants.TRUE;
           this.promoterDetailsModel.filesDTOList.push(files);
+          this.promoterDetailsModel.multipartFileListForPhotoCopyPath.push(files);
           this.promoterDetailsModel.uploadImage = null;
           this.promoterDetailsModel.filesDTOList[this.promoterDetailsModel.filesDTOList.length - 1].fileName = "Group_Promoter_Photo_copy" + "_" + timeStamp + "_" + file.name;
           this.promoterDetailsModel.uploadImage = "Group_Promoter_Photo_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
         }
         if (filePathName === "groupPromoterSignature") {
+          files.fileName = "Group_Promoter_signed_copy" + "_" + timeStamp + "_" + file.name;
           this.isFileUploadedPromoterSignature = applicationConstants.TRUE
           this.promoterDetailsModel.filesDTOList.push(files);
+          this.promoterDetailsModel.multipartFileListForSignatureCopyPath.push(files);
           this.promoterDetailsModel.uploadSignature = null;
           this.promoterDetailsModel.filesDTOList[this.promoterDetailsModel.filesDTOList.length - 1].fileName = "Group_Promoter_signed_copy" + "_" + timeStamp + "_" + file.name;
           this.promoterDetailsModel.uploadSignature = "Group_Promoter_signed_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
         }
-        let index1 = event.files.findIndex((x: any) => x === file);
-        fileUpload.remove(event, index1);
-        fileUpload.clear();
         this.updateData();
       }
       reader.readAsDataURL(file);
     }
   }
 
+
+  
   /**
    * @implements fileUpload for promoter in institution
    * @param event 
    * @param fileUpload 
    * @param filePathName 
    */
-  fileUploaderForInstitutionPromoters(event: any, fileUpload: FileUpload, filePathName: any) {
-    
-    this.multipleFilesList = [];
-    if(this.isEdit && this.institutionPromoterDetailsModel.filesDTOList == null || this.institutionPromoterDetailsModel.filesDTOList == undefined){
+  fileUploaderForInstitutionPromoters(event: any, fileUploadInstitutionPromoterSign: FileUpload, fileUpload: FileUpload, filePathName: any) {
+
+    if (this.isEdit && this.institutionPromoterDetailsModel.filesDTOList == null || this.institutionPromoterDetailsModel.filesDTOList == undefined) {
       this.institutionPromoterDetailsModel.filesDTOList = [];
     }
+    let selectedFiles = [...event.files];
     if (filePathName === "institutionPromoterImage") {
       this.isFileUploadedPromoterPhoto = applicationConstants.FALSE;
+      this.institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath = [];
+      fileUpload.clear();
     }
     if (filePathName === "insitutionPromoterSignature") {
       this.isFileUploadedPromoterSignature = applicationConstants.FALSE;
+      this.institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath = [];
+      fileUploadInstitutionPromoterSign.clear();
     }
     let files: FileUploadModel = new FileUploadModel();
-    for (let file of event.files) {
+    for (let file of selectedFiles) {
       let reader = new FileReader();
       reader.onloadend = (e) => {
         let timeStamp = this.commonComponent.getTimeStamp();
         let files = new FileUploadModel();
         this.uploadFileData = e.currentTarget;
-        files.fileName = "Institution_Photo_copy" + "_" + timeStamp + "_" + file.name;
         files.fileType = file.type.split('/')[1];
         files.value = this.uploadFileData.result.split(',')[1];
         files.imageValue = this.uploadFileData.result;
-        this.multipleFilesList.push(files);
-         
+
         if (filePathName === "institutionPromoterImage") {
+          files.fileName = "Institution_Photo_copy" + "_" + timeStamp + "_" + file.name;
           this.isFileUploadedPromoterPhoto = applicationConstants.TRUE;
           this.institutionPromoterDetailsModel.filesDTOList.push(files);
+          this.institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath.push(files);
           this.institutionPromoterDetailsModel.uploadImage = null;
           this.institutionPromoterDetailsModel.filesDTOList[this.institutionPromoterDetailsModel.filesDTOList.length - 1].fileName = "Institution_Promoter_Photo_copy" + "_" + timeStamp + "_" + file.name;
           this.institutionPromoterDetailsModel.uploadImage = "Institution_Promoter_Photo_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
         }
         if (filePathName === "insitutionPromoterSignature") {
+          files.fileName = "Institution_Promoter_signed_copy" + "_" + timeStamp + "_" + file.name;
           this.isFileUploadedPromoterSignature = applicationConstants.TRUE;
           this.institutionPromoterDetailsModel.filesDTOList.push(files);
+          this.institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath.push(files);
           this.institutionPromoterDetailsModel.uploadSignature = null;
           this.institutionPromoterDetailsModel.filesDTOList[this.institutionPromoterDetailsModel.filesDTOList.length - 1].fileName = "Institution_Promoter_signed_copy" + "_" + timeStamp + "_" + file.name;
           this.institutionPromoterDetailsModel.uploadSignature = "Institution_Promoter_signed_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
         }
-        let index1 = event.files.findIndex((x: any) => x === file);
-        fileUpload.remove(event, index1);
-        fileUpload.clear();
         this.updateData();
       }
       reader.readAsDataURL(file);
