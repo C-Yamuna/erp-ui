@@ -147,7 +147,7 @@
                                         [disabled]="editDeleteDisable" (click)="editGoldLoanMortgage(row)"
                                         id="prj_stakehlder_bt_edit" class="action-edit"></p-button>
                                     <p-button label="{{'LOAN_TRANSACTION.DELETE' | translate}}"
-                                        [disabled]="editDeleteDisable" (click)="deleteGoldLoanMortgage(row)"
+                                        [disabled]="editDeleteDisable" (click)="deletDilogBox(row)"
                                         id="prj_stakehlder_bt_edit" class="action-delete"></p-button>
                                 </div>
                             </td>
@@ -261,7 +261,7 @@
                                         [disabled]="editDeleteDisable" (click)="editLandLoanMortgage(row)"
                                         id="prj_stakehlder_bt_edit" class="action-edit"></p-button>
                                     <p-button label="{{'LOAN_TRANSACTION.DELETE' | translate}}"
-                                        [disabled]="editDeleteDisable" (click)="deleteLandLoanMortgage(row)"
+                                        [disabled]="editDeleteDisable" (click)="deletDilogBox(row)"
                                         id="prj_stakehlder_bt_edit" class="action-delete"></p-button>
                                 </div>
                             </td>
@@ -835,7 +835,7 @@
                             translate}}</label>
                         <p-dropdown id="bunit_txt_status" placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}"
                             [filter]="true" [options]="villagesList" formControlName="village"
-                            [(ngModel)]="siLandLoanMortgageModel.villageId" [appendTo]="'body'"></p-dropdown>
+                            [(ngModel)]="siLandLoanMortgageModel.villageId" [appendTo]="'body'" (onChange)="checkDuplicateSurveyNoInTable(siLandLoanMortgageModel)"></p-dropdown>
 
                     </div>
                 </div>
@@ -856,7 +856,7 @@
                         <label><span class="red">*</span>{{'LOAN_TRANSACTION.KHATA_BOOK_NUMBER' |
                             translate}}</label>
                         <input autocomplete="off" pInputText type="text" formControlName="khataNumber"
-                            [(ngModel)]="siLandLoanMortgageModel.khataNumber" minlength="1" maxlength="20">
+                            [(ngModel)]="siLandLoanMortgageModel.khataNumber" (onChange)="checkDuplicateSurveyNoInTable(siLandLoanMortgageModel)" minlength="1" maxlength="20">
                         <p-message severity="error" text="Enter Valid khata Number"
                             *ngIf="!siLandMortgageForm.controls['khataNumber'].valid && siLandMortgageForm.controls['khataNumber'].dirty">
                         </p-message>
@@ -867,7 +867,7 @@
                         <label><span class="red">*</span>{{'LOAN_TRANSACTION.SURVEY_NO' |
                             translate}}</label>
                         <input autocomplete="off" pInputText type="text" minlength="1" maxlength="16"
-                            formControlName="surveyNumber" [(ngModel)]="siLandLoanMortgageModel.surveyNumber">
+                            formControlName="surveyNumber" [(ngModel)]="siLandLoanMortgageModel.surveyNumber"  (focusout)="checkDuplicateSurveyNoInTable(siLandLoanMortgageModel)">
                         <p-message severity="error" text="Enter Valid survey Number"
                             *ngIf="!siLandMortgageForm.controls['surveyNumber'].valid && siLandMortgageForm.controls['surveyNumber'].dirty">
                         </p-message>
@@ -1353,5 +1353,27 @@
                 </div>
             </div>
         </form>
+    </div>
+</p-dialog>
+
+<p-dialog [(visible)]="displayDialog" [closable]="false" styleClass="delete-popup" [responsive]="true">
+    <div class="col-12">
+        <i class="fa fa-times-circle text-center" aria-hidden="true"></i>
+
+        <p class="text-center popup-header">{{'ERP.ARE_YOU_SURE_TO_DELETE' | translate}}</p>
+        <p class="text-center pop-subheader">{{'ERP.DO_YOU_REALLY_TO_DELETE_THESE_RECORDS' | translate}}</p>
+
+    </div>
+    <div class="col-12 text-center p-2">
+
+    <p-button pRipple class="yes-button" *ngIf="showGoldform"
+        label="{{ 'ERP.DELETE' | translate }}" (click)="submitDeleteForGold()"></p-button>
+
+    <p-button pRipple class="yes-button" *ngIf="showLandform"
+        label="{{ 'ERP.DELETE' | translate }}" (click)="submitDeleteForLand()"></p-button>
+
+
+        <p-button pRipple class="no-button" label="{{'ERP.CANCEL' | translate}}"
+            (click)="cancelForDialogBox()"></p-button>
     </div>
 </p-dialog>

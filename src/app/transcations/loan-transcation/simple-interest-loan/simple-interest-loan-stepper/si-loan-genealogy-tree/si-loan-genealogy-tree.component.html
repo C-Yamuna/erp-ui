@@ -86,6 +86,9 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="row.name" formControlName="name">
+                                <p-message severity="error" text="Enter Valid Relation Name"
+                                *ngIf="!siGenealogyTreeForm.controls['name'].valid && siGenealogyTreeForm.controls['name'].dirty">
+                              </p-message>
                             </ng-template>
                             <ng-template pTemplate="output">{{row.name}}</ng-template>
                         </p-cellEditor>
@@ -111,7 +114,7 @@
                             <p-button label="{{'ERP.EDIT' | translate}}" *ngIf="!editing" pInitEditableRow
                                 (click)="editService(row)" id="prj_stakehlder_bt_edit" class="action-edit"
                                 [disabled]="editDeleteDisable"></p-button>
-                            <p-button label="{{'ERP.DELETE' | translate}}" *ngIf="!editing" (click)="delete(row)"
+                            <p-button label="{{'ERP.DELETE' | translate}}" *ngIf="!editing"  (click)="deletDilogBox(row)"
                                 id="prj_stakehlder_bt_edit" class="action-delete"
                                 [disabled]="editDeleteDisable"></p-button>
                         </div>
@@ -121,3 +124,18 @@
         </p-table>
     </form>
 </div>
+
+<p-dialog [(visible)]="displayDialog" [closable]="false" styleClass="delete-popup" [responsive]="true">
+    <div class="col-12">
+        <i class="fa fa-times-circle text-center" aria-hidden="true"></i>
+
+        <p class="text-center popup-header">{{'ERP.ARE_YOU_SURE_TO_DELETE' | translate}}</p>
+        <p class="text-center pop-subheader">{{'ERP.DO_YOU_REALLY_TO_DELETE_THESE_RECORDS' | translate}}</p>
+
+    </div>
+    <div class="col-12 text-center p-2">
+        <p-button pRipple class="yes-button" label="{{'ERP.DELETE' | translate}}" (click)="submitDelete()"></p-button>
+        <p-button pRipple class="no-button" label="{{'ERP.CANCEL' | translate}}"
+            (click)="cancelForDialogBox()"></p-button>
+    </div>
+</p-dialog>

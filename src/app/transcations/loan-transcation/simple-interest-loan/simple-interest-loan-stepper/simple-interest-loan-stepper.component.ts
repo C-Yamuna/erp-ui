@@ -1123,6 +1123,9 @@ export class SimpleInterestLoanStepperComponent {
       }else if (this.siOtherLoanMortgageModel.collateralType == 7) {
         this.saveOrUpdatePropertyLoanMortagageDetails(activeIndex, "next");
       }
+       else {
+        this.saveOrUpdateOtherLoanMortagageDetails(activeIndex, "next");
+      }
     } else if (activeIndex == 8) {
       this.saveOrUpdateDocumentDetails(activeIndex, "next");
     } else if (activeIndex == 9) {

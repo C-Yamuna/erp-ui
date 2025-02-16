@@ -33,7 +33,7 @@ export class SiLoanDocumentsComponent {
     isEdit: boolean = false;
     buttonDisabled: boolean = false;
     saveAndNextEnable : boolean = false;
-  
+    buttonsFlag: boolean = true;
     columns: any[] = [];
     uploadFlag: boolean = false;
     editIndex: any;
@@ -271,9 +271,9 @@ export class SiLoanDocumentsComponent {
           this.mandatoryDoxsTextShow = false;
       }
       if (mandatoryDocuments.length > 0) {
-          this.saveAndNextEnable = allMandatoryUploaded;
+          this.saveAndNextEnable = allMandatoryUploaded && this.buttonsFlag;
       } else {
-          this.saveAndNextEnable = this.documentModelList?.length > 0 ;
+          this.saveAndNextEnable = this.documentModelList?.length > 0 && this.buttonsFlag;
       }
       this.siLoanDocumentsModel.siLoanApplicationId = this.loanAccId;
       this.siLoanDocumentsModel.admissionNumber = this.admissionNumber;
@@ -391,6 +391,8 @@ export class SiLoanDocumentsComponent {
             this.msgs = [];
           }, 3000);
         }
+        this.buttonsFlag = true;
+        this.saveAndNextEnable = true;;
         this.addKycButton = false;
         this.buttonDisabled = false;
         this.getAllSILoanDocumentDetailsLoanAccId(this.loanAccId);
@@ -404,6 +406,7 @@ export class SiLoanDocumentsComponent {
       });
       this.addDocumentOfKycFalg = false;
       this.editButtonDisable = false;
+      this.updateData();
     }
    
     /**
@@ -488,6 +491,8 @@ export class SiLoanDocumentsComponent {
       this.multipleFilesList = [];
       this.addDocumentOfKycFalg = !this.addDocumentOfKycFalg;
       this.buttonDisabled = true;
+      this.buttonsFlag = false;
+      this.saveAndNextEnable = false;
       this.editButtonDisable = true;
       this.siLoanDocumentsModel = new SiLoanDocuments();
       this.updateData();
@@ -498,6 +503,8 @@ export class SiLoanDocumentsComponent {
       this.addDocumentOfKycFalg = !this.addDocumentOfKycFalg;
       this.buttonDisabled = false;
       this.editButtonDisable = false;
+      this.buttonsFlag = true;
+      this.saveAndNextEnable = true;
       this.getAllSILoanDocumentDetailsLoanAccId(this.loanAccId);
       this.updateData();
     }
@@ -519,6 +526,8 @@ export class SiLoanDocumentsComponent {
       }
       this.editButtonDisable = true;
       this.buttonDisabled = true;
+      this.buttonsFlag = false;
+      this.saveAndNextEnable = false;
       this.veiwCardHide = false;
       this.editDocumentOfKycFalg = false;
       this.addDocumentOfKycFalg = false;
@@ -531,6 +540,8 @@ export class SiLoanDocumentsComponent {
       this.editDocumentOfKycFalg = true;
       this.buttonDisabled = false;
       this.editButtonDisable = false;
+      this.buttonsFlag = true;
+      this.saveAndNextEnable = true;
         this.getAllSILoanDocumentDetailsLoanAccId(this.loanAccId);
       this.updateData();
     }
@@ -556,6 +567,9 @@ export class SiLoanDocumentsComponent {
       this.siLoanDocumentsDetailsService.updateSILoanDocumentsDetails(this.siLoanDocumentsModel).subscribe((response: any) => {
         this.responseModel = response;
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+          this.saveAndNextEnable = true;
+          this.buttonsFlag = true;
+          this.updateData();
           this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
             setTimeout(() => {
               this.msgs = [];
@@ -570,7 +584,7 @@ export class SiLoanDocumentsComponent {
         this.addKycButton = false;
         this.buttonDisabled = false;
         this.getAllSILoanDocumentDetailsLoanAccId(this.loanAccId);
-        this.updateData();
+        // this.updateData();
       }, error => {
         this.commonComponent.stopSpinner();
         this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];

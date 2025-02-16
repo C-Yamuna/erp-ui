@@ -52,7 +52,7 @@ export class SiGoldLoanMortgage {
 export class SiLandLoanMortgage {
 
     id : any;
-
+    rowId:any;
     siLoanApplicationId : any;
 
     admissionNo : any;
