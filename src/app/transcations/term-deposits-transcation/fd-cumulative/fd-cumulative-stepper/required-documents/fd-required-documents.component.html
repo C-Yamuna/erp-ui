@@ -116,7 +116,7 @@
                                     <div class="uplodad-style align-items-center">
                                         <!-- Upload Button Column -->
 
-                                        <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold"
+                                        <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" formContralName="requiredDocumentFilePath"
                                             name="myfile[]" chooseLabel=" " id="apply-leave_fileUp_attach"
                                             name="file" accept=".png,.jpg,.jpeg,.pdf" [customUpload]="true"
                                             (onRemove)="fileRemoeEvent()" (onSelect)="imageUploader($event,fileUpload)">
@@ -156,7 +156,8 @@
                                     <label><span class="red">*</span>{{ 'TERMDEPOSITSTRANSACTION.DOCUMENT_TYPE' | translate }}</label>
                                     <p-dropdown placeholder="{{'TERMDEPOSITSTRANSACTION.SELECT'| translate}}" formControlName="requiredDocumentTypeName"
                                         [options]="documentNameList" id="docTypeId"
-                                        [(ngModel)]="fdRequiredDocumentModel.requiredDocumentTypeId">
+                                        [(ngModel)]="fdRequiredDocumentModel.requiredDocumentTypeId"
+                                        (onChange)="documentDuplicate(fdRequiredDocumentModel.requiredDocumentTypeId)">
                                     </p-dropdown>
                                 </div>
                             </div>

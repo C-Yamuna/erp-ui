@@ -426,11 +426,11 @@
                 <div class="globel-border-top-color"></div>
                 <!-- ............... <p-table #dt [value]="promoterDetails" dataKey="id" editMode="row"> -->
                     <form [formGroup]="promoterDetailsForm" id="proj_stakeholder_form">
-                <p-table #dt [columns]="promoterColumns" [value]="promoterDetails" dataKey="uniqueId" editMode="row"
-                    styleClass="p-datatable-striped" [rows]="5" [paginator]="true" [showJumpToPageDropdown]="true"
-                    [showPageLinks]="false" [pageLinks]="1" [responsive]="true" rowExpandMode="single"
-                    [globalFilterFields]="['surname', 'name', 'operatorTypeName', 'dob', 'age', 'genderName', 'maritalStatusName', 'mobileNumber', 'aadharNumber', 'emailId', 'startDate']">
-                    <ng-template pTemplate="header">
+                        <p-table #dt [columns]="promoterColumns" [value]="promoterDetails" dataKey="uniqueId" 
+                        styleClass="p-datatable-striped" [rows]="5" [paginator]="true" [showJumpToPageDropdown]="true"
+                        [showPageLinks]="false" [pageLinks]="1" [responsive]="true" rowExpandMode="single"
+                        [globalFilterFields]="['surname', 'name', 'operatorTypeName', 'dob', 'age', 'genderTypeName', 'maritalStatusName', 'mobileNumber', 'aadharNumber', 'emailId', 'startDateVal']">
+                        <ng-template pTemplate="header">
                         <tr>
                             <th>{{'ERP.SURNAME' | translate}}</th>
                             <th>{{'ERP.NAME' | translate}}</th>

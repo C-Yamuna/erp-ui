@@ -73,7 +73,7 @@
                                                 <input type="text" formControlName="nomineeName" pInputText
                                                     placeholder="Enter Name"
                                                     [(ngModel)]="siLoanNomineeModel.nomineeName" />
-                                                <p-message severity="error" text="Enter Valid nomineeName"
+                                                <p-message severity="error" text="Enter Valid Nominee Name"
                                                     *ngIf="!nomineeForm.controls['nomineeName'].valid && nomineeForm.controls['nomineeName'].dirty">
                                                 </p-message>
                                             </div>
@@ -82,7 +82,7 @@
                                             <div class="form-label">
                                                 <label><span class="red">*</span>{{'ERP.AADHAR_NUMBER' |
                                                     translate}}</label>
-                                                <input type="text" formControlName="aadhaar" pInputText
+                                                <input type="text" formControlName="aadhaar" pInputText minlength="12" maxlength="12"
                                                     placeholder="Enter Aadhar Number"
                                                     [(ngModel)]="siLoanNomineeModel.nomineeAadharNumber" />
                                                 <p-message severity="error" text="Enter Valid aadhaar"
@@ -94,10 +94,10 @@
                                             <div class="form-label">
                                                 <label><span class="red">*</span>{{'ERP.MOBILE_NUMBER' |
                                                     translate}}</label>
-                                                <input type="text" formControlName="mobileNumber" pInputText
+                                                <input type="text" formControlName="mobileNumber" pInputText minlength="10" maxlength="10"
                                                     placeholder="Enter Mobile Number"
                                                     [(ngModel)]="siLoanNomineeModel.nomineeMobileNumber" />
-                                                <p-message severity="error" text="Enter Valid mobileNumber"
+                                                <p-message severity="error" text="Enter Valid Mobile Number"
                                                     *ngIf="!nomineeForm.controls['mobileNumber'].valid && nomineeForm.controls['mobileNumber'].dirty">
                                                 </p-message>
                                             </div>

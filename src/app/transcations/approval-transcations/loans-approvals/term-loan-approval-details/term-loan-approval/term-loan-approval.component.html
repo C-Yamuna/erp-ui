@@ -1556,74 +1556,61 @@
 
                         </div>
                     </p-scrollPanel>
-                    <div class="col-12 viewbottom-footer icon-size">
-                        <div class="row">
-                            <div class="col-xl-3 col-lg-4 col-md-3 col-sm-4 mt-4">
-                                <p-button icon="fa fa-download" iconPos="left" (click)="pdfDownload()"
-                                    pTooltip="Filename.pdf" tooltipPosition="top"></p-button>
-                                <!-- <p-button icon="fa fa-print" iconPos="left" pTooltip="Print"
-                                    tooltipPosition="top"></p-button> -->
-                            </div>
-                            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12" *ngIf="!editOpt && preveiwFalg">
-                                <div class="form-label">
-                                    <span class=""> {{ 'ERP.UPLOAD_DOCUMENT' | translate
-                                        }} </span>
-                                    <div class="uplodad-style align-items-center">
-                                        <!-- Upload Button Column -->
-                                        <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
-                                            id="apply-leave_fileUp_attach" chooseLabel=" " name="file"
-                                            accept=".png,.jpg,.jpeg" (onRemove)="fileRemoveEvent()"
-                                            (onSelect)="imageUploader($event,fileUpload)">
-                                        </p-fileUpload>
-                                        <div class="col-12  d-flex p-1 contant-body"
-                                            *ngFor="let img of termLoanApplicationModel.multipartFileList">
-                                            <div
-                                                *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22"
-                                                        height="22"></a>
+                    <form [formGroup]="approvalForm">
+                        <div class="col-12 viewbottom-footer icon-size">
+                            <div class="row">
+                                <!-- <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4"> -->
+                                    <!-- <p-button icon="fa fa-download" iconPos="left" pTooltip="Filename.pdf"
+                                        tooltipPosition="top"></p-button> -->
+                                    <!-- <p-button icon="fa fa-print" iconPos="left" pTooltip="Print"
+                                        tooltipPosition="top"></p-button> -->
+            
+                                <!-- </div> -->
+                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4" >
+                                    <p class="label-view text-fontwt">{{'ERP.FILE_PATH' | translate}}</p>
+                                <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-xs-12 justify-content-end">
+                                    <div class="col-12 px-0">
+                                        <div class="px-0" *ngFor="let img of termLoanApplicationModel.multipartFileList">
+                                            <div class="col-12 p-0" *ngIf=" img.fileType =='pdf'">
+                                                <a href="{{img.imageValue}}">
+                                                    <img src="assets\images\pdf.png" class="pdf-img img-fluid" pTooltip="{{img.fileName}}"
+                                                    tooltipPosition="bottom">
+                                                </a>
                                             </div>
-                                            <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
-                                                tooltipPosition="bottom">
-                                                {{img.fileName}}</div>
-
+                                            <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                                {{img.fileName}}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
-                            <div class="col-12 p-3 bottom-padding"></div>
-                            <!-- <div class="col-xl-3 col-lg-4 col-md-3 col-sm-4 ht-3rem"
-                                *ngIf="!editOpt && !preveiwFalg || editOpt">
-                                <h6 class="label-view">{{'ERP.STATUS' | translate}}</h6>
-                                <p class="label-input-text">{{termLoanApplicationModel.accountStatusName}}</p>
-                            </div> -->
-                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4">
-                                <div class="form-label">
-                                    <label> <span class="red">*</span> {{'ERP.STATUS' | translate}}</label>
-                                    <p-dropdown [filter]="true" [options]="statusList" placeholder="Select"
-                                        (onChange)="getAccountStatus()" [(ngModel)]="termLoanApplicationModel.accountStatus"></p-dropdown>
+                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4">
+                                    <div class="form-label">
+                                        <label> <span class="red">*</span> {{'ERP.STATUS' | translate}}</label>
+                                        <p-dropdown [filter]="true" [options]="statusList" placeholder="Select"
+                                            [(ngModel)]="termLoanApplicationModel.accountStatus" formControlName="status"
+                                            (onChange)="onStatusChange($event)" ></p-dropdown>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-12 p-3 bottom-padding"></div>
-                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4">
-                                <div class="form-label">
-                                    <label>{{'ERP.REMARKS' | translate}}</label>
-                                    <textarea type="text" class="form-control" pInputTextarea
-                                        placeholder="Enter Remarks Here"
-                                        [(ngModel)]="termLoanApplicationModel.remarks"></textarea>
+            
+                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4">
+                                    <div class="form-label">
+                                        <label>{{'ERP.REMARKS' | translate}}</label>
+                                        <textarea type="text" class="form-control" pInputTextarea
+                                            placeholder="Enter Remarks Here" formControlName="remark"
+                                            [(ngModel)]="termLoanApplicationModel.remarks"></textarea>
+                                    </div>
                                 </div>
-                            </div>
-                            
-                            <div class="col-xl-9 col-lg-8 col-md-9 col-sm-8 mt-4">
-                                <div class="d-flex justify-content-end">
-                                    <p-button (click)="backbutton()" label="BACK"></p-button>
-                                    <p-button
-                                        label="{{'TERMDEPOSITSTRANSACTION.SUBMIT' | translate}}" (click)="submit()"
-                                        [disabled]="isDisableSubmit"></p-button>
+                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4">
+                                    <div class="d-flex justify-content-end">
+                                        <p-button (click)="backbutton()" label="BACK"></p-button>
+                                        <p-button label="{{'TERMDEPOSITSTRANSACTION.SUBMIT' | translate}}"
+                                            (click)="submit()" [disabled]="!approvalForm.valid"></p-button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        </form>
                     <div class="col-12 m-2"></div>
                 </div>
 

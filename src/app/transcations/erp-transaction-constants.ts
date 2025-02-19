@@ -331,6 +331,8 @@ export const ERP_TRANSACTION_CONSTANTS = {
     FD_NON_CUMMULATIVE_FAS: '/fd_non_cummulative_fas',
     FD_NON_CUMMULATIVE_ACCOUNTS_TRANSACTIONS: '/fd_non_cummulative_accounts_transactions',
     FD_NON_CUMMULATIVE_ACCOUNTS: '/fd_non_cummulative_accounts',
+    FD_CUMULATIVE_ACCOUNTS_TRANSACTION:'/fd_cummulative_accounts_transactions',
+    RD_ACCOUNTS_TRANSACTIONS:'/rd_accounts_transactions',
     UPDATE_CLOUSER_STATUS: '/update_clouser_status',
     GET_FD_NON_CUMMULATIVE_TRANSACTIONS_BY_ACCOUNT_ID_AND_TRANSACTION_TYPE: '/get_fd_non_cummulative_transactions_by_account_id_and_transaction_type',
     GET_FD_NON_CUMMULATIVE_ACCOUNT_DETAILS: '/get_fd_non_cummulative_account_details',
@@ -820,7 +822,7 @@ export const ERP_TRANSACTION_CONSTANTS = {
    GET_FD_NON_CUMMULATIVE_APPLICATION_BY_ADDMISSION_NUMBER:'/get_fd_non_cummulative_application_by_admission_number',
    GET_RD_APPLICATION_BY_ADDMISSION_NUMBER:'/get_rd_application_by_admission_number',
    FD_TRANSACTION :"/fd_cummulative_accounts_transactions",
-   
+   GET_SAO_PROD_PURPOSE_BY_PRODUCT_ID:'/get_sao_product_purpose_config_list_by_product_id',
 
 
 //Borrowing Product Definition
@@ -929,11 +931,15 @@ export const ERP_TRANSACTION_CONSTANTS = {
    SI_OTHER_MORTGAGE_DETAILS:'/si_other_mortgage_details',
    SI_PROPERY_MORTGAGE_DETAILS:'/si_property_mortgages',
    TERM_PROPERTY_MORTGAGES:'/term_property_mortgages',
+   GET_CI_DISBURSEMENT_BY_CI_APPLICATION_ID:'/get_ci_disbursement_list_by_application_id',
    GET_SI_LOAN_APPLICATION_BY_ADDMISSION_NUMBER:'/get_si_loan_application_by_admission_number',
    GET_SAO_LOAN_APPLICATION_BY_ADDMISSION_NUMBER:'/get_sao_loan_application_by_admission_number',
    GET_CI_LOAN_APPLICATION_BY_ADDMISSION_NUMBER:'/get_ci_loan_application_by_admission_number',
    GET_TERM_LOAN_APPLICATION_BY_ADDMISSION_NUMBER:'/get_term_loan_application_by_admission_number',
    GET_AGENT_DETAILS_BY_ADDMISSION_NUMBER:'/get_agent_details_by_admission_number',
+   GET_TERM_LOAN_DISBURSEMENT_SCHEDULE_BY_LOAN_APPLICATION_ID:'/get_term_loan_disbursement_schedule_by_loan_application_id',
+   GET_TERM_DISBURSEMENT_LIST_BY_APPLICATION_ID:'/get_disbursement_list_by_application_id',
+   GET_TERM_LOAN_COLLECTION_BY_APPLICATION_ID:'/get_term_loan_collections_by_application_id',
 
 
    FD_PRODUCT_DEFINITION_PREVIEW_DOWNLOAD:'/fd_cummulative_product_definition_preview_download',
@@ -943,4 +949,6 @@ export const ERP_TRANSACTION_CONSTANTS = {
    FD_CUMMULATIVE_ACCOUNTS_TRANSACTIONS:'/fd_cummulative_accounts_transactions',
    GET_ALL_AGENT_TRANSACTION_BY_AGENT_ID:'/get_agent_transaction_by_agent_id' ,
    GET_DAILY_DEPOSIT_TRANSCATION_BY_ACCOUNT_ID:'/get_latest_five_transaction_details_by_acc_id',
+   SI_LOAN_APPLICATION_PREVIEW_DOWNLOAD :'/si_loan_application_preview_download',
+
 }

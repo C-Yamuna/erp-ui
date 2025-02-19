@@ -212,6 +212,7 @@ export class RecurringDepositNomineeComponent implements OnInit{
     }
     this.rdAccountNomineeModel.accountNumber = this.accountNumber;
     this.rdAccountNomineeModel.rdAccId = this.rdAccId;
+    this.rdAccountNomineeModel.memberTypeName = this.memberTypeName;
     this.rdAccountsService.changeData({
       formValid: !this.nomineeForm.valid ? true : false,
       data: this.rdAccountNomineeModel,

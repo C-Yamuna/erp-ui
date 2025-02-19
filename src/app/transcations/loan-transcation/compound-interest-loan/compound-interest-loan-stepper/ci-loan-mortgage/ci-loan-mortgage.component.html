@@ -72,8 +72,9 @@
                                         <div class="search">
                                             <span class="p-input-icon-right">
                                                 <i class="pi pi-search global-search-icon"></i>
-                                                <input type="text" pInputText class="searchbox"
-                                                    placeholder="Search" />
+                                                <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                                placeholder="Search" class="searchbox"
+                                                #searchInput (input)="gold.filterGlobal(searchInput.value, 'contains')">
                                             </span>
                                         </div>
                                     </div>
@@ -177,8 +178,9 @@
                                         <div class="search">
                                             <span class="p-input-icon-right">
                                                 <i class="pi pi-search global-search-icon"></i>
-                                                <input type="text" pInputText class="searchbox"
-                                                    placeholder="Search" />
+                                                <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                                placeholder="Search" class="searchbox"
+                                                #searchInput (input)="land.filterGlobal(searchInput.value, 'contains')">
                                             </span>
                                         </div>
                                     </div>
@@ -344,8 +346,9 @@
                                         <div class="search">
                                             <span class="p-input-icon-right">
                                                 <i class="pi pi-search global-search-icon"></i>
-                                                <input type="text" pInputText class="searchbox"
-                                                    placeholder="Search" />
+                                                <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                                placeholder="Search" class="searchbox"
+                                                #searchInput (input)="bond.filterGlobal(searchInput.value, 'contains')">
                                             </span>
                                         </div>
                                     </div>
@@ -559,8 +562,9 @@
                                         <div class="search">
                                             <span class="p-input-icon-right">
                                                 <i class="pi pi-search global-search-icon"></i>
-                                                <input type="text" pInputText class="searchbox"
-                                                    placeholder="Search" />
+                                                <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                                placeholder="Search" class="searchbox"
+                                                #searchInput (input)="storage.filterGlobal(searchInput.value, 'contains')">
                                             </span>
                                         </div>
                                     </div>
@@ -654,7 +658,9 @@
                                     <div class="search">
                                         <span class="p-input-icon-right">
                                             <i class="pi pi-search global-search-icon"></i>
-                                            <input type="text" pInputText class="searchbox" placeholder="Search" />
+                                            <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                            placeholder="Search" class="searchbox"
+                                            #searchInput (input)="property.filterGlobal(searchInput.value, 'contains')">
                                         </span>
                                     </div>
                                 </div>
@@ -872,8 +878,9 @@
                                         <div class="search">
                                             <span class="p-input-icon-right">
                                                 <i class="pi pi-search global-search-icon"></i>
-                                                <input type="text" pInputText class="searchbox"
-                                                    placeholder="Search" />
+                                                <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                                placeholder="Search" class="searchbox"
+                                                #searchInput (input)="other.filterGlobal(searchInput.value, 'contains')">
                                             </span>
                                         </div>
                                     </div>
@@ -970,7 +977,7 @@
                         <label><span class="red">*</span>{{'LOAN_TRANSACTION.ORNAMENT_QUALITY_IN_KDM' |
                             translate}}</label>
                         <input autocomplete="off" pInputText type="text" formControlName="ornamentQualityInKdm"
-                            [(ngModel)]="ciGoldMortgageLoanModel.ornamentQualityInKdm">
+                            [(ngModel)]="ciGoldMortgageLoanModel.ornamentQualityInKdm" pKeyFilters="pnum">
                         <p-message severity="error" text="Enter Valid ornament ornament Quality In Kdm"
                             *ngIf="!ciGoldMortgageForm.controls['ornamentQualityInKdm'].valid && ciGoldMortgageForm.controls['ornamentQualityInKdm'].dirty">
                         </p-message>
@@ -1563,3 +1570,18 @@
         </form>
     </div>
 </p-dialog>
+
+<!-- delete dialog box -->
+<p-dialog [(visible)]="displayDialog" [closable]="false" styleClass="delete-popup" [responsive]="true">
+    <div class="col-12">
+        <i class="fa fa-times-circle text-center" aria-hidden="true"></i>
+    
+        <p class="text-center popup-header">{{'ERP.ARE_YOU_SURE_TO_DELETE' | translate}}</p>
+        <p class="text-center pop-subheader">{{'ERP.DO_YOU_REALLY_TO_DELETE_THESE_RECORDS' | translate}}</p>
+  
+    </div>
+    <div class="col-12 text-center p-2">
+            <p-button pRipple class="yes-button" label="{{'ERP.DELETE' | translate}}" (click)="deleteCofirtmBox()"></p-button>
+            <p-button pRipple class="no-button" label="{{'ERP.CANCEL' | translate}}" (click)="cancelForDialogBox()"></p-button>
+    </div>
+  </p-dialog>

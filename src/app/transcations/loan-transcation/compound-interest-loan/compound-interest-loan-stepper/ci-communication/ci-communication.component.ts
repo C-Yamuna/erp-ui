@@ -21,7 +21,7 @@ import { MembershipDetailsService } from '../ci-membership-details/shared/member
 })
 export class CiCommunicationComponent {
   responseModel!: Responsemodel;
-  communicationForm: any;
+  communicationForm: FormGroup;
   sameAsPermanentAddress: boolean = false;
   subDistrictList: any[] = [];
   villageList: any[] = [];
@@ -164,12 +164,12 @@ export class CiCommunicationComponent {
   setAllFields() {
     if (this.ciLoanCommunicationModel.isSameAddress != null && this.ciLoanCommunicationModel.isSameAddress != undefined) {
       if (this.ciLoanCommunicationModel.isSameAddress == true) {
-        this.communicationForm.get('permanentStateName').disable();
-        this.communicationForm.get('permanentDistrictName').disable();
-        this.communicationForm.get('permanentSubDistrictName').disable();
-        this.communicationForm.get('permanentVillageName').disable();
-        this.communicationForm.get('permanentAddress1').disable();
-        this.communicationForm.get('permanentPinCode').disable();
+        this.communicationForm.get('permanentStateName')?.disable();
+        this.communicationForm.get('permanentDistrictName')?.disable();
+        this.communicationForm.get('permanentSubDistrictName')?.disable();
+        this.communicationForm.get('permanentVillageName')?.disable();
+        this.communicationForm.get('permanentAddress1')?.disable();
+        this.communicationForm.get('permanentPinCode')?.disable();
         this.RegAddressToComAddress();
       }
     }
@@ -287,7 +287,7 @@ export class CiCommunicationComponent {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.statesList = this.responseModel.data;
-            this.statesList = this.responseModel.data.filter((obj: any) => obj != null).map((state: { name: any; id: any; }) => {
+            this.statesList = this.responseModel.data.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((state: { name: any; id: any; }) => {
               return { label: state.name, value: state.id };
             });
             this.sameAsRegisterAddress();
@@ -306,9 +306,12 @@ export class CiCommunicationComponent {
 
   getAllDistrictsByStateId(id: any, isResetIds: any) {
     if (isResetIds) {
-      this.communicationForm.get('districtName').reset();
-      this.communicationForm.get('subDistrictName').reset();
-      this.communicationForm.get('villageName').reset();
+      this.communicationForm.get('districtName')?.reset();
+      this.communicationForm.get('subDistrictName')?.reset();
+      this.communicationForm.get('villageName')?.reset();
+      this.communicationForm.get('address1')?.reset();
+      this.communicationForm.get('pinCode')?.reset();
+      
       this.districtsList = [];
       this.subDistrictList = [];
       this.villageList = [];
@@ -317,7 +320,7 @@ export class CiCommunicationComponent {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         this.districtsList = this.responseModel.data;
-        this.districtsList = this.districtsList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+        this.districtsList = this.districtsList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
           return { label: relationType.name, value: relationType.id };
         });
         const state = this.statesList.find((item: { value: any; }) => item.value === id);
@@ -336,8 +339,12 @@ export class CiCommunicationComponent {
 
   getAllSubDistrictByDistrictId(id: any, isResetIds: any) {
     if (isResetIds) {
-      this.communicationForm.get('subDistrictName').reset();
-      this.communicationForm.get('villageName').reset();
+      this.communicationForm.get('subDistrictName')?.reset();
+      this.communicationForm.get('villageName')?.reset();
+      this.communicationForm.get('address1')?.reset();
+      this.communicationForm.get('pinCode')?.reset();
+      this.communicationForm.get('permanentAddress1')?.reset();
+      this.communicationForm.get('permanentPinCode')?.reset();
       this.subDistrictList = [];
       this.villageList = [];
     }
@@ -345,7 +352,7 @@ export class CiCommunicationComponent {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         this.subDistrictList = this.responseModel.data;
-        this.subDistrictList = this.subDistrictList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+        this.subDistrictList = this.subDistrictList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
           return { label: relationType.name, value: relationType.id };
         });
         const district = this.districtsList.find((item: { value: any; }) => item.value === id);
@@ -364,7 +371,11 @@ export class CiCommunicationComponent {
 
   getAllVillagesBySubDistrictId(id: any, isResetIds: any) {
     if (isResetIds) {
-      this.communicationForm.get('villageName').reset();
+      this.communicationForm.get('villageName')?.reset();
+      this.communicationForm.get('address1')?.reset();
+      this.communicationForm.get('pinCode')?.reset();
+      this.communicationForm.get('permanentAddress1')?.reset();
+      this.communicationForm.get('permanentPinCode')?.reset();
       this.villageList = [];
     }
     this.ciLoanApplicationService.getvillagesBySubDistrictId(id).subscribe((response: any) => {
@@ -373,7 +384,7 @@ export class CiCommunicationComponent {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.villageList = this.responseModel.data;
-            this.villageList = this.villageList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+            this.villageList = this.villageList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
               return { label: relationType.name, value: relationType.id };
             });
             const subDistrictName = this.subDistrictList.find((item: { value: any; }) => item.value === id);
@@ -395,6 +406,8 @@ export class CiCommunicationComponent {
   getVillage(id: any) {
     const villageName = this.villageList.find((item: { value: any; }) => item.value === id);
     this.ciLoanCommunicationModel.villageName = villageName.label;
+    this.communicationForm.get('permanentAddress1')?.reset();
+      this.communicationForm.get('permanentPinCode')?.reset();
     this.sameAsRegisterAddress();
   }
 
@@ -405,7 +418,7 @@ export class CiCommunicationComponent {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.permanentStatesList = this.responseModel.data;
-            this.permanentStatesList = this.responseModel.data.filter((obj: any) => obj != null).map((state: { name: any; id: any; }) => {
+            this.permanentStatesList = this.responseModel.data.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((state: { name: any; id: any; }) => {
               return { label: state.name, value: state.id };
             });
           }
@@ -423,9 +436,11 @@ export class CiCommunicationComponent {
 
   getAllPermanentDistrictsByStateId(id: any, isResetIds: any) {
     if (isResetIds) {
-      this.communicationForm.get('permanentDistrictName').reset();
-      this.communicationForm.get('permanentSubDistrictName').reset();
-      this.communicationForm.get('permanentVillageName').reset();
+      this.communicationForm.get('permanentDistrictName')?.reset();
+      this.communicationForm.get('permanentSubDistrictName')?.reset();
+      this.communicationForm.get('permanentVillageName')?.reset();
+      this.communicationForm.get('permanentAddress1')?.reset();
+      this.communicationForm.get('permanentPinCode')?.reset();
       this.permanentDistrictList = [];
       this.permanentSubDistrictList = [];
       this.permanentVillageList = [];
@@ -434,7 +449,7 @@ export class CiCommunicationComponent {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         this.permanentDistrictList = this.responseModel.data;
-        this.permanentDistrictList = this.permanentDistrictList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+        this.permanentDistrictList = this.permanentDistrictList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
           return { label: relationType.name, value: relationType.id };
         });
         const perState = this.permanentStatesList.find((item: { value: any; }) => item.value === id);
@@ -452,8 +467,10 @@ export class CiCommunicationComponent {
 
   getAllPermanentSubDistrictByDistrictId(id: any, isResetIds: any) {
     if (isResetIds) {
-      this.communicationForm.get('permanentSubDistrictName').reset();
-      this.communicationForm.get('permanentVillageName').reset();
+      this.communicationForm.get('permanentSubDistrictName')?.reset();
+      this.communicationForm.get('permanentVillageName')?.reset();
+      this.communicationForm.get('permanentAddress1')?.reset();
+      this.communicationForm.get('permanentPinCode')?.reset();
       this.permanentSubDistrictList = [];
       this.permanentVillageList = [];
     }
@@ -461,7 +478,7 @@ export class CiCommunicationComponent {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         this.permanentSubDistrictList = this.responseModel.data;
-        this.permanentSubDistrictList = this.permanentSubDistrictList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+        this.permanentSubDistrictList = this.permanentSubDistrictList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
           return { label: relationType.name, value: relationType.id };
         });
         const perDistrict = this.permanentDistrictList.find((item: { value: any; }) => item.value === id);
@@ -479,7 +496,9 @@ export class CiCommunicationComponent {
 
   getAllPermanentVillagesBySubDistrictId(id: any, isResetIds: any) {
     if (isResetIds) {
-      this.communicationForm.get('permanentVillageName').reset();
+      this.communicationForm.get('permanentVillageName')?.reset();
+      this.communicationForm.get('permanentAddress1')?.reset();
+      this.communicationForm.get('permanentPinCode')?.reset();
       this.permanentVillageList = [];
     }
     this.ciLoanApplicationService.getvillagesBySubDistrictId(id).subscribe((response: any) => {
@@ -488,7 +507,7 @@ export class CiCommunicationComponent {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.permanentVillageList = this.responseModel.data;
-            this.permanentVillageList = this.permanentVillageList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+            this.permanentVillageList = this.permanentVillageList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
               return { label: relationType.name, value: relationType.id };
             });
             const persubDistrictName = this.permanentSubDistrictList.find((item: { value: any; }) => item.value === id);
@@ -535,12 +554,21 @@ export class CiCommunicationComponent {
   sameAsPerAddr(isSameAddress: any) {
     if (isSameAddress) {
       this.ciLoanCommunicationModel.isSameAddress = applicationConstants.TRUE;
-      this.communicationForm.get('permanentStateName').disable();
-      this.communicationForm.get('permanentDistrictName').disable();
-      this.communicationForm.get('permanentSubDistrictName').disable();
-      this.communicationForm.get('permanentVillageName').disable();
-      this.communicationForm.get('permanentAddress1').disable();
-      this.communicationForm.get('permanentPinCode').disable();
+      this.communicationForm.get('permanentStateName')?.reset();
+      this.communicationForm.get('permanentDistrictName')?.reset();
+      this.communicationForm.get('permanentSubDistrictName')?.reset();
+      this.communicationForm.get('permanentVillageName')?.reset();
+      this.communicationForm.get('permanentAddress1')?.reset();
+      this.communicationForm.get('permanentPinCode')?.reset();
+      
+      this.communicationForm.get('permanentStateName')?.disable();
+      this.communicationForm.get('permanentDistrictName')?.disable();
+      this.communicationForm.get('permanentSubDistrictName')?.disable();
+      this.communicationForm.get('permanentVillageName')?.disable();
+      this.communicationForm.get('permanentAddress1')?.disable();
+      this.communicationForm.get('permanentPinCode')?.disable();
+
+     
 
 
       this.ciLoanCommunicationModel.permanentStateId = this.ciLoanCommunicationModel.stateId;
@@ -566,30 +594,30 @@ export class CiCommunicationComponent {
     else {
       this.ciLoanCommunicationModel.isSameAddress = applicationConstants.FALSE;
 
-      this.communicationForm.get('permanentStateName').enable();
-      this.communicationForm.get('permanentDistrictName').enable();
-      this.communicationForm.get('permanentSubDistrictName').enable();
-      this.communicationForm.get('permanentVillageName').enable();
-      this.communicationForm.get('permanentAddress1').enable();
-      this.communicationForm.get('permanentPinCode').enable();
+      this.communicationForm.get('permanentStateName')?.enable();
+      this.communicationForm.get('permanentDistrictName')?.enable();
+      this.communicationForm.get('permanentSubDistrictName')?.enable();
+      this.communicationForm.get('permanentVillageName')?.enable();
+      this.communicationForm.get('permanentAddress1')?.enable();
+      this.communicationForm.get('permanentPinCode')?.enable();
 
-      this.communicationForm.get('permanentStateName').reset();
-      this.communicationForm.get('permanentDistrictName').reset();
-      this.communicationForm.get('permanentSubDistrictName').reset();
-      this.communicationForm.get('permanentVillageName').reset();
-      this.communicationForm.get('permanentAddress1').reset();
-      this.communicationForm.get('permanentPinCode').reset();
+      this.communicationForm.get('permanentStateName')?.reset();
+      this.communicationForm.get('permanentDistrictName')?.reset();
+      this.communicationForm.get('permanentSubDistrictName')?.reset();
+      this.communicationForm.get('permanentVillageName')?.reset();
+      this.communicationForm.get('permanentAddress1')?.reset();
+      this.communicationForm.get('permanentPinCode')?.reset();
       this.permanentDistrictList = [];
       this.permanentSubDistrictList = [];
       this.permanentVillageList = [];
 
 
-      this.communicationForm.get('permanentStateName').enable();
-      this.communicationForm.get('permanentDistrictName').enable();
-      this.communicationForm.get('permanentSubDistrictName').enable();
-      this.communicationForm.get('permanentVillageName').enable();
-      this.communicationForm.get('permanentAddress1').enable();
-      this.communicationForm.get('permanentPinCode').enable();
+      this.communicationForm.get('permanentStateName')?.enable();
+      this.communicationForm.get('permanentDistrictName')?.enable();
+      this.communicationForm.get('permanentSubDistrictName')?.enable();
+      this.communicationForm.get('permanentVillageName')?.enable();
+      this.communicationForm.get('permanentAddress1')?.enable();
+      this.communicationForm.get('permanentPinCode')?.enable();
 
       this.ciLoanCommunicationModel.permanentStateId = null;
       this.ciLoanCommunicationModel.permanentDistrictId = null;

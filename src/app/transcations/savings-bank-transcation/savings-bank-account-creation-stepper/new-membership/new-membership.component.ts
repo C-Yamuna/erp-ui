@@ -69,7 +69,7 @@ export class NewMembershipComponent {
   institutionFlag: boolean = false;
   isDisableFlag: boolean = true;
   disableMemberType: boolean = false;
-  promoterDetailsForm: FormGroup;
+  promoterDetailsForm: any;
   promoterColumns: any[] = [];
   institutionPromoterColumn: any[] = [];
   institutionPromoter: any[] = [];
@@ -161,7 +161,7 @@ export class NewMembershipComponent {
       panNumber: ['', [Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN), Validators.compose([Validators.required])]],
       tanNumber: ['', [Validators.pattern(applicationConstants.TAN_NUMBER)]],
       gstNumber: ['', [Validators.pattern(applicationConstants.GST_NUMBER_PATTERN)]],
-      pocName:['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
+      pocName:['', [Validators.pattern(applicationConstants.ALPHA_NAME_PATTERN), Validators.compose([Validators.required])]],
       groupType: ['', Validators.required],
       societyAdmissionNumber:['', [Validators.pattern(applicationConstants.ALPHANUMERIC), Validators.compose([Validators.required])]],
 
@@ -181,23 +181,23 @@ export class NewMembershipComponent {
       societyAdmissionNumber:['', [Validators.pattern(applicationConstants.ALPHANUMERIC), Validators.compose([Validators.required])]],
     })
     this.promoterDetailsForm = this.formBuilder.group({
-      surname: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
-      name: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
-      operatorTypeId: ['',],
-      dob: ['', Validators.required],
-      age: ['', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.compose([Validators.required])]],
-      genderId: ['', Validators.required],
-      martialId: ['', Validators.required],
-      mobileNumber: ['', [Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.compose([Validators.required])]],
-      aadharNumber: ['', [Validators.pattern(applicationConstants.AADHAR_PATTERN), Validators.compose([Validators.required])]],
-      emailId: ['', [Validators.pattern(applicationConstants.EMAIL_PATTERN), Validators.compose([Validators.required])]],
-      startDate: ['', Validators.required],
-      promterType: ['',],
-      isGroupLeader :['',],
-      admissionNumber :['',],
-      photoUpload :['',],
-      signatureUpload :['',],
-      authorizedSignatory:['',],
+      "surname": ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
+      "name": ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
+      "operatorTypeId": ['',],
+      "dob": ['', Validators.required],
+      "age": ['', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.compose([Validators.required])]],
+      "genderId": ['', Validators.required],
+      "martialId": ['', Validators.required],
+      "mobileNumber": ['', [Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.compose([Validators.required])]],
+      "aadharNumber": ['', [Validators.pattern(applicationConstants.AADHAR_PATTERN), Validators.compose([Validators.required])]],
+      "emailId": ['', [Validators.pattern(applicationConstants.EMAIL_PATTERN)]],
+      "startDate": ['', Validators.required],
+      "promterType": ['',],
+      "isGroupLeader" :['', Validators.required],
+      "admissionNumber" :['',],
+      "photoUpload" :['',],
+      "ignatureUpload" :['',],
+      "authorizedSignatory":['', Validators.required],
     })
     this.today = new Date();//for future date set to disable
   }
@@ -213,12 +213,13 @@ export class NewMembershipComponent {
     this.trueFalseList = this.commonComponent.requiredlist();
   
     this.groupTypes  = [
-      { label: 'Group One', value: 1 },
-      { label: 'Group Two ', value: 2 },
+      { label: "Self Help Group", value:1 },
+      { label: "Rythu Mitra", value:2 }
     ]
+    
     this.institutionTypes= [
-      { label: 'Institution One', value: 1 },
-      { label: 'Institution Two', value: 2 },
+      { label: "Self Help Group", value:1 },
+      { label: "Rythu Mitra", value:2 }
     ]
 
     this.genderList = [
@@ -991,9 +992,43 @@ export class NewMembershipComponent {
     this.addButton = true;
     this.EditDeleteDisable = true;
     this.groupPromoters = true;
-    this.onChangeExistedPrmoter(rowData.isExistingMember , false);
     this.promoterDetailsModel = new promoterDetailsModel();
-    this.promoterDetailsModel = rowData;
+    // First, assign the data
+    this.promoterDetailsModel = { ...rowData };
+    // Then, disable the fields
+    if (rowData.isExistingMember) {
+      setTimeout(() => { // Ensure Angular updates the UI before disabling
+        this.promoterDetailsForm.get('surname')?.disable();
+        this.promoterDetailsForm.get('name')?.disable();
+        this.promoterDetailsForm.get('dob')?.disable();
+        this.promoterDetailsForm.get('operatorTypeId')?.disable();
+        this.promoterDetailsForm.get('dob')?.disable();
+        this.promoterDetailsForm.get('age')?.disable();
+        this.promoterDetailsForm.get('genderId')?.disable();
+        this.promoterDetailsForm.get('martialId')?.disable();
+        this.promoterDetailsForm.get('mobileNumber')?.disable();
+        this.promoterDetailsForm.get('aadharNumber')?.disable();
+        this.promoterDetailsForm.get('emailId')?.disable();
+        this.promoterDetailsForm.get('startDate')?.disable();
+        this.promoterDetailsForm.get('admissionNumber')?.setValue(rowData.admissionNumber);
+      }, 100);
+    }
+    else {
+      this.promoterDetailsForm.get('surname')?.enable();
+      this.promoterDetailsForm.get('name')?.enable();
+      this.promoterDetailsForm.get('operatorTypeId')?.enable();
+      this.promoterDetailsForm.get('dob')?.enable();
+      this.promoterDetailsForm.get('age')?.enable();
+      this.promoterDetailsForm.get('genderId')?.enable();
+      this.promoterDetailsForm.get('martialId')?.enable();
+      this.promoterDetailsForm.get('mobileNumber')?.enable();
+      this.promoterDetailsForm.get('aadharNumber')?.enable();
+      this.promoterDetailsForm.get('emailId')?.enable();
+      this.promoterDetailsForm.get('startDate')?.enable();
+      this.promoterDetailsForm.get('admissionNumber')?.setValidators(null); 
+      this.promoterDetailsForm.get('admissionNumber')?.updateValueAndValidity();
+      this.admissionNumberDropDown = false;
+    }
     // this.promoterDetailsModel = this.promoterDetails.find((obj:any) => (obj != null && obj != undefined) && obj.uniqueId === rowData.uniqueId );
     if(this.promoterDetailsModel.isExistingMember ){
       this.admissionNumberDropDown = true;
@@ -1025,7 +1060,7 @@ export class NewMembershipComponent {
     this.promoterDetailsModel = new promoterDetailsModel();
     this.promoterDetailsModel.uniqueId = this.promoterDetails.length + 1
     this.promoterDetailsForm.reset();
-    this.onChangeExistedPrmoter(false , true);
+    this.onChangeExistedPrmoter(false , false);
     this.admissionNumberDropDown = false;
     this.updateData();
     
@@ -1162,9 +1197,43 @@ export class NewMembershipComponent {
     this.addButton = true;
     this.EditDeleteDisable = true;
     this.institutionPromoterPopUp = true;
-    this.onChangeExistedPrmoter(rowData.isExistingMember , false);
     this.institutionPromoterDetailsModel = new InstitutionPromoterDetailsModel();
-   
+    // First, assign the data
+    this.promoterDetailsModel = { ...rowData };
+    // Then, disable the fields
+    if (rowData.isExistingMember) {
+      setTimeout(() => { // Ensure Angular updates the UI before disabling
+        this.promoterDetailsForm.get('surname')?.disable();
+        this.promoterDetailsForm.get('name')?.disable();
+        this.promoterDetailsForm.get('dob')?.disable();
+        this.promoterDetailsForm.get('operatorTypeId')?.disable();
+        this.promoterDetailsForm.get('dob')?.disable();
+        this.promoterDetailsForm.get('age')?.disable();
+        this.promoterDetailsForm.get('genderId')?.disable();
+        this.promoterDetailsForm.get('martialId')?.disable();
+        this.promoterDetailsForm.get('mobileNumber')?.disable();
+        this.promoterDetailsForm.get('aadharNumber')?.disable();
+        this.promoterDetailsForm.get('emailId')?.disable();
+        this.promoterDetailsForm.get('startDate')?.disable();
+        this.promoterDetailsForm.get('admissionNumber')?.setValue(rowData.admissionNumber);
+      }, 100);
+    }
+    else {
+      this.promoterDetailsForm.get('surname')?.enable();
+      this.promoterDetailsForm.get('name')?.enable();
+      this.promoterDetailsForm.get('operatorTypeId')?.enable();
+      this.promoterDetailsForm.get('dob')?.enable();
+      this.promoterDetailsForm.get('age')?.enable();
+      this.promoterDetailsForm.get('genderId')?.enable();
+      this.promoterDetailsForm.get('martialId')?.enable();
+      this.promoterDetailsForm.get('mobileNumber')?.enable();
+      this.promoterDetailsForm.get('aadharNumber')?.enable();
+      this.promoterDetailsForm.get('emailId')?.enable();
+      this.promoterDetailsForm.get('startDate')?.enable();
+      this.promoterDetailsForm.get('admissionNumber')?.setValidators(null); 
+      this.promoterDetailsForm.get('admissionNumber')?.updateValueAndValidity();
+      this.admissionNumberDropDown = false;
+    }
     // this.institutionPromoterDetailsModel =  this.institutionPromoter.find((obj:any) => (obj != null && obj != undefined) && obj.uniqueId === rowData.uniqueId );
     this.institutionPromoterDetailsModel = rowData;
     if(this.institutionPromoterDetailsModel.isExistingMember ){
@@ -1199,6 +1268,7 @@ export class NewMembershipComponent {
     this.institutionPromoterDetailsModel = new InstitutionPromoterDetailsModel();
     this.institutionPromoterDetailsModel.uniqueId = uniqueId; 
     this.promoterDetailsForm.reset();
+    this.onChangeExistedPrmoter(false , false);
     this.admissionNumberDropDown = false;
     this.updateData();
   }
@@ -1481,8 +1551,12 @@ export class NewMembershipComponent {
    * @author jyothi.naidana
    */
   onChangeExistedPrmoter(isExistingMember :any ,flag :boolean){
+    this.resetFields();
     if(flag){
-      this.resetFields();
+      this.promoterDetailsModel = new promoterDetailsModel();
+      this.promoterDetailsModel.isExistingMember = isExistingMember;
+      this.institutionPromoterDetailsModel = new InstitutionPromoterDetailsModel();
+      this.institutionPromoterDetailsModel.isExistingMember = isExistingMember;
     }
     if(isExistingMember){
         this.admissionNumberDropDown = true;
@@ -1517,6 +1591,7 @@ export class NewMembershipComponent {
         this.admissionNumberDropDown = false;
     }
   }
+  
 
   /**
    * @implements reset feilds 
@@ -1604,10 +1679,13 @@ getMemberDetailsByAdmissionNUmber(admissionNumber: any ) {
 
       if(this.promoterDetailsModel.uploadImage != null && this.promoterDetailsModel.uploadImage != undefined){
         this.promoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadImage  );
+        this.institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionPromoterDetailsModel.uploadImage);
         this.isFileUploadedPromoterPhoto= applicationConstants.TRUE;
       }
       if(this.promoterDetailsModel.uploadSignature != null && this.promoterDetailsModel.uploadSignature != undefined){
         this.promoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadSignature  );
+        this.institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionPromoterDetailsModel.uploadSignature  );
+
         this.isFileUploadedPromoterSignature = applicationConstants.TRUE;
       }
        this.promoterDetailsModel.operatorTypeId  = this.membershipBasicRequiredDetails.occupationId;
@@ -1631,33 +1709,37 @@ getMemberDetailsByAdmissionNUmber(admissionNumber: any ) {
   });
 }
 
-/**
- * @implements onselect group leader
- * @param isGroup 
- * @author jyothi.naidana
- */
-  onGroupLeaderSelect(isGroup:any) {
-    if(isGroup){
-      let isGroupLeadeExited = this.promoterDetails.filter((obj: any) => obj.isGroupLeader == true);
-      if (isGroupLeadeExited != null && isGroupLeadeExited != undefined && isGroupLeadeExited.length >0) {
-        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "One Group leader is Already Exist" }];
-        this.promoterDetailsForm.get('isGroupLeader')?.reset();
-        setTimeout(() => {
-          this.msgs = [];
-        }, 3000);
+  /**
+   * @implements onselect group leader
+   * @param isGroup 
+   * @author jyothi.naidana
+   */
+  onGroupLeaderSelect(isGroup: any, isGroupLeader: any) {
+    if (isGroup) {
+      if (isGroupLeader) {
+        let isGroupLeadeExited = this.promoterDetails.filter((obj: any) => obj.isGroupLeader == true);
+        if (isGroupLeadeExited != null && isGroupLeadeExited != undefined && isGroupLeadeExited.length > 0 && isGroupLeadeExited[0].id != this.promoterDetailsModel.id) {
+          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "One Group leader is Already Exist" }];
+          this.promoterDetailsForm.get('isGroupLeader')?.reset();
+          setTimeout(() => {
+            this.msgs = [];
+          }, 3000);
+        }
       }
     }
-    else{
-      let isGroupLeadeExited = this.institutionPromoter.filter((obj: any) => obj.isGroupLeader == true);
-      if (isGroupLeadeExited != null && isGroupLeadeExited != undefined && isGroupLeadeExited.length >0) {
-        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "One Group leader is Already Exist" }];
-        this.promoterDetailsForm.get('isGroupLeader')?.reset();
-        setTimeout(() => {
-          this.msgs = [];
-        }, 3000);
+    else {
+      if (isGroupLeader) {
+        let isGroupLeadeExited = this.institutionPromoter.filter((obj: any) => obj.isGroupLeader == true);
+        if (isGroupLeadeExited != null && isGroupLeadeExited != undefined && isGroupLeadeExited.length > 0 && isGroupLeadeExited[0].id != this.institutionPromoterDetailsModel.id) {
+          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "One Group leader is Already Exist" }];
+          this.promoterDetailsForm.get('isGroupLeader')?.reset();
+          setTimeout(() => {
+            this.msgs = [];
+          }, 3000);
+        }
       }
     }
-    
+
   }
 
 

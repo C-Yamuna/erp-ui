@@ -82,6 +82,13 @@ export class TermLoansNomineeComponent {
   guardainTypeDisable: boolean = false;
   historyFLag: boolean = false;
   flag: boolean = false;
+  saveDisabled:Boolean = false;
+  saveDisabledForGuardian :Boolean = false
+  saveAndNextButtonDisable:Boolean = false;
+
+  isFileUploadedNominee: boolean = false;
+  isFileUploadedGuardian: boolean = false;
+  isSaveAndNextEnable : boolean = false;
   constructor(private formBuilder: FormBuilder,
     private commonComponent: CommonComponent, private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService,
     private commonFunctionsService: CommonFunctionsService, private datePipe: DatePipe,
@@ -180,23 +187,56 @@ export class TermLoansNomineeComponent {
     }
 
     //update model data to stepper component
+    // updateData() {
+    //   if (this.age <= 18) {
+    //     this.termLoanGuardianDetailsModel.termLoanApplicationId = this.termLoanApplicationId ;
+    //     this.termLoanNomineeModel.termMemberGuardianDetailsDTO = this.termLoanGuardianDetailsModel;
+    //   }
+    //   else {
+    //     this.termLoanNomineeModel.termMemberGuardianDetailsDTO = null;
+    //   }
+    // this.saveAndNextButtonDisable = !this.saveDisabled || !this.nomineeForm.valid;
+    //   this.termLoanNomineeModel.termLoanApplicationId = this.termLoanApplicationId;
+    //   this.termLoanApplicationsService.changeData({
+    //     formValid:  !this.nomineeForm.valid,
+    //     data: this.termLoanNomineeModel,
+    //     isDisable:  (this.saveAndNextButtonDisable) ? true : false ,
+    //     // isDisable:false,
+    //     stepperIndex: 5,
+    //   });
+    // }
     updateData() {
+      if(this.relationTypesList != null && this.relationTypesList != undefined && this.relationTypesList.length > 0){
+        let nominee = this.relationTypesList.find((data: any) => null != data && this.termLoanNomineeModel.relationTypeId != null && data.value == this.termLoanNomineeModel.relationTypeId);
+        if (nominee != null && undefined != nominee && nominee.label != null && nominee.label != undefined) {
+          this.termLoanNomineeModel.relationTypeName = nominee.label;
+        }
+       
+      }
       if (this.age <= 18) {
         this.termLoanGuardianDetailsModel.termLoanApplicationId = this.termLoanApplicationId ;
+        this.termLoanGuardianDetailsModel.accountNumber = this.accountNumber;
+        let guardain = this.relationTypesList.find((data: any) => null != data && this.termLoanGuardianDetailsModel.relationshipTypeId != null && data.value == this.termLoanNomineeModel.relationTypeId);
+        if (guardain != null && undefined != guardain  && guardain.label != undefined) {
+          this.termLoanGuardianDetailsModel.relationshipTypeName = guardain.label;
+        }
         this.termLoanNomineeModel.termMemberGuardianDetailsDTO = this.termLoanGuardianDetailsModel;
+        this.isSaveAndNextEnable = (!this.nomineeForm.valid) || !(this.isFileUploadedNominee && this.isFileUploadedGuardian)
       }
       else {
-        this.termLoanNomineeModel.termMemberGuardianDetailsDTO = null;
+        this.isSaveAndNextEnable = (!this.nomineeForm.valid) || (!this.isFileUploadedNominee);
       }
       this.termLoanNomineeModel.termLoanApplicationId = this.termLoanApplicationId;
       this.termLoanApplicationsService.changeData({
         formValid: !this.nomineeForm.valid ? true : false,
         data: this.termLoanNomineeModel,
-        isDisable: (!this.nomineeForm.valid),
+        isDisable: this.isSaveAndNextEnable,
         // isDisable:false,
         stepperIndex: 5,
       });
     }
+
+    
     save() {
       this.updateData();
     }
@@ -283,62 +323,82 @@ export class TermLoansNomineeComponent {
         this.responseModel = data;
         if (this.responseModel != null && this.responseModel != undefined) {
           if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
-            if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+            if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
               this.termLoanApplicationModel = this.responseModel.data[0];
-              if(this.responseModel.data[0].memberTypeName != null && this.responseModel.data[0].memberTypeName != undefined){
+             
+              if (this.responseModel.data[0].memberTypeName != null && this.responseModel.data[0].memberTypeName != undefined) {
                 this.memberTypeName = this.responseModel.data[0].memberTypeName;
                 this.memberTypeCheck(this.memberTypeName);
               }
-              if(this.responseModel.data[0].admissionNo != null && this.responseModel.data[0].admissionNo != undefined){
+              if (this.responseModel.data[0].admissionNo != null && this.responseModel.data[0].admissionNo != undefined) {
                 this.admissionNumber = this.responseModel.data[0].admissionNo;
               }
-              if(this.responseModel.data[0].accountNumber != null && this.responseModel.data[0].accountNumber != undefined){
+              if (this.responseModel.data[0].accountNumber != null && this.responseModel.data[0].accountNumber != undefined) {
                 this.accountNumber = this.responseModel.data[0].accountNumber;
-                if(this.historyFLag){
-                  this.getNomineeHistoryByTermAccountNumber(this.accountNumber);
+                if (this.historyFLag) {
+                  // this.getNomineeHistoryByRdAccountNumber(this.accountNumber);
                 }
               }
-             
-              if(this.responseModel.data[0].termLoanNomineeDetailsDTO != null && this.responseModel.data[0].termLoanNomineeDetailsDTO != undefined){
-                this.termLoanNomineeModel = this.responseModel.data[0].termLoanNomineeDetailsDTO;
-                if(this.termLoanNomineeModel.nomineeFilePath != null && this.termLoanNomineeModel.nomineeFilePath != undefined){
-                  this.termLoanNomineeModel.multipartFileList =  this.fileUploadService.getFile(this.termLoanNomineeModel.nomineeFilePath , ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.termLoanNomineeModel.nomineeFilePath);
+              if (this.termLoanApplicationModel != null && this.termLoanApplicationModel != undefined) {
+                if (this.termLoanApplicationModel.termLoanNomineeDetailsDTO != null && this.termLoanApplicationModel.termLoanNomineeDetailsDTO != undefined) {
+                  this.termLoanNomineeModel = this.termLoanApplicationModel.termLoanNomineeDetailsDTO;
+                  if (this.termLoanNomineeModel.nomineeFilePath != null && this.termLoanNomineeModel.nomineeFilePath != undefined) {
+                    this.termLoanNomineeModel.multipartFileList = this.fileUploadService.getFile(this.termLoanNomineeModel.nomineeFilePath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.termLoanNomineeModel.nomineeFilePath);
+                    if (this.termLoanNomineeModel.nomineeType != null && this.termLoanNomineeModel.nomineeType != undefined) {
+                      if (this.termLoanNomineeModel.nomineeType != 2) {
+                        this.termLoanNomineeModel.multipartFileList = this.fileUploadService.getFile(this.termLoanNomineeModel.nomineeFilePath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.termLoanNomineeModel.nomineeFilePath);
+                      }
+                      else {
+                        this.termLoanNomineeModel.multipartFileList = this.fileUploadService.getFile(this.termLoanNomineeModel.nomineeFilePath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.termLoanNomineeModel.nomineeFilePath);
+                      }
+                      this.isFileUploadedNominee = applicationConstants.TRUE;
+                    }
+                  }
+  
                 }
-              }
-             
-              if(this.responseModel.data[0].termMemberGuardianDetailsDTO != null && this.responseModel.data[0].termMemberGuardianDetailsDTO != undefined){
-                this.termLoanGuardianDetailsModel = this.responseModel.data[0].termMemberGuardianDetailsDTO;
-                if(this.termLoanGuardianDetailsModel.uploadFilePath != null && this.termLoanGuardianDetailsModel.uploadFilePath != undefined){
-                  if(this.termLoanGuardianDetailsModel.guardianType != 2){
+                else {
+                  this.isFileUploadedNominee = applicationConstants.FALSE;
+                }
+                if (this.termLoanApplicationModel.termMemberGuardianDetailsDTO != null && this.termLoanApplicationModel.termMemberGuardianDetailsDTO != undefined){
+                  this.termLoanGuardianDetailsModel = this.termLoanApplicationModel.termMemberGuardianDetailsDTO;
+  
+                if (this.termLoanGuardianDetailsModel.uploadFilePath != null && this.termLoanGuardianDetailsModel.uploadFilePath != undefined) {
+                  if(this.termLoanGuardianDetailsModel.guardianType != null && this.termLoanGuardianDetailsModel.guardianType != undefined){
+                    if(this.termLoanGuardianDetailsModel.guardianType != 2){
                       this.termLoanGuardianDetailsModel.guardainSighnedMultipartFiles =  this.fileUploadService.getFile(this.termLoanGuardianDetailsModel.uploadFilePath , ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.termLoanGuardianDetailsModel.uploadFilePath);
                     }
                     else {
                       this.termLoanGuardianDetailsModel.guardainSighnedMultipartFiles =  this.fileUploadService.getFile(this.termLoanGuardianDetailsModel.uploadFilePath , ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.termLoanGuardianDetailsModel.uploadFilePath);
                     }
+                    this.isFileUploadedGuardian = applicationConstants.TRUE;
+                  }
+                  
+                }
+                else{
+                  this.isFileUploadedGuardian = applicationConstants.FALSE;
                 }
               }
-            
-              if(this.termLoanNomineeModel.nomineeType != null && this.termLoanNomineeModel.nomineeType != undefined){
-                this.onChange(this.termLoanNomineeModel.nomineeType, this.flag);
-               
-              }
-              if( this.guarntorDetailsFalg && this.termLoanGuardianDetailsModel.guardianType != null && this.termLoanGuardianDetailsModel.guardianType != undefined){
-                this.onChangeGuardain(this.termLoanGuardianDetailsModel.guardianType , this.flag);
-               
-              }
-               if(this.responseModel.data[0].individualMemberDetailsDTO.age != null && this.responseModel.data[0].individualMemberDetailsDTO.age != undefined){
+                if (this.termLoanNomineeModel.nomineeType != null && this.termLoanNomineeModel.nomineeType != undefined) {
+                  this.onChange(this.termLoanNomineeModel.nomineeType, this.flag);
+                }
+  
+              if (this.responseModel.data[0].individualMemberDetailsDTO.age != null && this.responseModel.data[0].individualMemberDetailsDTO.age != undefined) {
                 this.age = this.responseModel.data[0].individualMemberDetailsDTO.age;
-                if(this.age < 18){
+                if (this.age < 18) {
                   this.guarntorDetailsFalg = true;
                 }
               }
-              else if(this.guarntorDetailsFalg){
-                  const controlName = this.nomineeForm.get('guardainType');
-                  if (controlName) {
-                    controlName.setValidators([
-                      Validators.required,
-                    ]);
-                    controlName.updateValueAndValidity();
+              if (this.guarntorDetailsFalg && this.termLoanGuardianDetailsModel.guardianType != null && this.termLoanGuardianDetailsModel.guardianType != undefined) {
+                this.onChangeGuardain(this.termLoanGuardianDetailsModel.guardianType, this.flag);
+              }
+              }
+              else if (this.guarntorDetailsFalg) {
+                const controlName = this.nomineeForm.get('guardainType');
+                if (controlName) {
+                  controlName.setValidators([
+                    Validators.required,
+                  ]);
+                  controlName.updateValueAndValidity();
                 }
               }
             }
@@ -583,9 +643,12 @@ export class TermLoansNomineeComponent {
               if(this.responseModel.data[0].nomineeName != null && this.responseModel.data[0].nomineeName != undefined){
                 this.termLoanNomineeModel.nomineeName = this.responseModel.data[0].nomineeName;
               }
-              // if(this.responseModel.data[0].nomineeFilePath != null && this.responseModel.data[0].nomineeFilePath != undefined){
-              //   this.termLoanNomineeModel.addressProofCopyPath = this.responseModel.data[0].nomineeFilePath;
-              // }
+              if (this.responseModel.data[0].memberShipNomineeDetailsDTOList[0].nomineeFilePath != null && this.responseModel.data[0].memberShipNomineeDetailsDTOList[0].nomineeFilePath != undefined) {
+                this.termLoanNomineeModel.multipartFileList = this.fileUploadService.getFile(this.responseModel.data[0].memberShipNomineeDetailsDTOList[0].nomineeFilePath , 
+                  ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.responseModel.data[0].memberShipNomineeDetailsDTOList[0].nomineeFilePath );
+                  this.isFileUploadedNominee = applicationConstants.TRUE;
+                  
+                }
               
               this.termLoanNomineeModel.nomineeType = 2;
             }
@@ -650,6 +713,10 @@ export class TermLoansNomineeComponent {
               if (this.responseModel.data[0].guardianAge != null && this.responseModel.data[0].guardianAge != undefined) {
                 this.termLoanGuardianDetailsModel.guardianAge = this.responseModel.data[0].guardianAge;
               }
+              if (this.responseModel.data[0].uploadFilePath != null && this.responseModel.data[0].uploadFilePath != undefined) {
+                this.termLoanGuardianDetailsModel.guardainSighnedMultipartFiles = this.fileUploadService.getFile(this.responseModel.data[0].uploadFilePath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.responseModel.data[0].uploadFilePath);
+                this.isFileUploadedGuardian = applicationConstants.TRUE;
+              }
   
               this.updateData();
             }
@@ -680,13 +747,19 @@ export class TermLoansNomineeComponent {
      * @param filePathName 
      */
     fileUploader(event: any, fileUpload: FileUpload , filePathName:any) {
-      this.isFileUploaded = applicationConstants.FALSE;
+    
       this.multipleFilesList = [];
       if(this.termLoanNomineeModel != null && this.termLoanNomineeModel != undefined && this.isEdit && this.termLoanNomineeModel.filesDTOList == null || this.termLoanNomineeModel.filesDTOList == undefined){
           this.termLoanNomineeModel.filesDTOList = [];
       }
       if(this.isEdit && this.termLoanGuardianDetailsModel != null && this.termLoanGuardianDetailsModel != undefined && this.termLoanGuardianDetailsModel.filesDTO == null || this.termLoanGuardianDetailsModel.filesDTO == undefined){
         this.termLoanGuardianDetailsModel.filesDTO = [];
+      }
+      if (filePathName === "Nominee") {
+        this.isFileUploadedNominee = applicationConstants.FALSE;
+      }
+      if (filePathName === "Guardain") {
+        this.isFileUploadedGuardian = applicationConstants.FALSE;
       }
       let files: FileUploadModel = new FileUploadModel();
       for (let file of event.files) {
@@ -703,21 +776,28 @@ export class TermLoansNomineeComponent {
             // Add to filesDTOList array
           let timeStamp = this.commonComponent.getTimeStamp();
           if (filePathName === "Nominee") {
+            this.isFileUploadedNominee = applicationConstants.TRUE;
             this.termLoanNomineeModel.filesDTOList.push(files); 
             this.termLoanNomineeModel.nomineeFilePath = null;
             this.termLoanNomineeModel.filesDTOList[this.termLoanNomineeModel.filesDTOList.length-1].fileName = "TERM_LOAN_NOMINEE" + this.termLoanApplicationId + "_" + timeStamp + "_" + file.name;
             this.termLoanNomineeModel.nomineeFilePath = "TERM_LOAN_NOMINEE" + this.termLoanApplicationId + "_" +timeStamp+"_"+ file.name; 
           }
           if (filePathName === "Guardain") {
+            this.isFileUploadedGuardian = applicationConstants.TRUE;
             this.termLoanGuardianDetailsModel.filesDTO.push(files); 
             this.termLoanGuardianDetailsModel.uploadFilePath = null;
-            this.termLoanGuardianDetailsModel.filesDTO = files;
-            this.termLoanGuardianDetailsModel.filesDTO.fileName = "TERM_LOAN_GUARDAIN" + "_" + timeStamp + "_" + file.name;
+            this.termLoanGuardianDetailsModel.filesDTO[this.termLoanGuardianDetailsModel.filesDTO.length-1].fileName = "TERM_LOAN_GUARDAIN" + "_" + timeStamp + "_" + file.name;
             this.termLoanGuardianDetailsModel.uploadFilePath = "TERM_LOAN_GUARDAIN" + "_" + timeStamp + "_" + file.name; 
           }
           this.updateData();
         }
         reader.readAsDataURL(file);
+      }
+    }
+    onImageSelected(event: Event): void {
+      const file = (event.target as HTMLInputElement).files?.[0];
+      if (file) {
+        this.fileName = file.name;
       }
     }
 
@@ -872,6 +952,11 @@ export class TermLoansNomineeComponent {
         ]);
         controlFive.updateValueAndValidity();
       }
+      // const fileControl = this.nomineeForm.get('fileUpload');
+      // if (fileControl) {
+      //   fileControl.setValidators([Validators.required]);
+      //   fileControl.updateValueAndValidity();
+      // }
       this.updateData();
     }
   
@@ -901,6 +986,11 @@ export class TermLoansNomineeComponent {
         controlFive.setValidators(null); // Set the required validator null
         controlFive.updateValueAndValidity();
       }
+  //     const fileControl = this.nomineeForm.get('fileUpload');
+  // if (fileControl) {
+  //   fileControl.setValidators([Validators.required]);
+  //   fileControl.updateValueAndValidity();
+  // }
       this.updateData();
     }
   
@@ -911,19 +1001,22 @@ export class TermLoansNomineeComponent {
      */
     fileRemoeEvent(fileName :any){
       if(fileName == "Nominee"){
-        if(this.termLoanNomineeModel.filesDTOList != null && this.termLoanNomineeModel.filesDTOList != undefined){
+        this.isFileUploadedNominee = applicationConstants.FALSE;
+        if(this.termLoanNomineeModel.filesDTOList != null && this.termLoanNomineeModel.filesDTOList != undefined && this.termLoanNomineeModel.filesDTOList.length > 0){
           let removeFileIndex = this.termLoanNomineeModel.filesDTOList.findIndex((obj:any) => obj && obj.fileName === this.termLoanNomineeModel.nomineeFilePath);
           this.termLoanNomineeModel.filesDTOList[removeFileIndex] = null;
           this.termLoanNomineeModel.nomineeFilePath = null;
         }
       }
       if(fileName == "Guardain"){
-        if(this.termLoanGuardianDetailsModel.filesDTO != null && this.termLoanGuardianDetailsModel.filesDTO != undefined){
+        this.isFileUploadedGuardian = applicationConstants.FALSE;
+        if(this.termLoanGuardianDetailsModel.filesDTO != null && this.termLoanGuardianDetailsModel.filesDTO != undefined && this.termLoanGuardianDetailsModel.filesDTO.length > 0){
           let removeFileIndex = this.termLoanGuardianDetailsModel.filesDTO.findIndex((obj:any) => obj && obj.fileName === this.termLoanGuardianDetailsModel.uploadFilePath);
           this.termLoanGuardianDetailsModel.filesDTO[removeFileIndex] = null;
           this.termLoanGuardianDetailsModel.uploadFilePath = null;
         }
       }
+      this.updateData();//validation update for save and next button
     }
   /**
    * @implements onChange new Nominee
@@ -931,6 +1024,7 @@ export class TermLoansNomineeComponent {
   
    */
     newNomineeType(flag:boolean){
+      this.saveDisabled = false;
       this.newNominee = true;
         this.noNominee = false;
         //onchange on update
@@ -954,6 +1048,7 @@ export class TermLoansNomineeComponent {
     
      */
     samAsMemberNimineeType(flag:boolean){
+      this.saveDisabled = false;
       this.newNominee = true;
       this.noNominee = false;
       //onchange on update
@@ -980,6 +1075,7 @@ export class TermLoansNomineeComponent {
     
      */
     noNimineeType(flag : boolean){
+      this.saveDisabled = false;
       this.noNominee = true;
       this.newNominee = false;
       this.sameAsMembershipNominee = false;
@@ -1021,6 +1117,7 @@ export class TermLoansNomineeComponent {
     
      */
     newGuardainType(flag : boolean){
+      this.saveDisabled = true;
       this.courtAppointedGuardain = false;
         this.sameAsMemberGuardain = true;
         this.noGuardain  = false;
@@ -1042,6 +1139,7 @@ export class TermLoansNomineeComponent {
   
    */
     sameAsMemberGuardianType(flag:boolean){
+      this.saveDisabled = true;
       this.sameAsMemberGuardain = true;
       this.courtAppointedGuardain = false;
       this.noGuardain  = false;
@@ -1060,7 +1158,7 @@ export class TermLoansNomineeComponent {
     }
   
     noGuardainaType(flag:boolean){
-  
+      this.saveDisabled = true;
       this.courtAppointedGuardain = true;
       this.sameAsMemberGuardain = false;
       this.noGuardain  = true;

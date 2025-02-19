@@ -88,14 +88,21 @@
                             </p-message>
                         </div>
                     </div>
-
                     <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-label">
+                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.TENURE_TYPE' | translate}}</label>
+                            <p-dropdown [options]="tenureTypeList"   placeholder="select" 
+                            formControlName="tenureType" [(ngModel)]="fdNonCumulativeProductDefinitionModel.tenureType"></p-dropdown>
+                        </div>
+                    </div> 
+
+                    <!-- <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-label">
                         <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.IS_AUTO_RENEWAL' | translate}}</label>
                             <p-dropdown [options]="isSpecialSchemelist"   placeholder="select" 
                             formControlName="isAutoRenewal" [(ngModel)]="fdNonCumulativeProductDefinitionModel.isAutoRenewal"></p-dropdown>
                         </div>
-                    </div> 
+                    </div>  -->
             
                     <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-label">

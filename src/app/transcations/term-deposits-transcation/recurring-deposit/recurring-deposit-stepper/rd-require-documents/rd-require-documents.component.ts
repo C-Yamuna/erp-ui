@@ -201,8 +201,6 @@ export class RdRequireDocumentsComponent {
     this.requiredDocumentDetails.rdAccId = this.rdAccId;
     this.requiredDocumentDetails.admissionNumber = this.admissionNumber;
     this.requiredDocumentDetails.memberTypeName  = this.memberTypeName;
-    this.requiredDocumentDetails.memberType  = this.memberTypeId;
-    this.requiredDocumentDetails.memberId  = this.memberId;
     this.requiredDocumentDetails.accountNumber = this.accountNumber;
     //for manadatory KYC Documents check
     this.saveAndPreview = false;
@@ -241,6 +239,7 @@ export class RdRequireDocumentsComponent {
         setTimeout(() => {
           this.msgs = [];
         }, 3000);
+        this.updateData();
       }
       else {
         this.commonComponent.stopSpinner();
@@ -598,11 +597,28 @@ export class RdRequireDocumentsComponent {
     this.displayDialog = false;
   }
 
+    documentDuplicate(id: any) {
+      if (id != null && id != undefined) {
+        if (this.documentDataList != null && this.documentDataList != undefined && this.documentDataList.length > 0) {
+          for (let item of this.documentDataList) {
+            if (item != null && item != undefined && item.requiredDocumentTypeId === id) {
+              this.requiredForm.reset();
+              this.msgs = [];
+              this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "Required Document already exists" }];
+              setTimeout(() => {
+                this.msgs = [];
+              }, 1500);
+            }
+          }
+        }
+      }
+    }
   /**
    * @implements onFile remove
    * @author bhargavi
    */
   fileRemoeEvent(){
+    this.isFileUploaded = applicationConstants.FALSE;
    if(this.requiredDocumentDetails.filesDTOList != null && this.requiredDocumentDetails.filesDTOList != undefined && this.requiredDocumentDetails.filesDTOList.length > 0){
     let removeFileIndex = this.requiredDocumentDetails.filesDTOList.findIndex((obj:any) => obj && obj.fileName === this.requiredDocumentDetails.requiredDocumentFilePath);
     if(removeFileIndex != null && removeFileIndex != undefined){

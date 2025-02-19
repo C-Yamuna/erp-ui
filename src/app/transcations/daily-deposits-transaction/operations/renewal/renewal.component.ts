@@ -14,6 +14,7 @@ import { CommonFunctionsService } from 'src/app/shared/commonfunction.service';
 import { EncryptDecryptService } from 'src/app/shared/encrypt-decrypt.service';
 import { FileUpload } from 'primeng/fileupload';
 import { FileUploadModel } from 'src/app/layout/mainmenu/shared/file-upload-model.model';
+import { AcountsTransaction } from '../../shared/acounts-transaction.model';
 
 @Component({
   selector: 'app-renewal',
@@ -61,6 +62,7 @@ export class RenewalComponent {
   membershipBasicRequiredDetailsModel: MembershipBasicDetail = new MembershipBasicDetail();
   memberGroupDetailsModel: MemberGroupDetailsModel = new MemberGroupDetailsModel();
   membershipInstitutionDetailsModel: MembershipInstitutionDetailsModel = new MembershipInstitutionDetailsModel();
+  transactionModel: AcountsTransaction = new AcountsTransaction();
   individualFlag: boolean = true;
   groupFlag: boolean = false;
   institutionFlag: boolean = false;
@@ -77,6 +79,7 @@ export class RenewalComponent {
   multipleFilesList: any[] = [];
   groupPrmotersList: any[] = [];
   institionPromotersList: any[] = [];
+  today: any;
 
   constructor(private router: Router,
     private dailyDepositsAccountsService: DailyDepositsAccountsService,
@@ -132,7 +135,7 @@ export class RenewalComponent {
     this.pacsId = 1;
     this.branchId = 1;
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
-
+    this.today= this.commonFunctionsService.currentDate();
     this.activateRoute.queryParams.subscribe(params => {
       if(params['id'] != undefined ) {
         let queryParams = this.encryptDecryptService.decrypt(params['id']);
@@ -202,10 +205,10 @@ export class RenewalComponent {
   }
 
   onPaymentTypeChange(element: any): void {
-    if (element.value.value === 'sbAccount') {
+    if (element.value.value === applicationConstants.SB_ACCOUNT) {
       this.showSbAccountNumber = true;
       this.accountsModel.transactionMode=2;
-    } else if(element.value.value === 'cash'){
+    } else if(element.value.value === applicationConstants.CASH){
       this.showSbAccountNumber = false;
       this.accountsModel.transactionMode=1;
     }
@@ -217,16 +220,16 @@ export class RenewalComponent {
     this.showInterestForm = false;
     this.showIntrestOrPrincipleForm = false;
     this.showManualRenewalForm = false;
-    if (element.value === 'Principle') {
+    if (element.value === applicationConstants.PRINCIPLE) {
       this.showPrincipleform = true;
     } 
     // else if (element.value === 'Interest') {
     //   this.showInterestForm = true;
     // }
-    else if (element.value === 'Principle And Interest') {
+    else if (element.value === applicationConstants.PRINCIPLE_AND_INTEREST) {
       this.showIntrestOrPrincipleForm = true;
     }
-    else if (element.value === 'Manual Renewal Amount') {
+    else if (element.value === applicationConstants.MANUAL_RENEWAL_AMOUNT) {
       this.showManualRenewalForm = true;
     }
   }
@@ -402,10 +405,8 @@ export class RenewalComponent {
 	// @author Jyoshna
   addAccountDetails(accountsModel: any) {
     accountsModel.closureDate = this.commonFunctionsService.getUTCEpoch(new Date(accountsModel.closureDate));
-    accountsModel.depositDate = this.commonFunctionsService.getUTCEpoch(new Date(accountsModel.depositDate));
-    accountsModel.previousAccId = this.accId;
-    accountsModel.accountNumber = null;
-    accountsModel.id = null;
+    accountsModel.depositDate = this.commonFunctionsService.getUTCEpoch(new Date(this.today));
+    this.mapRenealDetailsToAccTransaction(accountsModel);
     this.dailyDepositsAccountsService.addRenewalData(accountsModel).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
@@ -433,5 +434,14 @@ export class RenewalComponent {
       }, 3000);
     });
   }
-
+  mapRenealDetailsToAccTransaction(accModel:any){
+    this.transactionModel.admissionNumber=accModel.adminssionNumber;
+    this.transactionModel.accountNumber=accModel.accountNumber;
+    this.transactionModel.accId=accModel.id;
+    this.transactionModel.transactionAmount=accModel.depositAmount;
+    this.transactionModel.transactionDate=accModel.depositDate;
+    this.transactionModel.transactionType=2;
+    this.transactionModel.transactionMode=3
+    accModel.accountsTransactionDTO = this.transactionModel;
+  }
 }

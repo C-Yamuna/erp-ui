@@ -8,13 +8,13 @@
                                 (click)="addKyc($event)" [disabled]="buttonDisabled"></p-button> -->
                             <div class="col-12 px-0">
                                 <div class="row g-3">
-                                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-xs-12" *ngFor="let document of kycModelList ; let i = index">
+                                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-xs-12 mt-2" *ngFor="let document of kycModelList ; let i = index">
                                         <div class="stepper-kyc-card p-3 pb-1 mb-2" *ngIf="editIndex != i || editDocumentOfKycFalg">
                                             <!-- view card -->
                                             <div class="row">
                                                 <div class="col-lg-7 col-md-7 col-sm-7 col-xs-6 d-flex align-items-center">
                                                     <div class="card-leftbody">
-                                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px" *ngIf="!individualFlag">
+                                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="!individualFlag">
                                                             <h6 class="label-view">Promoter Name</h6>
                                                             <p class="label-input-text">{{document.promoterName}}</p>
                                                         </div>
@@ -34,9 +34,9 @@
                                                 </div>
                                                 </div>
                                                 <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end d-flex right-actions">
-                                                    <div class="cardview-icon icon-size text-right cursor-pointer -mt-1" (click)="onClickkycPhotoCopy(document)"><i class="fa fa-eye mr-3" aria-hidden="true"></i></div>
+                                                    <div class="cardview-icon icon-size text-right cursor-pointer -mt-1" (click)="onClickkycPhotoCopy(document)"><i class="fa fa-eye mr-3" aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}" tooltipPosition="top"></i></div>
                                                             <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn" (click)="toggleEditForm(i ,document)"
-                                                                [disabled]="editButtonDisable"></p-button>
+                                                                [disabled]="editButtonDisable" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                                   
                                                     <!-- <div class="col-12 px-0">
                                                             <div class="col-12 px-0" *ngFor="let img of document.multipartFileList">
@@ -147,7 +147,7 @@
                         </form>
 </div>
  <!-- KYC Photo Copy -->
- <p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="kycPhotoCopyZoom" styleClass="doc-photo-dialog">
+ <p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="kycPhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
     <div class="col-12">
     <div *ngFor="let img of multipleFilesList">
         <div class="mb-3" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">

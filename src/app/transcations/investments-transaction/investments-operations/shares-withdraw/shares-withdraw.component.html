@@ -1,6 +1,133 @@
-<p>shares-withdraw works!</p>
-<div class="col-12 mt4">
-
-    <p-button class="action-view" label="Back" (click)="navigateBack()"></p-button>
+<p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
+    [hideTransitionOptions]="'500ms'"></p-messages>
+<div class="col-12">
+    <div class="row">
+        <div class="d-flex justify-content-between top-header-section">
+            <div class="main-heading mt-1 justify-content-start">{{'INVESTMENTS_TRANSACTIONS.INVESTMENTS' | translate}}
+                <i class="fa fa-angle-right font-bold mr-3 ml-3"></i>
+                {{'INVESTMENTS_TRANSACTIONS.SHARE_DETAILS' | translate}}
+            </div>
+        </div>
+        <div class="col-12 p-0">
+            <div class="row">
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 left-sidecard">
+                    <!--  left side screen start -->
+                    <div class="col-12 basic-view side-card-style">
+                        <div class="col-12 inner-border">
+                            <div class="side-card-header-border">
+                                <div class="row">
+                                    <div class="col-10 py-0">
+                                        <h6 class="side-card-header">{{'INVESTMENTS_TRANSACTIONS.SHARE_DETAILS'
+                                            | translate}}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
+                                    <div class="row">
+                                        <div
+                                            class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                            <span class="basicdata-icons icon-size"></span>
+                                            <div>
+                                                <p class="label-view text-fontwt">{{'INVESTMENTS_TRANSACTIONS.PRODUCT' |
+                                                    translate}}</p>
+                                                <p class="label-input-text">
+                                                    {{sharesInvestmentsModel.productName}}</p>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                            <span class="basicdata-icons icon-size"></span>
+                                            <div>
+                                                <p class="label-view text-fontwt">{{'INVESTMENTS_TRANSACTIONS.BANK_NAME'
+                                                    | translate}}
+                                                </p>
+                                                <p class="label-input-text">
+                                                    {{sharesInvestmentsModel.bankName}}</p>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                            <span class="basicdata-icons icon-size"></span>
+                                            <div>
+                                                <p class="label-view text-fontwt">
+                                                    {{'INVESTMENTS_TRANSACTIONS.BRANCH' |
+                                                    translate}}</p>
+                                                <p class="label-input-text">
+                                                    {{sharesInvestmentsModel.branchName}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                            <span class="basicdata-icons icon-size"></span>
+                                            <div>
+                                                <p class="label-view text-fontwt">
+                                                    {{'INVESTMENTS_TRANSACTIONS.PURCHASE_DATE' | translate}}</p>
+                                                <p class="label-input-text">
+                                                    {{sharesInvestmentsModel.sharesPurchasedDate}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                            <span class="basicdata-icons icon-size"></span>
+                                            <div>
+                                                <p class="label-view text-fontwt">
+                                                    {{'INVESTMENTS_TRANSACTIONS.SHARES_CERTIFICATE_NO' |
+                                                    translate}}</p>
+                                                <p class="label-input-text">
+                                                    {{sharesInvestmentsModel.shareCertificateNumber}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                            <span class="basicdata-icons icon-size"></span>
+                                            <div>
+                                                <p class="label-view text-fontwt">
+                                                    {{'INVESTMENTS_TRANSACTIONS.NO_OF_SHARES_PURCHASED' | translate}}
+                                                </p>
+                                                <p class="label-input-text">
+                                                    {{sharesInvestmentsModel.noOfSharesPurchased}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                            <span class="basicdata-icons icon-size"></span>
+                                            <div>
+                                                <p class="label-view text-fontwt">
+                                                    {{'INVESTMENTS_TRANSACTIONS.EACH_SHARE_AMOUNT' | translate}}</p>
+                                                <p class="label-input-text">
+                                                    {{sharesInvestmentsModel.eachShareAmount}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--  left side screen end-->
+                <!--  right side screen start -->
+                <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10 right-sidecard">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="col-12 p-0">
+                                <div class=" global-card-bg-color view-carddata icon-size">
+                                    <div class="col-12">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 margtop-3rem">
+                            <p-button class="action-view pull-right" label="Back" (click)="navigateBack()"></p-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-

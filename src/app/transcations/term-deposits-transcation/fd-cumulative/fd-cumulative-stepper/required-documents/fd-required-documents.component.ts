@@ -207,8 +207,8 @@ export class FdRequiredDocumentsComponent implements OnInit {
     this.fdRequiredDocumentModel.fdCummulativeAccountId = this.fdCummulativeAccountId;
     this.fdRequiredDocumentModel.admissionNumber = this.admissionNumber;
     this.fdRequiredDocumentModel.memberTypeName = this.memberTypeName;
-    this.fdRequiredDocumentModel.memberType = this.memberTypeId;
-    this.fdRequiredDocumentModel.memberId = this.memberId;
+    // this.fdRequiredDocumentModel.memberType = this.memberTypeId;
+    // this.fdRequiredDocumentModel.memberId = this.memberId;
     this.fdRequiredDocumentModel.accountNumber = this.accountNumber;
     //for manadatory KYC Documents check
     this.saveAndPreview = false;
@@ -247,6 +247,7 @@ export class FdRequiredDocumentsComponent implements OnInit {
         setTimeout(() => {
           this.msgs = [];
         }, 3000);
+        this.updateData();
       }
       else {
         this.commonComponent.stopSpinner();
@@ -601,12 +602,28 @@ export class FdRequiredDocumentsComponent implements OnInit {
 
     this.displayDialog = false;
   }
-
+  documentDuplicate(id: any) {
+    if (id != null && id != undefined) {
+      if (this.documentDataList != null && this.documentDataList != undefined && this.documentDataList.length > 0) {
+        for (let item of this.documentDataList) {
+          if (item != null && item != undefined && item.requiredDocumentTypeId === id) {
+            this.requiredForm.reset();
+            this.msgs = [];
+            this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "Required Document already exists" }];
+            setTimeout(() => {
+              this.msgs = [];
+            }, 1500);
+          }
+        }
+      }
+    }
+  }
   /**
    * @implements onFile remove
    * @author bhargavi
    */
   fileRemoeEvent() {
+    this.isFileUploaded = applicationConstants.FALSE;
     if (this.fdRequiredDocumentModel.filesDTOList != null && this.fdRequiredDocumentModel.filesDTOList != undefined && this.fdRequiredDocumentModel.filesDTOList.length > 0) {
       let removeFileIndex = this.fdRequiredDocumentModel.filesDTOList.findIndex((obj: any) => obj && obj.fileName === this.fdRequiredDocumentModel.requiredDocumentFilePath);
       if (removeFileIndex != null && removeFileIndex != undefined) {

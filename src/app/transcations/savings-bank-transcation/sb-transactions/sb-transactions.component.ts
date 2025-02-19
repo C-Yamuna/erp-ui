@@ -3,7 +3,7 @@ import { SelectItem } from 'primeng/api';
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { savingsbanktransactionconstant } from '../savingsbank-transaction-constant';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { SavingBankApplicationService } from '../savings-bank-account-creation-stepper/savings-bank-application/shared/saving-bank-application.service';
 import { CommonComponent } from 'src/app/shared/common.component';
 import { EncryptDecryptService } from 'src/app/shared/encrypt-decrypt.service';
@@ -21,7 +21,7 @@ import { ChequeDetails, SbTransaction, TransferTransactionDetails } from './shar
 import { FileUploadService } from 'src/app/shared/file-upload.service';
 import { ERP_TRANSACTION_CONSTANTS } from '../../erp-transaction-constants';
 import { TranslateService } from '@ngx-translate/core';
-import { CommonStatusData } from '../../common-status-data.json';
+import { CommonStatusData, TRANSACTION_TYPES } from '../../common-status-data.json';
 
 interface Transaction {
   id: number;
@@ -45,7 +45,7 @@ export class SbTransactionsComponent {
   // selectedDate: Date;
   showCashForm: boolean = false;
   showChequeForm: boolean = false;
-  sbTransactionFrom: any;
+  sbTransactionFrom: FormGroup;
   orgnizationSetting: any;
   responseModel!: Responsemodel;
   sbAccId: any;
@@ -95,29 +95,40 @@ export class SbTransactionsComponent {
   admissionNumber : any;
   groupPrmoters: any[] = [];
   groupPrmotersList: any [] = [];
+  cashForm: FormGroup;
+  transferForm: FormGroup;
+  chequeForm: FormGroup;
 
   constructor(private router: Router, private formBuilder: FormBuilder, private savingBankApplicationService: SavingBankApplicationService, private commonComponent: CommonComponent, private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService, private savingsBankCommunicationService: SavingsBankCommunicationService, private statesService: StatesService, private commonFunctionsService: CommonFunctionsService, private datePipe: DatePipe, private membershipServiceService: MembershipServiceService, private sbTransactionService: SbTransactionService ,private fileUploadService :FileUploadService,private translate: TranslateService) {
     this.sbTransactionFrom = this.formBuilder.group({
+        "accountType": new FormControl({ value: '', disabled: true }, Validators.required),
         'trnsactionType': new FormControl({ value: '', disabled: true },Validators.required),
         "transactionMode": new FormControl('', Validators.required),
-        "accountNumber":new FormControl({ value: '', disabled: true }, Validators.required),
-        // "accountHolderName": new FormControl('', Validators.required),
-        "amountInWords": new FormControl({ value: '', disabled: true }, Validators.required),
-        "accountType": new FormControl({ value: '', disabled: true }, Validators.required),
-        "amount": new FormControl('', Validators.required),
         "transactionDate": new FormControl({ value: '', disabled: true },Validators.required),
-        //cheque
-        "chequeHolderName": new FormControl('',Validators.required),
-        "branch": new FormControl('',Validators.required),
-        "chequeNumber": new FormControl('',Validators.required),
-        "chequeValidDate": new FormControl('',Validators.required),
-        "chequeAmount": new FormControl('',Validators.required),
-        "narration": new FormControl('',Validators.required),
-        //transaction
-        "transferAccountHolderName": new FormControl('',Validators.required),
-        "transferAmount": new FormControl('',Validators.required),
-        "transaferBranch": new FormControl('',Validators.required),
-        "transferNarration": new FormControl('',Validators.required),
+    });
+    this.cashForm = this.formBuilder.group({
+      "accountNumber": new FormControl({ value: '', disabled: true }, Validators.required),
+      "amount":  new FormControl(Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS), Validators.minLength(1), Validators.maxLength(13)]),
+      "amountInWords": new FormControl({ value: '', disabled: true }, Validators.required),
+      "narration": new FormControl('', Validators.required),
+    });
+    this.transferForm = this.formBuilder.group({
+      "amount": new FormControl(Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS), Validators.minLength(1), Validators.maxLength(13)]),
+      "amountInWords": new FormControl({ value: '', disabled: true }, Validators.required),
+      "transferNarration": new FormControl('', Validators.required),
+      "accountNumber": new FormControl({ value: '', disabled: true }, Validators.required),
+      "transferAccountHolderName": new FormControl('', Validators.required),
+      "transaferBranch": new FormControl('', ),
+      "transferAmount": new FormControl('', Validators.required),
+    });
+    this.chequeForm = this.formBuilder.group({
+      "accountNumber": new FormControl({ value: '', disabled: true }, Validators.required),
+      "chequeHolderName": new FormControl('', Validators.required),
+      "chequeNumber": new FormControl('', Validators.required),
+      "chequeValidDate": new FormControl('',Validators.required),
+      "chequeAmount": new FormControl(Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS), Validators.minLength(1), Validators.maxLength(13)]),
+      "amountInWords": new FormControl({ value: '', disabled: true }, Validators.required),
+      "narration": new FormControl('',),
     });
     this.transactionColumns = [
       { field: 'trnasactionDateVal', header: 'DEMANDDEPOSITS.TRANSACTION_DATE' },
@@ -194,6 +205,7 @@ export class SbTransactionsComponent {
     });
     this.sbTransactionModel.trnasactionDateVal= this.commonFunctionsService.currentDate();
     this.sbTransactionModel.transactionType = 2;
+    this.sbTransactionModel.transactionTypeName = TRANSACTION_TYPES.WITHDRAW;
     this.transactionType(this.sbTransactionModel.transactionType);
     this.getTopTransactionsList();
   }
@@ -215,7 +227,7 @@ export class SbTransactionsComponent {
         // { label: 'Cheque', value: 2 }
         { label: 'transafer', value: 3 }
       ];
-      this.sbTransactionModel.transactionTypeName = 'Credit';
+      this.sbTransactionModel.transactionTypeName = 'Deposit';
     } else if (event == 2) {
       this.depositFlag = false;
       this.withDrawalFlag = true;
@@ -224,7 +236,7 @@ export class SbTransactionsComponent {
         // { label: 'Cheque', value: 2 },
         { label: 'transafer', value: 3 }
       ];
-      this.sbTransactionModel.transactionTypeName = 'Debit';
+      this.sbTransactionModel.transactionTypeName = 'Withdraw';
     } else {
       this.showCashForm = false;
       this.showChequeForm = false;
@@ -238,7 +250,7 @@ export class SbTransactionsComponent {
    * @param transactionMode
    * @author jyothi.naidana
    */
-  toggleCashForm(element: any) {
+  toggleCashForm(element: any , flag :any) {
     if (element == 1) {
       this.showCashForm = true;
       this.showChequeForm = false;
@@ -252,14 +264,22 @@ export class SbTransactionsComponent {
       this.transferForShow = false;
       this.paymentMethodOptions = this.paymentMethodOptionsForWithDrawalType;
       this.sbTransactionModel.transactionModeName = "Cheque";
+      this.sbTransactionModel.transactionTypeName = 'Withdraw';
     } else {
+      if(!flag){
+        this.transferTransactionDetails = new TransferTransactionDetails();
+      }
       this.transferForShow = true;
       this.showCashForm = false;
       this.showChequeForm = false;
       this.paymentMethodOptions = this.paymentMethodOptionsForWithDrawalType;
       this.sbTransactionModel.transactionModeName = "transafer";
+      this.sbTransactionModel.transactionTypeName = 'Withdraw';
     }
+  
+  
   }
+
 
   /**
    *@code back navigation 
@@ -431,7 +451,7 @@ export class SbTransactionsComponent {
     this.sbTransactionModel.branchId = this.branchId;
     this.sbTransactionModel.products = this.savingBankApplicationModel.productId;
     this.sbTransactionModel.balance = this.savingBankApplicationModel.balance;
-
+   
     if (this.sbTransactionModel.transactionMode != null && this.sbTransactionModel.transactionMode != undefined && this.sbTransactionModel.transactionMode === 2) {
       if (this.chequeDetails != null && this.chequeDetails != undefined) {
         this.sbTransactionModel.chequeTransactionDetailsDTO = this.chequeDetails;
@@ -464,7 +484,7 @@ export class SbTransactionsComponent {
           if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
               this.voucherDeiloge = true;
           }
-          this.transactionModelList.push(this.responseModel.data[0]);
+          this.transactionModelList.push(this.sbTransactionModel);
           
         }
         this.getTopTransactionsList();
@@ -486,7 +506,7 @@ export class SbTransactionsComponent {
         if (this.responseModel != null && this.responseModel != undefined) {
           if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.voucherDeiloge = true;
-            this.transactionModelList.push(this.responseModel.data[0]);
+            this.transactionModelList.push(this.sbTransactionModel);
           }
         }
         this.getTopTransactionsList();
@@ -508,23 +528,23 @@ export class SbTransactionsComponent {
    */
   submit() {
     if (this.sbTransactionModel != null && this.sbTransactionModel != undefined && this.sbTransactionModel.transactionType != null && this.sbTransactionModel.transactionType != undefined && this.sbTransactionModel.transactionType == 2) {
-      if (this.savingBankApplicationModel.balance == null || this.savingBankApplicationModel.balance == undefined) {
-        this.msgs = [];
-        this.msgs = [{ severity: 'error', detail: "Insuffiecient Balence In your Account" }];
-        setTimeout(() => {
-          this.msgs = [];
-        }, 2000);
-      }
-      else if (this.sbTransactionModel != null && this.sbTransactionModel != undefined && this.sbTransactionModel.transactionAmount > this.savingBankApplicationModel.balance) {
-        this.msgs = [];
-        this.msgs = [{ severity: 'error', detail: "Insuffiecient Balence In your Account" }];
-        setTimeout(() => {
-          this.msgs = [];
-        }, 2000);
-      }
-      else {
+      // if (this.savingBankApplicationModel.balance == null || this.savingBankApplicationModel.balance == undefined) {
+      //   this.msgs = [];
+      //   this.msgs = [{ severity: 'error', detail: "Insuffiecient Balence In your Account" }];
+      //   setTimeout(() => {
+      //     this.msgs = [];
+      //   }, 2000);
+      // }
+      // else if (this.sbTransactionModel != null && this.sbTransactionModel != undefined && this.sbTransactionModel.transactionAmount > this.savingBankApplicationModel.balance) {
+      //   this.msgs = [];
+      //   this.msgs = [{ severity: 'error', detail: "Insuffiecient Balence In your Account" }];
+      //   setTimeout(() => {
+      //     this.msgs = [];
+      //   }, 2000);
+      // }
+      // else {
         this.confirmDialog = true;
-      }
+      // }
     } else {
       this.confirmDialog = true;
     }
@@ -692,8 +712,17 @@ export class SbTransactionsComponent {
         if (this.responseModel != null && this.responseModel != undefined && this.responseModel.status != null && this.responseModel.status != undefined && this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.sbTransactionModel = this.responseModel.data[0];
+            if(this.sbTransactionModel.transactionDate != null && this.sbTransactionModel.transactionDate != undefined){
+              this.sbTransactionModel.trnasactionDateVal = this.datePipe.transform(this.savingBankApplicationModel.accountOpenDate, this.orgnizationSetting.datePipe);
+            }
+            if(this.sbTransactionModel.transferTransactionDetailsDTO != null && this.sbTransactionModel.transferTransactionDetailsDTO != undefined){
+              this.transferTransactionDetails =this.sbTransactionModel.transferTransactionDetailsDTO 
+            }
+            if(this.sbTransactionModel.chequeTransactionDetailsDTO != null && this.sbTransactionModel.chequeTransactionDetailsDTO != undefined){
+              this.chequeDetails = this.sbTransactionModel.chequeTransactionDetailsDTO;
+            }
             if(this.sbTransactionModel.transactionMode != null && this.sbTransactionModel.transactionMode != undefined){
-              this.toggleCashForm(this.sbTransactionModel.transactionMode);
+              this.toggleCashForm(this.sbTransactionModel.transactionMode , true);
             }
             if(this.sbTransactionModel.transactionType != null && this.sbTransactionModel.transactionType != undefined){
               this.transactionType(this.sbTransactionModel.transactionType);
@@ -796,9 +825,9 @@ export class SbTransactionsComponent {
    */
   onAmountChange() {
     if (this.sbTransactionModel.transactionAmount !== null && this.sbTransactionModel.transactionAmount >= 0 && this.sbTransactionModel.transactionAmount != "") {
-      this.sbTransactionModel.transactionAmountInWords = this.commonFunctionsService.convertToWords(this.sbTransactionModel.transactionAmount);
+      this.sbTransactionModel.amountInWords = this.commonFunctionsService.convertToWords(this.sbTransactionModel.transactionAmount);
     } else {
-      this.sbTransactionModel.transactionAmountInWords = '';
+      this.sbTransactionModel.amountInWords = '';
     }
 
     if (this.transferTransactionDetails.transactionAmount !== null && this.transferTransactionDetails.transactionAmount >= 0 && this.transferTransactionDetails.transactionAmount != "") {

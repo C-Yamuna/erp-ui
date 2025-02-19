@@ -147,8 +147,8 @@
 
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
-                                <div class="global-card-bg-color view-carddata icon-size pb-1">
-                                    <div class="col-12">
+                                <div class="global-card-bg-color view-carddata icon-size pb-2">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -162,29 +162,29 @@
                                                     (click)="editAgentDetails(membershipBasicDetailsModel,0)"></p-button>
                                             </div>
                                         </div>
-                                        <div class="col-12 px-0">
+                                        <div class="col-12 p-0">
                                             <div class="row g-3">
                                                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12"
                                                     *ngFor="let document of kycGridList ; let i = index">
-                                                    <div class="stepper-kyc-card p-3 mb-2">
+                                                    <div class="stepper-kyc-card p-3 pb-1 mb-2">
                                                         <div class="row">
                                                             <div
                                                                 class="col-lg-7 col-md-7 col-sm-7 col-xs-6 d-flex align-items-center">
                                                                 <div class="card-leftbody">
                                                                     <div
-                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                         <h6 class="label-view">Document Type</h6>
                                                                         <p class="label-input-text">
                                                                             {{document.kycDocumentTypeName}}</p>
                                                                     </div>
                                                                     <div
-                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                         <h6 class="label-view">Document Number</h6>
                                                                         <p class="label-input-text">
                                                                             {{document.documentNumber}}</p>
                                                                     </div>
                                                                     <div
-                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                         <h6 class="label-view">Name As Per Document</h6>
                                                                         <p class="label-input-text docname-texteclipse">
                                                                             {{document.kycFilePath}}</p>
@@ -229,8 +229,8 @@
                         <div class="col-12 p-1"></div>
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
-                                <div class="global-card-bg-color view-carddata icon-size">
-                                    <div class="col-12">
+                                <div class="global-card-bg-color view-carddata icon-size pb-2">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -245,25 +245,25 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-12 px-0">
+                                        <div class="col-12 p-0">
                                             <div class="row g-3">
                                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <div class="nominee-card p-3 pb-1 mb-2">
                                                         <div class="row">
                                                             <h6 class="super-sub-heading mt-1">Registered</h6>
                                                             <div class="col-12">
-                                                                <div class="row mt-2">
+                                                                <div class="row">
                                                                     <div
                                                                         class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                                         <div class="row">
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">State</h6>
                                                                                 <p class="label-input-text">
                                                                                     {{communicationModel.stateName}}</p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">District</h6>
                                                                                 <p class="label-input-text">
                                                                                     {{communicationModel.districtName}}
@@ -271,27 +271,27 @@
                                                                             </div>
 
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">Sub District</h6>
                                                                                 <p class="label-input-text">
                                                                                     {{communicationModel.subDistrictName}}
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">Village</h6>
                                                                                 <p class="label-input-text">
                                                                                     {{communicationModel.villageName}}
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">Address</h6>
                                                                                 <p class="label-input-text">
                                                                                     {{communicationModel.address1}}</p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">Pincode</h6>
                                                                                 <p class="label-input-text">
                                                                                     {{communicationModel.pinCode}}</p>
@@ -308,47 +308,47 @@
                                                         <div class="row">
                                                             <h6 class="super-sub-heading mt-1">Permanent</h6>
                                                             <div class="col-12">
-                                                                <div class="row mt-2">
+                                                                <div class="row">
                                                                     <div
                                                                         class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                                         <div class="row">
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">State</h6>
                                                                                 <p class="label-input-text">
                                                                                     {{communicationModel.permanentStateName}}
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">District</h6>
                                                                                 <p class="label-input-text">
                                                                                     {{communicationModel.permanentDistrictName}}
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">Sub District</h6>
                                                                                 <p class="label-input-text">
                                                                                     {{communicationModel.permanentSubDistrictName}}
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">Village</h6>
                                                                                 <p class="label-input-text">
                                                                                     {{communicationModel.permanentVillageName}}
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">Address</h6>
                                                                                 <p class="label-input-text">
                                                                                     {{communicationModel.permanentAddress1}}
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">Pincode</h6>
                                                                                 <p class="label-input-text">
                                                                                     {{communicationModel.permanentPinCode}}
@@ -372,8 +372,8 @@
                         <div class="col-12 p-1"></div>
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
-                                <div class="global-card-bg-color view-carddata icon-size">
-                                    <div class="col-12">
+                                <div class="global-card-bg-color view-carddata icon-size pb-1">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -387,20 +387,20 @@
                                                     (click)="editAgentDetails(membershipBasicDetailsModel,2)"></p-button>
                                             </div>
                                         </div>
-                                        <div class="col-12 px-0">
+                                        <div class="col-12 p-0">
                                             <div class="row">
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'AGENT_DETAILS_TRANSACTION.AGENT_TYPE' |
                                                         translate}}</h6>
                                                     <p class="label-input-text">{{agentDetailsModel.agentTypeName}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'AGENT_DETAILS_TRANSACTION.TASK_TYPE' |
                                                         translate}}</h6>
                                                     <p class="label-input-text">{{agentDetailsModel.taskTypeName}}</p>
                                                 </div>
 
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'AGENT_DETAILS_TRANSACTION.COLLECTION_TYPE'
                                                         |
                                                         translate}}</h6>
@@ -415,8 +415,8 @@
                         <div class="col-12 p-1"></div>
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
-                                <div class="global-card-bg-color view-carddata icon-size pb-1">
-                                    <div class="col-12">
+                                <div class="global-card-bg-color view-carddata icon-size pb-2">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -430,7 +430,7 @@
                                                     (click)="editAgentDetails(membershipBasicDetailsModel,3)"></p-button>
                                             </div>
                                         </div>
-                                        <div class="col-12 px-0">
+                                        <div class="col-12 p-0">
                                             <div class="row g-3">
                                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                     <div class="stepper-nominee-card p-3 pb-1 mb-2">
@@ -438,14 +438,14 @@
                                                             <h6 class="super-sub-heading mt-1">{{'ERP.NOMINEE' |
                                                                 translate}}</h6>
                                                             <div class="col-12">
-                                                                <div class="row mt-2">
+                                                                <div class="row">
                                                                     <div
                                                                         class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center">
                                                                         <div class="card-leftbody">
                                                                             <div class="row">
 
                                                                                 <div
-                                                                                    class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'AGENT_DETAILS_TRANSACTION.TYPE_OF_NOMINEE'
                                                                                         |
@@ -454,7 +454,7 @@
                                                                                         {{nomineeModel.nomineeType}}</p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'AGENT_DETAILS_TRANSACTION.RELATIONSHIP_WITH_MEMBERSHIP'
                                                                                         | translate}}</h6>
@@ -463,7 +463,7 @@
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'AGENT_DETAILS_TRANSACTION.FULL_NAME'
                                                                                         |
@@ -472,7 +472,7 @@
                                                                                         {{nomineeModel.nomineeName}}</p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'AGENT_DETAILS_TRANSACTION.MOBILE_NUMBER'
                                                                                         |
@@ -482,7 +482,7 @@
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'AGENT_DETAILS_TRANSACTION.EMAIL'
                                                                                         |
@@ -494,7 +494,7 @@
 
 
                                                                                 <div
-                                                                                    class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'AGENT_DETAILS_TRANSACTION.AADHAR_NUMBER'
                                                                                         | translate}}</h6>
@@ -545,8 +545,8 @@
                         <div class="col-12 p-1"></div>
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
-                                <div class=" global-card-bg-color view-carddata icon-size pb-3">
-                                    <div class="col-12">
+                                <div class=" global-card-bg-color view-carddata icon-size pb-2">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -561,7 +561,7 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-12">
+                                            <div class="col-12 pt-0">
                                                 <div class="d-flex">
                                                     <h6 class="super-sub-heading mt-1">
                                                         {{'AGENT_DETAILS_TRANSACTION.SECURITY' | translate}}</h6>
@@ -594,18 +594,18 @@
                                         <div class="col-12 margtop-3rem"></div>
 
                                         <div class="row">
-                                            <div class="col-12">
+                                            <div class="col-12 pt-0">
                                                 <div class="d-flex">
                                                     <h6 class="super-sub-heading mt-1">Surity</h6>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div class="col-12 p-3 stepper-nominee-card  mb-3">
-                                            <div class="col-auto rounded mb-2">
-                                                <div class="w-100 mt-1 mb-2 h-90p text-white-black">
+                                        <div class="col-12 p-2 stepper-nominee-card  mb-2">
+                                            <div class="col-auto rounded mb-1">
+                                                <div class="w-100 h-90p text-white-black">
                                                     <div class="row">
-                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                             <div class="col">
                                                                 <span
                                                                     class="label-view">{{'AGENT_DETAILS_TRANSACTION.ADMISSION_NUMBER'
@@ -614,7 +614,7 @@
                                                                     {{membershipBasicDetailsModel.admissionNumber}}</p>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                             <div class="col">
                                                                 <span
                                                                     class="label-view">{{'AGENT_DETAILS_TRANSACTION.NAME'
@@ -623,7 +623,7 @@
                                                                     {{membershipBasicDetailsModel.name}}</p>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                             <div class="col">
                                                                 <span
                                                                     class="label-view">{{'AGENT_DETAILS_TRANSACTION.MEMBER_TYPE'
@@ -632,7 +632,7 @@
                                                                     {{membershipBasicDetailsModel.memberTypeName}}</p>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                             <div class="col">
                                                                 <span
                                                                     class="label-view">{{'AGENT_DETAILS_TRANSACTION.CLASS'
@@ -641,7 +641,7 @@
                                                                     {{membershipBasicDetailsModel.subProductName}}</p>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                             <div class="col">
                                                                 <span
                                                                     class="label-view">{{'AGENT_DETAILS_TRANSACTION.ADMISSION_DATE'
@@ -650,7 +650,7 @@
                                                                     {{membershipBasicDetailsModel.admissionDate}}</p>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                             <div class="col">
                                                                 <span
                                                                     class="label-view">{{'AGENT_DETAILS_TRANSACTION.AADHAR_NUMBER'
@@ -659,7 +659,7 @@
                                                                     {{membershipBasicDetailsModel.aadharNumber}}</p>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                             <div class="col">
                                                                 <span
                                                                     class="label-view">{{'AGENT_DETAILS_TRANSACTION.PAN_NUMBER'
@@ -668,7 +668,7 @@
                                                                     {{membershipBasicDetailsModel.panNumber}}</p>
                                                             </div>
                                                         </div>
-                                                        <!-- <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">
+                                                        <!-- <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 ">
                                                             <h6 class="label-view">{{'AGENT_DETAILS_TRANSACTION.KYC' | translate}}</h6>
                                                             <p class="label-input-text">{{membershipBasicDetailsModel.isKycApproved}}</p>
                                                         </div> -->
@@ -677,7 +677,7 @@
                                             </div>
                                         </div>
                                         <div class="col-12 p-0 mt-3">
-                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                 <h6 class="label-view">Upload Signed Copy</h6>
                                                 <p class="label-input-text docname-texteclipse mt-1"><img
                                                         src="assets/images/pdficon-img.png"

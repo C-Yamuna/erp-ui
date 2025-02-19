@@ -20,7 +20,7 @@ import { FileUploadModel } from 'src/app/layout/mainmenu/shared/file-upload-mode
 import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-constants';
 import { FileUpload } from 'primeng/fileupload';
 import { FileUploadService } from 'src/app/shared/file-upload.service';
-import { CommonStatusData, MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
+import { CommonStatusData, DOCUMENT_TYPES, MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-membership-basic-details',
@@ -103,6 +103,7 @@ export class MembershipBasicDetailsComponent {
   documentsData: any[] = [];
   loanId:any;
   saveButtonDisable: boolean= false;
+  isPanNumber: boolean = false;
 
   constructor(private formBuilder: FormBuilder, private commonComponent: CommonComponent, private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService,
     private membershipBasicDetailsService: MembershipBasicDetailsService, private saoLoanApplicationService: SaoLoanApplicationService, private saoLoanNomineeDetailsService: SaoLoanNomineeDetailsService,
@@ -261,6 +262,62 @@ export class MembershipBasicDetailsComponent {
       }, 3000);
     });
   }
+  kycModelDuplicateCheck(saoLoanKycModel: any) {
+    if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0) {
+      let filteredObj = this.documentNameList.find((data: any) => null != data && this.saoKycModel.kycDocumentTypeId != null && data.value == this.saoKycModel.kycDocumentTypeId);
+      if (filteredObj != null && undefined != filteredObj && filteredObj.label != null && filteredObj.label != undefined) {
+        this.saoKycModel.kycDocumentTypeName = filteredObj.label;
+        this.documentNumberDynamicValidation(this.saoKycModel.kycDocumentTypeName );
+      }
+    }
+      if(this.kycModelList != null && this.kycModelList != undefined && this.kycModelList.length > 0){
+        let duplicate
+        if(this.saoLoanApplicationModel.memberTypeName != MemberShipTypesData.INDIVIDUAL){
+          duplicate = this.kycModelList.find((obj:any) => obj && obj.kycDocumentTypeId === saoLoanKycModel.kycDocumentTypeId && obj.promoterId ===  saoLoanKycModel.promoterId);
+        }
+        else {
+          duplicate = this.kycModelList.find((obj:any) => obj && obj.kycDocumentTypeId === saoLoanKycModel.kycDocumentTypeId );
+        }
+      if (duplicate != null && duplicate != undefined && this.kycModelList.length >1) {
+        this.kycForm.reset();
+        this.saoKycModel = new SaoKyc();
+        if(saoLoanKycModel.id != null && saoLoanKycModel != undefined)
+          this.saoKycModel.id = saoLoanKycModel.id;
+        this.msgs = [];
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "duplicate Kyc Types"}];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      } 
+    }
+  }
+   documentNumberDynamicValidation(docTypeName: any) {
+      if (DOCUMENT_TYPES.AADHAR == this.saoKycModel.kycDocumentTypeName) {
+        const controlTow = this.kycForm.get('documentNumber');
+        if (controlTow) {
+          controlTow.setValidators([
+            Validators.required,
+            Validators.pattern(applicationConstants.AADHAR_PATTERN)
+          ]);
+          controlTow.updateValueAndValidity();
+        }
+        this.isPanNumber = false;
+      }
+      else if (DOCUMENT_TYPES.PANNUMBER == this.saoKycModel.kycDocumentTypeName) {
+        const controlTow = this.kycForm.get('documentNumber');
+        if (controlTow) {
+          controlTow.setValidators([
+            Validators.required,
+            Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN)
+          ]);
+          controlTow.updateValueAndValidity();
+        }
+        this.isPanNumber = true;
+      }
+      else {
+        this.isPanNumber = false;
+      }
+    }
   addKyc(event : any){
     this.getAllKycTypes();
     this.multipleFilesList = [];
@@ -608,7 +665,13 @@ export class MembershipBasicDetailsComponent {
   // update stepper component based on memberTypeId
   updateData() {
     if(this.kycModelList != null && this.kycModelList != undefined && this.kycModelList.length > 0){
-      this.isDisableFlag = false;
+      // this.isDisableFlag = false;
+      if( this.buttonDisabled){
+        this.isDisableFlag = true;
+      }
+      else{
+        this.isDisableFlag = false;
+      }
     }else{
       this.isDisableFlag = true;
     }

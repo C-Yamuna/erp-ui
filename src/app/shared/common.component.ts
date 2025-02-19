@@ -33,6 +33,7 @@ export class CommonComponent implements OnInit {
   public approvalStatus (){
     let statusList =[
     { label: 'Approved', value: 'Approved' },
+    { label: 'Request for Resubmission', value: 'Request for Resubmission' },
     { label: 'Rejected', value: 'Rejected' }
     ]
     return statusList;

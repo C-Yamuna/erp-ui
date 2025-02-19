@@ -244,17 +244,20 @@ getAllSbTransactionDetails() {
             else if(sb.accountStatusName == savingsbanktransactionconstant.REJECTED){
               sb.rejected = true;
               sb.actionButton = false;
+              sb.approved = false;
               this.rejectCount =this.rejectCount +1;
             }
             else if(sb.accountStatusName == savingsbanktransactionconstant.SUBMISSION_FOR_APPROVAL){
               sb.submissionForApproval = true;
               sb.actionButton = false; 
+              sb.approved = false;
               this.submissionForApprovalCount =this.submissionForApprovalCount +1;
             }
             else if(sb.accountStatusName == savingsbanktransactionconstant.CREATED || sb.accountStatusName == savingsbanktransactionconstant.IN_PROGRESS){
               sb.created = true; 
               sb.viewButton = true;
               sb.actionButton = true;
+              sb.approved = false;
               this.inProgressCount = this.inProgressCount+1;
             }
             else if(sb.accountStatusName == savingsbanktransactionconstant.REQUEST_FOR_RESUBIMSSION){
@@ -274,6 +277,17 @@ getAllSbTransactionDetails() {
               sb.viewButton = true;
               sb.requestForResubmmission = false;
               sb.closed = true;
+              this.requestForResubmmissionCount=this.requestForResubmmissionCount +1;
+            }
+            else if(sb.accountStatusName == savingsbanktransactionconstant.CLOSURE_REQUEST){
+              sb.rejected = false;
+              sb.approved = false;
+              sb.submissionForApproval = false; 
+              sb.actionButton = false;
+              sb.viewButton = true;
+              sb.requestForResubmmission = false;
+              sb.closed = false;
+              sb.closureRequest = true;
               this.requestForResubmmissionCount=this.requestForResubmmissionCount +1;
             }
             return sb

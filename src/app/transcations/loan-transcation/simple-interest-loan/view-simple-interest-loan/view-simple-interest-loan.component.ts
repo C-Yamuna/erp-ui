@@ -26,7 +26,7 @@ import { FileUpload } from 'primeng/fileupload';
 import { FileUploadModel } from 'src/app/layout/mainmenu/shared/file-upload-model.model';
 import { approvaltransactionsconstant } from 'src/app/transcations/approval-transcations/approval-transactions-constant';
 import { TruncatePipe } from 'angular-pipes';
-import { CommonStatusData } from 'src/app/transcations/common-status-data.json';
+import { CollateralTypes, CommonStatusData } from 'src/app/transcations/common-status-data.json';
 import { SiLoanMortagageDetailsService } from '../../shared/si-loans/si-loan-mortagage-details.service';
 import { VillagesService } from 'src/app/configurations/common-config/villages/shared/villages.service';
 import { SiVehicleLoanMortgage } from '../../shared/si-loans/si-loan-mortgage.model';
@@ -141,6 +141,8 @@ export class ViewSimpleInterestLoanComponent {
   siStorageLoanMortgageList:any[]=[];
   siPropertyMortgageList: any[]=[];
   siOtherLoanMortgageList:  any[]=[];
+  collateralList:  any[]=[];
+  loanAccId: any;
 
 
   constructor(private router: Router, private formBuilder: FormBuilder,
@@ -320,24 +322,31 @@ export class ViewSimpleInterestLoanComponent {
     this.activateRoute.queryParams.subscribe(params => {
       if (params['id'] != undefined || params['editOpt'] != undefined) {
         let id = this.encryptDecryptService.decrypt(params['id']);
+        this.loanAccId = id;
         if (params['editOpt'] != undefined)
           this.idEdit = this.encryptDecryptService.decrypt(params['editOpt']);
 
-        if (this.idEdit == "1")
-          this.preveiwFalg = true
-        else
+       
+        if (this.idEdit == "1") {
+          this.preveiwFalg = true;
+          this.viewButton = false;
+        } else {
           this.preveiwFalg = false;
+          this.viewButton = true;
+        }
 
         if (params['isGridPage'] != undefined && params['isGridPage'] != null) {
           let isGrid = this.encryptDecryptService.decrypt(params['isGridPage']);
           if (isGrid === "0") {
             this.isShowSubmit = applicationConstants.FALSE;
-            this.viewButton =false;
+            // this.viewButton = false;
             this.editFlag = true;
           } else {
             this.isShowSubmit = applicationConstants.TRUE;
+            this.preveiwFalg = false;
           }
         }
+        
         this.siLoanApplicationService.getSILoanApplicationById(id).subscribe(res => {
           this.responseModel = res;
           if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
@@ -516,7 +525,7 @@ export class ViewSimpleInterestLoanComponent {
               this.memberGroupDetailsModel.admissionDateVal = this.datePipe.transform(this.memberGroupDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
 
             if (this.memberGroupDetailsModel.isNewMember != null && this.memberGroupDetailsModel.isNewMember != undefined)
-              this.isNewMember = this.membershipBasicRequiredDetailsModel.isNewMember;
+              this.isNewMember = this.memberGroupDetailsModel.isNewMember;
 
             if (this.memberGroupDetailsModel.groupPromoterList != null && this.memberGroupDetailsModel.groupPromoterList != undefined && this.memberGroupDetailsModel.groupPromoterList.length > 0)
               this.groupPrmotersList = this.memberGroupDetailsModel.groupPromoterList;
@@ -537,7 +546,7 @@ export class ViewSimpleInterestLoanComponent {
               this.membershipInstitutionDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipInstitutionDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
 
             if (this.membershipInstitutionDetailsModel.isNewMember != null && this.membershipInstitutionDetailsModel.isNewMember != undefined)
-              this.isNewMember = this.membershipBasicRequiredDetailsModel.isNewMember;
+              this.isNewMember = this.membershipInstitutionDetailsModel.isNewMember;
 
             if (this.membershipInstitutionDetailsModel.institutionPromoterList != null && this.membershipInstitutionDetailsModel.institutionPromoterList != undefined && this.membershipInstitutionDetailsModel.institutionPromoterList.length > 0)
               this.institionPromotersList = this.membershipInstitutionDetailsModel.institutionPromoterList;
@@ -560,11 +569,25 @@ export class ViewSimpleInterestLoanComponent {
             }
           }
 
-          if (this.siLoanApplicationModel.siLoanNomineeDetailsDTO != null && this.siLoanApplicationModel.siLoanNomineeDetailsDTO != undefined)
-            this.siLoanNomineeModel = this.siLoanApplicationModel.siLoanNomineeDetailsDTO;
+          // if (this.siLoanApplicationModel.siLoanNomineeDetailsDTO != null && this.siLoanApplicationModel.siLoanNomineeDetailsDTO != undefined)
+          //   this.siLoanNomineeModel = this.siLoanApplicationModel.siLoanNomineeDetailsDTO;
 
-          if (this.siLoanApplicationModel.siMemberGuardianDetailsDTO != null && this.siLoanApplicationModel.siMemberGuardianDetailsDTO != undefined)
+          // if (this.siLoanApplicationModel.siMemberGuardianDetailsDTO != null && this.siLoanApplicationModel.siMemberGuardianDetailsDTO != undefined)
+          //   this.siLoanGuardianModel = this.siLoanApplicationModel.siMemberGuardianDetailsDTO;
+
+          //nominee Details
+          if (this.siLoanApplicationModel.siLoanNomineeDetailsDTO != null && this.siLoanApplicationModel.siLoanNomineeDetailsDTO != undefined) {
+            this.siLoanNomineeModel = this.siLoanApplicationModel.siLoanNomineeDetailsDTO;
+            if (this.siLoanNomineeModel.nomineeFilePath != null && this.siLoanNomineeModel.nomineeFilePath != undefined)
+              this.siLoanNomineeModel.nomineeSighnedFormMultiPartList = this.fileUploadService.getFile(this.siLoanNomineeModel.nomineeFilePath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.siLoanNomineeModel.nomineeFilePath);
+          }
+          //guardain
+          if (this.siLoanApplicationModel.siMemberGuardianDetailsDTO != null && this.siLoanApplicationModel.siMemberGuardianDetailsDTO != undefined) {
             this.siLoanGuardianModel = this.siLoanApplicationModel.siMemberGuardianDetailsDTO;
+            if (this.siLoanGuardianModel.uploadFilePath != null && this.siLoanGuardianModel.uploadFilePath != undefined)
+              this.siLoanGuardianModel.guardainSighnedMultipartFiles = this.fileUploadService.getFile(this.siLoanNomineeModel.nomineeFilePath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.siLoanNomineeModel.nomineeFilePath);
+
+          }
 
           if (this.siLoanApplicationModel.siLoanGuarantorDetailsDTOList != null && this.siLoanApplicationModel.siLoanGuarantorDetailsDTOList != undefined) {
             this.siLoanGuarantorDetailsList = this.siLoanApplicationModel.siLoanGuarantorDetailsDTOList;
@@ -575,83 +598,7 @@ export class ViewSimpleInterestLoanComponent {
               return model;
             });
           }
-
-
-          if (this.siLoanApplicationModel.siLoanGoldMortgageDetailsDTOList != null && this.siLoanApplicationModel.siLoanGoldMortgageDetailsDTOList != undefined)
-            this.siGoldLoanMortgageDetailsList = this.siLoanApplicationModel.siLoanGoldMortgageDetailsDTOList;
-          if (this.siGoldLoanMortgageDetailsList != null && this.siGoldLoanMortgageDetailsList.length > 0) {
-            this.goldFlag = true;
-          }
-          else {
-            this.goldFlag = false;
-          }
-
-          if (this.siLoanApplicationModel.siBondsMortgageDetailsDTOList != null && this.siLoanApplicationModel.siBondsMortgageDetailsDTOList != undefined)
-            this.siBondLoanMortgageDetailsList = this.siLoanApplicationModel.siBondsMortgageDetailsDTOList;
-          if (this.siBondLoanMortgageDetailsList != null && this.siBondLoanMortgageDetailsList.length > 0) {
-
-            this.BondFlag = true;
-            this.siBondLoanMortgageDetailsList.map((bond: any) => {
-              bond.bondIssuedDateVal = this.datePipe.transform(bond.bondIssuedDate, this.orgnizationSetting.datePipe);
-              bond.bondMaturityDateVal = this.datePipe.transform(bond.bondMaturityDate, this.orgnizationSetting.datePipe);
-              let bondTypeName = this.bondTypesList.filter((obj: any) => obj.value == bond.bondType);//bond type name
-              if (bondTypeName != null && bondTypeName != undefined && bondTypeName.length > 0)
-                bond.bondTypeName = bondTypeName[0].label;
-            }
-            );
-          }
-          else {
-            this.BondFlag = false;
-          }
-
-          if (this.siLoanApplicationModel.siLoanLandMortgageDetailsDTOList != null && this.siLoanApplicationModel.siLoanLandMortgageDetailsDTOList != undefined)
-            this.siLandLoanMortgageList = this.siLoanApplicationModel.siLoanLandMortgageDetailsDTOList;
-          if (this.siLandLoanMortgageList != null && this.siLandLoanMortgageList.length > 0) {
-            this.landFlag = true;
-          this.siLandLoanMortgageList.map((obj: any) => {
-              if (obj.villageId != null && obj.villageId != undefined) {
-                let villageName = this.villagesList.filter((village: any) => village.value == obj.villageId);
-                obj.villageName = villageName[0].label;
-              }
-            });
-          } else {
-            this.landFlag = false;
-          }
-
-          if (this.siLoanApplicationModel.siStorageMortgageDetailsDTOList != null && this.siLoanApplicationModel.siStorageMortgageDetailsDTOList != undefined)
-            this.siStorageLoanMortgageList = this.siLoanApplicationModel.siStorageMortgageDetailsDTOList;
-          if (this.siStorageLoanMortgageList != null && this.siStorageLoanMortgageList.length > 0) {
-            this.storageFlag = true
-            this.siStorageLoanMortgageList.map((obj: any) => {
-              if (obj.dateOfIssue != null && obj.dateOfIssue != undefined) {
-                obj.dateOfIssueVal = this.datePipe.transform(obj.dateOfIssue, this.orgnizationSetting.datePipe);
-              }
-            });
-          } else {
-            this.storageFlag = false;
-          }
-          if (this.siLoanApplicationModel.siPropertyMortgageDTOList != null && this.siLoanApplicationModel.siPropertyMortgageDTOList != undefined)
-            this.siPropertyMortgageList = this.siLoanApplicationModel.siPropertyMortgageDTOList;
-          if (this.siPropertyMortgageList != null && this.siPropertyMortgageList.length > 0) {
-            this.propertyFlag = true;
-          } else {
-            this.propertyFlag = false;
-          }
-
-          if (this.siLoanApplicationModel.siOtherMortgageDetailsDTOList != null && this.siLoanApplicationModel.siOtherMortgageDetailsDTOList != undefined)
-            this.siOtherLoanMortgageList = this.siLoanApplicationModel.siOtherMortgageDetailsDTOList;
-          if (this.siOtherLoanMortgageList != null && this.siOtherLoanMortgageList.length > 0) {
-            this.otherFlag = true;
-          } else {
-            this.otherFlag = false;
-          }
-          if(this.siLoanApplicationModel.siLoanVehicleMortgageDetailsDTO != null && this.siLoanApplicationModel.siLoanVehicleMortgageDetailsDTO != undefined){
-            this.siVehicleLoanMortgageModel = this.siLoanApplicationModel.siLoanVehicleMortgageDetailsDTO;
-            this.vahicalFlag = true;
-          } else {
-            this.vahicalFlag = false;
-          }
-
+          this.collateralListSet(this.siLoanApplicationModel);
           if (this.siLoanApplicationModel.siLoanDocumentsDetailsDTOList != null && this.siLoanApplicationModel.siLoanDocumentsDetailsDTOList != undefined) {
             this.siLoanDocumentsDetailsList = this.siLoanApplicationModel.siLoanDocumentsDetailsDTOList;
             for (let document of this.siLoanDocumentsDetailsList) {
@@ -698,6 +645,65 @@ export class ViewSimpleInterestLoanComponent {
       }, 2000);
     });
   }
+
+  /**
+     * @implements set collateral list data
+     * @param obj 
+     * @author k.yamuna
+     */
+    collateralListSet(obj :any){
+      this.collateralList = [];
+      if(obj.collateralType == CollateralTypes.BONDS_MORTGAGE){
+        this.collateralList =obj.ciBondsMortgageDetailsDTOList;
+        this.collateralList = this.collateralList.map((bond: any) => {
+          bond.maturityDateVal =  this.datePipe.transform(bond.maturityDate, this.orgnizationSetting.datePipe);
+          return bond;
+        });
+        this.goldLoanMortgageColumns = this.bondLoanMortgageColumns;
+      }
+      else if(obj.collateralType == CollateralTypes.GOLD_MORTGAGE){
+        this.collateralList = obj.siLoanGoldMortgageDetailsDTOList;
+        this.goldLoanMortgageColumns = this.goldLoanMortgageColumns;
+        this.collateralList.map((bond: any) => {
+          bond.bondIssuedDateVal = this.datePipe.transform(bond.bondIssuedDate, this.orgnizationSetting.datePipe);
+          bond.bondMaturityDateVal = this.datePipe.transform(bond.bondMaturityDate, this.orgnizationSetting.datePipe);
+          let bondTypeName = this.bondTypesList.filter((obj: any) => obj.value == bond.bondType);//bond type name
+          if (bondTypeName != null && bondTypeName != undefined && bondTypeName.length > 0)
+            bond.bondTypeName = bondTypeName[0].label;
+        });
+      }
+      else if(obj.collateralType == CollateralTypes.LAND_MORTGAGE){
+        this.collateralList = obj.siLoanLandMortgageDetailsDTOList;
+        this.collateralList.map((obj: any) => {
+              if (obj.villageId != null && obj.villageId != undefined) {
+                let villageName = this.villagesList.filter((village: any) => village.value == obj.villageId);
+                obj.villageName = villageName[0].label;
+              }
+            });
+        this.goldLoanMortgageColumns = this.landLoanMortgageColumns;
+      }
+      else if(obj.collateralType == CollateralTypes.OTHER_MORTGAGE){
+        this.collateralList = obj.siOtherMortgageDetailsDTOList;
+        this.goldLoanMortgageColumns = this.otherLoanMortgageColumns;
+      }
+      else if(obj.collateralType == CollateralTypes.STORAGE_MORTGAGE){
+        this.collateralList = obj.siStorageMortgageDetailsDTOList;
+        this.collateralList.map((obj: any) => {
+          if (obj.dateOfIssue != null && obj.dateOfIssue != undefined) {
+            obj.dateOfIssueVal = this.datePipe.transform(obj.dateOfIssue, this.orgnizationSetting.datePipe);
+          }
+        });
+        this.goldLoanMortgageColumns = this.storageLoanMortgageColumns;
+      }
+      else if(obj.collateralType == CollateralTypes.VEHICLE_MORTGAGE){
+        this.collateralList = obj.siLoanVehicleMortgageDetailsDTOList;
+        this.goldLoanMortgageColumns = this.vehicleLoanMortgageColumns;
+      }
+      else if(obj.collateralType == CollateralTypes.PROPERTY_MORTGAGE){
+        this.collateralList = obj.ciLoanPropertyList;
+        this.goldLoanMortgageColumns = this.propertyColumns;
+      }
+    }
 
   getProductDefinitionByProductId(id: any) {
     this.siProductDefinitionService.getSIProductDefinitionPreviewByProductId(id).subscribe((data: any) => {
@@ -817,4 +823,19 @@ export class ViewSimpleInterestLoanComponent {
         this.isDisableSubmit = true;
       }
     }
+      pdfDownload() {
+        this.commonComponent.startSpinner();
+        this.siLoanApplicationService.downloadPreviewPDf(this.loanAccId).subscribe((data: any) => {
+          var file = new Blob([data], { type: 'application/pdf' });
+          saveAs(file, "Si_loan_application_filled_Document.pdf");
+          this.msgs = [];
+          this.msgs.push({ severity: "success", detail: 'Si Loan application file downloaded successfully' });
+          this.commonComponent.stopSpinner();
+        }, error => {
+          this.msgs = [];
+          this.commonComponent.stopSpinner();
+          this.msgs.push({ severity: "error", detail: 'Unable to download filled FHR' });
+        })
+    
+      }
 }

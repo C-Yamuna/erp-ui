@@ -123,14 +123,14 @@
             </ng-template>
             <ng-template pTemplate="body" let-rowData let-investmentApplicationDetails>
                 <tr [pSelectableRow]="rowData">
-                    <td *ngIf="rowData.statusName != 'Approved' && rowData.statusName != 'Rejected'">
+                    <td *ngIf="rowData.accountStatusName != 'Approved' && rowData.accountStatusName != 'Rejected'">
                         <div class="d-block">
                             <span><img class="table-circle-image" src="assets/images/avata2r-table.png" /></span>
                             <span class="account-number-style" (click)="editNewInvestments(rowData)">
                                 {{rowData.accountNumber}}</span>
                         </div>
                     </td>
-                    <td *ngIf="rowData.statusName == 'Approved' || rowData.statusName == 'Rejected'">
+                    <td *ngIf="rowData.accountStatusName == 'Approved' || rowData.accountStatusName == 'Rejected'">
                         <div class="d-block">
                             <span><img class="table-circle-image" src="assets/images/avata2r-table.png" /></span>
                             {{rowData.accountNumber}}
@@ -143,29 +143,29 @@
                     <td>{{rowData.roi ? rowData.roi : '--' }}</td>
                     <td>{{ rowData.depositDate}}</td>
                     <td>
-                        <div *ngIf="rowData.statusName == 'Approved'">
+                        <div *ngIf="rowData.accountStatusName == 'Approved'">
                             <div class="status-style statusactive">
-                                {{ rowData.statusName}}
+                                {{ rowData.accountStatusName}}
                             </div>
                         </div>
-                        <div *ngIf="rowData.statusName == 'Submission for Approval'">
+                        <div *ngIf="rowData.accountStatusName == 'Submission for Approval'">
                             <div class="status-style statussubmissionforapproval">
-                                {{ rowData.statusName}}
+                                {{ rowData.accountStatusName}}
                             </div>
                         </div>
-                        <div *ngIf="rowData.statusName == 'In Progress'">
+                        <div *ngIf="rowData.accountStatusName == 'In Progress'">
                             <div class="status-style statuspending">
-                                {{ rowData.statusName}}
+                                {{ rowData.accountStatusName}}
                             </div>
                         </div>
-                        <div *ngIf="rowData.statusName == 'Rejected'">
+                        <div *ngIf="rowData.accountStatusName == 'Rejected'">
                             <div class="status-style statusreject">
-                                {{ rowData.statusName}}
+                                {{ rowData.accountStatusName}}
                             </div>
                         </div>
-                        <div *ngIf="rowData.statusName == 'Request for Resubmission'">
+                        <div *ngIf="rowData.accountStatusName == 'Request for Resubmission'">
                             <div class="status-style statusrequestforresumission">
-                                {{ rowData.statusName}}
+                                {{ rowData.accountStatusName}}
                             </div>
                         </div>
                     </td>
@@ -173,11 +173,11 @@
                         <div class="global-action-btn flex align-items-center justify-content-center">
                             <p-button class="action-view" label="View" (click)="viewNewInvestments(rowData)"></p-button>
                             <p-dropdown id="bunit_txt_status" placeholder="operations" [filter]="false"
-                                [disabled]="rowData.statusName != 'Approved'" *ngIf="rowData.depositName != 'Shares'"
+                                [disabled]="rowData.accountStatusName != 'Approved'" *ngIf="rowData.depositName != 'Shares'"
                                 [options]="investmentOperationsList" [(ngModel)]="operations" class="action-operation"
                                 (onChange)="navigateToInfoDetails($event,rowData)" [appendTo]="'body'"></p-dropdown>
                             <p-dropdown id="bunit_txt_status" placeholder="operations" [filter]="false"
-                                [disabled]="rowData.statusName != 'Approved'" *ngIf="rowData.depositName == 'Shares'"
+                                [disabled]="rowData.accountStatusName != 'Approved'" *ngIf="rowData.depositName == 'Shares'"
                                 [options]="sharesOperationsList" [(ngModel)]="operations" class="action-operation"
                                 (onChange)="navigateToShareWithdraw($event,rowData)" [appendTo]="'body'"></p-dropdown>
                         </div>

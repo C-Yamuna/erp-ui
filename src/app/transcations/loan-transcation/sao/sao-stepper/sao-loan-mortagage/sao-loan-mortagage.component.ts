@@ -68,20 +68,20 @@ export class SaoLoanMortagageComponent {
   { 
     this.Collateralform = this.formBuilder.group({
      'passbookNumber': new FormControl('', [Validators.required]),
-      'khataNumber': new FormControl('', [Validators.pattern(applicationConstants.ALPHANUMERIC)]),
-      'surveyNumber': new FormControl('', [Validators.pattern(applicationConstants.ALPHANUMERIC)]),
-      'totalLandInUnits':new FormControl(Validators.compose([Validators.required]), [Validators.maxLength(5) ]),
-      'totalLandInSubUnits': new FormControl([Validators.required], [Validators.maxLength(5)]),
-      'landValuePerUnit': new FormControl(Validators.compose([Validators.required]), [Validators.minLength(1), Validators.maxLength(13) ]),   
-      'totalLandValue': new FormControl(Validators.compose([Validators.required]), [ Validators.minLength(1), Validators.maxLength(13) ]),
-      'mortgageLandInUnits': new FormControl(Validators.compose([Validators.required]), [Validators.maxLength(5)]),
-      'mortgageLandInSubUnits': new FormControl( Validators.compose([Validators.required]), [Validators.maxLength(5)]),
-      'mortgageLandValuePerUnit': new FormControl(Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALLOW_DECIMALS_UPTO_TWO_PLACES),  Validators.minLength(1), Validators.maxLength(13)]),
-      'totalMortgageLandValue': new FormControl( Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALLOW_DECIMALS_UPTO_TWO_PLACES),  Validators.minLength(1), Validators.maxLength(13)]),
-      'mortgageDeedNumber': new FormControl( Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALPHANUMERIC)]),
+      'khataNumber': new FormControl('', [Validators.required,Validators.pattern(applicationConstants.ALPHANUMERIC)]),
+      'surveyNumber': new FormControl('', [Validators.required,Validators.pattern(applicationConstants.ALPHANUMERIC)]),
+      'totalLandInUnits':new FormControl('',[Validators.required, Validators.maxLength(5) ]),
+      'totalLandInSubUnits': new FormControl('',[Validators.required, Validators.maxLength(5)]),
+      'landValuePerUnit': new FormControl('',[Validators.required, Validators.minLength(1), Validators.maxLength(5)]),
+      'totalLandValue': new FormControl('',[Validators.required, Validators.minLength(1), Validators.maxLength(5)]),
+      'mortgageLandInUnits': new FormControl('',[Validators.required, Validators.maxLength(5) ]),
+      'mortgageLandInSubUnits': new FormControl('',[Validators.required, Validators.maxLength(5) ]),
+      'mortgageLandValuePerUnit': new FormControl('', [Validators.required,Validators.pattern(applicationConstants.ALLOW_DECIMALS_UPTO_TWO_PLACES),  Validators.minLength(1), Validators.maxLength(13)]),
+      'totalMortgageLandValue': new FormControl('', [Validators.required,Validators.pattern(applicationConstants.ALLOW_DECIMALS_UPTO_TWO_PLACES),  Validators.minLength(1), Validators.maxLength(13)]),
+      'mortgageDeedNumber':new FormControl('', [Validators.required,Validators.pattern(applicationConstants.ALPHANUMERIC)]),
       'mortgageDeedDate': new FormControl('', [Validators.required]),
       'ownershipType': new FormControl('', [Validators.required]),
-      'village': new FormControl('', [Validators.required])
+      'villageName': new FormControl('', [Validators.required])
     })
    
    
@@ -184,9 +184,10 @@ getSaoLoanLandDetailsByApplicationId(loanId: any){
       if(this.gridList != null && this.gridList.length >0){
         this.editDeleteDisable = false;
         this.gridList = this.responseModel.data.map((land: any) => {
-          if(land.villageId != null && land.villageId != undefined){
-            let villageName  = this.villagesList.filter((village:any) => village.value == land.villageId);
-            land.villageName = villageName[0].label;
+          
+          let village = this.villagesList.find((data: any) => null != data && land.villageId != null && data.value == land.villageId);
+          if (village != null && undefined != village && village.label != null && village.label != undefined) {
+            land.villageName = village.label;
           }
           if (land != null && land != undefined && land.documentPath != null && land.documentPath != undefined) {
             land.requestedDocPathMultipartFileList = this.fileUploadService.getFile(land.documentPath , ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + land.documentPath);
@@ -294,6 +295,10 @@ getSaoLoanLandDetailsByApplicationId(loanId: any){
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         this.gridList = this.responseModel.data;
         this.gridList = this.responseModel.data.map((land: any) => {
+          if(land.villageId != null && land.villageId != undefined){
+            let villageName  = this.villagesList.filter((village:any) => village.value == land.villageId);
+            land.villageName = villageName[0].label;
+          }
           if (land != null && land != undefined && land.documentPath != null && land.documentPath != undefined) {
             land.requestedDocPathMultipartFileList = this.fileUploadService.getFile(land.documentPath , ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + land.documentPath);
           }

@@ -29,6 +29,7 @@ export class FdNonCumulativeProductDefinitionComponent {
   activeStatusCount: any;
   inactiveStatusCount: any;
   gridListLength: Number | undefined;
+  tenureTypeList: any[] = [];
 
   constructor(private router: Router,private translate: TranslateService,private commonFunctionsService: CommonFunctionsService,
     private encryptDecryptService: EncryptDecryptService,private fdNonCumulativeProductDefinitionService : FdNonCumulativeProductDefinitionService,private datePipe: DatePipe,
@@ -56,6 +57,7 @@ export class FdNonCumulativeProductDefinitionComponent {
       { field: 'minDepositAmount', header: 'TERMDEPOSITSTRANSACTION.MIN_DEPOSIT_AMOUNT' },
       { field: 'maxDepositAmount',header:'TERMDEPOSITSTRANSACTION.MAX_DEPOSIT_AMOUNT'},
       { field: 'effectiveStartDate',header:'TERMDEPOSITSTRANSACTION.EFFECTIVE_START_DATE'},
+      { field: 'tenureType',header:'TERMDEPOSITSTRANSACTION.TENURE_TYPE'},
       { field: 'statusName',header:'TERMDEPOSITSTRANSACTION.STATUS'}
     ];
     this.getAllFdNonCumulativeProductDefinition();

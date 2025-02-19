@@ -3,9 +3,10 @@
 <div class="col-12">
     <div class="row">
         <div class="d-flex justify-content-between top-header-section">
-            <div class="main-heading mt-1 justify-content-start">{{'LOAN_TRANSACTION.COMPOUND_INTEREST' | translate}} <i
-                    class="fa fa-angle-right font-bold mr-3 ml-3"></i>
-                {{'LOAN_TRANSACTION.VIEW' | translate}}</div>
+                <div class="main-heading mt-1 justify-content-start" *ngIf="!editbtn">{{'LOANS.TERM_LOANS' | translate}} <i
+                    class="fa fa-angle-right font-bold mr-3 ml-3"></i>{{'LOANS.VIEW' | translate}}</div>
+                    <div class="main-heading mt-1 justify-content-start" *ngIf="editbtn">{{'LOANS.TERM_LOANS' | translate}} <i
+                        class="fa fa-angle-right font-bold mr-3 ml-3"></i>{{'LOANS.EDIT' | translate}}</div>
         </div>
 
         <div class="col-12 p-0">
@@ -21,7 +22,7 @@
                                     </div>
                                     <div class="col-2 py-0">
                                         <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
-                                            *ngIf="isNewMember && preveiwFalg"
+                                            *ngIf="isNewMember && editbtn"
                                             (click)="editMembership(termLoanApplicationModel)"></p-button>
                                     </div>
                                 </div>
@@ -207,7 +208,7 @@
                                     </div>
                                     <div class="col-2 py-0">
                                         <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
-                                            *ngIf="isNewMember && preveiwFalg"
+                                            *ngIf="isNewMember && editbtn"
                                             (click)="editMembership(termLoanApplicationModel)"></p-button>
                                     </div>
                                 </div>
@@ -356,7 +357,7 @@
                                     </div>
                                     <div class="col-2 py-0">
                                         <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
-                                        *ngIf="isNewMember && preveiwFalg"
+                                        *ngIf="isNewMember && editbtn"
                                         (click)="editMembership(termLoanApplicationModel)"></p-button>
                                     </div>
                                 </div>
@@ -491,8 +492,8 @@
                             <!-- KYC DETAILS -->
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="col-12 p-0">
-                                    <div class="global-card-bg-color view-carddata icon-size pb-1">
-                                        <div class="col-12">
+                                    <div class="global-card-bg-color view-carddata icon-size pb-2">
+                                        <div class="col-12 p-0">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="d-flex">
@@ -501,18 +502,18 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
-                                                    <p-button *ngIf="preveiwFalg" icon="fa fa-pencil-square-o"
+                                                    <p-button *ngIf="editbtn" icon="fa fa-pencil-square-o"
                                                         class="kyc-edit-btn pull-right"
                                                         (click)="editKYCDetails(termLoanApplicationModel)"></p-button>
                                                 </div>
                                             </div>
 
-                                            <div class="col-12 px-0">
+                                            <div class="col-12 p-0">
                                                 <div class="row g-3">
 
                                                     <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12"
                                                         *ngFor="let document of kycGridList ; let i = index">
-                                                        <div class="stepper-kyc-card p-3 mb-2">
+                                                        <div class="stepper-kyc-card p-3 pb-1 mb-2">
 
                                                             <!-- view card -->
                                                             <div class="row">
@@ -521,19 +522,19 @@
                                                                     class="col-lg-7 col-md-7 col-sm-7 col-xs-6 d-flex align-items-center">
                                                                     <div class="card-leftbody">
                                                                         <div
-                                                                            class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                            class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                             <h6 class="label-view">Document Type</h6>
                                                                             <p class="label-input-text">
                                                                                 {{document.kycDocumentTypeName}}</p>
                                                                         </div>
                                                                         <div
-                                                                            class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                            class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                             <h6 class="label-view">Document Number</h6>
                                                                             <p class="label-input-text">
                                                                                 {{document.documentNumber}}</p>
                                                                         </div>
                                                                         <div
-                                                                            class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                            class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                             <h6 class="label-view">Document Name</h6>
                                                                             <p class="label-input-text docname-texteclipse"
                                                                                 pTooltip="{{document.kycFilePath}}"
@@ -589,8 +590,8 @@
                             <!-- COMMUNICATION DETAILS -->
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="col-12 p-0">
-                                    <div class="global-card-bg-color view-carddata icon-size">
-                                        <div class="col-12">
+                                    <div class="global-card-bg-color view-carddata icon-size pb-2">
+                                        <div class="col-12 p-0">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="d-flex">
@@ -600,32 +601,32 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
-                                                    <p-button *ngIf="preveiwFalg" icon="fa fa-pencil-square-o"
+                                                    <p-button *ngIf="editbtn" icon="fa fa-pencil-square-o"
                                                         class="kyc-edit-btn pull-right"
                                                         (click)="editCommunicationDetails(termLoanApplicationModel)"></p-button>
 
                                                 </div>
                                             </div>
-                                            <div class="col-12 px-0">
+                                            <div class="col-12 p-0">
                                                 <div class="row g-3">
                                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <div class="nominee-card p-3 pb-1 mb-2">
                                                             <div class="row">
                                                                 <h6 class="super-sub-heading mt-1">Registered</h6>
                                                                 <div class="col-12">
-                                                                    <div class="row mt-2">
+                                                                    <div class="row">
                                                                         <div
                                                                             class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                                             <div class="row">
                                                                                 <div
-                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">State</h6>
                                                                                     <p class="label-input-text">
                                                                                         {{termLoanCommunicationModel.stateName}}
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">District</h6>
                                                                                     <p class="label-input-text">
                                                                                         {{termLoanCommunicationModel.districtName}}
@@ -633,7 +634,7 @@
                                                                                 </div>
 
                                                                                 <div
-                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">Sub District
                                                                                     </h6>
                                                                                     <p class="label-input-text">
@@ -641,21 +642,21 @@
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">Village</h6>
                                                                                     <p class="label-input-text">
                                                                                         {{termLoanCommunicationModel.villageName}}
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">Address</h6>
                                                                                     <p class="label-input-text">
                                                                                         {{termLoanCommunicationModel.address1}}
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">Pincode</h6>
                                                                                     <p class="label-input-text">
                                                                                         {{termLoanCommunicationModel.pinCode}}
@@ -673,19 +674,19 @@
                                                             <div class="row">
                                                                 <h6 class="super-sub-heading mt-1">Permanent</h6>
                                                                 <div class="col-12">
-                                                                    <div class="row mt-2">
+                                                                    <div class="row">
                                                                         <div
                                                                             class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                                             <div class="row">
                                                                                 <div
-                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">State</h6>
                                                                                     <p class="label-input-text">
                                                                                         {{termLoanCommunicationModel.permanentStateName}}
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">District</h6>
                                                                                     <p class="label-input-text">
                                                                                         {{termLoanCommunicationModel.permanentDistrictName}}
@@ -693,7 +694,7 @@
                                                                                 </div>
 
                                                                                 <div
-                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">Sub District
                                                                                     </h6>
                                                                                     <p class="label-input-text">
@@ -701,21 +702,21 @@
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">Village</h6>
                                                                                     <p class="label-input-text">
                                                                                         {{termLoanCommunicationModel.permanentVillageName}}
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">Address</h6>
                                                                                     <p class="label-input-text">
                                                                                         {{termLoanCommunicationModel.permanentAddress1}}
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">Pincode</h6>
                                                                                     <p class="label-input-text">
                                                                                         {{termLoanCommunicationModel.permanentPinCode}}
@@ -764,8 +765,8 @@
                             <!-- APPLICATION DETAILS -->
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="col-12 p-0">
-                                    <div class="global-card-bg-color view-carddata icon-size">
-                                        <div class="col-12">
+                                    <div class="global-card-bg-color view-carddata icon-size pb-1">
+                                        <div class="col-12 p-0">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="d-flex">
@@ -775,29 +776,29 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
-                                                    <p-button *ngIf="preveiwFalg" icon="fa fa-pencil-square-o"
+                                                    <p-button *ngIf="editbtn" icon="fa fa-pencil-square-o"
                                                         class="kyc-edit-btn pull-right"
                                                         (click)="editApplicationDetails(termLoanApplicationModel)"></p-button>
                                                 </div>
                                             </div>
 
-                                            <div class="col-12">
+                                            <div class="col-12 p-0">
                                                 <div class="row">
                                                     <div
-                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                         <h6 class="label-view">{{'LOAN_TRANSACTION.PRODUCT_TYPE' | translate}}</h6>
                                                         <p class="label-input-text">
                                                             {{termLoanApplicationModel.termProductName}}
                                                         </p>
                                                     </div>
                                                     <div
-                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px" *ngIf ='termLoanApplicationModel.memberTypeName == "Individual"'>
+                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 " *ngIf ='termLoanApplicationModel.memberTypeName == "Individual"'>
                                                         <h6 class="label-view">{{'LOAN_TRANSACTION.ACCOUNT_TYPE' | translate}}</h6>
                                                         <p class="label-input-text">
                                                             {{termLoanApplicationModel.operationTypeName}}</p>
                                                     </div>
                                                     <div
-                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                         <h6 class="label-view">{{'LOAN_TRANSACTION.ACCOUNT_NUMBER' | translate}}</h6>
                                                         <p class="label-input-text">
                                                             {{termLoanApplicationModel.accountNumber}}
@@ -806,14 +807,14 @@
                                                     <!-- </div>
                             <div class="row"> -->
                                                     <div
-                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                         <h6 class="label-view">{{'LOAN_TRANSACTION.APPLICATION_DATE' | translate}}
                                                         </h6>
                                                         <p class="label-input-text">
                                                             {{termLoanApplicationModel.applicationDateVal}}</p>
                                                     </div>
                                                     <div
-                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                         <h6 class="label-view">{{'LOAN_TRANSACTION.MAX_LOAN_PERIOD_IN_MONTHS' |
                                                             translate}}</h6>
                                                         <p class="label-input-text">
@@ -821,58 +822,58 @@
                                                         </p>
                                                     </div>
                                                     <div
-                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                         <h6 class="label-view">{{'LOAN_TRANSACTION.PENAL_ROI' | translate}}</h6>
                                                         <p class="label-input-text">
                                                             {{termLoanApplicationModel.penalInterest}}</p>
                                                     </div>
                                                     <div
-                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                         <h6 class="label-view">{{'LOAN_TRANSACTION.IOD' | translate}}</h6>
                                                         <p class="label-input-text">{{termLoanApplicationModel.iod}}
                                                         </p>
                                                     </div>
                                                     <div
-                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                         <h6 class="label-view">{{'LOAN_TRANSACTION.REPAYMENT_FREQUENCY' | translate}}
                                                         </h6>
                                                         <p class="label-input-text">
                                                             {{termLoanApplicationModel.repaymentFrequencyName}}</p>
                                                     </div>
                                                     <div
-                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                         <h6 class="label-view">{{'LOAN_TRANSACTION.LOAN_PURPOSE' | translate}}</h6>
                                                         <p class="label-input-text">
                                                             {{termLoanApplicationModel.purposeName}}
                                                         </p>
                                                     </div>
                                                     <!-- <div
-                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                         <h6 class="label-view">{{'LOAN_TRANSACTION.OPERATION_TYPE' | translate}}</h6>
                                                         <p class="label-input-text">
                                                             {{termLoanApplicationModel.operationTypeName}}</p>
                                                     </div> -->
                                                     <div
-                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                         <h6 class="label-view">{{'LOAN_TRANSACTION.REQUEST_AMOUNT' | translate}}</h6>
                                                         <p class="label-input-text">
                                                             {{termLoanApplicationModel.requestedAmount}}</p>
                                                     </div>
                                                     <div
-                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                         <h6 class="label-view">{{'LOAN_TRANSACTION.SANCTION_DATE' | translate}}</h6>
                                                         <p class="label-input-text">
                                                             {{termLoanApplicationModel.sanctionDateVal}}</p>
                                                     </div>
                                                     <div
-                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                         <h6 class="label-view">{{'LOAN_TRANSACTION.SANCTION_AMOUNT' | translate}}
                                                         </h6>
                                                         <p class="label-input-text">
                                                             {{termLoanApplicationModel.sanctionAmount}}</p>
                                                     </div>
                                                     <div
-                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                         <h6 class="label-view">{{'LOAN_TRANSACTION.PLANNED_DISBURSEMENTS' |
                                                             translate}}
                                                         </h6>
@@ -880,7 +881,7 @@
                                                             {{termLoanApplicationModel.plannedDisbursements}}</p>
                                                     </div>
                                                     <div
-                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                         <h6 class="label-view">{{'LOAN_TRANSACTION.LOAN_PERIOD_IN_MONTHS' |
                                                             translate}}
                                                         </h6>
@@ -889,7 +890,7 @@
                                                         </p>
                                                     </div>
                                                     <div
-                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                         <h6 class="label-view">{{'LOAN_TRANSACTION.LOAN_DUE_DATE' | translate}}</h6>
                                                         <p class="label-input-text">
                                                             {{termLoanApplicationModel.loanDueDateVal}}</p>
@@ -906,8 +907,8 @@
                             <!-- JOINT HOLDER DETAILS -->
                             <div class="col-lg-12 col-md-12 col-sm-12" *ngIf="jointHoldersFlag">
                                 <div class="col-12 p-0">
-                                    <div class=" global-card-bg-color view-carddata icon-size">
-                                        <div class="col-12">
+                                    <div class=" global-card-bg-color view-carddata icon-size pb-1">
+                                        <div class="col-12 p-0">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="d-flex">
@@ -917,7 +918,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
-                                                    <p-button *ngIf="preveiwFalg" icon="fa fa-pencil-square-o"
+                                                    <p-button *ngIf="editbtn" icon="fa fa-pencil-square-o"
                                                         class="kyc-edit-btn pull-right"
                                                         (click)="editJointHolderDetails(termLoanApplicationModel)"></p-button>
                                                 </div>
@@ -958,7 +959,7 @@
                             <div class="col-lg-12 col-md-12 col-sm-12" *ngIf="memberGroupFlag">
                                 <div class="col-12 p-0">
                                     <div class=" global-card-bg-color view-carddata icon-size">
-                                        <div class="col-12">
+                                        <div class="col-12 p-0">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="d-flex">
@@ -1003,7 +1004,7 @@
                             <div class="col-lg-12 col-md-12 col-sm-12" *ngIf="memberIntitutionFlag">
                                 <div class="col-12 p-0">
                                     <div class=" global-card-bg-color view-carddata icon-size">
-                                        <div class="col-12">
+                                        <div class="col-12 p-0">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="d-flex">
@@ -1050,8 +1051,8 @@
                             <!-- NOMINEE and GUARDIAN -->
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="col-12 p-0">
-                                    <div class="global-card-bg-color view-carddata icon-size pb-1">
-                                        <div class="col-12">
+                                    <div class="global-card-bg-color view-carddata icon-size pb-2">
+                                        <div class="col-12 p-0">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="d-flex">
@@ -1061,31 +1062,31 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
-                                                    <p-button *ngIf="preveiwFalg" icon="fa fa-pencil-square-o"
+                                                    <p-button *ngIf="editbtn" icon="fa fa-pencil-square-o"
                                                         class="kyc-edit-btn pull-right"
                                                         (click)="editNomineeDetails(termLoanApplicationModel)"></p-button>
                                                 </div>
                                                 <!-- <div class="col-6">
-                                                                <p-button *ngIf="preveiwFalg" icon="fa fa-pencil-square-o"
+                                                                <p-button *ngIf="editbtn" icon="fa fa-pencil-square-o"
                                                                     class="kyc-edit-btn pull-right"
                                                                     (click)="editNomineeDetails(termLoanApplicationModel)"></p-button>
                                                             </div> -->
                                             </div>
-                                            <div class="col-12 px-0">
+                                            <div class="col-12 p-0">
                                                 <div class="row g-3">
                                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <div class="stepper-nominee-card p-3 pb-1 mb-2">
                                                             <div class="row">
                                                                 <h6 class="super-sub-heading mt-1">{{'LOAN_TRANSACTION.NOMINEE' |
                                                                     translate}}</h6>
-                                                                <div class="col-12">
-                                                                    <div class="row mt-2">
+                                                                <div class="col-12 pt-0">
+                                                                    <div class="row">
                                                                         <div
                                                                             class="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center">
                                                                             <div class="card-leftbody">
                                                                                 <div class="row">
                                                                                     <div
-                                                                                        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                         <h6 class="label-view">
                                                                                             {{'ERP.NOMINEE_TYPE'
                                                                                             | translate}}
@@ -1094,12 +1095,12 @@
                                                                                             {{termLoanNomineeModel.nomineeTypeName}}
                                                                                         </p>
                                                                                     </div>
-                                                                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px" *ngIf="termLoanNomineeModel.nomineeType == 3">
+                                                                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 " *ngIf="termLoanNomineeModel.nomineeType == 3">
                                                                                         <h6 class="label-view">{{'ERP.REMARKS' | translate}}</h6>
                                                                                         <p class="label-input-text">{{termLoanNomineeModel.remarks}}</p>
                                                                                     </div>
                                                                                     <div
-                                                                                        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                         <h6 class="label-view" *ngIf="termLoanNomineeModel.nomineeType != 3">
                                                                                             {{'LOAN_TRANSACTION.RELATIONSHIP_WITH_MEMBER'
                                                                                             | translate}}
@@ -1109,7 +1110,7 @@
                                                                                         </p>
                                                                                     </div>
                                                                                     <div
-                                                                                        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                         <h6 class="label-view" *ngIf="termLoanNomineeModel.nomineeType != 3">
                                                                                             {{'LOAN_TRANSACTION.NAME'
                                                                                             | translate}}
@@ -1119,7 +1120,7 @@
                                                                                         </p>
                                                                                     </div>
                                                                                     <div
-                                                                                        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                         <h6 class="label-view" *ngIf="termLoanNomineeModel.nomineeType != 3">
                                                                                             {{'LOAN_TRANSACTION.AADHAR' | translate}}
                                                                                         </h6>
@@ -1128,7 +1129,7 @@
                                                                                         </p>
                                                                                     </div>
                                                                                     <div
-                                                                                        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                         <h6 class="label-view" *ngIf="termLoanNomineeModel.nomineeType != 3">
                                                                                             {{'LOAN_TRANSACTION.CONTACT' |
                                                                                             translate}}
@@ -1138,7 +1139,7 @@
                                                                                         </p>
                                                                                     </div>
                                                                                     <div
-                                                                                        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                         <h6 class="label-view" *ngIf="termLoanNomineeModel.nomineeType != 3">
                                                                                             {{'LOAN_TRANSACTION.EMAIL'
                                                                                             | translate}}
@@ -1185,20 +1186,20 @@
                                                                     translate}}</h6>
 
                                                                 <!-- <div class="col-6">
-                                                                <p-button *ngIf="preveiwFalg"
+                                                                <p-button *ngIf="editbtn"
                                                                     icon="fa fa-pencil-square-o"
                                                                     class="kyc-edit-btn pull-right"
                                                                     (click)="editNomineeDetails(termLoanApplicationModel)"></p-button>
                                                             </div> -->
 
-                                                                <div class="col-12">
-                                                                    <div class="row mt-2">
+                                                                <div class="col-12 pt-0">
+                                                                    <div class="row">
                                                                         <div
                                                                             class="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center">
                                                                             <div class="card-leftbody">
                                                                                 <div class="row">
                                                                                     <div
-                                                                                        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                         <h6 class="label-view">
                                                                                             {{'ERP.GUARDAIN_TYPE'
                                                                                             | translate}}
@@ -1207,12 +1208,12 @@
                                                                                             {{termLoanGuardianDetailsModel.guardianName}}
                                                                                         </p>
                                                                                     </div>
-                                                                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px" *ngIf="termLoanGuardianDetailsModel.guardianType == 3">
+                                                                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 " *ngIf="termLoanGuardianDetailsModel.guardianType == 3">
                                                                                         <h6 class="label-view">{{'ERP.REMARKS' | translate}}</h6>
                                                                                         <p class="label-input-text">{{termLoanGuardianDetailsModel.remarks}}</p>
                                                                                     </div>
                                                                                     <div
-                                                                                        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px" *ngIf="termLoanGuardianDetailsModel.guardianType != 3">
+                                                                                        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 " *ngIf="termLoanGuardianDetailsModel.guardianType != 3">
                                                                                         <h6 class="label-view">
                                                                                             {{'LOAN_TRANSACTION.RELATIONSHIP_WITH_MEMBER'
                                                                                             | translate}}
@@ -1222,7 +1223,7 @@
                                                                                         </p>
                                                                                     </div>
                                                                                     <div
-                                                                                        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px" *ngIf="termLoanGuardianDetailsModel.guardianType != 3">
+                                                                                        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 " *ngIf="termLoanGuardianDetailsModel.guardianType != 3">
                                                                                         <h6 class="label-view">
                                                                                             {{'LOAN_TRANSACTION.NAME'
                                                                                             | translate}}
@@ -1232,7 +1233,7 @@
                                                                                         </p>
                                                                                     </div>
                                                                                     <div
-                                                                                        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px" *ngIf="termLoanGuardianDetailsModel.guardianType != 3">
+                                                                                        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 " *ngIf="termLoanGuardianDetailsModel.guardianType != 3">
                                                                                         <h6 class="label-view">
                                                                                             {{'LOAN_TRANSACTION.AADHAR' | translate}}
                                                                                         </h6>
@@ -1241,7 +1242,7 @@
                                                                                         </p>
                                                                                     </div>
                                                                                     <div
-                                                                                        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px" *ngIf="termLoanGuardianDetailsModel.guardianType != 3">
+                                                                                        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 " *ngIf="termLoanGuardianDetailsModel.guardianType != 3">
                                                                                         <h6 class="label-view">
                                                                                             {{'LOAN_TRANSACTION.CONTACT' |
                                                                                             translate}}
@@ -1251,7 +1252,7 @@
                                                                                         </p>
                                                                                     </div>
                                                                                     <div
-                                                                                        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px" *ngIf="termLoanGuardianDetailsModel.guardianType != 3">
+                                                                                        class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 " *ngIf="termLoanGuardianDetailsModel.guardianType != 3">
                                                                                         <h6 class="label-view">
                                                                                             {{'LOAN_TRANSACTION.EMAIL'
                                                                                             | translate}}
@@ -1304,7 +1305,7 @@
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="col-12 p-0">
                                     <div class=" global-card-bg-color view-carddata icon-size">
-                                        <div class="col-12">
+                                        <div class="col-12 p-0">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="d-flex">
@@ -1315,7 +1316,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
-                                                    <p-button *ngIf="preveiwFalg" icon="fa fa-pencil-square-o"
+                                                    <p-button *ngIf="editbtn" icon="fa fa-pencil-square-o"
                                                         class="kyc-edit-btn pull-right"
                                                         (click)="editGuarantorDetails(termLoanApplicationModel)"></p-button>
                                                 </div>
@@ -1356,7 +1357,7 @@
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="col-12 p-0">
                                     <div class=" global-card-bg-color view-carddata icon-size">
-                                        <div class="col-12">
+                                        <div class="col-12 p-0">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="d-flex">
@@ -1367,7 +1368,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
-                                                    <p-button *ngIf="preveiwFalg" icon="fa fa-pencil-square-o"
+                                                    <p-button *ngIf="editbtn" icon="fa fa-pencil-square-o"
                                                         class="kyc-edit-btn pull-right"
                                                         (click)="editMortgageDetails(termLoanApplicationModel)"></p-button>
                                                 </div>
@@ -1407,8 +1408,8 @@
                             <!-- LOAN DOCUMENTS -->
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="col-12 p-0">
-                                    <div class="global-card-bg-color view-carddata icon-size">
-                                        <div class="col-12">
+                                    <div class="global-card-bg-color view-carddata icon-size pb-2">
+                                        <div class="col-12 p-0">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="d-flex">
@@ -1419,36 +1420,36 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
-                                                    <p-button *ngIf="preveiwFalg" icon="fa fa-pencil-square-o"
+                                                    <p-button *ngIf="editbtn" icon="fa fa-pencil-square-o"
                                                         class="kyc-edit-btn pull-right"
                                                         (click)="editDocumentDetails(termLoanApplicationModel)"></p-button>
                                                 </div>
                                             </div>
-                                            <div class="col-12 px-0">
+                                            <div class="col-12 p-0">
                                                 <div class="row g-3">
                                                     <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12"
                                                         *ngFor="let document of termLoanDocumentsDetailsList ; let i = index">
-                                                        <div class="stepper-doc-card p-3 mb-2">
+                                                        <div class="stepper-doc-card p-3 pb-1 mb-2">
                                                             <div class="row">
                                                                 <div
                                                                     class="col-lg-7 col-md-7 col-sm-7 d-flex align-items-center">
                                                                     <div class="card-leftbody">
                                                                         <div
-                                                                            class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                            class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                             <h6 class="label-view">{{'LOAN_TRANSACTION.DOCUMENT_TYPE' |
                                                                                 translate}}</h6>
                                                                             <p class="label-input-text">
                                                                                 {{document.documentTypeName}}</p>
                                                                         </div>
                                                                         <div
-                                                                            class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                            class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                             <h6 class="label-view">{{'LOAN_TRANSACTION.DOCUMENT_NUMBER' |
                                                                                 translate}}</h6>
                                                                             <p class="label-input-text">
                                                                                 {{document.documentNo}}</p>
                                                                         </div>
                                                                         <div
-                                                                            class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                            class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                             <h6 class="label-view">{{'LOAN_TRANSACTION.DOCUMENT_NAME' |
                                                                                 translate}}</h6>
                                                                             <p class="label-input-text docname-texteclipse"
@@ -1503,7 +1504,7 @@
                             <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="col-12 p-0">
                                     <div class=" global-card-bg-color view-carddata icon-size">
-                                        <div class="col-12">
+                                        <div class="col-12 p-0">
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="d-flex">
@@ -1514,7 +1515,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
-                                                    <p-button *ngIf="preveiwFalg" icon="fa fa-pencil-square-o"
+                                                    <p-button *ngIf="editbtn" icon="fa fa-pencil-square-o"
                                                         class="kyc-edit-btn pull-right"
                                                         (click)="editGenealogyTreeDetails(termLoanApplicationModel)"></p-button>
                                                 </div>
@@ -1552,70 +1553,69 @@
                     </p-scrollPanel>
                     <div class="col-12 viewbottom-footer icon-size">
                         <div class="row">
-                            <div class="col-xl-3 col-lg-4 col-md-3 col-sm-4 mt-4" *ngIf="isShowSubmit">
-                                <p-button icon="fa fa-download" iconPos="left"   (click)="pdfDownload()" pTooltip="Filename.pdf"
-                                    tooltipPosition="top"></p-button>
-                                <!-- <p-button icon="fa fa-print" iconPos="left" pTooltip="Print"
-                                    tooltipPosition="top"></p-button> -->
+                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4" *ngIf="isShowSubmit">
+                                <p-button icon="fa fa-download" iconPos="left" pTooltip="Filename.pdf" tooltipPosition="top" (click)="pdfDownload()"></p-button>
+                                <!-- <p-button  icon="fa fa-print" iconPos="left" pTooltip="Print" tooltipPosition="top"></p-button> -->
                             </div>
-                            <div class="col-xl-3 col-lg-4 col-md-3 col-sm-4 mt-4" *ngIf="isShowSubmit">
+                            <div class="col-3 p-3 bottom-padding"></div>
+                            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-4" *ngIf="isShowSubmit"> 
                                 <div class="form-label">
-                                    <div class="uplodad-style align-items-center" >
-                                        <!-- Upload Button Column -->
-                                        <span class="text-fontwt">{{'ERP.UPLOAD_SIGNED_COPY' | translate}}</span>
-                                        <p-fileUpload  #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]" chooseLabel=" "
-                                            id="apply-leave_fileUp_attach" name="file" accept=".png,.jpg,.jpeg,.pdf" (onRemove)="fileRemoveEvent()"
-                                            [customUpload]="true" formContralName="fileUpload" (onSelect)="imageUploader($event,fileUpload)">
-                                        </p-fileUpload>
-                            
-                                        <!-- Uploaded Files Display Column -->
-                                        <div class="col-12 d-flex p-1 contant-body" *ngFor="let img of termLoanApplicationModel.multipartFileList">
-                                            <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                <a href="{{img.imageValue}}">
-                                                    <img src="{{img.imageValue}}" width="22" height="22">
-                                                </a>
-                                            </span>
-                                            <span *ngIf="img.fileType=='pdf'">
-                                                <a href="{{img.imageValue}}"> <img src="assets/images/pdficon-img.png" width="22" height="22"></a>
-                                            </span>
-                                            <span class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                                {{img.fileName}}
-                                            </span>
-                                        </div>
-                            
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-lg-4 col-md-3 col-sm-4 mt-4" *ngIf="!isShowSubmit">
-                                <div class="form-label">
-                                    <span class="text-fontwt">{{'ERP.UPLOAD_SIGNED_COPY' | translate}}</span>
+                                    <span class=""> {{ 'ERP.UPLOAD_DOCUMENT' | translate }} </span>
                                     <div class="uplodad-style align-items-center">
-                          
-                                        <div class="col-12 d-flex px-0" *ngFor="let img of termLoanApplicationModel.multipartFileList">
-                                            <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                <a href="{{img.imageValue}}">
-                                                    <img src="{{img.imageValue}}" width="22" height="22">
-                                                </a>
-                                            </span>
-                                            <span *ngIf="img.fileType=='pdf'">
-                                                <a href="{{img.imageValue}}"> <img src="assets/images/pdficon-img.png" width="22" height="22"></a>
-                                            </span>
-                                            <span class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                        <!-- Upload Button Column -->
+                                        <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                                            id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".pdf" 
+                                            (onRemove)="fileRemoveEvent()" (onSelect)="imageUploader($event, fileUpload)">
+                                        </p-fileUpload>
+                                        <div class="col-12  d-flex p-1 contant-body" *ngFor="let img of termLoanApplicationModel.multipartFileList">
+                                            <div *ngIf="img.fileType=='pdf'">
+                                                <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22" height="22"></a>
+                                            </div>
+                                            <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
                                                 {{img.fileName}}
-                                            </span>
+                                            </div>
                                         </div>
-                            
                                     </div>
                                 </div>
                             </div>
-                        
-                            <div class="col-xl-3 col-lg-4 col-md-3 col-sm-4 mt-4">
+                            
+                            <div class="col-xl-7 col-lg-5 col-md-4 col-sm-4 mt-4" *ngIf="isShowSubmit">
                                 <div class="d-flex justify-content-end">
-                                    <p-button (click)="backbutton()" label="BACK"></p-button>
-                                    <p-button *ngIf="isShowSubmit"
-                                        label="{{'TERMDEPOSITSTRANSACTION.SUBMIT' | translate}}"
-                                        (click)="submit()" [disabled]="isDisableSubmit" ></p-button>
+                                <p-button (click)="navigateToBack()" label="BACK"></p-button>
+                                <p-button *ngIf="isShowSubmit" label="{{'ERP.SUBMIT' | translate}}" (click)="submit()" [disabled]="isDisableSubmit" ></p-button>
+                            </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4" *ngIf="viewButton">
+                                <p class="label-view text-fontwt">{{'ERP.SIGNED_COPY_PATH' | translate}}</p>
+                            <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-xs-12 justify-content-end">
+                                <div class="col-12 px-0">
+                                    <div class="px-0" *ngFor="let img of termLoanApplicationModel.multipartFileList">
+                                        <div class="col-12 p-0" *ngIf=" img.fileType =='pdf'">
+                                            <a href="{{img.imageValue}}">
+                                                <img src="assets\images\pdf.png" class="pdf-img img-fluid" pTooltip="{{img.fileName}}"
+                                                tooltipPosition="bottom">
+                                            </a>
+                                        </div>
+                                        <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                            {{img.fileName}}
+                                        </div>
+                                    </div>
                                 </div>
+                            </div>
+                        </div>
+                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4" *ngIf="editFlag || viewButton">
+                                 <p class="label-view text-fontwt">{{'ERP.STATUS' | translate}}</p>
+                                <p class="label-input-text">{{termLoanApplicationModel.accountStatusName}}</p>
+                            </div>
+                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4" *ngIf="editFlag || viewButton">
+                                <p class="label-view text-fontwt">{{'ERP.REMARKS' | translate}}</p>
+                               <p class="label-input-text">{{termLoanApplicationModel.remarks}}</p>
+                           </div>
+                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4" *ngIf="editFlag || viewButton">
+                                <div class="d-flex justify-content-end">
+                                <p-button (click)="navigateToBack()" label="BACK"></p-button>
+                                <p-button *ngIf="isShowSubmit" label="{{'ERP.SUBMIT' | translate}}" (click)="submit()" [disabled]="isDisableSubmit" ></p-button>
+                            </div>
                             </div>
                         </div>
                     </div>

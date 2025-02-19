@@ -245,6 +245,8 @@ export class MembershipGroupDetails {
   admissionDateVal: any;
   registrationDateVal: any;
   groupPromoterList: any;
+  photoCopyPath: any;
+  groupTypeName: any;
 }
 
 export class MemInstitutionDetails {
@@ -329,6 +331,9 @@ export class MemInstitutionDetails {
     admissionDateVal: any;
     registrationDateVal: any;
     institutionPromoterList: any;
+  photoCopyPath: any;
+  institutionTypeName: any;
+  institutionType: any;
     
 }
 
@@ -470,6 +475,8 @@ export class InstitutionPromoterDetails {
   uniqueId :any;
 
   authorizedSignatory: any;
+
+  isGroupLeader:any;
 
   multipartFileListForSignatureCopyPath:any;
 

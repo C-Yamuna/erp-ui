@@ -98,6 +98,7 @@ export class CiLoanDocumentsComponent {
   displayDialog: boolean = false;
   requiredDocumentsNamesText: any;
   mandatoryDoxsTextShow: boolean = false;
+  saveAndNextEnable : boolean = false;
 
   constructor(private router: Router, 
     private formBuilder: FormBuilder,
@@ -155,6 +156,7 @@ export class CiLoanDocumentsComponent {
     this.ciLoanDocumentsDetailsModel.filePath = null;
     let files: FileUploadModel = new FileUploadModel();
     for (let file of event.files) {
+      this.isFileUploaded = applicationConstants.TRUE;
       let reader = new FileReader();
       reader.onloadend = (e) => {
         let files = new FileUploadModel();
@@ -191,10 +193,26 @@ export class CiLoanDocumentsComponent {
     this.ciLoanDocumentsDetailsModel.memberTypeName = this.memberTypeName;
     this.ciLoanDocumentsDetailsModel.memberType = this.memberTypeId;
     this.ciLoanDocumentsDetailsModel.memberId = this.memberId;
+    this.saveAndNextEnable = false;
+    if(this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0){
+      let documentNameList = this.documentNameList.filter((obj:any)=> obj.isRequired);
+    if (this.documentModelList != null && this.documentModelList != undefined && this.documentModelList.length > 0 && documentNameList != null && documentNameList != undefined && documentNameList.length >0) {
+      const missingItems = this.documentModelList.filter(document => !documentNameList.some(mandatoryDocument => document.requiredDocumentTypeId === mandatoryDocument.value));
+      if ((documentNameList.length  != this.documentModelList.length - missingItems.length) || this.buttonDisabled) {
+        this.saveAndNextEnable = true;
+      }
+    }
+    else if (((this.documentModelList == null || this.documentModelList == undefined || this.documentModelList.length === 0) && documentNameList != null && documentNameList != undefined && documentNameList.length > 0) || this.buttonDisabled) {
+      this.saveAndNextEnable = true;
+    }
+  }
+  else if(this.buttonDisabled) {
+    this.saveAndNextEnable = true;
+  }
     this.ciLoanApplicationService.changeData({
       formValid: this.ciDocumentDetailsForm.valid,
       data: this.ciLoanDocumentsDetailsModel,
-      isDisable: this.buttonDisabled,
+      isDisable: this.saveAndNextEnable,
       stepperIndex: 8,
     });
   }
@@ -243,13 +261,18 @@ export class CiLoanDocumentsComponent {
                     document.multipartFileList = this.fileUploadService.getFile(document.filePath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + document.filePath);
 
                   }
+                  this.updateData();
                 }
               }
             }
             this.buttonDisabled = false;
           }
           else {
+            this.ciLoanDocumentsDetailsModel = new  CiLoanDocumentsDetails();
+            this.isFileUploaded = applicationConstants.FALSE;
             this.addDocumentOfKycFalg = true;
+            this.buttonDisabled = true;
+            this.updateData();
           }
         }
       }
@@ -346,10 +369,9 @@ export class CiLoanDocumentsComponent {
               this.addDocumentOfKycFalg = true;
               this.buttonDisabled = true;
             }
-
             //required documents
-            if(this.responseModel.data[0].requiredDocumentsConfigDetailsDTOList != null && this.responseModel.data[0].requiredDocumentsConfigDetailsDTOList != undefined){
-              this.documentNameList = this.responseModel.data[0].requiredDocumentsConfigDetailsDTOList.filter((docs: any) => docs.status == applicationConstants.ACTIVE).map((count: any) => {
+            if(this.responseModel.data[0].ciRequiredDocumentsConfigDTOList != null && this.responseModel.data[0].ciRequiredDocumentsConfigDTOList != undefined){
+              this.documentNameList = this.responseModel.data[0].ciRequiredDocumentsConfigDTOList.filter((docs: any) => docs.status == applicationConstants.ACTIVE).map((count: any) => {
                 return { label: count.documentTypeName, value: count.documentTypeId ,isRequired :count.isRequired }
               });
             }
@@ -416,6 +438,7 @@ export class CiLoanDocumentsComponent {
 }
 
   addDocument(event: any) {
+    this.isFileUploaded = applicationConstants.FALSE;
     this.multipleFilesList = [];
     this.addDocumentOfKycFalg = !this.addDocumentOfKycFalg;
     this.buttonDisabled = true;
@@ -511,6 +534,7 @@ export class CiLoanDocumentsComponent {
               this.ciLoanDocumentsDetailsModel = this.responseModel.data[0];
               if (this.ciLoanDocumentsDetailsModel.filePath != undefined && this.ciLoanDocumentsDetailsModel.filePath != null) {
                 this.ciLoanDocumentsDetailsModel.multipartFileList = this.fileUploadService.getFile(this.ciLoanDocumentsDetailsModel.filePath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.ciLoanDocumentsDetailsModel.filePath);
+                this.isFileUploaded = applicationConstants.TRUE;
               }
             }
           }
@@ -544,6 +568,7 @@ export class CiLoanDocumentsComponent {
   }
 
   fileRemoveEvent() {
+    this.isFileUploaded = applicationConstants.FALSE;
     if (this.ciLoanDocumentsDetailsModel.filesDTOList != null && this.ciLoanDocumentsDetailsModel.filesDTOList != undefined && this.ciLoanDocumentsDetailsModel.filesDTOList.length > 0) {
       let removeFileIndex = this.ciLoanDocumentsDetailsModel.filesDTOList.findIndex((obj: any) => obj && obj.fileName === this.ciLoanDocumentsDetailsModel.filePath);
       if (removeFileIndex != null && removeFileIndex != undefined) {

@@ -187,6 +187,8 @@ export class CommunicationsComponent {
       this.communicationform.get('districtId').reset();
       this.communicationform.get('subDistrictId').reset();
       this.communicationform.get('villageId').reset();
+      this.communicationform.get('address1').reset();
+      this.communicationform.get('pinCode').reset();
       this.districtList = [];
       this.subDistrictList = [];
       this.villageList = [];
@@ -226,6 +228,8 @@ export class CommunicationsComponent {
     if (isResetIds) {
       this.communicationform.get('subDistrictId').reset();
       this.communicationform.get('villageId').reset();
+      this.communicationform.get('address1').reset();
+      this.communicationform.get('pinCode').reset();
       this.subDistrictList = [];
       this.villageList = [];
     }
@@ -263,6 +267,8 @@ export class CommunicationsComponent {
   getAllVillagesBySubDistrictId(id: any, isResetIds: any) {
     if (isResetIds) {
       this.communicationform.get('villageId').reset();
+      this.communicationform.get('address1').reset();
+      this.communicationform.get('pinCode').reset();
       this.villageList = [];
     }
     this.villagesService.getVillagesBySubDistrictId(id).subscribe((response: any) => {
@@ -340,6 +346,9 @@ export class CommunicationsComponent {
       this.communicationform.get('permanentDistrictId').reset();
       this.communicationform.get('permanentSubDistrictId').reset();
       this.communicationform.get('permanentVillageId').reset();
+      this.communicationform.get('permanentAddress1').reset();
+      this.communicationform.get('permanentPinCode').reset();
+      
       this.perdistrictList = [];
       this.persubDistrictList = [];
       this.pervillageList = [];
@@ -376,6 +385,8 @@ export class CommunicationsComponent {
     if (isResetIds) {
       this.communicationform.get('permanentSubDistrictId').reset();
       this.communicationform.get('permanentVillageId').reset();
+      this.communicationform.get('permanentAddress1').reset();
+      this.communicationform.get('permanentPinCode').reset();
       this.persubDistrictList = [];
       this.pervillageList = [];
     }
@@ -410,6 +421,8 @@ export class CommunicationsComponent {
   getAllPerVillagesBySubDistrictId(id: any, isResetIds: any) {
     if (isResetIds) {
       this.communicationform.get('permanentVillageId').reset();
+      this.communicationform.get('permanentAddress1').reset();
+      this.communicationform.get('permanentPinCode').reset();
       this.pervillageList = [];
     }
     this.villagesService.getVillagesBySubDistrictId(id).subscribe((response: any) => {
@@ -565,6 +578,14 @@ export class CommunicationsComponent {
         this.getAllPerVillagesBySubDistrictId(this.memberCommunicationDetailsModel.permanentSubDistrictId,false);
         this.memberCommunicationDetailsModel.permanentVillageId = this.memberCommunicationDetailsModel.villageId;
         this.getPerVillage(this.memberCommunicationDetailsModel.permanentVillageId);
+      }
+      if (this.memberCommunicationDetailsModel.permanentAddress1 != this.memberCommunicationDetailsModel.address1) {
+        this.memberCommunicationDetailsModel.permanentAddress1 = null;
+        this.memberCommunicationDetailsModel.permanentAddress1 = this.memberCommunicationDetailsModel.address1;
+      }
+      if (this.memberCommunicationDetailsModel.permanentPinCode != this.memberCommunicationDetailsModel.pinCode) {
+        this.memberCommunicationDetailsModel.permanentPinCode = null;
+        this.memberCommunicationDetailsModel.permanentPinCode = this.memberCommunicationDetailsModel.pinCode;
       }
     }
   }

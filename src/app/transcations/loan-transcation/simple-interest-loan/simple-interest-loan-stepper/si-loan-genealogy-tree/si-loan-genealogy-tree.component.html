@@ -1,6 +1,7 @@
 <div class="col-12">
-    <h6 class="sub-heading">{{'ERP.GENEALOGY_TREE_DETAILS' | translate}}<span class="admission-text">(Admission
-            Number:&nbsp;)</span></h6>
+    <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
+    [hideTransitionOptions]="'500ms'"></p-messages>
+    <h6 class="sub-heading">{{'ERP.GENEALOGY_TREE_DETAILS' | translate}}</h6>
     <div class="stepper-top-section-strip">
         <div class="row">
             <div class="col-lg-3 col-md-3 col-sm-12">
@@ -42,7 +43,11 @@
                             <div class="search">
                                 <span class="p-input-icon-right">
                                     <i class="pi pi-search global-search-icon"></i>
-                                    <input type="text" pInputText class="searchbox" placeholder="Search" />
+                                    <!-- <input type="text" pInputText class="searchbox" placeholder="Search" /> -->
+                                    <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                        placeholder="Search" class="searchbox" #searchInput
+                                        (input)="genealogy.filterGlobal(searchInput.value, 'contains')">
+                                    <!-- <span><i class="fa fa-search"></i></span> -->
                                 </span>
                             </div>
                         </div>
@@ -74,7 +79,7 @@
                                 <p-dropdown placeholder="{{'ERP.SELECT'| translate}}"
                                     formControlName="relationWithApplicant" [options]="relationshipTypesList"
                                     id="relationWithApplicant" [(ngModel)]="row.relationWithApplicant"
-                                    [appendTo]="'body'">
+                                    [appendTo]="'body'"  (onChange)="familyDplicate(row.relationWithApplicant)">
                                 </p-dropdown>
                             </ng-template>
                             <ng-template pTemplate="output">
@@ -114,8 +119,7 @@
                             <p-button label="{{'ERP.EDIT' | translate}}" *ngIf="!editing" pInitEditableRow
                                 (click)="editService(row)" id="prj_stakehlder_bt_edit" class="action-edit"
                                 [disabled]="editDeleteDisable"></p-button>
-                            <p-button label="{{'ERP.DELETE' | translate}}" *ngIf="!editing"  (click)="deletDilogBox(row)"
-                                id="prj_stakehlder_bt_edit" class="action-delete"
+                                <p-button label="{{'ERP.DELETE' | translate}}" *ngIf="!editing"  (click)="deletDilogBox(row)"                                id="prj_stakehlder_bt_edit" class="action-delete"
                                 [disabled]="editDeleteDisable"></p-button>
                         </div>
                     </td>

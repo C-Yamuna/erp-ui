@@ -234,7 +234,7 @@
                                                     placeholder="{{'ERP.SELECT' | translate}}"
                                                     [options]="relationTypesList"
                                                     formControlName="relationNameOfGuardian" id="id"
-                                                    [(ngModel)]="accountGuardianModel.relationType"></p-dropdown>
+                                                    [(ngModel)]="accountGuardianModel.relationshipTypeName"></p-dropdown>
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-12">
@@ -244,7 +244,7 @@
                                                     translate}}</label>
                                                 <input type="text" formControlName="guardianName" pInputText
                                                     placeholder="Enter Name"
-                                                    [(ngModel)]="accountGuardianModel.name" />
+                                                    [(ngModel)]="accountGuardianModel.guardianName" />
                                                 <p-message severity="error" text="Enter Valid Name"
                                                     *ngIf="!nomineeForm.controls['guardianName'].valid && nomineeForm.controls['guardianName'].dirty">
                                                 </p-message>
@@ -258,7 +258,7 @@
                                                     translate}}</label>
                                                 <input type="text" formControlName="guardianAadhar" pInputText
                                                     placeholder="Enter Aadhar Number"
-                                                    [(ngModel)]="accountGuardianModel.aadharNumber" />
+                                                    [(ngModel)]="accountGuardianModel.guardianAadharNumber" />
                                                 <p-message severity="error" text="Enter Valid aadhaar"
                                                     *ngIf="!nomineeForm.controls['guardianAadhar'].valid && nomineeForm.controls['guardianAadhar'].dirty">
                                                 </p-message>
@@ -271,7 +271,7 @@
                                                     translate}}</label>
                                                 <input type="text" formControlName="guardianMobile" pInputText
                                                     placeholder="Enter Mobile Number"
-                                                    [(ngModel)]="accountGuardianModel.mobileNumber" />
+                                                    [(ngModel)]="accountGuardianModel.guardianMobileNumber" />
                                                 <p-message severity="error" text="Enter Valid Phone Number"
                                                     *ngIf="!nomineeForm.controls['guardianMobile'].valid && nomineeForm.controls['guardianMobile'].dirty">
                                                 </p-message>
@@ -282,7 +282,7 @@
                                                 <label>{{'ERP.EMAIL' | translate}}</label>
                                                 <input type="text" formControlName="guardianEmail" pInputText
                                                     placeholder="Enter Email"
-                                                    [(ngModel)]="accountGuardianModel.email" />
+                                                    [(ngModel)]="accountGuardianModel.guardianEmailId" />
                                                 <p-message severity="error" text="Enter Valid Email"
                                                     *ngIf="!nomineeForm.controls['guardianEmail'].valid && nomineeForm.controls['guardianEmail'].dirty">
                                                 </p-message>

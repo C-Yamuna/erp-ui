@@ -76,6 +76,10 @@ import { FdNonCumulativeInterestPaymentComponent } from './operations/fd-non-cum
 import { FdNonCumulativeForeclosureComponent } from './operations/fd-non-cumulative-operations/fd-non-cumulative-foreclosure/fd-non-cumulative-foreclosure.component';
 import { FdNonCumulativeClosureComponent } from './operations/fd-non-cumulative-operations/fd-non-cumulative-closure/fd-non-cumulative-closure.component';
 import { FdNonCumulativeRenewalComponent } from './operations/fd-non-cumulative-operations/fd-non-cumulative-renewal/fd-non-cumulative-renewal.component';
+import { FdCumulativeForclosureClosureComponent } from './operations/fd-cumulative-operations/fd-cumulative-forclosure-closure/fd-cumulative-forclosure-closure.component';
+import { FdCumulativeRenewalComponent } from './operations/fd-cumulative-operations/fd-cumulative-renewal/fd-cumulative-renewal.component';
+import { RecurringDepositRenewalComponent } from './operations/rd-operations/recurring-deposit-renewal/recurring-deposit-renewal.component';
+import { RecurringDepositForeclosureClosureComponent } from './operations/rd-operations/recurring-deposit-foreclosure-closure/recurring-deposit-foreclosure-closure.component';
 export function httpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(httpClient, './assets/i18n/', '.json');
 }
@@ -145,6 +149,10 @@ export function httpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
     FdNonCumulativeForeclosureComponent,
     FdNonCumulativeClosureComponent,
     FdNonCumulativeRenewalComponent,
+    FdCumulativeForclosureClosureComponent,
+    FdCumulativeRenewalComponent,
+    RecurringDepositRenewalComponent,
+    RecurringDepositForeclosureClosureComponent,
   ],
   imports: [
     CommonModule,

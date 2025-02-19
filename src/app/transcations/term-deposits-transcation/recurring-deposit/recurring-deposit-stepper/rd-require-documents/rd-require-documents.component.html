@@ -97,7 +97,8 @@
                                     <label><span class="red">*</span>{{ 'TERMDEPOSITSTRANSACTION.DOCUMENT_TYPE' | translate }}</label>
                                     <p-dropdown placeholder="{{'TERMDEPOSITSTRANSACTION.SELECT'| translate}}"
                                         formControlName="requiredDocumentTypeName" [options]="documentNameList"
-                                        id="docTypeId" [(ngModel)]="requiredDocumentDetails.requiredDocumentTypeId">
+                                        id="docTypeId" [(ngModel)]="requiredDocumentDetails.requiredDocumentTypeId"
+                                        (onChange)="documentDuplicate(requiredDocumentDetails.requiredDocumentTypeId)">
                                     </p-dropdown>
                                 </div>
                             </div>
@@ -155,7 +156,8 @@
                                     <label><span class="red">*</span>{{ 'TERMDEPOSITSTRANSACTION.DOCUMENT_TYPE' | translate }}</label>
                                     <p-dropdown placeholder="{{'TERMDEPOSITSTRANSACTION.SELECT'| translate}}" formControlName="requiredDocumentTypeName"
                                         [options]="documentNameList" id="docTypeId"
-                                        [(ngModel)]="requiredDocumentDetails.requiredDocumentTypeId">
+                                        [(ngModel)]="requiredDocumentDetails.requiredDocumentTypeId"
+                                        (onChange)="documentDuplicate(requiredDocumentDetails.requiredDocumentTypeId)">
                                     </p-dropdown>
                                 </div>
                             </div>

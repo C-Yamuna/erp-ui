@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Responsemodel } from 'src/app/shared/responsemodel';
 import { Accounts } from '../../shared/accounts.model';
 import { MembershipBasicDetail } from 'src/app/transcations/term-deposits-transcation/shared/membership-basic-detail.model';
@@ -10,7 +10,6 @@ import { CommonComponent } from 'src/app/shared/common.component';
 import { CommonFunctionsService } from 'src/app/shared/commonfunction.service';
 import { EncryptDecryptService } from 'src/app/shared/encrypt-decrypt.service';
 import { FileUploadService } from 'src/app/shared/file-upload.service';
-import { RdProductDefinition } from 'src/app/transcations/term-deposits-transcation/shared/term-depost-model.model';
 import { applicationConstants } from 'src/app/shared/applicationConstants';
 import { DailyDepositsAccountsService } from '../../shared/daily-deposits-accounts.service';
 import { AccountInterestPolicy } from '../../shared/account-interest-policy.model';
@@ -39,7 +38,6 @@ export class ProductDetailsComponent {
   gendersList: any[] = [];
   relationshipTypesList: any[] = [];
   isMemberCreation: boolean = false;
-  rdProductDefinition: RdProductDefinition = new RdProductDefinition();
   accountModel: Accounts = new Accounts();
   membershipBasicDetail: MembershipBasicDetail = new MembershipBasicDetail();
   productDefinitionModel: AccountProductDefinition = new AccountProductDefinition();
@@ -76,15 +74,15 @@ export class ProductDetailsComponent {
     private dailyDepositsAccountsService: DailyDepositsAccountsService,
   ) {
     this.applicationForm = this.formBuilder.group({
-      'productId': ['', [Validators.required]],
+      'productId': new FormControl('', Validators.required),
       'accountNumber': [{ value: '', disabled: true }],
       'roi': [{ value: '', disabled: true }],
-      'depositDate': ['',],
+      'depositDate': new FormControl('', Validators.required),
       'penalRoi': [{ value: '', disabled: true }],
-      'depositAmount': ['',],
-      'accountType': ['', [Validators.required]],
-      'tenureInMonths':['',],
-      'tenureInYears':['',],
+      'depositAmount':  new FormControl('', [Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS), Validators.required]),
+      'accountType': new FormControl('', Validators.required),
+      'tenureInMonths':new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS)]),
+      'tenureInYears':new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS)]),
     })
   }
   ngOnInit() {
@@ -172,10 +170,10 @@ export class ProductDetailsComponent {
   }
 
   onChangeProduct(event: any) {
-    this.displayDialog = true;
+    // this.displayDialog = true;
     this.productInfoFalg = true;
     if (event.value != null && event.value != undefined) {
-      this.getProductDefinitionByProductIdAndDepositDate(event.value);
+      this.getProductDefinitionByProductId(event.value);
     }
   }
 
@@ -250,8 +248,8 @@ export class ProductDetailsComponent {
     });
   }
 
-  onSelectdepositDate() {
-    this.getProductDefinitionByProductIdAndDepositDate(this.accountModel.productId);
+  onSelectdepositDate(depositDateVal:any) {
+    this.dateValidation(depositDateVal);
   }
 
   getProductDefinitionByProductIdAndDepositDate(productId: any) {
@@ -281,6 +279,8 @@ export class ProductDetailsComponent {
           if (this.productDefinitionModel.requiredDocumentsConfigList != null && this.productDefinitionModel.requiredDocumentsConfigList != undefined && this.productDefinitionModel.requiredDocumentsConfigList.length > 0) {
             this.requiredDocumentsList = this.productDefinitionModel.requiredDocumentsConfigList;
           }
+          if(this.accountModel.depositDate != null && this.accountModel.depositDate != undefined)
+            this.dateValidation(this.accountModel.depositDate);
         }
       }
     });
@@ -299,5 +299,103 @@ export class ProductDetailsComponent {
   }
   closeProductDefinition() {
     this.productDefinitionFlag = false;
+  }
+
+  dateValidation(depositeDate: any) {
+    if (this.productDefinitionModel.effectiveStartDate != undefined && this.productDefinitionModel.effectiveStartDate != undefined
+      && this.productDefinitionModel.effectiveEndDate != null && this.productDefinitionModel.effectiveEndDate != null) {
+      let startDate = this.commonFunctionsService.getUTCEpoch(new Date(this.productDefinitionModel.effectiveStartDate));
+      let endDate = this.commonFunctionsService.getUTCEpoch(new Date(this.productDefinitionModel.effectiveEndDate));
+      let date = this.commonFunctionsService.getUTCEpoch(new Date(depositeDate));
+      if (date >= endDate) {
+        this.msgs = [];
+          this.msgs.push({ severity: 'warning', detail: applicationConstants.DEPOSITE_DATE_SHOULD_BE_LESSTHAN_PRODUCT_EFF_END_DATE });
+          this.accountModel.depositDate = null;
+        
+        setTimeout(() => {
+          this.msgs = [];
+        }, 1500);
+      } else if (date <= startDate) {
+        this.msgs = [];
+          this.msgs.push({ severity: 'warning', detail: applicationConstants.DEPOSITE_DATE_SHOULD_BE_GRATERTHAN_PRODUCT_EFF_START_DATE });
+          this.accountModel.depositDate = null;
+          setTimeout(() => {
+            this.msgs = [];
+          }, 1500);
+      }
+    }
+    this.updateData();
+  }
+
+  amountValidation(depositeAmount: any) {
+    if (this.productDefinitionModel.minDepositAmount != null && this.productDefinitionModel.minDepositAmount != undefined
+      && this.productDefinitionModel.maxDepositAmount != null && this.productDefinitionModel.maxDepositAmount != undefined) {
+      if (depositeAmount > this.productDefinitionModel.maxDepositAmount) {
+        this.msgs = [];
+          this.msgs.push({ severity: 'warning', detail: applicationConstants.DEPOSIT_AMOUNT_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAXIMUM_DEPOSIT_AMOUNT });
+          this.accountModel.depositAmount = null;
+        setTimeout(() => {
+          this.msgs = [];
+        }, 1500);
+      }else if(depositeAmount < this.productDefinitionModel.minDepositAmount){
+        this.msgs = [];
+          this.msgs.push({ severity: 'warning', detail: applicationConstants.DEPOSIT_AMOUNT_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MINIMUM_DEPOSIT_AMOUNT });
+          this.accountModel.depositAmount = null;
+        setTimeout(() => {
+          this.msgs = [];
+        }, 1500);
+      }
+    }
+    this.updateData();
+  }
+
+  getProductDefinitionByProductId(id: any) {
+    this.productDefinitionModel == null;
+    this.dailyDepositsAccountsService.getDailyDepositProductDefinitionOverviewDetailsById(id).subscribe((data: any) => {
+      this.responseModel = data;
+      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+        if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
+          this.productDefinitionModel = this.responseModel.data[0];
+
+          if (null != this.productDefinitionModel.effectiveStartDate)
+            this.productDefinitionModel.effectiveStartDate = this.datePipe.transform(this.productDefinitionModel.effectiveStartDate, this.orgnizationSetting.datePipe);
+
+          if (null != this.productDefinitionModel.effectiveEndDate)
+            this.productDefinitionModel.effectiveEndDate = this.datePipe.transform(this.productDefinitionModel.effectiveEndDate, this.orgnizationSetting.datePipe);
+
+          if (this.productDefinitionModel.intestPolicyConfigList != null && this.productDefinitionModel.intestPolicyConfigList != undefined && this.productDefinitionModel.intestPolicyConfigList.length > 0) {
+            this.interestPolicyList = this.productDefinitionModel.intestPolicyConfigList;
+           
+          }
+          if (this.productDefinitionModel.intestPolicyConfigList != null && this.productDefinitionModel.intestPolicyConfigList != undefined) {
+            if (this.productDefinitionModel.intestPolicyConfigList[0].roi != undefined && this.productDefinitionModel.intestPolicyConfigList[0].roi != null)
+              this.accountModel.roi = this.productDefinitionModel.intestPolicyConfigList[0].roi;
+  
+            if (this.productDefinitionModel.intestPolicyConfigList[0].penaltyRoi != undefined && this.productDefinitionModel.intestPolicyConfigList[0].penaltyRoi != null)
+              this.accountModel.penalRoi = this.productDefinitionModel.intestPolicyConfigList[0].penaltyRoi;
+          }
+         
+          if (this.productDefinitionModel.requiredDocumentsConfigList != null && this.productDefinitionModel.requiredDocumentsConfigList != undefined && this.productDefinitionModel.requiredDocumentsConfigList.length > 0) {
+            this.requiredDocumentsList = this.productDefinitionModel.requiredDocumentsConfigList;
+           
+          }
+
+        }
+      }
+    });
+  }
+  productViewPopUp(){
+    this.displayDialog = true;
+    if(this.accountModel.productId != null && this.accountModel.productId != undefined){
+      this.getProductDefinitionByProductId(this.accountModel.productId);
+    }
+    else {
+      this.msgs = [];
+          this.msgs = [{ severity: 'error', detail: "Please Select Product" }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+    }
+    
   }
 }

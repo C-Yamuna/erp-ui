@@ -88,6 +88,8 @@ export class AccountRequireDocumentsComponent {
   accountNumber: any;
   depositDate: any;
   depositAmount: any;
+  mandatoryDoxsTextShow: boolean = false;
+  requiredDocumentsNamesText: any;
 
   constructor(private router: Router, 
     private formBuilder: FormBuilder, 
@@ -133,12 +135,28 @@ export class AccountRequireDocumentsComponent {
   }
 
   getAllKycTypes() {
-    this.dailyDepositsAccountsService.getAllDocuementsTypes().subscribe((res: any) => {
+    this.dailyDepositsAccountsService.getAllRequiredDocuments().subscribe((res: any) => {
       this.responseModel = res;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
-        this.documentNameList = this.responseModel.data.filter((kyc: any) => kyc.status == applicationConstants.ACTIVE).map((count: any) => {
-          return { label: count.name, value: count.id }
+        this.documentNameList = this.responseModel.data.filter((document: any) => document.status == applicationConstants.ACTIVE && document.productId == this.accountsModel.productId).map((count: any) => {
+          return { label: count.documentTypeName, value: count.documentTypeId, isMandatory:count.isRequired  }
         });
+        let filteredObj = this.documentNameList.find((data: any) => null != data && this.requiredDocumentDetails.accId != null && data.value == this.requiredDocumentDetails.accId);
+        if (filteredObj != null && undefined != filteredObj)
+          this.requiredDocumentDetails.requiredDocumentTypeName = filteredObj.label;
+        let i = 0;
+        for (let doc of this.documentNameList) {
+          if (i == 0)
+            this.requiredDocumentsNamesText = "Please Upload Mandatory Required Documents ("
+          if (doc.isMandatory) {
+            i = i + 1;
+            this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + "'" + doc.label + "'";
+          }
+        }
+        this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + ")";
+        if (i > 0) {
+          this.mandatoryDoxsTextShow = true;
+        }
       }
     }, error => {
       this.commonComponent.stopSpinner();
@@ -152,12 +170,12 @@ export class AccountRequireDocumentsComponent {
     this.updateData();
   }
   updateData() {
-    // this.requiredDocumentDetails.acc = this.accId;
-    // this.requiredDocumentDetails.admissionNumber = this.admissionNumber;
-    // this.requiredDocumentDetails.memberTypeName  = this.memberTypeName;
-    // this.requiredDocumentDetails.memberType  = this.memberTypeId;
-    // this.requiredDocumentDetails.memberId  = this.memberId;
-    // this.requiredDocumentDetails.accountNumber = this.accountNumber;
+    this.requiredDocumentDetails.accId = this.accId;
+    this.requiredDocumentDetails.admissionNumber = this.admissionNumber;
+    this.requiredDocumentDetails.memberTypeName  = this.memberTypeName;
+    this.requiredDocumentDetails.memberType  = this.memberTypeId;
+    this.requiredDocumentDetails.memberId  = this.memberId;
+    this.requiredDocumentDetails.accountNumber = this.accountNumber;
     this.dailyDepositsAccountsService.changeData({
       formValid: !this.requiredForm.valid ? true : false,
       data: this.requiredDocumentDetails,
@@ -243,6 +261,21 @@ export class AccountRequireDocumentsComponent {
               this.addDocumentOfKycFalg = true;
               this.buttonDisabled = true;
               this.updateData();
+            }
+            if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length >0) {
+              let i = 0;
+              for (let doc of this.documentNameList) {
+                if (i == 0)
+                  this.requiredDocumentsNamesText = "Please Upload Mandatory Required Documents ("
+                if (doc.isMandatory) {
+                  i = i + 1;
+                  this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + "'" + doc.label + "'";
+                }
+              }
+              this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + ")";
+              if (i > 0) {
+                this.mandatoryDoxsTextShow = true;
+              }
             }
           }
         }

@@ -37,6 +37,7 @@ export class CiLoanApprovalDetailsComponent {
   inactiveStatusCount: number = 0;
   showForm: boolean=false;
   compoundInterestLoan : CompoundInterestLoan = new CompoundInterestLoan();
+  requestForResubmmissionCount: any;
   constructor(private router: Router, private translate: TranslateService,private commonComponent: CommonComponent,
     private commonFunctionsService: CommonFunctionsService,private ciLoanApplicationService : CiLoanApplicationsService, private encryptDecryptService: EncryptDecryptService ,private fileUploadService : FileUploadService)
   { 
@@ -122,6 +123,15 @@ export class CiLoanApprovalDetailsComponent {
             ci.submissionForApproval = false; 
             ci.actionButton = false;
             ci.viewButton = true;
+          }
+          else if(ci.accountStatusName == applicationConstants.REQUEST_FOR_RESUBIMSSION){
+            ci.rejected = false;
+            ci.approved = false;
+            ci.submissionForApproval = false; 
+            ci.actionButton = true;
+            ci.viewButton = true;
+            ci.requestForResubmmission = true;
+            this.requestForResubmmissionCount = this.requestForResubmmissionCount +1;
           }
           return ci
         });

@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { EncryptDecryptService } from 'src/app/shared/encrypt-decrypt.service';
 import { DailyDepositsProductDefinitionService } from '../../shared/daily-deposits-product-definition.service';
+import { BoxNumber } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-general-config',
@@ -151,7 +152,7 @@ export class GeneralConfigComponent {
     if (this.dailyDepositsProductDefinitionModel.minDepositAmount != null && this.dailyDepositsProductDefinitionModel.minDepositAmount != undefined
       && this.dailyDepositsProductDefinitionModel.maxDepositAmount != null && this.dailyDepositsProductDefinitionModel.maxDepositAmount != undefined) {
 
-      if (this.dailyDepositsProductDefinitionModel.minDepositAmount > this.dailyDepositsProductDefinitionModel.maxDepositAmount) {
+      if (Number(this.dailyDepositsProductDefinitionModel.minDepositAmount) > Number(this.dailyDepositsProductDefinitionModel.maxDepositAmount)) {
         this.msgs = [];
         if (box == this.dailyDepositsProductDefinitionModel.minDepositAmount) {
           this.msgs.push({ severity: 'warning', detail: applicationConstants.MINIMUM_DEPOSIT_AMOUNT_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAXIMUM_DEPOSIT_AMOUNT });
@@ -176,11 +177,11 @@ export class GeneralConfigComponent {
 
       if (this.dailyDepositsProductDefinitionModel.minTenure > this.dailyDepositsProductDefinitionModel.maxTenure) {
         this.msgs = [];
-        if (box == this.dailyDepositsProductDefinitionModel.minTenure) {
+        if (box == BoxNumber.BOX_ONE) {
           this.msgs.push({ severity: 'warning', detail: applicationConstants.MINIMUM_TENURE_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAXIMUM_TENURE });
           this.generalconfigform.get('minTenure').reset();
           this.dailyDepositsProductDefinitionModel.minTenure = null;
-        } else if (box == this.dailyDepositsProductDefinitionModel.maxTenure) {
+        } else if (box == BoxNumber.BOX_TWO) {
           this.msgs.push({ severity: 'warning', detail: applicationConstants.MAXIMUM_TENURE_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MINIMUM_TENURE });
           this.generalconfigform.get('maxTenure').reset();
           this.dailyDepositsProductDefinitionModel.maxTenure = null;

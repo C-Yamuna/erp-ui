@@ -37,6 +37,8 @@ export class SaoLoanLandMortageDetailsModel{
 
     villageId:any;
 
+    villageName: any;
+
     khataNumber:any;
 
     surveyNumber:any;

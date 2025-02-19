@@ -166,15 +166,20 @@
                             {{rowData[col.field]}}
                         </div>
                     </div>
+                    <div *ngIf="rowData.accountStatusName == 'Closed'">
+                        <div class="status-style statusrequestforforeclosure" *ngIf="col.field =='accountStatusName'"> 
+                            {{rowData[col.field]}}
+                        </div>
+                    </div>
                     <div *ngIf="col.field !='accountStatusName' &&  col.field !='admissionNumber'"> {{rowData[col.field]}}</div>
                 </td>
                 <td>
                     <div class="global-action-btn flex align-items-center justify-content-center">
                         <p-button label="{{'TERMDEPOSITS.VIEW' | translate}}" (click)="view(rowData)"
                             class="action-view"></p-button>
-                        <p-dropdown id="bunit_txt_status" class="action-operation" placeholder="operations"
+                        <p-dropdown *ngIf="rowData.accountStatusName == 'Approved'" id="bunit_txt_status" class="action-operation" placeholder="operations"
                             [filter]="true" [options]="operationslist" [(ngModel)]="operations"
-                            (onChange)="navigateToOperations($event)" [appendTo]="'body'"></p-dropdown>
+                            (onChange)="navigateToOperations($event,rowData)" [appendTo]="'body'"></p-dropdown>
                     </div>
                 </td>
             </tr>

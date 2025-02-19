@@ -9,6 +9,8 @@ export const CommonStatusData = {
     PENDING: 'Pending',
     ACTIVE: 'Active',
     CLOSED: 'Closed',
+    FORCLOSURE: 'Foreclosure',
+    CLOSURE_REQUEST:'Request for Closure',
     SCHEDULED:'Scheduled',
     FORECLOSURE: 'Foreclosure',
     DUE: 'Due'
@@ -39,7 +41,7 @@ export const BoxNumber = {
 
 export const CollateralTypes = {
     GOLD_MORTGAGE:1, LAND_MORTGAGE:2, BONDS_MORTGAGE:3,
-	VEHICLE_MORTGAGE:4, STORAGE_MORTGAGE:5, PROPERTY_MORTGAGE:7 , OTHER_MORTGAGE:6
+	VEHICLE_MORTGAGE:4, STORAGE_MORTGAGE:5, PROPERTY_MORTGAGE:6 , OTHER_MORTGAGE:7
 }
 
 export const CommonStatusDataValue = {
@@ -64,6 +66,7 @@ export const applicationData = {
 
 export const SbOperationConstantValue={
     STANDING_INSTRUCTIONS:'Standing Instructions',
+    CLOSURE:'Closure'
 }
 
 export const Frequency = {
@@ -75,8 +78,10 @@ export const Frequency = {
 }
 
 export const Blocked_Unblocked_Amount_Status = {
-    BLOCKED: "Blocked",
-    UN_BLOCKED: "Un-Blocked",
+    BLOCKED: "Request for Block",
+    UN_BLOCKED: "Request for UnBlock",
+    APPROVE_BLOCK:"Approve for Block",
+    APPROVER_UN_BLOCK:"Approve for UnBlock"
    
 }
 
@@ -88,4 +93,15 @@ export const sbStandingDestitnationAccountType={
 export const DOCUMENT_TYPES={
     AADHAR : "Aadhar Card",
     PANNUMBER : "PAN Card"
+ }
+
+ export const TRANSACTION_TYPES={
+    DEPOSIT : "Deposit",
+    WITHDRAW : "Withdraw"
+ }
+
+ export const TRANSACTION_MODES={
+    CASH : "Cash",
+    CHEQUE : "Cheque",
+    TRANSFER:"Transfer"
  }

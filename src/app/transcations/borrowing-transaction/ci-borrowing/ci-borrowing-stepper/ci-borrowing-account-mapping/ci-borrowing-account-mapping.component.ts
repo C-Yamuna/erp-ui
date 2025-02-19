@@ -79,7 +79,7 @@ export class CiBorrowingAccountMappingComponent {
         this.ciBorrowingAccountMappedLoansDTOList.forEach(row => {
           row.selected = this.borrowingsAccountMappinglist.some(item => item.loanAccountNumber === row.accountNumber);
         });
-        this.updateHeaderCheckboxState(); 
+
         this.getByCiBorrowingAccountId(this.borrowingAccountId);
         if (this.borrowingAccountId != "" && this.borrowingAccountId != null && this.borrowingAccountId != undefined) {
           this.ciAccountDetailsService.getCiAccountDetailsById(this.borrowingAccountId).subscribe(res => {
@@ -111,7 +111,7 @@ export class CiBorrowingAccountMappingComponent {
       }
     }) 
     this.save();
-    
+    this.updateHeaderCheckboxState(); 
 
   }
    /**
@@ -132,8 +132,11 @@ export class CiBorrowingAccountMappingComponent {
           );
         });  
         this.updateData();
+        this.updateHeaderCheckboxState();
         }
       } else {
+        this.ciBorrowingAccountMappedLoansDTOList = []; // Reset data to avoid issues
+        this.selectAllChecked = false;
         this.commonComponent.stopSpinner();
         this.msgs = [];
         this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
@@ -208,9 +211,12 @@ selectAll(event: any) {
 }
 
 
-
 updateHeaderCheckboxState() {
-  this.selectAllChecked = this.ciBorrowingAccountMappedLoansDTOList.every(row => row.selected);
+  if (!this.ciBorrowingAccountMappedLoansDTOList || this.ciBorrowingAccountMappedLoansDTOList.length === 0) {
+    this.selectAllChecked = false; 
+  } else {
+    this.selectAllChecked = this.ciBorrowingAccountMappedLoansDTOList.every(row => row.selected);
+  }
 }
   save() {
     this.updateData();

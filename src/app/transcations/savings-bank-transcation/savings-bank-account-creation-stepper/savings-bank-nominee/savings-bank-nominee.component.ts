@@ -84,8 +84,7 @@ export class SavingsBankNomineeComponent implements OnInit {
   historyFLag: boolean = false;
   flag: boolean = false;
   isSaveAndNextEnable : boolean = false;
-;
-;
+
 
   constructor(private router: Router, private formBuilder: FormBuilder, private savingBankApplicationService: SavingBankApplicationService, private commonComponent: CommonComponent, private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService, private savingsBankNomineeService: SavingsBankNomineeService, private commonFunctionsService: CommonFunctionsService, private datePipe: DatePipe , private savingsBankCommunicationService : SavingsBankCommunicationService , private fileUploadService :FileUploadService) {
     this.nomineeForm = this.formBuilder.group({
@@ -127,32 +126,6 @@ export class SavingsBankNomineeComponent implements OnInit {
   // @jyothi.naidana
   ngOnInit(): void {
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
-    this.showForm = this.commonFunctionsService.getStorageValue(applicationConstants.B_CLASS_MEMBER_CREATION);
-    if(this.showForm){
-      this.nomineeList = [
-        { label: 'New Nominee', value: 1 },
-        { label: 'No Nominee', value: 3 },
-      ]
-    }
-    else{
-      this.nomineeList = [
-        { label: 'New Nominee', value: 1 },
-        { label: 'Same As Membership Nominee', value: 2 },
-        { label: 'No Nominee', value: 3 },
-      ]
-    }
-   if(this.showForm){
-    this.guadianTypesList = [
-      { label: 'New Guardain', value: 1 },
-      { label: 'No Guardain', value: 3 },
-    ]
-   }else{
-    this.guadianTypesList= [
-      { label: 'New Guardain', value: 1 },
-      { label: 'Same as Member Guardain', value: 2 },
-      { label: 'No Guardain', value: 3 },
-    ];
-   }
     this.activateRoute.queryParams.subscribe(params => {
       if (params['id'] != undefined || params['preview'] != undefined) {
         if(params['preview'] != undefined && params['preview'] != null){
@@ -165,8 +138,6 @@ export class SavingsBankNomineeComponent implements OnInit {
           this.getSbAccountDetailsById(this.sbAccId);
           this.isEdit = true;
         }
-        
-        
       } else {
         this.isEdit = false;
       }
@@ -200,7 +171,7 @@ export class SavingsBankNomineeComponent implements OnInit {
       this.isSaveAndNextEnable = (!this.nomineeForm.valid) || !(this.isFileUploadedNominee && this.isFileUploadedGuardina)
     }
     else {
-      this.isSaveAndNextEnable = (!this.nomineeForm.valid) || (!this.isFileUploadedNominee);
+      this.isSaveAndNextEnable = (!this.nomineeForm.valid) || !(this.isFileUploadedNominee);
     }
     this.savingsBankNomineeModel.accountNumber = this.accountNumber;
     this.savingsBankNomineeModel.sbAccId = this.sbAccId;
@@ -218,6 +189,10 @@ export class SavingsBankNomineeComponent implements OnInit {
   //on change nominee type need to update validation
   //@jyothi.naidana
   onChange(event: any ,flag :boolean) {
+    if(flag){
+      this.savingsBankNomineeModel.nomineeSighnedFormMultiPartList = [];
+      this.isFileUploadedNominee = false;
+    }
     if (event == 1) {//new nominee
       this.newNomineeType(flag);
     }
@@ -235,6 +210,10 @@ export class SavingsBankNomineeComponent implements OnInit {
    * @param event guardain Type
    */
   onChangeGuardain(event: any , flag :boolean) {
+    if(flag){
+      this.memberGuardianDetailsModelDetail.guardainSighnedMultipartFiles = [];
+      this.isFileUploadedNominee = false;
+    }
     if (event == 1) {//new guardain
       this.newGuardainType(flag);
     }
@@ -261,6 +240,18 @@ export class SavingsBankNomineeComponent implements OnInit {
         { label: 'No Guardain', value: 3 },
       ]
       this.accountType = applicationConstants.SINGLE_ACCOUNT_TYPE;
+    }
+    else {
+      this.nomineeList = [
+        { label: 'New Nominee', value: 1 },
+        { label: 'Same As Membership Nominee', value: 2 },
+        { label: 'No Nominee', value: 3 },
+      ]
+      this.guadianTypesList= [
+        { label: 'New Guardain', value: 1 },
+        { label: 'Same as Member Guardain', value: 2 },
+        { label: 'No Guardain', value: 3 },
+      ];
     }
   }
 
@@ -762,14 +753,19 @@ export class SavingsBankNomineeComponent implements OnInit {
     if(this.isEdit && this.memberGuardianDetailsModelDetail != null && this.memberGuardianDetailsModelDetail != undefined && this.memberGuardianDetailsModelDetail.filesDTOList == null || this.memberGuardianDetailsModelDetail.filesDTOList == undefined){
       this.memberGuardianDetailsModelDetail.filesDTOList = [];
     }
+    let selectedFiles = [...event.files];
+    fileUpload.clear();
+    
     if (filePathName === "Nominee") {
       this.isFileUploadedNominee = applicationConstants.FALSE;
+      this.savingsBankNomineeModel.nomineeSighnedFormMultiPartList = [];
     }
     if (filePathName === "Guardain") {
       this.isFileUploadedGuardina = applicationConstants.FALSE;
+      this.memberGuardianDetailsModelDetail.guardainSighnedMultipartFiles = [];
     }
     let files: FileUploadModel = new FileUploadModel();
-    for (let file of event.files) {
+    for (let file of selectedFiles) {
      
       let reader = new FileReader();
       reader.onloadend = (e) => {
@@ -786,6 +782,7 @@ export class SavingsBankNomineeComponent implements OnInit {
         if (filePathName === "Nominee") {
           this.isFileUploadedNominee = applicationConstants.TRUE;
           this.savingsBankNomineeModel.filesDTOList.push(files); 
+          this.savingsBankNomineeModel.nomineeSighnedFormMultiPartList.push(files);
           this.savingsBankNomineeModel.signedNomineeForm = null;
           this.savingsBankNomineeModel.filesDTOList[this.savingsBankNomineeModel.filesDTOList.length-1].fileName = "SB_NOMINEE" + this.sbAccId + "_" + timeStamp + "_" + file.name;
           this.savingsBankNomineeModel.signedNomineeForm = "SB_NOMINEE" + this.sbAccId + "_" +timeStamp+"_"+ file.name; 
@@ -793,6 +790,7 @@ export class SavingsBankNomineeComponent implements OnInit {
         if (filePathName === "Guardain") {
           this.isFileUploadedGuardina = applicationConstants.TRUE;
           this.memberGuardianDetailsModelDetail.filesDTOList.push(files); 
+          this.memberGuardianDetailsModelDetail.guardainSighnedMultipartFiles.push(files);
           this.memberGuardianDetailsModelDetail.gaurdianSignedCopyPath = null;
           this.memberGuardianDetailsModelDetail.filesDTOList[this.memberGuardianDetailsModelDetail.filesDTOList.length-1].fileName = "SB_GUARDAIN" + "_" + timeStamp + "_" + file.name;
           this.memberGuardianDetailsModelDetail.gaurdianSignedCopyPath = "SB_GUARDAIN" + "_" + timeStamp + "_" + file.name; 

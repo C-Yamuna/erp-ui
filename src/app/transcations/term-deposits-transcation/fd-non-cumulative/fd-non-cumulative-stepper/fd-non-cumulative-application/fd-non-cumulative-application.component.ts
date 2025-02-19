@@ -15,6 +15,7 @@ import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-
 import { FileUploadService } from 'src/app/shared/file-upload.service';
 import { FdNonCumulativeInterestPolicy } from '../../../fd-non-cumulative-product-definition/add-fd-non-cumulative-product-definition/fd-non-cumulative-interest-policy/shared/fd-non-cumulative-interest-policy.model';
 import { FdNonCumulativeRequiredDocuments } from '../../../fd-non-cumulative-product-definition/add-fd-non-cumulative-product-definition/fd-non-cumulative-required-documents/shared/fd-non-cumulative-required-documents.model';
+import { MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-fd-non-cumulative-application',
@@ -72,6 +73,7 @@ export class FdNonCumulativeApplicationComponent {
   requireddocumentlist: any[] =[];
   interestPaymentFrequencyList: any[] = [];
   renewalList: any[] = [];
+  accountTypeDropDownHide: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -95,7 +97,7 @@ export class FdNonCumulativeApplicationComponent {
       'depositAmount': ['',],
       'accountType': ['', [Validators.required]],
       'interestPaymentFrequency': ['', [Validators.required]],
-      'isRenewal':[''],
+      'isRenewal': [{ value: '', disabled: true }],
       'maturityDate':[{ value: '', disabled: true }],
       'maturityAmount':[{ value: '', disabled: true }]
       })
@@ -153,7 +155,7 @@ export class FdNonCumulativeApplicationComponent {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.productsList = this.responseModel.data;
-            this.productsList = this.productsList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+            this.productsList = this.productsList.filter((obj: any) => obj != null && obj.statusName == applicationConstants.APPROVED).map((relationType: { name: any; id: any; }) => {
               return { label: relationType.name, value: relationType.id };
             });
           }
@@ -241,9 +243,13 @@ export class FdNonCumulativeApplicationComponent {
             else if(this.fdNonCumulativeApplicationModel.depositDate != null && this.fdNonCumulativeApplicationModel.depositDate != undefined){
               this.fdNonCumulativeApplicationModel.depositDateVal = this.commonFunctionsService.dateConvertionIntoFormate(this.fdNonCumulativeApplicationModel.depositDate);
             }
+
             // if (this.fdNonCumulativeApplicationModel.fdNonCummulativeproductId != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeproductId != undefined)
             //   this.isProductDisable = applicationConstants.TRUE;
-
+            
+            if (this.fdNonCumulativeApplicationModel.maturityDate != null && this.fdNonCumulativeApplicationModel.maturityDate != undefined) {
+              this.fdNonCumulativeApplicationModel.maturityDate = this.datePipe.transform(this.fdNonCumulativeApplicationModel.maturityDate, this.orgnizationSetting.datePipe);
+            }
             if (this.fdNonCumulativeApplicationModel.memberShipBasicDetailsDTO != undefined) {
               this.membershipBasicRequiredDetails = this.fdNonCumulativeApplicationModel.memberShipBasicDetailsDTO;
 
@@ -265,6 +271,23 @@ export class FdNonCumulativeApplicationComponent {
               this.memberTypeName = this.fdNonCumulativeApplicationModel.memberTypeName;
               if (this.fdNonCumulativeApplicationModel.memberTypeName == "Individual")
                 this.isIndividual = true;
+              if (this.memberTypeName != MemberShipTypesData.INDIVIDUAL) {  // account type entry resitricted because group institution have only single account type
+                this.accountTypeDropDownHide = true;
+                const controlName = this.applicationForm.get('accountType');
+                if (controlName) {
+                  controlName.setValidators(null); // Set the required validator null
+                  controlName.updateValueAndValidity();
+                }
+              }
+              else {
+                const controlName = this.applicationForm.get('accountType');
+                if (controlName) {
+                  controlName.setValidators([
+                    Validators.required,
+                  ]);
+                  controlName.updateValueAndValidity();
+                }
+              }
             }
             if (this.fdNonCumulativeApplicationModel.admissionNumber != null && this.fdNonCumulativeApplicationModel.admissionNumber != undefined)
               this.admissionNumber = this.fdNonCumulativeApplicationModel.admissionNumber;
@@ -300,6 +323,8 @@ export class FdNonCumulativeApplicationComponent {
 
   getProductDefinitionByProductId(id: any) {
     this.productDefinitionModel == null;
+    this.productDefinitionModel.isAutoRenewal == null;
+    this.productDefinitionModel.isSpecialScheme == null;
     this.fdNonCumulativeApplicationService.getFdNonCumulativeProductDefinitionOverviewDetailsById(id).subscribe((data: any) => {
       this.responseModel = data;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
@@ -328,6 +353,9 @@ export class FdNonCumulativeApplicationComponent {
             this.requireddocumentlist = this.productDefinitionModel.fdNonCummulativeRequiredDocumentsConfigList;
            
           }
+          if (this.productDefinitionModel.isAutoRenewal != null && this.productDefinitionModel.isAutoRenewal != undefined) {
+            this.fdNonCumulativeApplicationModel.isAutoRenewal = this.productDefinitionModel.isAutoRenewal;
+          }
 
         }
       }
@@ -348,13 +376,34 @@ export class FdNonCumulativeApplicationComponent {
     this.visible = true;
   }
 
-
-
   closeProductDefinition() {
     this.productDefinitionFlag = false;
   }
 
-
-
-
+  calculateMaturity() {
+    let depositAmount = parseFloat(this.applicationForm.get('depositAmount')?.value) || 0;
+    let roi = parseFloat(this.applicationForm.get('roi')?.value) || 0;
+    let tenureInDays = parseInt(this.applicationForm.get('tenureInDays')?.value) || 0;
+    let tenureInMonths = parseInt(this.applicationForm.get('tenureInMonths')?.value) || 0;
+    let tenureInYears = parseInt(this.applicationForm.get('tenureInYears')?.value) || 0;
+    let depositDate = this.applicationForm.get('depositDate')?.value;
+    if (!depositAmount || !roi || (tenureInDays === 0 && tenureInMonths === 0 && tenureInYears === 0)) {
+      return;
+    }
+    let tenureInYearsTotal = tenureInYears + (tenureInMonths / 12) + (tenureInDays / 365);
+    let maturityAmount = depositAmount * Math.pow((1 + roi / 100), tenureInYearsTotal);
+    this.applicationForm.get('maturityAmount')?.setValue(maturityAmount.toFixed(2));
+    if (depositDate) {
+      let maturityDate = new Date(depositDate);
+      if (isNaN(maturityDate.getTime())) {
+        return;
+      }
+      maturityDate.setFullYear(maturityDate.getFullYear() + tenureInYears);
+      maturityDate.setMonth(maturityDate.getMonth() + tenureInMonths);
+      maturityDate.setDate(maturityDate.getDate() + tenureInDays);
+      
+      const maturityDateFormatted = this.datePipe.transform(maturityDate, this.orgnizationSetting.datePipe);
+      this.applicationForm.get('maturityDate')?.setValue(maturityDateFormatted);
+    }
+  }
 }

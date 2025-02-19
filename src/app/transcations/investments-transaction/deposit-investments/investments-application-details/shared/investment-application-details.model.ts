@@ -55,5 +55,7 @@ export class InvestmentApplicationDetails {
 
     multipartFileList : any;
 
+    accountStatus: any;
+    accountStatusName: any;
     
 }

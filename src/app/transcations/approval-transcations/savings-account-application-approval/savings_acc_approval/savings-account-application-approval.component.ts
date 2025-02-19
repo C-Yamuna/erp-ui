@@ -107,7 +107,7 @@ export class SavingsAccountApplicationApprovalComponent {
       { field: 'chargesCollectionFrequencyName', header: 'ERP.FREQUENCY_TYPE' },
       { field: 'serviceCharges', header: 'ERP.SERVICE_CHARGES'},
       { field: 'requestDocPath', header: 'ERP.FILE' },
-      { field: 'statusName', header: 'ERP.STATUS' },
+      // { field: 'statusName', header: 'ERP.STATUS' },
       
     ];
     this.columns = [

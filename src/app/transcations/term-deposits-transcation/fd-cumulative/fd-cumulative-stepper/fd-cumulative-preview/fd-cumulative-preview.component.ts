@@ -168,25 +168,24 @@ export class FdCumulativePreviewComponent {
         let idEdit = this.encryptDecryptService.decrypt(params['editbutton']);
         this.fdCummulativeAccId = Number(id);
 
-        if (idEdit == "1"){
-          this.preveiwFalg = true;
-          this.viewButton = false;
-        }else {
-          this.preveiwFalg = false;
-          this.viewButton = true;
-        }
-
-        if (params['isGridPage'] != undefined && params['isGridPage'] != null) {
-          let isGrid = this.encryptDecryptService.decrypt(params['isGridPage']);
-          if (isGrid === "0") {
-            this.isShowSubmit = applicationConstants.FALSE;
-            // this.viewButton = false;
-            this.editFlag = true;
-          } else {
-            this.isShowSubmit = applicationConstants.TRUE;
-            this.preveiwFalg = false;
-          }
-        }
+         if (idEdit == "1") {
+             this.preveiwFalg = true;
+             this.isShowSubmit = applicationConstants.TRUE; // Allow Submit
+             this.viewButton = false;
+             this.editFlag = false;
+         } else {
+             this.preveiwFalg = false;
+         }
+         if (params['isGridPage'] != undefined && params['isGridPage'] != null) {
+             let isGrid = this.encryptDecryptService.decrypt(params['isGridPage']);
+             if (isGrid === "0") {
+                 this.isShowSubmit = applicationConstants.FALSE;
+                 this.viewButton = true;
+                 this.editFlag = false;
+             } else {
+                 this.isShowSubmit = applicationConstants.TRUE;
+             }
+         }
         this.getFdCummApplicationById();
       }
     })
@@ -515,12 +514,12 @@ export class FdCumulativePreviewComponent {
       else {
         this.photoCopyFlag = false;
       }
-      if (this.membershipBasicRequiredDetailsModel.signatureCopyPath != null && this.membershipBasicRequiredDetailsModel.signatureCopyPath != undefined) {
+      if (this.membershipBasicRequiredDetailsModel.signaturePath != null && this.membershipBasicRequiredDetailsModel.signaturePath != undefined) {
         if (this.membershipBasicRequiredDetailsModel.isNewMember) {
-          this.membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.signatureCopyPath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.signatureCopyPath);
+          this.membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.signaturePath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.signaturePath);
         }
         else {
-          this.membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.photoPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.signatureCopyPath);
+          this.membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.signaturePath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.signaturePath);
         }
       }
       else {

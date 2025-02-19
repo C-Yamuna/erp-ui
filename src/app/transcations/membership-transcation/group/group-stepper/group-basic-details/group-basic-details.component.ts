@@ -123,6 +123,7 @@ export class GroupBasicDetailsComponent implements OnInit{
       'tanNumber': new FormControl('',[Validators.pattern(applicationConstants.TAN_NUMBER)]),
       'resolutionNumber': new FormControl(''),
       'groupTypeId':new FormControl('',Validators.required),
+      'societyAdmissionNo': new FormControl('',Validators.required),
     })
     this.promoterDetailsForm = this.formBuilder.group({
       'surName':new FormControl('',[Validators.required,Validators.pattern(applicationConstants.NEW_NAME_PATTERN), Validators.maxLength(40), Validators.pattern(/^[^\s]+(\s.*)?$/)]),
@@ -413,11 +414,11 @@ onRowEditSave() {
   this.cancleButtonFlag = false;
   this.submitDisableForImage= false;
   this.submitDisableForSignature= false;
-  this.promoterDetailsModel.multipartFileListForPhotoCopy =[];
-  this.promoterDetailsModel.multipartFileListForsignatureCopyPath =[];
+  // this.promoterDetailsModel.multipartFileListForPhotoCopy =[];
+  // this.promoterDetailsModel.multipartFileListForsignatureCopyPath =[];
   this.promoterDetailsModel = new promoterDetailsModel();
   this.promoterDetailsForm.reset();
-  // this.onChangeExistedPrmoter(false);
+  this.onChangeExistedPrmoter(false);
   this.admissionNumberDropDown = false;
 
   // Re-fetch operator types for a new promoter
@@ -603,14 +604,27 @@ onRowEditSave() {
     }
   }
 
-  fileUploadersForPromoter(event: any, fileUpload: FileUpload, filePathName: any,rowData:any) {
+  fileUploadersForPromoter(event: any, fileUploadPhoto:FileUpload,fileUploadSign: FileUpload, filePathName: any,rowData:any) {
     this.isFileUploaded = applicationConstants.FALSE;
     this.multipleFilesList = [];
     if(this.isEdit && rowData.filesDTOList == null || rowData.filesDTOList == undefined){
       rowData.filesDTOList = [];
     }
+    let selectedFiles = [...event.files];
+    if (filePathName === "photoCopyPath") {
+      this.submitDisableForImage = false;
+      rowData.multipartFileListForPhotoCopy = [];
+      // Clear file input before processing files
+      fileUploadPhoto.clear();
+    }
+    if (filePathName === "signaturePath") {
+      this.submitDisableForSignature = applicationConstants.FALSE;
+      rowData.multipartFileListForsignatureCopyPath = [];
+      fileUploadSign.clear();
+    }
+   
     let files: FileUploadModel = new FileUploadModel();
-    for (let file of event.files) {
+    for (let file of selectedFiles) {
       let reader = new FileReader();
       reader.onloadend = (e) => {
         let files = new FileUploadModel();
@@ -624,6 +638,7 @@ onRowEditSave() {
         if (filePathName === "photoCopyPath") {
           this.submitDisableForImage = true;
           rowData.multipartFileListForPhotoCopy = [];
+          rowData.multipartFileListForPhotoCopy.push(files);
           rowData.uploadImage = null;
           rowData.filesDTOList.push(files);
           rowData.filesDTOList[rowData.filesDTOList.length - 1].fileName = "Group_Promoter_Photo_Copy" + "_" + timeStamp + "_" + file.name;
@@ -631,7 +646,8 @@ onRowEditSave() {
         }
         if (filePathName === "signaturePath") {
           this.submitDisableForSignature = true;
-          rowData.multipartFileListForsignatureCopyPath = [];
+          // rowData.multipartFileListForsignatureCopyPath = [];
+          rowData.multipartFileListForsignatureCopyPath.push(files);
           rowData.uploadSignature = null;
           rowData.filesDTOList.push(files);
           rowData.filesDTOList[rowData.filesDTOList.length - 1].fileName = "Group_Promoter_Signature_Copy" + "_" + timeStamp + "_" + file.name;
@@ -706,7 +722,6 @@ admissionDateOnSelect(){
     this.EditDeleteDisable = false;
     this.buttonsFlag  = true;
     this.promoterDisplayFlag = false;
-    this.EditDeleteDisable = false;
     this.promoterDetails;
     this.updateData();
   }
@@ -806,6 +821,17 @@ admissionDateOnSelect(){
             if (this.promoterDetailsModel.startDate != null && this.promoterDetailsModel.startDate != undefined)
               this.promoterDetailsModel.startDateVal = this.datePipe.transform(this.promoterDetailsModel.startDate, this.orgnizationSetting.datePipe);
 
+            this.promoterDetailsModel.uploadImage =  this.memberBasicDetailsModel.photoCopyPath;
+            this.promoterDetailsModel.uploadSignature =  	this.memberBasicDetailsModel.signatureCopyPath;
+
+            if(this.promoterDetailsModel.uploadImage != null && this.promoterDetailsModel.uploadImage != undefined){
+              this.promoterDetailsModel.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.promoterDetailsModel.uploadImage, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadImage);
+              this.submitDisableForImage = applicationConstants.TRUE;
+            }
+            if (this.promoterDetailsModel.uploadSignature != null && this.promoterDetailsModel.uploadSignature != undefined) {
+              this.promoterDetailsModel.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadSignature, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadSignature);
+              this.submitDisableForSignature = applicationConstants.TRUE;
+            }
            this.disableFormFields();
             // this.promoterDetailsForm.get('admissionNumber').setValidators(Validators.compose([Validators.required]));
           }

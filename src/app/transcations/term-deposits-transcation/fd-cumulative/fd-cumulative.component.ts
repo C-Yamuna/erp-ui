@@ -62,10 +62,10 @@ export class FdCumulativeComponent implements OnInit {
     });
 
     this.operationslist = [
-      { label: "Interest Payment", value: 1 },
-      { label: "Foreclosure", value: 2 },
-      { label: "Closure", value: 3 },
-      { label: "Renewal", value: 4 },
+      // { label: "Interest Payment", value: 1 },
+      // { label: "Closure", value: 3 },
+      { label: "Foreclosure/Closure", value: 1 },
+      { label: "Renewal", value: 2 },
 
     ]
     this.termdeposits = [
@@ -102,15 +102,19 @@ export class FdCumulativeComponent implements OnInit {
     this.commonFunctionsService.setStorageValue(applicationConstants.B_CLASS_MEMBER_CREATION, false);
     this.router.navigate([termdeposittransactionconstant.MEMBERSHIP_DETAIL],{ queryParams: { falg: this.encryptDecryptService.encrypt(true)}});
   }
-  navigateToOperations(event: any) {
+  navigateToOperations(event: any,rowData:any) {
+    // if (event.value === 1)
+    //   this.router.navigate([termdeposittransactionconstant.TERMDEPOSIT_INTEREST_PAYMENT]);
+    // else if (event.value === 2)
+    //   this.router.navigate([termdeposittransactionconstant.TERMDEPOSIT_FORE_CLOSURE]);
+    // else if (event.value === 3)
+    //   this.router.navigate([termdeposittransactionconstant.TERMDEPOSIT_CLOSURE]);
+    // else if (event.value === 4)
+    //   this.router.navigate([termdeposittransactionconstant.TERMDEPOSIT_RENEWAL]);
     if (event.value === 1)
-      this.router.navigate([termdeposittransactionconstant.TERMDEPOSIT_INTEREST_PAYMENT]);
+      this.router.navigate([termdeposittransactionconstant.FD_CUMULATIVE_FORECLOSURE],{ queryParams: { id: this.encryptDecryptService.encrypt(rowData.id) }, });
     else if (event.value === 2)
-      this.router.navigate([termdeposittransactionconstant.TERMDEPOSIT_FORE_CLOSURE]);
-    else if (event.value === 3)
-      this.router.navigate([termdeposittransactionconstant.TERMDEPOSIT_CLOSURE]);
-    else if (event.value === 4)
-      this.router.navigate([termdeposittransactionconstant.TERMDEPOSIT_RENEWAL]);
+      this.router.navigate([termdeposittransactionconstant.FD_CUMULATIVE_RENEWAL],{ queryParams: { id: this.encryptDecryptService.encrypt(rowData.id) }, });
   }
 
   getAllFdCummulativeByBranchIdPacsId() {

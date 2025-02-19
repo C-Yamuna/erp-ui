@@ -15,6 +15,7 @@ import { InstitutionKycDetailsService } from '../../../shared/institution-kyc-de
 import { FileUploadService } from 'src/app/shared/file-upload.service';
 import { KycDocumentTypesService } from 'src/app/configurations/common-config/kyc-document-types/shared/kyc-document-types.service';
 import { DatePipe } from '@angular/common';
+import { DOCUMENT_TYPES } from 'src/app/transcations/common-status-data.json';
 
 
 @Component({
@@ -78,6 +79,8 @@ export class InstitutionkycComponent implements OnInit{
   saveButtonDisable: boolean= false;
   kycPhotoCopyZoom: boolean = false;
   isMaximized: boolean = false;
+  isPanNumber: boolean = false;
+
 
   constructor(private router: Router,private formBuilder: FormBuilder,
     private memInistitutionsService: MemInstitutionService,
@@ -217,11 +220,14 @@ export class InstitutionkycComponent implements OnInit{
       });
     }
   // set document name
-    onChangeDocumnetTypesChange() {
-      let documnetTypes = this.docTypeList.find((data: any) => null != data && this.kycModel.kycDocumentTypeId != null &&  data.value == this.kycModel.kycDocumentTypeId);
-      if (documnetTypes != null && undefined != documnetTypes)
+  onChangeDocumnetTypesChange() {
+    let documnetTypes = this.docTypeList.find((data: any) => null != data && this.kycModel.kycDocumentTypeId != null && data.value == this.kycModel.kycDocumentTypeId);
+    if (documnetTypes != null && undefined != documnetTypes)
       this.kycModel.kycDocumentTypeName = documnetTypes.label;
+    if (this.kycModel.kycDocumentTypeName != null && this.kycModel != undefined) {
+      this.documentNumberDynamicValidation(this.kycModel.kycDocumentTypeName);
     }
+  }
   
     updateData() {
       let allPromotersHaveMandatoryDocs = true;
@@ -382,6 +388,9 @@ export class InstitutionkycComponent implements OnInit{
             else{
               this.saveButtonDisable = false;
             }
+            if(this.kycModel.kycDocumentTypeName != null && this.kycModel.kycDocumentTypeName != undefined){
+              this.documentNumberDynamicValidation(this.kycModel.kycDocumentTypeName );
+            }
           }
         }
       });
@@ -533,26 +542,64 @@ export class InstitutionkycComponent implements OnInit{
     kycclosePhotoCopy() {
       this.kycPhotoCopyZoom = false;
     }
-    // Popup Maximize
-              @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
-              
-                onDialogResize(event: any) {
-                  this.isMaximized = event.maximized;
-              
-                  if (this.isMaximized) {
-                    // Restore original image size when maximized
-                    this.imageElement.nativeElement.style.width = 'auto';
-                    this.imageElement.nativeElement.style.height = 'auto';
-                    this.imageElement.nativeElement.style.maxWidth = '100%';
-                    this.imageElement.nativeElement.style.maxHeight = '100vh';
-                  } else {
-                    // Fit image inside the dialog without scrollbars
-                    this.imageElement.nativeElement.style.width = '100%';
-                    this.imageElement.nativeElement.style.height = '100%';
-                    this.imageElement.nativeElement.style.maxWidth = '100%';
-                    this.imageElement.nativeElement.style.maxHeight = '100%';
-                    this.imageElement.nativeElement.style.objectFit = 'contain';
-                  }
-                }
+  // Popup Maximize
+  @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+
+  onDialogResize(event: any) {
+    this.isMaximized = event.maximized;
+
+    if (this.isMaximized) {
+      // Restore original image size when maximized
+      this.imageElement.nativeElement.style.width = 'auto';
+      this.imageElement.nativeElement.style.height = 'auto';
+      this.imageElement.nativeElement.style.maxWidth = '100%';
+      this.imageElement.nativeElement.style.maxHeight = '100vh';
+    } else {
+      // Fit image inside the dialog without scrollbars
+      this.imageElement.nativeElement.style.width = '100%';
+      this.imageElement.nativeElement.style.height = '100%';
+      this.imageElement.nativeElement.style.maxWidth = '100%';
+      this.imageElement.nativeElement.style.maxHeight = '100%';
+      this.imageElement.nativeElement.style.objectFit = 'contain';
+    }
+  }
+  /**
+     * @implements document number dynamic Vaildation
+     * @author k.yamuna
+     */
+  documentNumberDynamicValidation(docTypeName: any) {
+    if (DOCUMENT_TYPES.AADHAR == this.kycModel.kycDocumentTypeName) {
+      const controlTow = this.kycForm.get('documentNumber');
+      if (controlTow) {
+        controlTow.setValidators([
+          Validators.required,
+          Validators.pattern(applicationConstants.AADHAR_PATTERN)
+        ]);
+        controlTow.updateValueAndValidity();
+      }
+      this.isPanNumber = false;
+    }
+    else if (DOCUMENT_TYPES.PANNUMBER == this.kycModel.kycDocumentTypeName) {
+      const controlTow = this.kycForm.get('documentNumber');
+      if (controlTow) {
+        controlTow.setValidators([
+          Validators.required,
+          Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN)
+        ]);
+        controlTow.updateValueAndValidity();
+      }
+      this.isPanNumber = true;
+    }
+    else {
+      const controlTow = this.kycForm.get('documentNumber');
+      if (controlTow) {
+        controlTow.setValidators([
+          Validators.required,
+        ]);
+        controlTow.updateValueAndValidity();
+      }
+      this.isPanNumber = false;
+    }
+  }
 }
   

@@ -1,8 +1,7 @@
 <div class="col-12">
     <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
         [hideTransitionOptions]="'500ms'"></p-messages>
-    <h6 class="sub-heading">{{'DEMANDDEPOSITS.DOCUMENTS' | translate}}<span class="admission-text">(Admission
-            Number:&nbsp;{{admissionNumber}})</span></h6>
+    <h6 class="sub-heading">{{'ERP.REQUIRED_DOCUMENTS' | translate}}</h6>
     <div class="stepper-top-section-strip">
         <div class="row">
             <div class="col-lg-3 col-md-3 col-sm-12">
@@ -71,27 +70,6 @@
                                 <p-button icon="fa fa-trash" class="kyc-edit-btn ml-3" (click)="deletDilogBox(document)"
                                     [disabled]="editButtonDisable"></p-button>
 
-                                <!-- <div class="col-12 px-0"> 
-                                            <div class="col-12 px-0" *ngFor="let img of document.multipartFileList">
-                                                    <div class="col-12 p-0" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                        <a href="{{img.imageValue}}">
-                                                            <img src="{{img.imageValue}}" class="upload-img img-fluid" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                                        </a>
-                                                    </div>
-                                                    <div class="col-12 p-0" *ngIf=" img.fileType =='pdf'">
-                                                        <a href="{{img.imageValue}}">
-                                                            <img src="assets\images\pdf.png" class="pdf-img img-fluid" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div> -->
-                                <!-- <div class="col-12 border-top" *ngFor="let img of document.multipartFileList">
-                                                <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                    <a href="{{img.imageValue}}">
-                                                        <img src="{{img.imageValue}}" width="50px" height="50px" >
-                                                    </a>
-                                                </div>
-                                            </div> -->
                             </div>
                         </div>
                     </div>
@@ -105,7 +83,7 @@
                                     <label><span class="red">*</span>Document Type</label>
                                     <p-dropdown placeholder="{{'ERP.SELECT'| translate}}" formControlName="docTypeName"
                                         [options]="documentNameList" id="docTypeId"
-                                        [(ngModel)]="siLoanDocumentsModel.documentType">
+                                        [(ngModel)]="siLoanDocumentsModel.documentType" (onChange)="requiredDocumentDplicate(siLoanDocumentsModel.documentType)">
                                     </p-dropdown>
                                 </div>
                             </div>
@@ -113,8 +91,11 @@
                                 <div class="form-label">
                                     <label><span class="red">*</span>Document Number</label>
                                     <input id="documentNo" type="text" pInputText formControlName="docNumber"
-                                        [(ngModel)]="siLoanDocumentsModel.documentNo" pInputText
-                                        placeholder="Enter Document Number">
+                                        [(ngModel)]="siLoanDocumentsModel.documentNo" pInputText placeholder="Enter Document Number">
+                            
+                                    <p-message severity="error" text="Enter Valid Document Number "
+                                        *ngIf="!siDocumentDetailsForm.controls['docNumber'].valid && siDocumentDetailsForm.controls['docNumber'].dirty">
+                                    </p-message>
                                 </div>
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -173,7 +154,7 @@
                                     <label><span class="red">*</span>Document Type</label>
                                     <p-dropdown placeholder="{{'ERP.SELECT'| translate}}" formControlName="docTypeName"
                                         [options]="documentNameList" id="docTypeId"
-                                        [(ngModel)]="siLoanDocumentsModel.documentType">
+                                        [(ngModel)]="siLoanDocumentsModel.documentType" (onChange)="requiredDocumentDplicate(siLoanDocumentsModel.documentType)">
                                     </p-dropdown>
                                 </div>
                             </div>
@@ -183,6 +164,9 @@
                                     <input id="documentNo" type="text" pInputText formControlName="docNumber"
                                         [(ngModel)]="siLoanDocumentsModel.documentNo"
                                         placeholder="Enter Document Number">
+                                        <p-message severity="error" text="Enter Valid Document Number "
+                                        *ngIf="!siDocumentDetailsForm.controls['docNumber'].valid && siDocumentDetailsForm.controls['docNumber'].dirty">
+                                    </p-message>
                                 </div>
                             </div>
                             <!-- <div class="col-8">

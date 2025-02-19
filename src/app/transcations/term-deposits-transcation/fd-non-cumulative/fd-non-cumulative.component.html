@@ -172,7 +172,11 @@
                             {{rowData[col.field]}}
                         </div>
                     </div>
-
+                    <div *ngIf="rowData.accountStatusName == 'Closed'">
+                        <div class="status-style statusrequestforforeclosure" *ngIf="col.field =='accountStatusName'"> 
+                            {{rowData[col.field]}}
+                        </div>
+                    </div>
 
                     <div *ngIf="col.field !='accountStatusName' &&  col.field !='admissionNumber'">
                         {{rowData[col.field]}}</div>

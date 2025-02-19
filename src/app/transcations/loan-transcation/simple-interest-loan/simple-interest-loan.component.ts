@@ -57,6 +57,7 @@ export class SimpleInterestLoanComponent {
   multipartFileListForPhotoCopy: any;
   showDialog: boolean = false;
   showDialogs: boolean = false;
+  inProgressCount: any;
 
   constructor(private router: Router, private translate: TranslateService, private commonFunctionsService: CommonFunctionsService,
     private encryptDecryptService: EncryptDecryptService, private commonComponent: CommonComponent,
@@ -81,6 +82,7 @@ export class SimpleInterestLoanComponent {
       { field: 'accountNumber', header: 'ERP.ACCOUNT_NUMBER' },
       { field: 'admissionNo', header: 'ERP.ADMISSION_NUMBER' },
       { field: 'memberTypeName',header:'LOAN_TRANSACTION.MEMBER_TYPE'},
+      { field: 'accountTypeName', header: 'Account Type' },
       { field: 'applicationDateVal', header: 'ERP.APPLICATION_DATE' },
       { field: 'sanctionDateVal', header: 'ERP.SANCTION_DATE' },
       { field: 'repaymentFrequencyName', header: 'ERP.REPAYMENT_FREQUENCY' },
@@ -171,14 +173,65 @@ export class SimpleInterestLoanComponent {
             else {
               this.showDialogs = false;
             }
-            siLoan.isRejected = false;
-            if (siLoan.accountStatusName == CommonStatusData.APPROVED || siLoan.accountStatusName == CommonStatusData.REJECTED) {
-              if (siLoan.accountStatusName == CommonStatusData.REJECTED) {
-                siLoan.isRejected = true;
-              }
+            if ((siLoan.accountStatusName == CommonStatusData.SUBMISSION_FOR_APPROVAL) || (siLoan.accountStatusName == CommonStatusData.APPROVED)) {
               siLoan.viewButton = true;
-            } else {
+              siLoan.actionButton = false;
+            }
+            else {
+              siLoan.actionButton = true;
               siLoan.viewButton = false;
+            }
+            if (siLoan.accountStatusName == CommonStatusData.APPROVED) {
+              siLoan.approved = true;
+              siLoan.actionButton = false;
+              this.approvedCount = this.approvedCount + 1;
+
+            }
+            else if (siLoan.accountStatusName == CommonStatusData.REJECTED) {
+              siLoan.rejected = true;
+              siLoan.actionButton = false;
+              this.rejectCount = this.rejectCount + 1;
+            }
+            else if (siLoan.accountStatusName == CommonStatusData.SUBMISSION_FOR_APPROVAL) {
+              siLoan.submissionForApproval = true;
+              siLoan.actionButton = false;
+              this.submissionForApprovalCount = this.submissionForApprovalCount + 1;
+            }
+            else if (siLoan.accountStatusName == CommonStatusData.CREATED || siLoan.accountStatusName == CommonStatusData.IN_PROGRESS) {
+              siLoan.created = true;
+              siLoan.viewButton = true;
+              siLoan.actionButton = true;
+              this.inProgressCount = this.inProgressCount + 1;
+            }
+            else if (siLoan.accountStatusName == CommonStatusData.REQUEST_FOR_RESUBMISSION) {
+              siLoan.rejected = false;
+              siLoan.approved = false;
+              siLoan.submissionForApproval = false;
+              siLoan.actionButton = true;
+              siLoan.viewButton = true;
+              siLoan.requestForResubmmission = true;
+              this.requestForResubmmissionCount = this.requestForResubmmissionCount + 1;
+            }
+            else if (siLoan.accountStatusName == CommonStatusData.CLOSED) {
+              siLoan.rejected = false;
+              siLoan.approved = false;
+              siLoan.submissionForApproval = false;
+              siLoan.actionButton = true;
+              siLoan.viewButton = true;
+              siLoan.requestForResubmmission = false;
+              siLoan.closed = true;
+              this.requestForResubmmissionCount = this.requestForResubmmissionCount + 1;
+            }
+            else if (siLoan.accountStatusName == CommonStatusData.CLOSURE_REQUEST) {
+              siLoan.rejected = false;
+              siLoan.approved = false;
+              siLoan.submissionForApproval = false;
+              siLoan.actionButton = false;
+              siLoan.viewButton = true;
+              siLoan.requestForResubmmission = false;
+              siLoan.closed = false;
+              siLoan.closureRequest = true;
+              this.requestForResubmmissionCount = this.requestForResubmmissionCount + 1;
             }
 
             if (siLoan.balance == null || siLoan.balance == undefined || siLoan.balance == 0) {

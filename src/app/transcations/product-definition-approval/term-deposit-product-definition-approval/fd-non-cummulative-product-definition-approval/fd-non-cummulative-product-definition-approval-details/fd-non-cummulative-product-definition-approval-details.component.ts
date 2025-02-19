@@ -53,7 +53,7 @@ export class FdNonCummulativeProductDefinitionApprovalDetailsComponent {
   multipleFilesList: any[] = [];
   uploadFileData: any;
   roleName: any;
-
+  tenureTypeList: any[] = [];
 
   constructor(private commonComponent: CommonComponent, private formBuilder: FormBuilder, private commonStatusService: CommonCategoryService,
     private activateRoute: ActivatedRoute, private encryptService: EncryptDecryptService, private datePipe: DatePipe,
@@ -63,7 +63,8 @@ export class FdNonCummulativeProductDefinitionApprovalDetailsComponent {
   }
   ngOnInit(): void {
     this.roleName = this.commonFunctionsService.getStorageValue(applicationConstants.roleName);
-    this.orgnizationSetting = this.commonComponent.orgnizationSettings()
+    this.orgnizationSetting = this.commonComponent.orgnizationSettings();
+    this.tenureTypeList = this.commonComponent.tenureType();
     this.commonFunctionsService.data.subscribe((res: any) => {
       if (res) {
         this.translate.use(res);

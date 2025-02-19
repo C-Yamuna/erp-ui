@@ -188,7 +188,7 @@
                     <p-button label="{{'LOAN_TRANSACTION.VIEW' | translate}}" (click)="viewCompoundInterestDetails(rowData)" class="action-view"></p-button>
                     <p-dropdown *ngIf="rowData.approved" id="bunit_txt_status" class="action-operation" placeholder="operations"
                         [filter]="true" [options]="operationslist" [(ngModel)]="operations"
-                        (onChange)="navigateToOperations($event)" [appendTo]="'body'"></p-dropdown>
+                        (onChange)="navigateToOperations($event,rowData)" [appendTo]="'body'"></p-dropdown>
 
                 </div>
             </td>

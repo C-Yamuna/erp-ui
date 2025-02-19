@@ -15,6 +15,7 @@ import { FileUploadModel } from 'src/app/layout/mainmenu/shared/file-upload-mode
 import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-constants';
 import { KycDocumentTypesService } from 'src/app/configurations/common-config/kyc-document-types/shared/kyc-document-types.service';
 import { FileUploadService } from 'src/app/shared/file-upload.service';
+import { DOCUMENT_TYPES } from 'src/app/transcations/common-status-data.json';
 
 
 @Component({
@@ -88,7 +89,7 @@ export class GroupKYCComponent implements OnInit{
   saveButtonDisable: boolean= false;
   kycPhotoCopyZoom: boolean = false;
   isMaximized: boolean = false;
-
+  isPanNumber: boolean = false;
 
   constructor(private router: Router, private formBuilder: FormBuilder, private membershipGroupDetailsService: MembershipGroupDetailsService,
     private memberBasicDetailsStepperService:MemberBasicDetailsStepperService,
@@ -233,9 +234,12 @@ export class GroupKYCComponent implements OnInit{
 
 // set document name
   onChangeDocumnetTypesChange() {
-    let documnetTypes = this.docTypeList.find((data: any) => null != data && this.groupKycDeatilsModel.kycDocumentTypeId != null &&  data.value == this.groupKycDeatilsModel.kycDocumentTypeId);
+    let documnetTypes = this.docTypeList.find((data: any) => null != data && this.groupKycDeatilsModel.kycDocumentTypeId != null && data.value == this.groupKycDeatilsModel.kycDocumentTypeId);
     if (documnetTypes != null && undefined != documnetTypes)
-    this.groupKycDeatilsModel.kycDocumentTypeName = documnetTypes.label;
+      this.groupKycDeatilsModel.kycDocumentTypeName = documnetTypes.label;
+    if (this.groupKycDeatilsModel.kycDocumentTypeName != null && this.groupKycDeatilsModel != undefined) {
+      this.documentNumberDynamicValidation(this.groupKycDeatilsModel.kycDocumentTypeName);
+    }
   }
 
   updateData() {
@@ -400,6 +404,9 @@ export class GroupKYCComponent implements OnInit{
           else{
             this.saveButtonDisable = false;
           }
+          if(this.groupKycDeatilsModel.kycDocumentTypeName != null && this.groupKycDeatilsModel.kycDocumentTypeName != undefined){
+            this.documentNumberDynamicValidation(this.groupKycDeatilsModel.kycDocumentTypeName );
+          }
         }
       }
     });
@@ -476,18 +483,24 @@ export class GroupKYCComponent implements OnInit{
     reader.readAsDataURL(file);
   }
 
-  kycModelDuplicateCheck(kycDocTypeId:any){
-    if(this.kycModelList != null && this.kycModelList != undefined && this.kycModelList.length > 0){
-    let duplicate = this.kycModelList.find((obj:any) => obj && obj.kycDocumentTypeId === kycDocTypeId );
-    if (duplicate != null && duplicate != undefined) {
-      this.groupKYCForm.reset();
-      this.msgs = [];
-      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.DOCUMENT_TYPE_ALREADY_EXIST}];
-      setTimeout(() => {
+  kycModelDuplicateCheck(kycDocTypeId: any) {
+    if (this.kycModelList != null && this.kycModelList != undefined && this.kycModelList.length > 0) {
+      let duplicate = this.kycModelList.find((obj: any) => obj && obj.kycDocumentTypeId === kycDocTypeId);
+      if (duplicate != null && duplicate != undefined) {
+        this.groupKYCForm.reset();
         this.msgs = [];
-      }, 3000);
-    } 
-  }
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.DOCUMENT_TYPE_ALREADY_EXIST }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      }
+    }
+    let documnetTypes = this.docTypeList.find((data: any) => null != data && this.groupKycDeatilsModel.kycDocumentTypeId != null && data.value == this.groupKycDeatilsModel.kycDocumentTypeId);
+    if (documnetTypes != null && undefined != documnetTypes)
+      this.groupKycDeatilsModel.kycDocumentTypeName = documnetTypes.label;
+    if (this.groupKycDeatilsModel.kycDocumentTypeName != null && this.groupKycDeatilsModel != undefined) {
+      this.documentNumberDynamicValidation(this.groupKycDeatilsModel.kycDocumentTypeName);
+    }
   }
   delete(rowDataId: any) {
     this.groupKycDetailsService.deleteGroupKycDetails(rowDataId).subscribe((response: any) => {
@@ -542,37 +555,75 @@ export class GroupKYCComponent implements OnInit{
       this.groupKycDeatilsModel.filesDTO = null;
     }
   }
-      // KYC
-      onClickkycPhotoCopy(rowData :any){
-        this.multipleFilesList = [];
-        this.kycPhotoCopyZoom = true;
-        this.multipleFilesList = rowData.multipleFilesList;
-      }
-      kycclosePhoto(){
-        this.kycPhotoCopyZoom = false;
-      }
-      kycclosePhotoCopy() {
-        this.kycPhotoCopyZoom = false;
-      }
-       // Popup Maximize
-        @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
-        
-          onDialogResize(event: any) {
-            this.isMaximized = event.maximized;
-        
-            if (this.isMaximized) {
-              // Restore original image size when maximized
-              this.imageElement.nativeElement.style.width = 'auto';
-              this.imageElement.nativeElement.style.height = 'auto';
-              this.imageElement.nativeElement.style.maxWidth = '100%';
-              this.imageElement.nativeElement.style.maxHeight = '100vh';
-            } else {
-              // Fit image inside the dialog without scrollbars
-              this.imageElement.nativeElement.style.width = '100%';
-              this.imageElement.nativeElement.style.height = '100%';
-              this.imageElement.nativeElement.style.maxWidth = '100%';
-              this.imageElement.nativeElement.style.maxHeight = '100%';
-              this.imageElement.nativeElement.style.objectFit = 'contain';
-            }
+  // KYC
+  onClickkycPhotoCopy(rowData: any) {
+    this.multipleFilesList = [];
+    this.kycPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipleFilesList;
+  }
+  kycclosePhoto() {
+    this.kycPhotoCopyZoom = false;
+  }
+  kycclosePhotoCopy() {
+    this.kycPhotoCopyZoom = false;
+  }
+  // Popup Maximize
+  @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+
+  onDialogResize(event: any) {
+    this.isMaximized = event.maximized;
+
+    if (this.isMaximized) {
+      // Restore original image size when maximized
+      this.imageElement.nativeElement.style.width = 'auto';
+      this.imageElement.nativeElement.style.height = 'auto';
+      this.imageElement.nativeElement.style.maxWidth = '100%';
+      this.imageElement.nativeElement.style.maxHeight = '100vh';
+    } else {
+      // Fit image inside the dialog without scrollbars
+      this.imageElement.nativeElement.style.width = '100%';
+      this.imageElement.nativeElement.style.height = '100%';
+      this.imageElement.nativeElement.style.maxWidth = '100%';
+      this.imageElement.nativeElement.style.maxHeight = '100%';
+      this.imageElement.nativeElement.style.objectFit = 'contain';
+    }
+  }
+  /**
+       * @implements document number dynamic Vaildation
+       * @author k.yamuna
+       */
+       documentNumberDynamicValidation(docTypeName: any) {
+        if (DOCUMENT_TYPES.AADHAR == this.groupKycDeatilsModel.kycDocumentTypeName) {
+          const controlTow = this.groupKYCForm.get('documentNumber');
+          if (controlTow) {
+            controlTow.setValidators([
+              Validators.required,
+              Validators.pattern(applicationConstants.AADHAR_PATTERN)
+            ]);
+            controlTow.updateValueAndValidity();
           }
+          this.isPanNumber = false;
+        }
+        else if (DOCUMENT_TYPES.PANNUMBER == this.groupKycDeatilsModel.kycDocumentTypeName) {
+          const controlTow = this.groupKYCForm.get('documentNumber');
+          if (controlTow) {
+            controlTow.setValidators([
+              Validators.required,
+              Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN)
+            ]);
+            controlTow.updateValueAndValidity();
+          }
+          this.isPanNumber = true;
+        }
+        else {
+          const controlTow = this.groupKYCForm.get('documentNumber');
+          if (controlTow) {
+            controlTow.setValidators([
+              Validators.required,
+            ]);
+            controlTow.updateValueAndValidity();
+          }
+          this.isPanNumber = false;
+        }
+      }
 }

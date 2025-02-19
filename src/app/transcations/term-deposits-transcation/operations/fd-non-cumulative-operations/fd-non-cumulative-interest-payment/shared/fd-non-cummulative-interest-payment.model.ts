@@ -52,6 +52,8 @@ export class FdNonCummulativeInterestPayment {
     multipartFileListsignedCopyPath: any;
 
     multipartFileList: any;
+
+    transactionModeName:any;
 }
 export class FdNonCummulativeTransaction {
    id: any;
@@ -108,6 +110,5 @@ export class FdNonCummulativeTransaction {
 
    multipartFileList: any;
 
-   totalInterestAmount:any;
 }
 

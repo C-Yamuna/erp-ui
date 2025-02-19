@@ -112,6 +112,13 @@ import { SimpleInterestProductConfigurationComponent } from './simple-interest-l
 import { TermLoanNewMembershipComponent } from './term-loan/term-loan-stepper/term-loan-new-membership/term-loan-new-membership.component';
 import { TermLoanMembershipComponent } from './term-loan/term-loan-stepper/term-loan-membership/term-loan-membership.component';
 import { CiLoanPreviewComponent } from './compound-interest-loan/compound-interest-loan-stepper/ci-loan-preview/ci-loan-preview.component';
+import { CiLoanDisbursementComponent } from './compound-interest-loan/ci-loan-operations/ci-loan-disbursement/ci-loan-disbursement.component';
+import { CiLoanCollectionComponent } from './compound-interest-loan/ci-loan-operations/ci-loan-collection/ci-loan-collection.component';
+import { CiLoanClosureComponent } from './compound-interest-loan/ci-loan-operations/ci-loan-closure/ci-loan-closure.component';
+import { TermLoanDisbursementComponent } from './term-loan/term-loan-operations/term-loan-disbursement/term-loan-disbursement.component';
+import { TermLoanCollectionComponent } from './term-loan/term-loan-operations/term-loan-collection/term-loan-collection.component';
+import { SiLoanApprovalComponent } from '../approval-transcations/loans-approvals/si-loan-approval-details/si-loan-approval/si-loan-approval.component';
+import { SiLoanApprovalDetailsComponent } from '../approval-transcations/loans-approvals/si-loan-approval-details/si-loan-approval-details.component';
 
   
 
@@ -165,6 +172,8 @@ const routes: Routes = [
 
       { path: 'term_loans' , component:TermLoanComponent},
       { path: 'preview_term_loan' , component:TermLoanPreviewComponent},
+      { path: 'term_loan_disbursment' , component:TermLoanDisbursementComponent},
+      { path: 'term_loan_collection' , component:TermLoanCollectionComponent},
       { path: 'term_loans_stepper',component:TermLoanStepperComponent,
       children: [
         { path: 'term_loans_product_details', component:TermLoansProductDetailsComponent },
@@ -185,6 +194,9 @@ const routes: Routes = [
     },
       { path: 'simple_interest_loans' , component:SimpleInterestLoanComponent},
       { path: 'view_simple_interest_loan' , component:ViewSimpleInterestLoanComponent},
+      { path: 'si_loan_approval' , component:SiLoanApprovalComponent},
+      { path: 'si_loan_approval_details_transaction' , component:SiLoanApprovalDetailsComponent},
+
       { path: 'simple_interest_loan_disbursement' , component:SimpleInterestLoanDisbursementComponent},
       { path: 'simple_interest_loan_collections' , component:SimpleInterestLoanCollectionComponent},
       { path: 'simple_interest_loan_closure' , component:SimpleInterestLoanClosureComponent},
@@ -207,6 +219,9 @@ const routes: Routes = [
       { path: 'compound_interest_loans_stepper',component:CompoundInterestLoanStepperComponent},
       { path: 'compound_interest_loans_preview', component:CiLoanPreviewComponent },
       { path: 'edit_loans',component:EditLoansComponent},
+      { path: 'ci_loan_disbursement' , component:CiLoanDisbursementComponent},
+      { path: 'ci_loan_collection' , component:CiLoanCollectionComponent},
+      { path: 'ci_loan_closure' , component:CiLoanClosureComponent},
       { path: 'compound_interest_loans_stepper',component:CompoundInterestLoanStepperComponent,
     
       children: [

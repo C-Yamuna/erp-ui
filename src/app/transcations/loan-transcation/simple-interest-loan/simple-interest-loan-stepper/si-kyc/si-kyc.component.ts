@@ -18,7 +18,7 @@ import { SiLoanApplication } from '../../../shared/si-loans/si-loan-application.
 import { InstitutionPromoterDetailsModel, MemberGroupDetailsModel, MembershipBasicRequiredDetails, MembershipInstitutionDetailsModel, promoterDetailsModel } from '../../../shared/si-loans/si-loan-membership-details.model';
 import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-constants';
 import { FileUploadService } from 'src/app/shared/file-upload.service';
-import { MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
+import { DOCUMENT_TYPES, MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-si-kyc',
@@ -111,7 +111,8 @@ export class SiKycComponent {
   groupFlag : boolean = false;
   institutionFlag : boolean = false;
   promotersList: any [] =[];
-  buttonFlag:  boolean = false;
+  isPanNumber: boolean = false;
+  buttonDisabledForKyc :boolean = false;
 
   constructor(private formBuilder: FormBuilder,
     private commonComponent: CommonComponent, private activateRoute: ActivatedRoute,
@@ -164,6 +165,7 @@ export class SiKycComponent {
       this.siLoanKycService.currentStep.subscribe((data: any) => {
         this.kycModelList = [];
         this.promotersList =[];
+        this.memberTypeName = null;
         if (data != undefined && data != null) {
           // this.buttonDisabled = data.isDisable
           if (data.data != null && data.data != undefined) {
@@ -179,15 +181,11 @@ export class SiKycComponent {
                 this.kycModelList = data.data.individualMemberDetailsDTO.memberShipKycDetailsDTOList;
                 if (this.kycModelList != null && this.kycModelList != undefined) {
                   this.editDocumentOfKycFalg = true;
-                  this.buttonFlag = true;
                   for (let kyc of this.kycModelList) {
                     if (kyc.kycFilePath != null && kyc.kycFilePath != undefined) {
                       kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
                     }
                   }
-                }
-                else{
-                  this.buttonFlag = false;
                 }
               }
             }
@@ -198,6 +196,7 @@ export class SiKycComponent {
 
               this.memberGroupDetailsModel = data.data.memberGroupDetailsDTO;
               this.memberTypeName = data.data.memberGroupDetailsDTO.memberTypeName;
+              this.admissionNumber = data.data.memberGroupDetailsDTO.admissionNumber;
               if (data.data.memberGroupDetailsDTO.groupKycList != null) {
 
                 if(data.data.memberGroupDetailsDTO.groupPromoterList != null && data.data.memberGroupDetailsDTO.groupPromoterList != undefined && data.data.memberGroupDetailsDTO.groupPromoterList.length >0){
@@ -216,15 +215,11 @@ export class SiKycComponent {
                 this.kycModelList = data.data.memberGroupDetailsDTO.groupKycList;
                 if (this.kycModelList != null && this.kycModelList != undefined) {
                   this.editDocumentOfKycFalg = true;
-                  this.buttonFlag = true;
                   for (let kyc of this.kycModelList) {
                     if (kyc.kycFilePath != null && kyc.kycFilePath != undefined) {
                       kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
                     }
                   }
-                }
-                else{
-                  this.buttonFlag = false;
                 }
               }
             }
@@ -235,6 +230,7 @@ export class SiKycComponent {
 
               this.membershipInstitutionDetailsModel = data.data.memberInstitutionDTO;
               this.memberTypeName = data.data.memberInstitutionDTO.memberTypeName;
+              this.admissionNumber = data.data.memberInstitutionDTO.admissionNumber;
               if (data.data.memberInstitutionDTO.institutionKycDetailsDTOList != null) {
 
                 if(data.data.memberInstitutionDTO.institutionPrmotersList != null && data.data.memberInstitutionDTO.institutionPrmotersList != undefined && data.data.memberInstitutionDTO.institutionPrmotersList.length >0){
@@ -253,15 +249,11 @@ export class SiKycComponent {
                 this.kycModelList = data.data.memberInstitutionDTO.institutionKycDetailsDTOList;
                 if (this.kycModelList != null && this.kycModelList != undefined) {
                   this.editDocumentOfKycFalg = true;
-                  this.buttonFlag = true;
                   for (let kyc of this.kycModelList) {
                     if (kyc.kycFilePath != null && kyc.kycFilePath != undefined) {
                       kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
                     }
                   }
-                }
-                else{
-                  this.buttonFlag = false;
                 }
               }
             }
@@ -354,17 +346,17 @@ export class SiKycComponent {
             if (this.siLoanApplicationModel.memberGroupDetailsDTO != undefined && this.siLoanApplicationModel.memberGroupDetailsDTO != null) {
               this.memberGroupDetailsModel = this.siLoanApplicationModel.memberGroupDetailsDTO;
 
-              if (this.membershipBasicRequiredDetailsModel.admissionDate != null && this.membershipBasicRequiredDetailsModel.admissionDate != undefined)
-                this.memberGroupDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
+              if (this.memberGroupDetailsModel.admissionDate != null && this.memberGroupDetailsModel.admissionDate != undefined)
+                this.memberGroupDetailsModel.admissionDateVal = this.datePipe.transform(this.memberGroupDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
+
+              if (this.memberGroupDetailsModel.registrationDate != null && this.memberGroupDetailsModel.registrationDate != undefined)
+                this.memberGroupDetailsModel.registrationDateVal = this.datePipe.transform(this.memberGroupDetailsModel.registrationDate, this.orgnizationSetting.datePipe);
 
               if (this.siLoanApplicationModel.memberGroupDetailsDTO.isNewMember != undefined
                 && this.siLoanApplicationModel.memberGroupDetailsDTO.isNewMember != null){
                   this.isMemberCreation = this.siLoanApplicationModel.memberGroupDetailsDTO.isNewMember;
-                  
                 }
-               
             }
-
             if (this.siLoanApplicationModel.memberInstitutionDTO != undefined && this.siLoanApplicationModel.memberInstitutionDTO != null) {
               this.membershipInstitutionDetailsModel = this.siLoanApplicationModel.memberInstitutionDTO;
 
@@ -483,9 +475,19 @@ export class SiKycComponent {
         isDisable: this.saveAndNextEnable,
         stepperIndex: 1,
       });
-    }else{
-      if(this.kycModelList != null && this.kycModelList != undefined && this.kycModelList.length > 0 && this.buttonFlag){
+    }
+    else{
+      this.siLoanKycModel.siLoanApplicationId = this.loanAccId;
+      this.siLoanKycModel.admissionNumber = this.admissionNumber;
+      this.siLoanKycModel.memberTypeName = this.memberTypeName;
+      this.siLoanKycModel.memberType = this.memberTypeId;
+      this.siLoanKycModel.memberId = this.memberId;
+      if(this.kycModelList != null && this.kycModelList != undefined && this.kycModelList.length > 0){
+       
+      this.siLoanApplicationModel.memberTypeName = this.memberTypeName;
+        if(!this.buttonDisabled ){
           this.saveAndNextEnable = false;
+        }
         }
         else{
           this.saveAndNextEnable = true;
@@ -625,7 +627,6 @@ export class SiKycComponent {
     this.siLoanKycModel.memberType = this.memberTypeId;
     this.siLoanKycModel.memberId = this.memberId;
     this.siLoanKycModel.isNewMember = this.isMemberCreation;
-    this.buttonFlag = true;
     if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0) {
       let filteredObj = this.documentNameList.find((data: any) => null != data && this.siLoanKycModel.kycDocumentTypeId != null && data.value == this.siLoanKycModel.kycDocumentTypeId);
       if (filteredObj != null && undefined != filteredObj && filteredObj.label != null && filteredObj.label != undefined) {
@@ -669,14 +670,16 @@ export class SiKycComponent {
         this.promotersList = this.siLoanApplicationModel.memberGroupDetailsDTO.groupPromoterList.map((promoter: any) => {
           return { label: promoter.name+" "+promoter.surname +"-"+promoter.aadharNumber, value: promoter.id }
         });
-        this.siLoanApplicationModel.siLoanKycDetailsDTOList.filter((obj:any) => obj != null).map((obj:any) =>{
-          if(this.promotersList != null && this.promotersList != undefined && this.promotersList.length > 0){
-            let filteredObj = this.promotersList.find((data: any) => null != data && obj.promoterId != null && data.value == obj.promoterId);
-            if (filteredObj != null && undefined != filteredObj && filteredObj.label != null && filteredObj.label != undefined){
-              obj.promoterName = filteredObj.label;
+        if(this.siLoanApplicationModel.siLoanKycDetailsDTOList != null && this.siLoanApplicationModel.siLoanKycDetailsDTOList.length >0){
+          this.siLoanApplicationModel.siLoanKycDetailsDTOList.filter((obj:any) => obj != null).map((obj:any) =>{
+            if(this.promotersList != null && this.promotersList != undefined && this.promotersList.length > 0){
+              let filteredObj = this.promotersList.find((data: any) => null != data && obj.promoterId != null && data.value == obj.promoterId);
+              if (filteredObj != null && undefined != filteredObj && filteredObj.label != null && filteredObj.label != undefined){
+                obj.promoterName = filteredObj.label;
+              }
             }
-          }
-        });
+          });
+        }
       }
     } else if (this.memberTypeName == "Institution") {
       this.institutionFlag = true;
@@ -684,21 +687,25 @@ export class SiKycComponent {
         this.promotersList = this.siLoanApplicationModel.memberInstitutionDTO.institutionPromoterList.map((promoter: any) => {
           return { label: promoter.name+" "+promoter.surname+"-"+promoter.aadharNumber, value: promoter.id }
         });
-        this.siLoanApplicationModel.siLoanKycDetailsDTOList.filter((obj:any) => obj != null).map((obj:any) =>{
-          if(this.promotersList != null && this.promotersList != undefined && this.promotersList.length > 0){
-            let filteredObj = this.promotersList.find((data: any) => null != data && obj.promoterId != null && data.value == obj.promoterId);
-            if (filteredObj != null && undefined != filteredObj && filteredObj.label != null && filteredObj.label != undefined){
-              obj.promoterName = filteredObj.label;
+        if(this.siLoanApplicationModel.siLoanKycDetailsDTOList != null && this.siLoanApplicationModel.siLoanKycDetailsDTOList.length >0){
+          this.siLoanApplicationModel.siLoanKycDetailsDTOList.filter((obj:any) => obj != null).map((obj:any) =>{
+            if(this.promotersList != null && this.promotersList != undefined && this.promotersList.length > 0){
+              let filteredObj = this.promotersList.find((data: any) => null != data && obj.promoterId != null && data.value == obj.promoterId);
+              if (filteredObj != null && undefined != filteredObj && filteredObj.label != null && filteredObj.label != undefined){
+                obj.promoterName = filteredObj.label;
+              }
             }
-          }
-        });
+          });
+        }
       }
     }
     
   }
   //add kyc 
   addKyc() {
+    this.isFileUploaded = applicationConstants.FALSE;
     this.getAllKycTypes();
+    this.kycForm.reset();
     this.multipleFilesList = [];
     this.addDocumentOfKycFalg = !this.addDocumentOfKycFalg;
     this.buttonDisabled = true;
@@ -724,8 +731,8 @@ export class SiKycComponent {
     this.addDocumentOfKycFalg = true;
   }
 
-  //click on edit and populate data on form and save & next disable purpose
-  toggleEditForm(index: number, modelData: any): void {
+   //click on edit and populate data on form and save & next disable purpose
+   toggleEditForm(index: number, modelData: any): void {
     if (this.editIndex === index) {
       this.editIndex = index;
     } else {
@@ -737,7 +744,6 @@ export class SiKycComponent {
     this.editDocumentOfKycFalg = false;
     this.addDocumentOfKycFalg = false;
     this.saveAndNextEnable = true;
-    this.buttonFlag = false;
     if (this.loanAccId != undefined){
       this.getKycById(modelData.id);
     }
@@ -766,6 +772,9 @@ export class SiKycComponent {
                   this.siLoanKycModel.multipartFileList = this.fileUploadService.getFile(this.siLoanKycModel.kycFilePath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.siLoanKycModel.kycFilePath);
                   this.isFileUploaded = applicationConstants.TRUE;
                 }
+              }
+              if(this.siLoanKycModel.kycDocumentTypeName != null && this.siLoanKycModel.kycDocumentTypeName != undefined){
+                this.documentNumberDynamicValidation(this.siLoanKycModel.kycDocumentTypeName );
               }
             }
           }
@@ -803,7 +812,6 @@ export class SiKycComponent {
     this.editDocumentOfKycFalg = true;
     this.buttonDisabled = false;
     this.editButtonDisable = false;
-    this.buttonFlag = true;
     this.siLoanKycService.updateSILoanKYCDetails(this.siLoanKycModel).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
@@ -831,12 +839,14 @@ export class SiKycComponent {
     });
   }
 
-  onChangeDocument(event: any) {
-    let filteredObj = this.documentNameList.find((data: any) => null != data && event != null && data.value == event);
+  onChangeDocument() {
+    let filteredObj = this.documentNameList.find((data: any) => null != data && this.siLoanKycModel != null && data.value == this.siLoanKycModel.kycDocumentTypeId);
     if (filteredObj != null && undefined != filteredObj)
       this.siLoanKycModel.kycDocumentTypeName = filteredObj.label;
+      if (this.siLoanKycModel.kycDocumentTypeName != null && this.siLoanKycModel != undefined) {
+        this.documentNumberDynamicValidation(this.siLoanKycModel.kycDocumentTypeName);
+      }
   }
-
   kycModelDuplicateCheck(kycModelList: any) {
     let duplicate = false;
     const uniqueIds = new Set<number>();
@@ -897,6 +907,13 @@ export class SiKycComponent {
         }
       }
     }
+    let filteredObj = this.documentNameList.find((data: any) => null != data && this.siLoanKycModel != null && data.value == this.siLoanKycModel.kycDocumentTypeId);
+    if (filteredObj != null && undefined != filteredObj)
+      this.siLoanKycModel.kycDocumentTypeName = filteredObj.label;
+      if (this.siLoanKycModel.kycDocumentTypeName != null && this.siLoanKycModel != undefined) {
+        this.documentNumberDynamicValidation(this.siLoanKycModel.kycDocumentTypeName);
+      }
+    
 
   }
    
@@ -936,6 +953,8 @@ export class SiKycComponent {
                 kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
               }
             }
+            this.isFileUploaded = applicationConstants.TRUE;
+            this.updateData();
           }
         }
       }
@@ -946,6 +965,7 @@ export class SiKycComponent {
         this.msgs = [];
       }, 3000);
     });
+    
   }
 
   getGroupDetailsByAdmissionNumber(admissionNUmber: any) {
@@ -962,6 +982,8 @@ export class SiKycComponent {
                 kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
               }
             }
+            this.isFileUploaded = applicationConstants.TRUE;
+            this.updateData();
           }
         }
       }
@@ -988,6 +1010,8 @@ export class SiKycComponent {
                 kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
               }
             }
+            this.isFileUploaded = applicationConstants.TRUE;
+            this.updateData();
           }
         }
       }
@@ -998,17 +1022,56 @@ export class SiKycComponent {
         this.msgs = [];
       }, 3000);
     });
+   
   }
 
-  fileRemoeEvent(){
-      this.isFileUploaded = applicationConstants.FALSE; // upload validation
-      if(this.siLoanKycModel.filesDTOList != null && this.siLoanKycModel.filesDTOList != undefined && this.siLoanKycModel.filesDTOList.length > 0){
-       let removeFileIndex = this.siLoanKycModel.filesDTOList.findIndex((obj:any) => obj && obj.fileName === this.siLoanKycModel.kycFilePath);
-       if(removeFileIndex != null && removeFileIndex != undefined){
-         this.siLoanKycModel.filesDTOList[removeFileIndex] = null;
-         this.siLoanKycModel.kycFilePath = null;
-       }
+  fileRemoeEvent() {
+    this.isFileUploaded = applicationConstants.FALSE; // upload validation
+    if (this.siLoanKycModel.filesDTOList != null && this.siLoanKycModel.filesDTOList != undefined && this.siLoanKycModel.filesDTOList.length > 0) {
+      let removeFileIndex = this.siLoanKycModel.filesDTOList.findIndex((obj: any) => obj && obj.fileName === this.siLoanKycModel.kycFilePath);
+      if (removeFileIndex != null && removeFileIndex != undefined) {
+        this.siLoanKycModel.filesDTOList[removeFileIndex] = null;
+        this.siLoanKycModel.kycFilePath = null;
       }
-     }
+    }
+  }
+  /**
+      * @implements document number dynamic Vaildation
+      * @author k.yamuna
+      */
+  documentNumberDynamicValidation(docTypeName: any) {
+    if (DOCUMENT_TYPES.AADHAR == this.siLoanKycModel.kycDocumentTypeName) {
+      const controlTow = this.kycForm.get('documentNumber');
+      if (controlTow) {
+        controlTow.setValidators([
+          Validators.required,
+          Validators.pattern(applicationConstants.AADHAR_PATTERN)
+        ]);
+        controlTow.updateValueAndValidity();
+      }
+      this.isPanNumber = false;
+    }
+    else if (DOCUMENT_TYPES.PANNUMBER == this.siLoanKycModel.kycDocumentTypeName) {
+      const controlTow = this.kycForm.get('documentNumber');
+      if (controlTow) {
+        controlTow.setValidators([
+          Validators.required,
+          Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN)
+        ]);
+        controlTow.updateValueAndValidity();
+      }
+      this.isPanNumber = true;
+    }
+    else {
+      const controlTow = this.kycForm.get('documentNumber');
+      if (controlTow) {
+        controlTow.setValidators([
+          Validators.required,
+        ]);
+        controlTow.updateValueAndValidity();
+      }
+      this.isPanNumber = false;
+    }
+  }
 
 }

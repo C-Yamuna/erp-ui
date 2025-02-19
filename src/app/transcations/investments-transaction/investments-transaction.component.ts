@@ -56,7 +56,7 @@ export class InvestmentsTransactionComponent implements OnInit {
       { field: 'depositAmount', header: 'INVESTMENTS_TRANSACTIONS.DEPOSIT_AMOUNT_EACH_SHARE_AMOUNT' },
       { field: 'roi', header: 'INVESTMENTS_TRANSACTIONS.ROI' },
       { field: 'depositDate', header: 'INVESTMENTS_TRANSACTIONS.DEPOSIT_DATE_PURCHASE_DATE' },
-      { field: 'statusName', header: 'INVESTMENTS_TRANSACTIONS.STATUS' },
+      { field: 'accountStatusName', header: 'INVESTMENTS_TRANSACTIONS.STATUS' },
     ];
 
     this.investmentOperationsList = [

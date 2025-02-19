@@ -29,4 +29,9 @@ export class CiDisbursementsService {
   ciDisbursementApproval(loansModel: any) {
     return this.commonHttpService.put(loansModel,Headers, ERP_TRANSACTION_CONSTANTS.LOANS+ ERP_TRANSACTION_CONSTANTS.CI_DISBURSEMENTS + ERP_TRANSACTION_CONSTANTS.CI_DISBURSEMENT_APPROVAL)
   }
+
+  getCILoanDisbursementsByCIApplicationId(id:any){
+    let headers = new HttpHeaders({ 'id': id + '' })
+    return this.commonHttpService.getById(headers,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.CI_DISBURSEMENTS + ERP_TRANSACTION_CONSTANTS.GET_CI_DISBURSEMENT_BY_CI_APPLICATION_ID);
+  }
 }

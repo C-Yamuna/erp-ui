@@ -76,7 +76,7 @@ export class CiLoanCoApplicantDetailsComponent {
 
     this.jointAccountForm = this.formBuilder.group({
       admissionNumber: [''],
-      noOfJointHolders: ['']
+      noOfJointHolders:  [{ value: '', disabled: true }],
     });
   }
   ngOnInit(): void {
@@ -135,6 +135,16 @@ export class CiLoanCoApplicantDetailsComponent {
             }
             if (this.ciLoanApplicationModel.accountNumber != null && this.ciLoanApplicationModel.accountNumber != undefined) {
               this.accountNumber = this.ciLoanApplicationModel.accountNumber;
+            }
+            if (this.ciLoanApplicationModel.admissionNo != null && this.ciLoanApplicationModel.admissionNo != undefined) {
+              this.admissionNumber = this.ciLoanApplicationModel.admissionNo;
+              if(this.membershipList != null && this.membershipList != undefined && this.membershipList.length >0){
+                this.admissionNumberList = this.membershipList.filter((obj: any) => obj != null && obj.memberTypeId == applicationConstants.ACTIVE && obj.statusName == CommonStatusData.APPROVED && obj.admissionNumber != this.admissionNumber).map((relationType: { id: any; name: any; admissionNumber: any; memberTypeName: any }) => {
+                  return {
+                    label: relationType.admissionNumber
+                  };
+                });
+              }
             }
             if (this.ciLoanApplicationModel.ciLoanCoApplicantDetailsDTOList != null) {
               this.jointHolderDetailsList = this.ciLoanApplicationModel.ciLoanCoApplicantDetailsDTOList;
@@ -241,10 +251,17 @@ export class CiLoanCoApplicantDetailsComponent {
     //   const existingIndex = this.jointHolderDetailsList.findIndex(
     //     promoter => promoter.admissionNumber === admissionNumber);
       this.jointHolderDetailsList = [];
+      this.numberOfJointHolders = 0;
       this.updateData();
     // }
   }
 
+  /**
+   * @implements get all type membership details
+   * @param pacsId 
+   * @param branchId 
+   * @author jyothi.naidana
+   */
   getAllTypeOfMembershipDetails(pacsId: any, branchId: any) {
     this.membershipDetailsService.getAllTypeOfMemberDetailsListFromMemberModule(pacsId, branchId).subscribe((response: any) => {
       this.responseModel = response;
@@ -252,7 +269,7 @@ export class CiLoanCoApplicantDetailsComponent {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.membershipList = this.responseModel.data;
-            this.admissionNumberList = this.membershipList.filter((obj: any) => obj != null && obj.memberTypeId == 1 && obj.statusName == CommonStatusData.APPROVED).map((relationType: { id: any; name: any; admissionNumber: any; memberTypeName: any }) => {
+            this.admissionNumberList = this.membershipList.filter((obj: any) => obj != null && obj.memberTypeId == applicationConstants.ACTIVE && obj.statusName == CommonStatusData.APPROVED && obj.admissionNumber != this.admissionNumber).map((relationType: { id: any; name: any; admissionNumber: any; memberTypeName: any }) => {
               return {
                 label: relationType.admissionNumber
               };

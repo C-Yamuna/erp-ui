@@ -47,7 +47,7 @@
                 </div>
 
 
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="!accountTypeDropDownHide">
                     <div class="form-label">
                     <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.ACCOUNT_TYPE' | translate}}</label>
                         <p-dropdown [options]="accountList" placeholder="{{'ERP.SELECT' | translate}}"
@@ -78,7 +78,8 @@
                     <div class="form-label">
                         <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.DEPOSIT_AMOUNT' | translate}}</label>
                             <input pInputText id="state_txt_name" type="text" formControlName="depositAmount"
-                                [(ngModel)]=" rdAccountModel.depositAmount" placeholder="Enter Amount">
+                                [(ngModel)]=" rdAccountModel.depositAmount" placeholder="Enter Amount"
+                                (focusout)="calculateMaturity()">
                     </div>
                 </div>
                 <!-- <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
@@ -92,14 +93,16 @@
                     <div class="form-label">
                         <label>{{'TERMDEPOSITSTRANSACTION.TENURE_IN_MONTHS' | translate}}</label>
                             <input pInputText id="state_txt_name" type="text" formControlName="tenureInMonths"
-                                [(ngModel)]=" rdAccountModel.tenureInMonths" placeholder="Enter Tenure (In Months)">
+                                [(ngModel)]=" rdAccountModel.tenureInMonths" placeholder="Enter Tenure (In Months)"
+                                (focusout)="calculateMaturity()">
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label>{{'TERMDEPOSITSTRANSACTION.TENURE_IN_YEARS' | translate}}</label>
                             <input pInputText id="state_txt_name" type="text" formControlName="tenureInYears"
-                                [(ngModel)]=" rdAccountModel.tenureInYears" placeholder="Enter Tenure (In Years)">
+                                [(ngModel)]=" rdAccountModel.tenureInYears" placeholder="Enter Tenure (In Years)"
+                                (focusout)="calculateMaturity()">
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
@@ -171,7 +174,7 @@
                                                         |translate}}</h6>
                                                     <p class="label-input-text"> {{
                                                         recurringDepositProductDefinitionModel.isSpecialScheme ? 'Yes' :
-                                                        'No' }}
+                                                        ' ' }}
                                                     </p>
                                                 </div>
                                                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
@@ -199,7 +202,7 @@
                                                     <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.IS_AUTO_RENEWAL'
                                                         |translate}}</h6>
                                                     <p class="label-input-text">{{
-                                                        recurringDepositProductDefinitionModel.isAutoRenewal ? 'Yes' : 'No'}}</p>
+                                                        recurringDepositProductDefinitionModel.isAutoRenewal ? 'Yes' : ' '}}</p>
                                                 </div>
                                               
                                                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">

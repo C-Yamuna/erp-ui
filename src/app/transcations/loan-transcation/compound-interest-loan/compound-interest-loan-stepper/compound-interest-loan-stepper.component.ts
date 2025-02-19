@@ -261,7 +261,7 @@ export class CompoundInterestLoanStepperComponent {
             }
           }
           else if (this.activeIndex == 1) {
-            this.previouseButtonDisable = data.isDisable;
+            // this.previouseButtonDisable = data.isDisable;
             if (data.data != null && data.data != undefined) {
               this.ciLoanKycModel = data.data;
             }
@@ -836,6 +836,15 @@ export class CompoundInterestLoanStepperComponent {
       this.navigateTo(this.activeIndex, this.ciLoanApplicationId);
     }
     else if (activeIndex == 6) {
+      if (!this.individualFlag) {
+        if (this.ciLoanApplicationModel.operationTypeName != AccountTypes.JOINT) {
+          this.flag = false;
+          this.activeIndex = this.activeIndex - 2;
+        }
+        else {
+          this.activeIndex = this.activeIndex - 1;
+        }
+      }
       this.navigateTo(this.activeIndex, this.ciLoanApplicationId);
     }
     else if (activeIndex == 7) {
@@ -1875,7 +1884,7 @@ export class CompoundInterestLoanStepperComponent {
   }
 
   saveOrUpdateGoldLoanMortagageDetails(activeIndex: any, buttonName: any) {
-    this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+    this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: "Gold Mortgage Details Updated Successfully" }];
     setTimeout(() => {
       this.msgs = [];
     }, 1200);
@@ -1886,7 +1895,7 @@ export class CompoundInterestLoanStepperComponent {
   }
 
   saveOrUpdateLandLoanMortagageDetails(activeIndex: any, buttonName: any) {
-    this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+    this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS,  detail: "Land Mortgage Details Updated Successfully"  }];
     setTimeout(() => {
       this.msgs = [];
     }, 1200);
@@ -1897,7 +1906,7 @@ export class CompoundInterestLoanStepperComponent {
   }
 
   saveOrUpdateBondLoanMortagageDetails(activeIndex: any, buttonName: any) {
-    this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+    this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: "Bond Mortgage Details Updated Successfully"  }];
     setTimeout(() => {
       this.msgs = [];
     }, 1200);
@@ -1980,7 +1989,7 @@ export class CompoundInterestLoanStepperComponent {
   }
 
   saveOrUpdateStorageLoanMortagageDetails(activeIndex: any, buttonName: any) {
-    this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+    this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: "Storage Mortgage Details Updated Successfully"  }];
     setTimeout(() => {
       this.msgs = [];
     }, 1200);
@@ -1991,7 +2000,7 @@ export class CompoundInterestLoanStepperComponent {
   }
 
   saveOrUpdateOtherLoanMortagageDetails(activeIndex: any, buttonName: any) {
-    this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+    this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: "Land Mortgage Details Updated Successfully" }];
     setTimeout(() => {
       this.msgs = [];
     }, 1200);
@@ -2004,7 +2013,7 @@ export class CompoundInterestLoanStepperComponent {
   
 
   saveOrUpdateDocumentDetails(activeIndex: any, buttonName: any) {
-    this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+    this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: "Loan Documents Update Succussfully" }];
     setTimeout(() => {
       this.msgs = [];
     }, 1200);
@@ -2270,6 +2279,7 @@ export class CompoundInterestLoanStepperComponent {
           },
           {
             label: 'Loan Documents', icon: 'fa fa-files-o', routerLink: Loantransactionconstant.COMPOUND_INTEREST_LOANS_DOCUMENTS,
+            disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 8;
             }

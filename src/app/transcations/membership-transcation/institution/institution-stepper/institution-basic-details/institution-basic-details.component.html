@@ -13,6 +13,14 @@
                     </div>
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-label">
+                            <label><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.INSTITUTION_TYPE' | translate}}</label>
+                            <p-dropdown id="bunit_txt_status" placeholder="Select" [filter]="true"
+                                [options]="institutionTypesList" [(ngModel)]="ginstitutionBasicDetailsModel.institutionType"
+                                formControlName="institutionType"></p-dropdown>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-label">
                         <label> <span class="red">*</span>{{'ERP.INSTITUTION_NAME' | translate}}</label>
                             <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="name"
                                 [(ngModel)]="ginstitutionBasicDetailsModel.name" placeholder="Enter Institution Name">
@@ -21,12 +29,12 @@
                             </p-message>
                         </div>
                     </div>
-                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12" >
                         <div class="form-label">
-                            <label><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.INSTITUTION_TYPE' | translate}}</label>
-                            <p-dropdown id="bunit_txt_status" placeholder="Select" [filter]="true"
-                                [options]="institutionTypesList" [(ngModel)]="ginstitutionBasicDetailsModel.institutionType"
-                                formControlName="institutionType"></p-dropdown>
+                            <label for="username"> <span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.SOCIETY_ADMISSION_NUMBER' | translate}}
+                            </label>
+                            <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="societyAdmissionNo"
+                                [(ngModel)]="ginstitutionBasicDetailsModel.societyAdmissionNumber" placeholder="Enter Admission Number">
                         </div>
                     </div>
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
@@ -67,8 +75,7 @@
                             </p-calendar>
                         </div>
                     </div>
-                    </div>
-                    <div class="row g-3 mt-0">
+                    
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-label">
                         <label> <span class="red">*</span>{{'ERP.POC_NAME' | translate}}</label>
@@ -89,6 +96,8 @@
                             </p-message>
                         </div>
                     </div>
+                </div>
+                <div class="row g-3 mt-0">
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-label">
                         <label> <span class="red">*</span>{{'ERP.PAN_NUMBER' | translate}}</label>
@@ -326,17 +335,19 @@
 <p-dialog header="Institution Promoter" [(visible)]="promoterDisplayFlag" styleClass="moredetails-style" [closable]="false">
     <div class="popup-basic-details">
         <form [formGroup]="institutepromoterDetailsForm" id="proj_stakeholder_form">
-            <div class="row g-3 mt-n1">
-                <div class="d-flex pull-right">
-                    <div class="col-auto">
-                        <p-inputSwitch [(ngModel)]="institutePromoterDetails.isExistingMember"
-                            (onChange)="onChangeExistedPrmoter(institutePromoterDetails.isExistingMember)"
-                            formControlName="isExistingMember" [disabled]="promterTypeDisabled"></p-inputSwitch>
-                    </div>
-                    <div class="col-auto">
-                        <p class="mt-1 px-2">{{'MEMBERSHIP_TRANSACTION.IS_EXISTED_PROMOTER' | translate}}</p>
-                    </div>
+            <div class="col-12 px-0">
+            <div class="d-flex">
+                <div>
+                    <p-inputSwitch [(ngModel)]="institutePromoterDetails.isExistingMember"
+                        (onChange)="onChangeExistedPrmoter(institutePromoterDetails.isExistingMember)"
+                        formControlName="isExistingMember" [disabled]="promterTypeDisabled"></p-inputSwitch>
                 </div>
+                <div>
+                    <p class="mt-1 px-2">{{'MEMBERSHIP_TRANSACTION.IS_EXISTED_PROMOTER' | translate}}</p>
+                </div>
+            </div>
+        </div>
+            <div class="row g-3 mt-n1">
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12" *ngIf="admissionNumberDropDown">
                     <div class="form-label">
                         <label><span class="red">*</span>{{'ERP.ADMISSION_NUMBER' | translate}}</label>
@@ -473,11 +484,12 @@
                     <div class="form-label">
                         <span><span class="red">*</span>{{'ERP.UPLOAD_IMAGE' | translate}}</span>
                         <div class="uplodad-style align-items-center">
-                            <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
-                                id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".png,.jpg,.jpeg"
-                                (onRemove)="fileRemoveEventForPromoter('photoCopyPath',institutePromoterDetails)"
-                                (onSelect)="fileUploadersForPromoter($event,fileUpload,'photoCopyPath',institutePromoterDetails)">
-                            </p-fileUpload>
+                            <p-fileUpload #fileUploadIndividualPhoto class="qua-upld file-attach semi-bold" name="myfile[]"
+                            id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".png,.jpg,.jpeg"
+                            (onRemove)="fileRemoveEventForPromoter('photoCopyPath',institutePromoterDetails)"
+                            (onSelect)="fileUploadersForPromoter($event,fileUploadIndividualPhoto,fileUploadIndividualSign,'photoCopyPath',institutePromoterDetails)"
+                            [disabled]="uploadSignature">
+                        </p-fileUpload>
                             <div class="col-12  d-flex p-1 contant-body"
                                 *ngFor="let img of institutePromoterDetails.multipartFileListForPhotoCopy">
                                 <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
@@ -495,10 +507,10 @@
                     <div class="form-label">
                         <span><span class="red">*</span>{{'ERP.UPLOAD_SIGNATURE' | translate}}</span>
                         <div class="uplodad-style align-items-center">
-                            <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                            <p-fileUpload #fileUploadIndividualSign class="qua-upld file-attach semi-bold" name="myfile[]"
                                 id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".png,.jpg,.jpeg"
                                 (onRemove)="fileRemoveEventForPromoter('signaturePath',institutePromoterDetails)"
-                                (onSelect)="fileUploadersForPromoter($event,fileUpload,'signaturePath',institutePromoterDetails)"
+                                (onSelect)="fileUploadersForPromoter($event,fileUploadIndividualPhoto,fileUploadIndividualSign,'signaturePath',institutePromoterDetails)"
                                 [disabled]="uploadSignature">
                             </p-fileUpload>
                             <div class="col-12  d-flex p-1 contant-body"

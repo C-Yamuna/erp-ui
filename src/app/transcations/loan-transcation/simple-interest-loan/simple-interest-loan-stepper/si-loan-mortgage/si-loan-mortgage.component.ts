@@ -26,8 +26,6 @@ import { SiOtherMortgageDetailsService } from '../../../shared/si-loans/si-other
   styleUrls: ['./si-loan-mortgage.component.css']
 })
 export class SiLoanMortgageComponent {
-  selectedCollateralType: string = ''; // Stores the selected collateral type
-
 
   siGoldMortgageForm: FormGroup;
     siLandMortgageForm: FormGroup;
@@ -37,11 +35,11 @@ export class SiLoanMortgageComponent {
     siOtherMortgageForm: FormGroup;
     propertyDetailsForm: FormGroup;
     suretyForm: FormGroup;
-    landSurveyDuplicateDisable: boolean = false;
-    displayDialog: boolean = false;
+    
+  
     selectCollateralType: any;
     collateraltypeOptionsList: any[] = [];
-    deleteId: any;
+  
     showGoldform: boolean = false;
     showLandform: boolean = false;
     showBondform: boolean = false;
@@ -68,8 +66,9 @@ export class SiLoanMortgageComponent {
     gendersList: any[] = [];
     relationshipTypesList: any[] = [];
     isMemberCreation: boolean = false;
-    surveyId: any;
-
+    deleteId: any;
+    displayDialog: boolean = false;
+  
   
   siPropertyMortgageLoanModel: SiPropertyMortgageLoan = new SiPropertyMortgageLoan();
   membershipBasicRequiredDetails: MembershipBasicRequiredDetails = new MembershipBasicRequiredDetails();
@@ -101,7 +100,6 @@ export class SiLoanMortgageComponent {
     visible: boolean = false;
     isFormValid: Boolean = false;
   
-    
     @ViewChild('gold', { static: false }) private gold!: Table;
     @ViewChild('land', { static: false }) private land!: Table;
     @ViewChild('bond', { static: false }) private bond!: Table;
@@ -191,28 +189,28 @@ export class SiLoanMortgageComponent {
     ) {
   
       this.siGoldMortgageForm = this.formBuilder.group({
-        'ornamentDescription': new FormControl('', [Validators.required]),
-        'ornamentsCount': new FormControl('', Validators.compose([Validators.required])),
-        'ornamentQualityInKdm': new FormControl('',  Validators.compose([Validators.required])),
-        'ornamentGrossWeightInGm': new FormControl('',  Validators.compose([Validators.required])),
-        'ornamentNetWeightInGm': new FormControl('',Validators.compose([Validators.required])),
-        'valuePerGramInRs': new FormControl('',  Validators.compose([Validators.required])),
-        'ornamentNetValueInRs': new FormControl('', Validators.compose([Validators.required])),
+        'ornamentDescription':new FormControl('', [Validators.required]),
+        'ornamentsCount': new FormControl('', [Validators.required, Validators.pattern(applicationConstants.ALLOW_NUMBERS)]),
+        'ornamentQualityInKdm': new FormControl('', [Validators.required, Validators.pattern(applicationConstants.ALLOW_NUMBERS)]),
+        'ornamentGrossWeightInGm': new FormControl('', [Validators.required,  Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS)]),
+        'ornamentNetWeightInGm': new FormControl('', [Validators.required,  Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS)]),
+        'valuePerGramInRs': new FormControl('', [Validators.required,  Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS)]),
+        'ornamentNetValueInRs': new FormControl('', [Validators.required,  Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS)]),
       })
   
       this.siLandMortgageForm = this.formBuilder.group({
        'passbookNumber': new FormControl('', [Validators.required]),
         'khataNumber': new FormControl('', [Validators.pattern(applicationConstants.ALPHANUMERIC)]),
         'surveyNumber': new FormControl('', [Validators.pattern(applicationConstants.ALPHANUMERIC)]),
-        'totalLandInUnits':new FormControl(Validators.compose([Validators.required]), [Validators.maxLength(5) ]),
-        'totalLandInSubUnits': new FormControl([Validators.required], [Validators.maxLength(5)]),
-        'landValuePerUnit': new FormControl(Validators.compose([Validators.required]), [Validators.minLength(1), Validators.maxLength(13) ]),   
-        'totalLandValue': new FormControl(Validators.compose([Validators.required]), [ Validators.minLength(1), Validators.maxLength(13) ]),
-        'mortgageLandInUnits': new FormControl(Validators.compose([Validators.required]), [Validators.maxLength(5)]),
-        'mortgageLandInSubUnits': new FormControl( Validators.compose([Validators.required]), [Validators.maxLength(5)]),
-        'mortgageLandValuePerUnit': new FormControl(Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALLOW_DECIMALS_UPTO_TWO_PLACES),  Validators.minLength(1), Validators.maxLength(13)]),
-        'totalMortgageLandValue': new FormControl( Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALLOW_DECIMALS_UPTO_TWO_PLACES),  Validators.minLength(1), Validators.maxLength(13)]),
-        'mortgageDeedNumber': new FormControl( Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALPHANUMERIC)]),
+        'totalLandInUnits': new FormControl('', [Validators.required,  Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS)]),
+        'totalLandInSubUnits': new FormControl('', [Validators.required,  Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS)]),
+        'landValuePerUnit': new FormControl('', [Validators.required,  Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS)]),   
+        'totalLandValue': new FormControl('', [Validators.required,  Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS)]),
+        'mortgageLandInUnits':new FormControl('', [Validators.required,  Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS)]),
+        'mortgageLandInSubUnits': new FormControl('', [Validators.required,  Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS)]),
+        'mortgageLandValuePerUnit': new FormControl(Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS),  Validators.minLength(1), Validators.maxLength(13)]),
+        'totalMortgageLandValue': new FormControl( Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS),  Validators.minLength(1), Validators.maxLength(13)]),
+        'mortgageDeedNumber': new FormControl( Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS)]),
         'mortgageDeedDate': new FormControl('', [Validators.required]),
         'ownershipType': new FormControl('', [Validators.required]),
         'village': new FormControl('', [Validators.required])
@@ -224,7 +222,7 @@ export class SiLoanMortgageComponent {
         'bondIssuedDate': new FormControl('', [Validators.required]),
         'bondIssuedBy': new FormControl(Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALPHANUMERIC), ]),
         'bondMaturityDate': new FormControl('', [Validators.required]),
-        'bondMaturityValueInRs': new FormControl( Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALLOW_DECIMALS_UPTO_TWO_PLACES)]),
+        'bondMaturityValueInRs': new FormControl( Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS)]),
         'bondPrincipleAmount': new FormControl('', [Validators.required]),
       })
   
@@ -232,9 +230,9 @@ export class SiLoanMortgageComponent {
         'vehicleMakerOrBrand': new FormControl(Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALPHANUMERIC)]),
         'vehicleModel': new FormControl(Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALPHANUMERIC)]),
         'vehicleRegNumber': new FormControl( Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALPHANUMERIC)]),
-        'vehicleCost': new FormControl(Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALLOW_DECIMALS_UPTO_TWO_PLACES)]),
+        'vehicleCost': new FormControl(Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS)]),
         'insuranceNumber': new FormControl( Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALPHANUMERIC)]),
-        'insuranceAmount': new FormControl( Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALLOW_DECIMALS_UPTO_TWO_PLACES)]),
+        'insuranceAmount': new FormControl( Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS)]),
         'vehicleStatus': new FormControl('', [Validators.required]),
         'hypothecation': new FormControl('', [Validators.required]),
       })
@@ -243,25 +241,25 @@ export class SiLoanMortgageComponent {
       'commodity': new FormControl(Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALPHANUMERIC)]),
         'nwrStorageReceiptNumber': new FormControl( Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALPHANUMERIC)]),
         'dateOfIssue': new FormControl('', [Validators.required]),
-        'numberOfUnitsStored': new FormControl('', [Validators.required]),//present on hold
-        'perUnitCostInRs': new FormControl( Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALLOW_DECIMALS_UPTO_TWO_PLACES)]),
-        'netValueInRs': new FormControl( Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALLOW_DECIMALS_UPTO_TWO_PLACES)]),
+        'numberOfUnitsStored': new FormControl( Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALLOW_NUMBERS_ONLY)]),//present on hold
+        'perUnitCostInRs': new FormControl( Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS)]),
+        'netValueInRs': new FormControl( Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS)]),
       })
   
       this.siOtherMortgageForm = this.formBuilder.group({
-        name: new FormControl('', Validators.required),
-        noOfUnits: new FormControl('', Validators.required),
-        value: new FormControl('', Validators.required),
-        remarks: new FormControl('')
+        'name': new FormControl('', [Validators.required]),
+        'noOfUnits': new FormControl( Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALLOW_NUMBERS_ONLY)]),
+        'values': new FormControl( Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS)]),
+        'remarks': new FormControl('')
       })
   
       this.propertyDetailsForm = this.formBuilder.group({
         'site': new FormControl('', [Validators.required]),
         'location': new FormControl('', [Validators.required]),
         'squareYards': new FormControl('', [Validators.required]),
-        'propertySurveyNumber': new FormControl('', [Validators.required]),
-        'valueOfProperty': new FormControl(Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALLOW_DECIMALS_UPTO_TWO_PLACES), Validators.minLength(1), Validators.maxLength(13)]),
-        'nameOfProperty': new FormControl('', [Validators.required]),
+        'propertySurveyNumber': new FormControl( Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALLOW_NUMBERS_ONLY)]),
+        'valueOfProperty': new FormControl(Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS), Validators.minLength(1), Validators.maxLength(13)]),
+        'nameOfProperty':new FormControl( Validators.compose([Validators.required]), [Validators.pattern(applicationConstants.ALPHANUMERIC)]),
         'extentOfProperty': new FormControl('', [Validators.required]),
         
       });
@@ -497,6 +495,7 @@ export class SiLoanMortgageComponent {
       } else if (this.collateralType == CollateralTypes.VEHICLE_MORTGAGE) {//vehicle
   
         this.siVehicleLoanMortgageModel.collateralType = this.collateralType;
+        this.siVehicleLoanMortgageModel.siLoanApplicationId = this.siLoanApplicationId;
         this.siLoanApplicationService.changeData({
           formValid: !this.siVehicleMortgageForm.valid ? true : false,
           data: this.siVehicleLoanMortgageModel,
@@ -646,6 +645,7 @@ export class SiLoanMortgageComponent {
               if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
                 if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
                   this.siLoanApplicationModel = this.responseModel.data[0];
+                  this.siLoanApplicationId= this.siLoanApplicationModel.id;
   
                   // strip date
                   if(this.siLoanApplicationModel.operationTypeName != null &&  this.siLoanApplicationModel.operationTypeName != undefined &&  this.siLoanApplicationModel.memberTypeName != MemberShipTypesData.INDIVIDUAL){
@@ -673,7 +673,7 @@ export class SiLoanMortgageComponent {
                       this.getSILandLoanMortgageDetailsByLoanAccId(siLoanApplicationId ,false);
                     } else if (this.siLoanApplicationModel.collateralType == CollateralTypes.BONDS_MORTGAGE) {//bond
                       this.showBondform = true;
-                      this.getCIBondLoanMortgageDetailsByciLoanApplicationId(siLoanApplicationId ,false);
+                      this.getSIBondLoanMortgageDetailsByciLoanApplicationId(siLoanApplicationId ,false);
                     } else if (this.siLoanApplicationModel.collateralType == CollateralTypes.VEHICLE_MORTGAGE) {//vehicle
                       this.showVehicleform = true;
                       this.addButtonService = false;
@@ -974,7 +974,7 @@ export class SiLoanMortgageComponent {
      * @param flag 
      * @author k.yamuna
      */
-    getCIBondLoanMortgageDetailsByciLoanApplicationId(siLoanApplicationId: any , flag :Boolean) {
+    getSIBondLoanMortgageDetailsByciLoanApplicationId(siLoanApplicationId: any , flag :Boolean) {
       this.commonFunctionsService
       this.siLoanMortagageDetailsService.getSIBondLoanMortagageDetailsByApplicationId(siLoanApplicationId).subscribe((data: any) => {
         this.responseModel = data;
@@ -1132,7 +1132,7 @@ export class SiLoanMortgageComponent {
     // }
     
     /**
-     * @implements ci Loan Propery Details by Application Id
+     * @implements si Loan Propery Details by Application Id
      * @param siLoanApplicationId 
      * @author k.yamuna
      */
@@ -1166,6 +1166,7 @@ export class SiLoanMortgageComponent {
      * @Modification k.yamuna
      */
     addGoldLoanMortgage() {
+      this.siGoldMortgageForm.reset();
       this.siGoldLoanMortgageModel = new SiGoldLoanMortgage();
       this.goldMortgagePopUp = true;
       this.addButtonService = true;
@@ -1181,6 +1182,7 @@ export class SiLoanMortgageComponent {
      * @Modification k.yamuna
      */
     addLandLoanMortgage() {
+      this.siLandMortgageForm.reset();
       this.landMortgagePopUp = true;
       this.siLandLoanMortgageModel = new SiLandLoanMortgage();
       this.addButtonService = true;
@@ -1194,6 +1196,7 @@ export class SiLoanMortgageComponent {
      * @Modification k.yamuna
      */
     addBondLoanMortgage() {
+      this.siBondMortgageForm.reset();
       this.bondMortgagePopUp = true;
       this.siBondLoanMortgageModel = new SiBondLoanMortgage();
       this.addButtonService = true;
@@ -1206,6 +1209,7 @@ export class SiLoanMortgageComponent {
      * @modification k.yamuna
      */
     addVehicleLoanMortgage() {
+      this.siVehicleMortgageForm.reset();
       this.siVehicleLoanMortgageModel = new SiVehicleLoanMortgage();
       this.addButtonService = true;
       this.editDeleteDisable = true;
@@ -1217,6 +1221,7 @@ export class SiLoanMortgageComponent {
      * @modification k.yamuna
      */
     addStorageLoanMortgage() {
+      this.siStorageMortgageForm.reset();
       this.siStorageLoanMortgageModel = new SiStorageLoanMortgage();
       this.addButtonService = true;
       this.storagePopUp = true;
@@ -1229,6 +1234,7 @@ export class SiLoanMortgageComponent {
      * @modification k.yamuna
      */
     addOtherLoanMortgage() {
+      this.siOtherMortgageForm.reset();
       this.siOtherLoanMortgageModel = new SiOtherLoanMortgage();
       this.addButtonService = true;
       this.editDeleteDisable = true;
@@ -1251,7 +1257,7 @@ export class SiLoanMortgageComponent {
       // this.siGoldLoanMortgageModel.status = applicationConstants.ACTIVE;
       this.updateData();
       if (row.id != null && row.id != undefined) {
-        this.siLoanMortagageDetailsService.updateSIBondLoanMortagageDetails(this.siGoldLoanMortgageModel).subscribe((response: any) => {
+        this.siLoanMortagageDetailsService.updateSIGoldLoanMortagageDetails(this.siGoldLoanMortgageModel).subscribe((response: any) => {
           this.responseModel = response;
           if (this.responseModel != null && this.responseModel != undefined) {
             if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
@@ -1410,7 +1416,7 @@ export class SiLoanMortgageComponent {
                 this.siBondLoanMortgageModel = this.responseModel.data;
                 this.addButtonService = false;
                 if (this.responseModel.data[0].siLoanApplicationId != null && this.responseModel.data[0].siLoanApplicationId != undefined) {
-                  this.getCIBondLoanMortgageDetailsByciLoanApplicationId(this.responseModel.data[0].siLoanApplicationId ,false);
+                  this.getSIBondLoanMortgageDetailsByciLoanApplicationId(this.responseModel.data[0].siLoanApplicationId ,false);
                 }
               }
             }
@@ -1439,7 +1445,7 @@ export class SiLoanMortgageComponent {
                 this.siBondLoanMortgageModel = this.responseModel.data;
                 this.addButtonService = false;
                 if (this.responseModel.data[0].siLoanApplicationId != null && this.responseModel.data[0].siLoanApplicationId != undefined) {
-                  this.getCIBondLoanMortgageDetailsByciLoanApplicationId(this.responseModel.data[0].siLoanApplicationId ,false);
+                  this.getSIBondLoanMortgageDetailsByciLoanApplicationId(this.responseModel.data[0].siLoanApplicationId ,false);
                 }
               }
             }
@@ -1786,7 +1792,7 @@ export class SiLoanMortgageComponent {
       this.siBondLoanMortgageList = [];
       this.addButtonService = false;
       this.editDeleteDisable = false;
-      this.getCIBondLoanMortgageDetailsByciLoanApplicationId(this.siLoanApplicationId ,false);
+      this.getSIBondLoanMortgageDetailsByciLoanApplicationId(this.siLoanApplicationId ,false);
     }
   
     /**
@@ -2092,18 +2098,8 @@ export class SiLoanMortgageComponent {
      * @modifictaion k.yamuna
      */
     deleteGoldLoanMortgage(row: any) {
-      this.siGoldLoanMortgageList = [];
-      this.siLoanMortagageDetailsService.deleteSIGoldLoanMortagageDetails(row.id).subscribe((response: any) => {
-        this.responseModel = response;
-        if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-          this.getSIGoldLoanMortgageDetailsByciLoanApplicationId(this.siLoanApplicationId ,false);
-          this.msgs = [];
-          this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 2000);
-        }
-      });
+      this.deleteId = row.id;
+      this.displayDialog = true;
     }
   
     /**
@@ -2112,18 +2108,8 @@ export class SiLoanMortgageComponent {
      * @modification k.yamuna
      */
     deleteLandLoanMortgage(row: any) {
-      this.siLandLoanMortgageList = [];
-      this.siLoanMortagageDetailsService.deleteSILandLoanMortagageDetails(row.id).subscribe((response: any) => {
-        this.responseModel = response;
-        if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-          this.getSILandLoanMortgageDetailsByLoanAccId(this.siLoanApplicationId ,false);
-          this.msgs = [];
-          this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 2000);
-        }
-      });
+      this.deleteId = row.id;
+    this.displayDialog = true;
     }
   
     /**
@@ -2132,18 +2118,8 @@ export class SiLoanMortgageComponent {
      * @author k.yamuna
      */
     deleteBondLoanMortgage(row: any) {
-      this.siLoanMortagageDetailsService.deleteSIBondLoanMortagageDetails(row.id).subscribe((response: any) => {
-        this.responseModel = response;
-        if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-          this.siBondLoanMortgageList = this.responseModel.data;
-          this.getCIBondLoanMortgageDetailsByciLoanApplicationId(this.siLoanApplicationId ,false);
-          this.msgs = [];
-          this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 2000);
-        }
-      });
+      this.deleteId = row.id;
+    this.displayDialog = true;
     }
   
     /**
@@ -2172,18 +2148,8 @@ export class SiLoanMortgageComponent {
      * @modification k.yamuna
      */
     deleteStorageLoanMortgage(row: any) {
-      this.siLoanMortagageDetailsService.deleteSIStorageLoanMortagageDetails(row.id).subscribe((response: any) => {
-        this.responseModel = response;
-        if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-          this.siStorageLoanMortgageList = this.responseModel.data;
-          this.getSIStorageLoanMortgageDetailsByLoanAccId(this.siLoanApplicationId ,false);
-          this.msgs = [];
-          this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 2000);
-        }
-      });
+      this.deleteId = row.id;
+    this.displayDialog = true;
     }
   
     /**
@@ -2192,18 +2158,8 @@ export class SiLoanMortgageComponent {
      * @author k.yamuna
      */
     deleteOtherLoanMortgage(row: any) {
-      this.siLoanMortagageDetailsService.deleteSIOtherLoanMortagageDetails(row.id).subscribe((response: any) => {
-        this.responseModel = response;
-        if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-          this.siOtherLoanMortgageList = this.responseModel.data;
-          this.getSIOtherLoanMortgageDetailsByLoanAccId(this.siLoanApplicationId ,false);
-          this.msgs = [];
-          this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 2000);
-        }
-      });
+      this.deleteId = row.id;
+    this.displayDialog = true;
     }
   
     /**
@@ -2212,25 +2168,14 @@ export class SiLoanMortgageComponent {
      * @param row 
      */
     deleteProperyLoanMortgage(row:any){
-      this.siLoanMortagageDetailsService.deleteSIPropertyLoanMortagageDetails(row.id).subscribe((response: any) => {
-        this.responseModel = response;
-        if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-          this.siOtherLoanMortgageList = this.responseModel.data;
-          this.getCiLoanProperyDetailsByApplication(this.siLoanApplicationId ,false);
-          this.msgs = [];
-            this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-            setTimeout(() => {
-              this.msgs = [];
-            }, 2000);
-        }
-      });
+      this.deleteId = row.id;
+      this.displayDialog = true;
     }
   
   
     /**
-     * @implements update collateral in ci application Details
+     * @implements update collateral in si application Details
      * @author k.yamuna
-     * 
      */
     updateCollateralInCiApplicationDetails() {
       this.siLoanApplicationModel.collateralType = this.collateralType;
@@ -2299,79 +2244,114 @@ export class SiLoanMortgageComponent {
       this.updateData();
     }
 
-    checkDuplicateSurveyNoInTable(siLandLoanMortgageModel: any) {
-        debugger
-        if (null != siLandLoanMortgageModel && undefined != siLandLoanMortgageModel) {
-          let obj = [];
-          if (this.siLandLoanMortgageList != undefined && this.siLandLoanMortgageList != null && this.siLandLoanMortgageList.length != 0) {
-            obj = this.siLandLoanMortgageList.filter(obj => (obj.khataNumber == siLandLoanMortgageModel.khataNumber) && (obj.surveyNumber == siLandLoanMortgageModel.surveyNumber)
-              && (obj.villageId == siLandLoanMortgageModel.villageId)).map(object => {
-                return object;
-              });
-          }
-          if (obj.length > 0 && obj[0].rowId != this.surveyId) {
-            this.landSurveyDuplicateDisable = true;
-            this.siLandMortgageForm?.get("surveyNumber")?.reset();
+     /**
+   * @implements delete confirmBox
+   * @param collateralType 
+   * @author k.yamuna
+   */
+  deleteCofirtmBox() {
+    if (this.collateralType == CollateralTypes.GOLD_MORTGAGE) {//gold
+      this.siGoldLoanMortgageList = [];
+      this.siLoanMortagageDetailsService.deleteSIGoldLoanMortagageDetails(this.deleteId).subscribe((response: any) => {
+        this.responseModel = response;
+        if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+          this.getSIGoldLoanMortgageDetailsByciLoanApplicationId(this.siLoanApplicationId, false);
+          this.msgs = [];
+          this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+          this.displayDialog = false;
+          setTimeout(() => {
             this.msgs = [];
-            this.msgs = [{ severity: "error", detail: applicationConstants.SURVEY_NUMBER_ALREADY_EXIST }];
-            setTimeout(() => {
-              this.msgs = [];
-            }, 2000);
-    
-          } else {
-            this.landSurveyDuplicateDisable = false;
-          }
-          this.surveyId = 0;
+          }, 2000);
         }
-    
-      }
+      });
+    } else if (this.collateralType == CollateralTypes.LAND_MORTGAGE) {//land
+      this.siLandLoanMortgageList = [];
+      this.siLoanMortagageDetailsService.deleteSILandLoanMortagageDetails(this.deleteId).subscribe((response: any) => {
+        this.responseModel = response;
+        if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+          this.getSILandLoanMortgageDetailsByLoanAccId(this.siLoanApplicationId, false);
+          this.msgs = [];
+          this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+          this.displayDialog = false;
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        }
+      });
+    } else if (this.collateralType == CollateralTypes.BONDS_MORTGAGE) {//bond
+      this.siBondLoanMortgageList = [];
+      this.siLoanMortagageDetailsService.deleteSIBondLoanMortagageDetails(this.deleteId).subscribe((response: any) => {
+        this.responseModel = response;
+        if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+          this.siBondLoanMortgageList = this.responseModel.data;
+          this.getSIBondLoanMortgageDetailsByciLoanApplicationId(this.siLoanApplicationId, false);
+          this.msgs = [];
+          this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+          this.displayDialog = false;
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        }
+      });
 
-    deletDilogBox(rowData: any) {
-        this.displayDialog = true; // Show the confirmation popup
-        this.deleteId = rowData.id;
+    } else if (this.collateralType == CollateralTypes.VEHICLE_MORTGAGE) {//vehicle
+
+    } else if (this.collateralType == CollateralTypes.STORAGE_MORTGAGE) {
+      //storage
+      this.siStorageLoanMortgageList = [];
+      this.siLoanMortagageDetailsService.deleteSIStorageLoanMortagageDetails(this.deleteId).subscribe((response: any) => {
+        this.responseModel = response;
+        if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+          this.siStorageLoanMortgageList = this.responseModel.data;
+          this.getSIStorageLoanMortgageDetailsByLoanAccId(this.siLoanApplicationId, false);
+          this.msgs = [];
+          this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+          this.displayDialog = false;
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        }
+      });
+    } else if (this.collateralType == CollateralTypes.PROPERTY_MORTGAGE) {//property
+      this.siPropertyMortgageList = [];
+      this.siLoanMortagageDetailsService.deleteSIPropertyLoanMortagageDetails(this.deleteId).subscribe((response: any) => {
+        this.responseModel = response;
+        if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+          this.siPropertyMortgageList = this.responseModel.data;
+          this.getCiLoanProperyDetailsByApplication(this.siLoanApplicationId, false);
+          this.msgs = [];
+          this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+          this.displayDialog = false;
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        }
+      });
     }
+    else if (this.collateralType == CollateralTypes.OTHER_MORTGAGE) {//other
+      this.siOtherLoanMortgageList
+      this.siLoanMortagageDetailsService.deleteSIOtherLoanMortagageDetails(this.deleteId).subscribe((response: any) => {
+        this.responseModel = response;
+        if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+          this.siOtherLoanMortgageList = this.responseModel.data;
+          this.getSIOtherLoanMortgageDetailsByLoanAccId(this.siLoanApplicationId, false);
+          this.msgs = [];
+          this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+          this.displayDialog = false;
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        }
+      });
 
-    submitDeleteForGold() {
-      this.deleteGoldLoanMortgage(this.deleteId)
-      this.displayDialog = false; // Close the dialog after action
+    }
   }
-    submitDeleteForLand() {
-      this.deleteLandLoanMortgage(this.deleteId)
-    this.displayDialog = false; // Close the dialog after action
-}
-
-  cancelForDialogBox() {
-    this.displayDialog = false;
-}
-
-// deleteDialogBox(collateralType: string, rowData: any) {
-//   this.displayDialog = true;  // Show popup
-//   this.deleteId = rowData.id; // Store selected row ID
-//   this.selectedCollateralType = collateralType; // Store collateral type
-// }
-
-// confirmDelete() {
-//   this.deleteCollateral(this.selectedCollateralType, this.deleteId);
-//   this.displayDialog = false; // Close the popup
-// }
-
-// deleteCollateral(collateralType: string, rowId: any) {
-//   let deleteServiceMethod;
-
-//   switch (collateralType) {
-//       case 'GOLD_MORTGAGE':
-//           deleteServiceMethod = this.siLoanMortagageDetailsService.deleteSIGoldLoanMortagageDetails(this.deleteId);
-//           break;
-//       case 'LAND_MORTGAGE':
-//           deleteServiceMethod = this.siLoanMortagageDetailsService.deleteSILandLoanMortagageDetails(this.deleteId);
-//           break;
-//       case 'VEHICLE_MORTGAGE':
-//           deleteServiceMethod = this.siLoanMortagageDetailsService.deleteSIVehicleLoanMortagageDetails(this.deleteId);
-//           break;
-//       default:
-//           alert('Invalid Collateral Type');
-//           return;
-//   }
-
-//   }
-}
+    /**
+   * @implements cancle for DialogBox
+   * @author k.yamuna
+   */
+    cancelForDialogBox(){
+      this.displayDialog = false;
+    }
+  
+  }

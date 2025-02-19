@@ -35,6 +35,7 @@
     <form [formGroup]="requiredForm" id="exit_types_form">
         <p-button icon="fa fa-plus" label="{{'ERP.ADD_ANOTHER_DOCUMENT' | translate}}"
             (click)="addDocument($event)" [disabled]="buttonDisabled" class="kyc-btnm-0"></p-button>
+            <p class="label-input-text text-danger mt-2" *ngIf="mandatoryDoxsTextShow">Note : {{requiredDocumentsNamesText}}</p>
         <div class="col-12 p-0 pt-2">
             <div class="row g-3">
                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12" *ngFor="let document of kycModelList ; let i = index">

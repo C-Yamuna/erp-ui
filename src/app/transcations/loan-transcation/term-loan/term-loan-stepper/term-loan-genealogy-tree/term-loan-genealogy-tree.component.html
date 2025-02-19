@@ -1,29 +1,31 @@
 <div class="col-12">
-    <h6 class="sub-heading">{{'ERP.GENEALOGY_TREE_DETAILS' | translate}}<span class="admission-text">(Admission
+    <p-messages label="Info" life="2000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
+    [hideTransitionOptions]="'500ms'"></p-messages>
+    <h6 class="sub-heading">{{'LOAN_TRANSACTION.GENEALOGY_TREE_DETAILS' | translate}}<span class="admission-text">(Admission
             Number:&nbsp;{{admissionNumber}})</span></h6>
     <div class="stepper-top-section-strip">
         <div class="row">
             <div class="col-lg-3 col-md-3 col-sm-12">
                 <div class="form-group">
-                    <span>{{'ERP.PRODUCT' | translate}}</span>
+                    <span>{{'LOAN_TRANSACTION.PRODUCT_NAME' | translate}}</span>
                     <p class="mb-0">{{termLoanApplicationModel.termProductName}}</p>
                 </div>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-12">
                 <div class="form-group">
-                    <span>{{'ERP.OPERATION_TYPE' | translate}}</span>
+                    <span>{{'LOAN_TRANSACTION.ACCOUNT_TYPE' | translate}}</span>
                     <p class="mb-0">{{termLoanApplicationModel.operationTypeName}}</p>
                 </div>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-12">
                 <div class="form-group">
-                    <span>{{'ERP.LOAN_ACCOUNT_NO' | translate}}</span>
+                    <span>{{'LOAN_TRANSACTION.ACCOUNT_NUMBER' | translate}}</span>
                     <p class="mb-0">{{termLoanApplicationModel.accountNumber}}</p>
                 </div>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-12">
                 <div class="form-group">
-                    <span>{{'ERP.REQUEST_AMOUNT' | translate}}</span>
+                    <span>{{'LOAN_TRANSACTION.REQUEST_AMOUNT' | translate}}</span>
                     <p class="mb-0">{{termLoanApplicationModel.requestedAmount}}</p>
                 </div>
             </div>
@@ -33,7 +35,7 @@
     <form [formGroup]="termGenealogyTreeForm" id="proj_stakeholder_form">
         <div class="flex justify-content-between py-2">
             <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                <!-- <div class="main-heading mt-1">{{'ERP.CASTE' | translate}}</div> -->
+                <!-- <div class="main-heading mt-1">{{'LOAN_TRANSACTION.CASTE' | translate}}</div> -->
             </div>
             <div class="col-xl-7 col-lg-7 col-md-7 col-sm-7 col-xs-7">
                 <div class="col-12 p-0">
@@ -59,13 +61,13 @@
         <p-table #genealogy [columns]="genealogyTreeDetails" [value]="termLoanGenealogyTreeList" dataKey="id"
             editMode="row" styleClass="p-datatable-striped" [rows]="5" [paginator]="true"
             [showJumpToPageDropdown]="true" [showPageLinks]="false" [pageLinks]="1" [responsive]="true"
-            rowExpandMode="single">
+            rowExpandMode="single"  [globalFilterFields]="['relationWithApplicantName', 'name']">
             <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th><span class="red">*</span>{{'ERP.RELATIONSHIP_WITH_MEMBER' | translate}}</th>
-                    <th><span class="red">*</span>{{'ERP.RELATION_NAME' | translate}}</th>
-                    <!-- <th>{{'ERP.REMARKS' | translate}}</th> -->
-                    <th class="width-15em">{{'ERP.ACTION' | translate}}</th>
+                    <th><span class="red">*</span>{{'LOAN_TRANSACTION.RELATIONSHIP_WITH_MEMBER' | translate}}</th>
+                    <th><span class="red">*</span>{{'LOAN_TRANSACTION.RELATION_NAME' | translate}}</th>
+                    <!-- <th>{{'LOAN_TRANSACTION.REMARKS' | translate}}</th> -->
+                    <th class="width-15em">{{'LOAN_TRANSACTION.ACTION' | translate}}</th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-row let-editing="editing" let-ri="rowIndex">
@@ -73,10 +75,10 @@
                     <td>
                         <p-cellEditor>
                             <ng-template pTemplate="input">
-                                <p-dropdown placeholder="{{'ERP.SELECT'| translate}}"
-                                    formControlName="relationWithApplicant" [options]="relationshipTypesList"
+                                <p-dropdown placeholder="{{'LOAN_TRANSACTION.SELECT'| translate}}"
+                                    formControlName="relationWithApplicantName" [options]="relationshipTypesList"
                                     id="relationWithApplicant" [(ngModel)]="row.relationWithApplicant"
-                                    [appendTo]="'body'">
+                                    [appendTo]="'body'" (onChange)="relationtypeDuplicateCheck(row.relationWithApplicant)">
                                 </p-dropdown>
                             </ng-template>
                             <ng-template pTemplate="output">
@@ -103,17 +105,17 @@
 
                     <td>
                         <div class="global-action-btn flex align-items-center justify-content-center">
-                            <p-button label="{{'ERP.SAVE'|translate }}" *ngIf="editing"
+                            <p-button label="{{'LOAN_TRANSACTION.SAVE'|translate }}" *ngIf="editing"
                                 [disabled]="!termGenealogyTreeForm.valid" (click)="saveService(row)" pSaveEditableRow
                                 id="prj_stakehlder_bt_cancel" class="action-save">
                             </p-button>
-                            <p-button label="{{'ERP.CANCEL'|translate }}" *ngIf="editing" pCancelEditableRow
+                            <p-button label="{{'LOAN_TRANSACTION.CANCEL'|translate }}" *ngIf="editing" pCancelEditableRow
                                 id="prj_stakehlder_bt_cancel" class="action-cancel" (click)="cancelService()">
                             </p-button>
-                            <p-button label="{{'ERP.EDIT' | translate}}" *ngIf="!editing" pInitEditableRow
+                            <p-button label="{{'LOAN_TRANSACTION.EDIT' | translate}}" *ngIf="!editing" pInitEditableRow
                                 (click)="editService(row)" id="prj_stakehlder_bt_edit" class="action-edit"
                                 [disabled]="editDeleteDisable"></p-button>
-                            <p-button label="{{'ERP.DELETE' | translate}}" *ngIf="!editing" (click)="delete(row)"
+                            <p-button label="{{'LOAN_TRANSACTION.DELETE' | translate}}" *ngIf="!editing" (click)="delete(row)"
                                 id="prj_stakehlder_bt_edit" class="action-delete"
                                 [disabled]="editDeleteDisable"></p-button>
                         </div>
@@ -123,3 +125,18 @@
         </p-table>
     </form>
 </div>
+
+<!-- delete dialog box -->
+<p-dialog [(visible)]="displayDialog" [closable]="false" styleClass="delete-popup" [responsive]="true">
+    <div class="col-12">
+        <i class="fa fa-times-circle text-center" aria-hidden="true"></i>
+    
+        <p class="text-center popup-header">{{'ERP.ARE_YOU_SURE_TO_DELETE' | translate}}</p>
+        <p class="text-center pop-subheader">{{'ERP.DO_YOU_REALLY_TO_DELETE_THESE_RECORDS' | translate}}</p>
+  
+    </div>
+    <div class="col-12 text-center p-2">
+            <p-button pRipple class="yes-button" label="{{'ERP.DELETE' | translate}}" (click)="submitDelete()"></p-button>
+            <p-button pRipple class="no-button" label="{{'ERP.CANCEL' | translate}}" (click)="cancelForDialogBox()"></p-button>
+    </div>
+  </p-dialog>

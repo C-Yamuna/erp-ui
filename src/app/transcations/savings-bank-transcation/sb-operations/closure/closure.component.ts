@@ -16,13 +16,14 @@ import { AmountBlockService } from '../amount-block/shared/amount-block.service'
 import { SavingBankApplicationModel } from '../../savings-bank-account-creation-stepper/savings-bank-application/shared/saving-bank-application-model';
 import { MemberGroupDetailsModel, MembershipBasicRequiredDetails, MembershipInstitutionDetailsModel } from '../../savings-bank-account-creation-stepper/membership-basic-required-details/shared/membership-basic-required-details';
 import { Responsemodel } from 'src/app/shared/responsemodel';
-import { CommonStatusData, MemberShipTypesData, sbStandingDestitnationAccountType } from 'src/app/transcations/common-status-data.json';
+import { CommonStatusData, MemberShipTypesData, SbOperationConstantValue, sbStandingDestitnationAccountType } from 'src/app/transcations/common-status-data.json';
 import { FileUpload } from 'primeng/fileupload';
 import { FileUploadModel } from 'src/app/layout/mainmenu/shared/file-upload-model.model';
 import { SavingsAccountService } from '../../shared/savings-account.service';
 import { StandingInstructionsService } from '../standing-instruction/shared/standing-instructions.service';
 import { RdAccountsModel } from 'src/app/transcations/term-deposits-transcation/shared/term-depost-model.model';
 import { TermApplication } from 'src/app/transcations/loan-transcation/term-loan/term-loan-stepper/term-loan-application-details/shared/term-application.model';
+import { ServiceTypesService } from 'src/app/configurations/sb-config/service-types/shared/service-types.service';
 
 @Component({
   selector: 'app-closure',
@@ -70,17 +71,21 @@ export class ClosureComponent {
   institutionFlag: boolean = false;
   rdAccountFlag :boolean = false;
   termLoanFlag :boolean = false;
-  isStanderedInstrctionsActive: boolean = false;;
+  isStanderedInstrctionsActive: boolean = false;
+  servicetypeList: any[] = [];
+  serviceTypeId: any;
+  isFileUpload :boolean = false;
   
 
   constructor(private router: Router, private formBuilder: FormBuilder, private commonFunctionsService: CommonFunctionsService,
     private translate: TranslateService, private savingBankApplicationService: SavingBankApplicationService,
     private datePipe: DatePipe, private fileUploadService: FileUploadService, private commonComponent: CommonComponent,
-     private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService , private savingsAccountService :SavingsAccountService , private standingInstructionsService :StandingInstructionsService) {
+     private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService , 
+     private savingsAccountService :SavingsAccountService , private standingInstructionsService :StandingInstructionsService , private serviceTypesService:ServiceTypesService) {
     this.closureform = this.formBuilder.group({
-      'closureDate': new FormControl('', Validators.required),
-      'closureChargs': new FormControl('', Validators.required),
-      'fainalBalence': new FormControl('', Validators.required),
+      'closureDate': new FormControl({ value: '', disabled: true }, Validators.required),
+      'closureChargs': new FormControl({ value: '', disabled: true }, Validators.required),
+      'fainalBalence': new FormControl({ value: '', disabled: true }, Validators.required),
       'remarks': new FormControl('',),
     })
     this.groupPrmoters = [ //promoter grid feilds for group and institution
@@ -184,6 +189,9 @@ this.memberPhotoCopyZoom = false;
             else {
               this.savingBankApplicationModel.closureDateVal = this.commonFunctionsService.currentDate();
             }
+            if (this.savingBankApplicationModel.productId != null && this.savingBankApplicationModel.productId != undefined) {
+              this.getProductDefinitionByProductId(this.savingBankApplicationModel.productId); //get service Charges
+            }
             if (this.savingBankApplicationModel.memberTypeName != null && this.savingBankApplicationModel.memberTypeName != undefined) {
               this.memberTypeCheck(this.savingBankApplicationModel.memberTypeName);
             }
@@ -192,6 +200,7 @@ this.memberPhotoCopyZoom = false;
             }
             if (this.savingBankApplicationModel.closureSignedCopy != null && this.savingBankApplicationModel.closureSignedCopy != undefined) {
               this.savingBankApplicationModel.multipartFileList = this.fileUploadService.getFile(this.savingBankApplicationModel.closureSignedCopy ,ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.savingBankApplicationModel.closureSignedCopy);
+              this.isFileUpload = applicationConstants.TRUE;
             }
             if(this.savingBankApplicationModel.accountNumber != null && this.savingBankApplicationModel.accountNumber != undefined){
               this.getStanderedInstructionsByAccountNumber(this.savingBankApplicationModel.accountNumber);
@@ -203,6 +212,72 @@ this.memberPhotoCopyZoom = false;
         this.msgs = [];
         this.commonComponent.stopSpinner();
         this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
+    },
+      error => {
+        this.msgs = [];
+        this.commonComponent.stopSpinner();
+        this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      });
+  }
+
+   /**
+   * @implements get product details
+   * @param id 
+   * @author jyothi.naidana
+   */
+   getProductDefinitionByProductId(id: any) {
+    this.savingBankApplicationService.getProductByProductId(id).subscribe((data: any) => {
+      this.responseModel = data;
+      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+        if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
+          if (this.responseModel.data[0].accServiceConfigChargesList != null && this.responseModel.data[0].accServiceConfigChargesList != undefined && this.responseModel.data[0].accServiceConfigChargesList.length > 0) {
+            let serviceChargesList = this.responseModel.data[0].accServiceConfigChargesList.filter((data: any) => data != null && data.serviceTypeId == this.serviceTypeId);
+              if(serviceChargesList != null && serviceChargesList != undefined && serviceChargesList.length >0){
+                this.savingBankApplicationModel.closureCharges = serviceChargesList[0].serviceCharges;
+              }
+          }
+        }
+      }
+    });
+  }
+
+  /**
+   * @implements get all service Types master for compare service Type Id
+   * @author jyothi.naidana
+   */
+  getAllservicetypes() {
+    this.commonComponent.startSpinner();
+    this.servicetypeList =[];
+    this.serviceTypesService.getAllServiceTypes().subscribe((res: any) => {
+      this.responseModel = res;
+      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS && this.responseModel.data[0] !=null) {
+        if (this.responseModel.data == null || (this.responseModel.data != null && this.responseModel.data.length == 0)) {
+          this.commonComponent.stopSpinner();
+          this.msgs = [];
+          this.msgs = [{ severity: 'error', detail: applicationConstants.RELATIONSHIP_TYPE_NO_DATA_MESSAGE }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        }else{
+          this.servicetypeList = this.responseModel.data.filter((documenttype:any) => documenttype.status == applicationConstants.ACTIVE).map((count:any) => {
+            return { label: count.name, value: count.id }
+          });
+          let serviceType =  this.servicetypeList.find((data:any) => null != data && data.label == SbOperationConstantValue.CLOSURE);
+          if(serviceType != null && undefined != serviceType )
+             this.serviceTypeId = serviceType.value;
+          this.commonComponent.stopSpinner();
+        }
+      } else {
+        this.commonComponent.stopSpinner();
+        this.msgs = [];
+        this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
         setTimeout(() => {
           this.msgs = [];
         }, 2000);
@@ -364,6 +439,7 @@ this.memberPhotoCopyZoom = false;
      * @implements jyothi.naidana
      */
   fileUploader(event: any, fileUpload: FileUpload) {
+    this.isFileUpload = applicationConstants.FALSE;
     this.multipleFilesList = [];
     this.savingBankApplicationModel.filesDTOList = [];
     this.savingBankApplicationModel.closureSignedCopy = null;
@@ -372,6 +448,7 @@ this.memberPhotoCopyZoom = false;
     for (let file of event.files) {
       let reader = new FileReader();
       reader.onloadend = (e) => {
+        this.isFileUpload = applicationConstants.TRUE;
         let files = new FileUploadModel();
         this.uploadFileData = e.currentTarget;
         files.fileName = file.name;
@@ -411,7 +488,7 @@ this.memberPhotoCopyZoom = false;
    * @author jyothi.naidana
    */
   savingsAccountClosureUpdate(){
-      this.savingBankApplicationModel.accountStatusName = savingsbanktransactionconstant.CLOSURE;
+      this.savingBankApplicationModel.accountStatusName = CommonStatusData.CLOSURE_REQUEST;
       this.savingBankApplicationModel.closureDate =this.commonFunctionsService.getUTCEpoch(new Date(this.savingBankApplicationModel.closureDateVal));//closure date converstion
       this.savingsAccountService.updateSavingsAccountDetails(this.savingBankApplicationModel).subscribe((response: any) => {
         this.responseModel = response;
@@ -422,7 +499,7 @@ this.memberPhotoCopyZoom = false;
             this.msgs = [{ severity: 'success', detail: this.responseModel.statusMsg }];
             setTimeout(() => {
               this.msgs = [];
-              // this.router.navigate([savingsbanktransactionconstant.SB_TRANSACTION]);
+              this.router.navigate([savingsbanktransactionconstant.SB_TRANSACTION]);
             }, 2000);
           }
           else {
@@ -483,7 +560,7 @@ this.memberPhotoCopyZoom = false;
               if (sb.destinationAccountTypeName == sbStandingDestitnationAccountType.TO_RECURRING_DEPOSIT) {
                 this.getRdAccountDetailsByAccountNumber(sb.destinationAccountNumber);
               }
-              else if (sb.sbStandingDestitnationAccountType == sbStandingDestitnationAccountType.TO_TERM_LOAN) {
+              else if (sb.destinationAccountTypeName == sbStandingDestitnationAccountType.TO_TERM_LOAN) {
                 this.getTermAccountDetailsByAccountNumber(sb.destinationAccountNumber);
               }
             }

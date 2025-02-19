@@ -60,6 +60,8 @@
                                         (keyup)="appendPinCodeToPermanent()" placeholder="Enter Pincode"
                                         [(ngModel)]="termLoanCommunicationModel.pinCode"
                                         [disabled]="sameAsPermanentAddress">
+                                        <p-message severity="error" text="Enter Valid Pin Code"
+                                        *ngIf="!communicationForm.controls['pinCode'].valid && communicationForm.controls['pinCode'].dirty"></p-message>
                                 </div>
                             </div>
                         </div>
@@ -130,6 +132,8 @@
                                     <input pInputText type="text" formControlName="permanentPinCode"
                                         [disabled]="sameAsPermanentAddress" placeholder="Enter Pincode"
                                         [(ngModel)]="termLoanCommunicationModel.permanentPinCode">
+                                        <p-message severity="error" text="Enter Valid Pin Code"
+                                        *ngIf="!communicationForm.controls['permanentPinCode'].valid && communicationForm.controls['permanentPinCode'].dirty"></p-message>
                                 </div>
                             </div>
                         </div>

@@ -506,6 +506,7 @@ getAllRelationTypes(){
   fileUploader(event: any, fileUpload: FileUpload , filePathName:any) {
     this.isFileUploaded = applicationConstants.FALSE;
     this.multipleFilesList = [];
+    // this.saoNomineeModel.nomineeFilePathList = [];
     if(this.saoNomineeModel != null && this.saoNomineeModel != undefined && this.isEdit && this.saoNomineeModel.filesDTOList == null || this.saoNomineeModel.filesDTOList == undefined){
       this.saoNomineeModel.filesDTOList = [];
     }

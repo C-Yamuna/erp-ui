@@ -66,14 +66,14 @@ export class SavingsBankCommunicationComponent implements OnInit {
       districts: ['', [Validators.required]],
       mandal: ['', [Validators.required]],
       village: ['', [Validators.required]],
-      regesteredAddressOne: ['',],
+      regesteredAddressOne: ['', [Validators.required]],
       regesteredAddressTwo: ['',],
       pinCode:['', [Validators.required]],
       permenentState: ['', [Validators.required]],
       permenentDistricts: ['', [Validators.required]],
       permenentMandal: ['', [Validators.required]],
       permenentVillage: ['', [Validators.required]],
-      permenentAddressOne: ['', ],
+      permenentAddressOne: ['', [Validators.required]],
       permenentAddressTwo: ['', ],
       permenentPinCode:['', [Validators.required]],
       checked: [''],
@@ -150,10 +150,13 @@ export class SavingsBankCommunicationComponent implements OnInit {
    */
   sameAsPerAddr(flag :any) {
     if (this.savingsBankCommunicationModel.isSameAddress) {
+
+      this.communicationForm.get('permenentAddressOne')?.reset();
+      this.communicationForm.get('permenentPinCode')?.reset();
+
       this.communicationForm.get('permenentState')?.disable();
       this.communicationForm.get('permenentDistricts')?.disable();
       this.communicationForm.get('permenentMandal')?.disable();
-      
       this.communicationForm.get('permenentVillage')?.disable();
       this.communicationForm.get('permenentAddressOne')?.disable();
       this.communicationForm.get('permenentAddressTwo')?.disable();
@@ -187,12 +190,13 @@ export class SavingsBankCommunicationComponent implements OnInit {
       this.communicationForm.get('permenentState')?.enable();
       this.communicationForm.get('permenentDistricts')?.enable();
       this.communicationForm.get('permenentMandal')?.enable();
-      
       this.communicationForm.get('permenentVillage')?.enable();
       this.communicationForm.get('permenentAddressOne')?.enable();
       this.communicationForm.get('permenentAddressTwo')?.enable();
       this.communicationForm.get('permenentPinCode')?.enable();
-      
+
+      this.communicationForm.get('permenentAddressOne')?.reset();
+      this.communicationForm.get('permenentPinCode')?.reset();
 
       if(flag){
         this.savingsBankCommunicationModel.permntStateId = null;
@@ -323,7 +327,7 @@ export class SavingsBankCommunicationComponent implements OnInit {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.statesList = this.responseModel.data;
-            this.statesList = this.responseModel.data.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+            this.statesList = this.responseModel.data.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
               return { label: relationType.name, value: relationType.id };
             });
             let relationshiptype = this.statesList.find((data: any) => null != data && this.savingsBankCommunicationModel.stateId != null && data.value == this.savingsBankCommunicationModel.stateId);
@@ -352,7 +356,7 @@ export class SavingsBankCommunicationComponent implements OnInit {
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
           this.districtsList = this.responseModel.data;
-          this.districtsList = this.districtsList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+          this.districtsList = this.districtsList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
             return { label: relationType.name, value: relationType.id };
           });
           let district = this.districtsList.find((data: any) => null != data && this.savingsBankCommunicationModel.districtId != null && data.value == this.savingsBankCommunicationModel.districtId);
@@ -378,7 +382,7 @@ export class SavingsBankCommunicationComponent implements OnInit {
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data != null && this.responseModel.data != undefined ) {
           this.permenentDistrictList = this.responseModel.data;
-          this.permenentDistrictList = this.permenentDistrictList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+          this.permenentDistrictList = this.permenentDistrictList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
             return { label: relationType.name, value: relationType.id };
           });
           let permenentdistrictName = this.permenentDistrictList.find((data: any) => null != data && this.savingsBankCommunicationModel.permntDistrictId != null && data.value == this.savingsBankCommunicationModel.permntDistrictId);
@@ -412,7 +416,7 @@ export class SavingsBankCommunicationComponent implements OnInit {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.districtsList = this.responseModel.data;
-            this.districtsList = this.districtsList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+            this.districtsList = this.districtsList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
               return { label: relationType.name, value: relationType.id };
             });
           }
@@ -438,7 +442,7 @@ export class SavingsBankCommunicationComponent implements OnInit {
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data.length > 0 &&  this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
         this.mandalsList = this.responseModel.data;
-        this.mandalsList = this.mandalsList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+        this.mandalsList = this.mandalsList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
           return { label: relationType.name, value: relationType.id };
         });
         let subDistrict = this.mandalsList.find((data: any) => null != data && this.savingsBankCommunicationModel.permntSubDistrictId  != null && data.value == this.savingsBankCommunicationModel.subDistrictId);
@@ -464,7 +468,7 @@ export class SavingsBankCommunicationComponent implements OnInit {
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
         this.permenentMandalsList = this.responseModel.data;
-        this.permenentMandalsList = this.permenentMandalsList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+        this.permenentMandalsList = this.permenentMandalsList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
           return { label: relationType.name, value: relationType.id };
         });
           let permenentdistrictName = this.permenentMandalsList.find((data: any) => null != data && this.savingsBankCommunicationModel.permntSubDistrictId  != null && data.value == this.savingsBankCommunicationModel.permntSubDistrictId);
@@ -497,7 +501,7 @@ export class SavingsBankCommunicationComponent implements OnInit {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.mandalsList = this.responseModel.data;
-            this.mandalsList = this.mandalsList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+            this.mandalsList = this.mandalsList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
               return { label: relationType.name, value: relationType.id };
             });
           }
@@ -527,7 +531,7 @@ export class SavingsBankCommunicationComponent implements OnInit {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 &&  this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.villageList = this.responseModel.data;
-            this.villageList = this.villageList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+            this.villageList = this.villageList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
               return { label: relationType.name, value: relationType.id };
             });
           let subDistrict = this.villageList.find((data: any) => null != data && this.savingsBankCommunicationModel.permntVillageId != null &&  data.value == this.savingsBankCommunicationModel.villageId);
@@ -563,7 +567,7 @@ export class SavingsBankCommunicationComponent implements OnInit {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 ) {
             this.permenentVillagesList = this.responseModel.data;
-            this.permenentVillagesList = this.permenentVillagesList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+            this.permenentVillagesList = this.permenentVillagesList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
               return { label: relationType.name, value: relationType.id };
             });
           let permenentdistrictName = this.permenentVillagesList.find((data: any) => null != data && this.savingsBankCommunicationModel.permntVillageId != null && data.value == this.savingsBankCommunicationModel.permntVillageId);
@@ -596,7 +600,7 @@ export class SavingsBankCommunicationComponent implements OnInit {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 &&  this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.villageList = this.responseModel.data;
-            this.villageList = this.villageList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+            this.villageList = this.villageList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
               return { label: relationType.name, value: relationType.id };
             });
           }

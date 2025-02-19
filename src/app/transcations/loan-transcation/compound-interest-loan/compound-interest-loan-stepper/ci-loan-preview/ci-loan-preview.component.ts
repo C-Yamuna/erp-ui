@@ -27,7 +27,7 @@ import { CiInterestPolicy } from '../../compound-interest-product-definition/com
 import { CiLoanGenealogyTreeService } from '../ci-loan-genealogy-tree/shared/ci-loan-genealogy-tree.service';
 import { savingsbanktransactionconstant } from 'src/app/transcations/savings-bank-transcation/savingsbank-transaction-constant';
 import { FileUploadModel } from 'src/app/layout/mainmenu/shared/file-upload-model.model';
-import { CollateralTypes } from 'src/app/transcations/common-status-data.json';
+import { CollateralTypes, MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
 import { saveAs } from 'file-saver';
 
 
@@ -87,6 +87,8 @@ export class CiLoanPreviewComponent {
   institutionPromoterFlag: boolean = false;
   groupPromotersPopUpFlag: boolean = false;
   isShowSubmit: boolean = applicationConstants.FALSE;
+  indvidualFalg: boolean = true;
+  
 
   membershipBasicDetailsModel: MembershipBasicDetails = new MembershipBasicDetails();
   membershipGroupDetailsModel: MembershipGroupDetails = new MembershipGroupDetails();
@@ -142,7 +144,7 @@ export class CiLoanPreviewComponent {
     this.guarantorColumns = [
       { field: 'memberTypeName', header: 'LOAN_TRANSACTION.MEMBER_TYPE' },
       { field: 'admissionNumber', header: 'LOAN_TRANSACTION.ADMISSION_NO' },
-      { field: 'admissionDate', header: 'LOAN_TRANSACTION.ADMISSION_DATE' },
+      { field: 'admissionDateVal', header: 'LOAN_TRANSACTION.ADMISSION_DATE' },
       { field: 'name', header: 'LOAN_TRANSACTION.NAME' },
       { field: 'aadharNumber', header: 'LOAN_TRANSACTION.AADHAR_NUMBER' },
       { field: 'mobileNumber', header: 'LOAN_TRANSACTION.MOBILE_NUMBER' },
@@ -151,7 +153,7 @@ export class CiLoanPreviewComponent {
     this.jointHolderColumns = [
       // { field: 'memberTypeName', header: 'LOAN_TRANSACTION.MEMBER_TYPE' },
       { field: 'admissionNumber', header: 'LOAN_TRANSACTION.ADMISSION_NO' },
-      { field: 'admissionDate', header: 'LOAN_TRANSACTION.ADMISSION_DATE' },
+      { field: 'admissionDateVal', header: 'LOAN_TRANSACTION.ADMISSION_DATE' },
       { field: 'name', header: 'LOAN_TRANSACTION.NAME' },
       { field: 'aadharNumber', header: 'LOAN_TRANSACTION.AADHAR_NUMBER' },
       { field: 'mobileNumber', header: 'LOAN_TRANSACTION.MOBILE_NUMBER' },
@@ -454,6 +456,11 @@ export class CiLoanPreviewComponent {
           if (this.ciLoanApplicationModel.loanDueDate != null && this.ciLoanApplicationModel.loanDueDate != undefined)
             this.ciLoanApplicationModel.loanDueDateVal = this.datePipe.transform(this.ciLoanApplicationModel.loanDueDate, this.orgnizationSetting.datePipe);
           
+          if(this.ciLoanApplicationModel.memberTypeName == MemberShipTypesData.INDIVIDUAL)
+            this.indvidualFalg = true;
+          else {
+            this.indvidualFalg = false;
+          }
             //frequency name
           if(this.repaymentFrequencyList != null && this.repaymentFrequencyList != undefined && this.repaymentFrequencyList.length >0 && this.ciLoanApplicationModel.repaymentFrequency != null && this.ciLoanApplicationModel.repaymentFrequency !+ undefined){
             let repaymentFrequencyName = this.repaymentFrequencyList.filter((obj:any)=>obj.value == this.ciLoanApplicationModel.repaymentFrequency);//set repayment frequency name 
@@ -470,6 +477,7 @@ export class CiLoanPreviewComponent {
 
           if (this.ciLoanApplicationModel.applicationPath != null && this.ciLoanApplicationModel.applicationPath != undefined) {
             this.ciLoanApplicationModel.multipartFileList = this.fileUploadService.getFile(this.ciLoanApplicationModel.applicationPath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.ciLoanApplicationModel.applicationPath);
+            this.isFileUploaded = applicationConstants.TRUE;
           } 
 
           if (this.ciLoanApplicationModel.operationTypeName != null && this.ciLoanApplicationModel.operationTypeName != undefined ){
@@ -831,16 +839,19 @@ export class CiLoanPreviewComponent {
    * @author jyothi.naidana
    */
   pdfUploader(event:any,fileUpload:any){
-    this.isFileUploaded = applicationConstants.TRUE;
+    this.isFileUploaded = applicationConstants.FALSE;
     this.multipleFilesList = [];
     this.ciLoanApplicationModel.filesDTOList = [];
     this.ciLoanApplicationModel.multipartFileList = [];
     this.ciLoanApplicationModel.applicationPath = null;
     let files: FileUploadModel = new FileUploadModel();
-    for (let file of event.files) {
+    let selectedFiles = [...event.files];
+    fileUpload.clear();
+    for (let file of selectedFiles) {
       let reader = new FileReader();
       reader.onloadend = (e) => {
         let files = new FileUploadModel();
+        this.isFileUploaded = applicationConstants.TRUE;
         this.uploadFileData = e.currentTarget;
         files.fileName = file.name;
         files.fileType = file.type.split('/')[1];
@@ -851,6 +862,7 @@ export class CiLoanPreviewComponent {
         if (index === -1) {
           this.multipleFilesList.push(files);
           this.ciLoanApplicationModel.filesDTOList.push(files); // Add to filesDTOList array
+          this.ciLoanApplicationModel.multipartFileList.push(files);
         }
         let timeStamp = this.commonComponent.getTimeStamp();
         this.ciLoanApplicationModel.filesDTOList[0].fileName = "CI_Application_signed_copy" + this.ciLoanApplicationModel.id + "_" +timeStamp+ "_"+ file.name ;
@@ -864,7 +876,8 @@ export class CiLoanPreviewComponent {
   }
 
   fileRemoeEvent(){
-
+    this.ciLoanApplicationModel.multipartFileList = [];
+    this.isFileUploaded = applicationConstants.FALSE;
   }
 
   /**

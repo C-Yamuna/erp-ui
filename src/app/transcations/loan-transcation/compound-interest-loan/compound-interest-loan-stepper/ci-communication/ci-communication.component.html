@@ -49,13 +49,15 @@
                                 <label><span class="red">*</span>{{'LOAN_TRANSACTION.ADDRESS' | translate}}</label>
                                     <textarea type="text" class="form-control" pInputTextarea formControlName="address1"
                                     (keyup)="RegAddressToComAddress()" [(ngModel)]="ciLoanCommunicationModel.address1" placeholder="House No., Door No., Landmark..etc"></textarea>
+                                    <p-message severity="error" text="Enter Valid address"
+                                        *ngIf="!communicationForm.controls['address1'].valid && communicationForm.controls['address1'].dirty"></p-message>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-label">
                                 <label><span class="red">*</span>{{'LOAN_TRANSACTION.PINCODE' | translate}}</label>
                                     <input pInputText id="bunit_txt_name" type="text"
-                                        formControlName="pinCode" placeholder="Enter Your Pincode"
+                                        formControlName="pinCode" placeholder="Enter Your Pincode" minlength="6" maxlength="6" pKeyFilter="pnum"
                                         (keyup)="RegAddressToComAddress()" [(ngModel)]="ciLoanCommunicationModel.pinCode">
                                     <p-message severity="error" text="Enter Valid Pin Code"
                                         *ngIf="!communicationForm.controls['pinCode'].valid && communicationForm.controls['pinCode'].dirty"></p-message>
@@ -120,13 +122,15 @@
                                     <textarea class="form-control" type="text" pInputTextarea formControlName="permanentAddress1"
                                         [(ngModel)]="ciLoanCommunicationModel.permanentAddress1"
                                         [disabled]="sameAsPermanentAddress" placeholder="House No., Door No., Landmark..etc"></textarea>
+                                        <p-message severity="error" text="Enter Valid permanent Address"
+                                        *ngIf="!communicationForm.controls['permanentAddress1'].valid && communicationForm.controls['permanentAddress1'].dirty"></p-message>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-label">
                                 <label><span class="red">*</span>{{'LOAN_TRANSACTION.PINCODE' | translate}}</label>
                                     <input pInputText id="bunit_txt_name" type="text"
-                                        formControlName="permanentPinCode" placeholder="Enter Your Pincode"
+                                        formControlName="permanentPinCode" placeholder="Enter Your Pincode" minlength="6" maxlength="6" pKeyFilter="pnum"
                                         [(ngModel)]="ciLoanCommunicationModel.permanentPinCode">
                                     <p-message severity="error" text="Enter Valid Pin Code"
                                         *ngIf="!communicationForm.controls['permanentPinCode'].valid && communicationForm.controls['permanentPinCode'].dirty"></p-message>

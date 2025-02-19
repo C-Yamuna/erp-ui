@@ -65,7 +65,7 @@ export class CiLoanGuarantorComponent {
 
     this.guarantorForm = this.formBuilder.group({
       admissionNumber: [''],
-      noOfJointHolders: ['']
+      noOfJointHolders:  [{ value: '', disabled: true }],
     });
   }
   ngOnInit(): void {
@@ -124,6 +124,16 @@ export class CiLoanGuarantorComponent {
               }
             if (this.ciLoanApplicationModel.accountNumber != null && this.ciLoanApplicationModel.accountNumber != undefined) {
               this.accountNumber = this.ciLoanApplicationModel.accountNumber;
+            }
+            if (this.ciLoanApplicationModel.admissionNo != null && this.ciLoanApplicationModel.admissionNo != undefined) {
+              this.admissionNumber = this.ciLoanApplicationModel.admissionNo;
+              if(this.membershipList != null && this.membershipList != undefined && this.membershipList.length >0){
+                this.admissionNumberList = this.membershipList.filter((obj: any) => obj != null && obj.memberTypeId == applicationConstants.ACTIVE && obj.statusName == CommonStatusData.APPROVED && obj.admissionNumber != this.admissionNumber).map((relationType: { id: any; name: any; admissionNumber: any; memberTypeName: any }) => {
+                  return {
+                    label: relationType.admissionNumber
+                  };
+                });
+              }
             }
             if (this.ciLoanApplicationModel.ciLoanGuarantorDetailsDTOList != null) {
               this.ciGuarantorDetailsList = this.ciLoanApplicationModel.ciLoanGuarantorDetailsDTOList;
@@ -233,6 +243,7 @@ export class CiLoanGuarantorComponent {
     //     promoter => promoter.admissionNumber === admissionNumber);
     //   this.ciGuarantorDetailsList[existingIndex] = null;
     this.ciGuarantorDetailsList = [];
+    this.numberOfJointHolders = 0;
     this.updateData();
     // }
   }
@@ -244,7 +255,7 @@ export class CiLoanGuarantorComponent {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.membershipList = this.responseModel.data;
-            this.admissionNumberList = this.membershipList.filter((obj: any) => obj != null && obj.memberTypeId == applicationConstants.ACTIVE && obj.statusName == CommonStatusData.APPROVED).map((relationType: { id: any; name: any; admissionNumber: any; memberTypeName: any }) => {
+            this.admissionNumberList = this.membershipList.filter((obj: any) => obj != null && obj.memberTypeId == applicationConstants.ACTIVE && obj.statusName == CommonStatusData.APPROVED && obj.admissionNumber != this.admissionNumber).map((relationType: { id: any; name: any; admissionNumber: any; memberTypeName: any }) => {
               return {
                 label: relationType.admissionNumber
               };

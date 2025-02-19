@@ -74,7 +74,7 @@ export class FdCummulativeApprovalDetailsComponent {
 
     ]
     this.termdeposits = [
-      { field: 'adminssionNumber', header: 'TERMDEPOSITSTRANSACTION.ADMINSSION_NUMBER' },
+      { field: 'admissionNumber', header: 'TERMDEPOSITSTRANSACTION.ADMINSSION_NUMBER' },
       { field: 'accountNumber', header: 'TERMDEPOSITSTRANSACTION.ACCOUNT_NUMBER' },
       { field: 'accountTypeName', header: 'TERMDEPOSITSTRANSACTION.ACCOUNT_TYPE' },
       { field: 'memberTypeName', header: 'TERMDEPOSITSTRANSACTION.MEMBER_TYPE' },

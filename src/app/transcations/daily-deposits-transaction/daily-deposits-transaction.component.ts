@@ -11,6 +11,8 @@ import { applicationConstants } from 'src/app/shared/applicationConstants';
 import { DailyDepositsAccountsService } from './shared/daily-deposits-accounts.service';
 import { DailyDepositTransactionConstants } from './daily-deposits-transaction-constants';
 import { CommonStatusData } from '../common-status-data.json';
+import { ERP_TRANSACTION_CONSTANTS } from '../erp-transaction-constants';
+import { FileUploadService } from 'src/app/shared/file-upload.service';
 
 @Component({
   selector: 'app-daily-deposits-transaction',
@@ -40,11 +42,15 @@ export class DailyDepositsTransactionComponent {
   approvedCount: any;
   requestForResubmmissionCount: any; 
   rejectCount: any;
+  memberSignatureCopyMultipartFileList:any[]=[];
+  showDialogsForSignature:  boolean = false;
+  showDialog: boolean= false;
 
   constructor(private router: Router, private translate: TranslateService,
     private commonComponent: CommonComponent, private encryptDecryptService:
     EncryptDecryptService, private commonFunctionsService: CommonFunctionsService,
-    private dailyDepositsAccountsService:DailyDepositsAccountsService) {
+    private dailyDepositsAccountsService:DailyDepositsAccountsService,
+    private fileUploadService: FileUploadService) {
 
   }
   ngOnInit(): void {
@@ -92,9 +98,24 @@ export class DailyDepositsTransactionComponent {
             this.approvedCount = this.gridListData.filter(membership => membership.statusName === CommonStatusData.APPROVED).length;
             this.requestForResubmmissionCount = this.gridListData.filter(membership => membership.statusName === CommonStatusData.REQUEST_FOR_RESUBMISSION).length;
             this.rejectCount = this.gridListData.filter(membership => membership.statusName === CommonStatusData.REJECTED).length;
+            if (membership.photoCopyPath != null && membership.photoCopyPath != undefined ) {
+              membership.multipartFileListForPhotoCopy = this.fileUploadService.getFile(membership.photoCopyPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + membership.photoCopyPath);
+              membership.showDialog = true;
+            }
+            else{
+              membership.showDialog = false;
+            }
 
+            if (membership.signatureCopyPath != null && membership.signatureCopyPath != undefined ) {
+              membership.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(membership.signatureCopyPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + membership.signatureCopyPath);
+              membership.showDialogsForSignature = true;
+            }
+            else{
+              membership.showDialogsForSignature = false;
+            }
           return membership
         });
+        
       } else {
         this.msgs = [];
         this.msgs = [{ severity: "error", summary: 'Failed', detail: this.responseModel.statusMsg }];
@@ -126,7 +147,9 @@ export class DailyDepositsTransactionComponent {
   onClickMemberPhotoCopy(rowData: any) {
     this.memberPhotoCopyZoom = true;
     this.memberphotCopyMultipartFileList = [];
+    this.memberSignatureCopyMultipartFileList = [];
     this.memberphotCopyMultipartFileList = rowData.multipartFileListForPhotoCopy;
+    this.memberSignatureCopyMultipartFileList = rowData.signatureCopyPath;
   }
   closePhoto() {
     this.memberPhotoCopyZoom = false;

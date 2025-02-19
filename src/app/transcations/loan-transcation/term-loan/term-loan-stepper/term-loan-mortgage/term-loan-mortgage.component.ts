@@ -650,7 +650,9 @@ export class TermLoanMortgageComponent {
                   this.accountNumber = this.termLoanApplicationModel.accountNumber
                 if(this.termLoanApplicationModel.requestedAmount != null && this.termLoanApplicationModel.requestedAmount != undefined)
                   this.requestedAmount =this.termLoanApplicationModel.requestedAmount
-
+                if (this.responseModel.data[0].admissionNo != null && this.responseModel.data[0].admissionNo != undefined) {
+                  this.admissionNumber = this.responseModel.data[0].admissionNo;
+                }
                 //collatral get based on collateral type
                 this.getProductDefinitionByProductId(this.termLoanApplicationModel.termProductId);
                 if (this.termLoanApplicationModel.collateralType != undefined) {//gold

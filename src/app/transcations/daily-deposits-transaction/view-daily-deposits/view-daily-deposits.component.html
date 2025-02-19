@@ -390,8 +390,8 @@
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
-                                <div class="global-card-bg-color view-carddata icon-size pb-1">
-                                    <div class="col-12">
+                                <div class="global-card-bg-color view-carddata icon-size pb-2">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -407,19 +407,19 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-12 px-0">
+                                        <div class="col-12 p-0">
                                             <div class="row g-3">
 
                                                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12"
                                                     *ngFor="let document of kycGridList ; let i = index">
-                                                    <div class="stepper-kyc-card p-3 mb-2">
+                                                    <div class="stepper-kyc-card p-3 pb-1 mb-2">
                                                         <!-- view card -->
                                                         <div class="row">
                                                             <div
                                                                 class="col-lg-7 col-md-7 col-sm-7 col-xs-6 d-flex align-items-center">
                                                                 <div class="card-leftbody">
                                                                     <div
-                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                         <h6 class="label-view">
                                                                             {{'ERP.DOCUMENT_TYPE' |
                                                                             translate}}</h6>
@@ -427,7 +427,7 @@
                                                                             {{document.kycDocumentTypeName}}</p>
                                                                     </div>
                                                                     <div
-                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                         <h6 class="label-view">
                                                                             {{'ERP.DOCUMENT_NUMBER'
                                                                             | translate}}</h6>
@@ -435,7 +435,7 @@
                                                                             {{document.documentNumber}}</p>
                                                                     </div>
                                                                     <div
-                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                         <h6 class="label-view">
                                                                             {{'ERP.NAME_AS_PER_DOCUMENT' |
                                                                             translate}}</h6>
@@ -486,8 +486,8 @@
 
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
-                                <div class="global-card-bg-color view-carddata icon-size">
-                                    <div class="col-12">
+                                <div class="global-card-bg-color view-carddata icon-size pb-2">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -502,7 +502,7 @@
                                                     (click)="communicationEdit(accountsModel)"></p-button>
                                             </div>
                                         </div>
-                                        <div class="col-12 px-0">
+                                        <div class="col-12 p-0">
                                             <div class="row g-3">
                                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <div class="nominee-card p-3 pb-1 mb-2">
@@ -511,12 +511,12 @@
                                                                 {{'ERP.PERMANENT' | translate}}
                                                             </h6>
                                                             <div class="col-12">
-                                                                <div class="row mt-2">
+                                                                <div class="row">
                                                                     <div
                                                                         class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                                         <div class="row">
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">
                                                                                     {{'ERP.STATE' |
                                                                                     translate}}</h6>
@@ -525,7 +525,7 @@
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">
                                                                                     {{'ERP.DISTRICT'
                                                                                     | translate}}</h6>
@@ -535,7 +535,7 @@
                                                                             </div>
 
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">
                                                                                     {{'ERP.SUB_DISTRICT'
                                                                                     | translate}}</h6>
@@ -544,7 +544,7 @@
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">
                                                                                     {{'ERP.VILLAGE'
                                                                                     | translate}}</h6>
@@ -553,7 +553,7 @@
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">
                                                                                     {{'ERP.ADDRESS'
                                                                                     | translate}}</h6>
@@ -562,7 +562,7 @@
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">
                                                                                     {{'ERP.PINCODE'
                                                                                     | translate}}</h6>
@@ -583,12 +583,12 @@
                                                             <h6 class="super-sub-heading mt-1">
                                                                 {{'ERP.REGISTERED' | translate}}</h6>
                                                             <div class="col-12">
-                                                                <div class="row mt-2">
+                                                                <div class="row">
                                                                     <div
                                                                         class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                                         <div class="row">
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">
                                                                                     {{'ERP.STATE' |
                                                                                     translate}}</h6>
@@ -597,7 +597,7 @@
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">
                                                                                     {{'ERP.DISTRICT'
                                                                                     | translate}}</h6>
@@ -606,7 +606,7 @@
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">
                                                                                     {{'ERP.SUB_DISTRICT'
                                                                                     | translate}}</h6>
@@ -615,7 +615,7 @@
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">
                                                                                     {{'ERP.VILLAGE'
                                                                                     | translate}}</h6>
@@ -624,7 +624,7 @@
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">
                                                                                     {{'ERP.ADDRESS'
                                                                                     | translate}}</h6>
@@ -633,7 +633,7 @@
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">
                                                                                     {{'ERP.PINCODE'
                                                                                     | translate}}</h6>
@@ -682,8 +682,8 @@
 
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
-                                <div class=" global-card-bg-color view-carddata icon-size">
-                                    <div class="col-12">
+                                <div class=" global-card-bg-color view-carddata icon-size pb-1">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -700,47 +700,47 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-12 px-0">
+                                        <div class="col-12 p-0">
                                             <div class="row">
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'ERP.PRODUCT_TYPE' |
                                                         translate}}</h6>
                                                     <p class="label-input-text">
                                                         {{accountsModel.productName}}
                                                     </p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'ERP.ACCOUNT_TYPE' |
                                                         translate}}</h6>
                                                     <p class="label-input-text">
                                                         {{accountsModel.accountTypeName}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'ERP.ACCOUNT_NUMBER' |
                                                         translate}}</h6>
                                                     <p class="label-input-text">
                                                         {{accountsModel.accountNumber}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'ERP.DEPOSIT_DATE' |
                                                         translate}}
                                                     </h6>
                                                     <p class="label-input-text">
                                                         {{accountsModel.depositDate}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'ERP.DEPOSIT_AMOUNT' |
                                                         translate}}</h6>
                                                     <p class="label-input-text">
                                                         {{accountsModel.depositAmount}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'ERP.TENURE_IN_MONTHS'
                                                         | translate}}</h6>
                                                     <p class="label-input-text">
                                                         {{accountsModel.tenureInMonths}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'ERP.TENURE_IN_YEARS' |
                                                         translate}}
                                                     </h6>
@@ -757,8 +757,8 @@
 
                         <div class="col-lg-12 col-md-12 col-sm-12"  *ngIf="jointHoldersFlag" >
                             <div class="col-12 p-0">
-                                <div class="global-card-bg-color view-carddata icon-size">
-                                    <div class="col-12">
+                                <div class="global-card-bg-color view-carddata icon-size pb-1">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -780,35 +780,35 @@
                                                     <div class="col"></div>
                                                     <div class="w-100 mt-1 mb-2 h-90p">
                                                 <div class="row" >
-                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                                 <span class="label-view">{{'ERP.ADMISSION_NO' | translate}}</span>
                                                                 <p class="font-semibold text-break m-0 label-input-text">{{jointHolderDetails.admissionNumber}}</p>
                                                             </div>
-                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                                 <span class="label-view">{{'ERP.NAME' | translate}}</span>
                                                                 <p class="font-semibold text-break m-0 label-input-text">{{jointHolderDetails.name}}</p>
                                                             </div>
-                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                                 <span class="label-view">{{'ERP.MEMBER_TYPE' | translate}}</span>
                                                                 <p class="font-semibold text-break m-0 label-input-text">{{jointHolderDetails.memberTypeName}}</p>
                                                             </div>
-                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                                 <span class="label-view">{{'ERP.ADMISSION_DATE' | translate}}</span>
                                                                 <p class="font-semibold text-break m-0 label-input-text">{{jointHolderDetails.admissionDateVal}}</p>
                                                             </div>
-                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                                 <span class="label-view">{{'ERP.AADHAR_NO' | translate}}</span>
                                                                 <p class="font-semibold text-break m-0 label-input-text">{{jointHolderDetails.aadharNumber}}</p>
                                                             </div>
-                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                                 <span class="label-view">{{'ERP.PAN_NUMBER' | translate}}</span>
                                                                 <p class="font-semibold text-break m-0 label-input-text">{{jointHolderDetails.panNumber}}</p>
                                                             </div>
-                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                                 <span class="label-view">{{'ERP.POC_MOBILE_NO' | translate}}</span>
                                                                 <p class="font-semibold text-break m-0 label-input-text">{{jointHolderDetails.mobileNumber}}</p>
                                                             </div>
-                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                                 <span class="label-view">{{'ERP.EMAIL' | translate}}</span>
                                                                 <p class="font-semibold text-break m-0 label-input-text">{{jointHolderDetails.emailId}}</p>
                                                             </div>
@@ -827,7 +827,7 @@
                         <div class="col-lg-12 col-md-12 col-sm-12" *ngIf="memberGroupFlag">
                             <div class="col-12 p-0">
                                 <div class=" global-card-bg-color view-carddata icon-size">
-                                    <div class="col-12">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -869,7 +869,7 @@
                         <div class="col-lg-12 col-md-12 col-sm-12" *ngIf="memberIntitutionFlag">
                             <div class="col-12 p-0">
                                 <div class=" global-card-bg-color view-carddata icon-size">
-                                    <div class="col-12">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -916,8 +916,8 @@
 
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
-                                <div class=" global-card-bg-color view-carddata icon-size pb-1">
-                                    <div class="col-12">
+                                <div class=" global-card-bg-color view-carddata icon-size pb-2">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -932,7 +932,7 @@
                                                     (click)="nomineeEdit(accountsModel)"></p-button>
                                             </div>
                                         </div>
-                                        <div class="col-12 px-0">
+                                        <div class="col-12 p-0">
                                             <div class="row g-3">
                                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <div class="stepper-nominee-card p-3 pb-1 mb-2">
@@ -940,13 +940,13 @@
                                                             <h6 class="super-sub-heading mt-1">
                                                                 {{'ERP.NOMINEE' | translate}}</h6>
                                                             <div class="col-12">
-                                                                <div class="row mt-2">
+                                                                <div class="row">
                                                                     <div
                                                                         class="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center">
                                                                         <div class="card-leftbody">
                                                                             <div class="row">
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'ERP.NOMINEE_TYPE'
                                                                                         | translate}}</h6>
@@ -955,7 +955,7 @@
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'ERP.RELATIONSHIP_WITH_MEMBER'
                                                                                         | translate}}</h6>
@@ -964,7 +964,7 @@
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'ERP.NAME'
                                                                                         | translate}}</h6>
@@ -976,7 +976,7 @@
                                                         <div class="row "> -->
 
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'ERP.AADHAR'
                                                                                         | translate}}</h6>
@@ -985,7 +985,7 @@
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'ERP.CONTACT'
                                                                                         | translate}}</h6>
@@ -994,7 +994,7 @@
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'ERP.EMAIL'
                                                                                         | translate}}</h6>
@@ -1049,13 +1049,13 @@
                                                                 (click)="nomineeEdit(viewSavingBankModel)"></p-button>
                                                         </div> -->
                                                             <div class="col-12">
-                                                                <div class="row mt-2">
+                                                                <div class="row">
                                                                     <div
                                                                         class="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center">
                                                                         <div class="card-leftbody">
                                                                             <div class="row">
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'ERP.GUARDAIN_TYPE'
                                                                                         | translate}}</h6>
@@ -1064,21 +1064,21 @@
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'ERP.RELATIONSHIP_WITH_MEMBER'
                                                                                         | translate}}</h6>
                                                                                     <p class="label-input-text">
-                                                                                        {{accountGuardianModel.relationTypeName}}
+                                                                                        {{accountGuardianModel.relationshipTypeName}}
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'ERP.NAME'
                                                                                         | translate}}</h6>
                                                                                     <p class="label-input-text">
-                                                                                        {{accountGuardianModel.name}}
+                                                                                        {{accountGuardianModel.guardianName}}
                                                                                     </p>
                                                                                 </div>
 
@@ -1086,30 +1086,30 @@
                                                                                 <!-- </div>
                                                             <div class="row "> -->
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'ERP.AADHAR'
                                                                                         | translate}}</h6>
                                                                                     <p class="label-input-text">
-                                                                                        {{accountGuardianModel.aadharNumber}}
+                                                                                        {{accountGuardianModel.guardianAadharNumber}}
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'ERP.CONTACT'
                                                                                         | translate}}</h6>
                                                                                     <p class="label-input-text">
-                                                                                        {{accountGuardianModel.mobileNumber}}
+                                                                                        {{accountGuardianModel.guardianMobileNumber}}
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'ERP.EMAIL'
                                                                                         | translate}}</h6>
                                                                                     <p class="label-input-text">
-                                                                                        {{accountGuardianModel.email}}
+                                                                                        {{accountGuardianModel.guardianEmailId}}
                                                                                     </p>
                                                                                 </div>
                                                                             </div>
@@ -1157,8 +1157,8 @@
 
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
-                                <div class="global-card-bg-color view-carddata icon-size">
-                                    <div class="col-12">
+                                <div class="global-card-bg-color view-carddata icon-size pb-2">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -1174,12 +1174,12 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-12 px-0">
+                                        <div class="col-12 p-0">
                                             <div class="row g-3">
 
                                                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12"
                                                     *ngFor="let document of requiredDocumentsList ; let i = index">
-                                                    <div class="stepper-doc-card p-3 mb-2">
+                                                    <div class="stepper-doc-card p-3 pb-1 mb-2">
                                                         <!-- view card -->
                                                         <div class="row">
 
@@ -1187,19 +1187,19 @@
                                                                 class="col-lg-7 col-md-7 col-sm-7 d-flex align-items-center">
                                                                 <div class="card-leftbody">
                                                                     <div
-                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                         <h6 class="label-view">Document Type</h6>
                                                                         <p class="label-input-text">
                                                                             {{document.requiredDocumentTypeName}}</p>
                                                                     </div>
                                                                     <div
-                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                         <h6 class="label-view">Document Number</h6>
                                                                         <p class="label-input-text">
                                                                             {{document.documentNumber}}</p>
                                                                     </div>
                                                                     <div
-                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                         <h6 class="label-view">Document Name</h6>
                                                                         <p class="label-input-text docname-texteclipse"
                                                                             pTooltip="{{document.requiredDocumentFilePath}}"

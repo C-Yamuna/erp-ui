@@ -74,7 +74,6 @@ export class SaoBorrowingAccountMappingComponent {
         this.saoborrowingAccountMappedLoansDTOList.forEach(row => {
           row.selected = this.borrowingsAccountMappinglist.some(item => item.loanAccountNumber === row.accountNumber);
         });
-        this.updateHeaderCheckboxState(); 
         this.getBySaoBorrowingAccountId(this.borrowingAccountId);
         if (this.borrowingAccountId != "" && this.borrowingAccountId != null && this.borrowingAccountId != undefined) {
           this.saoAccountDetailsService.getSaoAccountDetailsById(this.borrowingAccountId).subscribe(res => {
@@ -94,7 +93,7 @@ export class SaoBorrowingAccountMappingComponent {
       }
     }) 
     this.save();
-    
+    this.updateHeaderCheckboxState();
 
   }
   getBySaoBorrowingAccountId(borrowingAccountId:any) {
@@ -111,8 +110,11 @@ export class SaoBorrowingAccountMappingComponent {
           );
         });  
         this.updateData();
+        this.updateHeaderCheckboxState();
         }
       } else {
+        this.saoborrowingAccountMappedLoansDTOList = []; // Reset data to avoid issues
+        this.selectAllChecked = false;
         this.commonComponent.stopSpinner();
         this.msgs = [];
         this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
@@ -186,10 +188,12 @@ selectAll(event: any) {
   this.updateData();  
 }
 
-
-
 updateHeaderCheckboxState() {
-  this.selectAllChecked = this.saoborrowingAccountMappedLoansDTOList.every(row => row.selected);
+  if (!this.saoborrowingAccountMappedLoansDTOList || this.saoborrowingAccountMappedLoansDTOList.length === 0) {
+    this.selectAllChecked = false; 
+  } else {
+    this.selectAllChecked = this.saoborrowingAccountMappedLoansDTOList.every(row => row.selected);
+  }
 }
   save() {
     this.updateData();

@@ -8,6 +8,7 @@
     margin: 0px;
     /* border: 1px soid #5686E1 !important; */
     border-radius: 2px;
+    word-break: break-all;
 }
 .add-app-dropdown .p-menu-list li{
     margin-bottom: 5px;

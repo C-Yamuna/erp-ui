@@ -116,26 +116,28 @@
                 <td *ngFor="let col of termdeposits">
                     <div *ngIf="col.field =='adminssionNumber'">
                         <div class="d-block"
-                            *ngIf="rowData.multipartFileListForPhotoCopy != null && rowData.multipartFileListForPhotoCopy != undefined && rowData.multipartFileListForPhotoCopy.length > 0">
-                            <span *ngFor="let img of rowData.multipartFileListForPhotoCopy">
-                                <span class="{{img.imageValue}}" (click)="onClickMemberPhotoCopy(rowData)"
-                                    *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                    <!-- <a href="{{img.imageValue}}" ></a> -->
-                                    <img class="table-circle-image" src="{{img.imageValue}}">
-                                </span>
+                        *ngIf="rowData.multipartFileListForPhotoCopy != null && rowData.multipartFileListForPhotoCopy != undefined && rowData.multipartFileListForPhotoCopy.length > 0">
+                        <span *ngFor="let img of rowData.multipartFileListForPhotoCopy">
+                            <span class="{{img.imageValue}}" (click)="onClickMemberPhotoCopy(rowData)"
+                                *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                <!-- <a href="{{img.imageValue}}" ></a> -->
+                                <img class="table-circle-image" src="{{img.imageValue}}">
                             </span>
-                            <span *ngIf="!rowData.isRejected" class="account-number-style" (click)="editRecurringDepositDetails(rowData)" >{{rowData[col.field]}}</span>
-                            <span *ngIf="rowData.isRejected">{{rowData[col.field]}}</span>
-                        </div>
+                        </span>
+                        <span *ngIf="!rowData.isRejected" class="account-number-style"
+                            (click)="editRecurringDepositDetails(rowData)">{{rowData[col.field]}}</span>
+                        <span *ngIf="rowData.isRejected">{{rowData[col.field]}}</span>
+                    </div>
 
-                        <div class="d-block"
-                            *ngIf="rowData.multipartFileListForPhotoCopy == null || rowData.multipartFileListForPhotoCopy == undefined || rowData.multipartFileListForPhotoCopy.length == 0">
-                            <span (click)="onClickMemberPhotoCopy(rowData)">
-                                <img class="table-circle-image" src="assets/images/no-image.jpg">
-                            </span>
-                            <span *ngIf="!rowData.isRejected" class="account-number-style" (click)="editRecurringDepositDetails(rowData)" >{{rowData[col.field]}}</span>
-                            <span *ngIf="rowData.isRejected">{{rowData[col.field]}}</span>
-                        </div>
+                    <div class="d-block"
+                        *ngIf="rowData.multipartFileListForPhotoCopy == null || rowData.multipartFileListForPhotoCopy == undefined || rowData.multipartFileListForPhotoCopy.length == 0">
+                        <span (click)="onClickMemberPhotoCopy(rowData)">
+                            <img class="table-circle-image" src="assets/images/no-image.jpg">
+                        </span>
+                        <span *ngIf="!rowData.isRejected" class="account-number-style"
+                            (click)="editRecurringDepositDetails(rowData)">{{rowData[col.field]}}</span>
+                        <span *ngIf="rowData.isRejected">{{rowData[col.field]}}</span>
+                    </div>
 
                     </div>
                     <div *ngIf="rowData.accountStatusName == 'In Progress'">
@@ -171,9 +173,9 @@
                 <td>
                     <div class="global-action-btn flex align-items-center justify-content-center">
                         <p-button label="{{'TERMDEPOSITSTRANSACTION.VIEW' | translate}}" (click)="viewRecurringDepositDetails(rowData)" class="action-view"></p-button>
-                        <p-dropdown id="bunit_txt_status" class="action-operation" placeholder="operations"
+                        <p-dropdown *ngIf="rowData.accountStatusName == 'Approved'" id="bunit_txt_status" class="action-operation" placeholder="operations"
                             [filter]="true" [options]="operationslist" [(ngModel)]="operations"
-                            (onChange)="navigateToOperations($event)" [appendTo]="'body'"></p-dropdown>
+                            (onChange)="navigateToOperations($event,rowData)" [appendTo]="'body'"></p-dropdown>
 
                     </div>
                 </td>

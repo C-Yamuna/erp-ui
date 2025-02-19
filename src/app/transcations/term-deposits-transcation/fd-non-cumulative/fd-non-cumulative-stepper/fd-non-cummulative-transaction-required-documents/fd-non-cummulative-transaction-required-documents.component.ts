@@ -201,8 +201,6 @@ export class FdNonCummulativeTransactionRequiredDocumentsComponent {
     this.fdNonCummulativeRequiredDocumentsModel.fdNonCummulativeAccountId = this.fdNonCummulativeAccId;
     this.fdNonCummulativeRequiredDocumentsModel.admissionNumber = this.admissionNumber;
     this.fdNonCummulativeRequiredDocumentsModel.memberTypeName = this.memberTypeName;
-    this.fdNonCummulativeRequiredDocumentsModel.memberType = this.memberTypeId;
-    this.fdNonCummulativeRequiredDocumentsModel.memberId = this.memberId;
     this.fdNonCummulativeRequiredDocumentsModel.accountNumber = this.accountNumber;
     //for manadatory KYC Documents check
     this.saveAndPreview = false;
@@ -241,6 +239,7 @@ export class FdNonCummulativeTransactionRequiredDocumentsComponent {
         setTimeout(() => {
           this.msgs = [];
         }, 3000);
+        this.updateData();
       }
       else {
         this.commonComponent.stopSpinner();
@@ -574,6 +573,7 @@ export class FdNonCummulativeTransactionRequiredDocumentsComponent {
     if (rowData.id != null && rowData.id != undefined) {
       this.deleteId = rowData.id;
     }
+    this.updateData();
   }
 
   /**
@@ -592,15 +592,32 @@ export class FdNonCummulativeTransactionRequiredDocumentsComponent {
     if (this.deleteId != null && this.deleteId != undefined) {
       this.delete(this.deleteId);
     }
-
     this.displayDialog = false;
+    this.updateData();
   }
 
+  documentDuplicate(id: any) {
+    if (id != null && id != undefined) {
+      if (this.documentDataList != null && this.documentDataList != undefined && this.documentDataList.length > 0) {
+        for (let item of this.documentDataList) {
+          if (item != null && item != undefined && item.requiredDocumentTypeId === id) {
+            this.requiredForm.reset();
+            this.msgs = [];
+            this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "Required Document already exists" }];
+            setTimeout(() => {
+              this.msgs = [];
+            }, 1500);
+          }
+        }
+      }
+    }
+  }
   /**
    * @implements onFile remove
    * @author bhargavi
    */
   fileRemoeEvent() {
+    this.isFileUploaded = applicationConstants.FALSE;
     if (this.fdNonCummulativeRequiredDocumentsModel.filesDTOList != null && this.fdNonCummulativeRequiredDocumentsModel.filesDTOList != undefined && this.fdNonCummulativeRequiredDocumentsModel.filesDTOList.length > 0) {
       let removeFileIndex = this.fdNonCummulativeRequiredDocumentsModel.filesDTOList.findIndex((obj: any) => obj && obj.fileName === this.fdNonCummulativeRequiredDocumentsModel.requiredDocumentFilePath);
       if (removeFileIndex != null && removeFileIndex != undefined) {

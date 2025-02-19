@@ -12,6 +12,7 @@ import { MembershipBasicDetailsService } from '../membership-basic-details/share
 import { DatePipe } from '@angular/common';
 import { IndividualMemberDetailsModel, MemInstitutionModel, MemberShipGroupDetailsModel } from '../membership-basic-details/shared/membership-basic-details.model';
 import { SaoLoanGuarantorDetailsService } from './shared/sao-loan-guarantor-details.service';
+import { CommonStatusData } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-sao-loan-guarantor',
@@ -35,6 +36,7 @@ export class SaoLoanGuarantorComponent {
   groupFlag: boolean = false;
   institutionFlag: boolean = false;
   orgnizationSetting: any;
+  isDisableFlag: boolean = false;
   saoLoanApplicatonModel: SaoLoanApplication = new SaoLoanApplication();
   saoLoanGuarantorModel : SaoLoanGuarantor = new SaoLoanGuarantor();
   individualMemberDetailsModel: IndividualMemberDetailsModel = new IndividualMemberDetailsModel();
@@ -81,6 +83,11 @@ export class SaoLoanGuarantorComponent {
     
   }
   updateData() {
+    if(this.selectedList != null && this.selectedList != undefined && this.selectedList.length > 0){
+      this.isDisableFlag = false;
+    }else{
+      this.isDisableFlag = true;
+    }
     this.saoLoanGuarantorModel.saoLoanApplicationId = this.loanId;
     this.saoLoanGuarantorModel.admissionNo = this.admissionNumber;
     this.saoLoanGuarantorModel.gurantorList = this.selectedList;
@@ -89,8 +96,8 @@ export class SaoLoanGuarantorComponent {
     this.saoLoanApplicationService.changeData({
       formValid: !this.guarantorform.valid ? true : false,
       data: this.saoLoanGuarantorModel,
-      isDisable: (!this.guarantorform.valid),
-      // isDisable:false,
+      // isDisable: (!this.guarantorform.valid),
+      isDisable: this.isDisableFlag,
       stepperIndex: 6,
     });
   }
@@ -150,7 +157,8 @@ export class SaoLoanGuarantorComponent {
       if (this.responseModel != null && this.responseModel != undefined) {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data && this.responseModel.data.length > 0) {
-            this.allTypesOfmembershipList = this.responseModel.data.filter((data: any) => data.memberTypeName == "Individual").map((relationType: any) => {
+            this.allTypesOfmembershipList = this.responseModel.data.filter((data: any) => data.memberTypeName == "Individual"
+          && data.statusName == CommonStatusData.APPROVED && this.admissionNumber != data.admissionNumber).map((relationType: any) => {
               return {
                 label: `${relationType.name} - ${relationType.admissionNumber} - ${relationType.memberTypeName}`,
                 value: relationType.admissionNumber,

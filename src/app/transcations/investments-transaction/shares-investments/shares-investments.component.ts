@@ -124,7 +124,7 @@ export class SharesInvestmentsComponent implements OnInit{
     }
 
     if (this.sharesInvestmentsModel.id != undefined) {
-      this.sharesInvestmentsModel.statusName = "In Progress";
+      this.sharesInvestmentsModel.accountStatusName = "In Progress";
       this.sharesInvestmentsService.updateSharesInvestments(this.sharesInvestmentsModel).subscribe((response: any) => {
         this.responseModel = response;
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
@@ -154,7 +154,7 @@ export class SharesInvestmentsComponent implements OnInit{
         }, 2000);
       });
     } else {
-      this.sharesInvestmentsModel.statusName = "In Progress";
+      this.sharesInvestmentsModel.accountStatusName = "In Progress";
       this.sharesInvestmentsService.addSharesInvestments(this.sharesInvestmentsModel).subscribe((response: any) => {
         this.responseModel = response;
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {

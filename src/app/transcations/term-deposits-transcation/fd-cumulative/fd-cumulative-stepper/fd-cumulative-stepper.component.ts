@@ -114,7 +114,7 @@ export class FdCumulativeStepperComponent implements OnInit {
   jointHolderList: any[] = [];
   memberTypeList: any[] = [];
   jointHolderDetailsList: any[] = [];
-  genderList: any[]=[];
+  genderList: any[] = [];
   constructor(private router: Router,
     private fdCumulativeApplicationService: FdCumulativeApplicationService,
     private commonComponent: CommonComponent,
@@ -127,33 +127,33 @@ export class FdCumulativeStepperComponent implements OnInit {
     private membershipServiceService: NewMembershipAddService,
     private datePipe: DatePipe,
     private fdCumulativeJointHolderService: FdCumulativeJointHolderService, private fileUploadService: FileUploadService) {
-      this.institutionPrmoters = [
-        { field: 'surname', header: 'TERMDEPOSITSTRANSACTION.SURNAME' },
-        { field: 'name', header: 'TERMDEPOSITSTRANSACTION.NAME' },
-        { field: 'operatorTypeName', header: 'TERMDEPOSITSTRANSACTION.ACCOUNT_TYPE' },
-        { field: 'memDobVal', header: 'TERMDEPOSITSTRANSACTION.DATE_OF_BIRTH' },
-        { field: 'age', header: 'TERMDEPOSITSTRANSACTION.AGE' },
-        { field: 'genderTypeName', header: 'TERMDEPOSITSTRANSACTION.GENDER' },
-        { field: 'maritalStatusName', header: 'TERMDEPOSITSTRANSACTION.MARITAL_STATUS' },
-        { field: 'mobileNumber', header: 'TERMDEPOSITSTRANSACTION.CONTACT' },
-        { field: 'emailId', header: 'TERMDEPOSITSTRANSACTION.EMAIL' },
-        { field: 'aadharNumber', header: 'TERMDEPOSITSTRANSACTION.AADHAR' },
-        { field: 'startDateVal', header: 'TERMDEPOSITSTRANSACTION.START_DATE' },
-      ];
-      this.groupPrmoters = [
-        { field: 'surname', header: 'TERMDEPOSITSTRANSACTION.SURNAME' },
-        { field: 'name', header: 'TERMDEPOSITSTRANSACTION.NAME' },
-        { field: 'operatorTypeName', header: 'TERMDEPOSITSTRANSACTION.ACCOUNT_TYPE' },
-        { field: 'memDobVal', header: 'TERMDEPOSITSTRANSACTION.DATE_OF_BIRTH' },
-        { field: 'age', header: 'TERMDEPOSITSTRANSACTION.AGE' },
-        { field: 'genderName', header: 'TERMDEPOSITSTRANSACTION.GENDER' },
-        { field: 'maritalStatusName', header: 'TERMDEPOSITSTRANSACTION.MARITAL_STATUS' },
-        { field: 'mobileNumber', header: 'TERMDEPOSITSTRANSACTION.CONTACT' },
-        { field: 'emailId', header: 'TERMDEPOSITSTRANSACTION.EMAIL' },
-        { field: 'aadharNumber', header: 'TERMDEPOSITSTRANSACTION.AADHAR' },
-        { field: 'startDateVal', header: 'TERMDEPOSITSTRANSACTION.START_DATE' },
-      ];
-  
+    this.institutionPrmoters = [
+      { field: 'surname', header: 'TERMDEPOSITSTRANSACTION.SURNAME' },
+      { field: 'name', header: 'TERMDEPOSITSTRANSACTION.NAME' },
+      { field: 'operatorTypeName', header: 'TERMDEPOSITSTRANSACTION.ACCOUNT_TYPE' },
+      { field: 'memDobVal', header: 'TERMDEPOSITSTRANSACTION.DATE_OF_BIRTH' },
+      { field: 'age', header: 'TERMDEPOSITSTRANSACTION.AGE' },
+      { field: 'genderTypeName', header: 'TERMDEPOSITSTRANSACTION.GENDER' },
+      { field: 'maritalStatusName', header: 'TERMDEPOSITSTRANSACTION.MARITAL_STATUS' },
+      { field: 'mobileNumber', header: 'TERMDEPOSITSTRANSACTION.CONTACT' },
+      { field: 'emailId', header: 'TERMDEPOSITSTRANSACTION.EMAIL' },
+      { field: 'aadharNumber', header: 'TERMDEPOSITSTRANSACTION.AADHAR' },
+      { field: 'startDateVal', header: 'TERMDEPOSITSTRANSACTION.START_DATE' },
+    ];
+    this.groupPrmoters = [
+      { field: 'surname', header: 'TERMDEPOSITSTRANSACTION.SURNAME' },
+      { field: 'name', header: 'TERMDEPOSITSTRANSACTION.NAME' },
+      { field: 'operatorTypeName', header: 'TERMDEPOSITSTRANSACTION.ACCOUNT_TYPE' },
+      { field: 'memDobVal', header: 'TERMDEPOSITSTRANSACTION.DATE_OF_BIRTH' },
+      { field: 'age', header: 'TERMDEPOSITSTRANSACTION.AGE' },
+      { field: 'genderName', header: 'TERMDEPOSITSTRANSACTION.GENDER' },
+      { field: 'maritalStatusName', header: 'TERMDEPOSITSTRANSACTION.MARITAL_STATUS' },
+      { field: 'mobileNumber', header: 'TERMDEPOSITSTRANSACTION.CONTACT' },
+      { field: 'emailId', header: 'TERMDEPOSITSTRANSACTION.EMAIL' },
+      { field: 'aadharNumber', header: 'TERMDEPOSITSTRANSACTION.AADHAR' },
+      { field: 'startDateVal', header: 'TERMDEPOSITSTRANSACTION.START_DATE' },
+    ];
+
   }
 
   ngOnInit() {
@@ -222,6 +222,10 @@ export class FdCumulativeStepperComponent implements OnInit {
       }
 
       if (data != undefined) {
+        if(data.data.memberTypeName != null && data.data.memberTypeName != undefined){
+          this.memberTypeName = data.data.memberTypeName;
+        }
+        this.itemList();
         this.activeIndex = data.stepperIndex
         this.changeStepperSelector(this.activeIndex);
         this.buttonDisabled = data.isDisable
@@ -237,19 +241,16 @@ export class FdCumulativeStepperComponent implements OnInit {
                 this.memberTypeName = this.fdCumulativeApplicationModel.memberTypeName;
               this.memberTypeCheck(this.memberTypeName, this.fdCumulativeApplicationModel);
             }
-            this.itemList();
           }
           else if (this.activeIndex == 1) {
             if (data.data != null && data.data != undefined) {
               this.fdCumulativeKycModel = data.data;
             }
-            this.itemList();
           }
           else if (this.activeIndex == 2) {
             if (data.data != null && data.data != undefined) {
               this.fdCumulativeCommunicationModel = data.data;
             }
-            this.itemList();
           }
           else if (this.activeIndex == 3) {
             if (data.data != null && data.data != undefined) {
@@ -274,7 +275,7 @@ export class FdCumulativeStepperComponent implements OnInit {
           else if (this.activeIndex == 5) {
             if (data.data != null && data.data != undefined) {
               this.fdCumulativeNomineeModel = data.data;
-              if(data.data.memberTypeName != null && data.data.memberTypeName != undefined){
+              if (data.data.memberTypeName != null && data.data.memberTypeName != undefined) {
                 this.memberTypeName = data.data.memberTypeName;
               }
               if (this.fdCumulativeNomineeModel != null && this.fdCumulativeNomineeModel != undefined) {
@@ -283,220 +284,218 @@ export class FdCumulativeStepperComponent implements OnInit {
                 }
               }
             }
-            this.itemList();
           } else if (this.activeIndex == 6) {
             if (data.data != null && data.data != undefined) {
               this.fdCummulativeRequiredDocumentModel = data.data;
-              if(data.data.memberTypeName != null && data.data.memberTypeName != undefined){
+              if (data.data.memberTypeName != null && data.data.memberTypeName != undefined) {
                 this.memberTypeName = data.data.memberTypeName;
               }
             }
-            this.itemList();
           }
         }
       }
     });
   }
 
-    itemList() {
-      this.items = [];
-      if(this.memberTypeName != MemberShipTypesData.INDIVIDUAL){
-        this.itemListWithParamsForGroupInstitution();
-      }else {
-        if(this.fdCummulativeAccId != null && this.fdCummulativeAccId != undefined ){
-          if (this.showForm) {
-            if (this.fdCumulativeApplicationModel.accountTypeName != AccountTypes.JOINT) {
-  
-              this.items = [
-                {
-                  label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.NEW_MEMBERSHIPS, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 0;
-                  }
-                },
-                {
-                  label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.FD_CUMM_KYC, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 1;
-                  }
-                },
-                {
-                  label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 2;
-                  }
-                },
-                {
-                  label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 3;
-                  }
-                },
-                {
-                  label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.FD_NON_CUMM_NOMINEE, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 5;
-                  }
-                },
-                {
-                  label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 6;
-                  }
+  itemList() {
+    this.items = [];
+    if (this.memberTypeName != MemberShipTypesData.INDIVIDUAL) {
+      this.itemListWithParamsForGroupInstitution();
+    } else {
+      if (this.fdCummulativeAccId != null && this.fdCummulativeAccId != undefined) {
+        if (this.showForm) {
+          if (this.fdCumulativeApplicationModel.accountTypeName != AccountTypes.JOINT) {
+
+            this.items = [
+              {
+                label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.NEW_MEMBERSHIPS, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 0;
                 }
-              ];
-            }
-            else {
-              this.items = [
-                {
-                  label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.NEW_MEMBERSHIPS, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 0;
-                  }
-                },
-                {
-                  label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.FD_CUMM_KYC, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 1;
-                  }
-                },
-                {
-                  label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 2;
-                  }
-                },
-                {
-                  label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 3;
-                  }
-                },
-                {
-                  label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_JOINTHOLDERDETAILS, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 4;
-                  }
-                },
-                {
-                  label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 5;
-                  }
-                },
-                {
-                  label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 6;
-                  }
+              },
+              {
+                label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.FD_CUMM_KYC, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 1;
                 }
-              ];
-            }
-          } else {
-            if (this.fdCumulativeApplicationModel.accountTypeName != AccountTypes.JOINT) {
-              this.items = [
-                {
-                  label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 0;
-                  }
-                },
-                {
-                  label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 2;
-                  }
-                },
-                {
-                  label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 3;
-                  }
-                },
-                {
-                  label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 5;
-                  }
-                },
-                {
-                  label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 6;
-                  }
+              },
+              {
+                label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 2;
                 }
-              ];
-            } else {
-              this.items = [
-                {
-                  label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 0;
-                  }
-                },
-                {
-                  label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 2;
-                  }
-                },
-                {
-                  label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 3;
-                  }
-                },
-                {
-                  label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_JOINTHOLDERDETAILS, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 4;
-                  }
-                },
-                {
-                  label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 5;
-                  }
-                },
-                {
-                  label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 6;
-                  }
+              },
+              {
+                label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 3;
                 }
-              ];
-            }
+              },
+              {
+                label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.FD_NON_CUMM_NOMINEE, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 5;
+                }
+              },
+              {
+                label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 6;
+                }
+              }
+            ];
+          }
+          else {
+            this.items = [
+              {
+                label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.NEW_MEMBERSHIPS, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 0;
+                }
+              },
+              {
+                label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.FD_CUMM_KYC, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 1;
+                }
+              },
+              {
+                label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 2;
+                }
+              },
+              {
+                label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 3;
+                }
+              },
+              {
+                label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_JOINTHOLDERDETAILS, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 4;
+                }
+              },
+              {
+                label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 5;
+                }
+              },
+              {
+                label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 6;
+                }
+              }
+            ];
           }
         } else {
-          this.itemListWithoutParams();
+          if (this.fdCumulativeApplicationModel.accountTypeName != AccountTypes.JOINT) {
+            this.items = [
+              {
+                label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 0;
+                }
+              },
+              {
+                label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 2;
+                }
+              },
+              {
+                label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 3;
+                }
+              },
+              {
+                label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 5;
+                }
+              },
+              {
+                label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 6;
+                }
+              }
+            ];
+          } else {
+            this.items = [
+              {
+                label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 0;
+                }
+              },
+              {
+                label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 2;
+                }
+              },
+              {
+                label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 3;
+                }
+              },
+              {
+                label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_JOINTHOLDERDETAILS, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 4;
+                }
+              },
+              {
+                label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 5;
+                }
+              },
+              {
+                label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 6;
+                }
+              }
+            ];
+          }
         }
+      } else {
+        this.itemListWithoutParams();
       }
-      this.activeItem = this.items[this.activeIndex];
     }
+    this.activeItem = this.items[this.activeIndex];
+  }
 
 
   memberTypeCheck(memberType: any, data: any) {
@@ -683,14 +682,14 @@ export class FdCumulativeStepperComponent implements OnInit {
     }
     else if (activeIndex == 6) {
       // this.navigateTo(this.activeIndex, this.fdCummulativeAccId);
-      if(this.memberTypeName == MemberShipTypesData.INDIVIDUAL){
+      if (this.memberTypeName == MemberShipTypesData.INDIVIDUAL) {
         this.activeIndex = activeIndex - 1;
         this.navigateTo(this.activeIndex, this.fdCummulativeAccId);
-      }else{
+      } else {
         if (this.fdCumulativeApplicationModel.accountTypeName == AccountTypes.JOINT) {
           this.flag = false;
           this.activeIndex = this.activeIndex - 1;
-        }else{
+        } else {
           this.activeIndex = this.activeIndex - 2;
         }
         this.navigateTo(this.activeIndex, this.fdCummulativeAccId);
@@ -743,7 +742,7 @@ export class FdCumulativeStepperComponent implements OnInit {
       } else {
         this.activeIndex += 1;
         this.navigateTo(this.activeIndex, this.fdCummulativeAccId);
-      } 
+      }
     } else {
       this.activeIndex = activeIndex + 1;
       this.navigateTo(this.activeIndex, this.fdCummulativeAccId);
@@ -844,19 +843,19 @@ export class FdCumulativeStepperComponent implements OnInit {
               }
               if (this.memberGroupDetailsModel.groupPromoterList != null && this.memberGroupDetailsModel.groupPromoterList != undefined && this.memberGroupDetailsModel.groupPromoterList.length > 0) {
                 this.groupPrmotersList = this.memberGroupDetailsModel.groupPromoterList;
-                  for (let promoter of this.groupPrmotersList) {
-                    if (promoter.dob != null && promoter.dob != undefined) {
-                      promoter.memDobVal = this.datePipe.transform(promoter.dob, this.orgnizationSetting.datePipe);
-                    }
-                    if (promoter.startDate != null && promoter.startDate != undefined) {
-                      promoter.startDateVal = this.datePipe.transform(promoter.startDate, this.orgnizationSetting.datePipe);
-                    }
-                    if (promoter.genderId != null && promoter.genderId != undefined) {
-                      let gender = this.genderList.filter((obj: any) => obj.value == promoter.genderId);
-                      if (gender != null && gender != undefined && gender.length > 0)
-                        promoter.genderName = gender[0].label;
-                    }
+                for (let promoter of this.groupPrmotersList) {
+                  if (promoter.dob != null && promoter.dob != undefined) {
+                    promoter.memDobVal = this.datePipe.transform(promoter.dob, this.orgnizationSetting.datePipe);
                   }
+                  if (promoter.startDate != null && promoter.startDate != undefined) {
+                    promoter.startDateVal = this.datePipe.transform(promoter.startDate, this.orgnizationSetting.datePipe);
+                  }
+                  if (promoter.genderId != null && promoter.genderId != undefined) {
+                    let gender = this.genderList.filter((obj: any) => obj.value == promoter.genderId);
+                    if (gender != null && gender != undefined && gender.length > 0)
+                      promoter.genderName = gender[0].label;
+                  }
+                }
                 if (this.memberGroupDetailsModel.memberTypeName != null && this.memberGroupDetailsModel.memberTypeName != undefined) {
                   this.fdCumulativeApplicationModel.memberTypeName = this.memberGroupDetailsModel.memberTypeName;
                 }
@@ -885,19 +884,19 @@ export class FdCumulativeStepperComponent implements OnInit {
               }
               if (this.membershipInstitutionDetailsModel.institutionPromoterList != null && this.membershipInstitutionDetailsModel.institutionPromoterList != undefined && this.membershipInstitutionDetailsModel.institutionPromoterList.length > 0) {
                 this.institutionPrmotersList = this.membershipInstitutionDetailsModel.institutionPromoterList;
-                  for (let promoter of this.institutionPrmotersList) {
-                    if (promoter.dob != null && promoter.dob != undefined) {
-                      promoter.memDobVal = this.datePipe.transform(promoter.dob, this.orgnizationSetting.datePipe);
-                    }
-                    if (promoter.startDate != null && promoter.startDate != undefined) {
-                      promoter.startDateVal = this.datePipe.transform(promoter.startDate, this.orgnizationSetting.datePipe);
-                    }
-                    if (promoter.genderId != null && promoter.genderId != undefined) {
-                      let gender = this.genderList.filter((obj: any) => obj.value == promoter.genderId);
-                      if (gender != null && gender != undefined && gender.length > 0)
-                        promoter.genderName = gender[0].label;
-                    }
+                for (let promoter of this.institutionPrmotersList) {
+                  if (promoter.dob != null && promoter.dob != undefined) {
+                    promoter.memDobVal = this.datePipe.transform(promoter.dob, this.orgnizationSetting.datePipe);
                   }
+                  if (promoter.startDate != null && promoter.startDate != undefined) {
+                    promoter.startDateVal = this.datePipe.transform(promoter.startDate, this.orgnizationSetting.datePipe);
+                  }
+                  if (promoter.genderId != null && promoter.genderId != undefined) {
+                    let gender = this.genderList.filter((obj: any) => obj.value == promoter.genderId);
+                    if (gender != null && gender != undefined && gender.length > 0)
+                      promoter.genderName = gender[0].label;
+                  }
+                }
                 if (this.memberGroupDetailsModel.memberTypeName != null && this.memberGroupDetailsModel.memberTypeName != undefined) {
                   this.fdCumulativeApplicationModel.memberTypeName = this.memberGroupDetailsModel.memberTypeName;
                 }
@@ -965,8 +964,8 @@ export class FdCumulativeStepperComponent implements OnInit {
         if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
           this.membershipBasicRequiredDetailsModel = this.responseModel.data[0];
           this.membershipBasicRequiredDetailsModel.fdCummCommunicationDto = this.responseModel.data[0].memberShipCommunicationDetailsDTO;
-          this.membershipBasicRequiredDetailsModel.photoPath = this.responseModel.data[0].photoCopyPath; 
-          this.membershipBasicRequiredDetailsModel.signaturePath = this.responseModel.data[0].signatureCopyPath; 
+          this.membershipBasicRequiredDetailsModel.photoPath = this.responseModel.data[0].photoCopyPath;
+          this.membershipBasicRequiredDetailsModel.signaturePath = this.responseModel.data[0].signatureCopyPath;
           if (this.membershipBasicRequiredDetailsModel.dob != null && this.membershipBasicRequiredDetailsModel.dob != undefined) {
             this.membershipBasicRequiredDetailsModel.dob = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.dob, this.orgnizationSetting.datePipe);
           }
@@ -1020,8 +1019,8 @@ export class FdCumulativeStepperComponent implements OnInit {
         if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
           this.memberGroupDetailsModel = this.responseModel.data[0];
           this.memberGroupDetailsModel.fdCummCommunicationDto = this.responseModel.data[0].groupCommunicationList;
-          this.memberGroupDetailsModel.photoPath = this.responseModel.data[0].photoCopyPath; 
-          this.memberGroupDetailsModel.signaturePath = this.responseModel.data[0].signatureCopyPath; 
+          this.memberGroupDetailsModel.photoPath = this.responseModel.data[0].photoCopyPath;
+          this.memberGroupDetailsModel.signaturePath = this.responseModel.data[0].signatureCopyPath;
           this.memberTypeName = this.responseModel.data[0].memberTypeName;
           if (this.memberGroupDetailsModel.registrationDate != null && this.memberGroupDetailsModel.registrationDate != undefined) {
             this.memberGroupDetailsModel.registrationDateVal = this.datePipe.transform(this.memberGroupDetailsModel.registrationDate, this.orgnizationSetting.datePipe);
@@ -1071,8 +1070,8 @@ export class FdCumulativeStepperComponent implements OnInit {
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
           this.membershipInstitutionDetailsModel = this.responseModel.data[0];
-          this.membershipInstitutionDetailsModel.photoPath = this.responseModel.data[0].photoCopyPath; 
-          this.membershipInstitutionDetailsModel.signaturePath = this.responseModel.data[0].signatureCopyPath; 
+          this.membershipInstitutionDetailsModel.photoPath = this.responseModel.data[0].photoCopyPath;
+          this.membershipInstitutionDetailsModel.signaturePath = this.responseModel.data[0].signatureCopyPath;
           this.memberTypeName = this.membershipInstitutionDetailsModel.memberTypeName;
           this.fdCumulativeApplicationModel.memberTypeName = this.membershipInstitutionDetailsModel.memberTypeName;
           this.fdCumulativeApplicationModel.memInstitutionDTO = this.membershipInstitutionDetailsModel;
@@ -1170,6 +1169,9 @@ export class FdCumulativeStepperComponent implements OnInit {
     }
     if (this.fdCumulativeApplicationModel.depositDateVal != null && this.fdCumulativeApplicationModel.depositDateVal != undefined) {
       this.fdCumulativeApplicationModel.depositDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdCumulativeApplicationModel.depositDateVal));
+    }
+    if (this.fdCumulativeApplicationModel.maturityDate != null && this.fdCumulativeApplicationModel.maturityDate != undefined) {
+      this.fdCumulativeApplicationModel.maturityDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdCumulativeApplicationModel.maturityDate));
     }
     if (this.isApplicationEdit) {
       this.fdCumulativeApplicationModel.accountStatusName = applicationConstants.IS_ACTIVE;
@@ -1352,6 +1354,9 @@ export class FdCumulativeStepperComponent implements OnInit {
     if (this.fdCumulativeApplicationModel.depositDateVal != null && this.fdCumulativeApplicationModel.depositDateVal != undefined) {
       this.fdCumulativeApplicationModel.depositDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdCumulativeApplicationModel.depositDateVal));
     }
+    if (this.fdCumulativeApplicationModel.maturityDate != null && this.fdCumulativeApplicationModel.maturityDate != undefined) {
+      this.fdCumulativeApplicationModel.maturityDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdCumulativeApplicationModel.maturityDate));
+    }
     if (this.isApplicationEdit) {
       this.fdCumulativeApplicationModel.accountStatusName = applicationConstants.IS_ACTIVE;
       this.fdCumulativeApplicationService.updateFdCummApplication(this.fdCumulativeApplicationModel).subscribe((response: any) => {
@@ -1458,11 +1463,11 @@ export class FdCumulativeStepperComponent implements OnInit {
         // this.activeIndex = this.activeIndex + 1;
         // this.navigateTo(this.activeIndex, this.fdCummulativeAccId);
         // console.log("Navigation executed, activeIndex: ", this.activeIndex);
-        if(this.activeIndex == 4){
-          if(this.memberTypeName == MemberShipTypesData.INDIVIDUAL){
+        if (this.activeIndex == 4) {
+          if (this.memberTypeName == MemberShipTypesData.INDIVIDUAL) {
             this.activeIndex = this.activeIndex + 1;
             this.navigateTo(this.activeIndex, this.fdCummulativeAccId);
-          }else{
+          } else {
             this.activeIndex = this.activeIndex + 2;
             this.navigateTo(this.activeIndex, this.fdCummulativeAccId);
           }
@@ -1488,8 +1493,8 @@ export class FdCumulativeStepperComponent implements OnInit {
     this.fdCumulativeNomineeModel.fdCummulativeAccId = this.fdCummulativeAccId;
     this.fdCumulativeNomineeModel.accountNumber = this.accountNumber;
     this.fdCumulativeNomineeModel.isNewMember = this.showForm;
-    this. fdCumulativeNomineeModel.memberType = this.memberTypeId;
-    this. fdCumulativeNomineeModel.memberTypeName = this.memberTypeName;
+    this.fdCumulativeNomineeModel.memberType = this.memberTypeId;
+    this.fdCumulativeNomineeModel.memberTypeName = this.memberTypeName;
     if (this.fdCumulativeNomineeModel.id == null) {
       this.isNomineeEdit = false;
     }
@@ -1660,573 +1665,573 @@ export class FdCumulativeStepperComponent implements OnInit {
     this.memberSignatureCopyZoom = false;
     this.memberPhotoCopyZoom = false;
   }
-  itemListWithoutParams(){
-        if (this.showForm) {
-          if (this.fdCumulativeApplicationModel.accountTypeName != AccountTypes.JOINT) {
-            this.items = [
-              {
-                label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 0;
-                }
-              },
-              {
-                label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.FD_CUMM_KYC,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 1;
-                }
-              },
-              {
-                label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 2;
-                }
-              },
-              {
-                label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 3;
-                }
-              },
-              {
-                label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 5;
-                }
-              },
-              {
-                label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 6;
-                }
-              }
-            ];
-          } else {
-            this.items = [
-              {
-                label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 0;
-                }
-              },
-              {
-                label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.FD_CUMM_KYC,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 1;
-                }
-              },
-              {
-                label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 2;
-                }
-              },
-              {
-                label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 3;
-                }
-              },
-              {
-                label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_JOINTHOLDERDETAILS,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 4;
-                }
-              },
-              {
-                label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 5;
-                }
-              },
-              {
-                label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 6;
-                }
-              }
-            ];
-          }
-        } else {
-          if (this.fdCumulativeApplicationModel.accountTypeName != AccountTypes.JOINT) {
-            this.items = [
-              {
-                label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 0;
-                }
-              },
-              {
-                label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 2;
-                }
-              },
-              {
-                label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 3;
-                }
-              },
-              {
-                label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 5;
-                }
-              },
-              {
-                label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 6;
-                }
-              }
-            ];
-          }else {
-            this.items = [
-              {
-                label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 0;
-                }
-              },
-              {
-                label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 2;
-                }
-              },
-              {
-                label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 3;
-                }
-              },
-              {
-                label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_JOINTHOLDERDETAILS,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 4;
-                }
-              },
-              {
-                label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 5;
-                }
-              },
-              {
-                label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 6;
-                }
-              }
-            ];
-          }
-        }
-      }
-    
-      itemListWithoutParamsForGroupInstitution(){
-        if (this.showForm) {
-          if (this.fdCumulativeApplicationModel.accountTypeName != AccountTypes.JOINT) {
-            this.items = [
-              {
-                label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 0;
-                }
-              },
-              {
-                label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.FD_CUMM_KYC,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 1;
-                }
-              },
-              {
-                label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 2;
-                }
-              },
-              {
-                label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 3;
-                }
-              },
-              // {
-              //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE,
-              //   disabled: this.menuDisabled,
-              //   command: (event: any) => {
-              //     this.activeIndex = 5;
-              //   }
-              // },
-              {
-                label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 6;
-                }
-              }
-            ];
-          } else {
-            this.items = [
-              {
-                label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 0;
-                }
-              },
-              {
-                label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.FD_CUMM_KYC,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 1;
-                }
-              },
-              {
-                label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 2;
-                }
-              },
-              {
-                label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 3;
-                }
-              },
-              {
-                label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_JOINTHOLDERDETAILS,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 4;
-                }
-              },
-              // {
-              //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE,
-              //   disabled: this.menuDisabled,
-              //   command: (event: any) => {
-              //     this.activeIndex = 5;
-              //   }
-              // },
-              {
-                label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 6;
-                }
-              }
-            ];
-          }
-        } else {
-          if (this.fdCumulativeApplicationModel.accountTypeName != AccountTypes.JOINT) {
-            this.items = [
-              {
-                label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 0;
-                }
-              },
-              {
-                label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 2;
-                }
-              },
-              {
-                label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 3;
-                }
-              },
-              // {
-              //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE,
-              //   disabled: this.menuDisabled,
-              //   command: (event: any) => {
-              //     this.activeIndex = 5;
-              //   }
-              // },
-              {
-                label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 6;
-                }
-              }
-            ];
-          } else {
-            this.items = [
-              {
-                label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 0;
-                }
-              },
-              {
-                label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 2;
-                }
-              },
-              {
-                label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 3;
-                }
-              },
-              {
-                label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_JOINTHOLDERDETAILS,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 4;
-                }
-              },
-              // {
-              //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE,
-              //   disabled: this.menuDisabled,
-              //   command: (event: any) => {
-              //     this.activeIndex = 5;
-              //   }
-              // },
-              {
-                label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT,
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 6;
-                }
-              }
-            ];
-          }
-        }
-      }
-    
-      itemListWithParamsForGroupInstitution(){
-        this.items = [];
-        if(this.fdCummulativeAccId != null && this.fdCummulativeAccId != undefined){
-          if (this.showForm) {
-            if (this.fdCumulativeApplicationModel.accountTypeName != AccountTypes.JOINT) {
-      
-              this.items = [
-                {
-                  label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 0;
-                  }
-                },
-                {
-                  label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.FD_CUMM_KYC,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 1;
-                  }
-                },
-                {
-                  label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 2;
-                  }
-                },
-                {
-                  label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 3;
-                  }
-                },
-                // {
-                //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
-                //   disabled: this.menuDisabled,
-                //   command: (event: any) => {
-                //     this.activeIndex = 5;
-                //   }
-                // },
-                {
-                  label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 6;
-                  }
-                }
-              ];
-            }else {
-              this.items = [
-                {
-                  label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 0;
-                  }
-                },
-                {
-                  label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.FD_CUMM_KYC,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 1;
-                  }
-                },
-                {
-                  label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 2;
-                  }
-                },
-                {
-                  label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 3;
-                  }
-                },
-                {
-                  label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_JOINTHOLDERDETAILS,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 4;
-                  }
-                },
-                // {
-                //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
-                //   disabled: this.menuDisabled,
-                //   command: (event: any) => {
-                //     this.activeIndex = 5;
-                //   }
-                // },
-                {
-                  label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 6;
-                  }
-                }
-              ];
+  itemListWithoutParams() {
+    if (this.showForm) {
+      if (this.fdCumulativeApplicationModel.accountTypeName != AccountTypes.JOINT) {
+        this.items = [
+          {
+            label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 0;
             }
-          }else {
-            if(this.fdCumulativeApplicationModel.accountTypeName != AccountTypes.JOINT) {        
-              this.items = [
-                {
-                  label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 0;
-                  }
-                },
-                {
-                  label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 2;
-                  }
-                },
-                {
-                  label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 3;
-                  }
-                },
-                // {
-                //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
-                //   disabled: this.menuDisabled,
-                //   command: (event: any) => {
-                //     this.activeIndex = 5;
-                //   }
-                // },
-                {
-                  label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 6;
-                  }
-                }
-              ];
-            }else {
-              this.items = [
-                {
-                  label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 0;
-                  }
-                },
-                {
-                  label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 2;
-                  }
-                },
-                {
-                  label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 3;
-                  }
-                },
-                {
-                  label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_JOINTHOLDERDETAILS,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 4;
-                  }
-                },
-                // {
-                //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
-                //   disabled: this.menuDisabled,
-                //   command: (event: any) => {
-                //     this.activeIndex = 5;
-                //   }
-                // },
-                {
-                  label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
-                  disabled: this.menuDisabled,
-                  command: (event: any) => {
-                    this.activeIndex = 6;
-                  }
-                }
-              ];
+          },
+          {
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.FD_CUMM_KYC,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 1;
+            }
+          },
+          {
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 2;
+            }
+          },
+          {
+            label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 3;
+            }
+          },
+          {
+            label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 5;
+            }
+          },
+          {
+            label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 6;
             }
           }
-        }else {
-          this.itemListWithoutParamsForGroupInstitution();
+        ];
+      } else {
+        this.items = [
+          {
+            label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 0;
+            }
+          },
+          {
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.FD_CUMM_KYC,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 1;
+            }
+          },
+          {
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 2;
+            }
+          },
+          {
+            label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 3;
+            }
+          },
+          {
+            label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_JOINTHOLDERDETAILS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 4;
+            }
+          },
+          {
+            label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 5;
+            }
+          },
+          {
+            label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 6;
+            }
+          }
+        ];
+      }
+    } else {
+      if (this.fdCumulativeApplicationModel.accountTypeName != AccountTypes.JOINT) {
+        this.items = [
+          {
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 0;
+            }
+          },
+          {
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 2;
+            }
+          },
+          {
+            label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 3;
+            }
+          },
+          {
+            label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 5;
+            }
+          },
+          {
+            label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 6;
+            }
+          }
+        ];
+      } else {
+        this.items = [
+          {
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 0;
+            }
+          },
+          {
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 2;
+            }
+          },
+          {
+            label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 3;
+            }
+          },
+          {
+            label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_JOINTHOLDERDETAILS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 4;
+            }
+          },
+          {
+            label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 5;
+            }
+          },
+          {
+            label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 6;
+            }
+          }
+        ];
+      }
+    }
+  }
+
+  itemListWithoutParamsForGroupInstitution() {
+    if (this.showForm) {
+      if (this.fdCumulativeApplicationModel.accountTypeName != AccountTypes.JOINT) {
+        this.items = [
+          {
+            label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 0;
+            }
+          },
+          {
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.FD_CUMM_KYC,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 1;
+            }
+          },
+          {
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 2;
+            }
+          },
+          {
+            label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 3;
+            }
+          },
+          // {
+          //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE,
+          //   disabled: this.menuDisabled,
+          //   command: (event: any) => {
+          //     this.activeIndex = 5;
+          //   }
+          // },
+          {
+            label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 6;
+            }
+          }
+        ];
+      } else {
+        this.items = [
+          {
+            label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 0;
+            }
+          },
+          {
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.FD_CUMM_KYC,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 1;
+            }
+          },
+          {
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 2;
+            }
+          },
+          {
+            label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 3;
+            }
+          },
+          {
+            label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_JOINTHOLDERDETAILS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 4;
+            }
+          },
+          // {
+          //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE,
+          //   disabled: this.menuDisabled,
+          //   command: (event: any) => {
+          //     this.activeIndex = 5;
+          //   }
+          // },
+          {
+            label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 6;
+            }
+          }
+        ];
+      }
+    } else {
+      if (this.fdCumulativeApplicationModel.accountTypeName != AccountTypes.JOINT) {
+        this.items = [
+          {
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 0;
+            }
+          },
+          {
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 2;
+            }
+          },
+          {
+            label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 3;
+            }
+          },
+          // {
+          //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE,
+          //   disabled: this.menuDisabled,
+          //   command: (event: any) => {
+          //     this.activeIndex = 5;
+          //   }
+          // },
+          {
+            label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 6;
+            }
+          }
+        ];
+      } else {
+        this.items = [
+          {
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 0;
+            }
+          },
+          {
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 2;
+            }
+          },
+          {
+            label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 3;
+            }
+          },
+          {
+            label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_JOINTHOLDERDETAILS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 4;
+            }
+          },
+          // {
+          //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE,
+          //   disabled: this.menuDisabled,
+          //   command: (event: any) => {
+          //     this.activeIndex = 5;
+          //   }
+          // },
+          {
+            label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 6;
+            }
+          }
+        ];
+      }
+    }
+  }
+
+  itemListWithParamsForGroupInstitution() {
+    this.items = [];
+    if (this.fdCummulativeAccId != null && this.fdCummulativeAccId != undefined) {
+      if (this.showForm) {
+        if (this.fdCumulativeApplicationModel.accountTypeName != AccountTypes.JOINT) {
+
+          this.items = [
+            {
+              label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 0;
+              }
+            },
+            {
+              label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.FD_CUMM_KYC, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 1;
+              }
+            },
+            {
+              label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 2;
+              }
+            },
+            {
+              label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 3;
+              }
+            },
+            // {
+            //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
+            //   disabled: this.menuDisabled,
+            //   command: (event: any) => {
+            //     this.activeIndex = 5;
+            //   }
+            // },
+            {
+              label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 6;
+              }
+            }
+          ];
+        } else {
+          this.items = [
+            {
+              label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 0;
+              }
+            },
+            {
+              label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.FD_CUMM_KYC, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 1;
+              }
+            },
+            {
+              label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 2;
+              }
+            },
+            {
+              label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 3;
+              }
+            },
+            {
+              label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_JOINTHOLDERDETAILS, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 4;
+              }
+            },
+            // {
+            //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
+            //   disabled: this.menuDisabled,
+            //   command: (event: any) => {
+            //     this.activeIndex = 5;
+            //   }
+            // },
+            {
+              label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 6;
+              }
+            }
+          ];
+        }
+      } else {
+        if (this.fdCumulativeApplicationModel.accountTypeName != AccountTypes.JOINT) {
+          this.items = [
+            {
+              label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 0;
+              }
+            },
+            {
+              label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 2;
+              }
+            },
+            {
+              label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 3;
+              }
+            },
+            // {
+            //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
+            //   disabled: this.menuDisabled,
+            //   command: (event: any) => {
+            //     this.activeIndex = 5;
+            //   }
+            // },
+            {
+              label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 6;
+              }
+            }
+          ];
+        } else {
+          this.items = [
+            {
+              label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 0;
+              }
+            },
+            {
+              label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.FD_CUMM_COMMUNICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 2;
+              }
+            },
+            {
+              label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 3;
+              }
+            },
+            {
+              label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_JOINTHOLDERDETAILS, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 4;
+              }
+            },
+            // {
+            //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_NOMINEE,queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId)},
+            //   disabled: this.menuDisabled,
+            //   command: (event: any) => {
+            //     this.activeIndex = 5;
+            //   }
+            // },
+            {
+              label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_REQUIRED_DOCUMENT, queryParams: { id: this.encryptDecryptService.encrypt(this.fdCummulativeAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 6;
+              }
+            }
+          ];
         }
       }
+    } else {
+      this.itemListWithoutParamsForGroupInstitution();
+    }
+  }
 }

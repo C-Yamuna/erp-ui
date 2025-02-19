@@ -11,6 +11,8 @@ import { CommonComponent } from 'src/app/shared/common.component';
 import { FdNonCummulativeAccountsService } from '../shared/fd-non-cummulative-accounts.service';
 import { Responsemodel } from 'src/app/shared/responsemodel';
 import { DatePipe } from '@angular/common';
+import { FileUploadService } from 'src/app/shared/file-upload.service';
+import { ERP_TRANSACTION_CONSTANTS } from '../../erp-transaction-constants';
 
 @Component({
   selector: 'app-fd-non-cumulative',
@@ -44,6 +46,7 @@ export class FdNonCumulativeComponent implements OnInit {
 
   constructor(private router: Router,
     private translate: TranslateService,
+    private fileUploadService : FileUploadService,
     private commonComponent: CommonComponent,
     private encryptDecryptService: EncryptDecryptService,
     private commonFunctionsService: CommonFunctionsService,
@@ -51,6 +54,8 @@ export class FdNonCumulativeComponent implements OnInit {
     private datePipe: DatePipe) { }
 
   ngOnInit() {
+    this.pacsId =  this.commonFunctionsService.getStorageValue(applicationConstants.PACS_ID);
+    this.branchId =  this.commonFunctionsService.getStorageValue(applicationConstants.BRANCH_ID);
     this.orgnizationSetting = this.commonComponent.orgnizationSettings()
     this.commonFunctionsService.setStorageValue('language', 'en');
     this.commonFunctionsService.data.subscribe((res: any) => {
@@ -63,9 +68,9 @@ export class FdNonCumulativeComponent implements OnInit {
 
     this.operationslist = [
       { label: "Interest Payment", value: 1 },
-      { label: "Foreclosure", value: 2 },
-      { label: "Closure", value: 3 },
-      { label: "Renewal", value: 4 },
+      { label: "Foreclosure/Closure", value: 2 },
+      // { label: "Closure", value: 3 },
+      { label: "Renewal", value: 3 },
 
     ]
     this.termdeposits = [
@@ -121,6 +126,30 @@ export class FdNonCumulativeComponent implements OnInit {
       this.gridListData = this.gridListData.map(fd => {
         if (fd.depositDate != null && fd.depositDate != undefined) {
           fd.depositDate = this.datePipe.transform(fd.depositDate,this.orgnizationSetting.datePipe);
+        }
+        fd.multipartFileListForPhotoCopy = null;
+        fd.multipartFileListForSignatureCopy = null;
+        if (fd.memberPhotoCopyPath != null && fd.memberPhotoCopyPath != undefined && fd.isNewMember) {
+          fd.multipartFileListForPhotoCopy = this.fileUploadService.getFile(fd.memberPhotoCopyPath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + fd.memberPhotoCopyPath);
+          fd.photoCopy = true;
+        }
+        else if (fd.memberPhotoCopyPath != null && fd.memberPhotoCopyPath != undefined) {
+          fd.multipartFileListForPhotoCopy = this.fileUploadService.getFile(fd.memberPhotoCopyPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + fd.memberPhotoCopyPath);
+          fd.photoCopy = true;
+        }
+        else {
+          fd.photoCopy = false;
+        }
+        if (fd.memberSignatureCopyPath != null && fd.memberSignatureCopyPath != undefined && fd.isNewMember) {
+          fd.multipartFileListForSignatureCopy = this.fileUploadService.getFile(fd.memberSignatureCopyPath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + fd.memberSignatureCopyPath);
+          fd.signatureCopy = true;
+        }
+        else if (fd.memberSignatureCopyPath != null && fd.memberSignatureCopyPath != undefined) {
+          fd.multipartFileListForSignatureCopy = this.fileUploadService.getFile(fd.memberSignatureCopyPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + fd.memberSignatureCopyPath);
+          fd.signatureCopy = true;
+        }
+        else {
+          fd.signatureCopy = false;
         }
         this.activeStatusCount = this.gridListData.filter(fdAccountApplication => fdAccountApplication.status === applicationConstants.ACTIVE).length;
         this.inactiveStatusCount = this.gridListData.filter(fdAccountApplication => fdAccountApplication.status === applicationConstants.IN_ACTIVE).length;

@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -80,6 +80,8 @@ export class MemberApprovalComponent {
   photoCopyFlag: boolean = true;
   signatureCopyFlag: boolean = true;
   memberPhotoCopyZoom: boolean = false;
+  groupPhotoCopyZoom: boolean = false;
+  institutionPhotoCopyZoom: boolean = false;
   membreIndividualFlag: boolean = false;
   memberGroupBasicDetailsFlag:boolean =false;
   memberInstitutionBasicDetailsFlag:boolean =false;
@@ -99,7 +101,11 @@ export class MemberApprovalComponent {
   groupDocumentGridList: any[]=[];
   showdocumentForm: boolean=false;
   institutionDocumentList: any[]=[];
+  kycPhotoCopyZoom: boolean = false;
   docPhotoCopyZoom:boolean = false;
+  nomineePhotoCopyZoom:boolean = false;
+  guardianPhotoCopyZoom:boolean = false;
+  isMaximized: boolean = false;
 
   constructor(private commonComponent: CommonComponent, private formBuilder: FormBuilder, private membershipBasicDetailsService: MembershipBasicDetailsService,
     private activateRoute: ActivatedRoute, private encryptService: EncryptDecryptService, private datePipe: DatePipe,
@@ -591,6 +597,12 @@ export class MemberApprovalComponent {
   closePhotoCopy() {
     this.memberPhotoCopyZoom = false;
   }
+  groupclosePhotoCopy() {
+    this.groupPhotoCopyZoom = false;
+  }
+  institutionclosePhotoCopy() {
+    this.institutionPhotoCopyZoom = false;
+  }
 
   /**
    * @implement Image Zoom POp up
@@ -598,6 +610,12 @@ export class MemberApprovalComponent {
    */
   onClickMemberPhotoCopy(){
     this.memberPhotoCopyZoom = true;
+  }
+  onClickGroupPhotoCopy(){
+    this.groupPhotoCopyZoom = true;
+  }
+  onClickInstitutionPhotoCopy(){
+    this.institutionPhotoCopyZoom = true;
   }
 
   /**
@@ -807,8 +825,71 @@ fileRemoveEvent() {
         }, 2000);
       });
     }
-    onClickdoccPhotoCopy(){
-      this.docPhotoCopyZoom = true;
-    }
+    
+
+      // KYC, Nominee, Documents
+
+  onClickkycPhotoCopy(rowData :any){
+    this.multipleFilesList = [];
+    this.kycPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
+  }
+  kycclosePhoto(){
+    this.kycPhotoCopyZoom = false;
+  }
+  kycclosePhotoCopy() {
+    this.kycPhotoCopyZoom = false;
+  }
+  onClickdoccPhotoCopy(rowData :any){
+    this.multipleFilesList = [];
+    this.docPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
+  }
+  docclosePhoto(){
+    this.docPhotoCopyZoom = false;
+  }
+  docclosePhotoCopy() {
+    this.docPhotoCopyZoom = false;
+  }
+  onClicknomineePhotoCopy(){
+    this.nomineePhotoCopyZoom = true;
+  }
+  nomineeclosePhoto(){
+    this.nomineePhotoCopyZoom = false;
+  }
+  nomineeclosePhotoCopy() {
+    this.nomineePhotoCopyZoom = false;
+  }
+  onClickguardianPhotoCopy(){
+    this.guardianPhotoCopyZoom = true;
+  }
+  guardianclosePhoto(){
+    this.guardianPhotoCopyZoom = false;
+  }
+  guardianclosePhotoCopy() {
+    this.guardianPhotoCopyZoom = false;
+  }
+
+  // Popup Maximize photo for KYC Document and Nominee
+              @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+              
+                onDialogResize(event: any) {
+                  this.isMaximized = event.maximized;
+              
+                  if (this.isMaximized) {
+                    // Restore original image size when maximized
+                    this.imageElement.nativeElement.style.width = 'auto';
+                    this.imageElement.nativeElement.style.height = 'auto';
+                    this.imageElement.nativeElement.style.maxWidth = '100%';
+                    this.imageElement.nativeElement.style.maxHeight = '100vh';
+                  } else {
+                    // Fit image inside the dialog without scrollbars
+                    this.imageElement.nativeElement.style.width = '100%';
+                    this.imageElement.nativeElement.style.height = '100%';
+                    this.imageElement.nativeElement.style.maxWidth = '100%';
+                    this.imageElement.nativeElement.style.maxHeight = '100%';
+                    this.imageElement.nativeElement.style.objectFit = 'contain';
+                  }
+                }
 }
 

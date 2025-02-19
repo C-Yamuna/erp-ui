@@ -400,5 +400,7 @@ export class InstitutionPromoterDetailsModel {
 
     multipartFileListForSignatureCopyPath: any;
 
+    isGroupLeader: any;
+
 }
 

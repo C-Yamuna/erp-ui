@@ -14,6 +14,9 @@ import { EncryptDecryptService } from 'src/app/shared/encrypt-decrypt.service';
 import { FileUploadService } from 'src/app/shared/file-upload.service';
 import { Responsemodel } from 'src/app/shared/responsemodel';
 import { TranslateService } from '@ngx-translate/core';
+import { SiLoanApplication } from 'src/app/transcations/loan-transcation/shared/si-loans/si-loan-application.model';
+import { SiLoanKycService } from 'src/app/transcations/loan-transcation/shared/si-loans/si-loan-kyc.service';
+import { SiLoanApplicationService } from 'src/app/transcations/loan-transcation/shared/si-loans/si-loan-application.service';
 
 @Component({
   selector: 'app-si-loan-approval-details',
@@ -21,182 +24,299 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./si-loan-approval-details.component.css']
 })
 export class SiLoanApprovalDetailsComponent {
-  siloans: any[] = [];
-  statuses!: SelectItem[];
-  operations:any;
-  operationslist:any;
-  items: MenuItem[] | undefined;
-  activeItem: MenuItem | undefined;
-  value: number = 0;
-  responseModel!: Responsemodel;
-  gridListData: any[] = [];
-  orgnizationSetting: any;
-  msgs: any[] = [];
-  tempGridListData: any[] = [];
-  gridListLenght: Number | undefined;
-  pacsId : any;
-  branchId : any;
-  gridList: any [] = [];
-  activeStatusCount: any;
-  inactiveStatusCount: any;
-  showForm: boolean=false;
-  memberPhotoCopyZoom: boolean = false;
-  memberphotCopyMultipartFileList: any;
-
-  constructor(private router: Router,private commonFunctionsService: CommonFunctionsService
-    ,private siTransactionDetailsService : SiTransactionDetailsService ,private translate:TranslateService,
-     private encryptDecryptService: EncryptDecryptService ,private commonComponent: CommonComponent,private datePipe : DatePipe ,private fileUploadService : FileUploadService)
-  {
-    this. operationslist = [
-      { label: "Standing instructions", value: 1 },
-      { label: "Account service", value: 2 },
-      { label: "Amount Block", value: 3 },
-      // { label: "Chequebook issue", value: 4 },
-      // { label: "Debit card issue ", value: 5 },
-      { label: "Closure ", value: 6 },
-      { label: "Death Claim ", value: 7 },
-    ]
-    this.siloans = [
-      { field: 'accountNumber', header: 'Account Number' },
-      { field: 'balance', header: 'Account Balence' },
-      { field: 'name', header: 'Name' },
-      { field: 'memberTypeName', header: 'Member Type' },
-      { field: 'accountTypeName', header: 'Account Type' },
-      { field: 'admissionNumber',header:'Admission Number'},
-      { field: 'accountOpenDate', header: 'Account Openinig Date' },
-      { field: 'accountStatusName', header: 'Status' },
-      // { field: 'Action', header: 'ACTION' },
-    ];
-   }
-  ngOnInit() {
-    this.commonFunctionsService.setStorageValue('language', 'en');
-    this.orgnizationSetting = this.commonComponent.orgnizationSettings();
-    this.commonFunctionsService.data.subscribe((res: any) => {
-      if (res) {
-        this.translate.use(res);
-      } else {
-        this.translate.use('en');
-      }
-    });
-    this.pacsId =  this.commonFunctionsService.getStorageValue(applicationConstants.PACS_ID);
-   this.branchId =  this.commonFunctionsService.getStorageValue(applicationConstants.BRANCH_ID);
-   this.getAllSILoanDetailsByPacsIdAndBranchId();
-}
-
-view(rowData : any){
-  this.router.navigate([Loantransactionconstant.VIEW_SIMPLE_INTEREST_LOAN], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id) ,editOpt: this.encryptDecryptService.encrypt(applicationConstants.IN_ACTIVE),isGridPage: this.encryptDecryptService.encrypt(applicationConstants.IN_ACTIVE)}});
-}
-
-edit(rowData:any){
-  this.router.navigate([approvaltransactionsconstant.SI_LOANS_APPROVAL], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id) ,editOpt: this.encryptDecryptService.encrypt(applicationConstants.IN_ACTIVE),isGridPage: this.encryptDecryptService.encrypt(applicationConstants.IN_ACTIVE)}});
-}
-
-
-getAllSITransactionDetails() {
-    this.siTransactionDetailsService.getAllSITransactionDetails().subscribe((data: any) => {
-      this.responseModel = data;
-      this.gridListData = this.responseModel.data;
-      if(this.gridListData.length > 0 && this.gridListData != null && this.gridListData != undefined){
-        this.gridListLenght = this.gridListData.length;
-        this.gridListData = this.gridListData.map(siLoan => {
-          if(siLoan != null && siLoan != undefined){
-          if( siLoan.admissionDate != null && siLoan.admissionDate != undefined){
-            siLoan.admissionDate = (this.datePipe.transform(siLoan.admissionDate, this.orgnizationSetting.datePipe))||('');
-          }
-          if(siLoan.accountOpenDate != null && siLoan.accountOpenDate != undefined){
-            siLoan.accountOpenDate = (this.datePipe.transform(siLoan.accountOpenDate, this.orgnizationSetting.accountOpenDate))||('');
-          }
-          if(siLoan.balance == null || siLoan.balance == undefined || siLoan.balance == 0){
-            siLoan.balance = 0;
+   siLoanApplicationModel: SiLoanApplication = new SiLoanApplication();
+    responseModel!: Responsemodel;
+    items: MenuItem[] | undefined;
+    activeItem: MenuItem | undefined;
+    isMemberCreation: boolean = false;
+    orgnizationSetting: any;
+    operations: any;
+    operationslist: any;
+    value: number = 0;
+    msgs: any[] = [];
+    columns: any[] = [];
+    gridList: any[] = [];
+    showForm: boolean = false;
+    activeStatusCount: number = 0;
+    inactiveStatusCount: number = 0;
+  
+    memberPhotoCopyZoom: boolean = false;
+    memberphotCopyMultipartFileList: any;
+  
+    pacsId: any;
+    branchId: any;
+    tempGridListData: any[] = [];
+    gridListLenght: Number | undefined;
+  
+    createdCount: any;
+    submissionForApprovalCount: any;
+    approvedCount: any;
+    requestForResubmmissionCount: any;
+    rejectCount: any;
+    multipartFileListForsignatureCopyPath: any;
+    multipartFileListForPhotoCopy: any;
+    showDialog: boolean = false;
+    showDialogs: boolean = false;
+    inProgressCount: any;
+  
+    constructor(private router: Router, private translate: TranslateService, private commonFunctionsService: CommonFunctionsService,
+      private encryptDecryptService: EncryptDecryptService, private commonComponent: CommonComponent,
+      private siTransactionDetailsService: SiTransactionDetailsService, private datePipe: DatePipe,
+      private fileUploadService: FileUploadService, private siLoanApplicationService: SiLoanApplicationService,
+      private siLoanKycService: SiLoanKycService) {
+    }
+  
+    ngOnInit() {
+      this.orgnizationSetting = this.commonComponent.orgnizationSettings();
+      this.commonFunctionsService.setStorageValue('language', 'en');
+      this.pacsId = this.commonFunctionsService.getStorageValue(applicationConstants.PACS_ID);
+      this.branchId = this.commonFunctionsService.getStorageValue(applicationConstants.BRANCH_ID);
+      this.commonFunctionsService.data.subscribe((res: any) => {
+        if (res) {
+          this.translate.use(res);
+        } else {
+          this.translate.use('en');
+        }
+      });
+      this.columns = [
+        { field: 'accountNumber', header: 'ERP.ACCOUNT_NUMBER' },
+        { field: 'admissionNo', header: 'ERP.ADMISSION_NUMBER' },
+        { field: 'memberTypeName',header:'LOAN_TRANSACTION.MEMBER_TYPE'},
+        { field: 'accountTypeName', header: 'Account Type' },
+        { field: 'applicationDateVal', header: 'ERP.APPLICATION_DATE' },
+        { field: 'sanctionDateVal', header: 'ERP.SANCTION_DATE' },
+        { field: 'repaymentFrequencyName', header: 'ERP.REPAYMENT_FREQUENCY' },
+        { field: 'accountStatusName', header: 'ERP.STATUS' }
+      ];
+      this.operationslist = [
+        { label: "Disbursement", value: 1 },
+        { label: "Collection", value: 2 },
+        { label: "Closure", value: 3 },
+      ]
+      // this.getAll();
+      this.getAllSILoanDetailsBypacsIdAndBranchId();
+    }
+  
+    getAll() {
+      this.siTransactionDetailsService.getAllSITransactionDetails().subscribe((response: any) => {
+        this.responseModel = response;
+        if (this.responseModel != null && this.responseModel != undefined) {
+          if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+            this.gridList = this.responseModel.data;
+            this.gridList = this.responseModel.data.map((member: any) => {
+              if (member != null && member != undefined && member.applicationDate != null && member.applicationDate != undefined) {
+                member.applicationDateVal = this.datePipe.transform(member.applicationDate, this.orgnizationSetting.datePipe);
+              }
+              if (member != null && member != undefined && member.sanctionDate != null && member.sanctionDate != undefined) {
+                member.sanctionDateVal = this.datePipe.transform(member.sanctionDate, this.orgnizationSetting.datePipe);
+              }
+              member.multipartFileListForPhotoCopy = null;
+              if (member.memberPhotoCopyPath != null && member.memberPhotoCopyPath != undefined)
+                member.multipartFileListForPhotoCopy = this.fileUploadService.getFile(member.memberPhotoCopyPath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + member.memberPhotoCopyPath);
+  
+              if (member.balance == null || member.balance == undefined || member.balance == 0) {
+                member.balance = "0.0/-";
+              }
+              else {
+                member.balance = member.balance + "/-";
+              }
+              return member
+            });
+  
+          } else {
+            this.msgs = [];
+            this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+            setTimeout(() => {
+              this.msgs = [];
+            }, 2000);
           }
         }
-          return siLoan
-        });
-        this.tempGridListData = this.gridListData;
-      }
-      //  this.commonComponent.stopSpinner();
-    }, error => {
-      this.msgs = [];
-      this.msgs = [{ severity: "error", summary: 'Failed', detail:  applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST }];
-      // this.commonComponent.stopSpinner();
-    });
-  }
-
-  getAllSILoanDetailsByPacsIdAndBranchId() {
-    this.siTransactionDetailsService.getAllSILoanDetailsByPacsIdAndBranchId(this.pacsId, this.branchId).subscribe((data: any) => {
-      this.responseModel = data;
-      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
-        if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
-          this.gridList = this.responseModel.data.filter((siLoan: any) => siLoan.accountStatusName != CommonStatusData.CREATED && siLoan.accountStatusName != CommonStatusData.IN_PROGRESS).map((siLoan: any) =>  {
-            if (siLoan != null && siLoan != undefined && siLoan.accountOpenDate != null && siLoan.accountOpenDate != undefined) {
-              siLoan.accountOpenDate = this.datePipe.transform(siLoan.accountOpenDate, this.orgnizationSetting.datePipe);
-            }
-            siLoan.multipartFileListForPhotoCopy = null;
-            if(siLoan.memberPhotoCopyPath != null && siLoan.memberPhotoCopyPath != undefined && siLoan.isNewMember){
-              siLoan.multipartFileListForPhotoCopy = this.fileUploadService.getFile(siLoan.memberPhotoCopyPath ,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + siLoan.memberPhotoCopyPath  );
-            }
-            else{
-              siLoan.multipartFileListForPhotoCopy = this.fileUploadService.getFile(siLoan.memberPhotoCopyPath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + siLoan.memberPhotoCopyPath  );
-            }
-            if(siLoan.balance == null || siLoan.balance == undefined || siLoan.balance == 0){
-              siLoan.balance = "0.0/-";
-            }
-            else{
-              siLoan.balance = siLoan.balance +"/-";
-            }
-            if(siLoan.accountStatusName === CommonStatusData.SUBMISSION_FOR_APPROVAL){
-              siLoan.actionButton = true;
-            }
-            else{
-              siLoan.viewButton = true;
-            }
-            if(siLoan.accountStatusName == CommonStatusData.APPROVED){
-              siLoan.approved = true;
-            }
-            else if(siLoan.accountStatusName == CommonStatusData.REJECTED){
-              siLoan.rejected = true;
-            }
-            else if(siLoan.accountStatusName == CommonStatusData.SUBMISSION_FOR_APPROVAL){
-              siLoan.submissionForApproval = true; 
-            }
-           
-            
-            return siLoan
-          });
-          this.activeStatusCount = this.gridList.filter(siLoanAccountApplication => siLoanAccountApplication.status != null && siLoanAccountApplication.status != undefined && siLoanAccountApplication.status === applicationConstants.ACTIVE).length;
-          this.inactiveStatusCount = this.gridList.filter(siLoanAccountApplication => siLoanAccountApplication.status != null && siLoanAccountApplication.status != undefined && siLoanAccountApplication.status === applicationConstants.IN_ACTIVE).length;
-          this.gridListLenght = this.gridList.length;
-          this.tempGridListData = this.gridList;
+      }, error => {
+        this.msgs = [];
+        this.commonComponent.stopSpinner();
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST }];
+      });
+    }
+  
+    getAllSILoanDetailsBypacsIdAndBranchId() {
+      this.siTransactionDetailsService.getAllSILoanDetailsByPacsIdAndBranchId(this.pacsId, this.branchId).subscribe((data: any) => {
+        this.responseModel = data;
+        if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+          if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+              this.gridList = this.responseModel.data.filter((sb: any) => sb.accountStatusName != CommonStatusData.CREATED && sb.accountStatusName != CommonStatusData.IN_PROGRESS ).map((siLoan: any) =>  {
+              
+              if (siLoan != null && siLoan != undefined && siLoan.accountOpenDate != null && siLoan.accountOpenDate != undefined) {
+                siLoan.accountOpenDate = this.datePipe.transform(siLoan.accountOpenDate, this.orgnizationSetting.datePipe);
+              }
+              if (siLoan != null && siLoan != undefined && siLoan.applicationDate != null && siLoan.applicationDate != undefined) {
+                siLoan.applicationDateVal = this.datePipe.transform(siLoan.applicationDate, this.orgnizationSetting.datePipe);
+              }
+              if (siLoan != null && siLoan != undefined && siLoan.sanctionDate != null && siLoan.sanctionDate != undefined) {
+                siLoan.sanctionDateVal = this.datePipe.transform(siLoan.sanctionDate, this.orgnizationSetting.datePipe);
+              }
+              // siLoan.multipartFileListForPhotoCopy = null;
+              // if (siLoan.memberPhotoCopyPath != null && siLoan.memberPhotoCopyPath != undefined)
+              //   siLoan.multipartFileListForPhotoCopy = this.fileUploadService.getFile(siLoan.memberPhotoCopyPath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + siLoan.memberPhotoCopyPath);
+  
+              if (siLoan.memberPhotoCopyPath != null && siLoan.memberPhotoCopyPath != undefined) {
+                this.multipartFileListForPhotoCopy = siLoan.multipartFileListForPhotoCopy
+                this.multipartFileListForPhotoCopy = this.fileUploadService.getFile(siLoan.memberPhotoCopyPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + siLoan.memberPhotoCopyPath);
+                this.showDialog = true;
+              }
+              else {
+                this.showDialog = false;
+              }
+              if (siLoan.signatureCopyPath != null && siLoan.signatureCopyPath != undefined) {
+                this.multipartFileListForsignatureCopyPath = siLoan.multipartFileListForsignatureCopyPath;
+                this.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(siLoan.signatureCopyPath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + siLoan.signatureCopyPath);
+                this.showDialogs = true;
+              }
+              else {
+                this.showDialogs = false;
+              }
+              if ((siLoan.accountStatusName == CommonStatusData.SUBMISSION_FOR_APPROVAL) || (siLoan.accountStatusName == CommonStatusData.APPROVED)) {
+                siLoan.viewButton = true;
+                siLoan.actionButton = false;
+              }
+              else {
+                siLoan.actionButton = true;
+                siLoan.viewButton = false;
+              }
+              if (siLoan.accountStatusName == CommonStatusData.APPROVED) {
+                siLoan.approvalButton = false;
+                siLoan.approved = true;
+                siLoan.actionButton = false;
+                this.approvedCount = this.approvedCount + 1;
+  
+              }
+              else if (siLoan.accountStatusName == CommonStatusData.REJECTED) {
+                siLoan.approvalButton = false;
+                siLoan.rejected = true;
+                siLoan.actionButton = false;
+                this.rejectCount = this.rejectCount + 1;
+              }
+              else if (siLoan.accountStatusName == CommonStatusData.SUBMISSION_FOR_APPROVAL) {
+                siLoan.approvalButton = true;
+                siLoan.submissionForApproval = true;
+                siLoan.actionButton = false;
+                this.submissionForApprovalCount = this.submissionForApprovalCount + 1;
+              }
+              else if (siLoan.accountStatusName == CommonStatusData.REQUEST_FOR_RESUBMISSION) {
+                siLoan.approvalButton = false;
+                siLoan.rejected = false;
+                siLoan.approved = false;
+                siLoan.submissionForApproval = false;
+                siLoan.actionButton = true;
+                siLoan.viewButton = true;
+                siLoan.requestForResubmmission = true;
+                this.requestForResubmmissionCount = this.requestForResubmmissionCount + 1;
+              }
+              else if (siLoan.accountStatusName == CommonStatusData.CLOSED) {
+                siLoan.approvalButton = false;
+                siLoan.rejected = false;
+                siLoan.approved = false;
+                siLoan.submissionForApproval = false;
+                siLoan.actionButton = true;
+                siLoan.viewButton = true;
+                siLoan.requestForResubmmission = false;
+                siLoan.closed = true;
+                this.requestForResubmmissionCount = this.requestForResubmmissionCount + 1;
+              }
+              else if (siLoan.accountStatusName == CommonStatusData.CLOSURE_REQUEST) {
+                siLoan.approvalButton = false;
+                siLoan.rejected = false;
+                siLoan.approved = false;
+                siLoan.submissionForApproval = false;
+                siLoan.actionButton = false;
+                siLoan.viewButton = true;
+                siLoan.requestForResubmmission = false;
+                siLoan.closed = false;
+                siLoan.closureRequest = true;
+                this.requestForResubmmissionCount = this.requestForResubmmissionCount + 1;
+              }
+  
+              if (siLoan.balance == null || siLoan.balance == undefined || siLoan.balance == 0) {
+                siLoan.balance = "0.0/-";
+              }
+              else {
+                siLoan.balance = siLoan.balance + "/-";
+              }
+              return siLoan
+            });
+            // this.activeStatusCount = this.gridList.filter(sbAccountApplication => sbAccountApplication.status != null && sbAccountApplication.status != undefined && sbAccountApplication.status === applicationConstants.ACTIVE).length;
+            // this.inactiveStatusCount = this.gridList.filter(sbAccountApplication => sbAccountApplication.status != null && sbAccountApplication.status != undefined && sbAccountApplication.status === applicationConstants.IN_ACTIVE).length;
+            // this.gridListLenght = this.gridList.length;
+            this.createdCount = this.gridList.filter(siLoan => siLoan.accountStatusName === CommonStatusData.IN_PROGRESS).length;
+            this.submissionForApprovalCount = this.gridList.filter(siLoan => siLoan.accountStatusName === CommonStatusData.SUBMISSION_FOR_APPROVAL).length;
+            this.approvedCount = this.gridList.filter(siLoan => siLoan.accountStatusName === CommonStatusData.APPROVED).length;
+            this.requestForResubmmissionCount = this.gridList.filter(siLoan => siLoan.accountStatusName === CommonStatusData.REQUEST_FOR_RESUBMISSION).length;
+            this.rejectCount = this.gridList.filter(siLoan => siLoan.accountStatusName === CommonStatusData.REJECTED).length;
+            this.tempGridListData = this.gridList;
+          }
+        } else {
+          this.msgs = [];
+          this.msgs = [{ severity: "error", summary: 'Failed', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 3000);
         }
-      } else {
+      }, error => {
         this.msgs = [];
         this.msgs = [{ severity: "error", summary: 'Failed', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST }];
         setTimeout(() => {
           this.msgs = [];
         }, 3000);
-      }
-    }, error => {
-      this.msgs = [];
-      this.msgs = [{ severity: "error", summary: 'Failed', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST }];
-      setTimeout(() => {
-        this.msgs = [];
-      }, 3000);
-    });
+      });
+    }
+  
+    createSILoanAccount() {
+      this.siLoanApplicationService.resetCurrentStep();
+      this.siLoanKycService.resetCurrentStep();
+  
+      this.commonFunctionsService.setStorageValue('b-class-member_creation', false);
+      this.commonFunctionsService.setStorageValue(applicationConstants.INDIVIDUAL_MEMBER_DTAILS, null);
+      this.commonFunctionsService.setStorageValue(applicationConstants.GROUP_DETAILS, null);
+      this.commonFunctionsService.setStorageValue(applicationConstants.INSTITUTION_DETAILS, null);
+      this.router.navigate([Loantransactionconstant.SIMPLE_INTEREST_LOANS_KYC], { queryParams: { createLoanFlag: this.encryptDecryptService.encrypt(true) } });
+    }
+  
+    edit(rowData: any) {
+      this.router.navigate([Loantransactionconstant.VIEW_SIMPLE_INTEREST_LOAN], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id), editOpt: this.encryptDecryptService.encrypt(applicationConstants.ACTIVE), isGridPage: this.encryptDecryptService.encrypt(applicationConstants.IN_ACTIVE) } });
+    }
+  
+    view(rowData: any) {
+      this.router.navigate([Loantransactionconstant.VIEW_SIMPLE_INTEREST_LOAN], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id), isGridPage: this.encryptDecryptService.encrypt(applicationConstants.IN_ACTIVE) } });
+    }
+
+    approvalView(rowData: any) {
+      this.router.navigate([Loantransactionconstant.APPROVAL_SIMPLE_INTEREST_LOAN], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id), isGridPage: this.encryptDecryptService.encrypt(applicationConstants.IN_ACTIVE) } });
+    }
+  
+    onChange() {
+      this.isMemberCreation = !this.isMemberCreation;
+    }
+  
+    navigateToInfoDetails(event: any, rowData: any) {
+      if (event.value === 1)
+        this.router.navigate([Loantransactionconstant.SIMPLE_INTEREST_LOAN_DISBURSEMENTS], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id) } });
+      else if (event.value === 2)
+        this.router.navigate([Loantransactionconstant.SIMPLE_INTEREST_LOAN_COLLECTIONS], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id) } });
+      else if (event.value === 3)
+        this.router.navigate([Loantransactionconstant.SIMPLE_INTEREST_LOAN_CLOSURE], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id) } });
+    }
+  
+    onSearch() {
+      this.showForm = !this.showForm;
+    }
+  
+    onClickMemberPhotoCopy(sbRowData: any) {
+      this.memberPhotoCopyZoom = true;
+      this.memberphotCopyMultipartFileList = [];
+      this.memberphotCopyMultipartFileList = sbRowData.multipartFileListForPhotoCopy;
+    }
+  
+    closePhoto() {
+      this.memberPhotoCopyZoom = false;
+    }
+  
   }
-  onChange(){
-    this.showForm = !this.showForm;
-  }
-
-
-  onClickMemberPhotoCopy(sbRowData : any){
-    this.memberPhotoCopyZoom = true;
-    this.memberphotCopyMultipartFileList = [];
-    this.memberphotCopyMultipartFileList = sbRowData.multipartFileListForPhotoCopy ;
-  }
-
-  closePhoto(){
-    this.memberPhotoCopyZoom = false;
-  }
-
-
-}

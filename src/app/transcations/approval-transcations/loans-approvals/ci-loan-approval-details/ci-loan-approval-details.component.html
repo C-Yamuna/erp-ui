@@ -127,7 +127,7 @@
             <td>{{rowData.effectiveRoi}}</td>
             <td>
                 <div class="status-style statusactive" *ngIf="rowData.approved"> {{rowData.accountStatusName}}</div>
-                <div class="status-style statusreject" *ngIf="rowData.rejected"> {{rowData.accountStatusName}}</div>
+                <div class="status-style statusreject" *ngIf="rowData.rejected || rowData.requestForResubmmission"> {{rowData.accountStatusName}}</div>
                 <div class="status-style statuspending" *ngIf="rowData.submissionForApproval"> {{rowData.accountStatusName}}</div>
             </td>
 

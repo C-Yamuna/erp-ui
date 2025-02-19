@@ -209,6 +209,7 @@
                     <div class="status-style statuspending" *ngIf="(col.field =='accountStatusName') && rowData.created"> {{rowData[col.field]}}</div>
                     <div class="status-style statusrequestforresumission" *ngIf="(col.field =='accountStatusName') && rowData.requestForResubmmission"> {{rowData[col.field]}}</div>
                     <div class="status-style statusreject" *ngIf="(col.field =='accountStatusName') && rowData.closed"> {{rowData[col.field]}}</div>
+                    <div class="status-style statuspending" *ngIf="(col.field =='accountStatusName') && rowData.closureRequest"> {{rowData[col.field]}}</div>
 
 
                     <div *ngIf="col.field !='accountStatusName' && col.field !='accountNumber'"> {{rowData[col.field]}}</div>
@@ -217,10 +218,10 @@
                 <td>
                     <div class="global-action-btn flex align-items-center justify-content-start">
                         <p-button  label="view" class="action-view" (click)="view(rowData)"></p-button>
-                        <p-dropdown *ngIf ="rowData.approved" id="bunit_txt_status" class="action-operation" placeholder="operations"
-                            [filter]="true" [options]="operationslist" [(ngModel)]="operations"
+                        <p-dropdown  id="bunit_txt_status" class="action-operation" placeholder="operations"
+                            [filter]="true" [options]="operationslist" [(ngModel)]="operations" [disabled]="!rowData.approved"
                             (onChange)="navigateToInfoDetails($event,rowData)" [appendTo]="'body'"></p-dropdown>
-                        <p-button *ngIf ="rowData.approved" label="Transaction" class="action-view" icon="fa fa-exchange" iconPos="left"
+                        <p-button  label="Transaction" class="action-view" [disabled]="!rowData.approved" icon="fa fa-exchange" iconPos="left"
                             (click)="transaction(rowData)"></p-button>
                         <!-- <p-button label="edit" (click)="edit(rowData)"></p-button> -->
                     </div>

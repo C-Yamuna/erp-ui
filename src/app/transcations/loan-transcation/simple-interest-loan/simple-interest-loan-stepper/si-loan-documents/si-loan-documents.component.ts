@@ -33,7 +33,7 @@ export class SiLoanDocumentsComponent {
     isEdit: boolean = false;
     buttonDisabled: boolean = false;
     saveAndNextEnable : boolean = false;
-    buttonsFlag: boolean = true;
+  
     columns: any[] = [];
     uploadFlag: boolean = false;
     editIndex: any;
@@ -114,8 +114,7 @@ export class SiLoanDocumentsComponent {
     memberTypeId: any;
     displayDialog: boolean = false;
     docPhotoCopyZoom: boolean = false;
-  
-  
+    buttonsFlag: boolean = true;
     constructor(private router: Router, private formBuilder: FormBuilder, private siLoanApplicationService: SiLoanApplicationService, private commonComponent: CommonComponent,
        private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService,
        private siLoanDocumentsDetailsService: SiLoanDocumentsDetailsService,
@@ -271,9 +270,9 @@ export class SiLoanDocumentsComponent {
           this.mandatoryDoxsTextShow = false;
       }
       if (mandatoryDocuments.length > 0) {
-          this.saveAndNextEnable = allMandatoryUploaded && this.buttonsFlag;
+        this.saveAndNextEnable = allMandatoryUploaded && this.buttonsFlag;
       } else {
-          this.saveAndNextEnable = this.documentModelList?.length > 0 && this.buttonsFlag;
+        this.saveAndNextEnable = this.documentModelList?.length > 0 && this.buttonsFlag;
       }
       this.siLoanDocumentsModel.siLoanApplicationId = this.loanAccId;
       this.siLoanDocumentsModel.admissionNumber = this.admissionNumber;
@@ -486,14 +485,15 @@ export class SiLoanDocumentsComponent {
      * @argument loanAccId
      */
     addDocument(event: any) {
+      this.siDocumentDetailsForm.reset();
       this.getAllDocumentTypesByProductId();
       this.isFileUploaded = applicationConstants.FALSE;
       this.multipleFilesList = [];
       this.addDocumentOfKycFalg = !this.addDocumentOfKycFalg;
       this.buttonDisabled = true;
+      this.editButtonDisable = true;
       this.buttonsFlag = false;
       this.saveAndNextEnable = false;
-      this.editButtonDisable = true;
       this.siLoanDocumentsModel = new SiLoanDocuments();
       this.updateData();
     }
@@ -526,11 +526,11 @@ export class SiLoanDocumentsComponent {
       }
       this.editButtonDisable = true;
       this.buttonDisabled = true;
-      this.buttonsFlag = false;
-      this.saveAndNextEnable = false;
       this.veiwCardHide = false;
       this.editDocumentOfKycFalg = false;
       this.addDocumentOfKycFalg = false;
+      this.buttonsFlag = false;
+      this.saveAndNextEnable = false;
       this.getDocumentsById(modelData.id);
       this.updateData();
   
@@ -584,7 +584,7 @@ export class SiLoanDocumentsComponent {
         this.addKycButton = false;
         this.buttonDisabled = false;
         this.getAllSILoanDocumentDetailsLoanAccId(this.loanAccId);
-        // this.updateData();
+        this.updateData();
       }, error => {
         this.commonComponent.stopSpinner();
         this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
@@ -616,6 +616,7 @@ export class SiLoanDocumentsComponent {
                 }
               }
             }
+            this.updateData();
           }
         }
       }, error => {
@@ -668,5 +669,25 @@ export class SiLoanDocumentsComponent {
     docclosePhotoCopy() {
       this.docPhotoCopyZoom = false;
     }
+      /**
+     * @implements diplicate check for required documnets
+     * @author k.yamuna
+     */
+     requiredDocumentDplicate(id: any) {
+        if (id != null && id != undefined) {
+          if (this.documentModelList != null && this.documentModelList != undefined && this.documentModelList.length > 0) {
+            for (let item of this.documentModelList) {
+              if (item != null && item != undefined && item.documentType === id) {
+                this.siDocumentDetailsForm.reset();
+                this.msgs = [];
+                this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "Required Document already exists" }];
+                setTimeout(() => {
+                  this.msgs = [];
+                }, 1500);
+              }
+            }
+          }
+        }
+      }
 
 }

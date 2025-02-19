@@ -173,23 +173,24 @@ export class RdPreviewComponent {
         // let type = this.encryptDecryptService.decrypt(params['memType']);
         let idEdit = this.encryptDecryptService.decrypt(params['editbutton']);
         this.rdAccId = Number(id);
-        if (idEdit == "1"){
-          this.preveiwFalg = true;
-          this.viewButton = false;
-        }else {
-          this.preveiwFalg = false;
-          this.viewButton = true;
+
+        if (idEdit == "1") {
+            this.preveiwFalg = true;
+            this.isShowSubmit = applicationConstants.TRUE; // Allow Submit
+            this.viewButton = false;
+            this.editFlag = false;
+        } else {
+            this.preveiwFalg = false;
         }
         if (params['isGridPage'] != undefined && params['isGridPage'] != null) {
-          let isGrid = this.encryptDecryptService.decrypt(params['isGridPage']);
-          if (isGrid === "0") {
-            this.isShowSubmit = applicationConstants.FALSE;
-            // this.viewButton = false;
-            this.editFlag = true;
-          } else {
-            this.isShowSubmit = applicationConstants.TRUE;
-            this.preveiwFalg = false;
-          }
+            let isGrid = this.encryptDecryptService.decrypt(params['isGridPage']);
+            if (isGrid === "0") {
+                this.isShowSubmit = applicationConstants.FALSE;
+                this.viewButton = true;
+                this.editFlag = false;
+            } else {
+                this.isShowSubmit = applicationConstants.TRUE;
+            }
         }
         this.getRdAccountById();
       }

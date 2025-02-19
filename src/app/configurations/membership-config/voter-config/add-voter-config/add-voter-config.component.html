@@ -33,7 +33,7 @@
                         <div class="form-label">
                         <label>{{'MEMBERSHIPCONFIG.MINIMUM_PERIOD' | translate}}</label>
                         <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="minPeriodInMonths"
-                            [(ngModel)]="voterConfigModel.minPeriodInMonths" (focusout)="checkForPeriod(1)">
+                            [(ngModel)]="voterConfigModel.minPeriodInMonths" transaction_limit_config>
                             <p-message severity="error" text="Enter only Numbers"
                             *ngIf="!grouptypesform.controls['minPeriodInMonths'].valid && grouptypesform.controls['minPeriodInMonths'].dirty">
                           </p-message>

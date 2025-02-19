@@ -83,7 +83,7 @@ export class Member360DetailsViewComponent {
   pacsId: any;
   branchId: any;
   gridList: any[] = [];
-  addmissionNumbersList: any[] = [];
+  admissionNumbersList: any[] = [];
   memberTypeName: any;
   individualFlag: boolean = false;
   groupFlag: boolean = false;
@@ -112,7 +112,7 @@ export class Member360DetailsViewComponent {
       }
     });
     this.individualFlag = true;
-    this.getAllAddmissionNumbers(this.pacsId, this.branchId);
+    this.getAllAdmissionNumbers(this.pacsId, this.branchId);
   }
 
 
@@ -202,8 +202,8 @@ export class Member360DetailsViewComponent {
   * @implement get GroupDetails By AdmissionNumber
   * @argument admissionNumber
   */
-  getMemberGroupByAdmissionNumber(addmissionNumber: any) {
-    this.memberShipGroupDetailsService.getMemberGroupByAdmissionNumber(addmissionNumber).subscribe(res => {
+  getMemberGroupByAdmissionNumber(admissionNumber: any) {
+    this.memberShipGroupDetailsService.getMemberGroupByAdmissionNumber(admissionNumber).subscribe(res => {
       this.responseModel = res;
       this.commonComponent.stopSpinner();
 
@@ -265,8 +265,8 @@ export class Member360DetailsViewComponent {
   * @argument admissionNumber
   */
 
-  getMemberIstitutionByAdmissionNumber(addmissionNumber: any) {
-    this.memInistitutionsService.getMemberIstitutionByAdmissionNumber(addmissionNumber).subscribe(res => {
+  getMemberIstitutionByAdmissionNumber(admissionNumber: any) {
+    this.memInistitutionsService.getMemberIstitutionByAdmissionNumber(admissionNumber).subscribe(res => {
       this.responseModel = res;
       this.commonComponent.stopSpinner();
 
@@ -823,14 +823,14 @@ export class Member360DetailsViewComponent {
    * @implement get member admission Numbers list
    * @argument pacsId,branchId
    */
-  getAllAddmissionNumbers(pacsId: any, branchId: any) {
+  getAllAdmissionNumbers(pacsId: any, branchId: any) {
     this.membershipBasicDetailsService.getAllGridList(pacsId, branchId).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel != null && this.responseModel != undefined) {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.gridList = this.responseModel.data;
-            this.addmissionNumbersList = this.gridList.filter((obj: any) => obj != null).map(membership => {
+            this.admissionNumbersList = this.gridList.filter((obj: any) => obj != null).map(membership => {
               return {
                 label: `${membership.name} - ${membership.admissionNumber} - ${membership.memberTypeName}`,
                 value: membership.admissionNumber
@@ -1272,5 +1272,6 @@ export class Member360DetailsViewComponent {
     }
     this.showForm = true;
   }
+  minDataCount = 5; // Adjust based on how much data fits in 12rem
 }
 

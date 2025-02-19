@@ -13,6 +13,7 @@ import { TermLoanProductDefinition } from '../../shared/term-loan-product-defini
 import { TermLoanCharges } from './shared/term-loan-charges.model';
 import { TermLoanProductDefinitionService } from '../../shared/term-loan-product-definition.service';
 import { TermLoanChargesService } from './shared/term-loan-charges.service';
+import { BoxNumber } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-term-loan-charges',
@@ -55,7 +56,7 @@ export class TermLoanChargesComponent {
       'igst': new FormControl('',),
       'minSlabAmount':new FormControl('', Validators.required),
       'collectionFrequency': new FormControl('', Validators.required),
-      'maxSlabAmount':new FormControl('', ),
+      'maxSlabAmount':new FormControl('', Validators.required),
       'minCharges':new FormControl('',Validators.required),
       'maxChrges':new FormControl('',Validators.required),
     });
@@ -336,40 +337,44 @@ getPreviewDetailsByProductId(id: any) {
         // Otherwise, proceed with the new charges type
         return  applicationConstants.FALSE;
       }
-      checkForSlabAmount(): void {
-        const minSlabAmount = this.chargesForm.get('minSlabAmount')?.value;
-        const maxSlabAmount = this.chargesForm.get('maxSlabAmount')?.value;
+      checkForSlabAmount(box:any): void {
+        const minSlabAmount = Number(this.chargesForm.get('minSlabAmount')?.value);
+        const maxSlabAmount = Number(this.chargesForm.get('maxSlabAmount')?.value);
+      if (minSlabAmount && maxSlabAmount && minSlabAmount > maxSlabAmount) {
+          this.msgs = [];
+          if (box == BoxNumber.BOX_ONE) {
+            this.msgs.push({ severity: 'warning', detail: applicationConstants.MINIMUM_SLAB_AMOUNT_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAXIMUM_SLAB_AMOUNT });
+            this.chargesForm.get('minSlabAmount')?.reset();
+          } else if (box == BoxNumber.BOX_TWO) {
+            this.msgs.push({ severity: 'warning', detail: applicationConstants.MAXIMUM_SLAB_AMOUNT_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MINIMUM_SLAB_AMOUNT });
+            this.chargesForm.get('maxSlabAmount')?.reset();
     
-        if (minSlabAmount && maxSlabAmount &&  minSlabAmount >=maxSlabAmount) {
-          this.amountAndTenureFlag = applicationConstants.FALSE;
-          this.msgs = [{ severity: 'error', detail: applicationConstants.MIN_SLAB_AMOUNT_ERROR }];
+          }
           setTimeout(() => {
             this.msgs = [];
           }, 1500);
-        } else {
-          this.msgs = [];
-          this.amountAndTenureFlag = applicationConstants.TRUE;
         }
-    
-       
+      
         this.updateData();
       }
-      checkForCharges(){
-        const minCharges = this.chargesForm.get('minCharges')?.value;
-        const maxChrges = this.chargesForm.get('maxChrges')?.value;
+      checkForCharges(box : any){
+        const minCharges = Number(this.chargesForm.get('minCharges')?.value);
+        const maxChrges = Number(this.chargesForm.get('maxChrges')?.value);
     
-        if (minCharges && maxChrges &&  minCharges >=maxChrges) {
-          this.amountAndTenureFlag = applicationConstants.FALSE;
-          this.msgs = [{ severity: 'error', detail: applicationConstants.MIN_CHARGES_ERROR }];
+        if (minCharges && maxChrges && minCharges > maxChrges) {
+          this.msgs = [];
+          if (box == BoxNumber.BOX_ONE) {
+            this.msgs.push({ severity: 'warning', detail: applicationConstants.MINIMUM_CHARGES_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAXIMUM_CHARGES });
+            this.chargesForm.get('minCharges')?.reset();
+          } else if (box == BoxNumber.BOX_TWO) {
+            this.msgs.push({ severity: 'warning', detail: applicationConstants.MAXIMUM_CHARGES_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MINIMUM_CHARGES });
+            this.chargesForm.get('maxChrges')?.reset();
+    
+          }
           setTimeout(() => {
             this.msgs = [];
           }, 1500);
-        } else {
-          this.msgs = [];
-          this.amountAndTenureFlag = applicationConstants.TRUE;
         }
-    
-       
         this.updateData();
       }
 }

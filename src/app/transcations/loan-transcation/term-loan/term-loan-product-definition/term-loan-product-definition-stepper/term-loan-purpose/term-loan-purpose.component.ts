@@ -13,6 +13,7 @@ import { DatePipe } from '@angular/common';
 import { LoanPurposeService } from 'src/app/configurations/loan-config/loan-purpose/shared/loan-purpose.service';
 import { TermLoanProductDefinitionService } from '../../shared/term-loan-product-definition.service';
 import { TermLoanPurposeService } from './shared/term-loan-purpose.service';
+import { BoxNumber } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-term-loan-purpose',
@@ -24,50 +25,49 @@ export class TermLoanPurposeComponent {
   purposeList: any[] = [];
   displayDialog: boolean = applicationConstants.FALSE;
   purposeForm: FormGroup;
-  newRow :any =null;
-  editDeleteDisable:boolean = applicationConstants.FALSE;
-  addButton:boolean = applicationConstants.FALSE;
-  termLoanProductDefinitionModel :TermLoanProductDefinition = new TermLoanProductDefinition();
-  termLoanPurposeModel : TermLoanPurpose = new TermLoanPurpose();
+  newRow: any = null;
+  editDeleteDisable: boolean = applicationConstants.FALSE;
+  addButton: boolean = applicationConstants.FALSE;
+  termLoanProductDefinitionModel: TermLoanProductDefinition = new TermLoanProductDefinition();
+  termLoanPurposeModel: TermLoanPurpose = new TermLoanPurpose();
   maxDate = new Date();
   minDate = new Date();
-  orgnizationSetting:any;
+  orgnizationSetting: any;
   isEdit: any;
   termProductId: any;
-  msgs: any[]=[];
+  msgs: any[] = [];
   responseModel!: Responsemodel;
   enableSaveAndNextButton: boolean = applicationConstants.FALSE;
   amountAndTenureFlag: boolean = applicationConstants.TRUE;
-  purposeTypeList: any[]=[];
-  constructor(private formBuilder: FormBuilder,private commonComponent: CommonComponent,private activateRoute: ActivatedRoute,
-    private datePipe: DatePipe,private commonFunctionService: CommonFunctionsService,private encryptService: EncryptDecryptService,
-    private termLoanProductDefinitionService : TermLoanProductDefinitionService, private termLoanPurposeService :TermLoanPurposeService,
-    private loanPurposeService : LoanPurposeService
-  )
-  { 
+  purposeTypeList: any[] = [];
+  constructor(private formBuilder: FormBuilder, private commonComponent: CommonComponent, private activateRoute: ActivatedRoute,
+    private datePipe: DatePipe, private commonFunctionService: CommonFunctionsService, private encryptService: EncryptDecryptService,
+    private termLoanProductDefinitionService: TermLoanProductDefinitionService, private termLoanPurposeService: TermLoanPurposeService,
+    private loanPurposeService: LoanPurposeService
+  ) {
     this.purposeForm = this.formBuilder.group({
       'purposeId': new FormControl('', Validators.required),
-      'gesitationPeriod': new FormControl('',),
-      'maxGesitationPeriod':new FormControl('', Validators.required),
-      'remarks':new FormControl('', ),
-      
+      'gesitationPeriod': new FormControl('', Validators.required),
+      'maxGesitationPeriod': new FormControl('', Validators.required),
+      'remarks': new FormControl('',),
+
     });
   }
   ngOnInit() {
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
     this.activateRoute.queryParams.subscribe(params => {
       let encrypted = params['id'];
-      if (encrypted!= undefined) {
+      if (encrypted != undefined) {
         this.isEdit = applicationConstants.TRUE;
-       
+
         this.termProductId = Number(this.encryptService.decrypt(encrypted));
-          this.getPreviewDetailsByProductId(this.termProductId);
+        this.getPreviewDetailsByProductId(this.termProductId);
       } else {
         this.isEdit = applicationConstants.FALSE;
       }
       this.updateData();
     });
-  
+
     this.purposeForm.valueChanges.subscribe((data: any) => {
       this.updateData();
       if (this.purposeForm.valid) {
@@ -76,28 +76,28 @@ export class TermLoanPurposeComponent {
     });
     this.getAllPurposeTypes();
   }
- /**
-    @author vinitha
-    @implements Integrating Term Loans Configuration details To Main Stepper Component
-   */
+  /**
+     @author vinitha
+     @implements Integrating Term Loans Configuration details To Main Stepper Component
+    */
   updateData() {
     this.termLoanPurposeModel.termProductId = this.termProductId
     this.termLoanProductDefinitionService.changeData({
-      formValid: this.enableSaveAndNextButton ,
+      formValid: this.enableSaveAndNextButton,
       data: this.termLoanPurposeModel,
-      savedId:this.termProductId,
+      savedId: this.termProductId,
       stepperIndex: 4,
-      isDisable: !this.purposeForm.valid ? applicationConstants.TRUE:applicationConstants.FALSE,
+      isDisable: !this.purposeForm.valid ? applicationConstants.TRUE : applicationConstants.FALSE,
     });
   }
-     /**
-    @author vinitha
-    @implements To Call update Data function to integrate data to main stepper
-   */
+  /**
+ @author vinitha
+ @implements To Call update Data function to integrate data to main stepper
+*/
   save() {
     this.updateData();
   }
-  
+
   addInlineRow() {
     this.addNewEntry();
     this.editDeleteDisable = applicationConstants.TRUE;;
@@ -105,21 +105,20 @@ export class TermLoanPurposeComponent {
     this.dt._first = 0;
     this.dt.value.unshift(this.newRow);
     this.dt.initRowEdit(this.dt.value[0]);
-    this.enableSaveAndNextButton = applicationConstants.FALSE;  
+    this.enableSaveAndNextButton = applicationConstants.FALSE;
     this.updateData();
   }
 
-  addNewEntry()
-  {
-    this.newRow = {purposeId: '',gesitationPeriod:'',maxGesitationPeriod:'',remarks:''}
+  addNewEntry() {
+    this.newRow = { purposeId: '', gesitationPeriod: '', maxGesitationPeriod: '', remarks: '' }
   }
-     /**
-    @author vinitha
-    @implementsRow Row Edit Cancel
-   
-   */
+  /**
+ @author vinitha
+ @implementsRow Row Edit Cancel
+ 
+*/
   onRowEditCancel() {
-    this.addButton=applicationConstants.FALSE;
+    this.addButton = applicationConstants.FALSE;
     this.editDeleteDisable = applicationConstants.FALSE;
     this.enableSaveAndNextButton = applicationConstants.TRUE;
     this.getPreviewDetailsByProductId(this.termProductId);
@@ -130,25 +129,25 @@ export class TermLoanPurposeComponent {
     this.addNewEntry();
     this.updateData();
   }
-/**
-    @author vinitha
-    @implements edit inline row
-   
-   */
-  editInlineRow(row:any) {
+  /**
+      @author vinitha
+      @implements edit inline row
+     
+     */
+  editInlineRow(row: any) {
     this.addButton = applicationConstants.TRUE;
-    this.editDeleteDisable = applicationConstants.TRUE; 
-    this.enableSaveAndNextButton = applicationConstants.FALSE;  
+    this.editDeleteDisable = applicationConstants.TRUE;
+    this.enableSaveAndNextButton = applicationConstants.FALSE;
     this.updateData();
   }
- /**
-    @author vinitha
-    @implements Term Loans Configuration details 
-    @argument ProductId
-   */
-getPreviewDetailsByProductId(id: any) {
+  /**
+     @author vinitha
+     @implements Term Loans Configuration details 
+     @argument ProductId
+    */
+  getPreviewDetailsByProductId(id: any) {
     this.isEdit = applicationConstants.TRUE;
-    this.purposeList=[]
+    this.purposeList = []
     this.termLoanProductDefinitionService.getPreviewDetailsByProductId(id).subscribe(res => {
       this.responseModel = res;
       this.commonComponent.stopSpinner();
@@ -156,24 +155,24 @@ getPreviewDetailsByProductId(id: any) {
         this.termLoanProductDefinitionModel = this.responseModel.data[0];
         if (this.termLoanProductDefinitionModel != null && this.termLoanProductDefinitionModel != undefined) {
 
-          if(null!=this.termLoanProductDefinitionModel.effectiveStartDate && undefined!=this.termLoanProductDefinitionModel.effectiveStartDate)
+          if (null != this.termLoanProductDefinitionModel.effectiveStartDate && undefined != this.termLoanProductDefinitionModel.effectiveStartDate)
             this.termLoanProductDefinitionModel.effectiveStartDate = this.datePipe.transform(this.termLoanProductDefinitionModel.effectiveStartDate, this.orgnizationSetting.datePipe);
-          
-        if (this.termLoanProductDefinitionModel.termProdPurPoseConfgList != null && this.termLoanProductDefinitionModel.termProdPurPoseConfgList != undefined &&
+
+          if (this.termLoanProductDefinitionModel.termProdPurPoseConfgList != null && this.termLoanProductDefinitionModel.termProdPurPoseConfgList != undefined &&
             this.termLoanProductDefinitionModel.termProdPurPoseConfgList.length > 0) {
 
-              this.enableSaveAndNextButton = applicationConstants.TRUE;
+            this.enableSaveAndNextButton = applicationConstants.TRUE;
 
-          this.purposeList = this.termLoanProductDefinitionModel.termProdPurPoseConfgList;
+            this.purposeList = this.termLoanProductDefinitionModel.termProdPurPoseConfgList;
 
-        
+
+          }
+          else {
+            this.enableSaveAndNextButton = applicationConstants.FALSE;
+          }
         }
-        else{
-          this.enableSaveAndNextButton = applicationConstants.FALSE;
-        }
-      }
-      this.updateData();
-      }else {
+        this.updateData();
+      } else {
         this.commonComponent.stopSpinner();
         this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
         setTimeout(() => {
@@ -182,18 +181,18 @@ getPreviewDetailsByProductId(id: any) {
       }
     }, error => {
       this.msgs = [];
-      this.msgs = [{ severity: "error", summary: 'Failed', detail:  applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST }];
+      this.msgs = [{ severity: "error", summary: 'Failed', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST }];
       this.commonComponent.stopSpinner();
     });
   }
- /**
-    @author vinitha
-  @implements It Saves the Term Loans Linked Share Capital data 
-    @argument ProductId
-   */
+  /**
+     @author vinitha
+   @implements It Saves the Term Loans Linked Share Capital data 
+     @argument ProductId
+    */
 
   saveInlineRow(rowData: any) {
-    if(null != this.termLoanPurposeModel.termProductId && undefined!=this.termLoanPurposeModel.termProductId)
+    if (null != this.termLoanPurposeModel.termProductId && undefined != this.termLoanPurposeModel.termProductId)
       rowData.termProductId = this.termLoanPurposeModel.termProductId;
     this.addButton = applicationConstants.FALSE;
     this.editDeleteDisable = applicationConstants.FALSE;
@@ -203,146 +202,149 @@ getPreviewDetailsByProductId(id: any) {
     if (this.purposetypeDuplicateCheck(this.termLoanPurposeModel.purposeId)) {
       return;
     }
-  
-     if(rowData.id != null)
-      {
-          this.termLoanPurposeService.updateTermLoanPurpose(rowData).subscribe((response: any) => {
-            this.responseModel = response;
-            if (this.responseModel.status === applicationConstants.STATUS_SUCCESS && this.responseModel.data[0] !=null) {
-              if (this.responseModel != null&& this.responseModel.data!= undefined) {
-  
-              if(null != rowData.termProductId && undefined!=rowData.termProductId)
-               this.getPreviewDetailsByProductId(rowData.termProductId);
-              this.commonComponent.stopSpinner();
-              this.msgs =[{ severity: 'success',summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
-              setTimeout(() => {
-                this.msgs = [];  
-              }, 2000);
-            }
-            } else {
-             this.commonComponent.stopSpinner();
-              this.msgs =[{ severity: 'error',summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-              setTimeout(() => {
-                this.msgs = [];  
-              }, 2000);
-              this.getPreviewDetailsByProductId(this.termProductId);  
-            }
-          },
-            error => {
-              this.commonComponent.stopSpinner();
-              this.msgs =[{ severity: 'error',summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-              setTimeout(() => {
-                this.msgs = [];  
-              }, 2000);
-            });
-    } else {
-      rowData.status = applicationConstants.ACTIVE;
-       this.termLoanPurposeService.addTermLoanPurpose(rowData).subscribe((response: any) => {
-         this.responseModel = response;
-         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS && this.responseModel.data[0] !=null) {
-          if (this.responseModel != null&& this.responseModel.data!= undefined) {
-  
-          this.purposeList.unshift(this.responseModel.data[0]);
-          this.purposeList.splice(1, 1);
-          if(null != rowData.termProductId && undefined!=rowData.termProductId)
-            this.getPreviewDetailsByProductId(rowData.termProductId);
-           this.commonComponent.stopSpinner();
-           this.msgs =[{ severity: 'success',summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
-           setTimeout(() => {
-             this.msgs = [];  
-           }, 2000);
-          }
-         } else {
-           this.commonComponent.stopSpinner();
-           this.msgs =[{ severity: 'error',summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-           setTimeout(() => {
-             this.msgs = [];  
-           }, 2000);
-           this.getPreviewDetailsByProductId(this.termProductId);  
-         }
-       },
-         error => {
-           this.commonComponent.stopSpinner();
-           this.msgs =[{ severity: 'error',summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-           setTimeout(() => {
-             this.msgs = [];  
-           }, 2000);
-         });
-     }
-     }
-    /* @author vinitha
-     @implements get charges types
-       @argument ProductId
-      */
-      getAllPurposeTypes() {
-        this.commonComponent.startSpinner();
-        this.purposeTypeList =[];
-        this.loanPurposeService.getAllLoanPurpose().subscribe((res: any) => {
-          this.responseModel = res;
-          if (this.responseModel.status === applicationConstants.STATUS_SUCCESS && this.responseModel.data[0] !=null) {
-            if (this.responseModel.data == null || (this.responseModel.data != null && this.responseModel.data.length == 0)) {
-              this.commonComponent.stopSpinner();
-              this.msgs = [];
-              this.msgs = [{ severity: 'error', detail: applicationConstants.RELATIONSHIP_TYPE_NO_DATA_MESSAGE }];
-              setTimeout(() => {
-                this.msgs = [];
-              }, 2000);
-            }else{
-              this.purposeTypeList = this.responseModel.data.filter((documenttype:any) => documenttype.status == applicationConstants.ACTIVE).map((count:any) => {
-                return { label: count.name, value: count.id }
-              });
-      
-              let purposeType=  this.purposeTypeList.find((data:any) => null != data && data.value ==this.termLoanPurposeModel.purposeId);
-              if(purposeType != null && undefined != purposeType)
-                 this.termLoanPurposeModel.loanPurposeName = purposeType.label;
-              this.commonComponent.stopSpinner();
-            }
-          } 
-        },
-          error => {
-            this.msgs = [];
+
+    if (rowData.id != null) {
+      this.termLoanPurposeService.updateTermLoanPurpose(rowData).subscribe((response: any) => {
+        this.responseModel = response;
+        if (this.responseModel.status === applicationConstants.STATUS_SUCCESS && this.responseModel.data[0] != null) {
+          if (this.responseModel != null && this.responseModel.data != undefined) {
+
+            if (null != rowData.termProductId && undefined != rowData.termProductId)
+              this.getPreviewDetailsByProductId(rowData.termProductId);
             this.commonComponent.stopSpinner();
-            this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+            this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
             setTimeout(() => {
               this.msgs = [];
             }, 2000);
-          });
-      }
-      purposetypeDuplicateCheck(selectedpurposeType: any) {
-        // Check if there is any row in the list with the same purposetypes as the selected one
-        const isDuplicate = this.purposeList.some(row => 
-          row.purposeId === selectedpurposeType &&
-          row.id !== this.termLoanPurposeModel.id  // Exclude the current row being edited (if applicable)
-        );
-      
-        if (isDuplicate) {
-          this.purposeForm.get('chargesTypeName')?.reset();
-          this.msgs = [{ severity: 'error',  summary: applicationConstants.STATUS_ERROR,detail: applicationConstants.PURPOSE_TYPE_ALREADY_EXIST }];
+          }
+        } else {
+          this.commonComponent.stopSpinner();
+          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
           setTimeout(() => {
             this.msgs = [];
           }, 2000);
-          return applicationConstants.TRUE;
+          this.getPreviewDetailsByProductId(this.termProductId);
         }
-      
-        // Otherwise, proceed with the new purposetypes
-        return  applicationConstants.FALSE;
-      }
-      checkForGestationPeriod(){
-        const gesitationPeriod = this.purposeForm.get('gesitationPeriod')?.value;
-        const maxGesitationPeriod = this.purposeForm.get('maxGesitationPeriod')?.value;
-    
-        if (gesitationPeriod && maxGesitationPeriod &&  gesitationPeriod >=maxGesitationPeriod) {
-          this.amountAndTenureFlag = applicationConstants.FALSE;
-          this.msgs = [{ severity: 'error', detail: applicationConstants.MIN_CHARGES_ERROR }];
+      },
+        error => {
+          this.commonComponent.stopSpinner();
+          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
           setTimeout(() => {
             this.msgs = [];
-          }, 1500);
+          }, 2000);
+        });
+    } else {
+      rowData.status = applicationConstants.ACTIVE;
+      this.termLoanPurposeService.addTermLoanPurpose(rowData).subscribe((response: any) => {
+        this.responseModel = response;
+        if (this.responseModel.status === applicationConstants.STATUS_SUCCESS && this.responseModel.data[0] != null) {
+          if (this.responseModel != null && this.responseModel.data != undefined) {
+
+            this.purposeList.unshift(this.responseModel.data[0]);
+            this.purposeList.splice(1, 1);
+            if (null != rowData.termProductId && undefined != rowData.termProductId)
+              this.getPreviewDetailsByProductId(rowData.termProductId);
+            this.commonComponent.stopSpinner();
+            this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+            setTimeout(() => {
+              this.msgs = [];
+            }, 2000);
+          }
         } else {
-          this.msgs = [];
-          this.amountAndTenureFlag = applicationConstants.TRUE;
+          this.commonComponent.stopSpinner();
+          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+          this.getPreviewDetailsByProductId(this.termProductId);
         }
-    
-       
-        this.updateData();
+      },
+        error => {
+          this.commonComponent.stopSpinner();
+          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        });
+    }
+  }
+  /* @author vinitha
+   @implements get charges types
+     @argument ProductId
+    */
+  getAllPurposeTypes() {
+    this.commonComponent.startSpinner();
+    this.purposeTypeList = [];
+    this.loanPurposeService.getAllLoanPurpose().subscribe((res: any) => {
+      this.responseModel = res;
+      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS && this.responseModel.data[0] != null) {
+        if (this.responseModel.data == null || (this.responseModel.data != null && this.responseModel.data.length == 0)) {
+          this.commonComponent.stopSpinner();
+          this.msgs = [];
+          this.msgs = [{ severity: 'error', detail: applicationConstants.RELATIONSHIP_TYPE_NO_DATA_MESSAGE }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        } else {
+          this.purposeTypeList = this.responseModel.data.filter((documenttype: any) => documenttype.status == applicationConstants.ACTIVE).map((count: any) => {
+            return { label: count.name, value: count.id }
+          });
+
+          let purposeType = this.purposeTypeList.find((data: any) => null != data && data.value == this.termLoanPurposeModel.purposeId);
+          if (purposeType != null && undefined != purposeType)
+            this.termLoanPurposeModel.loanPurposeName = purposeType.label;
+          this.commonComponent.stopSpinner();
+        }
       }
+    },
+      error => {
+        this.msgs = [];
+        this.commonComponent.stopSpinner();
+        this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      });
+  }
+  purposetypeDuplicateCheck(selectedpurposeType: any) {
+    // Check if there is any row in the list with the same purposetypes as the selected one
+    const isDuplicate = this.purposeList.some(row =>
+      row.purposeId === selectedpurposeType &&
+      row.id !== this.termLoanPurposeModel.id  // Exclude the current row being edited (if applicable)
+    );
+
+    if (isDuplicate) {
+      this.purposeForm.get('chargesTypeName')?.reset();
+      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.PURPOSE_TYPE_ALREADY_EXIST }];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 2000);
+      return applicationConstants.TRUE;
+    }
+
+    // Otherwise, proceed with the new purposetypes
+    return applicationConstants.FALSE;
+  }
+  checkForGestationPeriod(box: any) {
+    const gesitationPeriod = Number(this.purposeForm.get('gesitationPeriod')?.value);
+    const maxGesitationPeriod = Number(this.purposeForm.get('maxGesitationPeriod')?.value);
+
+
+    if (gesitationPeriod && maxGesitationPeriod && gesitationPeriod >= maxGesitationPeriod) {
+      this.msgs = [];
+      if (box == BoxNumber.BOX_ONE) {
+        this.msgs.push({ severity: 'warning', detail: applicationConstants.MINIMUM_GESTATION_PERIOD_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAXIMUM_GESTATION_PERIOD });
+        this.purposeForm.get('gesitationPeriod')?.reset();
+      } else if (box == BoxNumber.BOX_TWO) {
+        this.msgs.push({ severity: 'warning', detail: applicationConstants.MAXIMUM_GESTATION_PERIOD_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MINIMUM_GESTATION_PERIOD });
+        this.purposeForm.get('maxGesitationPeriod')?.reset();
+
+      }
+      setTimeout(() => {
+        this.msgs = [];
+      }, 1500);
+    }
+
+    this.updateData();
+  }
 }

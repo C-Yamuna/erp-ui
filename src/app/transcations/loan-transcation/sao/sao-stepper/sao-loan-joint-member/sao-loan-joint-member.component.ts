@@ -36,6 +36,7 @@ export class SaoLoanJointMemberComponent {
   pacsId: any;
   branchId: any;
   orgnizationSetting: any;
+  isDisableFlag: boolean = false;
   constructor( private formBuilder: FormBuilder, private commonComponent : CommonComponent, private activateRoute: ActivatedRoute,
      private encryptDecryptService: EncryptDecryptService,private datePipe: DatePipe,
     private saoLoanJointMemberService: SaoLoanJointMemberService,private saoLoanApplicationService: SaoLoanApplicationService,
@@ -72,6 +73,11 @@ export class SaoLoanJointMemberComponent {
     this.getSaoLoanApplicationDetailsById(this.savedId);
   }
   updateData() {
+    if(this.selectedList != null && this.selectedList != undefined && this.selectedList.length > 0){
+      this.isDisableFlag = false;
+    }else{
+      this.isDisableFlag = true;
+    }
     this.saoLoanJointMemberModel.jointHolderList = this.selectedList;
     this.saoLoanJointMemberModel.admissionNo = this.admissionNumber;
     this.saoLoanJointMemberModel.saoLoanApplicationId = this.savedId;
@@ -80,8 +86,8 @@ export class SaoLoanJointMemberComponent {
     this.saoLoanApplicationService.changeData({
       formValid: !this.jointHolderForm.valid ? true : false,
       data: this.saoLoanJointMemberModel,
-      isDisable: (!this.jointHolderForm.valid),
-      // isDisable:false,
+      // isDisable: (!this.jointHolderForm.valid),
+      isDisable:this.isDisableFlag,
       stepperIndex: 3,
     });
   }

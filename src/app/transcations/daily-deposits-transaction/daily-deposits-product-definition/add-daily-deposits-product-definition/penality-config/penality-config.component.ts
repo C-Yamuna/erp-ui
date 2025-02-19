@@ -12,6 +12,7 @@ import { CommonFunctionsService } from 'src/app/shared/commonfunction.service';
 import { EncryptDecryptService } from 'src/app/shared/encrypt-decrypt.service';
 import { DailyDepositsProductDefinitionService } from '../../shared/daily-deposits-product-definition.service';
 import { PenalityConfigService } from './shared/penality-config.service';
+import { BoxNumber } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-penality-config',
@@ -274,19 +275,26 @@ export class PenalityConfigComponent {
    }
    }
 
-   checkForAmount(): void {
-    const minAmount = this.penalityConfigForm.get('minAmount')?.value;
-    const maxAmount = this.penalityConfigForm.get('maxAmount')?.value;
-    if (minAmount && maxAmount &&  minAmount >=maxAmount) {
-      this.amountAndTenureFlag = applicationConstants.FALSE;
-      this.msgs = [{ severity: 'error', detail: applicationConstants.MIN_DEPOSIT_AMOUNT_ERROR }];
-      setTimeout(() => {
+   checkForAmount(box : any): void {
+    const minAmount = Number(this.penalityConfigForm.get('minAmount')?.value);
+    const maxAmount = Number(this.penalityConfigForm.get('maxAmount')?.value);
+
+    if (minAmount && maxAmount &&  minAmount > maxAmount) {
         this.msgs = [];
-      }, 1000);
-    } else {
-      this.msgs = [];
-      this.amountAndTenureFlag = applicationConstants.TRUE;
-    }
+        if (box == BoxNumber.BOX_ONE) {
+          this.msgs.push({ severity: 'warning', detail: applicationConstants.MINIMUM_AMOUNT_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAXIMUM_AMOUNT });
+          this.penalityConfigForm.get('minAmount')?.reset();
+          this.dailyDepositsProductDefinitionModel.minTenure = null;
+        } else if (box == BoxNumber.BOX_TWO) {
+          this.msgs.push({ severity: 'warning', detail: applicationConstants.MAXIMUM_AMOUNT_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MINIMUM_AMOUNT });
+          this.penalityConfigForm.get('maxAmount')?.reset();
+          this.dailyDepositsProductDefinitionModel.maxTenure = null;
+        }
+        setTimeout(() => {
+          this.msgs = [];
+        }, 1500);
+      }
+
     this.updateData();
   }
 }

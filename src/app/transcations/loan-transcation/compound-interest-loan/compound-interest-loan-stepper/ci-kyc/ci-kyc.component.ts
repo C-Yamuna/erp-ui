@@ -128,7 +128,7 @@ export class CiKycComponent {
         'docNumber': ['', [ Validators.compose([Validators.required])]],
         'docTypeName': ['',  Validators.compose([Validators.required])],
         'fileUpload': ['', ],
-        'nameAsPerDocument':[Validators.pattern(applicationConstants.ALPHA_NAME_PATTERN),Validators.compose([Validators.required])],
+        'nameAsPerDocument':[Validators.compose([Validators.required]), Validators.pattern(applicationConstants.NAME_PATTERN)],
         'promoter': ['', ],
       });
     }
@@ -353,8 +353,7 @@ export class CiKycComponent {
                 for (let kyc of this.kycModelList) {
                   if(kyc.kycFilePath != null && kyc.kycFilePath != undefined){
                     if(kyc.kycFilePath != null && kyc.kycFilePath != undefined){
-                      kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath ,ERP_TRANSACTION_CONSTANTS.LOAN_PURPOSES + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
-  
+                      kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath ,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
                     }
                   }  
                 }
@@ -511,6 +510,7 @@ export class CiKycComponent {
     * @author jyothi.naidana
     */
     addKyc(event: any) {
+      this.kycForm.reset();
       this.isFileUploaded = applicationConstants.FALSE;
       this.getAllKycTypes();
       this.multipleFilesList = [];
@@ -809,27 +809,38 @@ export class CiKycComponent {
         this.ciLoanKycModel.kycDocumentTypeName = filteredObj.label;
         this.documentNumberDynamicValidation(this.ciLoanKycModel.kycDocumentTypeName );
       }
-      
     }
-    
-    //   if(this.kycModelList != null && this.kycModelList != undefined && this.kycModelList.length > 0){
-    //     let duplicate
-    //     if(this.ciLoanApplicationModel.memberTypeName != MemberShipTypesData.INDIVIDUAL){
-    //       duplicate = this.kycModelList.find((obj:any) => obj && obj.kycDocumentTypeId === ciLoanKycModel.kycDocTypeId && obj.promoterId ===  ciLoanKycModel.promoterId);
-    //     }
-    //     else {
-    //       duplicate = this.kycModelList.find((obj:any) => obj && obj.kycDocumentTypeId === ciLoanKycModel.kycDocTypeId );
-    //     }
-
-    //   if (duplicate != null && duplicate != undefined) {
-    //     this.kycForm.reset();
-    //     this.msgs = [];
-    //     this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "duplicate Kyc Types"}];
-    //     setTimeout(() => {
-    //       this.msgs = [];
-    //     }, 3000);
-    //   } 
-    // }
+      if(this.kycModelList != null && this.kycModelList != undefined && this.kycModelList.length > 0){
+        let duplicate :any
+        if(this.ciLoanApplicationModel.memberTypeName != MemberShipTypesData.INDIVIDUAL){
+          duplicate = this.kycModelList.filter((obj:any) => obj && obj.kycDocumentTypeId === ciLoanKycModel.kycDocumentTypeId && obj.promoterId ===  ciLoanKycModel.promoterId);
+        }
+        else {
+          duplicate = this.kycModelList.filter((obj:any) => obj && obj.kycDocumentTypeId === ciLoanKycModel.kycDocumentTypeId );
+        }
+      if ( this.addDocumentOfKycFalg && duplicate != null && duplicate != undefined && duplicate.length ==1) {
+        this.kycForm.reset();
+        this.ciLoanKycModel = new CiLoanKyc();
+        if(ciLoanKycModel.id != null && ciLoanKycModel != undefined)
+          this.ciLoanKycModel.id = ciLoanKycModel.id;
+        this.msgs = [];
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "duplicate Kyc Types"}];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      }
+      else if(!this.addDocumentOfKycFalg && duplicate != null && duplicate != undefined && duplicate.length ==1 && duplicate[0].id != ciLoanKycModel.id){
+        this.kycForm.reset();
+        this.ciLoanKycModel = new CiLoanKyc();
+        if(ciLoanKycModel.id != null && ciLoanKycModel != undefined)
+          this.ciLoanKycModel.id = ciLoanKycModel.id;
+        this.msgs = [];
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "duplicate Kyc Types"}];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      } 
+    }
   }
   
      /**
@@ -910,7 +921,9 @@ export class CiKycComponent {
        }
       }
      }
-     onClickkycPhotoCopy(){
+     onClickkycPhotoCopy(rowData:any){
+      this.multipleFilesList = [];
+      this.multipleFilesList =rowData.multipartFileList;
       this.kycPhotoCopyZoom = true;
     }
     kycclosePhoto(){

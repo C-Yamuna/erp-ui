@@ -3,7 +3,7 @@ import { SiLoanApplicationService } from './../../../shared/si-loans/si-loan-app
 import { SiLoanApplication } from './../../../shared/si-loans/si-loan-application.model';
 import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { applicationConstants } from 'src/app/shared/applicationConstants';
 import { CommonComponent } from 'src/app/shared/common.component';
@@ -13,6 +13,7 @@ import { Responsemodel } from 'src/app/shared/responsemodel';
 import { MembershipServiceService } from 'src/app/transcations/savings-bank-transcation/savings-bank-account-creation-stepper/membership-basic-required-details/shared/membership-service.service';
 import { MembershipBasicRequiredDetails, MemberGroupDetailsModel, MembershipInstitutionDetailsModel } from '../../../shared/si-loans/si-loan-membership-details.model';
 import { SiLoanCoApplicantDetailsService } from '../../../shared/si-loans/si-loan-co-applicant-details.service';
+import { CommonStatusData } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-si-loan-joint-account',
@@ -51,7 +52,6 @@ export class SiLoanJointAccountComponent {
   orgnizationSetting: any;
   numberOfJointHolders: any;
   jointHolderDetailsList: any[] = [];
-  admissionNumberList: any[] = [];
   productName: any;
   memberTypeName: any;
   membershipList: any;
@@ -59,6 +59,14 @@ export class SiLoanJointAccountComponent {
   branchId: any;
   accountNumber: any;
   tempJointHolderDetailsList: any[] = [];
+    gender: any[] | undefined;
+    selectedList: any[] = [];
+    selectedMembers: any[] = [];
+    allTypesOfmembershipList: any[] = [];
+    loanId: any;
+    individualFlag: boolean = true;
+    groupFlag: boolean = false;
+    institutionFlag: boolean = false;
 
   constructor(private router: Router, private formBuilder: FormBuilder,
     private siLoanCoApplicantDetailsService: SiLoanCoApplicantDetailsService,
@@ -66,165 +74,180 @@ export class SiLoanJointAccountComponent {
     private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService, private datePipe: DatePipe,
     private commonFunctionsService: CommonFunctionsService, private membershipServiceService: MembershipServiceService) {
 
+ 
     this.jointAccountForm = this.formBuilder.group({
-      admissionNumber: [''],
-      noOfJointHolders: ['']
-    });
+      admissionNo: ['',[Validators.required]],
+
+    })
   }
-  ngOnInit(): void {
+
+  ngOnInit() {
     this.pacsId = 1;
     this.branchId = 1;
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
     this.isMemberCreation = this.commonFunctionsService.getStorageValue('b-class-member_creation');
-
+    this.getAllTypeOfMembershipDetails(this.pacsId, this.branchId);
     this.activateRoute.queryParams.subscribe(params => {
-      if (params['id'] != undefined) {
+      if (params['id'] != undefined ||  params['admissionNumber'] != undefined) {
+        if (params['admissionNumber'] != undefined) {
+          this.admissionNumber = this.encryptDecryptService.decrypt(params['admissionNumber']);
+        }
         this.commonComponent.startSpinner();
         let id = this.encryptDecryptService.decrypt(params['id']);
         this.loanAccId = Number(id);
         this.isEdit = true;
-        this.getSILoanApplicationById(this.loanAccId);
-        this.commonComponent.stopSpinner();
+        this.getSILoanApplicationDetailsById(this.loanAccId);
+       // }
       } else {
         this.isEdit = false;
-        this.commonComponent.stopSpinner();
       }
-    })
+    }) 
     this.updateData();
-    this.getAllTypeOfMembershipDetails(this.pacsId, this.branchId);
+    this.jointAccountForm.valueChanges.subscribe((data: any) => {
+      this.updateData();
+      if (this.jointAccountForm.valid) {
+        this.save();
+      }
+    });
   }
-
   updateData() {
-    this.siLoanJointHolderModel.jointHolderList = this.jointHolderDetailsList;
+    this.siLoanJointHolderModel.siLoanApplicationId = this.loanAccId;
+    this.siLoanJointHolderModel.admissionNumber = this.admissionNumber;
+    this.siLoanJointHolderModel.jointHolderList = this.selectedList;
+    for(let joint of this.siLoanJointHolderModel.jointHolderList){
+      joint.siLoanApplicationId = this.loanAccId;
+      if (joint.admissionDateVal != undefined && joint.admissionDateVal != null)
+        joint.admissionDate = this.commonFunctionsService.getUTCEpoch(new Date(joint.admissionDateVal));
+    }
     this.siLoanApplicationService.changeData({
       formValid: !this.jointAccountForm.valid ? true : false,
       data: this.siLoanJointHolderModel,
       isDisable: (!this.jointAccountForm.valid),
+      // isDisable:false,
       stepperIndex: 4,
     });
   }
-
   save() {
     this.updateData();
   }
 
-  onChange() {
-    this.isMemberCreation = !this.isMemberCreation;
-  }
+    OnChangeAdmissionNumber(selectedAdmissionNumbers: any[]) {
+      // Clear existing selected details
+      this.selectedList = [];
+      const newlySelectedIds = selectedAdmissionNumbers;
+      this.selectedMembers = newlySelectedIds;
+      this.jointAccountForm.get('admissionNo')?.setValue(this.selectedMembers);
+      // Loop through selected admission numbers
+      selectedAdmissionNumbers.forEach(admissionNumber => {
+        const selectedMember = this.allTypesOfmembershipList.find((item: any) => item.value === admissionNumber);
+        if (selectedMember) {
+          this.selectedList.push({
+            admissionNumber: selectedMember.data.admissionNumber,
+            name: selectedMember.data.name,
+            memberTypeName: selectedMember.data.memberTypeName,
+            classTypeName: selectedMember.data.subProductName,
+            admissionDate: selectedMember.data.admissionDate,
+            admissionDateVal: selectedMember.data.admissionDate = this.datePipe.transform(selectedMember.data.admissionDate, this.orgnizationSetting.datePipe),
 
-  getSILoanAccountJointHolderDetailsBySILoanAccId(id: any) {
-    this.siLoanCoApplicantDetailsService.getSILoanCoApplicantByLoanApplicationId(id).subscribe((response: any) => {
-      this.responseModel = response;
-    });
-  }
-
-  getSILoanApplicationById(id: any) {
-    this.siLoanApplicationService.getSILoanApplicationById(id).subscribe((response: any) => {
-      this.responseModel = response;
-      if (this.responseModel.status != null && this.responseModel.status != undefined && this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-        if (this.responseModel.data != undefined && this.responseModel.data != null && this.responseModel.data.length > 0) {
-          if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
-            this.siLoanApplicationModel = this.responseModel.data[0];
-            if (this.siLoanApplicationModel.siProductName != null && this.siLoanApplicationModel.siProductName != undefined) {
-              this.productName = this.siLoanApplicationModel.siProductName;
-            }
-            if (this.siLoanApplicationModel.accountTypeName != null && this.siLoanApplicationModel.accountTypeName != undefined) {
-              this.accountType = this.siLoanApplicationModel.accountTypeName;
-            }
-            if (this.siLoanApplicationModel.accountTypeName != null && this.siLoanApplicationModel.accountTypeName != undefined) {
-              this.applicationType = this.siLoanApplicationModel.accountTypeName;
-            }
-            if (this.siLoanApplicationModel.applicationDate != null && this.siLoanApplicationModel.applicationDate != undefined) {
-              this.accountOpeningDateVal = this.datePipe.transform(this.siLoanApplicationModel.applicationDate, this.orgnizationSetting.datePipe);
-            }
-            if (this.siLoanApplicationModel.accountNumber != null && this.siLoanApplicationModel.accountNumber != undefined) {
-              this.accountNumber = this.siLoanApplicationModel.accountNumber;
-            }
-            if (this.siLoanApplicationModel.siLoanCoApplicantDetailsDTOList != null) {
-              this.jointHolderDetailsList = this.siLoanApplicationModel.siLoanCoApplicantDetailsDTOList;
-              this.jointHolderDetailsList = this.jointHolderDetailsList.map((model) => {
-                if (model.admissionDate != null) {
-                  model.admissionDateVal = this.datePipe.transform(model.admissionDate, this.orgnizationSetting.datePipe);
-                }
-                return model;
-              });
-              this.getJointAccontMemberDetails();
-            }
-          }
+            aadharNumber: selectedMember.data.aadharNumber,
+            panNumber: selectedMember.data.panNumber,
+            siLoanApplicationId : this.loanId,
+            status:applicationConstants.ACTIVE,
+            mobileNumber: selectedMember.data.mobileNumber,
+            emailId: selectedMember.data.emailId,
+            // Add more fields as needed
+          });
+          this.updateData();
         }
-      }
-      else {
-        this.msgs = [];
-        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-        setTimeout(() => {
-          this.msgs = [];
-        }, 2000);
-      }
-    }, error => {
-      this.msgs = [];
-      this.commonComponent.stopSpinner();
-      this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
-      setTimeout(() => {
-        this.msgs = [];
-      }, 2000);
-    });
-  }
-
-  getJointAccontMemberDetails() {
-    if (this.jointHolderDetailsList != null && this.jointHolderDetailsList != undefined && this.jointHolderDetailsList.length > 0) {
-      this.numberOfJointHolders = this.jointHolderDetailsList.length;
-      this.selectedAdmissionNumberList = this.numberOfJointHolders.filter((obj: any) => obj != null).map((obj: { id: any; name: any; admissionNumber: any }) => {
-        return {
-          label: obj.admissionNumber
-        };
+        // console.log('Selected members:', selectedMember);
       });
-      this.updateData();
     }
-    else {
-      this.msgs = [];
-      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-      setTimeout(() => {
-        this.msgs = [];
-      }, 2000);
-    }
-  }
-
-  onSelectionChange(event: any) {
-    this.numberOfJointHolders = 0;
-    this.selectedAdmissionNumberList = [];
-    if (null != event.value && undefined != event.value && event.value != "") {
-      for (let admissionNumber of event.value) {
-        let check = this.selectedAdmissionNumberList.push(admissionNumber);
-        this.numberOfJointHolders = this.selectedAdmissionNumberList.length;
-        this.getMembershipDetails(admissionNumber.label);
+      onClear(admissionNumber: any) {
+        const index = this.allTypesOfmembershipList.indexOf(admissionNumber);
+        if (index >= 0) {
+          this.allTypesOfmembershipList.splice(index, 1);
+          this.selectedList.push(this.responseModel.data);
+          const existingIndex = this.selectedList.findIndex(
+            promoter => promoter.admissionNumber === admissionNumber);
+          this.selectedList[existingIndex] = null;
+          this.updateData();
+        }
       }
-    }
-  }
-
-  onClear(admissionNumber: any) {
-    const index = this.admissionNumberList.indexOf(admissionNumber);
-    if (index >= 0) {
-      this.admissionNumberList.splice(index, 1);
-      this.jointHolderDetailsList.push(this.responseModel.data);
-      const existingIndex = this.jointHolderDetailsList.findIndex(
-        promoter => promoter.admissionNumber === admissionNumber);
-      this.jointHolderDetailsList[existingIndex] = null;
-      this.updateData();
-    }
-  }
-
-  getAllTypeOfMembershipDetails(pacsId: any, branchId: any) {
-    this.membershipServiceService.getAllTypeOfMemberDetailsListFromMemberModule(this.pacsId, this.branchId).subscribe((response: any) => {
-      this.responseModel = response;
-      if (this.responseModel != null && this.responseModel != undefined) {
-        if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-          if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
-            this.membershipList = this.responseModel.data;
-            this.admissionNumberList = this.membershipList.filter((obj: any) => obj != null).map((relationType: { id: any; name: any; admissionNumber: any; memberTypeName: any }) => {
-              return {
-                label: relationType.admissionNumber
-              };
+      initializeFormWithadmissionNumber(admissionNumber: any[]) {
+        this.selectedMembers = admissionNumber.map((collateral: any) => collateral.admissionNumber);
+        this.jointAccountForm.get('admissionNo')?.setValue(this.selectedMembers);
+      }
+     
+      // get all members from membership module data 
+      
+      getAllTypeOfMembershipDetails (pacsId: any, branchId: any) {
+        this.membershipServiceService.getAllTypeOfMemberDetailsListFromMemberModule(this.pacsId, this.branchId).subscribe((response: any) => {
+          this.responseModel = response;
+          if (this.responseModel != null && this.responseModel != undefined) {
+            if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+              if (this.responseModel.data && this.responseModel.data.length > 0) {
+                this.allTypesOfmembershipList = this.responseModel.data.filter((data: any) => data.memberTypeName == "Individual" && data.statusName == CommonStatusData.APPROVED).map((relationType: any) => {
+                  return {
+                    label: `${relationType.name} - ${relationType.admissionNumber} - ${relationType.memberTypeName}`,
+                    value: relationType.admissionNumber,
+                    data: relationType // Optional: Include entire data object for further details
+                  };
+                });
+              }
+            } 
+          }
+        }, error => {
+          this.commonComponent.stopSpinner();
+          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 3000);
+        });
+      }
+      
+     
+      getSILoanApplicationDetailsById(id: any) {
+        this.siLoanApplicationService.getSILoanApplicationById(id).subscribe((response: any) => {
+          this.responseModel = response;
+          if (this.responseModel.status != null && this.responseModel.status != undefined && this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+            if (this.responseModel.data != undefined && this.responseModel.data != null && this.responseModel.data.length > 0) {
+              if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+                this.siLoanApplicationModel = this.responseModel.data[0];
+                this.loanAccId =  this.siLoanApplicationModel.id;
+                if (this.siLoanApplicationModel.siLoanCoApplicantDetailsDTOList != null) {
+                  this.jointHolderDetailsList = this.siLoanApplicationModel.siLoanCoApplicantDetailsDTOList;
+                  this.getSiLoanJointHoderDetailsByApplicationId(this.siLoanApplicationModel.id);
+                }
+              }
+            }
+          }
+          else {
+            this.msgs = [];
+            this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+            setTimeout(() => {
+              this.msgs = [];
+            }, 2000);
+          }
+        }, error => {
+          this.msgs = [];
+          this.commonComponent.stopSpinner();
+          this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        });
+      }
+    
+      getSiLoanJointHoderDetailsByApplicationId(loanId: any){
+        this.siLoanCoApplicantDetailsService.getSILoanCoApplicantByLoanApplicationId(loanId).subscribe((response: any) => {
+          this.responseModel = response;
+          if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+            this.selectedList = this.responseModel.data;
+            this.selectedList.map(obj =>{
+              obj.admissionDateVal = this.datePipe.transform(obj.admissionDate, this.orgnizationSetting.datePipe)
             });
+
+            this.initializeFormWithadmissionNumber(this.selectedList);
           }
           else {
             this.msgs = [];
@@ -233,56 +256,14 @@ export class SiLoanJointAccountComponent {
               this.msgs = [];
             }, 2000);
           }
-        }
-      }
-    }, error => {
-      this.msgs = [];
-      this.commonComponent.stopSpinner();
-      this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
-      setTimeout(() => {
-        this.msgs = [];
-      }, 2000);
-    });
-  }
-
-  getMembershipDetails(admisionNumber: any) {
-    this.tempJointHolderDetailsList = this.jointHolderDetailsList;
-    this.jointHolderDetailsList = [];
-    this.membershipServiceService.getMembershipBasicDetailsByAdmissionNumber(admisionNumber).subscribe((response: any) => {
-      this.responseModel = response;
-      if (this.responseModel != null && this.responseModel != undefined) {
-        if (this.responseModel.status != null && this.responseModel.status != undefined && this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-          if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
-            if (this.responseModel.data[0].admissionDate != null && this.responseModel.data[0].admissionDate != undefined) {
-              this.responseModel.data[0].admissionDateVal = this.datePipe.transform(this.responseModel.data[0].admissionDate, this.orgnizationSetting.datePipe);
-            }
-            if (this.loanAccId != null && this.loanAccId != undefined) {
-              this.responseModel.data[0].siLoanApplicationId = this.loanAccId;
-            }
-            if (this.responseModel.data[0].accountNumber != null && this.responseModel.data[0].accountNumber != undefined) {
-              this.responseModel.data[0].accountNumber = this.accountNumber;
-            }
-            this.tempJointHolderDetailsList.push(this.responseModel.data[0]);
-            this.jointHolderDetailsList = this.tempJointHolderDetailsList;
-            this.updateData();
-          }
-          else {
+        }, error => {
+          this.msgs = [];
+          this.commonComponent.stopSpinner();
+          this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+          setTimeout(() => {
             this.msgs = [];
-            this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-            setTimeout(() => {
-              this.msgs = [];
-            }, 2000);
-          }
-        }
+          }, 2000);
+        });
       }
-    }, error => {
-      this.msgs = [];
-      this.commonComponent.stopSpinner();
-      this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
-      setTimeout(() => {
-        this.msgs = [];
-      }, 2000);
-    });
-  }
-
-}
+      
+    }

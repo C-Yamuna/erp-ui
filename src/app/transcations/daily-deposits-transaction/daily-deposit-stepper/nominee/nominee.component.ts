@@ -192,9 +192,9 @@ export class NomineeComponent {
       if (nominee != null && undefined != nominee && nominee.label != null && nominee.label != undefined) {
         this.accountNomineeModel.relationTypeName = nominee.label;
       }
-      let guardain = this.relationTypesList.find((data: any) => null != data && this.accountGuardianModel.relationType != null && data.value == this.accountGuardianModel.relationType);
+      let guardain = this.relationTypesList.find((data: any) => null != data && this.accountGuardianModel.relationshipTypeId != null && data.value == this.accountGuardianModel.relationshipTypeId);
       if (guardain != null && undefined != guardain && nominee.label != null && guardain.label != undefined) {
-        this.accountGuardianModel.relationTypeName = guardain.label;
+        this.accountGuardianModel.relationshipTypeName = guardain.label;
       }
     }
     if (this.age <= 18) {
@@ -342,9 +342,9 @@ export class NomineeComponent {
           if (nominee != null && undefined != nominee && nominee.label != null && nominee.label != undefined){
                 this.accountNomineeModel.relationTypeName = nominee.label;
             }
-            let  guardain= this.relationTypesList.find((data: any) => null != data && this.accountGuardianModel.relationType  != null && data.value == this.accountGuardianModel.relationType);
+            let  guardain= this.relationTypesList.find((data: any) => null != data && this.accountGuardianModel.relationshipTypeId  != null && data.value == this.accountGuardianModel.relationshipTypeId);
             if (guardain != null && undefined != guardain && nominee.label != null && guardain.label != undefined){
-                this.accountGuardianModel.relationTypeName = guardain.label;
+                this.accountGuardianModel.relationshipTypeName = guardain.label;
             }
           }
         }
@@ -456,23 +456,23 @@ export class NomineeComponent {
               this.accountGuardianModel = this.responseModel.data[0].memberShipGuadianDetailsDTOList[0];
             }
             if (this.responseModel.data[0].relationshipTypeId != null && this.responseModel.data[0].relationshipTypeId != undefined) {
-              this.accountGuardianModel.relationType = this.responseModel.data[0].relationshipTypeId;
+              this.accountGuardianModel.relationshipTypeId = this.responseModel.data[0].relationshipTypeId;
               this.getAllRelationTypes();
             }
             if (this.responseModel.data[0].relationshipTypeName != null && this.responseModel.data[0].relationshipTypeName != undefined) {
-              this.accountGuardianModel.relationTypeName = this.responseModel.data[0].relationshipTypeName;
+              this.accountGuardianModel.relationshipTypeName = this.responseModel.data[0].relationshipTypeName;
             }
             if (this.responseModel.data[0].memberShipGuadianDetailsDTOList[0].guardianName != null && this.responseModel.data[0].memberShipGuadianDetailsDTOList[0].guardianName != undefined) {
-              this.accountGuardianModel.name = this.responseModel.data[0].memberShipGuadianDetailsDTOList[0].guardianName;
+              this.accountGuardianModel.guardianName = this.responseModel.data[0].memberShipGuadianDetailsDTOList[0].guardianName;
             }
             if (this.responseModel.data[0].memberShipGuadianDetailsDTOList[0].guardianAadharNumber != null && this.responseModel.data[0].memberShipGuadianDetailsDTOList[0].guardianAadharNumber != undefined) {
-              this.accountGuardianModel.aadharNumber = this.responseModel.data[0].memberShipGuadianDetailsDTOList[0].guardianAadharNumber;
+              this.accountGuardianModel.guardianAadharNumber = this.responseModel.data[0].memberShipGuadianDetailsDTOList[0].guardianAadharNumber;
             }
             if (this.responseModel.data[0].memberShipGuadianDetailsDTOList[0].guardianMobileNumber != null && this.responseModel.data[0].memberShipGuadianDetailsDTOList[0].guardianMobileNumber != undefined) {
-              this.accountGuardianModel.mobileNumber = this.responseModel.data[0].memberShipGuadianDetailsDTOList[0].guardianMobileNumber;
+              this.accountGuardianModel.guardianMobileNumber = this.responseModel.data[0].memberShipGuadianDetailsDTOList[0].guardianMobileNumber;
             }
             if (this.responseModel.data[0].memberShipGuadianDetailsDTOList[0].guardianEmailId != null && this.responseModel.data[0].memberShipGuadianDetailsDTOList[0].guardianEmailId != undefined) {
-              this.accountGuardianModel.email = this.responseModel.data[0].memberShipGuadianDetailsDTOList[0].guardianEmailId;
+              this.accountGuardianModel.guardianEmailId = this.responseModel.data[0].memberShipGuadianDetailsDTOList[0].guardianEmailId;
             }
             if (this.responseModel.data[0].memberShipGuadianDetailsDTOList[0].uploadFilePath != null && this.responseModel.data[0].memberShipGuadianDetailsDTOList[0].uploadFilePath != undefined) {
               this.accountGuardianModel.guardainMultipartList = this.fileUploadService.getFile(this.responseModel.data[0].memberShipGuadianDetailsDTOList[0].uploadFilePath , 

@@ -114,7 +114,7 @@
                             
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
-                                    <span class="">{{ 'LOAN_TRANSACTION.UPLOAD_DOCUMENT' | translate }} </span>
+                                    <label><span class="red">*</span>{{ 'LOAN_TRANSACTION.UPLOAD_DOCUMENT' | translate }} </label>
                                     <div class="uplodad-style align-items-center">
                                         <!-- Upload Button Column -->
                                         <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
@@ -141,7 +141,7 @@
                             <div class="col-12">
                                 <div class="justify-content-end d-flex">
                                     <p-button label="{{'LOAN_TRANSACTION.CANCEL' | translate}}" (onClick)="editCancle()"></p-button>
-                                    <p-button label="{{'LOAN_TRANSACTION.SAVE' | translate}}" [disabled]="!ciDocumentDetailsForm.valid"
+                                    <p-button label="{{'LOAN_TRANSACTION.SAVE' | translate}}" [disabled]="(!ciDocumentDetailsForm.valid) || !isFileUploaded"
                                         (onClick)="editsave(ciLoanDocumentsDetailsModel)"></p-button>
                                 </div>
                             </div>
@@ -172,7 +172,7 @@
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
-                                    <span class="">{{ 'LOAN_TRANSACTION.UPLOAD_DOCUMENT' | translate }} </span>
+                                    <label><span class="red">*</span>{{ 'LOAN_TRANSACTION.UPLOAD_DOCUMENT' | translate }} </label>
                                     <div class="uplodad-style align-items-center">
                                         <!-- Upload Button Column -->
                                         <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
@@ -199,7 +199,7 @@
                             <div class="col-12">
                                 <div class="justify-content-end d-flex">
                                     <p-button label="{{'LOAN_TRANSACTION.CANCEL' | translate}}" (click)="cancel()"></p-button>
-                                    <p-button label="{{'LOAN_TRANSACTION.SAVE' | translate}}" [disabled]="!ciDocumentDetailsForm.valid"
+                                    <p-button label="{{'LOAN_TRANSACTION.SAVE' | translate}}" [disabled]="(!ciDocumentDetailsForm.valid) || !isFileUploaded"
                                         (click)="saveDocument(ciLoanDocumentsDetailsModel)"></p-button>
                                 </div>
                             </div>

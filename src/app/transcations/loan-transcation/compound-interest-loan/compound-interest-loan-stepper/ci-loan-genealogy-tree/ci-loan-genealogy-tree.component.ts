@@ -57,6 +57,8 @@ export class CiLoanGenealogyTreeComponent {
   ciLoanGenealogyTreeModel: CiLoanGenealogyTree = new CiLoanGenealogyTree();
   admissionNumber: any;
   saveAndNextDisable: boolean = false;
+  grenealogyTreeId: any;
+  displayDialog: boolean = false;
 
   constructor(private router: Router, 
     private formBuilder: FormBuilder,
@@ -79,8 +81,8 @@ export class CiLoanGenealogyTreeComponent {
     ];
 
     this.ciGenealogyTreeForm = this.formBuilder.group({
-      name: new FormControl('', Validators.required),
-      relationWithApplicant: new FormControl(''),
+      name :new FormControl('', [Validators.required, Validators.pattern(applicationConstants.NAME_PATTERN)]),
+      relationWithApplicant: new FormControl('', Validators.required),
       // remarks: new FormControl('')
     })
   }
@@ -140,7 +142,7 @@ export class CiLoanGenealogyTreeComponent {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.relationshipTypesList = this.responseModel.data;
-            this.relationshipTypesList = this.responseModel.data.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+            this.relationshipTypesList = this.responseModel.data.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
               return { label: relationType.name, value: relationType.id };
             });
             // let relationshiptype = this.relationshipTypesList.find((data: any) => null != data && data.value == this.ciLoanGenealogyTreeModel.relationWithApplicant);
@@ -238,6 +240,7 @@ export class CiLoanGenealogyTreeComponent {
     this.addButtonService = false;
     this.editDeleteDisable = false;
     this.ciLoanGenealogyTreeModel = row;
+    this.ciLoanGenealogyTreeList = [];
 
     const relation = this.relationshipTypesList.find((item: { value: any; }) => item.value === row.relationWithApplicant);
     this.ciLoanGenealogyTreeModel.relationWithApplicantName = relation.label;
@@ -251,15 +254,20 @@ export class CiLoanGenealogyTreeComponent {
           if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
             if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0  ) {
               this.ciLoanGenealogyTreeModel = this.responseModel.data;
-             
               if (this.responseModel.data[0].ciLoanApplicationId != null && this.responseModel.data[0].ciLoanApplicationId != undefined) {
                 this.getCiLoanGenealogyTreesById(this.responseModel.data[0].ciLoanApplicationId);
               }
+              this.msgs = [];
+              this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+              setTimeout(() => {
+                this.msgs = [];
+              }, 2000);
             }
           }
           else {
             this.msgs = [];
             this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+            this.getCiLoanGenealogyTreesById(this.ciLoanApplicationId);
             setTimeout(() => {
               this.msgs = [];
             }, 2000);
@@ -280,15 +288,20 @@ export class CiLoanGenealogyTreeComponent {
           if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
             if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 ) {
               this.ciLoanGenealogyTreeModel = this.responseModel.data;
-              
               if (this.responseModel.data[0].ciLoanApplicationId != null && this.responseModel.data[0].ciLoanApplicationId != undefined) {
                 this.getCiLoanGenealogyTreesById(this.responseModel.data[0].ciLoanApplicationId);
               }
+              this.msgs = [];
+              this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+              setTimeout(() => {
+                this.msgs = [];
+              }, 2000);
             }
           }
           else {
             this.msgs = [];
             this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+            this.getCiLoanGenealogyTreesById(this.ciLoanApplicationId);
             setTimeout(() => {
               this.msgs = [];
             }, 2000);
@@ -341,23 +354,57 @@ export class CiLoanGenealogyTreeComponent {
     });
   }
 
+  /**
+   * @implements delete confirm enble
+   * @param row 
+   * @author jyothi.naidana
+   */
   delete(row: any) {
-    this.ciLoanGenealogyTreeService.deleteCiLoanGenealogyTrees(row.id).subscribe((response: any) => {
+    this.grenealogyTreeId = row.id ;
+    this.displayDialog = true;
+  }
+
+
+  /**
+   * @implements submit delete
+   * @author jyothi.naidana
+   */
+  submitDelete() {
+    this.ciLoanGenealogyTreeService.deleteCiLoanGenealogyTrees(this.grenealogyTreeId).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+        this.displayDialog = false;
         // this.ciLoanGenealogyTreeList = this.responseModel.data;
         this.getCiLoanGenealogyTreesById(this.ciLoanApplicationId);
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+
       }
     });
   }
 
+
+
+  /**\
+   * @implements onChange relation Type
+   * @author jyothi.naidana
+   */
   onChangeRelationTypeType(event: any) {
-    
     if (event.value != null && event.value != undefined) {
       const relation = this.relationshipTypesList.find((item: { value: any; }) => item.value === event.value);
       this.ciLoanGenealogyTreeModel.relationWithApplicantName = relation.label;
       this.updateData();
     }
+  }
+
+  /**
+   * @implements cancle
+   * @author jyothi.naidana
+   */
+  cancelForDialogBox(){
+    this.displayDialog = false;
   }
 
 }

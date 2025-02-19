@@ -119,6 +119,7 @@ export class InstitutionCommunicationComponent implements OnInit{
           if (this.instituteCommunicationModel.isSameAddress != null && this.instituteCommunicationModel.isSameAddress != undefined) {
             if (this.instituteCommunicationModel.isSameAddress == applicationConstants.TRUE) {
               // this.sameAsPerAddr(this.instituteCommunicationModel.isSameAddress);
+              this.instituteCommunicationForm.get('permanentPinCode').reset();
               this.instituteCommunicationForm.get('permanentStateId').disable();
               this.instituteCommunicationForm.get('permanentDistrictId').disable();
               this.instituteCommunicationForm.get('permanentSubDistrictId').disable();
@@ -176,7 +177,7 @@ export class InstitutionCommunicationComponent implements OnInit{
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 ) {
             this.stateList = this.responseModel.data;
-            this.stateList = this.responseModel.data.filter((obj: any) => obj != null).map((state: { name: any; id: any; }) => {
+            this.stateList = this.responseModel.data.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((state: { name: any; id: any; }) => {
               return { label: state.name, value: state.id };
             });
             this.sameAsRegisterAddress();
@@ -204,6 +205,8 @@ export class InstitutionCommunicationComponent implements OnInit{
       this.instituteCommunicationForm.get('districtId').reset();
       this.instituteCommunicationForm.get('subDistrictId').reset();
       this.instituteCommunicationForm.get('villageId').reset();
+      this.instituteCommunicationForm.get('address1').reset();
+      this.instituteCommunicationForm.get('pinCode').reset();
      
       this.districtList = [];
       this.subDistrictList = [];
@@ -243,6 +246,8 @@ export class InstitutionCommunicationComponent implements OnInit{
     if (isResetIds) {
       this.instituteCommunicationForm.get('subDistrictId').reset();
       this.instituteCommunicationForm.get('villageId').reset();
+      this.instituteCommunicationForm.get('address1').reset();
+      this.instituteCommunicationForm.get('pinCode').reset();
       this.subDistrictList = [];
       this.villageList = [];
     }
@@ -279,6 +284,8 @@ export class InstitutionCommunicationComponent implements OnInit{
   getAllVillagesBySubDistrictId(id: any, isResetIds: any) {
     if (isResetIds) {
       this.instituteCommunicationForm.get('villageId').reset();
+      this.instituteCommunicationForm.get('address1').reset();
+      this.instituteCommunicationForm.get('pinCode').reset();
       this.villageList = [];
     }
     this.villagesService.getVillagesBySubDistrictId(id).subscribe((response: any) => {
@@ -327,7 +334,7 @@ export class InstitutionCommunicationComponent implements OnInit{
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.perstateList = this.responseModel.data;
-            this.perstateList = this.responseModel.data.filter((obj: any) => obj != null).map((state: { name: any; id: any; }) => {
+            this.perstateList = this.responseModel.data.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((state: { name: any; id: any; }) => {
               return { label: state.name, value: state.id };
             });
           }
@@ -354,6 +361,8 @@ export class InstitutionCommunicationComponent implements OnInit{
       this.instituteCommunicationForm.get('permanentDistrictId').reset();
       this.instituteCommunicationForm.get('permanentSubDistrictId').reset();
       this.instituteCommunicationForm.get('permanentVillageId').reset();
+      this.instituteCommunicationForm.get('permanentAddress1').reset();
+      this.instituteCommunicationForm.get('permanentPinCode').reset();
       this.perdistrictList = [];
       this.persubDistrictList = [];
       this.pervillageList = [];
@@ -389,6 +398,8 @@ export class InstitutionCommunicationComponent implements OnInit{
     if (isResetIds) {
       this.instituteCommunicationForm.get('permanentSubDistrictId').reset();
       this.instituteCommunicationForm.get('permanentVillageId').reset();
+      this.instituteCommunicationForm.get('permanentAddress1').reset();
+      this.instituteCommunicationForm.get('permanentPinCode').reset();
       this.persubDistrictList = [];
       this.pervillageList = [];
     }
@@ -422,6 +433,8 @@ export class InstitutionCommunicationComponent implements OnInit{
   getAllPerVillagesBySubDistrictId(id: any, isResetIds: any) {
     if (isResetIds) {
       this.instituteCommunicationForm.get('permanentVillageId').reset();
+      this.instituteCommunicationForm.get('permanentAddress1').reset();
+      this.instituteCommunicationForm.get('permanentPinCode').reset();
       this.pervillageList = [];
     }
     this.villagesService.getVillagesBySubDistrictId(id).subscribe((response: any) => {
@@ -578,6 +591,14 @@ export class InstitutionCommunicationComponent implements OnInit{
         if(this.instituteCommunicationModel.permanentVillageId != null && this.instituteCommunicationModel.permanentVillageId != undefined){
           this.getPerVillage(this.instituteCommunicationModel.permanentVillageId);
         }
+      }
+      if (this.instituteCommunicationModel.permanentAddress1 != this.instituteCommunicationModel.address1) {
+        this.instituteCommunicationModel.permanentAddress1 = null;
+        this.instituteCommunicationModel.permanentAddress1 = this.instituteCommunicationModel.address1;
+      }
+      if (this.instituteCommunicationModel.permanentPinCode != this.instituteCommunicationModel.pinCode) {
+        this.instituteCommunicationModel.permanentPinCode = null;
+        this.instituteCommunicationModel.permanentPinCode = this.instituteCommunicationModel.pinCode;
       }
     }
   }

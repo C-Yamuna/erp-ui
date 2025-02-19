@@ -82,6 +82,8 @@ export class SiLoanProductDefinition {
     siInterestPolicyConfigDTOList?: any;
 
     isInsuranceAppicableName?: any;
+
+    interestPostingFrequencyName:any;
 }
 
 export class SiLoanInterestPolicy {

@@ -399,8 +399,8 @@
                         <!-- Kyc -->
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
-                                <div class="global-card-bg-color view-carddata icon-size pb-1">
-                                    <div class="col-12">
+                                <div class="global-card-bg-color view-carddata icon-size pb-2">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -415,35 +415,37 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-12 px-0">
+                                        <div class="col-12 p-0">
                                             <div class="row g-3">
                                                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12"
                                                     *ngFor="let document of kycGridList ; let i = index">
-                                                    <div class="stepper-kyc-card p-3 mb-2">
+                                                    <div class="stepper-kyc-card p-3 pb-1 mb-2">
                                                         <!-- view card -->
                                                         <div class="row">
 
                                                             <div
                                                                 class="col-lg-7 col-md-7 col-sm-7 col-xs-6 d-flex align-items-center">
                                                                 <div class="card-leftbody">
-                                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf = "memberTypeName != 'Individual'">
+                                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12"
+                                                                        *ngIf="memberTypeName != 'Individual'">
                                                                         <h6 class="label-view">Promoter Name</h6>
-                                                                        <p class="label-input-text">{{document.promoterName}}</p>
+                                                                        <p class="label-input-text">
+                                                                            {{document.promoterName}}</p>
                                                                     </div>
                                                                     <div
-                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                         <h6 class="label-view">Document Type</h6>
                                                                         <p class="label-input-text">
                                                                             {{document.kycDocumentTypeName}}</p>
                                                                     </div>
                                                                     <div
-                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                         <h6 class="label-view">Document Number</h6>
                                                                         <p class="label-input-text">
                                                                             {{document.documentNumber}}</p>
                                                                     </div>
                                                                     <div
-                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                         <h6 class="label-view">Name as per Document</h6>
                                                                         <p class="label-input-text">
                                                                             {{document.nameAsPerDocument}} </p>
@@ -484,8 +486,8 @@
                         <!-- Communication -->
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
-                                <div class="global-card-bg-color view-carddata icon-size">
-                                    <div class="col-12">
+                                <div class="global-card-bg-color view-carddata icon-size pb-2">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -501,26 +503,26 @@
 
                                             </div>
                                         </div>
-                                        <div class="col-12 px-0">
+                                        <div class="col-12 p-0">
                                             <div class="row">
                                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <div class="nominee-card p-3 pb-1 mb-2">
                                                         <div class="row">
                                                             <h6 class="super-sub-heading mt-1">Registered</h6>
                                                             <div class="col-12">
-                                                                <div class="row mt-2">
+                                                                <div class="row">
                                                                     <div
                                                                         class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                                         <div class="row">
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">State</h6>
                                                                                 <p class="label-input-text">
                                                                                     {{saoLoanCommunicationModel.stateName}}
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">District</h6>
                                                                                 <p class="label-input-text">
                                                                                     {{saoLoanCommunicationModel.districtName}}
@@ -528,28 +530,28 @@
                                                                             </div>
 
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">Sub District</h6>
                                                                                 <p class="label-input-text">
                                                                                     {{saoLoanCommunicationModel.subDistrictName}}
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">Village</h6>
                                                                                 <p class="label-input-text">
                                                                                     {{saoLoanCommunicationModel.villageName}}
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">Address</h6>
                                                                                 <p class="label-input-text">
                                                                                     {{saoLoanCommunicationModel.address1}}
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">Pincode</h6>
                                                                                 <p class="label-input-text">
                                                                                     {{saoLoanCommunicationModel.pinCode}}
@@ -567,47 +569,47 @@
                                                         <div class="row">
                                                             <h6 class="super-sub-heading mt-1">Permanent</h6>
                                                             <div class="col-12">
-                                                                <div class="row mt-2">
+                                                                <div class="row">
                                                                     <div
                                                                         class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                                         <div class="row">
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">State</h6>
                                                                                 <p class="label-input-text">
                                                                                     {{saoLoanCommunicationModel.permanentStateName}}
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">District</h6>
                                                                                 <p class="label-input-text">
                                                                                     {{saoLoanCommunicationModel.permanentDistrictName}}
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">Sub District</h6>
                                                                                 <p class="label-input-text">
                                                                                     {{saoLoanCommunicationModel.permanentSubDistrictName}}
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">Village</h6>
                                                                                 <p class="label-input-text">
                                                                                     {{saoLoanCommunicationModel.permanentVillageName}}
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">Address</h6>
                                                                                 <p class="label-input-text">
                                                                                     {{saoLoanCommunicationModel.permanentAddress1}}
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">Pincode</h6>
                                                                                 <p class="label-input-text">
                                                                                     {{saoLoanCommunicationModel.permanentPinCode}}
@@ -643,7 +645,7 @@
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
                                 <div class="global-card-bg-color view-carddata icon-size">
-                                    <div class="col-12">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -659,67 +661,67 @@
                                                     (click)="applicationEdit(viewSaoLoanApplicatonModel)"></p-button>
                                             </div>
                                         </div>
-                                        <div class="col-12 px-0">
+                                        <div class="col-12 p-0">
                                             <div class="row">
 
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'ERP.PRODUCT' | translate}}</h6>
                                                     <p class="label-input-text">
                                                         {{viewSaoLoanApplicatonModel.saoProductName}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'ERP.LOAN_ACCOUNT_NUMBER' | translate}}
                                                     </h6>
                                                     <p class="label-input-text">
                                                         {{viewSaoLoanApplicatonModel.accountNumber}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'ERP.ROI' | translate}}</h6>
                                                     <p class="label-input-text">
                                                         {{viewSaoLoanApplicatonModel.effectiveRoi}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'ERP.APPLICATION_DATE' | translate}}</h6>
                                                     <p class="label-input-text">
                                                         {{viewSaoLoanApplicatonModel.applicationDateVal}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'ERP.PENAL_ROI' | translate}}</h6>
                                                     <p class="label-input-text">
                                                         {{viewSaoLoanApplicatonModel.penalInterest}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'ERP.IOD' | translate}}</h6>
                                                     <p class="label-input-text">{{viewSaoLoanApplicatonModel.iod}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'ERP.REPAYMENT_FREQUENCY' | translate}}
                                                     </h6>
                                                     <p class="label-input-text">
                                                         {{viewSaoLoanApplicatonModel.repaymentFrequencyName}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'ERP.LOAN_PURPOSES' | translate}}</h6>
                                                     <p class="label-input-text">
                                                         {{viewSaoLoanApplicatonModel.purposeName}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'ERP.REQUEST_AMOUNT' | translate}}</h6>
                                                     <p class="label-input-text">
                                                         {{viewSaoLoanApplicatonModel.requestedAmount}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'ERP.SANCTION_AMOUNT' | translate}}</h6>
                                                     <p class="label-input-text">
                                                         {{viewSaoLoanApplicatonModel.sanctionAmount}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'ERP.LOAN_PERIOD_IN_MONTHS' | translate}}
                                                     </h6>
                                                     <p class="label-input-text">
                                                         {{viewSaoLoanApplicatonModel.loanPeriod}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6">
                                                     <h6 class="label-view">{{'ERP.LOAN_DUE_DATE' | translate}}</h6>
                                                     <p class="label-input-text">
                                                         {{viewSaoLoanApplicatonModel.loanDueDateVal}}</p>
@@ -796,21 +798,21 @@
                                                 <div class="col-12">
                                                     <div class="row">
                                                         <div
-                                                            class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                            class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                             <h6 class="label-view">{{'ERP.POLICY_NAME' | translate}}
                                                             </h6>
                                                             <p class="label-input-text">
                                                                 {{saoLoanInsuranceDetailsModel.policyName}}</p>
                                                         </div>
                                                         <div
-                                                            class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                            class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                             <h6 class="label-view">{{'ERP.POLICY_NUMBER' | translate}}
                                                             </h6>
                                                             <p class="label-input-text">
                                                                 {{saoLoanInsuranceDetailsModel.policyNumber}}</p>
                                                         </div>
                                                         <div
-                                                            class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                            class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                             <h6 class="label-view">{{'ERP.INSURENCE_AMOUNT' |
                                                                 translate}}
                                                             </h6>
@@ -835,7 +837,7 @@
                         <div class="col-lg-12 col-md-12 col-sm-12" *ngIf="jointHoldersFlag">
                             <div class="col-12 p-0">
                                 <div class="global-card-bg-color view-carddata icon-size">
-                                    <div class="col-12">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -861,7 +863,7 @@
                                                     <div class="col"></div>
                                                     <div class="w-100 mt-1 mb-2 h-90p">
                                                         <div class="row">
-                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                                 <div class="col">
                                                                     <span class="label-view">{{'ERP.ADMISSION_NO' |
                                                                         translate}}</span>
@@ -870,7 +872,7 @@
                                                                         {{jointHolderDetails.admissionNo}}</p>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                                 <div class="col">
                                                                     <span class="label-view">{{'ERP.NAME' |
                                                                         translate}}</span>
@@ -879,7 +881,7 @@
                                                                         {{jointHolderDetails.name}}</p>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                                 <div class="col">
                                                                     <span class="label-view">{{'ERP.MEMBER_TYPE' |
                                                                         translate}}</span>
@@ -888,7 +890,7 @@
                                                                         {{jointHolderDetails.memberTypeName}}</p>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                                 <div class="col">
                                                                     <span class="label-view">{{'ERP.CLASS' |
                                                                         translate}}</span>
@@ -897,7 +899,7 @@
                                                                         {{jointHolderDetails.memberClass}}</p>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                                 <div class="col">
                                                                     <span class="label-view">{{'ERP.ADMISSION_DATE' |
                                                                         translate}}</span>
@@ -906,7 +908,7 @@
                                                                         {{jointHolderDetails.admissionDateVal}}</p>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                                 <div class="col">
                                                                     <span class="label-view">{{'ERP.AADHAR_NO' |
                                                                         translate}}</span>
@@ -915,7 +917,7 @@
                                                                         {{jointHolderDetails.aadharNumber}}</p>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                                 <div class="col">
                                                                     <span class="label-view">{{'ERP.PAN_NUMBER' |
                                                                         translate}}</span>
@@ -943,8 +945,8 @@
                         <!-- Loan Document  -->
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
-                                <div class="global-card-bg-color view-carddata icon-size">
-                                    <div class="col-12">
+                                <div class="global-card-bg-color view-carddata icon-size pb-2">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -959,11 +961,11 @@
                                                     (click)="loanDocumentEdit(viewSaoLoanApplicatonModel)"></p-button>
                                             </div>
                                         </div>
-                                        <div class="col-12 px-0">
+                                        <div class="col-12 p-0">
                                             <div class="row g-3">
                                                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12"
                                                     *ngFor="let document of saoLoanDocumentList ; let i = index">
-                                                    <div class="stepper-doc-card p-3 mb-2">
+                                                    <div class="stepper-doc-card p-3 pb-1 mb-2">
                                                         <!-- view card -->
                                                         <div class="row">
 
@@ -971,19 +973,19 @@
                                                                 class="col-lg-7 col-md-7 col-sm-7 d-flex align-items-center">
                                                                 <div class="card-leftbody">
                                                                     <div
-                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                         <h6 class="label-view">Document Type</h6>
                                                                         <p class="label-input-text">
                                                                             {{document.documentTypeName}}</p>
                                                                     </div>
                                                                     <div
-                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                         <h6 class="label-view">Document Number</h6>
                                                                         <p class="label-input-text">
                                                                             {{document.documentNo}}</p>
                                                                     </div>
                                                                     <!-- <div
-                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                         <h6 class="label-view">Remarks</h6>
                                                                         <p class="label-input-text docname-texteclipse">
                                                                             {{document.remarks}} </p>
@@ -1027,10 +1029,10 @@
                         </div>
                         <div class="col-12 p-1"></div>
                         <!-- Nominee  -->
-                        <div class="col-lg-12 col-md-12 col-sm-12" *ngIf = "memberTypeName == 'Individual'">
+                        <div class="col-lg-12 col-md-12 col-sm-12" *ngIf="memberTypeName == 'Individual'">
                             <div class="col-12 p-0">
-                                <div class="global-card-bg-color view-carddata icon-size pb-1">
-                                    <div class="col-12">
+                                <div class="global-card-bg-color view-carddata icon-size pb-2">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -1045,7 +1047,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-12 px-0">
+                                        <div class="col-12 p-0">
                                             <div class="row g-3">
                                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <div class="stepper-nominee-card p-3 pb-1 mb-2">
@@ -1053,67 +1055,45 @@
                                                             <h6 class="super-sub-heading mt-1">{{'ERP.NOMINEE' |
                                                                 translate}}</h6>
                                                             <div class="col-12">
-                                                                <div class="row mt-2">
+                                                                <div class="row">
                                                                     <div
                                                                         class="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center">
                                                                         <div class="card-leftbody">
                                                                             <div class="row">
-                                                                                <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                                                                                    <h6 class="label-view">
-                                                                                        {{'ERP.TYPE_OF_NOMINEE' |
-                                                                                        translate}}</h6>
-                                                                                    <p class="label-input-text">
-                                                                                        {{saoLoanNomineeDetailsModel.nomineeTypeName}}
+                                                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                    <h6 class="label-view">{{'ERP.NOMINEE_TYPE' | translate}}</h6>
+                                                                                    <p class="label-input-text">{{saoLoanNomineeDetailsModel.nomineeTypeName}}</p>
+                                                                                </div>
+                                                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
+                                                                                    *ngIf="saoLoanNomineeDetailsModel.nomineeType == 3">
+                                                                                    <h6 class="label-view">{{'ERP.REMARKS' | translate}}</h6>
+                                                                                    <p class="label-input-text">{{saoLoanNomineeDetailsModel.remarks}}</p>
+                                                                                </div>
+                                                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
+                                                                                    *ngIf="saoLoanNomineeDetailsModel.nomineeType != 3">
+                                                                                    <h6 class="label-view">{{'ERP.RELATIONSHIP_WITH_MEMBER' | translate}}</h6>
+                                                                                    <p class="label-input-text">{{saoLoanNomineeDetailsModel.relationTypeName}}</p>
+                                                                                </div>
+                                                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
+                                                                                    *ngIf="saoLoanNomineeDetailsModel.nomineeType != 3">
+                                                                                    <h6 class="label-view">{{'ERP.NAME' | translate}}</h6>
+                                                                                    <p class="label-input-text">{{saoLoanNomineeDetailsModel.nomineeName}}</p>
+                                                                                </div>
+                                                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
+                                                                                    *ngIf="saoLoanNomineeDetailsModel.nomineeType != 3">
+                                                                                    <h6 class="label-view">{{'ERP.AADHAR_NO' | translate}}</h6>
+                                                                                    <p class="label-input-text">{{saoLoanNomineeDetailsModel.nomineeAadharNumber}}</p>
+                                                                                </div>
+                                                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
+                                                                                    *ngIf="saoLoanNomineeDetailsModel.nomineeType != 3">
+                                                                                    <h6 class="label-view">{{'ERP.CONTACT' | translate}}</h6>
+                                                                                    <p class="label-input-text">{{saoLoanNomineeDetailsModel.nomineeMobileNumber}}
                                                                                     </p>
                                                                                 </div>
-                                                                                <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                                                                                    <h6 class="label-view">
-                                                                                        {{'ERP.RELATIONSHIP_TYPE'
-                                                                                        | translate}}</h6>
-                                                                                    <p class="label-input-text">
-                                                                                        {{saoLoanNomineeDetailsModel.relationTypeName}}
-                                                                                    </p>
-                                                                                </div>
-                                                                                <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                                                                                    <h6 class="label-view">
-                                                                                        {{'ERP.FULL_NAME'
-                                                                                        | translate}}</h6>
-                                                                                    <p class="label-input-text">
-                                                                                        {{saoLoanNomineeDetailsModel.nomineeName}}
-                                                                                    </p>
-                                                                                </div>
-
-                                                                                <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                                                                                    <h6 class="label-view">
-                                                                                        {{'ERP.MOBILE_NUMBER' |
-                                                                                        translate}}
-                                                                                    </h6>
-                                                                                    <p class="label-input-text">
-                                                                                        {{saoLoanNomineeDetailsModel.nomineeMobileNumber}}
-                                                                                    </p>
-                                                                                </div>
-                                                                                <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                                                                                    <h6 class="label-view">{{'ERP.EMAIL'
-                                                                                        |
-                                                                                        translate}}</h6>
-                                                                                    <p class="label-input-text">
-                                                                                        {{saoLoanNomineeDetailsModel.nomineeEmailId}}
-                                                                                    </p>
-                                                                                </div>
-
-                                                                                <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                                                                                    <h6 class="label-view">
-                                                                                        {{'ERP.AADHAR_NUMBER' |
-                                                                                        translate}}
-                                                                                    </h6>
-                                                                                    <p class="label-input-text">
-                                                                                        {{saoLoanNomineeDetailsModel.nomineeAadharNumber}}
+                                                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
+                                                                                    *ngIf="saoLoanNomineeDetailsModel.nomineeType != 3">
+                                                                                    <h6 class="label-view">{{'ERP.EMAIL' | translate}}</h6>
+                                                                                    <p class="label-input-text">{{saoLoanNomineeDetailsModel.nomineeEmailId}}
                                                                                     </p>
                                                                                 </div>
                                                                             </div>
@@ -1133,20 +1113,7 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <!-- <div
-                                                                    class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-xs-12 justify-content-end">
-                                                                    <div class="col-12 px-0">
-                                                                        <div class="col-12 px-0">
-                                                                            <div class="col-12 p-0">
-                                                                                <a>
-                                                                                    <img src="assets/images/aadhar.png"
-                                                                                        class="upload-img img-fluid"  pTooltip="Download"
-                                                                                        tooltipPosition="top">
-                                                                                </a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div> -->
+                                                                    
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1163,7 +1130,7 @@
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
                                 <div class=" global-card-bg-color view-carddata icon-size">
-                                    <div class="col-12">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -1211,7 +1178,7 @@
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
                                 <div class="global-card-bg-color view-carddata icon-size">
-                                    <div class="col-12">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -1228,27 +1195,27 @@
                                         </div>
                                         <div class="globel-border-top-color"></div>
                                         <p-table [columns]="landMortagageDetails"
-                                                [value]="saoLoanLandMortageDetailsDTOList" dataKey="id"
-                                                selectionMode="single" styleClass="p-datatable-striped"
-                                                [showJumpToPageDropdown]="true" [showPageLinks]="false" [rows]="5"
-                                                [paginator]="false" [pageLinks]="1" [responsive]="true"
-                                                rowExpandMode="single">
-                                                <ng-template pTemplate="header">
-                                                    <tr>
-                                                        <th *ngFor="let col of landMortagageDetails">
-                                                            {{col.header | translate}}
-                                                        </th>
-                                                    </tr>
-                                                </ng-template>
-                                                <ng-template pTemplate="body" let-saoLoanLandMortageDetailsDTOList
-                                                    let-expanded="expanded" let-rowData>
-                                                    <tr>
-                                                        <td *ngFor="let col of landMortagageDetails">
-                                                            {{rowData[col.field]}}
-                                                        </td>
-                                                    </tr>
-                                                </ng-template>
-                                            </p-table>
+                                            [value]="saoLoanLandMortageDetailsDTOList" dataKey="id"
+                                            selectionMode="single" styleClass="p-datatable-striped"
+                                            [showJumpToPageDropdown]="true" [showPageLinks]="false" [rows]="5"
+                                            [paginator]="false" [pageLinks]="1" [responsive]="true"
+                                            rowExpandMode="single">
+                                            <ng-template pTemplate="header">
+                                                <tr>
+                                                    <th *ngFor="let col of landMortagageDetails">
+                                                        {{col.header | translate}}
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-saoLoanLandMortageDetailsDTOList
+                                                let-expanded="expanded" let-rowData>
+                                                <tr>
+                                                    <td *ngFor="let col of landMortagageDetails">
+                                                        {{rowData[col.field]}}
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
                                         <div class="col-12 margtop-3rem"></div>
                                     </div>
                                 </div>
@@ -1259,7 +1226,7 @@
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
                                 <div class=" global-card-bg-color view-carddata icon-size pb-3">
-                                    <div class="col-12">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -1347,7 +1314,7 @@
                             <h6 class="label-view">{{'ERP.REMARKS' | translate}}</h6>
                             <p class="label-input-text">{{viewSaoLoanApplicatonModel.remarks}}</p>
                         </div>
-                        <div class="col-xl-9 col-lg-8 col-md-9 col-sm-8 mt-4">
+                        <div class="col-xl-3 col-lg-4 col-md-3 col-sm-4 mt-4">
                             <div class="d-flex justify-content-end">
                                 <p-button label="BACK" (click)="back()"></p-button>
                                 <p-button *ngIf="isShowSubmit" label="{{'ERP.SUBMIT' | translate}}" (click)="submit()"

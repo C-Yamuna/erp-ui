@@ -84,11 +84,21 @@
             <ng-template pTemplate="body" let-termLoanInterestPolicyModel let-editing="editing" let-ri="rowIndex">
                 <tr [pEditableRow]="termLoanInterestPolicyModel">
                     <td>
-                        <p-cellEditor>
+                        <!-- <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="termLoanInterestPolicyModel.minSlabAmount"
                                     (keyup)="checkForAmount()" formControlName="minSlabAmount">
 
+                            </ng-template>
+                            <ng-template pTemplate="output">{{termLoanInterestPolicyModel.minSlabAmount}}</ng-template>
+                        </p-cellEditor> -->
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText type="text" [(ngModel)]="termLoanInterestPolicyModel.minSlabAmount"
+                                    (focusout)="checkForAmount(1)" formControlName="minSlabAmount" pKeyFilter="num" mode="currency"  inputId="currency-india" currency="INR" locale="en-IN">
+                                <p-message severity="error" text="Enter Valid Amount"
+                                    *ngIf="!interestPolicyForm.controls['minSlabAmount'].valid && interestPolicyForm.controls['minSlabAmount'].dirty">
+                                </p-message>
                             </ng-template>
                             <ng-template pTemplate="output">{{termLoanInterestPolicyModel.minSlabAmount}}</ng-template>
                         </p-cellEditor>
@@ -99,7 +109,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="termLoanInterestPolicyModel.maxSlabAmount"
-                                    (keyup)="checkForAmount()" formControlName="maxSlabAmount">
+                                    (focusout)="checkForAmount(2)" formControlName="maxSlabAmount">
 
                             </ng-template>
                             <ng-template pTemplate="output">{{termLoanInterestPolicyModel.maxSlabAmount}}</ng-template>
@@ -283,8 +293,8 @@
                             <ng-template pTemplate="input">
                                 <input pInputText type="text"
                                     [(ngModel)]="termCollectionApportionOrderModel.apportionOrder"
-                                    formControlName="apportionOrder">
-
+                                    formControlName="apportionOrder" (focusout)="checkApportionOrder(termCollectionApportionOrderModel.apportionOrder)">
+                                    
                             </ng-template>
                             <ng-template
                                 pTemplate="output">{{termCollectionApportionOrderModel.apportionOrder}}</ng-template>

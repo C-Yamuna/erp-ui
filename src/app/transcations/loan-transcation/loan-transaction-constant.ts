@@ -60,7 +60,9 @@ export const Loantransactionconstant = {
     TERMLOANS_JOINT_ACCOUNT:"/menu/loan_transaction/term_loans_stepper/term_loans_joint_account",
     TERMLOANS_NEW_MEMBERSHIP:"/menu/loan_transaction/term_loans_stepper/term_loans_new_membership",
     TERMLOANS_MEMBERSHIP:"/menu/loan_transaction/term_loans_stepper/term_loans_membership",
-
+    TERM_LOAN_DISBURSMENT:"/menu/loan_transaction/term_loan_disbursment",
+    TERM_LOAN_COLLECTION:"/menu/loan_transaction/term_loan_collection",
+    
 
     COMPOUND_INTEREST_LOANS_MEMBERSHIP_DETAILS:"/menu/loan_transaction/compound_interest_loans_stepper/compound_interest_loans_membership_details",
     COMPOUND_INTEREST_LOANS_APPLICATIOIN_DETAILS:"/menu/loan_transaction/compound_interest_loans_stepper/compound_interest_loans_product_details",
@@ -77,6 +79,9 @@ export const Loantransactionconstant = {
     COMPOUND_INTEREST_APPROVAL : "/menu/approval_transactions/ci_loan_approval_grid",
     COMPOUND_INTEREST_APPROVAL_STATUS_UPDATE :"/menu/approval_transactions/ci_loan_approval_status_update",
     COMPOUND_INTEREST_GUARENTOR_DETAILS_APPLICATION_ID : "/get_loan_application_id",
+    CI_LOAN_DISBURSEMENT:"/menu/loan_transaction/ci_loan_disbursement",
+    CI_LOAN_COLLECTION:"/menu/loan_transaction/ci_loan_collection",
+    CI_LOAN_CLOSURE:"/menu/loan_transaction/ci_loan_closure",
 
     DEPOSITOR_LOANS_PRODUCT_DETAILS:"/menu/loan_transaction/depositor_loans_stepper/depositor_loans_product_details",
     DEPOSITOR_LOANS_COMMUNICATON:"/menu/loan_transaction/depositor_loans_stepper/depositor_loans_communication",
@@ -108,6 +113,12 @@ export const Loantransactionconstant = {
     SIMPLE_INTEREST_PROD_PURPOSE_CONFIG:"/menu/loan_transaction/simple_interest_loan_product_definition_stepper/simple_interest_prod_purpose_config",
     SIMPLE_INTEREST_REQUIRED_DOCUMENT_CONFIG:"/menu/loan_transaction/simple_interest_loan_product_definition_stepper/simple_interest_required_documents_config",
     VIEW_SIMPLE_INTEREST_PRODUCT_DEFINITION:"/menu/loan_transaction/view_simple_interest_loan_product_definition",
+    APPROVAL_SIMPLE_INTEREST_LOAN:"/menu/loan_transaction/si_loan_approval",
+    APPROVAL_SIMPLE_INTEREST_LOAN_DETAILS:"/menu/loan_transaction/si_borrowing_approval_details",
+    TRANSACTION_APPROVAL_SIMPLE_INTEREST_LOAN_DETAILS:"/menu/loan_transaction/si_loan_approval_details_transaction",
+
+
+
 
 
     COMPOUND_INTEREST_PRODUCT_DEFINITION:"/menu/loan_transaction/compound_interest_loan_product_definition",

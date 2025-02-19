@@ -165,7 +165,7 @@
                         <div class="form-label">
                             <label for="username"> <span class="red">*</span> {{'ERP.AADHAR_NUMBER' | translate}}
                             </label>
-                            <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="aadharNumber"
+                            <input pInputText id="bunit_txt_name" minlength="12" maxlength="12" type="text" formControlName="aadharNumber"
                                 [(ngModel)]="membershipBasicRequiredDetailsModel.aadharNumber" placeholder="Enter Aadhar Number">
                             <p-message severity="error" text="Enter Valid Aadhar Number"
                                 *ngIf="!memberCreationForm.controls['aadharNumber'].valid && memberCreationForm.controls['aadharNumber'].dirty"></p-message>
@@ -186,7 +186,7 @@
                         <div class="form-label">
                             <label for="username"> <span class="red">*</span> {{'ERP.MOBILE_NUMBER' | translate}}
                             </label>
-                            <input pInputText id="bunit_txt_name" maxlength="40" type="text"
+                            <input pInputText id="bunit_txt_name" minlength="10" maxlength="10" type="text"
                                 formControlName="mobileNumber"
                                 [(ngModel)]="membershipBasicRequiredDetailsModel.mobileNumber"
                                 placeholder="Enter Mobile Number">
@@ -242,27 +242,37 @@
                     </div>
                 </div>
                 <div class="row g-3 mt-0">
-                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                        <div class="form-group">
-                            <span class="fw-light">{{'MEMBERSHIP_TRANSACTION.RESOLUTION_NUMBER' | translate}}</span>
-                            <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.mcrNumber }}</p>
+                      <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12" *ngIf="show">
+                        <div class="form-label">
+                            <label for="username">{{'MEMBERSHIP_TRANSACTION.RESOLUTION_NUMBER' | translate}}
+                            </label>
+                            <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="mcrNumber"
+                                [(ngModel)]="membershipBasicRequiredDetailsModel.mcrNumber">
                         </div>
                     </div>
-                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12" *ngIf="show">
                         <div class="form-label">
-                            <span class="fw-light">{{'MEMBERSHIP_TRANSACTION.RESOLUTION_COPY' | translate}}</span>
-                            <div class="col-12 d-flex p-0"
-                                *ngFor="let img of membershipBasicRequiredDetailsModel.multipartFileListForMCRCopyPath">
-                                <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                    <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22"
-                                            height="22"></a>
+                            <span class=""> {{ 'MEMBERSHIP_TRANSACTION.RESOLUTION_COPY' | translate }} </span>
+                            <div class="uplodad-style align-items-center">
+                                <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                                    id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".pdf"
+                                    (onRemove)="fileRemoveEvent('mcrDocumentCopy')"
+                                    (onSelect)="fileUploader($event,fileUpload ,'mcrDocumentCopy')">
+                                </p-fileUpload>
+                                <div class="col-12  d-flex p-1 contant-body"
+                                    *ngFor="let img of membershipBasicRequiredDetailsModel.multipartFileListForMCRCopyPath">
+                                    <div *ngIf="img.fileType=='pdf'">
+                                        <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22"
+                                                height="22"></a>
+                                    </div>
+                                    <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
+                                        tooltipPosition="bottom">
+                                        {{img.fileName}}
+                                    </div>
                                 </div>
-                                <div class="docname-texteclipse pl-2 fw-semibold" pTooltip="{{img.fileName}}"
-                                    tooltipPosition="bottom">{{img.fileName}}</div>
                             </div>
                         </div>
                     </div>
-
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-label">
                             <span class=""><span class="red">*</span> {{ 'ERP.UPLOAD_IMAGE' | translate }} </span>
@@ -342,6 +352,14 @@
                     </div>
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-label">
+                            <label><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.GROUP_TYPE' | translate}}</label>
+                            <p-dropdown id="bunit_txt_status" placeholder="Select" [filter]="true"
+                                [options]="groupTypesList" [(ngModel)]="memberGroupDetailsModel.groupTypeId"
+                                formControlName="groupTypeId"></p-dropdown>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.REGISTERED_NO' | translate}}</label>
                             <input pInputText id="bunit_txt_name" maxlength="40" type="text"
                                 formControlName="registrationNumber" placeholder="Enter Registered Number"
@@ -357,7 +375,7 @@
                             <p-calendar [showIcon]="true" formControlName="registrationDate" [showIcon]="true"
                                 dateFormat="{{orgnizationSetting.calendar}}" placeholder="DD/MM/YYYY"
                                 [(ngModel)]="memberGroupDetailsModel.registrationDateVal"
-                                (onSelect)="dateConverstion()"></p-calendar>
+                                (onSelect)="dateConverstion()" [maxDate]="today"></p-calendar>
                         </div>
                     </div>
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
@@ -366,7 +384,7 @@
                             <p-calendar [showIcon]="true" formControlName="admissionDate" [showIcon]="true"
                                 dateFormat="{{orgnizationSetting.calendar}}" placeholder="DD/MM/YYYY"
                                 [(ngModel)]="memberGroupDetailsModel.admissionDateVal"
-                                (onSelect)="dateConverstion()"></p-calendar>
+                                (onSelect)="dateConverstion()" [maxDate]="today"></p-calendar>
                         </div>
                     </div>
                 </div>
@@ -448,15 +466,12 @@
                                     </span>
                                 </div>
                             </div>
-
                             <p-button type="submit" (click)="submitGropOrInstitution()" label="Submit"
-                                 iconPos="left"
-                                id="add_btn"></p-button>
-                                <!-- disabled]="(!groupForm.valid) || groupPromoters" -->
+                            iconPos="left" id="add_btn" [disabled]="!groupForm.valid || EditDeleteDisable" ></p-button>
+                        <p-button type="submit" (click)="onRowAddSave()" label="Add" icon="fa fa-plus"
+                            iconPos="left" id="add_btn" [disabled]="!isEdit || addButton" ></p-button>
 
-                            <p-button type="submit" (click)="onRowAddSave()" label="Add" icon="fa fa-plus"
-                                iconPos="left"
-                                id="add_btn"></p-button>
+                           
                                 <!-- [disabled]="groupOrInstitutionDisable || groupPromoters " -->
                         </div>
                     </div>
@@ -675,7 +690,7 @@
                                 <p-button type="submit" (click)="submitGropOrInstitution()" label="Submit" 
                                 [disabled]="(!institutionForm.valid) || institutionPromoterPopUp" iconPos="left" id="add_btn" ></p-button>
                                <p-button type="submit" (click)="onRowAddInstitution()" label="Add" 
-                                   icon="fa fa-plus" [disabled]="!groupOrInstitutionDisable" iconPos="left" id="add_btn" ></p-button>
+                                   icon="fa fa-plus" [disabled]="!isEdit || addButton" iconPos="left" id="add_btn" ></p-button>
                         </div>
                     </div>
                 </div>
@@ -803,11 +818,19 @@
                     </div>
                     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                         <div class="form-label">
+                            <label><span class="red">*</span>{{'ERP.AUTHORIZED_SIGNATORY' | translate}}</label>
+                            <p-dropdown [filter]="true" [options]="requiredlist" placeholder="Select"
+                                [(ngModel)]="promoterDetailsModel.authorizedSignatory"  formControlName="authorizedSignatory"
+                                [appendTo]="'body'"></p-dropdown>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.DATE_OF_BIRTH' | translate}}</label>
                             <p-calendar formControlName="dob" [showIcon]="true"
                                 dateFormat="{{orgnizationSetting.calendar}}"
                                 [(ngModel)]="promoterDetailsModel.memDobVal" placeholder="DD/MM/YYYY"
-                                [appendTo]="'body'">
+                                [appendTo]="'body'"  (focusout)="datesValidationCheckAgeAndDobForGroupPromoter(promoterDetailsModel, 2)">
                             </p-calendar>
                         </div>
                     </div>
@@ -815,7 +838,7 @@
                         <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.AGE' | translate}}</label>
                             <input pInputText type="text" formControlName="age" [(ngModel)]="promoterDetailsModel.age"
-                                minlength="1" maxlength="3" placeholder="Enter Age">
+                                minlength="1" maxlength="3" placeholder="Enter Age"  (focusout)="datesValidationCheckAgeAndDobForGroupPromoter(promoterDetailsModel, 1)">
                             <p-message severity="error" text="Enter Valid Age"
                                 *ngIf="!promoterDetailsForm.controls['age'].valid && promoterDetailsForm.controls['age'].dirty">
                             </p-message>
@@ -858,14 +881,14 @@
                             </p-message>
                         </div>
                     </div>
-                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 pt-4">
+                    <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 pt-4">
                         <div class="form-label">
                             <p-checkbox [binary]="true" formControlName="authorizedSignatory"
                                 [(ngModel)]="promoterDetailsModel.authorizedSignatory" inputId="binary"></p-checkbox>
                             <span class="mt-2" for="username">&nbsp;&nbsp;{{'DEMANDDEPOSITS.AUTHORIZED_SIGNATORY' |
                                 translate}}</span>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                         <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.AADHAR_NUMBER' | translate}}</label>
@@ -889,11 +912,12 @@
                         <div class="form-label">
                             <div class="ml-2"><span class="red">*</span>{{'ERP.UPLOAD_IMAGE' | translate}}</div>
                             <div class="uplodad-style align-items-center">
-                                <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                                <p-fileUpload #fileUploadIndividualPhoto class="qua-upld file-attach semi-bold" name="myfile[]"
                                     id="apply-leave_fileUp_attach" chooseLabel=" " name="file"
                                      accept=".png,.jpg,.jpeg"
                                     (onRemove)="fileRemoveEvent('promoterPhot')"
-                                    (onSelect)="fileUploaderForPromoters($event,fileUpload ,'groupPromoterImage')">
+                                    (onSelect)="fileUploaderForPromoters($event,fileUploadIndividualPhoto,fileUploadIndividualSign,'groupPromoterImage')"
+                                    >
                                 </p-fileUpload>
                                 <div class="col-12  d-flex p-1 contant-body"
                                     *ngFor="let img of promoterDetailsModel.multipartFileListForPhotoCopyPath">
@@ -912,11 +936,12 @@
                         <div class="form-label">
                             <div class="ml-2"><span class="red">*</span>{{'ERP.UPLOAD_SIGNATURE' | translate}}</div>
                             <div class="uplodad-style align-items-center">
-                                <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                                <p-fileUpload #fileUploadIndividualSign class="qua-upld file-attach semi-bold" name="myfile[]"
                                     id="apply-leave_fileUp_attach" chooseLabel=" "
                                     name="file" accept=".png,.jpg,.jpeg"
                                     (onRemove)="fileRemoveEvent('promoterSignature' )"
-                                    (onSelect)="fileUploaderForPromoters($event,fileUpload ,'groupPromoterSignature')">
+                                    (onSelect)="fileUploaderForPromoters($event,fileUploadIndividualPhoto,fileUploadIndividualSign,'groupPromoterSignature')"
+                                    >
                                 </p-fileUpload>
                                 <div class="col-12  d-flex p-1 contant-body"
                                     *ngFor="let img of promoterDetailsModel.multipartFileListForsignatureCopyPath">
@@ -970,7 +995,7 @@
                         <p-dropdown [options]="admissionNumbersList" placeholder="Select"
                             formControlName="admissionNumber" [(ngModel)]="institutionPromoterDetailsModel.admissionNumber"
                             [appendTo]="'body'"
-                            (onChange)="getMemberDetailsByAdmissionNUmber(institutionPromoterDetailsModel.admissionNumber)">
+                            (onChange)="getMemberDetailsByAdmissionNUmberForInstitutionPromoter(institutionPromoterDetailsModel.admissionNumber)">
                         </p-dropdown>
                     </div>
                 </div>
@@ -1004,9 +1029,18 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
+                        <label><span class="red">*</span>{{'ERP.AUTHORIZED_SIGNATORY' | translate}}</label>
+                        <p-dropdown [filter]="true" [options]="requiredlist" placeholder="Select"
+                            [(ngModel)]="institutionPromoterDetailsModel.authorizedSignatory"  formControlName="authorizedSignatory"
+                            [appendTo]="'body'"></p-dropdown>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
                         <label><span class="red">*</span>{{'ERP.DATE_OF_BIRTH' | translate}}</label>
                         <p-calendar formControlName="dob" [showIcon]="true" dateFormat="{{orgnizationSetting.calendar}}"
-                            [(ngModel)]="institutionPromoterDetailsModel.memDobVal" placeholder="DD/MM/YYYY" [appendTo]="'body'">
+                            [(ngModel)]="institutionPromoterDetailsModel.memDobVal" placeholder="DD/MM/YYYY" [appendTo]="'body'"
+                            (focusout)="datesValidationCheckAgeAndDobForInstitutionPromoter(institutionPromoterDetailsModel, 2)">
                         </p-calendar>
                     </div>
                 </div>
@@ -1014,7 +1048,7 @@
                     <div class="form-label">
                         <label><span class="red">*</span>{{'ERP.AGE' | translate}}</label>
                         <input pInputText type="text" formControlName="age" [(ngModel)]="institutionPromoterDetailsModel.age"
-                            minlength="1" maxlength="3" placeholder="Enter Age">
+                            minlength="1" maxlength="3" placeholder="Enter Age" (focusout)="datesValidationCheckAgeAndDobForInstitutionPromoter(institutionPromoterDetailsModel, 1)">
                             <p-message severity="error" text="Enter Valid Age"
                             *ngIf="!promoterDetailsForm.controls['age'].valid && promoterDetailsForm.controls['age'].dirty">
                         </p-message>
@@ -1025,7 +1059,7 @@
                         <label><span class="red">*</span>{{'ERP.GENDER' | translate}}</label>
                         <p-dropdown [filter]="true" [options]="genderList" placeholder="Select"
                             formControlName="genderId" [(ngModel)]="institutionPromoterDetailsModel.genderId"
-                            [appendTo]="'body'"></p-dropdown>
+                            [appendTo]="'body'" ></p-dropdown>
                     </div>
                 </div>
                
@@ -1076,7 +1110,7 @@
                         </p-calendar>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 pt-4">
+                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 pt-4">
                     <div class="form-label">
                         <p-checkbox [binary]="true" formControlName="authorizedSignatory" 
                             [(ngModel)]="institutionPromoterDetailsModel.authorizedSignatory" 
@@ -1086,14 +1120,15 @@
                             *ngIf="!promoterDetailsForm.controls['emailId'].valid && promoterDetailsForm.controls['emailId'].dirty">
                         </p-message>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
                         <div class="ml-2"><span class="red">*</span>{{'ERP.UPLOAD_IMAGE' | translate}}</div>
                         <div class="uplodad-style align-items-center">
-                            <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                            <p-fileUpload #fileUploadIndividualPhotos class="qua-upld file-attach semi-bold" name="myfile[]"
                                 id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".png,.jpg,.jpeg" (onRemove)="fileRemoveEvent('promoterPhot')"
-                                (onSelect)="fileUploaderForInstitutionPromoters($event,fileUpload ,'institutionPromoterImage')">
+                                (onSelect)="fileUploaderForInstitutionPromoters($event,fileUploadIndividualPhotos,fileUploadIndividualSigns,'institutionPromoterImage')"
+                                >
                             </p-fileUpload>
                             <div class="col-12  d-flex p-1 contant-body"
                                 *ngFor="let img of institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath">
@@ -1110,9 +1145,10 @@
                     <div class="form-label">
                         <div class="ml-2"><span class="red">*</span>{{'ERP.UPLOAD_SIGNATURE' | translate}}</div>
                         <div class="uplodad-style align-items-center">
-                            <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                            <p-fileUpload #fileUploadIndividualSigns class="qua-upld file-attach semi-bold" name="myfile[]"
                                 id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".png,.jpg,.jpeg" (onRemove)="fileRemoveEvent('promoterSignature')"
-                                (onSelect)="fileUploaderForInstitutionPromoters($event,fileUpload ,'insitutionPromoterSignature')" > 
+                                (onSelect)="fileUploaderForInstitutionPromoters($event,fileUploadIndividualPhotos,fileUploadIndividualSigns,'insitutionPromoterSignature')"
+                                > 
                             </p-fileUpload>
                             <div class="col-12  d-flex p-1 contant-body"
                                 *ngFor="let img of institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath">

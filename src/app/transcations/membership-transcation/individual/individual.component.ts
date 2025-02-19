@@ -130,7 +130,7 @@ export class IndividualComponent {
         this.translate.get('MEMBERSHIP_TRANSACTION.DOCUMENT_DEATAILS').subscribe((text: string) => {
           this.document = text;
         });
-        this.translate.get('ERP.NOMINEE_DETAILS').subscribe((text: string) => {
+        this.translate.get('ERP.NOMINEE_DETAIL').subscribe((text: string) => {
           this.nominee = text;
         });
         this.translate.get('ERP.FAMILY_DETAILS').subscribe((text: string) => {
@@ -267,7 +267,7 @@ export class IndividualComponent {
         this.translate.get('MEMBERSHIP_TRANSACTION.DOCUMENT_DEATAILS').subscribe((text: string) => {
           this.document = text;
         });
-        this.translate.get('ERP.NOMINEE_DETAILS').subscribe((text: string) => {
+        this.translate.get('ERP.NOMINEE_DETAIL').subscribe((text: string) => {
           this.nominee = text;
         });
         this.translate.get('ERP.FAMILY_DETAILS').subscribe((text: string) => {

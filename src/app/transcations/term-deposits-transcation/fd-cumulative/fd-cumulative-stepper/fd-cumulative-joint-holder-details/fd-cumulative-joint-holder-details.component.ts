@@ -13,6 +13,7 @@ import { FdCumulativeApplication } from '../fd-cumulative-application/shared/fd-
 import { FdCumulativeApplicationService } from '../fd-cumulative-application/shared/fd-cumulative-application.service';
 import { FdCumulativeJointHolder } from './shared/fd-cumulative-joint-holder.model';
 import { FdCumulativeJointHolderService } from './shared/fd-cumulative-joint-holder.service';
+import { CommonStatusData } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-fd-cumulative-joint-holder-details',
@@ -204,7 +205,7 @@ export class FdCumulativeJointHolderDetailsComponent implements OnInit {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.membershipList = this.responseModel.data;
-            this.admissionNumberList = this.membershipList.filter((obj: any) => obj != null && obj.memberTypeId == 1).map((relationType: { id: any; name: any; admissionNumber: any; memberTypeName: any }) => {
+            this.admissionNumberList = this.membershipList.filter((obj: any) => obj != null  && obj.statusName == CommonStatusData.APPROVED && obj.memberTypeId == 1).map((relationType: { id: any; name: any; admissionNumber: any; memberTypeName: any }) => {
               return {
                 label: relationType.admissionNumber
 

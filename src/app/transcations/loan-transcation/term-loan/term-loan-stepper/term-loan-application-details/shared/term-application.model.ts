@@ -218,7 +218,20 @@ export class TermApplication {
     termLoanKycDetailsDTOList: any;
 
     multipartFileList: any [] = [];
+
+    loanApprovedDateVal: any;
+
+    disbursedAmount:any;
+
+    disbursmentDueAmont: any;
+
+    applicationNumber: any;
+
+    termLoanDisbursementDTOList: any;
     
+    termCollectionDTOList: any;
+
+    totalCollectionAmount: any;
 
 }
 export class TermLoanProductDefinition {

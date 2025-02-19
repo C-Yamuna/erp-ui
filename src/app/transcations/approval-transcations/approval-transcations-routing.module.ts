@@ -35,6 +35,7 @@ import { DepositInvestmentApprovalComponent } from './investment-approval-detail
 import { SharesInvestmentApprovalComponent } from './investment-approval-details/shares-investment-approval/shares-investment-approval.component';
 import { DailyDepositApprovalViewComponent } from './daily-deposit-approval/daily-deposit-approval-view/daily-deposit-approval-view.component';
 import { DailyDepositApprovalComponent } from './daily-deposit-approval/daily-deposit-approval.component';
+import { MemberApprovalComponent } from './membership-approval-details/member-approval/member-approval.component';
 
 
 const routes: Routes = [
@@ -50,6 +51,10 @@ const routes: Routes = [
       { path: 'reccuring_deposit_approval_details', component: ReccuringDepositApprovalDetailsComponent },
       { path: 'reccuring_deposit_approval', component: ReccuringDepositApprovalComponent },
 
+      //
+       // membership approvals
+      { path: 'member_approval', component:MemberApprovalComponent},
+       
       //loans approvals
       { path: 'loans_approval_details', component: LoansApprovalDetailsComponent },
 

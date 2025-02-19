@@ -270,5 +270,11 @@ export class DailyDepositsAccountsService {
   addRenewalData(object:any){
     return this.commonHttpService.post(object, Headers, Configuration.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.ACCOUNTS+ ERP_TRANSACTION_CONSTANTS.SAVE_ACCOUNT_ON_RENEWAL);
   }
-  
+  getDailyDepositProductDefinitionOverviewDetailsById(id: any) {
+    let headers = new HttpHeaders({ 'id': id + '' })
+    return this.commonHttpService.getById(headers,ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.PRODUCT_DEFINITION + ERP_TRANSACTION_CONSTANTS.GET_PRODUCT_OVERVIEW_BY_ID);
+  }
+  getAllRequiredDocuments(){
+    return this.commonHttpService.getAll(ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.REQUIRED_DOCUMENTS_CONFIG + ERP_TRANSACTION_CONSTANTS.GET_ALL);
+  }
 }

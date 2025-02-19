@@ -1,7 +1,8 @@
 <div class="col-12">
     <!-- <p-card class="m-4"> -->
-    <h6 class="sub-heading">{{'LOAN_TRANSACTION.MORTAGAGE_DETAILS' | translate}}</h6>
-    <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
+    <h6 class="sub-heading">{{'LOAN_TRANSACTION.MORTAGAGE_DETAILS' | translate}}<span class="admission-text">(Admission
+        Number:&nbsp;{{admissionNumber}})</span></h6>
+        <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
         [hideTransitionOptions]="'500ms'"></p-messages>
         <div class="stepper-top-section-strip">
             <div class="row">
@@ -72,8 +73,9 @@
                                         <div class="search">
                                             <span class="p-input-icon-right">
                                                 <i class="pi pi-search global-search-icon"></i>
-                                                <input type="text" pInputText class="searchbox"
-                                                    placeholder="Search" />
+                                                <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                placeholder="Search" class="searchbox"
+                                #searchInput (input)="gold.filterGlobal(searchInput.value, 'contains')">
                                             </span>
                                         </div>
                                     </div>
@@ -91,7 +93,8 @@
                         styleClass="p-datatable-striped" [rows]="5" [paginator]="true"
                         [showJumpToPageDropdown]="true" [showPageLinks]="false" [pageLinks]="1"
                         [responsive]="true" rowExpandMode="single"
-                        [globalFilterFields]="['itemName', 'netWeight', 'grossWeight', 'carats', 'value', 'remarks']">
+                        [globalFilterFields]="['ornamentDescription', 'ornamentsCount', 'ornamentQualityInKdm', 'ornamentGrossWeightInGm', 'ornamentNetWeightInGm', 'valuePerGramInRs',
+                        'ornamentNetValueInRs']">
                         <ng-template pTemplate="header" let-goldColumns>
                             <tr>
                                 <th>{{'LOAN_TRANSACTION.ORNAMENT_DESCRTIPTION' |
@@ -177,8 +180,9 @@
                                         <div class="search">
                                             <span class="p-input-icon-right">
                                                 <i class="pi pi-search global-search-icon"></i>
-                                                <input type="text" pInputText class="searchbox"
-                                                    placeholder="Search" />
+                                                <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                placeholder="Search" class="searchbox"
+                                #searchInput (input)="land.filterGlobal(searchInput.value, 'contains')">
                                             </span>
                                         </div>
                                     </div>
@@ -196,7 +200,9 @@
                         styleClass="p-datatable-striped" [rows]="5" [paginator]="true"
                         [showJumpToPageDropdown]="true" [showPageLinks]="false" [pageLinks]="1"
                         [responsive]="true" rowExpandMode="single"
-                        [globalFilterFields]="['passbookNumber', 'surveyNo', 'landType', 'landUnits', 'landSubUnits', 'value', 'declaredLandUnits', 'declaredLandSubUnits' ,'remarks']">
+                      
+                        [globalFilterFields]="['villageName', 'passbookNumber', 'khataNumber', 'surveyNumber', 'totalLandInUnits', 
+                        'totalLandInUnits','totalLandInSubUnits','landValuePerUnit', 'declaredLandUnits', 'declaredLandSubUnits' ,'remarks']">
                         <ng-template pTemplate="header" let-goldColumns>
                             <tr>
                                 <th>{{'LOAN_TRANSACTION.VILLAGE' | translate}}</th>
@@ -344,8 +350,9 @@
                                         <div class="search">
                                             <span class="p-input-icon-right">
                                                 <i class="pi pi-search global-search-icon"></i>
-                                                <input type="text" pInputText class="searchbox"
-                                                    placeholder="Search" />
+                                                <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                                placeholder="Search" class="searchbox"
+                                                #searchInput (input)="bond.filterGlobal(searchInput.value, 'contains')">
                                             </span>
                                         </div>
                                     </div>
@@ -363,7 +370,9 @@
                         styleClass="p-datatable-striped" [rows]="5" [paginator]="true"
                         [showJumpToPageDropdown]="true" [showPageLinks]="false" [pageLinks]="1"
                         [responsive]="true" rowExpandMode="single"
-                        [globalFilterFields]="['bondNumber', 'faceValue', 'surrenderValue', 'remarks']">
+                        [globalFilterFields]="['bondTypeName', 'bondNumber', 'bondIssuedDateVal', 'bondIssuedBy',
+                        'bondMaturityDateVal','bondMaturityValueInRs']"
+                         >
                         <ng-template pTemplate="header">
                             <tr>
                                 <th>{{'LOAN_TRANSACTION.BOND_TYPE' | translate}}</th>
@@ -559,8 +568,9 @@
                                         <div class="search">
                                             <span class="p-input-icon-right">
                                                 <i class="pi pi-search global-search-icon"></i>
-                                                <input type="text" pInputText class="searchbox"
-                                                    placeholder="Search" />
+                                                <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                                placeholder="Search" class="searchbox"
+                                                #searchInput (input)="storage.filterGlobal(searchInput.value, 'contains')">
                                             </span>
                                         </div>
                                     </div>
@@ -578,7 +588,7 @@
                         styleClass="p-datatable-striped" [rows]="5" [paginator]="true"
                         [showJumpToPageDropdown]="true" [showPageLinks]="false" [pageLinks]="1"
                         [responsive]="true" rowExpandMode="single"
-                        [globalFilterFields]="['name', 'quantity', 'totalWeight', 'netWeight', 'value', 'remarks']">
+                        [globalFilterFields]="['commodity', 'nwrStorageReceiptNumber', 'dateOfIssueVal', 'numberOfUnitsStored', 'perUnitCostInRs', 'netValueInRs']" >
                         <ng-template pTemplate="header" let-goldColumns>
                             <tr>
                                 <th>{{'LOAN_TRANSACTION.COMMODITY' | translate}}</th>
@@ -654,7 +664,9 @@
                                     <div class="search">
                                         <span class="p-input-icon-right">
                                             <i class="pi pi-search global-search-icon"></i>
-                                            <input type="text" pInputText class="searchbox" placeholder="Search" />
+                                            <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                            placeholder="Search" class="searchbox"
+                                            #searchInput (input)="property.filterGlobal(searchInput.value, 'contains')">
                                         </span>
                                     </div>
                                 </div>
@@ -670,7 +682,8 @@
                 <p-table #property [value]="termPropertyMortgageList" dataKey="id" editMode="row"
                     styleClass="p-datatable-striped" [rows]="5" [paginator]="true" [showJumpToPageDropdown]="true"
                     [showPageLinks]="false" [pageLinks]="1" [responsive]="true" rowExpandMode="single"
-                    [globalFilterFields]="['name', 'quantity', 'totalWeight', 'netWeight', 'value', 'remarks']">
+                    [globalFilterFields]="['site', 'location', 'squareYards', 'propertySurveyNumber', 'valueOfProperty', 'nameOfProperty',
+                    'extentOfProperty']"  >
                     <ng-template pTemplate="header" let-columns>
                         <tr>
                             <th>{{'LOAN_TRANSACTION.SITE' | translate}}</th>
@@ -872,8 +885,9 @@
                                         <div class="search">
                                             <span class="p-input-icon-right">
                                                 <i class="pi pi-search global-search-icon"></i>
-                                                <input type="text" pInputText class="searchbox"
-                                                    placeholder="Search" />
+                                                <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                                placeholder="Search" class="searchbox"
+                                                #searchInput (input)="other.filterGlobal(searchInput.value, 'contains')">
                                             </span>
                                         </div>
                                     </div>

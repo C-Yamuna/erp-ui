@@ -65,6 +65,8 @@ export class MembershipApprovalDetailsComponent {
   totalInstitutionProfileCount: any;
   tempStatusNameList: any[] = [];
   productTypeList: any[]=[];
+  // memberphotCopyMultipartFileList: any[] = [];
+  memberSignatureCopyMultipartFileList:any[] =[];
 
   showForm: boolean=false;
 
@@ -134,6 +136,22 @@ export class MembershipApprovalDetailsComponent {
           membership.dob = this.datePipe.transform(membership.dob, this.orgnizationSetting.datePipe) || '';
 
           if (membership.photoCopyPath != null && membership.photoCopyPath != undefined) {
+            membership.multipartFileListForPhotoCopy = this.fileUploadService.getFile(membership.photoCopyPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + membership.photoCopyPath);
+            membership.showDialog = true;
+          }
+          else {
+            membership.showDialog = false;
+          }
+
+          if (membership.signatureCopyPath != null && membership.signatureCopyPath != undefined) {
+            membership.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(membership.signatureCopyPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + membership.signatureCopyPath);
+            membership.showDialogsForSignature = true;
+          }
+          else {
+            membership.showDialogsForSignature = false;
+          }
+
+          if (membership.photoCopyPath != null && membership.photoCopyPath != undefined) {
             membership.multipartFileListForPhotoCopy = this.fileUploadService.getFile(membership.photoCopyPath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + membership.photoCopyPath  );
           }
           if(membership.statusName == CommonStatusData.APPROVED || membership.statusName == CommonStatusData.REJECTED){
@@ -158,15 +176,20 @@ export class MembershipApprovalDetailsComponent {
     this.showForm = !this.showForm;
   }
 
-  onClickMemberPhotoCopy(rowData : any){
+  onClickMemberPhotoCopy(rowData: any) {
     this.memberPhotoCopyZoom = true;
     this.memberphotCopyMultipartFileList = [];
-    this.memberphotCopyMultipartFileList = rowData.multipartFileListForPhotoCopy ;
+    this.memberSignatureCopyMultipartFileList = [];
+    this.memberphotCopyMultipartFileList = rowData.multipartFileListForPhotoCopy;
+    this.memberSignatureCopyMultipartFileList = rowData.multipartFileListForsignatureCopyPath;
   }
   closePhoto(){
     this.memberPhotoCopyZoom = false;
   }
-  
+  editMemberDetails(rowData: any) {
+    this.router.navigate([Membershiptransactionconstant.VIEW_MEMBERSHIP], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id), type: this.encryptDecryptService.encrypt(rowData.memberTypeName), editbtn: this.encryptDecryptService.encrypt(applicationConstants.ACTIVE) } });
+    this.editViewButton = true;
+  } 
 
 
 }

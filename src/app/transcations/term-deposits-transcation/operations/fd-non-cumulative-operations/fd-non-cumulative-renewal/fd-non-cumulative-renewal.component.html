@@ -419,10 +419,8 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="col-75-fullmidd mt-2"> -->
-
             <div class="col-50-midd mt-2">
-                <p-progressBar [value]="50" styleClass="progressbar-styles" class="bg-success"></p-progressBar>
+                <!-- <p-progressBar [value]="50" styleClass="progressbar-styles" class="bg-success"></p-progressBar> -->
                 <div class="col-12 bg-card border mt-1">
                     <div class="col-12">
                         <div class="row justify-content-between">
@@ -453,60 +451,60 @@
                                                 <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.ACCOUNT_NUMBER' |
                                                     translate}}</h6>
                                                 <p class="label-input-text">
-                                                    {{fdNonCumulativeApplicationModel.accountNumber}}
+                                                    {{newFdNonCumulativeApplicationModel.accountNumber}}
                                                 </p>
                                             </div>
                                             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
                                                 <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.PRODUCT_TYPE' |
                                                     translate}}</h6>
                                                 <p class="label-input-text">
-                                                    {{fdNonCumulativeApplicationModel.fdNonCummulativeProductName}}
+                                                    {{newFdNonCumulativeApplicationModel.fdNonCummulativeProductName}}
                                                 </p>
                                             </div>
                                             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
                                                 <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.ACCOUNT_TYPE' |
                                                     translate}}</h6>
                                                 <p class="label-input-text">
-                                                    {{fdNonCumulativeApplicationModel.accountTypeName}}</p>
+                                                    {{newFdNonCumulativeApplicationModel.accountTypeName}}</p>
                                             </div>
                                             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
                                                 <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.RATE_OF_INTEREST' |
                                                     translate}}</h6>
                                                 <p class="label-input-text">
-                                                    {{fdNonCumulativeApplicationModel.roi}}</p>
+                                                    {{newFdNonCumulativeApplicationModel.roi}}</p>
                                             </div>
                                             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
                                                 <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.DEPOSIT_DATE' |
                                                     translate}}
                                                 </h6>
                                                 <p class="label-input-text">
-                                                    {{fdNonCumulativeApplicationModel.depositDate}}</p>
+                                                    {{newFdNonCumulativeApplicationModel.depositDate}}</p>
                                             </div>
                                             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
                                                 <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.DEPOSIT_AMOUNT' |
                                                     translate}}
                                                 </h6>
                                                 <p class="label-input-text">
-                                                    {{fdNonCumulativeApplicationModel.depositAmount}}</p>
+                                                    {{newFdNonCumulativeApplicationModel.depositAmount}}</p>
                                             </div>
                                             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
                                                 <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.MATURITY_AMOUNT' |
                                                     translate}}</h6>
                                                 <p class="label-input-text">
-                                                    {{fdNonCumulativeApplicationModel.maturityAmount}}</p>
+                                                    {{newFdNonCumulativeApplicationModel.maturityAmount}}</p>
                                             </div>
                                             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
                                                 <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.TENURE_IN_MONTHS'
                                                     | translate}}</h6>
                                                 <p class="label-input-text">
-                                                    {{fdNonCumulativeApplicationModel.tenureInMonths}}</p>
+                                                    {{newFdNonCumulativeApplicationModel.tenureInMonths}}</p>
                                             </div>
                                             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
                                                 <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.TENURE_IN_YEARS' |
                                                     translate}}
                                                 </h6>
                                                 <p class="label-input-text">
-                                                    {{fdNonCumulativeApplicationModel.tenureInYears}}</p>
+                                                    {{newFdNonCumulativeApplicationModel.tenureInYears}}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -609,51 +607,198 @@
                         <div class="col-12 p-1"></div>
                     </div>
                 </div>
-<!-- 
+
                 <div class="col-12 mt-3 p-0 main-tab-panal">
                     <p-tabView>
-                        <p-tabPanel header="Interest Payment Details"> 
-                            <p-table #dt [columns]="interestPayment" [value]="interestPaymentList" dataKey="id" selectionMode="single"
-                            [rows]="5" [paginator]="true" [pageLinks]="1" [responsive]="true" rowExpandMode="single"
-                            styleClass="p-datatable-striped" [showJumpToPageDropdown]="true" [showPageLinks]="false">
-                            <ng-template pTemplate="header">
-                                <tr>
-                                    <th *ngFor="let col of interestPayment">
-                                        {{col.header | translate}}
-                                    </th>
-                                    <th class="width-15em">{{'ERP.ACTION' | translate}}</th>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-activity let-rowData>
-                                <tr>
-                                    <td *ngFor="let col of interestPayment">
-                                        {{rowData[col.field]}}
-                                    </td>
-                                </tr>
-                            </ng-template>
-                        </p-table>               
+                        <p-tabPanel header="Previous Account Details"> 
+                            <div class="col-12 bg-card border mt-1">
+                                <div class="col-12">
+                                    <div class="row justify-content-between">
+                                        <div class="col-lg-6 col-md-6 col-sm-6">
+            
+                                            <h5 class="sub-heading">{{'ERP.ACCOUNT_DETAILS' | translate}}</h5>
+                                        </div>
+                                        <div class=" col-lg-6 col-md-6 col-sm-6">
+                                            <div class=" d-flex justify-content-end">
+                                                <div class="basic-detaisl-btn view-popup-top"><a
+                                                        (click)="showBasicDetailsDialog('right')"
+                                                        class="top-badge-btn btn-outline-0 ">Basic Details</a></div>
+                                                <div class="basic-detaisl-btn view-popup-top"><a
+                                                        (click)="showHistoryDialog('right')"
+                                                        class="top-badge-btn btn-outline-0">History Details</a></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+            
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div class="col-12 p-0">
+                                            <div class="col-12">
+                                                <div class="col-12 px-0">
+                                                    <div class="row">
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                            <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.ACCOUNT_NUMBER' |
+                                                                translate}}</h6>
+                                                            <p class="label-input-text">
+                                                                {{fdNonCumulativeApplicationModel.accountNumber}}
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                            <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.PRODUCT_TYPE' |
+                                                                translate}}</h6>
+                                                            <p class="label-input-text">
+                                                                {{fdNonCumulativeApplicationModel.fdNonCummulativeProductName}}
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                            <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.ACCOUNT_TYPE' |
+                                                                translate}}</h6>
+                                                            <p class="label-input-text">
+                                                                {{fdNonCumulativeApplicationModel.accountTypeName}}</p>
+                                                        </div>
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                            <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.RATE_OF_INTEREST' |
+                                                                translate}}</h6>
+                                                            <p class="label-input-text">
+                                                                {{fdNonCumulativeApplicationModel.roi}}</p>
+                                                        </div>
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                            <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.DEPOSIT_DATE' |
+                                                                translate}}
+                                                            </h6>
+                                                            <p class="label-input-text">
+                                                                {{fdNonCumulativeApplicationModel.depositDate}}</p>
+                                                        </div>
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                            <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.DEPOSIT_AMOUNT' |
+                                                                translate}}
+                                                            </h6>
+                                                            <p class="label-input-text">
+                                                                {{fdNonCumulativeApplicationModel.depositAmount}}</p>
+                                                        </div>
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                            <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.MATURITY_AMOUNT' |
+                                                                translate}}</h6>
+                                                            <p class="label-input-text">
+                                                                {{fdNonCumulativeApplicationModel.maturityAmount}}</p>
+                                                        </div>
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                            <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.TENURE_IN_MONTHS'
+                                                                | translate}}</h6>
+                                                            <p class="label-input-text">
+                                                                {{fdNonCumulativeApplicationModel.tenureInMonths}}</p>
+                                                        </div>
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                            <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.TENURE_IN_YEARS' |
+                                                                translate}}
+                                                            </h6>
+                                                            <p class="label-input-text">
+                                                                {{fdNonCumulativeApplicationModel.tenureInYears}}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 p-1"></div>
+            
+                                    <div class="col-lg-12 col-md-12 col-sm-12" *ngIf="memberGroupFlag">
+                                        <div class="col-12 p-0">
+                                            <div class=" global-card-bg-color view-carddata icon-size">
+                                                <div class="col-12">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <div class="d-flex">
+                                                                <span class="card-icon"><i class="fa fa-male"></i></span>
+                                                                <h6 class="sub-heading">{{'TERMDEPOSITSTRANSACTION.PROMOTER_DETAILS'
+                                                                    | translate}}</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+            
+                                                    <div class="globel-border-top-color"></div>
+            
+                                                    <p-table [columns]="memberPromoterDetails" [value]="groupPromoterList"
+                                                        dataKey="id" selectionMode="single" styleClass="p-datatable-striped"
+                                                        [showJumpToPageDropdown]="true" [showPageLinks]="false" [rows]="5"
+                                                        [paginator]="false" [pageLinks]="1" [responsive]="true"
+                                                        rowExpandMode="single">
+                                                        <ng-template pTemplate="header">
+                                                            <tr>
+                                                                <th *ngFor="let col of memberPromoterDetails">
+                                                                    {{col.header | translate}}
+                                                                </th>
+                                                            </tr>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="body" let-groupPromoterList let-expanded="expanded"
+                                                            let-rowData>
+                                                            <tr>
+                                                                <td *ngFor="let col of memberPromoterDetails">
+                                                                    {{rowData[col.field]}}
+                                                                </td>
+                                                            </tr>
+                                                        </ng-template>
+                                                    </p-table>
+                                                    <div class="col-12 margtop-3rem"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 p-1"></div>
+            
+                                    <div class="col-lg-12 col-md-12 col-sm-12" *ngIf="memberIntitutionFlag">
+                                        <div class="col-12 p-0">
+                                            <div class=" global-card-bg-color view-carddata icon-size">
+                                                <div class="col-12">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <div class="d-flex">
+                                                                <span class="card-icon"><i class="fa fa-male"></i></span>
+                                                                <h6 class="sub-heading">{{'TERMDEPOSITSTRANSACTION.PROMOTER_DETAILS'
+                                                                    | translate}}
+            
+                                                                </h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+            
+                                                    <div class="globel-border-top-color"></div>
+            
+                                                    <p-table [columns]="memberPromoterDetails" [value]="groupPromoterList"
+                                                        dataKey="id" selectionMode="single" styleClass="p-datatable-striped"
+                                                        [showJumpToPageDropdown]="true" [showPageLinks]="false" [rows]="5"
+                                                        [paginator]="false" [pageLinks]="1" [responsive]="true"
+                                                        rowExpandMode="single">
+                                                        <ng-template pTemplate="header">
+                                                            <tr>
+                                                                <th *ngFor="let col of memberPromoterDetails">
+                                                                    {{col.header | translate}}
+                                                                </th>
+                                                            </tr>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="body" let-groupPromoterList let-expanded="expanded"
+                                                            let-rowData>
+                                                            <tr>
+                                                                <td *ngFor="let col of memberPromoterDetails">
+                                                                    {{rowData[col.field]}}
+                                                                </td>
+                                                            </tr>
+                                                        </ng-template>
+                                                    </p-table>
+            
+                                                    <div class="col-12 margtop-3rem"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 p-1" *ngIf="memberGroupFlag"></div>
+                                    <div class="col-12 p-1" *ngIf="memberIntitutionFlag"></div>
+                                    <div class="col-12 p-1"></div>
+                                </div>
+                            </div>
                         </p-tabPanel>
                         <p-tabPanel header="Transaction History">                
-                            <h5 class="sub-heading">{{'TERMDEPOSITSTRANSACTION.INTEREST_PAYMENT_DETAILS' | translate}}</h5>
-                            <p-table #dt [columns]="interestPayment" [value]="interestPaymentList" dataKey="id" selectionMode="single"
-                                [rows]="5" [paginator]="true" [pageLinks]="1" [responsive]="true" rowExpandMode="single"
-                                styleClass="p-datatable-striped" [showJumpToPageDropdown]="true" [showPageLinks]="false">
-                                <ng-template pTemplate="header">
-                                    <tr>
-                                        <th *ngFor="let col of interestPayment">
-                                            {{col.header | translate}}
-                                        </th>
-                                        <th class="width-15em">{{'ERP.ACTION' | translate}}</th>
-                                    </tr>
-                                </ng-template>
-                                <ng-template pTemplate="body" let-activity let-rowData>
-                                    <tr>
-                                        <td *ngFor="let col of interestPayment">
-                                            {{rowData[col.field]}}
-                                        </td>
-                                    </tr>
-                                </ng-template>
-                            </p-table>
                             <h5 class="sub-heading pt-4">{{'TERMDEPOSITSTRANSACTION.DEPOSIT_DETAILS' | translate}}</h5>
                             <p-table #dt [columns]="transaction" [value]="accountTransactionList" dataKey="id" selectionMode="single"
                                 [rows]="5" [paginator]="true" [pageLinks]="1" [responsive]="true" rowExpandMode="single"
@@ -663,7 +808,7 @@
                                         <th *ngFor="let col of transaction">
                                             {{col.header | translate}}
                                         </th>
-                                        <th class="width-15em">{{'ERP.ACTION' | translate}}</th>
+                                        <!-- <th class="width-15em">{{'ERP.ACTION' | translate}}</th> -->
                                     </tr>
                                 </ng-template>
                                 <ng-template pTemplate="body" let-activity let-rowData>
@@ -675,80 +820,81 @@
                                 </ng-template>
                             </p-table>
                         </p-tabPanel>
-                        <p-tabPanel header="Graphical View">
+                        <!-- <p-tabPanel header="Graphical View">
                                             <p-card>
                                                 <p-chart type="line" [data]="data" [options]="options"></p-chart>
                                             </p-card>
-                                        </p-tabPanel>
+                                        </p-tabPanel> -->
                 
                     </p-tabView>
                 
                 
-                </div> -->
+                </div>
             </div>
 
-            <!-- <div class="col-25-left mt-2">
-                
+            <div class="col-25-left mt-2">
                 <div class="col-12 rightside-form-style" >
                     <div class="col-12">
                         <h5 class="transaction-side-card-header text-dark border-bottom border-secondary">
-                            {{'ERP.FORECLOUSRE DETAILS'
+                            {{'ERP.RENEWAL_DETAILS'
                             | translate}}</h5>
                     </div>
-                    <form [formGroup]="foreclosureForm" id="exit_types_form">
+                    <form [formGroup]="renewalForm" id="exit_types_form">
                         <div class="col-12 mt-1">
                             <div class="col-12">
                                 <div class="row">
                                     <div class="col-lg-12 col-md-12 col-sm-6">
                                         <div class="form-label">
-                                            <label for="username">{{'ERP.FORECLOSURE_DATE' | translate}}</label>
+                                            <label for="username">{{'ERP.RENEWAL_DATE' | translate}}</label>
                                             <p-calendar [showIcon]="true" [dateFormat]="orgnizationSetting.calendar" id="calendar"
-                                            formControlName="foreClosureDate" name="calendar" [(ngModel)]="fdNonCumulativeApplicationModel.foreClosureDate" 
+                                            formControlName="transactionDate" name="calendar" [(ngModel)]="fdNonCummulativeTransactionModel.transactionDate" 
                                             placeholder="DD/MM/YYYY"></p-calendar>
                                         </div>
                                     </div>
                                     <div class="col-lg-12 col-md-12 col-sm-6">
                                         <div class="form-label">
-                                            <label for="username">{{'ERP.PENALITY_AMOUNT' | translate}}
-                                            </label>
-                                            <input pInputText id="bunit_txt_name" maxlength="40" type="text" placeholder="Enter Amount">
+                                            <label>{{'ERP.RENEWAL_TYPE' | translate}}</label>
+                                            <p-dropdown [options]="renewalTypeList" optionLabel="label" formControlName="transactionType"
+                                              [(ngModel)]="fdNonCummulativeTransactionModel.transactionType"
+                                              (onChange)="onRenewalTypeChange(fdNonCummulativeTransactionModel.transactionType)" placeholder="Select" placeholder="Select"></p-dropdown>
                                         </div>
                                     </div>
                                     <div class="col-lg-12 col-md-12 col-sm-6">
+                                        <div class="form-label">
+                                            <label for="username">{{'ERP.RENEWAL_AMOUNT' | translate}}
+                                            </label>
+                                            <input pInputText id="bunit_txt_name" maxlength="40" type="text" placeholder="Enter Amount"
+                                            formControlName="transactionAmount"
+                                              [(ngModel)]="fdNonCummulativeTransactionModel.transactionAmount">
+                                        </div>
+                                    </div>
+                                    <!-- <div class="col-lg-12 col-md-12 col-sm-6">
                                         <div class="form-label">
                                             <label for="username">{{'ERP.BALANCE_AMOUNT' | translate}}
                                             </label>
                                             <input pInputText id="bunit_txt_name" maxlength="40" type="text" placeholder="Enter Amount">
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class="col-lg-12 col-md-12 col-sm-6">
                                         <div class="form-label">
-                                            <label>{{'ERP.TRANSACTION_MODES' | translate}}</label>
+                                            <label><span class="red">*</span>{{'ERP.PAYMENT_MODE' | translate}}</label>
                                             <p-dropdown [options]="transactionModelist" optionLabel="label" formControlName="transactionMode"
-                                                (onChange)="onPaymentTypeChange($event)" [(ngModel)]="fdNonCumulativeApplicationModel.transactionMode"
+                                                (onChange)="onPaymentTypeChange($event)" [(ngModel)]="fdNonCummulativeTransactionModel.transactionMode"
                                                 placeholder="Select Payment Type" placeholder="Select"></p-dropdown>
                                         </div>
                                     </div>
                                     <div class="col-lg-12 col-md-12 col-sm-6">
                                         <div class="form-label">
-                                            <label>{{'ERP.STATUS' | translate}}</label>
-                                            <p-dropdown [options]="statusTypesList" optionLabel="label"
-                                                (onChange)="onstatusSelection($event)" placeholder="Select Payment Type"
-                                                placeholder="Select"  formControlName="accountStatusName"></p-dropdown>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-12 col-md-12 col-sm-6">
-                                        <div class="form-label">
-                                            <label>{{'ERP.IS_VERIFIED' | translate}}</label>
-                                            <p-dropdown [options]="verifiedList" optionLabel="label" 
-                                             placeholder="Select"></p-dropdown>
+                                            <label><span class="red">*</span>{{'ERP.IS_VERIFIED' | translate}}</label>
+                                            <p-dropdown [options]="verifiedList" optionLabel="label"  formControlName="isVerified"
+                                            [(ngModel)]="fdNonCummulativeTransactionModel.isVerified" placeholder="Select"></p-dropdown>
                                         </div>
                                     </div>
                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <div class="form-label">
-                                            <span class=""><span class="red">*</span> {{ 'ERP.SIGNED_COPY_PATH' | translate }} </span>
+                                             {{ 'ERP.UPLOAD_SIGNED_COPY' | translate }} 
                                             <div class="uplodad-style align-items-center">
-                                                Upload Button Column
+                                                <!-- Upload Button Column -->
             
                                                 <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
                                                     chooseLabel=" " id="apply-leave_fileUp_attach" name="file"
@@ -756,10 +902,10 @@
                                                     (onSelect)="imageUploader($event,fileUpload)">
                                                 </p-fileUpload>
             
-                                                Uploaded Files Display Column
+                                                <!-- Uploaded Files Display Column -->
             
                                                 <div class="col-12 d-flex p-1 contant-body"
-                                                    *ngFor="let img of  fdNonCumulativeApplicationModel.multipartFileList">
+                                                    *ngFor="let img of  fdNonCummulativeTransactionModel.multipartFileList">
                                                     <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                                                                     <a href="{{img.imageValue}}">
                                                                                 <img src="{{img.imageValue}}">
@@ -780,7 +926,7 @@
                                             </label>
                                             <textarea type="text" formContralName="remarks" 
                                             pInputTextarea placeholder="Enter Remarks Here"
-                                                [(ngModel)]="fdNonCumulativeApplicationModel.remarks"></textarea>
+                                                [(ngModel)]="fdNonCummulativeTransactionModel.remarks"></textarea>
                                         </div>
                                     </div>
                     
@@ -794,12 +940,12 @@
                 <div class="col-12 btn-footer px-0">
                     <div class="col-12 d-flex justify-content-end px-0 mt-1 group-button-bottom">
                         <p-button label="Back" (click)="backbutton()"></p-button>
-                        <p-button label="Cancel" (click)="backbutton()"></p-button>
-                        <p-button label="{{'ERP.SUBMIT' | translate}}"
-                            (click)="updateFdNonCummulativeDetails(fdNonCumulativeApplicationModel)"></p-button>
+                        <!-- <p-button label="Cancel" (click)="backbutton()"></p-button> -->
+                        <p-button label="{{'ERP.SUBMIT' | translate}}" [disabled]="!renewalForm.valid"
+                            (click)="saveAccountOnRenewal(fdNonCumulativeApplicationModel)"></p-button>
                     </div>
                 </div>
-            </div> -->
+            </div>
         </div>
     </div>
 </div>

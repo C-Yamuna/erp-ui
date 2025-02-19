@@ -112,6 +112,8 @@ export class MemberGroupBasicDetails {
 
   closureDateVal:any;
 
+  societyAdmissionNumber:any;
+
 	
 }
 export class GroupCommunicationModel {

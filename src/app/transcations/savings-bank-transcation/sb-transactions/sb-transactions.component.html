@@ -432,7 +432,7 @@
                 </div>
             </div>
             <div class="col-75-fullmidd">
-                <form [formGroup]="sbTransactionFrom">
+               
                     <div class="col-12 p-2 bg-card bg-label-colorfull">
                         <div class="col-12 p-1">
                             <div class=" d-flex justify-content-end">
@@ -448,55 +448,59 @@
                             </div>
                         </div>
                         <div class="mt-n1 p-2">
-                            <div class="row g-3 mb-3">
-                                <!-- Account Type -->
-                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
-                                    <div class="form-label">
-                                        <label>{{'ERP.ACCOUNT_TYPE' | translate}}</label>
-                                        <input type="text" class="form-control" formControlName="accountType"
-                                            [(ngModel)]="accountType" placeholder="Enter Account Type">
+                            <form [formGroup]="sbTransactionFrom">
+                                <div class="row g-3 mb-3">
+                                    <!-- Account Type -->
+                                    <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
+                                        <div class="form-label">
+                                            <label><span class="red">*</span>{{'ERP.ACCOUNT_TYPE' | translate}}</label>
+                                            <input type="text" class="form-control" formControlName="accountType" [(ngModel)]="accountType"
+                                                placeholder="Enter Account Type">
+                                        </div>
+                                    </div>
+                                    <!-- Transaction Type -->
+                                    <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
+                                        <div class="form-label">
+                                            <label for="paymentMethod"><span class="red">*</span>{{'ERP.TRANSACTION_TYPE' | translate}}</label>
+                                            <p-dropdown placeholder="{{'ERP.SELECT' | translate}}" [options]="transactionTypeOptions"
+                                                formControlName="trnsactionType" [(ngModel)]="sbTransactionModel.transactionType"
+                                                (onChange)="transactionType(sbTransactionModel.transactionType)"></p-dropdown>
+                            
+                                        </div>
+                                    </div>
+                                    <!-- Payment Method -->
+                                    <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
+                                        <div class="form-label">
+                                            <label for="paymentMethod"><span class="red">*</span>{{'ERP.PAYMENT_METHOD' | translate}}</label>
+                                            <p-dropdown placeholder="{{'ERP.SELECT' | translate}}" [options]="paymentMethodOptions"
+                                                formControlName="transactionMode" [(ngModel)]="sbTransactionModel.transactionMode"
+                                                (onChange)="toggleCashForm(sbTransactionModel.transactionMode , false)"></p-dropdown>
+                            
+                                        </div>
+                                    </div>
+                                    <!-- Calendar -->
+                                    <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
+                                        <div class="form-label">
+                                            <label for="calendar"><span class="red">*</span>{{'ERP.TRANSACTION_DATE' | translate}}</label>
+                                            <p-calendar [showIcon]="true" id="calendar" name="calendar" [dateFormat]="orgnizationSetting.calendar"
+                                                formControlName="transactionDate" [(ngModel)]="sbTransactionModel.trnasactionDateVal"
+                                                placeholder="DD/MM/YYYY"></p-calendar>
+                                        </div>
                                     </div>
                                 </div>
-                                <!-- Transaction Type -->
-                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
-                                    <div class="form-label">
-                                        <label for="paymentMethod">{{'ERP.TRANSACTION_TYPE' | translate}}</label>
-                                        <p-dropdown placeholder="{{'ERP.SELECT' | translate}}"
-                                            [options]="transactionTypeOptions" formControlName="trnsactionType"
-                                            [(ngModel)]="sbTransactionModel.transactionType"
-                                            (onChange)="transactionType(sbTransactionModel.transactionType)"></p-dropdown>
-        
-                                    </div>
-                                </div>
-                                <!-- Payment Method -->
-                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
-                                    <div class="form-label">
-                                        <label for="paymentMethod">{{'ERP.PAYMENT_METHOD' | translate}}</label>
-                                        <p-dropdown placeholder="{{'ERP.SELECT' | translate}}" [options]="paymentMethodOptions"
-                                            formControlName="transactionMode" [(ngModel)]="sbTransactionModel.transactionMode"
-                                            (onChange)="toggleCashForm(sbTransactionModel.transactionMode)"></p-dropdown>
-        
-                                    </div>
-                                </div>
-                                <!-- Calendar -->
-                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
-                                    <div class="form-label">
-                                        <label for="calendar">{{'ERP.TRANSACTION_DATE' | translate}}</label>
-                                        <p-calendar [showIcon]="true" id="calendar" name="calendar"
-                                            [dateFormat]="orgnizationSetting.calendar" formControlName="transactionDate"
-                                            [(ngModel)]="sbTransactionModel.trnasactionDateVal"
-                                            placeholder="DD/MM/YYYY"></p-calendar>
-                                    </div>
-                                </div>
-                            </div>
+                            </form>
                             <!-- Cash-->
+                            <form [formGroup]="cashForm">
                             <div class="row g-3" *ngIf="showCashForm">
                                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
                                     <div class="form-label">
-                                        <label>{{'ERP.ACCOUNT_NUMBER' | translate}}</label>
+                                        <label><span class="red">*</span>{{'ERP.ACCOUNT_NUMBER' | translate}}</label>
                                         <input type="text" class="form-control" id="accountNumber"
                                             placeholder="Enter Account Number" formControlName="accountNumber"
                                             [(ngModel)]="sbTransactionModel.accountNumber">
+                                            <p-message severity="error" text="Enter Valid accountNumber"
+                                        *ngIf="!cashForm.controls['accountNumber'].valid && cashForm.controls['accountNumber'].dirty">
+                                    </p-message>
                                     </div>
                                 </div>
                                 <!-- <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
@@ -509,25 +513,29 @@
                                         </div> -->
                                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
                                     <div class="form-label">
-                                        <label>{{'ERP.AMOUNT' | translate}}</label>
+                                        <label><span class="red">*</span>{{'ERP.AMOUNT' | translate}}</label>
                                         <input type="text" class="form-control" formControlName="amount"
                                             placeholder="Enter Amount" [(ngModel)]="sbTransactionModel.transactionAmount"
                                             (keyup)="onAmountChange()">
+                                            <p-message severity="error" text="Enter Valid amount"
+                                            *ngIf="!cashForm.controls['amount'].valid && cashForm.controls['amount'].dirty">
+                                        </p-message>
                                     </div>
                                 </div>
                                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
                                     <div class="form-label">
-                                        <label>{{'ERP.AMOUNT_IN_WORDS' | translate}}</label>
+                                        <label><span class="red">*</span>{{'ERP.AMOUNT_IN_WORDS' | translate}}</label>
                                         <input type="text" class="form-control" id="amountInWords"
                                             formControlName="amountInWords" placeholder="Enter Amount in Words"
-                                            [(ngModel)]="sbTransactionModel.transactionAmountInWords">
+                                            [(ngModel)]="sbTransactionModel.amountInWords">
+
                                     </div>
                                 </div>
                                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
                                     <div class="form-label">
-                                        <label>{{'ERP.NARRATION' | translate}}</label>
-                                        <textarea class="form-control" type="text" pInputTextarea id="narration"
-                                            name="narration" placeholder="Enter Narration Here"></textarea>
+                                        <label><span class="red">*</span>{{'ERP.NARRATION' | translate}}</label>
+                                        <textarea class="form-control" type="text" formControlName="narration" pInputTextarea id="narration"
+                                            name="narration" placeholder="Enter Narration Here" [(ngModel)]="sbTransactionModel.narration"></textarea>
                                     </div>
                                 </div>
                                 <!-- <div class="col-md-4">
@@ -536,8 +544,10 @@
                                                                     </div>
                                                                 </div> -->
                             </div>
+                            </form>
         
                             <!-- Cheque-->
+                            <form [formGroup]="chequeForm">
                             <div class="row g-3" *ngIf="showChequeForm">
                                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
                                     <div class="form-label">
@@ -611,23 +621,27 @@
                                     </div>
                                 </div>
                             </div>
+                            </form>
         
         
                             <!-- Transfer Transaction-->
-        
+                            <form [formGroup]="transferForm">
                             <div class="row g-3 mt-n1" *ngIf="transferForShow">
                                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
                                     <div class="form-label">
-                                        <label for="chequeAccountNumber">{{'ERP.AMOUNT' | translate}}</label>
+                                        <label for="chequeAccountNumber"><span class="red">*</span>{{'ERP.AMOUNT' | translate}}</label>
                                         <input type="text" class="form-control" id="chequeAccountNumber"
                                             formControlName="amount" [(ngModel)]="transferTransactionDetails.transactionAmount"
                                             placeholder="Enter Amount" (keyup)="onAmountChange()">
+                                            <p-message severity="error" text="Enter Valid amount"
+                                            *ngIf="!transferForm.controls['amount'].valid && transferForm.controls['amount'].dirty">
+                                        </p-message>
                                     </div>
                                 </div>
         
                                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
                                     <div class="form-label">
-                                        <label for="chequeHolderName">{{'ERP.AMOUNT_IN_WORDS' | translate}}</label>
+                                        <label for="chequeHolderName"><span class="red">*</span>{{'ERP.AMOUNT_IN_WORDS' | translate}}</label>
                                         <input type="text" class="form-control" id="chequeHolderName"
                                             formControlName="amountInWords"
                                             [(ngModel)]="transferTransactionDetails.amountInWords"
@@ -637,7 +651,7 @@
         
                                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
                                     <div class="form-label">
-                                        <label for="chequeAmount">{{'ERP.NARRATION' | translate}}</label>
+                                        <label for="chequeAmount"><span class="red">*</span>{{'ERP.NARRATION' | translate}}</label>
                                         <textarea type="text" class="form-control" id="chequeAmount"
                                             formControlName="transferNarration"
                                             [(ngModel)]="transferTransactionDetails.narration" pInputTextarea
@@ -646,7 +660,7 @@
                                 </div>
                             </div>
                             <div class="col-12 p-0 mt-3" *ngIf="transferForShow">
-                                <h6 class="sub-heading">{{'DEMANDDEPOSITS.TO_ACCOUNT_DETAILS' | translate}}</h6>
+                                <h6 class="sub-heading"><span class="red">*</span>{{'DEMANDDEPOSITS.TO_ACCOUNT_DETAILS' | translate}}</h6>
                                 <div class="row g-3 mt-n1">
                                     <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
                                         <div class="form-label">
@@ -654,39 +668,49 @@
                                             <input type="text" class="form-control" id="transactionId"
                                                 formControlName="accountNumber" [(ngModel)]="sbTransactionModel.accountNumber"
                                                 placeholder="Enter Account Number">
+                                                <p-message severity="error" text="Enter Valid accountNumber"
+                                            *ngIf="!transferForm.controls['accountNumber'].valid && transferForm.controls['accountNumber'].dirty">
+                                        </p-message>
                                         </div>
                                     </div>
         
                                     <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
                                         <div class="form-label">
-                                            <label for="validFrom">{{'ERP.ACCOUNT_HOLDER_NAME' | translate}}</label>
+                                            <label for="validFrom"><span class="red">*</span>{{'ERP.ACCOUNT_HOLDER_NAME' | translate}}</label>
                                             <input type="text" class="form-control" id="transactionId"
                                                 formControlName="transferAccountHolderName"
                                                 [(ngModel)]="transferTransactionDetails.beneficiaryName"
                                                 placeholder="Enter Holder Name">
+                                                <p-message severity="error" text="Enter Valid accountNumber"
+                                            *ngIf="!transferForm.controls['transferAccountHolderName'].valid && transferForm.controls['transferAccountHolderName'].dirty">
+                                        </p-message>
                                         </div>
                                     </div>
         
-                                    <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
+                                    <!-- <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
                                         <div class="form-label">
                                             <label for="chequeAmountInWords">{{'ERP.BRANCH' | translate}}</label>
                                             <input type="text" class="form-control" id="chequeAmountInWords"
                                                 formControlName="transaferBranch"
                                                 [(ngModel)]="transferTransactionDetails.branchName" placeholder="Enter Branch">
                                         </div>
-                                    </div>
+                                    </div> -->
         
                                     <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
                                         <div class="form-label">
-                                            <label for="chequeNarration">{{'ERP.AMOUNT' | translate}}</label>
+                                            <label for="chequeNarration"><span class="red">*</span>{{'ERP.AMOUNT' | translate}}</label>
                                             <input class="form-control" id="chequeNarration" formControlName="transferAmount"
                                                 pInputText type="text"
                                                 [(ngModel)]="transferTransactionDetails.transactionAmount"
                                                 placeholder="Enter Amount">
+                                                <p-message severity="error" text="Enter Valid accountNumber"
+                                                *ngIf="!transferForm.controls['transferAmount'].valid && transferForm.controls['transferAmount'].dirty">
+                                            </p-message>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </form>
         
         
                             <div class="row mt-3">
@@ -695,7 +719,10 @@
                                     <div class="col-12 d-flex justify-content-end p-0 group-button-bottom">
                                         <p-button label="{{'ERP.BACK' | translate}}" (click)="back()"></p-button>
                                         <p-button label="{{'ERP.CLEAR' | translate}}" (click)="cancel()"></p-button>
-                                        <p-button label="{{'ERP.SUBMIT' | translate}}" (click)="submit()"></p-button>
+                                        <p-button label="{{'ERP.SUBMIT' | translate}}" [disabled]="((!sbTransactionFrom.valid))" *ngIf="!showCashForm && !transferForShow && !showChequeForm" (click)="submit()"></p-button>
+                                        <p-button label="{{'ERP.SUBMIT' | translate}}" [disabled]="(!cashForm.valid)" *ngIf="showCashForm" (click)="submit()"></p-button>
+                                        <p-button label="{{'ERP.SUBMIT' | translate}}" [disabled]="!transferForm.valid" *ngIf="transferForShow" (click)="submit()"></p-button>
+                                        <p-button label="{{'ERP.SUBMIT' | translate}}" [disabled]="!chequeForm.valid" *ngIf="showChequeForm" (click)="submit()"></p-button>
                                     </div>
                                 </div>
                             </div>
@@ -716,6 +743,9 @@
                                         <th *ngFor="let col of transactionColumns">
                                             {{col.header | translate}}
                                         </th>
+                                        <th >
+                                            {{'ERP.ACTION' | translate}}
+                                        </th>
                                     </tr>
                                 </ng-template>
                                 <ng-template pTemplate="body" let-rowData let-accounttypes>
@@ -724,17 +754,17 @@
                                             {{rowData[col.field]}}
                                         </td>
                                         <td>
-                                            <!-- <div class="global-action-btn flex align-items-center justify-content-center"> -->
-                                            <!-- <p-button class="action-edit" label="{{'ERP.EDIT' | translate}}" (click)="getSbTranasactionById(rowData)"></p-button> -->
-                                            <!--  <p-button class="action-delete" label="{{'ERP.DELETE' | translate}}" (click)="deleteTransaction(rowData)"></p-button>
-                                        </div> -->
+                                            <div class="global-action-btn flex align-items-center justify-content-center">
+                                            <p-button class="action-edit" label="{{'ERP.EDIT' | translate}}" [disabled]="showCashForm || transferForShow" (click)="getSbTranasactionById(rowData)"></p-button>
+                                             <!-- <p-button class="action-delete" label="{{'ERP.DELETE' | translate}}" (click)="deleteTransaction(rowData)"></p-button> -->
+                                        </div>
                                         </td>
                                     </tr>
                                 </ng-template>
                             </p-table>
                         </div>
                     </div>
-                </form>
+               
             </div>
         </div>
         </div>
@@ -800,7 +830,7 @@
                 <div class="col-lg-3 col-md-3 col-sm-12">
                     <div class="form-group">
                     <span class="fw-light">{{'ERP.AMOUNT_IN_WORDS' | translate}}</span>
-                        <p class="fw-semibold">{{sbTransactionModel.transactionAmount}}</p>
+                        <p class="fw-semibold">{{sbTransactionModel.amountInWords}}</p>
                     </div>
                 </div>
     
@@ -846,12 +876,12 @@
                             <p class="fw-semibold">{{transferTransactionDetails.beneficiaryName}}</p>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-3 col-sm-12">
+                    <!-- <div class="col-lg-3 col-md-3 col-sm-12">
                         <div class="form-group">
                             <span class="fw-light">{{'ERP.BRANCH' | translate}}</span>
                             <p class="fw-semibold">{{transferTransactionDetails.branchName}}</p>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-lg-3 col-md-3 col-sm-12">
                         <div class="form-group">
                             <span class="fw-light">{{'ERP.AMOUNT' | translate}}</span>
@@ -958,10 +988,10 @@
             </ng-template>
             <ng-template pTemplate="body" let-rowData let-columns="columns">
                 <tr>
-                    <td>{{sbTransactionModel.transactionModeName}}</td>
-                    <td>{{sbTransactionModel.transactionTypeName}}</td>
-                    <td>{{sbTransactionModel.trnasactionDateVal}}</td>
-                    <td>{{sbTransactionModel.transactionAmount}}</td>
+                    <td>{{rowData.transactionModeName}}</td>
+                    <td>{{rowData.transactionTypeName}}</td>
+                    <td>{{rowData.trnasactionDateVal}}</td>
+                    <td>{{rowData.transactionAmount}}</td>
                     <td>success</td>
                 </tr>
             </ng-template>
@@ -969,8 +999,8 @@
         <div class="col-12"></div>
         <div class="d-flex justify-content-between">
             <div>
-                <p-button icon="fa fa-download" iconPos="left" pTooltip="Filename.pdf" tooltipPosition="top"></p-button>
-                <p-button icon="fa fa-print" iconPos="left" pTooltip="Print" tooltipPosition="top"></p-button>
+                <!-- <p-button icon="fa fa-download" iconPos="left" pTooltip="Filename.pdf" tooltipPosition="top"></p-button>
+                <p-button icon="fa fa-print" iconPos="left" pTooltip="Print" tooltipPosition="top"></p-button> -->
             </div>
             <div>
                 <p-button class="pull-right" label="{{'ERP.CLOSE' | translate}}" (click)="close()"></p-button>
@@ -1166,7 +1196,6 @@
         </div>
     </p-dialog>
     </div>
-
 <!-- institution Promoter details dialog -->
 <div class="view-moredetails-popup">
     <p-dialog header="More Basic Details" [(visible)]="institutionPromoterFlag" styleClass="moredetails-style">
@@ -1257,7 +1286,7 @@
         <h6 class="super-sub-heading">{{'ERP.INSTITUTION_PROMOTER_DETAILS' | translate}}</h6>
 
         <div class="globel-border-top-color"></div>
-        <p-table #dt [columns]="columns" [value]="institionPromotersList" dataKey="id" styleClass="p-datatable-striped"
+        <p-table #dt [columns]="groupPrmoters" [value]="institionPromotersList" dataKey="id" styleClass="p-datatable-striped"
             [rows]="5" [paginator]="true" [showJumpToPageDropdown]="true" [showPageLinks]="false" [pageLinks]="1"
             [responsive]="true" rowExpandMode="single">
             <ng-template pTemplate="header" let-columns>

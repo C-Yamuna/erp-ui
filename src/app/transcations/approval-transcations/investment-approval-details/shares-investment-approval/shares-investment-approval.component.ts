@@ -88,7 +88,7 @@ export class SharesInvestmentApprovalComponent {
                   this.sharesInvestmentsModel.sharesPurchasedDate = this.datePipe.transform(this.sharesInvestmentsModel.sharesPurchasedDate, this.orgnizationSetting.datePipe);
                 }
                 this.remarks = this.sharesInvestmentsModel.remarks;
-                this.status = this.sharesInvestmentsModel.status;
+                this.status = this.sharesInvestmentsModel.accountStatus;
                 if (this.sharesInvestmentsModel.shareCertificateCopyPath != null && this.sharesInvestmentsModel.shareCertificateCopyPath != undefined) {
                   this.shareCertificateCopyFile = this.fileUploadService.getFile(this.sharesInvestmentsModel.shareCertificateCopyPath,
                     ERP_TRANSACTION_CONSTANTS.INVESTMENTS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.sharesInvestmentsModel.shareCertificateCopyPath);
@@ -155,7 +155,7 @@ export class SharesInvestmentApprovalComponent {
   onChangeStatus(status: any) {
     if (status != null && status != undefined) {
       this.statusList.filter(data => data.value == status).map(count => {
-        this.sharesInvestmentsModel.statusName = count.label;
+        this.sharesInvestmentsModel.accountStatusName = count.label;
       });
       this.submitFlag = false;
     } else

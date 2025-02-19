@@ -84,13 +84,10 @@
                                                         fdNonCumulativeProductDefinitionModel.maxTenure}}</p>
                                                 </div>
                                                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">
-                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.IS_AUTO_RENEWAL'
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.TENURE_TYPE'
                                                         |translate}}</h6>
                                                     <p class="label-input-text"> {{
-                                                        fdNonCumulativeProductDefinitionModel.isAutoRenewal ? 'Yes' :
-                                                        'No' }}
-
-                                                    </p>
+                                                        fdNonCumulativeProductDefinitionModel.tenureTypeName }}</p>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -217,8 +214,8 @@
                         <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4">
                             <p-button icon="fa fa-download" iconPos="left" pTooltip="Filename.pdf"
                                 tooltipPosition="top" (click)="pdfDownload()"></p-button>
-                            <p-button icon="fa fa-print" iconPos="left" pTooltip="Print"
-                                tooltipPosition="top"></p-button>
+                            <!-- <p-button icon="fa fa-print" iconPos="left" pTooltip="Print"
+                                tooltipPosition="top"></p-button> -->
                         </div>
                         <div class="col-3 p-3 bottom-padding"></div>
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-4" *ngIf="isShowSubmit">

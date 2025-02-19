@@ -69,7 +69,11 @@
                                     <div class="search">
                                         <span class="p-input-icon-right">
                                             <i class="pi pi-search global-search-icon"></i>
-                                            <input type="text" pInputText class="searchbox" placeholder="Search" />
+                                            <!-- <input type="text" pInputText class="searchbox" placeholder="Search" /> -->
+                                            <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                                placeholder="Search" class="searchbox"
+                                                #searchInput (input)="gold.filterGlobal(searchInput.value, 'contains')">
+                                            <!-- <span><i class="fa fa-search"></i></span> -->
                                         </span>
                                     </div>
                                 </div>
@@ -147,7 +151,7 @@
                                         [disabled]="editDeleteDisable" (click)="editGoldLoanMortgage(row)"
                                         id="prj_stakehlder_bt_edit" class="action-edit"></p-button>
                                     <p-button label="{{'LOAN_TRANSACTION.DELETE' | translate}}"
-                                        [disabled]="editDeleteDisable" (click)="deletDilogBox(row)"
+                                        [disabled]="editDeleteDisable" (click)="deleteGoldLoanMortgage(row)"
                                         id="prj_stakehlder_bt_edit" class="action-delete"></p-button>
                                 </div>
                             </td>
@@ -170,7 +174,11 @@
                                     <div class="search">
                                         <span class="p-input-icon-right">
                                             <i class="pi pi-search global-search-icon"></i>
-                                            <input type="text" pInputText class="searchbox" placeholder="Search" />
+                                            <!-- <input type="text" pInputText class="searchbox" placeholder="Search" /> -->
+                                            <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                            placeholder="Search" class="searchbox"
+                                            #searchInput (input)="land.filterGlobal(searchInput.value, 'contains')">
+                                            <!-- <span><i class="fa fa-search"></i></span> -->
                                         </span>
                                     </div>
                                 </div>
@@ -183,7 +191,7 @@
 
                 <div class="globel-border-top-color"></div>
 
-                <p-table #land [value]="siLandLoanMortgageList" dataKey="id" editMode="row"
+                <p-table  #land [value]="siLandLoanMortgageList" dataKey="id" editMode="row"
                     styleClass="p-datatable-striped" [rows]="5" [paginator]="true" [showJumpToPageDropdown]="true"
                     [showPageLinks]="false" [pageLinks]="1" [responsive]="true" rowExpandMode="single"
                     [globalFilterFields]="['passbookNumber', 'surveyNo', 'landType', 'landUnits', 'landSubUnits', 'value', 'declaredLandUnits', 'declaredLandSubUnits' ,'remarks']">
@@ -261,7 +269,7 @@
                                         [disabled]="editDeleteDisable" (click)="editLandLoanMortgage(row)"
                                         id="prj_stakehlder_bt_edit" class="action-edit"></p-button>
                                     <p-button label="{{'LOAN_TRANSACTION.DELETE' | translate}}"
-                                        [disabled]="editDeleteDisable" (click)="deletDilogBox(row)"
+                                        [disabled]="editDeleteDisable" (click)="deleteLandLoanMortgage(row)"
                                         id="prj_stakehlder_bt_edit" class="action-delete"></p-button>
                                 </div>
                             </td>
@@ -284,7 +292,11 @@
                                     <div class="search">
                                         <span class="p-input-icon-right">
                                             <i class="pi pi-search global-search-icon"></i>
-                                            <input type="text" pInputText class="searchbox" placeholder="Search" />
+                                            <!-- <input type="text" pInputText class="searchbox" placeholder="Search" /> -->
+                                            <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                                placeholder="Search" class="searchbox"
+                                                #searchInput (input)="bond.filterGlobal(searchInput.value, 'contains')">
+                                            <!-- <span><i class="fa fa-search"></i></span> -->
                                         </span>
                                     </div>
                                 </div>
@@ -494,7 +506,9 @@
                                     <div class="search">
                                         <span class="p-input-icon-right">
                                             <i class="pi pi-search global-search-icon"></i>
-                                            <input type="text" pInputText class="searchbox" placeholder="Search" />
+                                            <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                            placeholder="Search" class="searchbox"
+                                            #searchInput (input)="storage.filterGlobal(searchInput.value, 'contains')">
                                         </span>
                                     </div>
                                 </div>
@@ -507,7 +521,7 @@
 
                 <div class="globel-border-top-color"></div>
 
-                <p-table #storage [value]="siStorageLoanMortgageList" dataKey="id" editMode="row"
+                <p-table  #storage [value]="siStorageLoanMortgageList" dataKey="id" editMode="row"
                     styleClass="p-datatable-striped" [rows]="5" [paginator]="true" [showJumpToPageDropdown]="true"
                     [showPageLinks]="false" [pageLinks]="1" [responsive]="true" rowExpandMode="single"
                     [globalFilterFields]="['name', 'quantity', 'totalWeight', 'netWeight', 'value', 'remarks']">
@@ -583,7 +597,9 @@
                                     <div class="search">
                                         <span class="p-input-icon-right">
                                             <i class="pi pi-search global-search-icon"></i>
-                                            <input type="text" pInputText class="searchbox" placeholder="Search" />
+                                            <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                            placeholder="Search" class="searchbox"
+                                            #searchInput (input)="property.filterGlobal(searchInput.value, 'contains')">
                                         </span>
                                     </div>
                                 </div>
@@ -666,7 +682,9 @@
                                     <div class="search">
                                         <span class="p-input-icon-right">
                                             <i class="pi pi-search global-search-icon"></i>
-                                            <input type="text" pInputText class="searchbox" placeholder="Search" />
+                                            <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                            placeholder="Search" class="searchbox"
+                                            #searchInput (input)="other.filterGlobal(searchInput.value, 'contains')">
                                         </span>
                                     </div>
                                 </div>
@@ -835,7 +853,7 @@
                             translate}}</label>
                         <p-dropdown id="bunit_txt_status" placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}"
                             [filter]="true" [options]="villagesList" formControlName="village"
-                            [(ngModel)]="siLandLoanMortgageModel.villageId" [appendTo]="'body'" (onChange)="checkDuplicateSurveyNoInTable(siLandLoanMortgageModel)"></p-dropdown>
+                            [(ngModel)]="siLandLoanMortgageModel.villageId" [appendTo]="'body'"></p-dropdown>
 
                     </div>
                 </div>
@@ -856,7 +874,7 @@
                         <label><span class="red">*</span>{{'LOAN_TRANSACTION.KHATA_BOOK_NUMBER' |
                             translate}}</label>
                         <input autocomplete="off" pInputText type="text" formControlName="khataNumber"
-                            [(ngModel)]="siLandLoanMortgageModel.khataNumber" (onChange)="checkDuplicateSurveyNoInTable(siLandLoanMortgageModel)" minlength="1" maxlength="20">
+                            [(ngModel)]="siLandLoanMortgageModel.khataNumber" minlength="1" maxlength="20">
                         <p-message severity="error" text="Enter Valid khata Number"
                             *ngIf="!siLandMortgageForm.controls['khataNumber'].valid && siLandMortgageForm.controls['khataNumber'].dirty">
                         </p-message>
@@ -867,7 +885,7 @@
                         <label><span class="red">*</span>{{'LOAN_TRANSACTION.SURVEY_NO' |
                             translate}}</label>
                         <input autocomplete="off" pInputText type="text" minlength="1" maxlength="16"
-                            formControlName="surveyNumber" [(ngModel)]="siLandLoanMortgageModel.surveyNumber"  (focusout)="checkDuplicateSurveyNoInTable(siLandLoanMortgageModel)">
+                            formControlName="surveyNumber" [(ngModel)]="siLandLoanMortgageModel.surveyNumber">
                         <p-message severity="error" text="Enter Valid survey Number"
                             *ngIf="!siLandMortgageForm.controls['surveyNumber'].valid && siLandMortgageForm.controls['surveyNumber'].dirty">
                         </p-message>
@@ -1326,9 +1344,9 @@
                         <label><span class="red">*</span>{{'LOAN_TRANSACTION.VALUE' |
                             translate}}</label>
                         <input pInputText type="text" [(ngModel)]="siOtherLoanMortgageModel.value"
-                            formControlName="value">
+                            formControlName="values">
                         <p-message severity="error" text="Enter Valid remarks"
-                            *ngIf="!siOtherMortgageForm.controls['remarks'].valid && siOtherMortgageForm.controls['remarks'].dirty">
+                            *ngIf="!siOtherMortgageForm.controls['values'].valid && siOtherMortgageForm.controls['values'].dirty">
                         </p-message>
                     </div>
                 </div>
@@ -1356,24 +1374,17 @@
     </div>
 </p-dialog>
 
+<!-- delete dialog box -->
 <p-dialog [(visible)]="displayDialog" [closable]="false" styleClass="delete-popup" [responsive]="true">
     <div class="col-12">
         <i class="fa fa-times-circle text-center" aria-hidden="true"></i>
-
+    
         <p class="text-center popup-header">{{'ERP.ARE_YOU_SURE_TO_DELETE' | translate}}</p>
         <p class="text-center pop-subheader">{{'ERP.DO_YOU_REALLY_TO_DELETE_THESE_RECORDS' | translate}}</p>
-
+  
     </div>
     <div class="col-12 text-center p-2">
-
-    <p-button pRipple class="yes-button" *ngIf="showGoldform"
-        label="{{ 'ERP.DELETE' | translate }}" (click)="submitDeleteForGold()"></p-button>
-
-    <p-button pRipple class="yes-button" *ngIf="showLandform"
-        label="{{ 'ERP.DELETE' | translate }}" (click)="submitDeleteForLand()"></p-button>
-
-
-        <p-button pRipple class="no-button" label="{{'ERP.CANCEL' | translate}}"
-            (click)="cancelForDialogBox()"></p-button>
+            <p-button pRipple class="yes-button" label="{{'ERP.DELETE' | translate}}" (click)="deleteCofirtmBox()"></p-button>
+            <p-button pRipple class="no-button" label="{{'ERP.CANCEL' | translate}}" (click)="cancelForDialogBox()"></p-button>
     </div>
-</p-dialog>
+  </p-dialog>

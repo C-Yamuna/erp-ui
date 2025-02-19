@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { savingsbanktransactionconstant } from '../../savings-bank-transcation/savingsbank-transaction-constant';
@@ -33,7 +33,8 @@ import { MemberClosureDetailsModel } from './shared/member-basic-details.model';
 @Component({
   selector: 'app-member-closure',
   templateUrl: './member-closure.component.html',
-  styleUrls: ['./member-closure.component.css']
+  styleUrls: ['./member-closure.component.css'],
+  encapsulation:ViewEncapsulation.None
 })
 export class MemberClosureComponent {
  closureform: FormGroup;
@@ -172,7 +173,7 @@ export class MemberClosureComponent {
         if (this.memberBasicDetailsModel.memClosingDate != null) {
           this.memberBasicDetailsModel.memClosingDateVal = this.datePipe.transform(this.memberBasicDetailsModel.memClosingDate, this.orgnizationSetting.datePipe);
         }
-        this.memberBasicDetailsModel.memClosingDateVal = new Date();
+        
         
         if (this.memberBasicDetailsModel.memberShipCommunicationDetailsDTO != null && this.memberBasicDetailsModel.memberShipCommunicationDetailsDTO != undefined) {
           this.memberCommunicationDetailsModel = this.memberBasicDetailsModel.memberShipCommunicationDetailsDTO;
@@ -969,6 +970,8 @@ if (this.institutionBasicDetailsModel.filesDTOList != null && this.institutionBa
   }
   submitForGroup() {
     this.msgs = [];
+    if(this.memberGroupBasicDetails.closureDateVal != undefined && this.memberGroupBasicDetails.closureDateVal != null)
+      this.memberGroupBasicDetails.closureDate = this.commonFunctionsService.getUTCEpoch(new Date(this.memberGroupBasicDetails.closureDateVal));
     this.memberGroupBasicDetails.groupStatus = 7;
     this.memberShipGroupDetailsService.submitForApproval(this.memberGroupBasicDetails).subscribe(response => {
       this.responseModel = response;
@@ -993,6 +996,8 @@ if (this.institutionBasicDetailsModel.filesDTOList != null && this.institutionBa
 
   submitForInstitution() {
     this.msgs = [];
+    if(this.institutionBasicDetailsModel.closureDateVal != undefined && this.institutionBasicDetailsModel.closureDateVal != null)
+      this.institutionBasicDetailsModel.closureDate = this.commonFunctionsService.getUTCEpoch(new Date(this.institutionBasicDetailsModel.closureDateVal));
     this.institutionBasicDetailsModel.institutionStatus = 7;
     this.memInistitutionsService.submitForApproval(this.institutionBasicDetailsModel).subscribe(response => {
       this.responseModel = response;

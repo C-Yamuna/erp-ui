@@ -70,17 +70,20 @@
                                             </div>
                                     </div>
                                 </div>
+                                
                                 <div class="text-center min-h-50px">
-                                    <span class="text-fontwt">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
-                                    <p class="font-semibold text-break">{{memberBasicDetailsModel.admissionNumber}}</p>
-                                </div>
-                                <div class="text-center min-h-50px">
-                                    <span class="text-fontwt">{{'ERP.NAME' | translate}}</span>
-                                    <p class="font-semibold text-break"><span class="border-bottom">{{memberBasicDetailsModel.name}}</span></p>
+                                    <p class="font-semibold text-break view-member-name"><span class="border-bottom">{{memberBasicDetailsModel.name}}</span></p>
                                 </div>
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
                                 <div class="row">
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                        <span class="basicdata-icons icon-size"><i class="fa fa-id-card-o"></i></span>
+                                        <div>
+                                        <p class="label-view text-fontwt">{{'ERP.ADMISSION_NUMBER' | translate}}</p>
+                                        <p class="label-input-text">{{memberBasicDetailsModel.admissionNumber}}</p>
+                                        </div>
+                                    </div>
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
                                         <span class="basicdata-icons icon-size"><i class="fa fa-id-card-o"></i></span>
                                         <div>
@@ -135,7 +138,7 @@
                                         <div class="col-10 d-flex p-0">
                                         <span class="basicdata-icons icon-size"><i class="fa fa-check-circle-o"></i></span>
                                         <div>
-                                        <p class="label-view text-fontwt">{{'ERP.ISKYC' | translate}}</p>
+                                        <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                         <p class="label-input-text">{{isKycApproved}}</p>
                                     </div>
                                         </div>
@@ -146,7 +149,7 @@
                                         <div class="col-10 d-flex p-0">
                                         <span class="basicdata-icons icon-size"><i class="fa fa-check-circle-o"></i></span>
                                         <div>
-                                        <p class="label-view text-fontwt">{{'ERP.ISKYC' | translate}}</p>
+                                        <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                         <p class="label-input-text">{{isKycApproved}}</p>
                                     </div>
                                         </div>
@@ -178,13 +181,13 @@
                                             </div>
                                             <div class="col-6" *ngIf="editbtn">
                                                 <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
-                                                    (click)="editMembershipDetails(memberBasicDetailsModel,1)"></p-button>
+                                                    (click)="editMembershipDetails(memberBasicDetailsModel,1)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                         
                                             </div>
                                         </div>
                                         <div class="col-12 px-0">
                                             <div class="row g-3">
-                                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6" *ngFor="let document of kycGridList ; let i = index">
+                                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6 mt-2" *ngFor="let document of kycGridList ; let i = index">
                                                     <div class="stepper-kyc-card p-3 pb-1 mb-2">
                                                     <div class="row">
                                                         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 d-flex align-items-center">
@@ -204,9 +207,8 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 justify-content-end d-flex right-actions">
-                                                            <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClickkycPhotoCopy(document)"><i class="fa fa-eye m-0" aria-hidden="true"></i></div>
-                                                            <div *ngIf="!editbtn">
-                                                            <div class="carddownload-icon icon-size text-right" *ngFor="let img of document.multipartFileList">
+                                                            <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClickkycPhotoCopy(document)"><i class="fa fa-eye m-0" aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}" tooltipPosition="top"></i></div>
+                                                            <div class="carddownload-icon icon-size text-right" *ngFor="let img of document.multipartFileList" pTooltip="{{'ERP.DOC_DOWNLOAD' | translate}}" tooltipPosition="top">
                                                                 <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                                                     <a href="{{img.imageValue}}">
                                                                         <i class="fa fa-download ml-3 mr-0" aria-hidden="true">
@@ -215,7 +217,6 @@
                                                                     </a>
                                                                 </div>
                                                             </div>
-                                                        </div>
                                                             <div><img src="assets/images/verify.png" alt="" class="verifykyc ml-3"></div>
                                                         </div>
                                                             <!-- <div class="col-12 px-0">
@@ -231,7 +232,7 @@
                                                     </div>
                                                 </div>
                                                 </div> 
-                                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6" *ngIf="showFormkyc">
+                                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6 mt-2" *ngIf="showFormkyc">
                                                 <div class="stepper-kyc-card p-3 mb-2">
                                                 <div class="row">
                                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center">
@@ -260,39 +261,39 @@
                                             </div>
                                             <div class="col-6" *ngIf="editbtn">
                                                 <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
-                                                    (click)="editMembershipDetails(memberBasicDetailsModel,2)"></p-button>
+                                                    (click)="editMembershipDetails(memberBasicDetailsModel,2)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                             </div>
                                         </div>
                                         <div class="col-12 px-0">
                                             <div class="row g-3">
-                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-2">
                                                     <div class="nominee-card p-3 pb-1 mb-2">
                                                     <div class="row">
-                                                        <h6 class="super-sub-heading mt-1">{{'ERP.REGISTERED' | translate}}</h6>
-                                                        <div class="col-12">
-                                                            <div class="row mt-2">
+                                                        <h6 class="super-sub-heading">{{'ERP.REGISTERED' | translate}}</h6>
+                                                        <div class="col-12 pb-0">
+                                                            <div class="row">
 
-                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                             <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.STATES' | translate}}</h6>
                                                             <p class="label-input-text">{{memberCommunicationDetailsModel.stateName}}</p>
                                                         </div>
-                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                             <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.DISTRICTS' | translate}}</h6>
                                                             <p class="label-input-text">{{memberCommunicationDetailsModel.districtName}}</p>
                                                         </div>
-                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                             <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.SUB_DISTRICT' | translate}}</h6>
                                                             <p class="label-input-text">{{memberCommunicationDetailsModel.subDistrictName}}</p>
                                                         </div>
-                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                             <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.VILLAGES' | translate}}</h6>
                                                             <p class="label-input-text">{{memberCommunicationDetailsModel.villageName}}</p>
                                                         </div>
-                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                             <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.ADDRESS' | translate}}</h6>
                                                             <p class="label-input-text">{{memberCommunicationDetailsModel.address1}}</p>
                                                         </div>
-                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                             <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.PINCODE' | translate}}</h6>
                                                             <p class="label-input-text">{{memberCommunicationDetailsModel.pinCode}}
                                                             </p>
@@ -305,34 +306,34 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-2">
                                                     <div class="nominee-card p-3 pb-1 mb-2">
                                                             <div class="row">
-                                                                <h6 class="super-sub-heading mt-1">{{'ERP.PERMANENT' | translate}}</h6>
+                                                                <h6 class="super-sub-heading">{{'ERP.PERMANENT' | translate}}</h6>
                                                             
-                                                        <div class="col-12">
-                                                            <div class="row mt-2">
-                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                        <div class="col-12 pb-0">
+                                                            <div class="row">
+                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                                     <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.STATES' | translate}}</h6>
                                                                     <p class="label-input-text">{{memberCommunicationDetailsModel.permanentStateName}}</p>
                                                                 </div>
-                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                                     <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.DISTRICTS' | translate}}</h6>
                                                                     <p class="label-input-text">{{memberCommunicationDetailsModel.permanentDistrictName}}</p>
                                                                 </div>
-                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                                     <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.SUB_DISTRICT' | translate}}</h6>
                                                                     <p class="label-input-text">{{memberCommunicationDetailsModel.permanentSubDistrictName}}</p>
                                                                 </div>
-                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                                     <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.VILLAGES' | translate}}</h6>
                                                                     <p class="label-input-text">{{memberCommunicationDetailsModel.permanentVillageName}}</p>
                                                                 </div>
-                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                                     <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.ADDRESS' | translate}}</h6>
                                                                     <p class="label-input-text">{{memberCommunicationDetailsModel.permanentAddress1}}</p>
                                                                 </div>
-                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                                     <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.PINCODE' | translate}}</h6>
                                                                     <p class="label-input-text">{{memberCommunicationDetailsModel.permanentPinCode}}
                                                                     </p>
@@ -363,7 +364,7 @@
                                 </div>
                                 <div class="col-6" *ngIf="editbtn">
                                     <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
-                                    (click)="editMembershipDetails(memberBasicDetailsModel,3)"></p-button>
+                                    (click)="editMembershipDetails(memberBasicDetailsModel,3)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                 </div>
                             </div>
 
@@ -438,13 +439,13 @@
                                             </div>
                                             <div class="col-6" *ngIf="editbtn">
                                                 <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
-                                                    (click)="editMembershipDetails(memberBasicDetailsModel,4)"></p-button>
+                                                    (click)="editMembershipDetails(memberBasicDetailsModel,4)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                         
                                             </div>
                                         </div>
                                         <div class="col-12 px-0">
                                             <div class="row g-3">
-                                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6" *ngFor="let document of documnetGridList ; let i = index">
+                                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6 mt-2" *ngFor="let document of documnetGridList ; let i = index">
                                                     <div class="stepper-kyc-card p-3 pb-1 mb-2">
                                                     <div class="row">
                                                         <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 d-flex align-items-center">
@@ -461,9 +462,8 @@
                                                        
                                                         </div>
                                                         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 justify-content-end d-flex right-actions">
-                                                            <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClickdoccPhotoCopy(document)"><i class="fa fa-eye m-0" aria-hidden="true"></i></div>
-                                                            <div *ngIf="!editbtn">
-                                                            <div class="carddownload-icon icon-size text-right" *ngFor="let img of document.multipartFileList">
+                                                            <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClickdoccPhotoCopy(document)"><i class="fa fa-eye m-0" aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}" tooltipPosition="top"></i></div>
+                                                            <div class="carddownload-icon icon-size text-right" pTooltip="{{'ERP.DOC_DOWNLOAD' | translate}}" tooltipPosition="top" *ngFor="let img of document.multipartFileList">
                                                                 <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                                                     <a href="{{img.imageValue}}">
                                                                         <i class="fa fa-download ml-3 mr-0" aria-hidden="true">
@@ -471,7 +471,6 @@
                                                                         </i>
                                                                     </a>
                                                                 </div>
-                                                            </div>
                                                         </div>
                                                             <!-- <div class="kycview-done icon-size text-right"><i class="fa fa-check-circle mr-0" aria-hidden="true"></i></div>
                                                             <div class="col-12 px-0">
@@ -487,7 +486,7 @@
                                                     </div>
                                                 </div>
                                                 </div> 
-                                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6" *ngIf="showdocumentForm">
+                                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6 mt-2" *ngIf="showdocumentForm">
                                                 <div class="stepper-kyc-card p-3 mb-2">
                                                 <div class="row">
                                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center">
@@ -511,23 +510,23 @@
                                             <div class="col-6">
                                                 <div class="d-flex">
                                                     <span class="card-icon"><i class="fa fa-user-o"></i></span>
-                                                    <h6 class="sub-heading">{{'ERP.NOMINEE_DETAILS' | translate}}</h6>
+                                                    <h6 class="sub-heading">{{'ERP.NOMINEE_DETAIL' | translate}}</h6>
                                                 </div>
                                             </div>
                                             <div class="col-6" *ngIf="editbtn">
                                                 <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
-                                                    (click)="editMembershipDetails(memberBasicDetailsModel,5)"></p-button>
+                                                    (click)="editMembershipDetails(memberBasicDetailsModel,5)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                             </div>
                                         </div>
                                         <div class="col-12 px-0">
                                             <div class="row g-3">
-                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-2">
                                                     <div class="stepper-nominee-card p-3 pb-1 mb-2">
                                                         <div class="row">
                                                             <div class="col-12 py-0">
                                                                 <div class="row">
                                                                     <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-xs-8">
-                                                                        <h6 class="super-sub-heading mt-1">{{'ERP.NOMINEE' | translate}}</h6> 
+                                                                        <h6 class="super-sub-heading">{{'ERP.NOMINEE' | translate}}</h6> 
                                                                     </div>
                                                                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4 justify-content-end d-flex">
                                                                         <!-- <div class="col-12 px-0">
@@ -547,9 +546,8 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div> -->
-                                                                        <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClicknomineePhotoCopy()"><i class="fa fa-eye m-0" aria-hidden="true"></i></div>
-                                                                        <div *ngIf="!editbtn">
-                                                                        <div class="carddownload-icon icon-size text-right" *ngFor="let img of memberNomineeDetailsModel.multipartFileList">
+                                                                        <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClicknomineePhotoCopy()"><i class="fa fa-eye m-0" aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}" tooltipPosition="top"></i></div>
+                                                                        <div class="carddownload-icon icon-size text-right" pTooltip="{{'ERP.DOC_DOWNLOAD' | translate}}" tooltipPosition="top" *ngFor="let img of memberNomineeDetailsModel.multipartFileList">
                                                                             <!-- Image -->
                                                                             <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
                                                                                 <a href="{{img.imageValue}}">
@@ -568,11 +566,10 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             
-                                                            <div class="col-12">
+                                                            <div class="col-12 pb-0">
                                                                 <div class="row">
                                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center">
                                                                         <div class="card-leftbody">
@@ -625,13 +622,13 @@
                                                     </div>
                                                 </div>
                                         
-                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngIf="guardainEnableFlag">
+                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-2" *ngIf="guardainEnableFlag">
                                                     <div class="stepper-nominee-card p-3 pb-1 mb-2">
                                                         <div class="row">
                                                             <div class="col-12 py-0">
                                                                 <div class="row">
                                                                     <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-xs-8">
-                                                                        <h6 class="super-sub-heading mt-1">{{'ERP.GUARDIAN' | translate}}</h6>
+                                                                        <h6 class="super-sub-heading">{{'ERP.GUARDIAN' | translate}}</h6>
                                                                     </div>
                                                                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4 justify-content-end d-flex">
                                                                         <!-- <div class="col-12 px-0">
@@ -652,9 +649,8 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div> -->
-                                                                        <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClickguardianPhotoCopy()"><i class="fa fa-eye m-0" aria-hidden="true"></i></div>
-                                                                        <div *ngIf="!editbtn">
-                                                                        <div class="carddownload-icon icon-size text-right" *ngFor="let img of memberGuardianDetailsDetailsModel.multipartsFileList">
+                                                                        <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClickguardianPhotoCopy()"><i class="fa fa-eye m-0" aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}" tooltipPosition="top"></i></div>
+                                                                        <div class="carddownload-icon icon-size text-right" pTooltip="{{'ERP.DOC_DOWNLOAD' | translate}}" tooltipPosition="top" *ngFor="let img of memberGuardianDetailsDetailsModel.multipartsFileList">
                                                                             <!-- Image -->
                                                                             <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
                                                                                 <a href="{{img.imageValue}}">
@@ -673,11 +669,10 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             
-                                                            <div class="col-12">
+                                                            <div class="col-12 pb-0">
                                                                 <div class="row">
                                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center">
                                                                         <div class="card-leftbody">
@@ -752,7 +747,7 @@
                                 </div>
                                 <div class="col-6" *ngIf="editbtn">
                                     <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
-                                    (click)="editMembershipDetails(memberBasicDetailsModel,6)"></p-button>
+                                    (click)="editMembershipDetails(memberBasicDetailsModel,6)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                 </div>
                             </div>
 
@@ -867,7 +862,7 @@
                                 </div>
                                 <div class="col-6" *ngIf="editbtn">
                                     <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
-                                    (click)="editMembershipDetails(memberBasicDetailsModel,7)"></p-button>
+                                    (click)="editMembershipDetails(memberBasicDetailsModel,7)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                 </div>
                             </div>
 
@@ -963,7 +958,7 @@
                     <div class="row">
                         <div class="col-xl-6 col-lg-7 col-md-7 col-sm-12" *ngIf= "previewButton">
                             <div class="view-dow-upload">
-                            <p-button icon="fa fa-download" iconPos="left" pTooltip="{{ 'ERP.DOWNLOAD' | translate }}" tooltipPosition="top" (click)="pdfDownload()"></p-button>&nbsp;
+                            <p-button icon="fa fa-download" iconPos="left" pTooltip="{{ 'ERP.DOWNLOAD_FILLED_COPY' | translate }}" tooltipPosition="top" (click)="pdfDownload()"></p-button>&nbsp;
                             <!-- <p-button icon="fa fa-print" iconPos="left" pTooltip="{{ 'ERP.PRINT' | translate }}" tooltipPosition="right"></p-button>&nbsp; -->
                             <div class="form-label -mt-2">
                                 <h6 class="label-view"><span class="red">*</span> {{ 'MEMBERSHIP_TRANSACTION.SIGNED_COPY' | translate }} </h6>
@@ -973,7 +968,7 @@
                                         id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".pdf" 
                                         (onRemove)="fileRemoveEvent()" (onSelect)="fileUploader($event, fileUpload)">
                                     </p-fileUpload>
-                                    <div class="col-12  d-flex p-1" *ngFor="let img of memberBasicDetailsModel.multipartFileListsignedCopyPath">
+                                    <div class="col-12  d-flex p-1 contant-body" *ngFor="let img of memberBasicDetailsModel.multipartFileListsignedCopyPath">
                                         <div *ngIf="img.fileType=='pdf'">
                                             <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22" height="22"></a>
                                         </div>
@@ -1139,7 +1134,7 @@
                                         <div class="col-10 d-flex p-0">
                                             <span class="basicdata-icons icon-size"><i class="fa fa-check-circle-o"></i></span>
                                             <div>
-                                                <p class="label-view text-fontwt">{{'ERP.ISKYC' | translate}}</p>
+                                                <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                                 <p class="label-input-text">Approved</p>
                                             </div>
                                         </div>
@@ -1150,7 +1145,7 @@
                                             <div class="col-10 d-flex p-0">
                                                 <span class="basicdata-icons icon-size"><i class="fa fa-check-circle-o"></i></span>
                                                 <div>
-                                                    <p class="label-view text-fontwt">{{'ERP.ISKYC' | translate}}</p>
+                                                    <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                                     <p class="label-input-text">Not Approved</p>
                                                 </div>
                                             </div>
@@ -1171,8 +1166,8 @@
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
-                                <div class="global-card-bg-color view-carddata icon-size pb-1">
-                                    <div class="col-12">
+                                <div class="global-card-bg-color view-carddata icon-size">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -1182,13 +1177,13 @@
                                             </div>
                                             <div class="col-6" *ngIf="editbtn">
                                                 <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
-                                                    (click)="editGroupDetails(memberGroupBasicDetails,2)"></p-button>
+                                                    (click)="editGroupDetails(memberGroupBasicDetails,2)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                         
                                             </div>
                                         </div>
                                         <div class="col-12 px-0">
                                             <div class="row g-3">
-                                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6" *ngFor="let document of groupKycGridList ; let i = index">
+                                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6 mt-2" *ngFor="let document of groupKycGridList ; let i = index">
                                                     <div class="stepper-kyc-card p-3 pb-1 mb-2">
                                                     <div class="row">
                                                         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 d-flex align-items-center">
@@ -1213,9 +1208,8 @@
                                                        
                                                         </div>
                                                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 justify-content-end d-flex right-actions">
-                                                            <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClickkycPhotoCopy(document)"><i class="fa fa-eye m-0" aria-hidden="true"></i></div>
-                                                            <div *ngIf="!editbtn">
-                                                            <div class="carddownload-icon icon-size text-right" *ngFor="let img of document.multipartFileList">
+                                                            <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClickkycPhotoCopy(document)"><i class="fa fa-eye m-0" aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}" tooltipPosition="top"></i></div>
+                                                            <div class="carddownload-icon icon-size text-right" pTooltip="{{'ERP.DOC_DOWNLOAD' | translate}}" tooltipPosition="top" *ngFor="let img of document.multipartFileList">
                                                                 <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                                                     <a href="{{img.imageValue}}">
                                                                         <i class="fa fa-download ml-3 mr-0" aria-hidden="true">
@@ -1224,7 +1218,6 @@
                                                                     </a>
                                                                 </div>
                                                             </div>
-                                                        </div>
                                                             <div><img src="assets/images/verify.png" alt="" class="verifykyc ml-3"></div>
                                                         </div>
                                                             <!-- <div class="col-12 px-0">
@@ -1241,7 +1234,7 @@
 
                                                     </div>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6" *ngIf="showFormkyc">
+                                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6 mt-2" *ngIf="showFormkyc">
                                                     <div class="stepper-kyc-card p-3 mb-2">
                                                     <div class="row">
                                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center">
@@ -1259,8 +1252,8 @@
                         <div class="col-12 p-1"></div>
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
-                                <div class=" global-card-bg-color view-carddata icon-size pb-1">
-                                    <div class="col-12">
+                                <div class=" global-card-bg-color view-carddata icon-size">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -1270,39 +1263,39 @@
                                             </div>
                                             <div class="col-6" *ngIf="editbtn">
                                                 <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
-                                                    (click)="editGroupDetails(memberGroupBasicDetails,1)"></p-button>
+                                                    (click)="editGroupDetails(memberGroupBasicDetails,1)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                             </div>
                                         </div>
                                         <div class="col-12 px-0">
                                             <div class="row g-3">
-                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <div class="nominee-card p-3 mb-2">
+                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-2">
+                                                    <div class="nominee-card p-3 pb-1 mb-2">
                                                     <div class="row">
-                                                        <h6 class="super-sub-heading mt-1">{{'ERP.REGISTERED' | translate}}</h6>
-                                                        <div class="col-12">
+                                                        <h6 class="super-sub-heading">{{'ERP.REGISTERED' | translate}}</h6>
+                                                        <div class="col-12 pb-0">
                                                             <div class="row mt-2">
 
-                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                             <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.STATES' | translate}}</h6>
                                                             <p class="label-input-text">{{groupCommunicationModel.stateName}}</p>
                                                         </div>
-                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                             <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.DISTRICTS' | translate}}</h6>
                                                             <p class="label-input-text">{{groupCommunicationModel.districtName}}</p>
                                                         </div>
-                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                             <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.SUB_DISTRICT' | translate}}</h6>
                                                             <p class="label-input-text">{{groupCommunicationModel.subDistrictName}}</p>
                                                         </div>
-                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                             <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.VILLAGES' | translate}}</h6>
                                                             <p class="label-input-text">{{groupCommunicationModel.villageName}}</p>
                                                         </div>
-                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                             <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.ADDRESS' | translate}}</h6>
                                                             <p class="label-input-text">{{groupCommunicationModel.address1}}</p>
                                                         </div>
-                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                             <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.PINCODE' | translate}}</h6>
                                                             <p class="label-input-text">{{groupCommunicationModel.pincode}}
                                                             </p>
@@ -1315,34 +1308,34 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <div class="nominee-card p-3 mb-2">
+                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-2">
+                                                    <div class="nominee-card p-3 pb-1 mb-2">
                                                             <div class="row">
-                                                                <h6 class="super-sub-heading mt-1">{{'ERP.PERMANENT' | translate}}</h6>
+                                                                <h6 class="super-sub-heading">{{'ERP.PERMANENT' | translate}}</h6>
                                                             
-                                                        <div class="col-12">
-                                                            <div class="row mt-2">
-                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                        <div class="col-12 pb-0">
+                                                            <div class="row">
+                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                                     <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.STATES' | translate}}</h6>
                                                                     <p class="label-input-text">{{groupCommunicationModel.permanentStateName}}</p>
                                                                 </div>
-                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                                     <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.DISTRICTS' | translate}}</h6>
                                                                     <p class="label-input-text">{{groupCommunicationModel.permanentDistrictName}}</p>
                                                                 </div>
-                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                                     <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.SUB_DISTRICT' | translate}}</h6>
                                                                     <p class="label-input-text">{{groupCommunicationModel.permanentSubDistrictName}}</p>
                                                                 </div>
-                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                                     <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.VILLAGES' | translate}}</h6>
                                                                     <p class="label-input-text">{{groupCommunicationModel.permanentVillageName}}</p>
                                                                 </div>
-                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                                     <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.ADDRESS' | translate}}</h6>
                                                                     <p class="label-input-text">{{groupCommunicationModel.permanentAddress1}}</p>
                                                                 </div>
-                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                                     <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.PINCODE' | translate}}</h6>
                                                                     <p class="label-input-text">{{groupCommunicationModel.permanentPincode}}
                                                                     </p>
@@ -1360,10 +1353,10 @@
                                 </div>
                         </div>
                         <div class="col-12 p-1"></div>
-                        <div class="col-lg-12 col-md-12 col-sm-12" >
+                        <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
                                 <div class=" global-card-bg-color view-carddata icon-size">
-                                    <div class="col-12">
+                                    <div class="col-12 p-0">
                                     <div class="row">
                                         <div class="col-6">
                                     <div class="d-flex">
@@ -1373,7 +1366,7 @@
                                 </div>
                                 <div class="col-6" *ngIf="editbtn">
                                     <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
-                                    (click)="editGroupDetails(memberGroupBasicDetails,0)"></p-button>
+                                    (click)="editGroupDetails(memberGroupBasicDetails,0)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                 </div>
                             </div>
     
@@ -1517,8 +1510,8 @@
                     <div class="col-12 p-1"></div>
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
-                                <div class="global-card-bg-color view-carddata icon-size pb-1">
-                                    <div class="col-12">
+                                <div class="global-card-bg-color view-carddata icon-size">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -1528,13 +1521,13 @@
                                             </div>
                                             <div class="col-6" *ngIf="editbtn">
                                                 <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
-                                                    (click)="editGroupDetails(memberGroupBasicDetails,3)"></p-button>
+                                                    (click)="editGroupDetails(memberGroupBasicDetails,3)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                         
                                             </div>
                                         </div>
                                         <div class="col-12 px-0">
                                             <div class="row g-3">
-                                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6" *ngFor="let document of groupDocumentGridList ; let i = index">
+                                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6 mt-2" *ngFor="let document of groupDocumentGridList ; let i = index">
                                                     <div class="stepper-kyc-card p-3 pb-1 mb-2">
                                                     <div class="row">
                                                         <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 d-flex align-items-center">
@@ -1550,9 +1543,8 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 justify-content-end d-flex right-actions">
-                                                            <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClickdoccPhotoCopy(document)"><i class="fa fa-eye m-0" aria-hidden="true"></i></div>
-                                                            <div *ngIf="!editbtn">
-                                                            <div class="carddownload-icon icon-size text-right" *ngFor="let img of document.multipartFileList">
+                                                            <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClickdoccPhotoCopy(document)"><i class="fa fa-eye m-0" aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}" tooltipPosition="top"></i></div>
+                                                            <div class="carddownload-icon icon-size text-right" pTooltip="{{'ERP.DOC_DOWNLOAD' | translate}}" tooltipPosition="top" *ngFor="let img of document.multipartFileList">
                                                                 <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                                                     <a href="{{img.imageValue}}">
                                                                         <i class="fa fa-download ml-3 mr-0" aria-hidden="true">
@@ -1561,7 +1553,6 @@
                                                                     </a>
                                                                 </div>
                                                             </div>
-                                                        </div>
                                                                 
                                                             <!-- <div class="col-12 px-0">
                                                                 <div class="col-12 px-0" *ngFor="let img of document.multipartFileList">
@@ -1578,7 +1569,7 @@
                                                     </div>
                                                 </div>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6" *ngIf="showdocumentForm">
+                                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6 mt-2" *ngIf="showdocumentForm">
                                                     <div class="stepper-kyc-card p-3 pb-1 mb-2">
                                                     <div class="row">
                                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center">
@@ -1600,7 +1591,7 @@
                     <div class="row">
                         <div class="col-xl-6 col-lg-7 col-md-7 col-sm-12" *ngIf="previewButton">
                             <div class="view-dow-upload">
-                            <p-button icon="fa fa-download" iconPos="left" pTooltip="{{ 'ERP.DOWNLOAD' | translate }}" tooltipPosition="right" (click)="groupPdfDownload()"></p-button>&nbsp;
+                            <p-button icon="fa fa-download" iconPos="left" pTooltip="{{ 'ERP.DOWNLOAD_FILLED_COPY' | translate }}" tooltipPosition="right" (click)="groupPdfDownload()"></p-button>&nbsp;
                             <!-- <p-button icon="fa fa-print" iconPos="left" pTooltip="{{ 'ERP.PRINT' | translate }}" tooltipPosition="right"></p-button>&nbsp; -->
                             <div class="form-label -mt-2">
                                 <h6 class="label-view"> <span class="red">*</span>{{ 'MEMBERSHIP_TRANSACTION.SIGNED_COPY' | translate }} </h6>
@@ -1610,7 +1601,7 @@
                                         id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".pdf" 
                                         (onRemove)="fileRemoveEventForGroup()" (onSelect)="fileUploaderForGroup($event, fileUpload)">
                                     </p-fileUpload>
-                                    <div class="col-12  d-flex p-1" *ngFor="let img of memberGroupBasicDetails.multipartFileListsignedCopyPath">
+                                    <div class="col-12  d-flex p-1 contant-body" *ngFor="let img of memberGroupBasicDetails.multipartFileListsignedCopyPath">
                                         <div *ngIf="img.fileType=='pdf'">
                                             <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22" height="22"></a>
                                         </div>
@@ -1778,7 +1769,7 @@
                                         <div class="col-10 d-flex p-0">
                                             <span class="basicdata-icons icon-size"><i class="fa fa-check-circle-o"></i></span>
                                             <div>
-                                                <p class="label-view text-fontwt">{{'ERP.ISKYC' | translate}}</p>
+                                                <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                                 <p class="label-input-text">Approved</p>
                                             </div>
                                         </div>
@@ -1789,7 +1780,7 @@
                                         <div class="col-10 d-flex p-0">
                                             <span class="basicdata-icons icon-size"><i class="fa fa-check-circle-o"></i></span>
                                             <div>
-                                                <p class="label-view text-fontwt">{{'ERP.ISKYC' | translate}}</p>
+                                                <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                                 <p class="label-input-text">Not Approved</p>
                                             </div>
                                         </div>
@@ -1808,8 +1799,8 @@
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
-                                <div class="global-card-bg-color view-carddata icon-size pb-1">
-                                    <div class="col-12">
+                                <div class="global-card-bg-color view-carddata icon-size">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -1819,13 +1810,13 @@
                                             </div>
                                             <div class="col-6" *ngIf="editbtn">
                                                 <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
-                                                    (click)="editInstitutionDetails(institutionBasicDetailsModel,2)"></p-button>
+                                                    (click)="editInstitutionDetails(institutionBasicDetailsModel,2)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                         
                                             </div>
                                         </div>
                                         <div class="col-12 px-0">
                                             <div class="row g-3">
-                                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6" *ngFor="let document of institutionKycList ; let i = index">
+                                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6 mt-2" *ngFor="let document of institutionKycList ; let i = index">
                                                     <div class="stepper-kyc-card p-3 pb-1 mb-2">
                                                     <div class="row">
                                                         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 d-flex align-items-center">
@@ -1850,9 +1841,8 @@
                                                        
                                                         </div>
                                                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 justify-content-end d-flex right-actions">
-                                                            <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClickkycPhotoCopy(document)"><i class="fa fa-eye m-0" aria-hidden="true"></i></div>
-                                                            <div *ngIf="!editbtn">
-                                                            <div class="carddownload-icon icon-size text-right" *ngFor="let img of document.multipartFileList">
+                                                            <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClickkycPhotoCopy(document)"><i class="fa fa-eye m-0" aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}" tooltipPosition="top"></i></div>
+                                                            <div class="carddownload-icon icon-size text-right" pTooltip="{{'ERP.DOC_DOWNLOAD' | translate}}" tooltipPosition="top" *ngFor="let img of document.multipartFileList">
                                                                 <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                                                     <a href="{{img.imageValue}}">
                                                                         <i class="fa fa-download ml-3 mr-0" aria-hidden="true">
@@ -1861,7 +1851,6 @@
                                                                     </a>
                                                                 </div>
                                                             </div>
-                                                        </div>
                                                             <div><img src="assets/images/verify.png" alt="" class="verifykyc ml-3"></div>
                                                                 
                                                             <!-- <div class="col-12 px-0">
@@ -1879,7 +1868,7 @@
                                                     </div>
                                                 </div>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6" *ngIf="showFormkyc">
+                                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6 mt-2" *ngIf="showFormkyc">
                                                     <div class="stepper-kyc-card p-3 mb-2">
                                                     <div class="row">
                                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center">
@@ -1897,8 +1886,8 @@
                         <div class="col-12 p-1"></div>
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
-                                <div class=" global-card-bg-color view-carddata icon-size pb-1">
-                                    <div class="col-12">
+                                <div class=" global-card-bg-color view-carddata icon-size">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -1908,39 +1897,39 @@
                                             </div>
                                             <div class="col-6" *ngIf="editbtn">
                                                 <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
-                                                    (click)="editInstitutionDetails(institutionBasicDetailsModel,1)"></p-button>
+                                                    (click)="editInstitutionDetails(institutionBasicDetailsModel,1)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                             </div>
                                         </div>
                                         <div class="col-12 px-0">
                                             <div class="row g-3">
-                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <div class="nominee-card p-3 mb-2">
+                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-2">
+                                                    <div class="nominee-card p-3 pb-1 mb-2">
                                                     <div class="row">
-                                                        <h6 class="super-sub-heading mt-1">{{'ERP.REGISTERED' | translate}}</h6>
-                                                        <div class="col-12">
-                                                            <div class="row mt-2">
+                                                        <h6 class="super-sub-heading">{{'ERP.REGISTERED' | translate}}</h6>
+                                                        <div class="col-12 pb-0">
+                                                            <div class="row">
 
-                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                             <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.STATES' | translate}}</h6>
                                                             <p class="label-input-text">{{instituteCommunicationModel.stateName}}</p>
                                                         </div>
-                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                             <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.DISTRICTS' | translate}}</h6>
                                                             <p class="label-input-text">{{instituteCommunicationModel.districtName}}</p>
                                                         </div>
-                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                             <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.SUB_DISTRICT' | translate}}</h6>
                                                             <p class="label-input-text">{{instituteCommunicationModel.subDistrictName}}</p>
                                                         </div>
-                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                             <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.VILLAGES' | translate}}</h6>
                                                             <p class="label-input-text">{{instituteCommunicationModel.villageName}}</p>
                                                         </div>
-                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                             <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.ADDRESS' | translate}}</h6>
                                                             <p class="label-input-text">{{instituteCommunicationModel.address1}}</p>
                                                         </div>
-                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                             <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.PINCODE' | translate}}</h6>
                                                             <p class="label-input-text">{{instituteCommunicationModel.pinCode}}
                                                             </p>
@@ -1953,34 +1942,34 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <div class="nominee-card p-3 mb-2">
+                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-2">
+                                                    <div class="nominee-card p-3 pb-1 mb-2">
                                                             <div class="row">
-                                                                <h6 class="super-sub-heading mt-1">{{'ERP.PERMANENT' | translate}}</h6>
+                                                                <h6 class="super-sub-heading">{{'ERP.PERMANENT' | translate}}</h6>
                                                             
-                                                        <div class="col-12">
-                                                            <div class="row mt-2">
-                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                        <div class="col-12 pb-0">
+                                                            <div class="row">
+                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                                     <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.STATES' | translate}}</h6>
                                                                     <p class="label-input-text">{{instituteCommunicationModel.permanentStateName}}</p>
                                                                 </div>
-                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                                     <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.DISTRICTS' | translate}}</h6>
                                                                     <p class="label-input-text">{{instituteCommunicationModel.permanentDistrictName}}</p>
                                                                 </div>
-                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                                     <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.SUB_DISTRICT' | translate}}</h6>
                                                                     <p class="label-input-text">{{instituteCommunicationModel.permanentSubDistrictName}}</p>
                                                                 </div>
-                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                                     <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.VILLAGES' | translate}}</h6>
                                                                     <p class="label-input-text">{{instituteCommunicationModel.permanentVillageName}}</p>
                                                                 </div>
-                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                                     <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.ADDRESS' | translate}}</h6>
                                                                     <p class="label-input-text">{{instituteCommunicationModel.permanentAddress1}}</p>
                                                                 </div>
-                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6 min-h-50px">
+                                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                                     <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.PINCODE' | translate}}</h6>
                                                                     <p class="label-input-text">{{instituteCommunicationModel.permanentPinCode}}
                                                                     </p>
@@ -1997,12 +1986,11 @@
                                     </div>
                                 </div>
                         </div>
-                        
                         <div class="col-12 p-1"></div>
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
                                 <div class=" global-card-bg-color view-carddata icon-size">
-                                    <div class="col-12">
+                                    <div class="col-12 p-0">
                                     <div class="row">
                                         <div class="col-6">
                                     <div class="d-flex">
@@ -2012,7 +2000,7 @@
                                 </div>
                                 <div class="col-6" *ngIf="editbtn">
                                     <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
-                                    (click)="editInstitutionDetails(institutionBasicDetailsModel,0)"></p-button>
+                                    (click)="editInstitutionDetails(institutionBasicDetailsModel,0)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                 </div>
                             </div>
     
@@ -2158,8 +2146,8 @@
                         <div class="col-12 p-1"></div>
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
-                                <div class="global-card-bg-color view-carddata icon-size pb-1">
-                                    <div class="col-12">
+                                <div class="global-card-bg-color view-carddata icon-size">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -2175,7 +2163,7 @@
                                         </div>
                                         <div class="col-12 px-0">
                                             <div class="row g-3">
-                                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6" *ngFor="let document of institutionDocumentList ; let i = index">
+                                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6 mt-2" *ngFor="let document of institutionDocumentList ; let i = index">
                                                     <div class="stepper-kyc-card p-3 pb-1 mb-2">
                                                     <div class="row">
                                                         <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 d-flex align-items-center">
@@ -2192,9 +2180,8 @@
                                                        
                                                         </div>
                                                         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 justify-content-end d-flex right-actions">
-                                                            <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClickdoccPhotoCopy(document)"><i class="fa fa-eye m-0" aria-hidden="true"></i></div>
-                                                            <div *ngIf="!editbtn">
-                                                            <div class="carddownload-icon icon-size text-right" *ngFor="let img of document.multipartFileList">
+                                                            <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClickdoccPhotoCopy(document)"><i class="fa fa-eye m-0" aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}" tooltipPosition="top"></i></div>
+                                                            <div class="carddownload-icon icon-size text-right" pTooltip="{{'ERP.DOC_DOWNLOAD' | translate}}" tooltipPosition="top" *ngFor="let img of document.multipartFileList">
                                                                 <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                                                     <a href="{{img.imageValue}}">
                                                                         <i class="fa fa-download ml-3 mr-0" aria-hidden="true">
@@ -2203,7 +2190,6 @@
                                                                     </a>
                                                                 </div>
                                                             </div>
-                                                        </div>
                                                                 
                                                             <!-- <div class="col-12 px-0">
                                                                 <div class="col-12 px-0" *ngFor="let img of document.multipartFileList">
@@ -2220,7 +2206,7 @@
                                                     </div>
                                                 </div>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6" *ngIf="showdocumentForm">
+                                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6 mt-2" *ngIf="showdocumentForm">
                                                     <div class="stepper-kyc-card p-3 mb-2">
                                                     <div class="row">
                                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center">
@@ -2241,7 +2227,7 @@
                     <div class="row">
                         <div class="col-xl-6 col-lg-7 col-md-7 col-sm-6 d-flex" *ngIf="previewButton">
                             <div class="view-dow-upload">
-                            <p-button icon="fa fa-download" iconPos="left" pTooltip="{{ 'ERP.DOWNLOAD' | translate }}" tooltipPosition="right" (click)="institutionPdfDownload()" ></p-button>&nbsp;
+                            <p-button icon="fa fa-download" iconPos="left" pTooltip="{{ 'ERP.DOWNLOAD_FILLED_COPY' | translate }}" tooltipPosition="right" (click)="institutionPdfDownload()" ></p-button>&nbsp;
                             <!-- <p-button icon="fa fa-print" iconPos="left" pTooltip="{{ 'ERP.PRINT' | translate }}" tooltipPosition="right"></p-button>&nbsp; -->
                             <div class="form-label -mt-2">
                                 <h6 class="label-view"> <span class="red">*</span>{{ 'MEMBERSHIP_TRANSACTION.SIGNED_COPY' | translate }} </h6>
@@ -2251,7 +2237,7 @@
                                         id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".pdf" 
                                         (onRemove)="fileRemoveEventForInstitution()" (onSelect)="fileUploaderForInstitution($event, fileUpload)">
                                     </p-fileUpload>
-                                    <div class="col-12  d-flex p-1" *ngFor="let img of institutionBasicDetailsModel.multipartFileListsignedCopyPath">
+                                    <div class="col-12  d-flex p-1 contant-body" *ngFor="let img of institutionBasicDetailsModel.multipartFileListsignedCopyPath">
                                         <div *ngIf="img.fileType=='pdf'">
                                             <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22" height="22"></a>
                                         </div>
@@ -2375,7 +2361,7 @@
            
     </div>
     <div class="col-12 text-center popup-basic-details mt-5 pt-3">
-        <span class="fw-semi-bold">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
+        <span class="fw-semibold">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
         <p class="fw-bold">{{memberBasicDetailsModel.admissionNumber}}</p>
     </div>
     <div class="col-12 popup-basic-details">

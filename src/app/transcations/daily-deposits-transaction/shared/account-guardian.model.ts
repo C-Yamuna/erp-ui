@@ -1,87 +1,95 @@
 export class AccountGuardian {
-      id : any;
+	id: any;
 
-      productId : any;
+	productId: any;
 
-	  accId : any;
+	accId: any;
 
-	  gaurdianType : any;
+	gaurdianType: any;
 
-	  relationType : any;
+	guardianTypeName: any;
 
-	  surName : any;
+	relationshipTypeId: any;
 
-	  name : any;
+	surName: any;
 
-	  gender : any;
+	guardianName: any;
 
-	  marritalStatus : any;
+	gender: any;
 
-	  dateOfBirth : any;
+	marritalStatus: any;
 
-	  age : any;
+	dateOfBirth: any;
 
-	  identityProofDocType : any;
+	age: any;
 
-	  identityProofDocNumber : any;
+	identityProofDocType: any;
 
-	  identityProofDocPath : any;
+	identityProofDocNumber: any;
 
-	  addressProofDocType : any;
+	identityProofDocPath: any;
 
-	  addressProofDocNumber : any;
+	addressProofDocType: any;
 
-	  addressProofDocPath : any;
+	addressProofDocNumber: any;
 
-	  signedCopyPath : any;
+	addressProofDocPath: any;
 
-	  status : any;
+	uploadFilePath: any;
 
-	  relationTypeName : any;
+	status: any;
 
-	  identityProofDocTypeName : any;
+	relationshipTypeName: any;
 
-	  addressProofDocTypeName : any;
+	identityProofDocTypeName: any;
 
-	  accountNumber : any;
+	addressProofDocTypeName: any;
 
-	  aadharNumber : any;
+	accountNumber: any;
 
-	  address : any;
+	guardianAadharNumber: any;
 
-	  email : any;
+	address: any;
 
-	  mobileNumber : any;
+	guardianEmailId: any;
 
-	  countryId : any;
-	
-	  countryName : any;
+	guardianMobileNumber: any;
 
-	  stateId : any;
-	
-	  stateName : any;
+	countryId: any;
 
-	  districtId : any;
-	
-	  districtName : any;
-	
-	  mandalId : any;
-	
-	  mandalName : any;
+	countryName: any;
 
-	  villageId : any;
-	
-	  villageName : any;
+	stateId: any;
 
-	  genderName : any;
+	stateName: any;
 
-	  maritalStatusName : any;
+	districtId: any;
 
-	  effectiveStartDate : any;
+	districtName: any;
 
-	  effectiveEndDate : any;
+	mandalId: any;
 
-  	  filesDTOList: any;
+	mandalName: any;
 
-  	  guardainMultipartList: any;
+	villageId: any;
+
+	villageName: any;
+
+	genderName: any;
+
+	maritalStatusName: any;
+
+	effectiveStartDate: any;
+
+	effectiveEndDate: any;
+
+	statusName: any;
+
+	productName: any;
+
+	guardainMultipartList: any;
+
+	filesDTOList: any;
+
+	remarks: any;
 }

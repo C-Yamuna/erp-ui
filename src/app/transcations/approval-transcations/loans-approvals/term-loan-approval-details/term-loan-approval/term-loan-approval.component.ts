@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { FileUpload } from 'primeng/fileupload';
@@ -134,6 +134,7 @@ export class TermLoanApprovalComponent {
   multipleFilesList: any;
   uploadFileData: any;
   isDisableSubmit: boolean = false;
+  approvalForm: FormGroup ; 
   statusList:  any[] = [];
   constructor(private router: Router, private formBuilder: FormBuilder,
     private commonComponent: CommonComponent, private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService,
@@ -250,13 +251,18 @@ export class TermLoanApprovalComponent {
       { field: 'aadharNumber', header: 'aadhar' },
       { field: 'startDate', header: 'start date' },
     ];
-
+    this.approvalForm = this.formBuilder.group({
+      
+      'remark': new FormControl('',),
+      'status': new FormControl('', Validators.required),
+    });
+  
   }
   ngOnInit() {
     this.translate.use(this.commonFunctionsService.getStorageValue('language'));
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
     this.getAllRelationTypes();
-    this.getAllStatusList();
+   
     this.activateRoute.queryParams.subscribe(params => {
       if (params['id'] != undefined || params['editOpt'] != undefined) {
         this.commonComponent.startSpinner();
@@ -308,34 +314,62 @@ export class TermLoanApprovalComponent {
           this.msgs = [];
         }, 2000);
       }
-      
+      this.getAllStatusList();
   }
   backbutton() {
     this.termLoanApplicationsService.resetCurrentStep();
     this.termLoanKycService.resetCurrentStep();
     this.router.navigate([approvaltransactionsconstant.TERM_LOAN_APPROVAL_DETAILS]);
   }
+  onStatusChange(event: any) {
+    const selectedStatus = this.statusList.find((data: any) => data.value === event.value);
+    if (selectedStatus) {
+      this.termLoanApplicationModel.accountStatusName = selectedStatus.label;
+    }
+  }
   submit() {
-    this.msgs = [];
-    this.termLoanApplicationModel.accountStatusName = null;
-    this.termLoanApplicationsService.updateTermApplication(this.termLoanApplicationModel).subscribe(response => {
-      this.responseModel = response;
-      this.termLoanApplicationModel = response;
-      this.msgs = [];
-      if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-        this.commonComponent.stopSpinner();
-        this.msgs.push({ severity: 'success', detail: this.responseModel.statusMsg });
-        // setTimeout(() => {
-        this.router.navigate([approvaltransactionsconstant.TERM_LOAN_APPROVAL_DETAILS]);
-        // }, 300);
-      } else {
-        this.commonComponent.stopSpinner();
-        this.msgs.push({ severity: 'error', detail: this.responseModel.statusMsg });
+    if (this.termLoanApplicationModel.status != null && this.termLoanApplicationModel.status != undefined) {
+      const accountStatusName = this.statusList.find((data: any) => data != null && data.value === this.termLoanApplicationModel.accountStatusName);
+      if (accountStatusName != null && accountStatusName != undefined) {
+        this.termLoanApplicationModel.accountStatusName = accountStatusName.label;
       }
-    }, error => {
-      this.msgs = [];
+    } else {
       this.commonComponent.stopSpinner();
-      this.msgs.push({ severity: 'error', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST });
+      this.msgs = [];
+      this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 2000);
+    }
+    this.msgs = [];
+    // this.termLoanApplicationModel.accountStatusName = null;
+    this.termLoanApplicationsService.updateTermApplication(this.termLoanApplicationModel).subscribe((response: any) => {
+      this.responseModel = response;
+      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+        if (this.responseModel.data[0] != undefined && this.responseModel.data[0] != null && this.responseModel.data.length > 0) {
+          this.termLoanApplicationModel = this.responseModel.data[0];
+          if (this.termLoanApplicationModel.id != undefined && this.termLoanApplicationModel.id != null)
+            this.termLoanApplicationId = this.termLoanApplicationModel.id;
+        
+                
+        }
+        this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 1200);
+        this.router.navigate([approvaltransactionsconstant.TERM_LOAN_APPROVAL_DETAILS]);
+      } else {
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      }
+    }, (error: any) => {
+      this.commonComponent.stopSpinner();
+      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
     });
 
   }
@@ -347,6 +381,8 @@ export class TermLoanApprovalComponent {
         this.termLoanApplicationModel = this.responseModel.data[0];
 
         if (this.termLoanApplicationModel != null && this.termLoanApplicationModel != undefined) {
+          this.termLoanApplicationModel.accountStatus = null;
+          this.termLoanApplicationModel.accountStatusName = null;
 
           if (this.termLoanApplicationModel.termProductId != null && this.termLoanApplicationModel.termProductId != undefined)
             this.getProductDefinitionByProductId(this.termLoanApplicationModel.termProductId);
@@ -552,10 +588,10 @@ export class TermLoanApprovalComponent {
           }
           if (this.termLoanApplicationModel.applicationPath != null && this.termLoanApplicationModel.applicationPath != undefined) {
             this.termLoanApplicationModel.multipartFileList = this.fileUploadService.getFile(this.termLoanApplicationModel.applicationPath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.termLoanApplicationModel.applicationPath);
-            this.isDisableSubmit = false;
+            // this.isDisableSubmit = false;
           }
           else {
-            this.isDisableSubmit = true;
+            // this.isDisableSubmit = true;
           }
 
         }
@@ -714,7 +750,7 @@ export class TermLoanApprovalComponent {
       filesDTO.imageValue = this.uploadFileData.result as string;
       this.termLoanApplicationModel.filesDTO = filesDTO;
       this.termLoanApplicationModel.applicationPath = filesDTO.fileName;
-      this.isDisableSubmit = false;
+      // this.isDisableSubmit = false;
       let index1 = event.files.indexOf(file);
       if (index1 > -1) {
         fileUpload.remove(event, index1);
@@ -729,7 +765,7 @@ export class TermLoanApprovalComponent {
       let removeFileIndex = this.termLoanApplicationModel.filesDTO.findIndex((obj: any) => obj && obj.fileName === this.termLoanApplicationModel.applicationPath);
       this.termLoanApplicationModel.filesDTO.splice(removeFileIndex, 1);
       // this.termLoanApplicationModel.signedCopyPath = null;
-      this.isDisableSubmit = true;
+      // this.isDisableSubmit = true;
     }
   }
   pdfDownload() {
@@ -760,13 +796,13 @@ export class TermLoanApprovalComponent {
       this.responseModel = response;
       if (this.responseModel != null && this.responseModel != undefined) {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-          if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 ) {
+          if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
             this.statusList = this.responseModel.data;
-            this.statusList = this.responseModel.data.filter((obj: any) => obj != null && obj.name != CommonStatusData.CREATED && obj.name != CommonStatusData.SUBMISSION_FOR_APPROVAL).map((state: { name: any; id: any; }) => {
-              return { label: state.name, value: state.id };
+            this.statusList = this.responseModel.data.filter((obj: any) => obj != null && obj.name == CommonStatusData.REJECTED || obj.name == CommonStatusData.APPROVED ||
+              obj.name == CommonStatusData.REQUEST_FOR_RESUBMISSION).map((status: { name: any; id: any; }) => {
+            return { label: status.name, value: status.id };
             });
-          }
-          else {
+          }else {
             this.msgs = [];
             this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
             setTimeout(() => {

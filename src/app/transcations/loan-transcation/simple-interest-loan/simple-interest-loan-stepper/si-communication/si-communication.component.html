@@ -47,7 +47,7 @@
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-label">
-                                    <label>{{'ERP.ADDRESS1' | translate}}</label>
+                                    <label>{{'ERP.ADDRESS' | translate}}</label>
                                     <textarea type="text" class="form-control" pInputTextarea formControlName="regesteredAddressOne"
                                         (keyup)="appendPinCodeToPermanent()"
                                         [(ngModel)]="siLoanCommunicationModel.address1" placeholder="House No., Door No., Landmark..etc"></textarea>
@@ -56,7 +56,7 @@
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-label">
                                     <label><span class="red">*</span>{{'ERP.PINCODE' | translate}}</label>
-                                    <input pInputText type="text" formControlName="pinCode"
+                                    <input pInputText type="text" formControlName="pinCode" minlength="6" maxlength="6"
                                         (keyup)="appendPinCodeToPermanent()" placeholder="Enter Pincode"
                                         [(ngModel)]="siLoanCommunicationModel.pinCode"
                                         [disabled]="sameAsPermanentAddress">
@@ -124,7 +124,7 @@
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-label">
-                                    <label>{{'ERP.ADDRESS1' | translate}}</label>
+                                    <label>{{'ERP.ADDRESS' | translate}}</label>
                                     <textarea type="text" class="form-control" pInputTextarea formControlName="permanentAddressOne"
                                         [(ngModel)]="siLoanCommunicationModel.permanentAddress1" placeholder="House No., Door No., Landmark..etc"></textarea>
                                 </div>
@@ -132,7 +132,7 @@
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-label">
                                     <label><span class="red">*</span>{{'ERP.PINCODE' | translate}}</label>
-                                    <input pInputText type="text" formControlName="permanentPinCode"
+                                    <input pInputText type="text" formControlName="permanentPinCode"  minlength="6" maxlength="6"
                                         [disabled]="sameAsPermanentAddress" placeholder="Enter Pincode"
                                         [(ngModel)]="siLoanCommunicationModel.permanentPinCode">
                                         <p-message severity="error" text="Enter Valid Pin Code"

@@ -150,9 +150,9 @@ export class MembershipDetailsComponent {
       this.kycForm = this.formBuilder.group({
         'docNumber': ['', [Validators.required]],
         'docTypeName': ['', [Validators.required]],
-        'promoter': ['',],
+        'promoter':['', ],
         'fileUpload': new FormControl(''),
-        'nameAsPerDocument': new FormControl(''),
+        'nameAsPerDocument':['',[Validators.pattern(applicationConstants.ALPHA_NAME_PATTERN),Validators.compose([Validators.required])]],
       });
   }
   
@@ -290,7 +290,7 @@ ngOnInit(): void {
   updateData() {
     if (this.kycModelList != null && this.kycModelList != undefined && this.kycModelList.length > 0) {
       // this.kycDuplicate = this.kycModelDuplicateCheck(this.kycModelList);
-      if (this.kycDuplicate) {
+      if (this.kycDuplicate || this.buttonDisabled) {
         this.isDisableFlag = true;
       }
       else {
@@ -756,6 +756,7 @@ ngOnInit(): void {
     // this.kycModelList[existingIndex].push(row);
     this.addKycButton = false;
     this.buttonDisabled = false;
+    this.updateData();
   }
 
   /**

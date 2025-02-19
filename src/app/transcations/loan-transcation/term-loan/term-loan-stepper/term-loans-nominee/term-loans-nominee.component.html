@@ -97,7 +97,7 @@
                                                 <input type="text" formControlName="mobileNumber" pInputText
                                                     placeholder="Enter Mobile Number"
                                                     [(ngModel)]="  termLoanNomineeModel.nomineeMobileNumber" />
-                                                <p-message severity="error" text="Enter Valid mobileNumber"
+                                                <p-message severity="error" text="Enter Valid mobile Number"
                                                     *ngIf="!nomineeForm.controls['mobileNumber'].valid && nomineeForm.controls['mobileNumber'].dirty">
                                                 </p-message>
                                             </div>
@@ -115,7 +115,8 @@
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
-                                                <span><span class="red">*</span>{{ 'ERP.SIGNED_DOCUMENT' | translate }}</span>
+                                                <span><span
+                                                    class="red">*</span>{{ 'LOAN_TRANSACTION.SIGNED_DOCUMENT' | translate }}</span>
                                                 <div class="uplodad-style align-items-center">
                                                     <!-- Upload Button Column -->
 
@@ -128,22 +129,14 @@
 
                                                     <!-- Uploaded Files Display Column -->
 
-                                                    <div class="col-12 d-flex p-1 contant-body"
-                                                        *ngFor="let img of   termLoanNomineeModel.multipartFileList">
-                                                        <span
-                                                            *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                            <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}"
-                                                                    width="22" height="22"></a>
-                                                        </span>
-                                                        <span *ngIf="img.fileType=='pdf'">
-                                                            <a href="{{img.imageValue}}"> <img
-                                                                    src="assets/images/pdficon-img.png" width="22"
-                                                                    height="22"></a>
-                                                        </span>
-                                                        <span class="docname-texteclipse ml-3"
-                                                            pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                                            {{img.fileName}}</span>
+                                                    <div class="col-12  d-flex p-1 contant-body" *ngFor="let img of termLoanNomineeModel.multipartFileList">
+                                                        <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                            <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22" height="22"></a>
+                                                        </div>
+                                                        <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                                            {{img.fileName}}</div>
                                                     </div>
+                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -171,7 +164,9 @@
                                     <div class="row">
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
-                                                <span class=""><span class="red">*</span> {{ 'DEMANDDEPOSITS.SIGNED_DOCUMENT' | translate }}
+                                                <span class=""><span
+                                                    class="red">*</span> {{ 'LOAN_TRANSACTION.SIGNED_DOCUMENT' | translate
+                                                    }}
                                                 </span>
                                                 <div class="uplodad-style align-items-center">
                                                     <!-- Upload Button Column -->
@@ -181,21 +176,12 @@
                                                         (onRemove)="fileRemoeEvent('Nominee')"
                                                         (onSelect)="fileUploader($event,fileUpload,'Nominee')">
                                                     </p-fileUpload>
-                                                    <div class="col-12  d-flex p-1 contant-body"
-                                                        *ngFor="let img of   termLoanNomineeModel.multipartFileList">
-                                                        <span
-                                                            *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                            <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}"
-                                                                    width="22" height="22"></a>
-                                                        </span>
-                                                        <span *ngIf="img.fileType=='pdf'">
-                                                            <a href="{{img.imageValue}}"> <img
-                                                                    src="assets/images/pdficon-img.png" width="22"
-                                                                    height="22"></a>
-                                                        </span>
-                                                        <span class="docname-texteclipse ml-3"
-                                                            pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                                            {{img.fileName}}</span>
+                                                    <div class="col-12  d-flex p-1 contant-body" *ngFor="let img of termLoanNomineeModel.multipartFileList">
+                                                        <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                            <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22" height="22"></a>
+                                                        </div>
+                                                        <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                                            {{img.fileName}}</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -278,7 +264,7 @@
                                                 <input type="text" formControlName="guardianMobile" pInputText
                                                     placeholder="Enter Mobile Number"
                                                     [(ngModel)]="  termLoanGuardianDetailsModel.guardianMobileNumber" />
-                                                <p-message severity="error" text="Enter Valid Phone Number"
+                                                <p-message severity="error" text="Enter Valid Mobile Number"
                                                     *ngIf="!nomineeForm.controls['guardianMobile'].valid && nomineeForm.controls['guardianMobile'].dirty">
                                                 </p-message>
                                             </div>
@@ -297,7 +283,8 @@
 
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
-                                                <span><span class="red">*</span>{{ 'ERP.SIGNED_DOCUMENT' | translate }}</span>
+                                                <span><span
+                                                    class="red">*</span>{{ 'LOAN_TRANSACTION.SIGNED_DOCUMENT' | translate }}</span>
                                                 <div class="uplodad-style align-items-center">
                                                     <!-- Upload Button Column -->
                                                     <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold"
@@ -306,21 +293,12 @@
                                                         (onRemove)="fileRemoeEvent('Guardain')"
                                                         (onSelect)="fileUploader($event,fileUpload,'Guardain')">
                                                     </p-fileUpload>
-                                                    <div class="col-12 d-flex p-1 contant-body"
-                                                        *ngFor="let img of   termLoanGuardianDetailsModel.guardainSighnedMultipartFiles">
-                                                        <span
-                                                            *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                            <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}"
-                                                                    width="22" height="22"></a>
-                                                        </span>
-                                                        <span *ngIf="img.fileType=='pdf'">
-                                                            <a href="{{img.imageValue}}"> <img
-                                                                    src="assets/images/pdficon-img.png" width="22"
-                                                                    height="22"></a>
-                                                        </span>
-                                                        <span class="docname-texteclipse ml-3"
-                                                            pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                                            {{img.fileName}}</span>
+                                                    <div class="col-12  d-flex p-1 contant-body" *ngFor="let img of termLoanGuardianDetailsModel.guardainSighnedMultipartFiles">
+                                                        <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                            <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22" height="22"></a>
+                                                        </div>
+                                                        <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                                            {{img.fileName}}</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -347,7 +325,8 @@
                                     <div class="row">
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
-                                                <span><span class="red">*</span>{{ 'DEMANDDEPOSITS.SIGNED_DOCUMENT' | translate }}</span>
+                                                <span><span
+                                                    class="red">*</span>{{ 'LOAN_TRANSACTION.SIGNED_DOCUMENT' | translate }}</span>
                                                 <div class="uplodad-style align-items-center">
                                                     <!-- Upload Button Column -->
                                                     <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold"
@@ -356,21 +335,12 @@
                                                         (onRemove)="fileRemoeEvent('Guardain')"
                                                         (onSelect)="fileUploader($event,fileUpload,'Guardain')">
                                                     </p-fileUpload>
-                                                    <div class="col-12 d-flex p-1 contant-body"
-                                                        *ngFor="let img of   termLoanGuardianDetailsModel.guardainSighnedMultipartFiles">
-                                                        <span
-                                                            *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                            <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}"
-                                                                    width="22" height="22"></a>
-                                                        </span>
-                                                        <span *ngIf="img.fileType=='pdf'">
-                                                            <a href="{{img.imageValue}}"> <img
-                                                                    src="assets/images/pdficon-img.png" width="22"
-                                                                    height="22"></a>
-                                                        </span>
-                                                        <span class="docname-texteclipse ml-3"
-                                                            pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                                            {{img.fileName}}</span>
+                                                    <div class="col-12  d-flex p-1 contant-body" *ngFor="let img of termLoanGuardianDetailsModel.guardainSighnedMultipartFiles">
+                                                        <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                            <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22" height="22"></a>
+                                                        </div>
+                                                        <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                                            {{img.fileName}}</div>
                                                     </div>
                                                 </div>
                                             </div>

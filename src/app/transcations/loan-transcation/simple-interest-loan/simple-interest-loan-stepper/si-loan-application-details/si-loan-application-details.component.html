@@ -56,6 +56,9 @@
                         <input pInputText id="bunit_txt_name" type="text" formControlName="applicationNumber"
                             [(ngModel)]="siLoanApplicationModel.applicationNumber"
                             placeholder="Enter Loan Application Number">
+                            <p-message severity="error" text="Enter Application Number"
+                            *ngIf="!siLoanapplicationForm.controls['applicationNumber'].valid && siLoanapplicationForm.controls['applicationNumber'].dirty">
+                        </p-message>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
@@ -105,6 +108,9 @@
                             formControlName="repaymentFrequency" (onChange)="onChangeRepayment($event)"
                             [(ngModel)]="siLoanApplicationModel.repaymentFrequency">
                         </p-dropdown>
+                        <!-- <input pInputText id="bunit_txt_name" maxlength="40" type="text"
+                            formControlName="repaymentFrequencyName" [(ngModel)]="siLoanApplicationModel.repaymentFrequencyName"
+                            placeholder="Enter Repayment Frequency"> -->
                     </div>
                 </div>
 
@@ -147,7 +153,7 @@
                         </label>
                         <p-inputNumber id="bunit_txt_name" formControlName="sanctionAmount"
                             [(ngModel)]="siLoanApplicationModel.sanctionAmount" mode="currency" inputId="currency-india"
-                            currency="INR" locale="en-IN">
+                            currency="INR" locale="en-IN"  (focusout)="onSelectSanctionAmountCailculation(siLoanApplicationModel.sanctionAmount)">
                         </p-inputNumber>
                     </div>
                 </div>
@@ -168,10 +174,13 @@
                         <label for="username">
                             <span class="red">*</span>{{'LOANS.PLANNED_DISBURSEMENTS' | translate}}
                         </label>
-                        <input pInputText id="bunit_txt_name" type="text" formControlName="plannedDisbursements"
+                        <input pInputText id="bunit_txt_name" type="text" formControlName="plannedDisbursements" pKeyFilter="int"
                             [(ngModel)]="siLoanApplicationModel.plannedDisbursements"
-                            placeholder="Enter No of Planned Disbursements" (keyup)="checkPlannedDisbursement()"
-                            > <!-- Condition to disable input -->
+                            placeholder="Enter No of Planned Disbursements" (focusout)="checkPlannedDisbursement()"
+                            >
+                            <!-- <p-message severity="error" text="Enter Planned Disbursements"
+                            *ngIf="!siLoanapplicationForm.controls['plannedDisbursements'].valid && siLoanapplicationForm.controls['plannedDisbursements'].dirty">
+                        </p-message> Condition to disable input -->
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
@@ -180,7 +189,8 @@
                             <span class="red">*</span>{{'LOANS.LOAN_PERIOD_IN_MONTHS' | translate}}
                         </label>
                         <input pInputText id="bunit_txt_name" type="text" formControlName="loanPeriod"
-                            [(ngModel)]="siLoanApplicationModel.loanPeriod" placeholder="Enter Loan Period in Months">
+                            [(ngModel)]="siLoanApplicationModel.loanPeriod" placeholder="Enter Loan Period in Months"
+                            (focusout)="onSelectPeriodInMonths(siLoanApplicationModel.loanPeriod)">
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
@@ -222,6 +232,10 @@
                         </label>
                         <input pInputText id="bunit_txt_name" type="text" formControlName="policyName"
                             [(ngModel)]="siLoanInsuranceDetailsModel.policyName" placeholder="Enter Policy Name">
+
+                            <p-message severity="error" text="Enter Policy Name"
+                            *ngIf="!insurenceDetailsForm.controls['policyName'].valid && insurenceDetailsForm.controls['policyName'].dirty">
+                        </p-message>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
@@ -230,6 +244,9 @@
                         </label>
                         <input pInputText id="bunit_txt_name" type="text" formControlName="policyNumber"
                             [(ngModel)]="siLoanInsuranceDetailsModel.policyNumber" placeholder="Enter Policy Number">
+                            <p-message severity="error" text="Enter Policy Number"
+                            *ngIf="!insurenceDetailsForm.controls['policyNumber'].valid && insurenceDetailsForm.controls['policyNumber'].dirty">
+                        </p-message>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
@@ -342,7 +359,7 @@
                         <td>
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
-                                    <p-calendar formControlName="disbursementDateVal" [showIcon]="true"
+                                    <p-calendar formControlName="disbursementDateVal" [showIcon]="true" [appendTo]="'body'"
                                     [dateFormat]="orgnizationSetting.calendar"
                                     [(ngModel)]="row.disbursementDateVal" placeholder="DD/MM/YYYY"
                                     >
@@ -483,7 +500,7 @@
                                                             <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">
                                                                 <h6 class="label-view">{{'LOANS.LINK_SHARE_CAPITAL_APPLICABLE'
                                                                     |translate}}</h6>
-                                                                <p class="label-input-text"> {{ simpleInterestProductDefinitionModel.loanLinkedshareCapitalApplicable ? 'Yes' : 'No' }}
+                                                                <p class="label-input-text"> {{ simpleInterestProductDefinitionModel.loanLinkedshareCapitalApplicable ? 'Yes' : '' }}
                                                                 </p>
                                                             </div>
                                                             <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">
@@ -494,13 +511,13 @@
                                                             <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">
                                                                 <h6 class="label-view">{{'LOANS.IS_INSURANCE_APPLICABLE'
                                                                     |translate}}</h6>
-                                                                <p class="label-input-text"> {{ simpleInterestProductDefinitionModel.isInsuranceAppicable ? 'Yes' : 'No' }}
+                                                                <p class="label-input-text"> {{ simpleInterestProductDefinitionModel.isInsuranceAppicable ? 'Yes' : '' }}
                                                                 </p>
                                                             </div>
                                                             <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">
                                                                 <h6 class="label-view">
                                                                     {{'LOANS.MIN_DAYS_FOR_RENEWAL' |translate}}</h6>
-                                                                    <p class="label-input-text"> {{ simpleInterestProductDefinitionModel.minDaysForRenewel  }}
+                                                                    <p class="label-input-text"> {{ simpleInterestProductDefinitionModel.minDaysForRenewel }}
                                                             </div>
             
                                                         

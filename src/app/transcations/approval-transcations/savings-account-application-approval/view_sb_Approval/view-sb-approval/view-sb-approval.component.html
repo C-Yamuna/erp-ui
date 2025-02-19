@@ -411,20 +411,20 @@
                                                             <div class="col-lg-7 col-md-7 col-sm-7 col-xs-6 d-flex align-items-center">
                                                                 <div class="card-leftbody">
                                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px" *ngIf="!individualFlag">
-                                                                        <h6 class="label-view">Promoter Name</h6>
+                                                                        <h6 class="label-view">{{'ERP.PROMOTER_NAME' | translate}}</h6>
                                                                         <p class="label-input-text">{{document.promoterName}}</p>
                                                                     </div>
                                                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
-                                                                    <h6 class="label-view">Document Type</h6>
+                                                                    <h6 class="label-view">{{'ERP.DOCUMENT_TYPE' | translate}}</h6>
                                                                     <p class="label-input-text">{{document.kycDocumentTypeName}}</p>
                                                                 </div>
                                                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
-                                                                    <h6 class="label-view">Document Number</h6>
+                                                                    <h6 class="label-view">{{'ERP.DOCUMENT_NUMBER' | translate}}</h6>
                                                                     <p class="label-input-text">{{document.documentNumber}}</p>
                                                                 </div>
                                                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
-                                                                    <h6 class="label-view">Document Name</h6>
-                                                                    <p class="label-input-text docname-texteclipse" pTooltip="{{document.kycFilePath}}" tooltipPosition="bottom">{{document.kycFilePath}} </p>
+                                                                    <h6 class="label-view">{{'ERP.NAME_AS_PER_DOCUMENT' | translate}}</h6>
+                                                                    <p class="label-input-text docname-texteclipse" >{{document.nameAsPerDocument}} </p>
                                                                 </div>
                                                             </div>
                                                             </div>
@@ -646,9 +646,9 @@
                                                 <h6 class="label-view">{{'ERP.ACCOUNT_OPENENIG_DATE' | translate}}</h6>
                                                 <p class="label-input-text">{{viewSavingBankModel.accountOpenDateVal}}</p>
                                             </div>
-                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px" *ngIf="individualFlag">
                                                 <h6 class="label-view">{{'ERP.IS_STAFF' | translate}}</h6>
-                                                <p class="label-input-text">{{membershipBasicRequiredDetails.isStaff}}</p>
+                                                <p class="label-input-text">{{isStaff}}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -773,17 +773,17 @@
                                                             <div class="col-lg-7 col-md-7 col-sm-7 d-flex align-items-center">
                                                                 <div class="card-leftbody">
                                                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
-                                                                    <h6 class="label-view">Document Type</h6>
+                                                                    <h6 class="label-view">{{'ERP.DOCUMENT_TYPE' | translate}}</h6>
                                                                     <p class="label-input-text">{{document.requiredDocumentTypeName}}</p>
                                                                 </div>
                                                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
-                                                                    <h6 class="label-view">Document Number</h6>
+                                                                    <h6 class="label-view">{{'ERP.DOCUMENT_NUMBER' | translate}}</h6>
                                                                     <p class="label-input-text">{{document.documentNumber}}</p>
                                                                 </div>
-                                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                <!-- <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
                                                                     <h6 class="label-view">Document Name</h6>
                                                                     <p class="label-input-text docname-texteclipse" pTooltip="{{document.requiredDocumentFilePath}}" tooltipPosition="bottom">{{document.requiredDocumentFilePath}}</p>
-                                                                </div>
+                                                                </div> -->
                                                             </div>
                                                             </div>
                                                             <div class="col-lg-5 col-md-5 col-sm-5 justify-content-end">

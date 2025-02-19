@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SavingBankApplicationService } from '../savings-bank-application/shared/saving-bank-application.service';
@@ -113,7 +113,7 @@ export class SavingsBankKycComponent implements OnInit {
   saveAndNextEnable : boolean = false;
   kycPhotoCopyZoom: boolean = false;
   isPanNumber: boolean = false;
-
+  isMaximized: boolean = false;
 
 
   constructor(private router: Router, private formBuilder: FormBuilder, private savingBankApplicationService: SavingBankApplicationService, private commonComponent: CommonComponent, private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService, private savingsBankCommunicationService: SavingsBankCommunicationService, private savingsBankKycService: SavingsBankKycService, private commonFunctionsService: CommonFunctionsService, private datePipe: DatePipe , private fileUploadService :FileUploadService) {
@@ -153,31 +153,35 @@ export class SavingsBankKycComponent implements OnInit {
     this.updateData();
   }
   
- /**
-  * @implements get all kyc types
-  * @author jyothi.naidana
-  */
+  /**
+   * @implements get all kyc types
+   * @author jyothi.naidana
+   */
   getAllKycTypes() {
     this.savingsBankKycService.getAllKycTypes().subscribe((res: any) => {
       this.responseModel = res;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         this.documentNameList = this.responseModel.data.filter((kyc: any) => kyc.status == applicationConstants.ACTIVE).map((count: any) => {
-          return { label: count.name, value: count.id , isMandatory:count.isMandatory }
+          return { label: count.name, value: count.id, isMandatory: count.isMandatory }
         });
         let filteredObj = this.documentNameList.find((data: any) => null != data && this.savingsBankKycModel.kycDocumentTypeId != null && data.value == this.savingsBankKycModel.kycDocumentTypeId);
-            if (filteredObj != null && undefined != filteredObj){
-              this.savingsBankKycModel.kycDocumentTypeName = filteredObj.label;
-            }
+        if (filteredObj != null && undefined != filteredObj) {
+          this.savingsBankKycModel.kycDocumentTypeName = filteredObj.label;
+        }
+        let mandatoryList = this.documentNameList.filter((obj: any) => obj.isMandatory == applicationConstants.TRUE);
         let i = 0;
         for (let doc of this.documentNameList) {
           if (i == 0)
-            this.requiredDocumentsNamesText = "Please Upload Mandatory KYC Documents ("
+            this.requiredDocumentsNamesText = "'Please Upload Mandatory KYC Documents "
           if (doc.isMandatory) {
             i = i + 1;
-            this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + "'" + doc.label + "'";
+            this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + doc.label;
+            if (i < mandatoryList.length) {
+              this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + " , "
+            }
           }
         }
-        this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + ")";
+        this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + "'";
         if (i > 0) {
           this.mandatoryDoxsTextShow = true;
         }
@@ -473,16 +477,20 @@ export class SavingsBankKycComponent implements OnInit {
             }
             //required documents
             if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length >0) {
+              let mandatoryList = this.documentNameList.filter((obj:any) => obj.isMandatory== applicationConstants.TRUE);
               let i = 0;
               for (let doc of this.documentNameList) {
                 if (i == 0)
-                  this.requiredDocumentsNamesText = "Please Upload Mandatory KYC Documents ("
+                  this.requiredDocumentsNamesText = "'Please Upload Mandatory KYC Documents "
                 if (doc.isMandatory) {
                   i = i + 1;
-                  this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + "'" + doc.label + "'";
+                  this.requiredDocumentsNamesText = this.requiredDocumentsNamesText +doc.label ;
+                  if(i <mandatoryList.length){
+                    this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + " , "
+                  }
                 }
               }
-              this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + ")";
+              this.requiredDocumentsNamesText = this.requiredDocumentsNamesText;
               if (i > 0) {
                 this.mandatoryDoxsTextShow = true;
               }
@@ -815,7 +823,7 @@ export class SavingsBankKycComponent implements OnInit {
    * @param kycDocTypeId 
    * @author jyothi.naidana
    */
-  kycModelDuplicateCheck(savingsBankKycModel:any){
+  kycModelDuplicateCheck(rowData:any){
     if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0) {
       let filteredObj = this.documentNameList.find((data: any) => null != data && this.savingsBankKycModel.kycDocumentTypeId != null && data.value == this.savingsBankKycModel.kycDocumentTypeId);
       if (filteredObj != null && undefined != filteredObj && filteredObj.label != null && filteredObj.label != undefined) {
@@ -823,24 +831,37 @@ export class SavingsBankKycComponent implements OnInit {
         this.documentNumberDynamicValidation(this.savingsBankKycModel.kycDocumentTypeName );
       }
     }
-  //   if(this.kycModelList != null && this.kycModelList != undefined && this.kycModelList.length > 0){
-  //     let duplicate
-  //     if(this.savingBankApplicationModel.memberTypeName != MemberShipTypesData.INDIVIDUAL){
-  //       duplicate = this.kycModelList.find((obj:any) => obj && obj.kycDocumentTypeId === savingsBankKycModel.kycDocTypeId && obj.promoterId ===  savingsBankKycModel.promoterId);
-  //     }
-  //     else {
-  //       duplicate = this.kycModelList.find((obj:any) => obj && obj.kycDocumentTypeId === savingsBankKycModel.kycDocTypeId );
-  //     }
-   
-  //   if (duplicate != null && duplicate != undefined) {
-  //     this.kycForm.reset();
-  //     this.msgs = [];
-  //     this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "duplicate Kyc Types"}];
-  //     setTimeout(() => {
-  //       this.msgs = [];
-  //     }, 3000);
-  //   } 
-  // }
+    if(this.kycModelList != null && this.kycModelList != undefined && this.kycModelList.length > 0){
+      let duplicate :any
+      if(this.savingsBankKycModel.memberTypeName != MemberShipTypesData.INDIVIDUAL){
+        duplicate = this.kycModelList.filter((obj:any) => obj && obj.kycDocumentTypeId === rowData.kycDocumentTypeId && obj.promoterId ===  rowData.promoterId);
+      }
+      else {
+        duplicate = this.kycModelList.filter((obj:any) => obj && obj.kycDocumentTypeId === rowData.kycDocumentTypeId );
+      }
+    if ( this.addDocumentOfKycFalg && duplicate != null && duplicate != undefined && duplicate.length ==1) {
+      this.kycForm.reset();
+      this.savingsBankKycModel = new SavingsBankKycModel();
+      if(rowData.id != null && rowData != undefined)
+        this.savingsBankKycModel.id = rowData.id;
+      this.msgs = [];
+      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "duplicate Kyc Types"}];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    }
+    else if(!this.addDocumentOfKycFalg && duplicate != null && duplicate != undefined && duplicate.length ==1 && duplicate[0].id != rowData.id){
+      this.kycForm.reset();
+      this.savingsBankKycModel = new SavingsBankKycModel();
+      if(rowData.id != null && rowData != undefined)
+        this.savingsBankKycModel.id = rowData.id;
+      this.msgs = [];
+      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "duplicate Kyc Types"}];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    } 
+  }
   }
 
    /**
@@ -944,5 +965,27 @@ export class SavingsBankKycComponent implements OnInit {
       this.isPanNumber = false;
     }
   }
+
+  // Popup Maximize
+    @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+  
+    onDialogResize(event: any) {
+      this.isMaximized = event.maximized;
+  
+      if (this.isMaximized) {
+        // Restore original image size when maximized
+        this.imageElement.nativeElement.style.width = 'auto';
+        this.imageElement.nativeElement.style.height = 'auto';
+        this.imageElement.nativeElement.style.maxWidth = '100%';
+        this.imageElement.nativeElement.style.maxHeight = '100vh';
+      } else {
+        // Fit image inside the dialog without scrollbars
+        this.imageElement.nativeElement.style.width = '100%';
+        this.imageElement.nativeElement.style.height = '100%';
+        this.imageElement.nativeElement.style.maxWidth = '100%';
+        this.imageElement.nativeElement.style.maxHeight = '100%';
+        this.imageElement.nativeElement.style.objectFit = 'contain';
+      }
+    }
 
 }

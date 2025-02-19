@@ -94,7 +94,7 @@
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
-                                                <span>{{ 'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate }}</span>
+                                                <span><span class="red">*</span>{{ 'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate }}</span>
                                                 <div class="uplodad-style align-items-center">
                                                     <!-- Upload Button Column -->
 
@@ -143,7 +143,7 @@
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
-                                                <span>{{ 'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate }}</span>
+                                                <span><span class="red">*</span>{{ 'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate }}</span>
                                                 <div class="uplodad-style align-items-center">
                                                     <!-- Upload Button Column -->
 
@@ -173,8 +173,9 @@
 
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
-                                                <label>{{'ERP.REMARKS' | translate}}</label>
-                                                <textarea type="text" class="form-control" formControlName="remarks" pInputTextarea placeholder="Enter Remarks Here"></textarea>
+                                                <label><span class="red">*</span>{{'ERP.REMARKS' | translate}}</label>
+                                                <textarea type="text" class="form-control" formControlName="remarks" [(ngModel)]="fdCumulativeNomineeModel.remarks"
+                                                pInputTextarea placeholder="Enter Remarks Here"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -317,7 +318,8 @@
 
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
-                                                <span>{{ 'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate }}</span>
+                                                <span><span
+                                                    class="red">*</span>{{ 'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate }}</span>
                                                 <div class="uplodad-style align-items-center">
                                                     <!-- Upload Button Column -->
                                                     <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold"
@@ -343,8 +345,9 @@
 
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
-                                                <label>{{'ERP.REMARKS' | translate}}</label>
-                                                <textarea type="text" class="form-control" pInputTextarea formControlName="guardianRemarks" placeholder="Enter Remarks Here"></textarea>
+                                                <label><span class="red">*</span>{{'ERP.REMARKS' | translate}}</label>
+                                                <textarea type="text" class="form-control" pInputTextarea formControlName="guardianRemarks" placeholder="Enter Remarks Here"
+                                                [(ngModel)]="memberGuardianDetailsModelDetails.remarks"></textarea>
                                             </div>
                                         </div>
                                     </div>

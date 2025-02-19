@@ -52,7 +52,6 @@ export class TransactionLimitConfigComponent {
       'maxWithdrawLimitOtherBranchAtmInDay':  new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS_ONLY),Validators.required]),
       'maxTransferLimitPerDay': new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS_ONLY),Validators.required]),
       'maxWithdrawLimitByCheque': new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS_ONLY),Validators.required]),
-
       'maxWithdrawLimitByDebitCard': new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS_ONLY),Validators.required]),
       'maxWithdrawLimitInBranch': new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS_ONLY),Validators.required]),
 
@@ -63,44 +62,38 @@ export class TransactionLimitConfigComponent {
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
     this.activateRoute.queryParams.subscribe(params => {
       if (params['id'] != undefined) {
-        this.commonComponent.startSpinner(); 
+        this.commonComponent.startSpinner();
         this.productId = Number(this.encryptService.decrypt(params['id']));
         if (this.productId != "" && this.productId != null && this.productId != undefined) {
           this.isEdit = true;
           this.generalConfigService.getGeneralConfigById(this.productId).subscribe(res => {
             this.responseModel = res;
-            if (this.responseModel.status == applicationConstants.STATUS_SUCCESS && this.responseModel.data[0] !=null) {
+            if (this.responseModel.status == applicationConstants.STATUS_SUCCESS && this.responseModel.data[0] != null) {
               this.generalConfigModel = this.responseModel.data[0];
               if (this.generalConfigModel != null && this.generalConfigModel != undefined) {
-                if(this.generalConfigModel.effectiveStartDate != null && this.generalConfigModel.effectiveStartDate != undefined &&this.generalConfigModel.effectiveStartDate!=null&&this.generalConfigModel.effectiveStartDate!= undefined){
-                  this.generalConfigModel.effectiveStartDate=this.datePipe.transform(this.generalConfigModel.effectiveStartDate, this.orgnizationSetting.datePipe);                
-                } 
-                if(this.generalConfigModel.transactionLimitConfigDto  != null && this.generalConfigModel.transactionLimitConfigDto  != undefined)
-              
+                if (this.generalConfigModel.effectiveStartDate != null && this.generalConfigModel.effectiveStartDate != undefined && this.generalConfigModel.effectiveStartDate != null && this.generalConfigModel.effectiveStartDate != undefined) {
+                  this.generalConfigModel.effectiveStartDate = this.datePipe.transform(this.generalConfigModel.effectiveStartDate, this.orgnizationSetting.datePipe);
+                }
+                if (this.generalConfigModel.transactionLimitConfigDto != null && this.generalConfigModel.transactionLimitConfigDto != undefined)
+
                   this.transactionLimitConfigModel = this.generalConfigModel.transactionLimitConfigDto;
-  
-  
-               
-              
-                
-                
               }
-            this.commonComponent.stopSpinner();
-            }else {
+              this.commonComponent.stopSpinner();
+            } else {
               this.commonComponent.stopSpinner();
               this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
               setTimeout(() => {
                 this.msgs = [];
               }, 2000);
             }
-            
+
           }, error => {
             this.msgs = [];
-            this.msgs = [{ severity: "error", summary: 'Failed', detail:  applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST }];
+            this.msgs = [{ severity: "error", summary: 'Failed', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST }];
             this.commonComponent.stopSpinner();
           });
         }
-      } 
+      }
     })
     this.transactionlimitconfigform.valueChanges.subscribe((data: any) => {
       this.updateData();
@@ -108,8 +101,8 @@ export class TransactionLimitConfigComponent {
         this.save();
       }
     });
-  this.save();
-  this.pacsId = 1;
+    this.save();
+    this.pacsId = 1;
   }
   save() {
     this.updateData();
@@ -126,6 +119,10 @@ export class TransactionLimitConfigComponent {
     this.router.navigate([]);
   }
 
+   /**
+   * @author Dileep_Kumar_G
+   * @implements check Min Deposit Amount Based On Pan
+   */
   checkMinDepositAmountBasedOnPan(box : any){
     if(this.transactionLimitConfigModel.minDepositLimitPerDayWithPan != null && this.transactionLimitConfigModel.minDepositLimitPerDayWithPan != undefined
       && this.transactionLimitConfigModel.minDepositLimitPerDayWithoutPan != null && this.transactionLimitConfigModel.minDepositLimitPerDayWithoutPan != undefined
@@ -133,10 +130,10 @@ export class TransactionLimitConfigComponent {
       if(Number(this.transactionLimitConfigModel.minDepositLimitPerDayWithPan) < Number(this.transactionLimitConfigModel.minDepositLimitPerDayWithoutPan)){
  this.msgs = [];
     if (box == BoxNumber.BOX_ONE) {
-      this.msgs.push({ severity: 'warning', detail: applicationConstants.MINIMUM_DEPOSIT_AMOUNT_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAXIMUM_DEPOSIT_AMOUNT });
+      this.msgs.push({ severity: 'warning', detail: applicationConstants.MINIMUM_DEPOSIT_LIMIT_PER_DAY_WITH_PAN_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MINIMUM_DEPOSIT_LIMIT_PER_DAY_WITH_OUT_PAN });
      this.transactionlimitconfigform.get('minDepositLimitPerDayWithPan')?.reset();
     } else if (box == BoxNumber.BOX_TWO) {
-      this.msgs.push({ severity: 'warning', detail: applicationConstants.MAXIMUM_DEPOSIT_AMOUNT_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MINIMUM_DEPOSIT_AMOUNT });
+      this.msgs.push({ severity: 'warning', detail: applicationConstants.MINIMUM_DEPOSIT_LIMIT_PER_DAY_WITH_OUT_PAN_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MINIMUM_DEPOSIT_LIMIT_PER_DAY_WITH_PAN});
       this.transactionlimitconfigform.get('minDepositLimitPerDayWithoutPan')?.reset();
     }
     setTimeout(() => {
@@ -144,6 +141,81 @@ export class TransactionLimitConfigComponent {
     }, 1500);
       }
     }
+    this.updateData();
+  }
+   /**
+   * @author Dileep_Kumar_G
+   * @implements check Max Deposit Amount Based On Pan
+   */
+  checkMaxDepositAmountBasedOnPan(box: any) {
+    if (this.transactionLimitConfigModel.maxDepositLimitPerDayWithPan != null && this.transactionLimitConfigModel.maxDepositLimitPerDayWithPan != undefined
+      && this.transactionLimitConfigModel.maxDepositLimitPerDayWithoutPan != null && this.transactionLimitConfigModel.maxDepositLimitPerDayWithoutPan != undefined
+    ) {
+      if (Number(this.transactionLimitConfigModel.maxDepositLimitPerDayWithPan) < Number(this.transactionLimitConfigModel.maxDepositLimitPerDayWithoutPan)) {
+        this.msgs = [];
+        if (box == BoxNumber.BOX_ONE) {
+          this.msgs.push({ severity: 'warning', detail: applicationConstants.MAXIMUM_DEPOSIT_LIMIT_PER_DAY_WITH_PAN_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAXIMUM_DEPOSIT_LIMIT_PER_DAY_WITH_OUT_PAN });
+          this.transactionlimitconfigform.get('maxDepositLimitPerDayWithPan')?.reset();
+        } else if (box == BoxNumber.BOX_TWO) {
+          this.msgs.push({ severity: 'warning', detail: applicationConstants.MAXIMUM_DEPOSIT_LIMIT_PER_DAY_WITH_OUT_PAN_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MAXIMUM_DEPOSIT_LIMIT_PER_DAY_WITH_PAN });
+          this.transactionlimitconfigform.get('maxDepositLimitPerDayWithoutPan')?.reset();
+        }
+        setTimeout(() => {
+          this.msgs = [];
+        }, 1500);
+      }
+    }
+    this.updateData();
+  }
+
+  /**
+   * @author Dileep_Kumar_G
+   * @implements check Minimum Withdraw Amount Based On Pan
+   */
+  checkMinimumWithdrawAmountBasedOnPan(box : any){
+    if(this.transactionLimitConfigModel.minWithdrawLimitPerDayWithPan != null && this.transactionLimitConfigModel.minWithdrawLimitPerDayWithPan != undefined
+      && this.transactionLimitConfigModel.minWithdrawLimitPerDayWithoutPan != null && this.transactionLimitConfigModel.minWithdrawLimitPerDayWithoutPan != undefined
+    ){
+      if(Number(this.transactionLimitConfigModel.minWithdrawLimitPerDayWithoutPan) > Number(this.transactionLimitConfigModel.minWithdrawLimitPerDayWithPan)){
+ this.msgs = [];
+    if (box == BoxNumber.BOX_ONE) {
+      this.msgs.push({ severity: 'warning', detail: applicationConstants.MINIMUM_WITH_DRAW_LIMIT_PER_DAY_WITH_PAN_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MINIMUM_WITH_DRAW_LIMIT_PER_DAY_WITH_OUT_PAN });
+     this.transactionlimitconfigform.get('minWithdrawLimitPerDayWithPan')?.reset();
+    } else if (box == BoxNumber.BOX_TWO) {
+      this.msgs.push({ severity: 'warning', detail: applicationConstants.MINIMUM_WITH_DRAW_LIMIT_PER_DAY_WITH_OUT_PAN_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MINIMUM_WITH_DRAW_LIMIT_PER_DAY_WITH_PAN});
+      this.transactionlimitconfigform.get('minWithdrawLimitPerDayWithOutPan')?.reset();
+    }
+    setTimeout(() => {
+      this.msgs = [];
+    }, 1500);
+      }
+    }
+    this.updateData();
+  }
+
+  /**
+   * @author Dileep_Kumar_G
+   * @implements check Maximum Withdraw Amount Based On Pan
+   */
+  checkMaximumWithdrawAmountBasedOnPan(box : any){
+    if(this.transactionLimitConfigModel.maxWithdrawLimitSameBranchAtmInDay != null && this.transactionLimitConfigModel.maxWithdrawLimitSameBranchAtmInDay != undefined
+      && this.transactionLimitConfigModel.maxWithdrawLimitOtherBranchAtmInDay != null && this.transactionLimitConfigModel.maxWithdrawLimitOtherBranchAtmInDay != undefined
+    ){
+      if(Number(this.transactionLimitConfigModel.maxWithdrawLimitSameBranchAtmInDay) < Number(this.transactionLimitConfigModel.maxWithdrawLimitOtherBranchAtmInDay)){
+ this.msgs = [];
+    if (box == BoxNumber.BOX_ONE) {
+      this.msgs.push({ severity: 'warning', detail: applicationConstants.MAXIMUM_WITH_DRAW_LIMIT_SAME_BRANCH_ATM_PER_DAY_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAXIMUM_WITH_DRAW_LIMIT_OTHER_BRANCH_ATM_PER_DAY });
+     this.transactionlimitconfigform.get('maxWithdrawLimitSameBranchAtmInDay')?.reset();
+    } else if (box == BoxNumber.BOX_TWO) {
+      this.msgs.push({ severity: 'warning', detail: applicationConstants.MAXIMUM_WITH_DRAW_LIMIT_OTHER_BRANCH_ATM_PER_DAY_WITH_OUT_PAN_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MAXIMUM_WITH_DRAW_SAME_BRANCH_ATM_LIMIT_PER_DAY});
+      this.transactionlimitconfigform.get('maxWithdrawLimitOtherBranchAtmInDay')?.reset();
+    }
+    setTimeout(() => {
+      this.msgs = [];
+    }, 1500);
+      }
+    }
+    this.updateData();
   }
 
 }

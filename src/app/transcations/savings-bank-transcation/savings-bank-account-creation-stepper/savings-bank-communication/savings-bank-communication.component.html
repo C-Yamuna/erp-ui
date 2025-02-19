@@ -83,10 +83,13 @@
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                    <label>{{'ERP.ADDRESS' | translate}}</label>
+                                    <label><span class="red">*</span>{{'ERP.ADDRESS' | translate}}</label>
                         
                                         <textarea type="text" class="form-control" pInputTextarea formControlName="regesteredAddressOne" placeholder="House No., Door No., Landmark..etc"
                                         (keyup)="appendPinCodeToPermenent()"  [(ngModel)]="savingsBankCommunicationModel.address1"></textarea>
+                                        <p-message severity="error" text="Enter Valid address"
+                                        *ngIf="!communicationForm.controls['regesteredAddressOne'].valid && communicationForm.controls['regesteredAddressOne'].dirty">
+                            </p-message>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
@@ -155,10 +158,13 @@
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-label">
-                                <label>{{'ERP.ADDRESS' | translate}}</label>
+                                <label><span class="red">*</span>{{'ERP.ADDRESS' | translate}}</label>
                                     <textarea type="text" class="form-control" pInputTextarea formControlName="permenentAddressOne"
                                         [(ngModel)]="savingsBankCommunicationModel.permntAddress1" placeholder="House No., Door No., Landmark..etc"
                                         ></textarea>
+                                        <p-message severity="error" text="Enter Valid Address"
+                                        *ngIf="!communicationForm.controls['permenentAddressOne'].valid && communicationForm.controls['permenentAddressOne'].dirty">
+                            </p-message>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">

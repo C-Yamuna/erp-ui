@@ -506,6 +506,20 @@
                                                 <p class="label-input-text">
                                                     {{fdNonCumulativeApplicationModel.tenureInYears}}</p>
                                             </div>
+                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.MATURITY_AMOUNT' |
+                                                    translate}}
+                                                </h6>
+                                                <p class="label-input-text">
+                                                    {{fdNonCumulativeApplicationModel.maturityAmount}}</p>
+                                            </div>
+                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.MATURITY_DATE' |
+                                                    translate}}
+                                                </h6>
+                                                <p class="label-input-text">
+                                                    {{fdNonCumulativeApplicationModel.maturityDate}}</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -722,7 +736,7 @@
                                 </div>
                                 <div class="col-lg-12 col-md-12 col-sm-6">
                                     <div class="form-label">
-                                        <label>{{'ERP.TRANSACTION_MODES' | translate}}</label>
+                                        <label><span class="red">*</span> {{'ERP.PAYMENT_MODE' | translate}}</label>
                                         <p-dropdown [options]="transactionModelist" optionLabel="label" formControlName="transactionMode"
                                             (onChange)="onPaymentTypeChange($event)" [(ngModel)]="fdNonCummulativeTransactionModel.transactionMode"
                                             placeholder="Select Payment Type" placeholder="Select"></p-dropdown>
@@ -730,7 +744,7 @@
                                 </div>
                                 <div class="col-lg-12 col-md-12 col-sm-6">
                                     <div class="form-label">
-                                        <label>{{'ERP.IS_VERIFIED' | translate}}</label>
+                                        <label><span class="red">*</span> {{'ERP.IS_VERIFIED' | translate}}</label>
                                         <p-dropdown [options]="verifiedList" optionLabel="label" formControlName="isVerified"
                                              [(ngModel)]="fdNonCummulativeTransactionModel.isVerified"
                                          placeholder="Select"></p-dropdown>
@@ -748,7 +762,7 @@
                     
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="form-label">
-                                        <span class=""><span class="red">*</span> {{ 'ERP.SIGNED_COPY_PATH' | translate }} </span>
+                                        <span class=""> {{ 'ERP.UPLOAD_SIGNED_COPY' | translate }} </span>
                                         <div class="uplodad-style align-items-center">
                                             <!-- Upload Button Column -->
         
@@ -793,7 +807,7 @@
                     <div class="col-12 d-flex justify-content-end px-0 mt-1 group-button-bottom">
                         <p-button label="Back" (click)="backbutton()"></p-button>
                         <!-- <p-button label="Cancel" (click)="backbutton()"></p-button> -->
-                        <p-button label="{{'ERP.SUBMIT' | translate}}"
+                        <p-button label="{{'ERP.SUBMIT' | translate}}" [disabled]="!transactionForm.valid"
                             (click)="saveFdNonCummulativeTransaction(fdNonCummulativeTransactionModel)"></p-button>
                     </div>
                 </div>

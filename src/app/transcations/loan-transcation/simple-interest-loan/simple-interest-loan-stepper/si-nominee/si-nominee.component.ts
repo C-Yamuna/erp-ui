@@ -25,7 +25,7 @@ import { SiLoanApplication } from '../../../shared/si-loans/si-loan-application.
   styleUrls: ['./si-nominee.component.css']
 })
 export class SiNomineeComponent {
-   nomineeForm: FormGroup;
+   nomineeForm: any;
     guarantorDetailsForm: any;
     nominee: any;
     nomineeList: any;
@@ -188,7 +188,7 @@ export class SiNomineeComponent {
     //update model data to stepper component
     //@k.yamuna
     updateData() {
-     
+      this.siLoanNomineeModel.memberTypeName = this.memberTypeName;
       if(this.relationTypesList != null && this.relationTypesList != undefined && this.relationTypesList.length > 0){
         let nominee = this.relationTypesList.find((data: any) => null != data && this.siLoanNomineeModel.relationTypeId != null && data.value == this.siLoanNomineeModel.relationTypeId);
         if (nominee != null && undefined != nominee && nominee.label != null && nominee.label != undefined) {
@@ -224,6 +224,12 @@ export class SiNomineeComponent {
     //on change nominee type need to update validation
     //@k.yamuna
     onChange(event: any ,flag :boolean) {
+      this.nomineeForm.get('relationName').reset();
+      this.nomineeForm.get('nomineeName').reset();
+      this.nomineeForm.get('aadhaar').reset();
+      this.nomineeForm.get('mobileNumber').reset();
+      this.nomineeForm.get('email').reset();
+
       if (event == 1) {//new nominee
         this.newNomineeType(flag);
       }
@@ -241,6 +247,12 @@ export class SiNomineeComponent {
      * @param event guardain Type
      */
     onChangeGuardain(event: any , flag :boolean) {
+      this.nomineeForm.get('relationNameOfGuardian').reset();
+      this.nomineeForm.get('guardianName').reset();
+      this.nomineeForm.get('guardianAadhar').reset();
+      this.nomineeForm.get('guardianMobile').reset();
+      this.nomineeForm.get('guardianEmail').reset();
+
       if (event == 1) {//new guardain
         this.newGuardainType(flag);
       }
@@ -341,12 +353,15 @@ export class SiNomineeComponent {
                 if(this.siLoanNomineeModel.nomineeFilePath != null && this.siLoanNomineeModel.nomineeFilePath != undefined){
                   if(this.siLoanNomineeModel.nomineeType != null && this.siLoanNomineeModel.nomineeType != undefined){
                     if(this.siLoanNomineeModel.nomineeType != 2){
-                      this.siLoanNomineeModel.nomineeSighnedFormMultiPartList =  this.fileUploadService.getFile(this.siLoanNomineeModel.nomineeFilePath , ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.siLoanNomineeModel.nomineeFilePath);
+                      this.siLoanNomineeModel.nomineeSighnedFormMultiPartList =  this.fileUploadService.getFile(this.siLoanNomineeModel.nomineeFilePath , ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.siLoanNomineeModel.nomineeFilePath);
+                      this.isFileUploadedNominee = applicationConstants.TRUE;                    
                     }
                     else {
-                      this.siLoanNomineeModel.nomineeSighnedFormMultiPartList =  this.fileUploadService.getFile(this.siLoanNomineeModel.nomineeFilePath , ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.siLoanNomineeModel.nomineeFilePath);
+                      this.siLoanNomineeModel.nomineeSighnedFormMultiPartList =  this.fileUploadService.getFile(this.siLoanNomineeModel.nomineeFilePath , ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.siLoanNomineeModel.nomineeFilePath);
+                      this.isFileUploadedNominee = applicationConstants.TRUE;
                     }
                     this.isFileUploadedNominee = applicationConstants.TRUE;
+                    this.updateData();
                   }
                   
                 }
@@ -359,10 +374,10 @@ export class SiNomineeComponent {
                 if(this.siLoanGuardianModel.uploadFilePath != null && this.siLoanGuardianModel.uploadFilePath != undefined){
                   if(this.siLoanGuardianModel.guardianType != null && this.siLoanGuardianModel.guardianType != undefined){
                     if(this.siLoanGuardianModel.guardianType != 2){
-                      this.siLoanGuardianModel.guardainSighnedMultipartFiles =  this.fileUploadService.getFile(this.siLoanGuardianModel.uploadFilePath , ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.siLoanGuardianModel.uploadFilePath);
+                      this.siLoanGuardianModel.guardainSighnedMultipartFiles =  this.fileUploadService.getFile(this.siLoanGuardianModel.uploadFilePath , ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.siLoanGuardianModel.uploadFilePath);
                     }
                     else {
-                      this.siLoanGuardianModel.guardainSighnedMultipartFiles =  this.fileUploadService.getFile(this.siLoanGuardianModel.uploadFilePath , ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.siLoanGuardianModel.uploadFilePath);
+                      this.siLoanGuardianModel.guardainSighnedMultipartFiles =  this.fileUploadService.getFile(this.siLoanGuardianModel.uploadFilePath , ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.siLoanGuardianModel.uploadFilePath);
                     }
                     this.isFileUploadedGuardina = applicationConstants.TRUE;
                   }
@@ -387,6 +402,7 @@ export class SiNomineeComponent {
                 }
               }
             }
+            this.updateData();
           }
           else {
             this.msgs = [];
@@ -763,13 +779,12 @@ export class SiNomineeComponent {
           }, 2000);
         });
     }
-  
-    /**
-     * @implements fileUpload service
-     * @param event 
-     * @param fileUpload 
-     * @param filePathName 
-     */
+      // /**
+    //  * @implements fileUpload service
+    //  * @param event 
+    //  * @param fileUpload 
+    //  * @param filePathName 
+    //  */
     fileUploader(event: any, fileUpload: FileUpload , filePathName:any) {
       this.multipleFilesList = [];
       if(this.siLoanNomineeModel != null && this.siLoanNomineeModel != undefined && this.isEdit && this.siLoanNomineeModel.filesDTOList == null || this.siLoanNomineeModel.filesDTOList == undefined){
@@ -784,7 +799,6 @@ export class SiNomineeComponent {
       if (filePathName === "Guardain") {
         this.isFileUploadedGuardina = applicationConstants.FALSE;
       }
-      let files: FileUploadModel = new FileUploadModel();
       for (let file of event.files) {
        
         let reader = new FileReader();
@@ -863,6 +877,11 @@ export class SiNomineeComponent {
           ]);
           controlFive.updateValueAndValidity();
         }
+        const controlSeven = this.nomineeForm.get('guardianRemarks');
+        if(controlSeven){
+          controlSeven.setValidators(null);
+          controlSeven.updateValueAndValidity();
+        }
         this.updateData();
       }
     }
@@ -916,6 +935,11 @@ export class SiNomineeComponent {
         controlSix.setValidators(null); // Set the required validator null
         controlSix.updateValueAndValidity();
       }
+      const controlSeven = this.nomineeForm.get('remarks');
+      if(controlSeven){
+        controlSeven.setValidators(null);
+        controlSeven.updateValueAndValidity();
+      }
       this.updateData();
     }
     /**
@@ -968,6 +992,11 @@ export class SiNomineeComponent {
         ]);
         controlSix.updateValueAndValidity();
       }
+      const controlSeven = this.nomineeForm.get('remarks');
+      if(controlSeven){
+        controlSeven.setValidators(null);
+        controlSeven.updateValueAndValidity();
+      }
       this.updateData();
     }
   
@@ -997,13 +1026,13 @@ export class SiNomineeComponent {
         controlFive.setValidators(null); // Set the required validator null
         controlFive.updateValueAndValidity();
       }
-      const controlSix = this.nomineeForm.get('remarks');
-      if(controlSix){
-        controlSix.setValidators([
-          Validators.required,
-        ]);
-      controlSix.updateValueAndValidity();
-      }
+      // const controlSix = this.nomineeForm.get('remarks');
+      // if(controlSix){
+      //   controlSix.setValidators([
+      //     Validators.required,
+      //   ]);
+      // controlSix.updateValueAndValidity();
+      // }
       this.updateData();
     }
   
@@ -1041,6 +1070,7 @@ export class SiNomineeComponent {
         this.noNominee = false;
         //onchange on update
         if(flag){
+          this.isFileUploadedNominee = applicationConstants.FALSE
           let nomineeId = null;
           if(this.siLoanNomineeModel != null && this.siLoanNomineeModel != undefined && this.siLoanNomineeModel.id  != null && this.siLoanNomineeModel.id  != undefined){
             nomineeId = this.siLoanNomineeModel.id ;
@@ -1089,10 +1119,12 @@ export class SiNomineeComponent {
       this.noNominee = true;
       this.newNominee = false;
       this.sameAsMembershipNominee = false;
+     
       if(flag){
         let nomineeId = null;//onchange on update
         let remarks = null;
         let nomineeFilePath = null;
+        this.isFileUploadedNominee = applicationConstants.FALSE
         if(this.siLoanNomineeModel != null && this.siLoanNomineeModel != undefined){
           if(this.siLoanNomineeModel.id  != null && this.siLoanNomineeModel.id  != undefined){
             nomineeId = this.siLoanNomineeModel.id ;
@@ -1102,7 +1134,7 @@ export class SiNomineeComponent {
           }
           if(this.siLoanNomineeModel.nomineeFilePath  != null && this.siLoanNomineeModel.nomineeFilePath  != undefined){
             nomineeFilePath = this.siLoanNomineeModel.nomineeFilePath ;
-            this.siLoanNomineeModel.nomineeFilePath = this.fileUploadService.getFile(this.siLoanNomineeModel.nomineeFilePath , ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.siLoanNomineeModel.nomineeFilePath);
+            this.siLoanNomineeModel.nomineeFilePath = this.fileUploadService.getFile(this.siLoanNomineeModel.nomineeFilePath , ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.siLoanNomineeModel.nomineeFilePath);
           }
         }
         this.siLoanNomineeModel = new SiLoanNominee();
@@ -1117,7 +1149,17 @@ export class SiNomineeComponent {
         this.siLoanNomineeModel.nomineeFilePath = nomineeFilePath;
         }
       }
+      const controlSix = this.nomineeForm.get('remarks');
+      if(controlSix){
+        controlSix.setValidators([
+          Validators.required,
+        ]);
+      controlSix.updateValueAndValidity();
+      }
+     
+      // this.updateData();
       this.nomineeValidatorsFormNotRequired();
+      this.updateData();
       // this.newNominee = false;
     }
   
@@ -1130,6 +1172,7 @@ export class SiNomineeComponent {
       this.courtAppointedGuardain = false;
         this.sameAsMemberGuardain = true;
         this.noGuardain  = false;
+        this.isFileUploadedNominee = applicationConstants.FALSE
         //onchange on update
         if(flag){
           let guardainId = null;
@@ -1173,6 +1216,7 @@ export class SiNomineeComponent {
     noGuardainaType(flag:boolean){
       this.courtAppointedGuardain = true;
       this.sameAsMemberGuardain = false;
+      this.isFileUploadedNominee = applicationConstants.FALSE
       this.noGuardain  = true;
       //onchange on update
       let guardainId = null;
@@ -1188,7 +1232,7 @@ export class SiNomineeComponent {
           }
           if(this.siLoanGuardianModel.uploadFilePath  != null && this.siLoanGuardianModel.uploadFilePath  != undefined){
             uploadFilePath = this.siLoanGuardianModel.uploadFilePath ;
-            this.siLoanGuardianModel.guardainSighnedMultipartFiles =this.fileUploadService.getFile(this.siLoanGuardianModel.uploadFilePath , ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.siLoanGuardianModel.uploadFilePath);
+            this.siLoanGuardianModel.guardainSighnedMultipartFiles =this.fileUploadService.getFile(this.siLoanGuardianModel.uploadFilePath , ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.siLoanGuardianModel.uploadFilePath);
           }
         }
     

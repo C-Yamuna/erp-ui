@@ -58,6 +58,7 @@ export class AmountBlockComponent {
   multipleFilesList: any[] = [];
   uploadFileData: any;
   isEditDeleteButtonEnable: boolean = false;
+  amountBlockUpdateAllow: boolean = false;
 
   constructor(private router: Router, private formBuilder: FormBuilder, private commonFunctionsService :CommonFunctionsService , private translate: TranslateService , private savingBankApplicationService : SavingBankApplicationService ,private datePipe: DatePipe,private fileUploadService :FileUploadService,private commonComponent: CommonComponent,private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService,private amountBlockService :AmountBlockService )
   { 
@@ -114,8 +115,6 @@ showBasicDetailsDialog(position: string) {
   this.position = position;
   this.isBasicDetails = true;
 }
-edit(){}
-
 
   /**
    * @implements get by sbAccountId
@@ -626,9 +625,21 @@ cancelOrRefresh(){
   onAmountChange() {
     if (this.amountBlockModel.blockingAmount !== null && this.amountBlockModel.blockingAmount >= 0 && this.amountBlockModel.blockingAmount != "") {
       this.amountBlockModel.amountInWords = this.commonFunctionsService.convertToWords(this.amountBlockModel.blockingAmount);
+      // if(this.amountBlockModel.blockingAmount >= this.savingBankApplicationModel.balance){
+      //   this.msgs = [{ severity: 'error', detail: "Insufficient Funds To Block Amount On This Account Please Check Balnce" }];
+      //   setTimeout(() => {
+      //     this.accountblockform.get("blockAmount")?.reset();
+      //     this.msgs = [];
+      //   }, 2000);
+      //   this.amountBlockUpdateAllow = false;
+      // }
+      // else {
+      //   this.amountBlockUpdateAllow = false;
+      // }
     } else {
       this.amountBlockModel.amountInWords = '';
     }
+    
   }
 
 

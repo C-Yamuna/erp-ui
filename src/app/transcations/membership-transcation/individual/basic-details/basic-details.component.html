@@ -42,6 +42,14 @@
                         </p-message>
                     </div>
                 </div>
+                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12" >
+                    <div class="form-label">
+                        <label for="username"> <span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.SOCIETY_ADMISSION_NUMBER' | translate}}
+                        </label>
+                        <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="societyAdmissionNo" placeholder="Enter Admission Number"
+                            [(ngModel)]="memberBasicDetailsModel.societyAdmissionNumber">
+                    </div>
+                </div>
                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-6">
                     <div class="form-label">
                         <label for="username"> <span class="red">*</span>{{'ERP.DATE_OF_BIRTH' | translate}}
@@ -81,8 +89,8 @@
                         </p-dropdown>
                     </div>
                 </div>
-            </div>
-            <div class="row g-3 mt-0">
+            <!-- </div>
+            <div class="row g-3 mt-0"> -->
                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                     <div class="form-label">
                         <label> <span class="red">*</span> {{'ERP.MARITAL_STATUS' | translate}}</label>
@@ -221,7 +229,6 @@
                         </p-calendar>
                     </div>
                 </div>
-
                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                     <div class="form-label">
                         <label for="username">{{'ERP.ADMISSION_FEE' | translate}}
@@ -232,17 +239,15 @@
                     </p-inputNumber>
                     </div>
                 </div>
-
-                
-            </div>
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                <div class="form-label">
-                    <label for="code">
-                        <span class="red">*</span>{{'ERP.IS_STAFF' | translate}}
-                    </label>
-
-                    <p-dropdown [options]="requiredlist" formControlName="isStaff"
-                        [(ngModel)]="memberBasicDetailsModel.isStaff" placeholder="Select"></p-dropdown>
+                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                    <div class="form-label">
+                        <label for="code">
+                            <span class="red">*</span>{{'ERP.IS_STAFF' | translate}}
+                        </label>
+    
+                        <p-dropdown [options]="requiredlist" formControlName="isStaff"
+                            [(ngModel)]="memberBasicDetailsModel.isStaff" placeholder="Select"></p-dropdown>
+                    </div>
                 </div>
             </div>
             <div class="row g-3 mt-0">

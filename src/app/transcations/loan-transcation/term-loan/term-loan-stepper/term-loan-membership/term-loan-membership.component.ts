@@ -80,9 +80,9 @@ export class TermLoanMembershipComponent {
        private membershipService: TermLoanNewMembershipService, private termLoanKycService: TermLoanKycService, 
         private fileUploadService : FileUploadService) {
           this.kycForm = this.formBuilder.group({
-            'documentNumber': new FormControl('', [Validators.required, Validators.pattern(/^[^\s]+(\s.*)?$/)]),
+            'documentNumber': ['',[Validators.pattern(applicationConstants.ALLOW_NUMBERS_ONLY),Validators.compose([Validators.required])]],
             'kycDocumentTypeName': new FormControl('', Validators.required),
-            'nameAsPerDocument' : new FormControl('', Validators.required),
+            'nameAsPerDocument' :  ['',[Validators.pattern(applicationConstants.NEW_ALPHANUMERIC),Validators.compose([Validators.required])]],
             'fileUpload': new FormControl('')
           });
   }
@@ -179,8 +179,8 @@ export class TermLoanMembershipComponent {
   */
   updateData() {
     if(this.termLoanKycDetailsList != null && this.termLoanKycDetailsList != undefined && this.termLoanKycDetailsList.length > 0){
-      this.kycDuplicate = this.termLoanKycModelDuplicateCheck(this.termLoanKycDetailsList);
-      if(this.kycDuplicate){
+      // this.kycDuplicate = this.termLoanKycModelDuplicateCheck(this.termLoanKycDetailsList);
+      if(this.kycDuplicate|| this.buttonDisabled){
         this.isDisableFlag = true;
       }
       else{
@@ -372,7 +372,7 @@ export class TermLoanMembershipComponent {
   //image upload and document path save
   imageUploader(event: any, fileUpload: FileUpload) {
     this.isFileUploaded = applicationConstants.FALSE;
-    this.multipleFilesList = [];
+    this.termLoanKycModel.multipartFileList = [];
     this.termLoanKycModel.filesDTOList = [];
     this.termLoanKycModel.kycFilePath = null;
     let files: FileUploadModel = new FileUploadModel();
@@ -385,15 +385,15 @@ export class TermLoanMembershipComponent {
         files.fileType = file.type.split('/')[1];
         files.value = this.uploadFileData.result.split(',')[1];
         files.imageValue = this.uploadFileData.result;
-        
         let index = this.multipleFilesList.findIndex(x => x.fileName == files.fileName);
         if (index === -1) {
           this.multipleFilesList.push(files);
           this.termLoanKycModel.filesDTOList.push(files); // Add to filesDTOList array
         }
         let timeStamp = this.commonComponent.getTimeStamp();
-        this.termLoanKycModel.filesDTOList[0].fileName = "TERM_KYC_" + this.termLoanApplicationId + "_" +timeStamp+ "_"+ file.name ;
-        this.termLoanKycModel.kycFilePath = "TERM_KYC_" + this.termLoanApplicationId + "_" +timeStamp+"_"+ file.name; // This will set the last file's name as kycFilePath
+        this.termLoanKycModel.filesDTOList[0].fileName = "TERM_LOAN_KYC_" + this.termLoanApplicationId + "_" + timeStamp + "_" + file.name;
+        this.termLoanKycModel.kycFilePath = "TERM_LOAN_KYC_" + this.termLoanApplicationId + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
+        this.isFileUploaded = applicationConstants.TRUE;
         let index1 = event.files.findIndex((x: any) => x === file);
         fileUpload.remove(event, index1);
         fileUpload.clear();
@@ -403,12 +403,15 @@ export class TermLoanMembershipComponent {
   }
 
   fileRemoveEvent() {
-    this.termLoanKycModel.multipartFileList = [];
-    if (this.termLoanKycModel.filesDTOList != null && this.termLoanKycModel.filesDTOList != undefined) {
-      this.termLoanKycModel.kycFilePath = null;
-      this.termLoanKycModel.filesDTOList = null;
+    this.isFileUploaded = applicationConstants.FALSE; // upload validation
+    if(this.termLoanKycModel.filesDTOList != null && this.termLoanKycModel.filesDTOList != undefined && this.termLoanKycModel.filesDTOList.length > 0){
+     let removeFileIndex = this.termLoanKycModel.filesDTOList.findIndex((obj:any) => obj && obj.fileName === this.termLoanKycModel.kycFilePath);
+     if(removeFileIndex != null && removeFileIndex != undefined){
+       this.termLoanKycModel.filesDTOList[removeFileIndex] = null;
+       this.termLoanKycModel.kycFilePath = null;
+     }
     }
-  }
+   }
 
 //delete kyc 
   delete(rowData: any) {
@@ -493,6 +496,7 @@ export class TermLoanMembershipComponent {
   }
   //edit cancle
   editCancle() {
+    this.termLoanKycModel = new TermLoanKyc();
     this.editDocumentOfKycFalg = true;
     this.buttonDisabled = false;
     this.editButtonDisable = false;
@@ -514,7 +518,7 @@ export class TermLoanMembershipComponent {
       this.editDocumentOfKycFalg = true;
       this.buttonDisabled = false;
       this.editButtonDisable = false;
-      this.termLoanKycService.updateTermLoanKYCDetails(this.termLoanKycModel).subscribe((response: any) => {
+            this.termLoanKycService.updateTermLoanKYCDetails(this.termLoanKycModel).subscribe((response: any) => {
         this.responseModel = response;
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];

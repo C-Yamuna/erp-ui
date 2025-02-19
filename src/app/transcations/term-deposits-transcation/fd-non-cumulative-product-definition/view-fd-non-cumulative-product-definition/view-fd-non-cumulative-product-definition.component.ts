@@ -53,6 +53,7 @@ export class ViewFdNonCumulativeProductDefinitionComponent {
   multipleFilesList: any[] = [];
   uploadFileData: any;
   roleName: any;
+  tenureTypeList: any[] = [];
 
 
   constructor(private commonComponent: CommonComponent, private formBuilder: FormBuilder,
@@ -63,7 +64,8 @@ export class ViewFdNonCumulativeProductDefinitionComponent {
   }
   ngOnInit(): void {
     this.roleName = this.commonFunctionsService.getStorageValue(applicationConstants.roleName);
-    this.orgnizationSetting = this.commonComponent.orgnizationSettings()
+    this.orgnizationSetting = this.commonComponent.orgnizationSettings();
+    this.tenureTypeList = this.commonComponent.tenureType();
     this.commonFunctionsService.data.subscribe((res: any) => {
       if (res) {
         this.translate.use(res);

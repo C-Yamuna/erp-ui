@@ -453,7 +453,6 @@ export class CiNomineeComponent {
             this.membershipBasicDetailsModel = this.responseModel.data[0];
             if (this.responseModel.data[0].memberShipNomineeDetailsDTOList != null && this.responseModel.data[0].memberShipNomineeDetailsDTOList != undefined &&
               this.responseModel.data[0].memberShipNomineeDetailsDTOList[0] != null && this.responseModel.data[0].memberShipNomineeDetailsDTOList[0] != undefined) {
-              this.ciLoanNomineeModel = this.responseModel.data[0].memberShipNomineeDetailsDTOList[0];
             }
             if(this.responseModel.data[0].memberShipNomineeDetailsDTOList[0].relationTypeId != null && this.responseModel.data[0].memberShipNomineeDetailsDTOList[0].relationTypeId != undefined){
               this.ciLoanNomineeModel.relationTypeId = this.responseModel.data[0].memberShipNomineeDetailsDTOList[0].relationTypeId;
@@ -562,7 +561,6 @@ export class CiNomineeComponent {
    * @param filePathName 
    */
   fileUploader(event: any, fileUpload: FileUpload , filePathName:any) {
-    
     this.multipleFilesList = [];
     if(this.ciLoanNomineeModel != null && this.ciLoanNomineeModel != undefined && this.isEdit && this.ciLoanNomineeModel.filesDTOList == null || this.ciLoanNomineeModel.filesDTOList == undefined){
         this.ciLoanNomineeModel.filesDTOList = [];
@@ -571,13 +569,20 @@ export class CiNomineeComponent {
       this.ciLoanGuardianModel.filesDTO = [];
     }
     if (filePathName === "Nominee") {
+      this.ciLoanNomineeModel.nomineeMultiPartList = [];
       this.isFileUploadedNominee = applicationConstants.FALSE;
     }
     if (filePathName === "Guardain") {
       this.isFileUploadedGuardina = applicationConstants.FALSE;
+      this.ciLoanGuardianModel.guardainMultipartList = [];
     }
+
+    let selectedFiles = [...event.files];
+    // Clear file input before processing files
+    fileUpload.clear();
+
     let files: FileUploadModel = new FileUploadModel();
-    for (let file of event.files) {
+    for (let file of selectedFiles) {
       let reader = new FileReader();
       reader.onloadend = (e) => {
         let files = new FileUploadModel();
@@ -593,6 +598,7 @@ export class CiNomineeComponent {
         if (filePathName === "Nominee") {
           this.isFileUploadedNominee = applicationConstants.TRUE;
           this.ciLoanNomineeModel.filesDTOList.push(files); 
+          this.ciLoanNomineeModel.nomineeMultiPartList.push(files);
           this.ciLoanNomineeModel.nomineeFilePath = null;
           this.ciLoanNomineeModel.filesDTOList[this.ciLoanNomineeModel.filesDTOList.length-1].fileName = "CI_LOAN_NOMINEE" + this.ciLoanApplicationId + "_" + timeStamp + "_" + file.name;
           this.ciLoanNomineeModel.nomineeFilePath = "CI_LOAN_NOMINEE" + this.ciLoanApplicationId + "_" +timeStamp+"_"+ file.name; 
@@ -600,6 +606,7 @@ export class CiNomineeComponent {
         if (filePathName === "Guardain") {
           this.isFileUploadedGuardina = applicationConstants.TRUE;
           this.ciLoanGuardianModel.filesDTO.push(files); 
+          this.ciLoanGuardianModel.guardainMultipartList.push(files);
           this.ciLoanGuardianModel.uploadFilePath = null;
           this.ciLoanGuardianModel.filesDTO[this.ciLoanGuardianModel.filesDTO.length-1].fileName = "CI_LOAN_GUARDAIN" + "_" + timeStamp + "_" + file.name;
           this.ciLoanGuardianModel.uploadFilePath = "CI_LOAN_GUARDAIN" + "_" + timeStamp + "_" + file.name; 

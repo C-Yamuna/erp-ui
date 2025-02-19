@@ -45,7 +45,7 @@
                 </div>
 
 
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                <!-- <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                     <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.ACCOUNT_TYPE' | translate}}</label>
                         <p-dropdown [options]="accountList" placeholder="{{'ERP.SELECT' | translate}}"
@@ -53,8 +53,16 @@
                             [(ngModel)]="fdNonCumulativeApplicationModel.accountType">
                         </p-dropdown>
                     </div>
+                </div> -->
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="!accountTypeDropDownHide">
+                    <div class="form-label">
+                    <label><span class="red">*</span>{{'ERP.ACCOUNT_TYPE' | translate}}</label>
+                        <p-dropdown [options]="accountList" placeholder="{{'ERP.SELECT' | translate}}"
+                            formControlName="accountType" [disabled]="applicationType" (onChange)="onChangeAccountType($event)"
+                            [(ngModel)]="fdNonCumulativeApplicationModel.accountType">
+                        </p-dropdown>
+                    </div>
                 </div>
-
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label for="username"><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.ROI' | translate}}
@@ -76,28 +84,33 @@
                     <div class="form-label">
                         <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.DEPOSIT_AMOUNT' | translate}}</label>
                             <input pInputText id="state_txt_name" type="text" formControlName="depositAmount"
-                                [(ngModel)]=" fdNonCumulativeApplicationModel.depositAmount" placeholder="Enter Amount">
+                                [(ngModel)]=" fdNonCumulativeApplicationModel.depositAmount" placeholder="Enter Amount"
+                                (focusout)="calculateMaturity()">
+
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.TENURE_IN_DAYS' | translate}}</label>
                             <input pInputText id="state_txt_name" type="text" formControlName="tenureInDays"
-                                [(ngModel)]=" fdNonCumulativeApplicationModel.tenureInDays" placeholder="Enter Tenure (In Days)">
+                                [(ngModel)]=" fdNonCumulativeApplicationModel.tenureInDays" placeholder="Enter Tenure (In Days)"
+                                (focusout)="calculateMaturity()">
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.TENURE_IN_MONTHS' | translate}}</label>
                             <input pInputText id="state_txt_name" type="text" formControlName="tenureInMonths"
-                                [(ngModel)]=" fdNonCumulativeApplicationModel.tenureInMonths" placeholder="Enter Tenure (In Months)">
+                                [(ngModel)]=" fdNonCumulativeApplicationModel.tenureInMonths" placeholder="Enter Tenure (In Months)"
+                                (focusout)="calculateMaturity()">
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.TENURE_IN_YEARS' | translate}}</label>
                             <input pInputText id="state_txt_name" type="text" formControlName="tenureInYears"
-                                [(ngModel)]=" fdNonCumulativeApplicationModel.tenureInYears" placeholder="Enter Tenure (In Years)">
+                                [(ngModel)]=" fdNonCumulativeApplicationModel.tenureInYears" placeholder="Enter Tenure (In Years)"
+                                (focusout)="calculateMaturity()">
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
@@ -128,7 +141,7 @@
                         <label>{{'TERMDEPOSITSTRANSACTION.IS_AUTO_RENEWAL' | translate}}</label>
                         <p-dropdown [options]="renewalList" placeholder="{{'ERP.SELECT' | translate}}"
                         formControlName="isRenewal"
-                        [(ngModel)]="fdNonCumulativeApplicationModel.isRenewal">
+                        [(ngModel)]="fdNonCumulativeApplicationModel.isAutoRenewal">
                     </p-dropdown>
                     </div>
                 </div>
@@ -169,7 +182,7 @@
                                                         |translate}}</h6>
                                                     <p class="label-input-text"> {{
                                                         productDefinitionModel.isSpecialScheme ? 'Yes' :
-                                                        'No' }}
+                                                        ' ' }}
                                                     </p>
                                                 </div>
                                                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
@@ -197,7 +210,7 @@
                                                     <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.IS_AUTO_RENEWAL'
                                                         |translate}}</h6>
                                                     <p class="label-input-text">{{
-                                                        productDefinitionModel.isAutoRenewal ? 'Yes' : 'No'}}</p>
+                                                        productDefinitionModel.isAutoRenewal ? 'Yes' : ' '}}</p>
                                                 </div>
                                               
                                                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">

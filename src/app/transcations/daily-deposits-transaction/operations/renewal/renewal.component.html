@@ -250,7 +250,7 @@
             </div>
         </div>
         <div class="col-50-midd mt-2">
-            <p-progressBar [value]="100" styleClass="progressbar-styles" class="bg-success"></p-progressBar>
+            <!-- <p-progressBar [value]="100" styleClass="progressbar-styles" class="bg-success"></p-progressBar> -->
             <div class="col-12 bg-card border mt-1">
                 <div class="col-12">
                     <div class="row justify-content-between">
@@ -442,7 +442,7 @@
                             <div class="form-label">
                                 <label for="username">{{'ERP.RENEWAL_DATE' | translate}} </label>
                                 <p-calendar [showIcon]="true" id="calendar" name="calendar" [dateFormat]="orgnizationSetting.calendar"
-                                    [(ngModel)]="tempAccountsModel.depositDate" placeholder="DD/MM/YYYY"></p-calendar>
+                                    [(ngModel)]="today" placeholder="DD/MM/YYYY"></p-calendar>
                             </div>
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-6">

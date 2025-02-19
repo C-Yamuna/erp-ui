@@ -176,6 +176,8 @@ export class MemberBasicDetails {
 
    closureSignedCopyPathList:any;
 
+   societyAdmissionNumber:any;
+
 }
 
 export class MemberNomineeDetails {

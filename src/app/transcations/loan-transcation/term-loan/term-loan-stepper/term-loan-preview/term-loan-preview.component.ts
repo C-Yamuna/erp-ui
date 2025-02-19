@@ -26,6 +26,7 @@ import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-
 import { FileUpload } from 'primeng/fileupload';
 import { FileUploadModel } from 'src/app/layout/mainmenu/shared/file-upload-model.model';
 import { CollateralTypes } from 'src/app/transcations/common-status-data.json';
+import { approvaltransactionsconstant } from 'src/app/transcations/approval-transcations/approval-transactions-constant';
 
 @Component({
   selector: 'app-term-loan-preview',
@@ -74,7 +75,7 @@ export class TermLoanPreviewComponent {
   nomineeMemberFullName: any;
   editOption: boolean = false;
   memberTypeName: any;
-  preveiwFalg: any;
+  editbtn: boolean = true;;
   flag: boolean = false;
   addressOne: any;
   addressTwo: any;
@@ -122,6 +123,9 @@ export class TermLoanPreviewComponent {
   loanPurposeList: any [] =[];
   termLoanApplicationId: any;
   isDisableSubmit: boolean = false;
+  viewButton: boolean = false;
+  editFlag: boolean = false;
+  roleName: any;
   propertyColumns: { field: string; header: string; }[];
   constructor(private router: Router, private formBuilder: FormBuilder,
     private commonComponent: CommonComponent, private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService,
@@ -299,32 +303,37 @@ export class TermLoanPreviewComponent {
     }
   
     ngOnInit() {
+      this.roleName = this.commonFunctionsService.getStorageValue(applicationConstants.roleName);
       this.translate.use(this.commonFunctionsService.getStorageValue('language'));
       this.orgnizationSetting = this.commonComponent.orgnizationSettings();
       this.getAllRelationshipTypes();
       this.getAllRepaymentFrequency();
       this.getAllLoanPurpose();
       this.activateRoute.queryParams.subscribe(params => {
-        if (params['id'] != undefined || params['editOpt'] != undefined) {
-          let id = this.encryptDecryptService.decrypt(params['id']);
-          this.termLoanApplicationId = id;
-          if (params['editOpt'] != undefined)
-            this.idEdit = this.encryptDecryptService.decrypt(params['editOpt']);
-  
-          if (this.idEdit == "1")
-            this.preveiwFalg = true
-          else
-            this.preveiwFalg = false;
-  
+        if (params['id'] != undefined && params['id'] != null) {
+          let termLoanApplicationId = this.encryptDecryptService.decrypt(params['id']);
+          if (params['editbtn'] != undefined && params['editbtn'] != null) {
+            let isEditParam = this.encryptDecryptService.decrypt(params['editbtn']);
+            if (isEditParam == "1") {
+              this.editbtn = true;
+              this.viewButton = false;
+              
+            } else {
+              this.editbtn = false;
+              this.viewButton = true;
+            }
+          }
           if (params['isGridPage'] != undefined && params['isGridPage'] != null) {
             let isGrid = this.encryptDecryptService.decrypt(params['isGridPage']);
             if (isGrid === "0") {
               this.isShowSubmit = applicationConstants.FALSE;
+              // this.viewButton = false;
+              this.editFlag = true;
             } else {
               this.isShowSubmit = applicationConstants.TRUE;
             }
           }
-          this.termLoanApplicationsService.getTermApplicationById(id).subscribe(res => {
+          this.termLoanApplicationsService.getTermApplicationById(termLoanApplicationId).subscribe(res => {
             this.responseModel = res;
             if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
               if (this.responseModel.data[0].admissionNo != null && this.responseModel.data[0].admissionNo != undefined) {
@@ -396,10 +405,17 @@ export class TermLoanPreviewComponent {
         })
     }
   
-    backbutton() {
-      this.termLoanApplicationsService.resetCurrentStep();
-      // this.ciKycService.resetCurrentStep();
-      this.router.navigate([Loantransactionconstant.TERM_LOAN]);
+    // backbutton() {
+    //   this.termLoanApplicationsService.resetCurrentStep();
+    //   // this.ciKycService.resetCurrentStep();
+    //   this.router.navigate([Loantransactionconstant.TERM_LOAN]);
+    // }
+    navigateToBack() {
+      if (this.roleName == "Manager") {
+        this.router.navigate([approvaltransactionsconstant.TERM_LOAN_APPROVAL_DETAILS]);
+      } else {
+        this.router.navigate([Loantransactionconstant.TERM_LOAN]);
+      }
     }
     submit(){
       this.termLoanApplicationModel.accountStatusName = applicationConstants.SUBMISSION_FOR_APPROVAL;
@@ -478,7 +494,14 @@ export class TermLoanPreviewComponent {
             else {
               // this.termLoanApplicationModel.operationTypeName = "Single";
             }
-              
+            if (this.termLoanApplicationModel.applicationPath != null && this.termLoanApplicationModel.applicationPath != undefined) {
+              this.termLoanApplicationModel.multipartFileList = this.fileUploadService.getFile(this.termLoanApplicationModel.applicationPath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.termLoanApplicationModel.applicationPath);
+              this.isDisableSubmit = false;
+            }
+            else {
+              this.isDisableSubmit = true;
+            }
+            
   
             if (this.termLoanApplicationModel.termLoanCoApplicantDetailsDTOList != null && this.termLoanApplicationModel.termLoanCoApplicantDetailsDTOList != undefined && this.termLoanApplicationModel.termLoanCoApplicantDetailsDTOList.length > 0) {
               this.jointHoldersFlag = true;

@@ -80,7 +80,7 @@ export class SiBorrowingAccountMappingComponent {
         this.siborrowingAccountMappedLoansDTOList.forEach(row => {
           row.selected = this.borrowingsAccountMappinglist.some(item => item.loanAccountNumber === row.accountNumber);
         });
-        this.updateHeaderCheckboxState(); 
+      
         this.getBySiBorrowingAccountId(this.borrowingAccountId);
         if (this.borrowingAccountId != "" && this.borrowingAccountId != null && this.borrowingAccountId != undefined) {
           this.siBorrowingStepperService.getSiBorrowingStepperById(this.borrowingAccountId).subscribe(res => {
@@ -112,7 +112,7 @@ export class SiBorrowingAccountMappingComponent {
       }
     }) 
     this.save();
-    
+    this.updateHeaderCheckboxState(); 
 
   }
    /**
@@ -133,8 +133,11 @@ export class SiBorrowingAccountMappingComponent {
           );
         });  
           this.updateData();
+          this.updateHeaderCheckboxState();
         }
       } else {
+        this.siborrowingAccountMappedLoansDTOList = []; // Reset data to avoid issues
+        this.selectAllChecked = false;
         this.commonComponent.stopSpinner();
         this.msgs = [];
         this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
@@ -212,7 +215,11 @@ selectAll(event: any) {
 
 
 updateHeaderCheckboxState() {
-  this.selectAllChecked = this.siborrowingAccountMappedLoansDTOList.every(row => row.selected);
+  if (!this.siborrowingAccountMappedLoansDTOList || this.siborrowingAccountMappedLoansDTOList.length === 0) {
+    this.selectAllChecked = false; 
+  } else {
+    this.selectAllChecked = this.siborrowingAccountMappedLoansDTOList.every(row => row.selected);
+  }
 }
   save() {
     this.updateData();
@@ -255,8 +262,11 @@ updateHeaderCheckboxState() {
           );
         });
         this.commonComponent.stopSpinner();
-      } else {
+      } 
+      else {
+
         this.commonComponent.stopSpinner();
+
         this.msgs = [];
         this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
       }

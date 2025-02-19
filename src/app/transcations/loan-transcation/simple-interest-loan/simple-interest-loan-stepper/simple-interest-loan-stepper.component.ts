@@ -35,6 +35,7 @@ import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-
 import { FileUploadService } from 'src/app/shared/file-upload.service';
 import { TranslateService } from '@ngx-translate/core';
 import { CommonStatusData, MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
+import { SiLoanMortagageDetailsService } from '../../shared/si-loans/si-loan-mortagage-details.service';
 
 @Component({
   selector: 'app-simple-interest-loan-stepper',
@@ -68,7 +69,7 @@ export class SimpleInterestLoanStepperComponent {
   siLoanDocumentsModel: SiLoanDocuments = new SiLoanDocuments();
   siLoanGenealogyTreeModel: SiLoanGenealogyTree = new SiLoanGenealogyTree();
   promoterDetailsModel: promoterDetailsModel = new promoterDetailsModel();
-    siPropertyMortgageLoanModel: SiPropertyMortgageLoan = new SiPropertyMortgageLoan();
+  siPropertyMortgageLoanModel: SiPropertyMortgageLoan = new SiPropertyMortgageLoan();
   
   institutionPromoterDetailsModel: InstitutionPromoterDetailsModel = new InstitutionPromoterDetailsModel();
 
@@ -197,7 +198,8 @@ export class SimpleInterestLoanStepperComponent {
     private siLoanGenealogyTreeService: SiLoanGenealogyTreeService,
     private membershipServiceService: MembershipServiceService, private formBuilder: FormBuilder, private datePipe: DatePipe,
     private siLoanGuardianService: SiLoanGuardianService, private fileUploadService: FileUploadService,
-    private translate: TranslateService, private commonFunctionService: CommonFunctionsService
+    private translate: TranslateService, private commonFunctionService: CommonFunctionsService,
+    private siLoanMortagageDetailsService:SiLoanMortagageDetailsService
   ) {
     this.memberCreationForm = this.formBuilder.group({
       surName: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
@@ -291,7 +293,7 @@ export class SimpleInterestLoanStepperComponent {
       { field: 'surname', header: 'Surname' },
       { field: 'name', header: 'Name' },
       { field: 'operatorTypeName', header: 'Operation Type' },
-      { field: 'memDobVal', header: 'Date of Birth' },
+      { field: 'dobVal', header: 'Date of Birth' },
       { field: 'age', header: 'Age' },
       { field: 'genderTypeName', header: 'Gender' },
       { field: 'maritalStatusName', header: 'Marital Status' },
@@ -310,24 +312,27 @@ export class SimpleInterestLoanStepperComponent {
     this.pacsId = this.commonFunctionsService.getStorageValue(applicationConstants.PACS_ID);
     this.branchId = this.commonFunctionsService.getStorageValue(applicationConstants.BRANCH_ID);
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
+    this.isMemberCreation = this.commonFunctionsService.getStorageValue('b-class-member_creation');
 
     this.activateRoute.queryParams.subscribe(params => {
       if (params['id'] != undefined) {
         let queryParams = Number(this.encryptDecryptService.decrypt(params['id']));
         this.loanAccId = queryParams;
+        this.menuDisabled = false;
         this.getSILoanApplicationById(this.loanAccId);
         this.isEditCheck(this.activeIndex);
       } else if (params['createLoanFlag'] != undefined || params['isMemberCreation'] != undefined) {
         this.refreshTheMemberCardData();
         this.isMemberCreation = this.commonFunctionsService.getStorageValue('b-class-member_creation');
-        this.itemList();
+        // this.itemList();
       } else {
         this.isEdit = false;
         this.flagForLabelName = false;
         this.isMemberCreation = this.commonFunctionsService.getStorageValue('b-class-member_creation');
       }
+      this.itemList();
     });
-    this.itemList();
+    // this.itemList();
     // if (!this.isMemberCreation) {
     this.getAllTypeOfMembershipDetails(this.pacsId, this.branchId);
     // }
@@ -351,6 +356,7 @@ export class SimpleInterestLoanStepperComponent {
         this.translate.use(this.commonFunctionService.getStorageValue('language'));
       }
       if (data != undefined && data != null) {
+        this.itemList();
         this.activeIndex = data.stepperIndex
         this.changeStepperSelector(this.activeIndex);
         this.buttonDisabled = data.isDisable
@@ -390,12 +396,27 @@ export class SimpleInterestLoanStepperComponent {
             }
           }
 
+          // if (this.activeIndex == 0) {
+          //   this.siLoanApplicationModel = data.data;
+          //   this.memberTypeName = data.data.memberTypeName;
+          //   if (this.memberTypeName != undefined && this.memberTypeName != null)
+          //     this.memberTypeCheck(this.memberTypeName, data.data);
+          // }
+
           if (this.activeIndex == 0) {
             this.siLoanApplicationModel = data.data;
-            if (this.memberTypeName != undefined && this.memberTypeName != null)
-              this.memberTypeCheck(this.memberTypeName, data.data);
+            if (this.siLoanApplicationModel != null && this.siLoanApplicationModel != undefined) {
+              if (this.siLoanApplicationModel.isNewMember != null && this.siLoanApplicationModel.isNewMember != undefined)
+                this.isMemberCreation = this.siLoanApplicationModel.isNewMember;
+              if (this.siLoanApplicationModel.admissionNo != null && this.siLoanApplicationModel.admissionNo != undefined)
+                this.admissionNumber = this.siLoanApplicationModel.admissionNo;
+              if (this.siLoanApplicationModel.memberTypeName != null && this.siLoanApplicationModel.memberTypeName != undefined)
+                this.memberTypeName = this.siLoanApplicationModel.memberTypeName;
+              this.memberTypeCheck(this.memberTypeName, this.siLoanApplicationModel);
+            }
           }
           if (this.activeIndex == 1) {
+            this.memberTypeName = data.data.memberTypeName;
             if (this.memberTypeName != undefined && this.memberTypeName != null)
               this.memberTypeCheck(this.memberTypeName, data.data);
 
@@ -416,7 +437,7 @@ export class SimpleInterestLoanStepperComponent {
               this.itemList();
             }
           }
-          if (this.activeIndex == 4) {
+          else if (this.activeIndex == 4) {//join holder
             if (data.data != null && data.data != undefined) {
               if (data.data.admissionNumber != null && data.data.admissionNumber != undefined) {
                 this.siLoanApplicationModel.admissionNo = data.data.admissionNumber;
@@ -424,8 +445,16 @@ export class SimpleInterestLoanStepperComponent {
               if (data.data.siLoanApplicationId != null && data.data.siLoanApplicationId != undefined) {
                 this.loanAccId = data.data.siLoanApplicationId;
               }
-              if (data.data.jointHolderList != null && data.data.jointHolderList != undefined && data.data.jointHolderList.length > 0) {
-                this.jointHolderList = data.data.jointHolderList;
+              if(data.data.memberTypeName != null && data.data.memberTypeName != undefined){
+                this.memberTypeName = data.data.memberTypeName;
+              }
+              if( data.data.jointHolderList != null && data.data.jointHolderList != undefined && data.data.jointHolderList.length > 0 ){
+                  this.jointHolderList = data.data.jointHolderList;
+                  this.jointHolderList.map(joint =>{
+                    if (joint.admissionDateVal != undefined && joint.admissionDateVal != null)
+                      joint.admissionDate = this.commonFunctionsService.getUTCEpoch(new Date(joint.admissionDateVal));
+                  })
+                 
               }
               this.siLoanJointHolderModel = data.data;
             }
@@ -556,6 +585,14 @@ export class SimpleInterestLoanStepperComponent {
 
                 if (this.memberGroupDetailsModel.groupPromoterList != null && this.memberGroupDetailsModel.groupPromoterList != undefined)
                   this.groupPrmotersList = this.memberGroupDetailsModel.groupPromoterList;
+                 this.groupPrmotersList.map(obj=>{
+                  if (obj.dob != null && obj.dob != undefined){
+                    obj.dobVal = this.datePipe.transform(obj.dob, this.orgnizationSetting.datePipe);
+                  }
+                  if (obj.startDate != null && obj.startDate != undefined){
+                    obj.startDateVal = this.datePipe.transform(obj.startDate, this.orgnizationSetting.datePipe);
+                  }
+                });
 
                 this.individualFlag = false;
                 this.groupFlag = true;
@@ -589,6 +626,14 @@ export class SimpleInterestLoanStepperComponent {
 
                 if (this.membershipInstitutionDetailsModel.institutionPromoterList.length && this.membershipInstitutionDetailsModel.institutionPromoterList != null && this.membershipInstitutionDetailsModel.institutionPromoterList != undefined)
                   this.institionPromotersList = this.membershipInstitutionDetailsModel.institutionPromoterList;
+                this.institionPromotersList.map(obj=>{
+                  if (obj.dob != null && obj.dob != undefined){
+                    obj.dobVal = this.datePipe.transform(obj.dob, this.orgnizationSetting.datePipe);
+                  }
+                  if (obj.startDate != null && obj.startDate != undefined){
+                    obj.startDateVal = this.datePipe.transform(obj.startDate, this.orgnizationSetting.datePipe);
+                  }
+                });
 
                 this.individualFlag = false;
                 this.groupFlag = false;
@@ -625,6 +670,7 @@ export class SimpleInterestLoanStepperComponent {
       this.groupFlag = true;
       this.institutionFlag = false;
       this.individualFlag = false;
+      if(data.data.memberGroupDetailsDTO != null)
       this.memberGroupDetailsModel = data.data.memberGroupDetailsDTO;
       if (this.memberGroupDetailsModel.registrationDate != null && this.memberGroupDetailsModel.registrationDate != undefined) {
         this.memberGroupDetailsModel.registrationDateVal = this.datePipe.transform(this.memberGroupDetailsModel.registrationDate, this.orgnizationSetting.datePipe);
@@ -637,6 +683,14 @@ export class SimpleInterestLoanStepperComponent {
       }
       if (this.memberGroupDetailsModel.isNewMember) {
         this.groupPrmotersList = this.memberGroupDetailsModel.groupPromoterList;
+        this.groupPrmotersList.map(obj=>{
+          if (obj.dob != null && obj.dob != undefined){
+            obj.dobVal = this.datePipe.transform(obj.dob, this.orgnizationSetting.datePipe);
+          }
+          if (obj.startDate != null && obj.startDate != undefined){
+            obj.startDateVal = this.datePipe.transform(obj.startDate, this.orgnizationSetting.datePipe);
+          }
+        });
       }
 
 
@@ -644,6 +698,7 @@ export class SimpleInterestLoanStepperComponent {
       this.institutionFlag = true;
       this.groupFlag = false;
       this.individualFlag = false;
+      if(data.data.memberInstitutionDTO != null)
       this.membershipInstitutionDetailsModel = data.data.memberInstitutionDTO;
 
       if (this.membershipInstitutionDetailsModel.registrationDate != null && this.membershipInstitutionDetailsModel.registrationDate != undefined) {
@@ -654,6 +709,14 @@ export class SimpleInterestLoanStepperComponent {
       }
       if (this.membershipInstitutionDetailsModel.isNewMember) {
         this.institionPromotersList = this.membershipInstitutionDetailsModel.institutionPromoterList;
+        this.institionPromotersList.map(obj=>{
+          if (obj.dob != null && obj.dob != undefined){
+            obj.dobVal = this.datePipe.transform(obj.dob, this.orgnizationSetting.datePipe);
+          }
+          if (obj.startDate != null && obj.startDate != undefined){
+            obj.startDateVal = this.datePipe.transform(obj.startDate, this.orgnizationSetting.datePipe);
+          }
+        });
       }
     }
   }
@@ -682,8 +745,309 @@ export class SimpleInterestLoanStepperComponent {
       this.isGenealogyEdit = true
     }
   }
+  
 
   itemList() {
+    if(this.memberTypeName != MemberShipTypesData.INDIVIDUAL){
+      this.itemListWithParamGroupInstitution();
+    }else{
+      if(this.loanAccId != null && this.loanAccId != undefined){
+        if (this.isMemberCreation) {
+          if (this.siLoanApplicationModel.operationTypeName != "Joint") {
+            this.items = [
+              {
+                label: 'Basic Details', icon: 'fa fa-id-badge', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_MEMBERSHIP_DETAILS, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 0;
+                }
+              },
+              {
+                label: 'KYC', icon: 'fa fa-podcast', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_KYC,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 1;
+                }
+              },
+              {
+                label: 'Communication', icon: 'fa fa-map-marker', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_COMMUNICATION,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 2;
+                }
+              },
+              {
+                label: 'Application', icon: 'fa fa-clipboard', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_APPLICATION_DETAILS,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 3;
+                }
+              },
+              {
+                label: 'Nominee', icon: 'fa fa-user-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_NOMINEE,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 5;
+                }
+              },
+              {
+                label: 'Loan Guarantor', icon: 'fa fa-male', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_GUARANTOR,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 6;
+                }
+              },
+              {
+                label: 'Loan Mortagage', icon: 'fa fa-puzzle-piece', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_MORTAGAGE,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 7;
+                }
+              },
+              {
+                label: 'Loan Documents', icon: 'fa fa-files-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_DOCUMENTS,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 8;
+                }
+              },
+              {
+                label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_GENEALOGY_TREE,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 9;
+                }
+              }
+            ];
+          } else {
+            this.items = [
+              {
+                label: 'Basic Details', icon: 'fa fa-id-badge', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_MEMBERSHIP_DETAILS,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 0;
+                }
+              },
+              {
+                label: 'KYC', icon: 'fa fa-podcast', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_KYC,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 1;
+                }
+              },
+              {
+                label: 'Communication', icon: 'fa fa-map-marker', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_COMMUNICATION,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 2;
+                }
+              },
+              {
+                label: 'Application', icon: 'fa fa-clipboard', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_APPLICATION_DETAILS,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 3;
+                }
+              },
+              {
+                label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_JOINT_ACCOUNT,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 4;
+                }
+              },
+              {
+                label: 'Nominee', icon: 'fa fa-user-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_NOMINEE,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 5;
+                }
+              },
+              {
+                label: 'Loan Guarantor', icon: 'fa fa-male', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_GUARANTOR,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 6;
+                }
+              },
+              {
+                label: 'Loan Mortagage', icon: 'fa fa-puzzle-piece', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_MORTAGAGE,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 7;
+                }
+              },
+              {
+                label: 'Loan Documents', icon: 'fa fa-files-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_DOCUMENTS,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 8;
+                }
+              },
+              {
+                label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_GENEALOGY_TREE,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 9;
+                }
+              }
+            ];
+          }
+        }
+        else {
+          if (this.siLoanApplicationModel.operationTypeName != "Joint") {
+            this.items = [
+              // {
+              //   label: 'Basic Details', icon: 'fa fa-id-badge', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_MEMBERSHIP_DETAILS,
+              // disabled: this.menuDisabled,
+              //   command: (event: any) => {
+              //     this.activeIndex = 0;
+              //   }
+              // },
+              {
+                label: 'KYC', icon: 'fa fa-podcast', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_KYC,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 1;
+                }
+              },
+              {
+                label: 'Communication', icon: 'fa fa-map-marker', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_COMMUNICATION,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 2;
+                }
+              },
+              {
+                label: 'Application', icon: 'fa fa-clipboard', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_APPLICATION_DETAILS,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 3;
+                }
+              },
+              {
+                label: 'Nominee', icon: 'fa fa-user-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_NOMINEE,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 5;
+                }
+              },
+              {
+                label: 'Loan Guarantor', icon: 'fa fa-male', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_GUARANTOR,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 6;
+                }
+              },
+              {
+                label: 'Loan Mortagage', icon: 'fa fa-puzzle-piece', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_MORTAGAGE,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 7;
+                }
+              },
+              {
+                label: 'Loan Documents', icon: 'fa fa-files-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_DOCUMENTS,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 8;
+                }
+              },
+              {
+                label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_GENEALOGY_TREE,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 9;
+                }
+              }
+            ];
+          } else {
+            this.items = [
+              // {
+              //   label: 'Basic Details', icon: 'fa fa-id-badge', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_MEMBERSHIP_DETAILS,
+              // disabled: this.menuDisabled,
+              //   command: (event: any) => {
+              //     this.activeIndex = 0;
+              //   }
+              // },
+              {
+                label: 'KYC', icon: 'fa fa-podcast', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_KYC,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 1;
+                }
+              },
+              {
+                label: 'Communication', icon: 'fa fa-map-marker', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_COMMUNICATION,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 2;
+                }
+              },
+              {
+                label: 'Application', icon: 'fa fa-clipboard', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_APPLICATION_DETAILS,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 3;
+                }
+              },
+              {
+                label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_JOINT_ACCOUNT,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 4;
+                }
+              },
+              {
+                label: 'Nominee', icon: 'fa fa-user-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_NOMINEE,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 5;
+                }
+              },
+              {
+                label: 'Loan Guarantor', icon: 'fa fa-male', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_GUARANTOR,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 6;
+                }
+              },
+              {
+                label: 'Loan Mortagage', icon: 'fa fa-puzzle-piece', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_MORTAGAGE,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 7;
+                }
+              },
+              {
+                label: 'Loan Documents', icon: 'fa fa-files-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_DOCUMENTS,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 8;
+                }
+              },
+              {
+                label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_GENEALOGY_TREE,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+                disabled: this.menuDisabled,
+                command: (event: any) => {
+                  this.activeIndex = 9;
+                }
+              }
+            ];
+          }
+        }
+      }
+      else {
+        this.itemListWithoutParams();
+      }
+
+    }
+   
+    this.activeItem = this.items[this.activeIndex];
+  }
+
+ 
+  itemListWithoutParams() {
     if (this.isMemberCreation) {
       if (this.siLoanApplicationModel.operationTypeName != "Joint") {
         this.items = [
@@ -968,7 +1332,586 @@ export class SimpleInterestLoanStepperComponent {
         ];
       }
     }
-    this.activeItem = this.items[this.activeIndex];
+
+  }
+  itemListWithParamGroupInstitution() {
+    this.items = [];
+    if (this.loanAccId != null && this.loanAccId != undefined) {
+      if (this.isMemberCreation) {
+        if (this.siLoanApplicationModel.operationTypeName != "Joint") {
+          this.items = [
+            {
+              label: 'Basic Details', icon: 'fa fa-id-badge', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_MEMBERSHIP_DETAILS, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 0;
+              }
+            },
+            {
+              label: 'KYC', icon: 'fa fa-podcast', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_KYC, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 1;
+              }
+            },
+            {
+              label: 'Communication', icon: 'fa fa-map-marker', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_COMMUNICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 2;
+              }
+            },
+            {
+              label: 'Application', icon: 'fa fa-clipboard', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_APPLICATION_DETAILS, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 3;
+              }
+            },
+            // {
+            //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_NOMINEE,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+            //   disabled: this.menuDisabled,
+            //   command: (event: any) => {
+            //     this.activeIndex = 5;
+            //   }
+            // },
+            {
+              label: 'Loan Guarantor', icon: 'fa fa-male', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_GUARANTOR, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 6;
+              }
+            },
+            {
+              label: 'Loan Mortagage', icon: 'fa fa-puzzle-piece', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_MORTAGAGE, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 7;
+              }
+            },
+            {
+              label: 'Loan Documents', icon: 'fa fa-files-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_DOCUMENTS, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 8;
+              }
+            },
+            {
+              label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_GENEALOGY_TREE, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 9;
+              }
+            }
+          ];
+        } else {
+          this.items = [
+            {
+              label: 'Basic Details', icon: 'fa fa-id-badge', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_MEMBERSHIP_DETAILS, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 0;
+              }
+            },
+            {
+              label: 'KYC', icon: 'fa fa-podcast', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_KYC, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 1;
+              }
+            },
+            {
+              label: 'Communication', icon: 'fa fa-map-marker', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_COMMUNICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 2;
+              }
+            },
+            {
+              label: 'Application', icon: 'fa fa-clipboard', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_APPLICATION_DETAILS, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 3;
+              }
+            },
+            {
+              label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_JOINT_ACCOUNT, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 4;
+              }
+            },
+            // {
+            //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_NOMINEE,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+            //   disabled: this.menuDisabled,
+            //   command: (event: any) => {
+            //     this.activeIndex = 5;
+            //   }
+            // },
+            {
+              label: 'Loan Guarantor', icon: 'fa fa-male', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_GUARANTOR, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 6;
+              }
+            },
+            {
+              label: 'Loan Mortagage', icon: 'fa fa-puzzle-piece', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_MORTAGAGE, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 7;
+              }
+            },
+            {
+              label: 'Loan Documents', icon: 'fa fa-files-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_DOCUMENTS, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 8;
+              }
+            },
+            {
+              label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_GENEALOGY_TREE, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 9;
+              }
+            }
+          ];
+        }
+      }
+      else {
+        if (this.siLoanApplicationModel.operationTypeName != "Joint") {
+          this.items = [
+            // {
+            //   label: 'Basic Details', icon: 'fa fa-id-badge', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_MEMBERSHIP_DETAILS,
+            // disabled: this.menuDisabled,
+            //   command: (event: any) => {
+            //     this.activeIndex = 0;
+            //   }
+            // },
+            {
+              label: 'KYC', icon: 'fa fa-podcast', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_KYC, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 1;
+              }
+            },
+            {
+              label: 'Communication', icon: 'fa fa-map-marker', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_COMMUNICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 2;
+              }
+            },
+            {
+              label: 'Application', icon: 'fa fa-clipboard', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_APPLICATION_DETAILS, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 3;
+              }
+            },
+            // {
+            //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_NOMINEE,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+            //   disabled: this.menuDisabled,
+            //   command: (event: any) => {
+            //     this.activeIndex = 5;
+            //   }
+            // },
+            {
+              label: 'Loan Guarantor', icon: 'fa fa-male', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_GUARANTOR, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 6;
+              }
+            },
+            {
+              label: 'Loan Mortagage', icon: 'fa fa-puzzle-piece', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_MORTAGAGE, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 7;
+              }
+            },
+            {
+              label: 'Loan Documents', icon: 'fa fa-files-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_DOCUMENTS, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 8;
+              }
+            },
+            {
+              label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_GENEALOGY_TREE, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 9;
+              }
+            }
+          ];
+        } else {
+          this.items = [
+            // {
+            //   label: 'Basic Details', icon: 'fa fa-id-badge', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_MEMBERSHIP_DETAILS,
+            // disabled: this.menuDisabled,
+            //   command: (event: any) => {
+            //     this.activeIndex = 0;
+            //   }
+            // },
+            {
+              label: 'KYC', icon: 'fa fa-podcast', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_KYC, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 1;
+              }
+            },
+            {
+              label: 'Communication', icon: 'fa fa-map-marker', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_COMMUNICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 2;
+              }
+            },
+            {
+              label: 'Application', icon: 'fa fa-clipboard', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_APPLICATION_DETAILS, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 3;
+              }
+            },
+            {
+              label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_JOINT_ACCOUNT, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 4;
+              }
+            },
+            // {
+            //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_NOMINEE,queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId)},
+            //   disabled: this.menuDisabled,
+            //   command: (event: any) => {
+            //     this.activeIndex = 5;
+            //   }
+            // },
+            {
+              label: 'Loan Guarantor', icon: 'fa fa-male', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_GUARANTOR, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 6;
+              }
+            },
+            {
+              label: 'Loan Mortagage', icon: 'fa fa-puzzle-piece', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_MORTAGAGE, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 7;
+              }
+            },
+            {
+              label: 'Loan Documents', icon: 'fa fa-files-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_DOCUMENTS, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 8;
+              }
+            },
+            {
+              label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_GENEALOGY_TREE, queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) },
+              disabled: this.menuDisabled,
+              command: (event: any) => {
+                this.activeIndex = 9;
+              }
+            }
+          ];
+        }
+      }
+    }
+    else {
+      this.itemListWithoutParamsForGroupInstitution();
+    }
+  }
+
+  itemListWithoutParamsForGroupInstitution() {
+    if (this.isMemberCreation) {
+      if (this.siLoanApplicationModel.operationTypeName != "Joint") {
+        this.items = [
+          {
+            label: 'Basic Details', icon: 'fa fa-id-badge', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_MEMBERSHIP_DETAILS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 0;
+            }
+          },
+          {
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_KYC,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 1;
+            }
+          },
+          {
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_COMMUNICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 2;
+            }
+          },
+          {
+            label: 'Application', icon: 'fa fa-clipboard', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_APPLICATION_DETAILS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 3;
+            }
+          },
+          // {
+          //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_NOMINEE,
+          //   disabled: this.menuDisabled,
+          //   command: (event: any) => {
+          //     this.activeIndex = 5;
+          //   }
+          // },
+          {
+            label: 'Loan Guarantor', icon: 'fa fa-male', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_GUARANTOR,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 6;
+            }
+          },
+          {
+            label: 'Loan Mortagage', icon: 'fa fa-puzzle-piece', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_MORTAGAGE,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 7;
+            }
+          },
+          {
+            label: 'Loan Documents', icon: 'fa fa-files-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_DOCUMENTS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 8;
+            }
+          },
+          {
+            label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_GENEALOGY_TREE,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 9;
+            }
+          }
+        ];
+      } else {
+        this.items = [
+          {
+            label: 'Basic Details', icon: 'fa fa-id-badge', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_MEMBERSHIP_DETAILS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 0;
+            }
+          },
+          {
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_KYC,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 1;
+            }
+          },
+          {
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_COMMUNICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 2;
+            }
+          },
+          {
+            label: 'Application', icon: 'fa fa-clipboard', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_APPLICATION_DETAILS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 3;
+            }
+          },
+          {
+            label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_JOINT_ACCOUNT,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 4;
+            }
+          },
+          // {
+          //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_NOMINEE,
+          //   disabled: this.menuDisabled,
+          //   command: (event: any) => {
+          //     this.activeIndex = 5;
+          //   }
+          // },
+          {
+            label: 'Loan Guarantor', icon: 'fa fa-male', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_GUARANTOR,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 6;
+            }
+          },
+          {
+            label: 'Loan Mortagage', icon: 'fa fa-puzzle-piece', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_MORTAGAGE,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 7;
+            }
+          },
+          {
+            label: 'Loan Documents', icon: 'fa fa-files-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_DOCUMENTS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 8;
+            }
+          },
+          {
+            label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_GENEALOGY_TREE,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 9;
+            }
+          }
+        ];
+      }
+    }
+    else {
+      if (this.siLoanApplicationModel.operationTypeName != "Joint") {
+        this.items = [
+          // {
+          //   label: 'Basic Details', icon: 'fa fa-id-badge', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_MEMBERSHIP_DETAILS,
+          // disabled: this.menuDisabled,
+          //   command: (event: any) => {
+          //     this.activeIndex = 0;
+          //   }
+          // },
+          {
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_KYC,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 1;
+            }
+          },
+          {
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_COMMUNICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 2;
+            }
+          },
+          {
+            label: 'Application', icon: 'fa fa-clipboard', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_APPLICATION_DETAILS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 3;
+            }
+          },
+          // {
+          //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_NOMINEE,
+          //   disabled: this.menuDisabled,
+          //   command: (event: any) => {
+          //     this.activeIndex = 5;
+          //   }
+          // },
+          {
+            label: 'Loan Guarantor', icon: 'fa fa-male', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_GUARANTOR,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 6;
+            }
+          },
+          {
+            label: 'Loan Mortagage', icon: 'fa fa-puzzle-piece', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_MORTAGAGE,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 7;
+            }
+          },
+          {
+            label: 'Loan Documents', icon: 'fa fa-files-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_DOCUMENTS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 8;
+            }
+          },
+          {
+            label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_GENEALOGY_TREE,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 9;
+            }
+          }
+        ];
+      } else {
+        this.items = [
+          // {
+          //   label: 'Basic Details', icon: 'fa fa-id-badge', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_MEMBERSHIP_DETAILS,
+          // disabled: this.menuDisabled,
+          //   command: (event: any) => {
+          //     this.activeIndex = 0;
+          //   }
+          // },
+          {
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_KYC,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 1;
+            }
+          },
+          {
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_COMMUNICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 2;
+            }
+          },
+          {
+            label: 'Application', icon: 'fa fa-clipboard', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_APPLICATION_DETAILS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 3;
+            }
+          },
+          {
+            label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_JOINT_ACCOUNT,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 4;
+            }
+          },
+          // {
+          //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_NOMINEE,
+          //   disabled: this.menuDisabled,
+          //   command: (event: any) => {
+          //     this.activeIndex = 5;
+          //   }
+          // },
+          {
+            label: 'Loan Guarantor', icon: 'fa fa-male', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_GUARANTOR,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 6;
+            }
+          },
+          {
+            label: 'Loan Mortagage', icon: 'fa fa-puzzle-piece', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_MORTAGAGE,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 7;
+            }
+          },
+          {
+            label: 'Loan Documents', icon: 'fa fa-files-o', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_DOCUMENTS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 8;
+            }
+          },
+          {
+            label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.SIMPLE_INTEREST_LOANS_GENEALOGY_TREE,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 9;
+            }
+          }
+        ];
+      }
+    }
   }
 
   //navigation to stepper form component
@@ -1006,7 +1949,7 @@ export class SimpleInterestLoanStepperComponent {
         this.router.navigate([Loantransactionconstant.SIMPLE_INTEREST_LOANS_NOMINEE], { queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) } });
         break;
       case 6:
-        this.router.navigate([Loantransactionconstant.SIMPLE_INTEREST_LOANS_GUARANTOR], { queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) } });
+        this.router.navigate([Loantransactionconstant.SIMPLE_INTEREST_LOANS_GUARANTOR], { queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId), admissionNumber: this.encryptDecryptService.encrypt(this.admissionNumber) } });
         break;
       case 7:
         this.router.navigate([Loantransactionconstant.SIMPLE_INTEREST_LOANS_MORTAGAGE], { queryParams: { id: this.encryptDecryptService.encrypt(this.loanAccId) } });
@@ -1020,14 +1963,14 @@ export class SimpleInterestLoanStepperComponent {
     }
   }
 
-  //on change stepper selection  set stepper disable
   changeStepperSelector(item: any) {
     if (this.menuDisabled) {
       return; // Do nothing if menu is disabled
     }
     this.activeItem = item;
-    this.menuDisabled = true;
+    // this.menuDisabled = !this.menuDisabled;
   }
+
 
   ngAfterContentChecked(): void {
     this.ref.detectChanges();
@@ -1070,7 +2013,6 @@ export class SimpleInterestLoanStepperComponent {
 
   //next step navigation based on index number
   nextStep(activeIndex: number) {
-     
     if (activeIndex == 0) {
       if (this.memberTypeName == MemberShipTypesData.INDIVIDUAL) {
         this.setMemberDetailsToSiLoanApplicationDetails(this.siLoanApplicationModel.individualMemberDetailsDTO);
@@ -1123,7 +2065,7 @@ export class SimpleInterestLoanStepperComponent {
       }else if (this.siOtherLoanMortgageModel.collateralType == 7) {
         this.saveOrUpdatePropertyLoanMortagageDetails(activeIndex, "next");
       }
-       else {
+      else {
         this.saveOrUpdateOtherLoanMortagageDetails(activeIndex, "next");
       }
     } else if (activeIndex == 8) {
@@ -1176,13 +2118,13 @@ export class SimpleInterestLoanStepperComponent {
       this.isApplicationEdit = false;
     }
     if (this.siLoanApplicationModel.applicationDateVal != null && this.siLoanApplicationModel.applicationDateVal != undefined)
-      this.siLoanApplicationModel.applicationDate = this.commonFunctionsService.getUTCEpochWithTime(this.siLoanApplicationModel.applicationDateVal);
+      this.siLoanApplicationModel.applicationDate = this.commonFunctionsService.getUTCEpoch(new Date(this.siLoanApplicationModel.applicationDateVal));
 
     if (this.siLoanApplicationModel.sanctionDateVal != null && this.siLoanApplicationModel.sanctionDateVal != undefined)
-      this.siLoanApplicationModel.sanctionDate = this.commonFunctionsService.getUTCEpochWithTime(this.siLoanApplicationModel.sanctionDateVal);
+      this.siLoanApplicationModel.sanctionDate = this.commonFunctionsService.getUTCEpoch(new Date(this.siLoanApplicationModel.sanctionDateVal));
 
     if (this.siLoanApplicationModel.loanDueDateVal != null && this.siLoanApplicationModel.loanDueDateVal != undefined)
-      this.siLoanApplicationModel.loanDueDate = this.commonFunctionsService.getUTCEpochWithTime(this.siLoanApplicationModel.loanDueDateVal);
+      this.siLoanApplicationModel.loanDueDate = this.commonFunctionsService.getUTCEpoch(new Date(this.siLoanApplicationModel.loanDueDateVal));
 
     if (this.isApplicationEdit) {
       this.siLoanApplicationService.updateSILoanApplication(this.siLoanApplicationModel).subscribe((response: any) => {
@@ -1503,7 +2445,7 @@ export class SimpleInterestLoanStepperComponent {
       this.isNomineeEdit = true;
     }
     if (this.siLoanNomineeModel.nomineeDobVal != null && this.siLoanNomineeModel.nomineeDobVal != undefined) {
-      this.siLoanNomineeModel.nomineeDob = this.commonFunctionsService.getUTCEpochWithTime(this.siLoanNomineeModel.nomineeDobVal);
+      this.siLoanNomineeModel.nomineeDob = this.commonFunctionsService.getUTCEpoch(this.siLoanNomineeModel.nomineeDobVal);
     }
     if (this.isNomineeEdit) {
       this.siLoanNomineeService.updateSILoanNomineeDetails(this.siLoanNomineeModel).subscribe((response: any) => {
@@ -1652,7 +2594,7 @@ export class SimpleInterestLoanStepperComponent {
         this.msgs = [];
       }, 2000);
     });
-  }
+}
 
   saveOrUpdateGuarantorDetails(activeIndex: any, buttonName: any) {
     
@@ -1719,16 +2661,82 @@ export class SimpleInterestLoanStepperComponent {
     this.completed = 1;
   }
 
-  saveOrUpdateVehicleLoanMortagageDetails(activeIndex: any, buttonName: any) {
-    this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
-    setTimeout(() => {
-      this.msgs = [];
-    }, 1200);
-    this.activeIndex = this.activeIndex + 1;
-    this.navigateTo(this.activeIndex, this.loanAccId);
-    console.log("Navigation executed, activeIndex: ", this.activeIndex);
-    this.completed = 1;
-  }
+
+   /**
+     * @implements save and update VehicleLoanMortagageDetails
+     * @author k.yamuna
+     */
+   saveOrUpdateVehicleLoanMortagageDetails(activeIndex: any, buttonName: any) {
+      if (this.siVehicleLoanMortgageModel.id != null && this.siVehicleLoanMortgageModel.id != undefined) {
+        this.siLoanMortagageDetailsService.updateSIVehicleLoanMortagageDetails(this.siVehicleLoanMortgageModel).subscribe((response: any) => {
+          this.responseModel = response;
+          if (this.responseModel != null && this.responseModel != undefined) {
+            if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+              if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+                this.siVehicleLoanMortgageModel = this.responseModel.data[0];
+              }
+              this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+              setTimeout(() => {
+                this.msgs = [];
+              }, 1200);
+              this.activeIndex = this.activeIndex + 1;
+              this.navigateTo(this.activeIndex, this.loanAccId);
+              console.log("Navigation executed, activeIndex: ", this.activeIndex);
+              this.completed = 1;
+            }
+            else {
+              this.msgs = [];
+              this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+              setTimeout(() => {
+                this.msgs = [];
+              }, 2000);
+            }
+          }
+        }, error => {
+          this.commonComponent.stopSpinner();
+          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 3000);
+        });
+      }
+      else {
+        this.siLoanMortagageDetailsService.addSIVehicleLoanMortagageDetails(this.siVehicleLoanMortgageModel).subscribe((response: any) => {
+          this.responseModel = response;
+          if (this.responseModel != null && this.responseModel != undefined) {
+            if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+              if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+                this.siVehicleLoanMortgageModel = this.responseModel.data[0];
+                if (this.responseModel.data[0].ciLoanApplicationId != null && this.responseModel.data[0].ciLoanApplicationId != undefined) {
+                }
+                this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+              setTimeout(() => {
+                this.msgs = [];
+              }, 1200);
+              this.activeIndex = this.activeIndex + 1;
+              this.navigateTo(this.activeIndex, this.loanAccId);
+              console.log("Navigation executed, activeIndex: ", this.activeIndex);
+              this.completed = 1;
+              }
+            }
+            else {
+              this.msgs = [];
+              this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+              setTimeout(() => {
+                this.msgs = [];
+              }, 2000);
+            }
+          }
+        }, error => {
+          this.commonComponent.stopSpinner();
+          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 3000);
+        });
+      }
+     
+    }
 
   saveOrUpdateStorageLoanMortagageDetails(activeIndex: any, buttonName: any) {
     this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
@@ -1954,7 +2962,6 @@ export class SimpleInterestLoanStepperComponent {
   }
 
   getMembershipBasicDetailsByAdmissionNumber(admissionNumber: any) {
-     
     this.membershipServiceService.getMembershipBasicDetailsByAdmissionNumber(admissionNumber).subscribe((data: any) => {
       this.responseModel = data;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
@@ -1971,6 +2978,9 @@ export class SimpleInterestLoanStepperComponent {
           }
           if (this.membershipBasicRequiredDetailsModel.signatureCopyPath != null && this.membershipBasicRequiredDetailsModel.signatureCopyPath != undefined) {
             this.membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.signatureCopyPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.signatureCopyPath);
+          }
+          if (this.membershipBasicRequiredDetailsModel.mcrDocumentCopy != null && this.membershipBasicRequiredDetailsModel.mcrDocumentCopy != undefined) {
+            this.membershipBasicRequiredDetailsModel.multipartFileListForMCRCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.mcrDocumentCopy ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.mcrDocumentCopy  );
           }
 
           if (this.membershipBasicRequiredDetailsModel.dob != null && this.membershipBasicRequiredDetailsModel.dob != undefined)
@@ -2032,6 +3042,14 @@ export class SimpleInterestLoanStepperComponent {
 
           if (this.memberGroupDetailsModel.groupPromoterList != null && this.memberGroupDetailsModel.groupPromoterList != undefined)
             this.groupPrmotersList = this.memberGroupDetailsModel.groupPromoterList;
+          this.groupPrmotersList.map(obj=>{
+            if (obj.dob != null && obj.dob != undefined){
+              obj.dobVal = this.datePipe.transform(obj.dob, this.orgnizationSetting.datePipe);
+            }
+            if (obj.startDate != null && obj.startDate != undefined){
+              obj.startDateVal = this.datePipe.transform(obj.startDate, this.orgnizationSetting.datePipe);
+            }
+          });
         }
         this.siLoanKycService.changeData({
           formValid: true,

@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SavingBankApplicationService } from '../savings-bank-application/shared/saving-bank-application.service';
@@ -149,14 +149,26 @@ export class MembershipBasicRequiredDetailsComponent {
 
   tempKycList :any[] =[];
   promotersList: any[]=[];
+  requiredDocumentsNamesText: any;
+  mandatoryDoxsTextShow: boolean = false;
+  originalData: any;
+  isMaximized: boolean = false;
 
   constructor(private router: Router, private formBuilder: FormBuilder, private savingBankApplicationService: SavingBankApplicationService, private commonComponent: CommonComponent, private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService, private commonFunctionsService: CommonFunctionsService, private datePipe: DatePipe, private savingsBankCommunicationService: SavingsBankCommunicationService, private membershipServiceService: MembershipServiceService,private savingsBankKycService: SavingsBankKycService , private fileUploadService : FileUploadService) {
+    // this.kycForm = this.formBuilder.group({
+    //   'docNumber': ['', [Validators.required]],
+    //   'docTypeName': ['', [Validators.required]],
+    //   'promoter':['', ],
+    //   'fileUpload': new FormControl(''),
+    //   'nameAsPerDocument':['',[Validators.pattern(applicationConstants.ALPHA_NAME_PATTERN),Validators.compose([Validators.required])]],
+    // });
+
     this.kycForm = this.formBuilder.group({
-      'docNumber': ['', [Validators.required]],
-      'docTypeName': ['', [Validators.required]],
-      'promoter':['', ],
-      'fileUpload': new FormControl(''),
-      'nameAsPerDocument': new FormControl(''),
+      'docNumber':new FormControl('', [Validators.required]),
+      'docTypeName': new FormControl({ value: '', disabled: true }, Validators.required),
+      'nameAsPerDocument': new FormControl({ value: '', disabled: false }, [Validators.pattern(applicationConstants.ALPHA_NAME_PATTERN), Validators.required]),
+      'promoter': new FormControl({ value: '', disabled: true }), // 🔹 Disabled initially
+      'fileUpload': new FormControl({ value: '', disabled: false })
     });
   }
   
@@ -216,34 +228,50 @@ export class MembershipBasicRequiredDetailsComponent {
       if (this.responseModel != null && this.responseModel != undefined) {
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
-              if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
-                this.admissionNumber = this.responseModel.data[0].admissionNumber;
-                this.memberTypeName = this.responseModel.data[0].memberTypeName;
-                this.memberTypeCheckForPromotersKyc(this.responseModel.data[0].memberTypeName);
-                this.savingBankApplicationModel = this.responseModel.data[0];
-                if(this.savingBankApplicationModel.memberShipBasicDetailsDTO != null && this.savingBankApplicationModel.memberShipBasicDetailsDTO != undefined){
-                  this.getMultiPartFileList();
+            if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+              this.admissionNumber = this.responseModel.data[0].admissionNumber;
+              this.memberTypeName = this.responseModel.data[0].memberTypeName;
+              this.memberTypeCheckForPromotersKyc(this.responseModel.data[0].memberTypeName);
+              this.savingBankApplicationModel = this.responseModel.data[0];
+              if (this.savingBankApplicationModel.memberShipBasicDetailsDTO != null && this.savingBankApplicationModel.memberShipBasicDetailsDTO != undefined) {
+                this.getMultiPartFileList();
 
-                }
-                if(this.savingBankApplicationModel.kycList != null &&  this.savingBankApplicationModel.kycList != undefined && this.savingBankApplicationModel.kycList.length>0 ){
-                    this.kycModelList = this.savingBankApplicationModel.kycList;
-                    for(let kyc of this.kycModelList){
-                        kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
-                    }
-                    this.tempKycList = this.kycModelList;
-                }
-                this.editDocumentOfKycFalg = true;
-                this.membershipDataFromSbModule(this.savingBankApplicationModel);//for promoter kyc
-                this.updateData();
               }
+              if (this.savingBankApplicationModel.kycList != null && this.savingBankApplicationModel.kycList != undefined && this.savingBankApplicationModel.kycList.length > 0) {
+                this.kycModelList = this.savingBankApplicationModel.kycList;
+                for (let kyc of this.kycModelList) {
+                  kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
+                }
+                this.tempKycList = this.kycModelList;
+              }
+              //required documents
+              if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0) {
+                let i = 0;
+                for (let doc of this.documentNameList) {
+                  if (i == 0)
+                    this.requiredDocumentsNamesText = "Please Upload Mandatory KYC Documents ("
+                  if (doc.isMandatory) {
+                    i = i + 1;
+                    this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + "'" + doc.label + "'";
+                  }
+                }
+                this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + ")";
+                if (i > 0) {
+                  this.mandatoryDoxsTextShow = true;
+                }
+              }
+              this.editDocumentOfKycFalg = true;
+              this.membershipDataFromSbModule(this.savingBankApplicationModel);//for promoter kyc
+              this.updateData();
             }
+          }
         }
-        else{
-            this.commonComponent.stopSpinner();
-            this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-            setTimeout(() => {
-              this.msgs = [];
-            }, 3000);
+        else {
+          this.commonComponent.stopSpinner();
+          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 3000);
         }
       }
     }, error => {
@@ -294,7 +322,7 @@ export class MembershipBasicRequiredDetailsComponent {
   updateData() {
     if(this.kycModelList != null && this.kycModelList != undefined && this.kycModelList.length > 0){
       // this.kycDuplicate = this.kycModelDuplicateCheck(this.kycModelList);
-      if(this.kycDuplicate){
+      if(this.kycDuplicate || this.buttonDisabled){
         this.isDisableFlag = true;
       }
       else{
@@ -538,6 +566,21 @@ membershipDataFromSbModule(obj :any){
         let filteredObj = this.documentNameList.find((data: any) => null != data && data.value == this.savingsBankKycModel.kycDocumentTypeId);
             if (filteredObj != null && undefined != filteredObj)
               this.savingsBankKycModel.kycDocumentTypeName = filteredObj.label;
+           
+          let i = 0;
+          for (let doc of this.documentNameList) {
+            if (i == 0)
+              this.requiredDocumentsNamesText = "Please Upload Mandatory KYC Documents ("
+            if (doc.isMandatory) {
+              i = i + 1;
+              this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + "'" + doc.label + "'";
+            }
+          }
+          this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + ")";
+          if (i > 0) {
+            this.mandatoryDoxsTextShow = true;
+          }
+      
       }
     });
   }
@@ -556,7 +599,9 @@ membershipDataFromSbModule(obj :any){
     this.savingsBankKycModel.multipartFileList =[];
     this.savingsBankKycModel.kycFilePath = null;
     let files: FileUploadModel = new FileUploadModel();
-    for (let file of event.files) {
+    let selectedFiles = [...event.files];
+    fileUpload.clear();
+    for (let file of selectedFiles) {
       let reader = new FileReader();
       reader.onloadend = (e) => {
         let files = new FileUploadModel();
@@ -570,6 +615,7 @@ membershipDataFromSbModule(obj :any){
         if (index === -1) {
           this.multipleFilesList.push(files);
           this.savingsBankKycModel.filesDTOList.push(files); // Add to filesDTOList array
+          this.savingsBankKycModel.multipartFileList.push(files);
         }
         let timeStamp = this.commonComponent.getTimeStamp();
         this.savingsBankKycModel.filesDTOList[0].fileName = "SB_KYC_" + this.sbAccId + "_" +timeStamp+ "_"+ file.name ;
@@ -646,6 +692,7 @@ membershipDataFromSbModule(obj :any){
   cancelKyc() {
     this.kycModelList = [];
     this.addKycButton = false;
+    this.buttonDisabled = false;
     this.editButtonDisable = false;
     this.getAllKycsDetailsSbKycDetails(this.admissionNumber);
   }
@@ -689,23 +736,31 @@ membershipDataFromSbModule(obj :any){
     this.addDocumentOfKycFalg = false;
     this.getAllKycTypes();
     this.addOrEditKycTempList(modelData);
+     // this.getKycById(modelData.id);
+     this.editIndex = index;
+     this.originalData = { ...modelData }; // Create a shallow copy of the object
+     this.savingsBankKycModel = { ...modelData }; // Assign the cloned object to the form model
     // this.getKycById(modelData.id);
     this.updateData();
   }
 
-   /**
-   * @implements edit cancle
-   * @author jyothi.naidana
-   */
+  /**
+  * @implements edit cancle
+  * @author jyothi.naidana
+  */
   editCancle() {
-    // this.kycModelList = [];
-    this.savingsBankKycModel = new SavingsBankKycModel();
+    this.kycModelList = [];
+    this.kycModelList = this.tempKycList;
     this.editDocumentOfKycFalg = true;
     this.buttonDisabled = false;
-    // this.kycModelList = this.tempKycList;
     this.editButtonDisable = false;
-    // this.kycModelList ;
-    // this.updateData();
+    this.savingsBankKycModel = new SavingsBankKycModel();
+    if (this.editIndex !== null && this.originalData) {
+      this.kycModelList[this.editIndex] = { ...this.originalData };
+    }
+    this.editIndex = null; // Exit edit mode
+    this.originalData = null; // Clear stored original data
+    this.updateData();
   }
 
   /**
@@ -718,7 +773,6 @@ membershipDataFromSbModule(obj :any){
     this.editDocumentOfKycFalg = true;
     this.buttonDisabled = false;
     this.editButtonDisable = false;
-    this.buttonDisabled = false;
     this.editButtonDisable = false;
     let docType  = this.documentNameList.filter((obj:any) => row.kycDocumentTypeId == obj.value);
     if(docType != null && docType != undefined && docType.length >0){
@@ -752,7 +806,7 @@ membershipDataFromSbModule(obj :any){
 
     // this.kycModelList[existingIndex].push(row);
     this.addKycButton = false;
-    this.buttonDisabled = false;
+    this.updateData();
   }
 
   /**
@@ -857,5 +911,27 @@ membershipDataFromSbModule(obj :any){
   kycclosePhotoCopy() {
     this.kycPhotoCopyZoom = false;
   }
+
+  // Popup Maximize
+      @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+    
+      onDialogResize(event: any) {
+        this.isMaximized = event.maximized;
+    
+        if (this.isMaximized) {
+          // Restore original image size when maximized
+          this.imageElement.nativeElement.style.width = 'auto';
+          this.imageElement.nativeElement.style.height = 'auto';
+          this.imageElement.nativeElement.style.maxWidth = '100%';
+          this.imageElement.nativeElement.style.maxHeight = '100vh';
+        } else {
+          // Fit image inside the dialog without scrollbars
+          this.imageElement.nativeElement.style.width = '100%';
+          this.imageElement.nativeElement.style.height = '100%';
+          this.imageElement.nativeElement.style.maxWidth = '100%';
+          this.imageElement.nativeElement.style.maxHeight = '100%';
+          this.imageElement.nativeElement.style.objectFit = 'contain';
+        }
+      }
   
 }

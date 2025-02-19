@@ -135,6 +135,7 @@ export class SiLoanMembershipDetailsComponent {
   groupId: any;
   institutionId: any;
   admissionNumbersList: any[] = [];
+  groupTypesList: any[]=[];
 
   constructor(private router: Router, private formBuilder: FormBuilder,
     private commonComponent: CommonComponent, private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService,
@@ -150,7 +151,7 @@ export class SiLoanMembershipDetailsComponent {
       'name': new FormControl('', [Validators.required, Validators.pattern(applicationConstants.NEW_NAME_PATTERN), Validators.maxLength(40), Validators.pattern(/^[^\s]+(\s.*)?$/)]),
       'subProductId': new FormControl('', Validators.required),
       'age': new FormControl('', Validators.required),
-      'dob': new FormControl('',),
+      'dob': new FormControl('', Validators.required),
       'genderId': new FormControl('', Validators.required),
       'martialId': new FormControl('', Validators.required),
       'relationId': new FormControl('', Validators.required),
@@ -181,6 +182,8 @@ export class SiLoanMembershipDetailsComponent {
       gstNumber: ['', [Validators.pattern(applicationConstants.GST_NUMBER_PATTERN)]],
       pocName: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
       subProductId: ['', Validators.compose([Validators.required])],
+      groupTypeId:['', Validators.compose([Validators.required])],
+
 
 
     })
@@ -212,14 +215,13 @@ export class SiLoanMembershipDetailsComponent {
       startDate: ['', Validators.required],
       promterType: ['',],
       admissionNumber: [''],
-      authorizedSignatory: [''],
+      authorizedSignatory:['', Validators.required],
     })
   }
 
   ngOnInit(): void {
     this.today = new Date();
     this.requiredlist = this.commonComponent.requiredlist();
-
     this.membershipBasicRequiredDetailsModel.filesDTOList = [];
     this.pacsId = 1;
     this.branchId = 1;
@@ -234,6 +236,10 @@ export class SiLoanMembershipDetailsComponent {
     this.maritalstatusList = [
       { label: 'Married', value: 1 },
       { label: 'Un-Married', value: 2 }
+    ]
+    this.groupTypesList = [
+      { label: "Self Help Group", value:1 },
+      { label: "Rythu Mitra", value:2 }
     ]
 
     this.getAllMemberType();
@@ -406,70 +412,14 @@ export class SiLoanMembershipDetailsComponent {
       this.isMemberCreation = flag;
     }
   }
-
-  // //update data to main stepper component based on member type form validation
-  // updateData() {
-  //   // const isFieldsValid = this.membershipBasicRequiredDetailsModel.photoCopyPath != null && this.membershipBasicRequiredDetailsModel.signatureCopyPath != null
-  //   //   && this.membershipBasicRequiredDetailsModel.photoCopyPath != undefined && this.membershipBasicRequiredDetailsModel.signatureCopyPath != undefined;
-
-  //   // // const isFieldsValid = this.membershipBasicRequiredDetailsModel.photoCopyPath != null && this.membershipBasicRequiredDetailsModel.signatureCopyPath != null;
-
-  //   // // Disable save button if either field is missing or the form is invalid
-  //   // if (!isFieldsValid || !this.memberCreationForm.valid) {
-  //   //   this.saveButtonDisabled = true;
-  //   // } else {
-  //   //   this.saveButtonDisabled = false;
-  //   // }
-
-  //   this.siLoanApplicationModel.memberTypeId = this.memberTypeId;
-  //   if (this.memberTypeName == MemberShipTypesData.INDIVIDUAL) {
-  //     this.individualFlag = true;
-  //     // this.isDisableFlag = (!this.memberCreationForm.valid)
-  //     const isFieldsValid = this.membershipBasicRequiredDetailsModel.photoCopyPath != null && this.membershipBasicRequiredDetailsModel.signatureCopyPath != null
-  //       && this.membershipBasicRequiredDetailsModel.photoCopyPath != undefined && this.membershipBasicRequiredDetailsModel.signatureCopyPath != undefined;
-
-  //     // const isFieldsValid = this.membershipBasicRequiredDetailsModel.photoCopyPath != null && this.membershipBasicRequiredDetailsModel.signatureCopyPath != null;
-
-  //     // Disable save button if either field is missing or the form is invalid
-  //     if (!isFieldsValid || !this.memberCreationForm.valid) {
-  //       this.isDisableFlag = true;
-  //     } else {
-  //       this.isDisableFlag = false;
-  //     }
-
-  //     this.siLoanApplicationModel.memberTypeName = this.memberTypeName;
-  //     this.membershipBasicRequiredDetailsModel.memberTypeName = this.memberTypeName;
-  //     this.membershipBasicRequiredDetailsModel.isNewMember = this.isMemberCreation;
-  //     this.siLoanApplicationModel.individualMemberDetailsDTO = this.membershipBasicRequiredDetailsModel;
-  //   } else if (this.memberTypeName == MemberShipTypesData.GROUP) {
-  //     this.groupFlag = true;
-  //     this.isDisableFlag = (!this.groupForm.valid)
-  //     this.memberGroupDetailsModel.memberTypeId = this.memberTypeId;
-  //     this.memberGroupDetailsModel.memberTypeName = this.memberTypeName;
-  //     this.memberGroupDetailsModel.isNewMember = this.isMemberCreation;
-  //     this.siLoanApplicationModel.memberTypeName = this.memberTypeName;
-  //     this.siLoanApplicationModel.memberGroupDetailsDTO = this.memberGroupDetailsModel;
-  //   } else if (this.memberTypeName == MemberShipTypesData.INSTITUTION) {
-  //     this.institutionFlag = true;
-  //     this.isDisableFlag = (!this.institutionForm.valid)
-  //     this.membershipInstitutionDetailsModel.memberTypeId = this.memberTypeId;
-  //     this.membershipInstitutionDetailsModel.memberTypeName = this.memberTypeName;
-  //     this.membershipInstitutionDetailsModel.isNewMember = this.isMemberCreation;
-  //     this.siLoanApplicationModel.memberTypeName = this.memberTypeName;
-  //     this.siLoanApplicationModel.memberInstitutionDTO = this.membershipInstitutionDetailsModel;
-  //   }
-  //   this.siLoanApplicationService.changeData({
-  //     formValid: this.memberCreationForm.valid ? true : false || this.institutionForm.valid ? true : false || this.memberCreationForm.valid ? true : false || this.memberTypeId != null ? true : false,
-  //     data: this.siLoanApplicationModel,
-  //     isDisable: this.isDisableFlag,
-  //     stepperIndex: 0,
-  //   });
-
-  //   // this.updateData();
-  // }
   updateData() {
     this.siLoanApplicationModel.memberTypeId = this.memberTypeId;
     if (this.memberTypeName == MemberShipTypesData.INDIVIDUAL) {
+      this.siLoanApplicationModel.memberTypeName = this.memberTypeName;
+      this.membershipBasicRequiredDetailsModel.memberTypeName = this.memberTypeName;
+      this.membershipBasicRequiredDetailsModel.isNewMember = this.isMemberCreation;
+      this.siLoanApplicationModel.individualMemberDetailsDTO = this.membershipBasicRequiredDetailsModel;
+
       this.individualFlag = true;
       const isFieldsValid = this.membershipBasicRequiredDetailsModel.photoCopyPath != null && this.membershipBasicRequiredDetailsModel.signatureCopyPath != null
         && this.membershipBasicRequiredDetailsModel.photoCopyPath != undefined && this.membershipBasicRequiredDetailsModel.signatureCopyPath != undefined;
@@ -480,10 +430,7 @@ export class SiLoanMembershipDetailsComponent {
         this.isDisableFlag = false;
       }
 
-      this.siLoanApplicationModel.memberTypeName = this.memberTypeName;
-      this.membershipBasicRequiredDetailsModel.memberTypeName = this.memberTypeName;
-      this.membershipBasicRequiredDetailsModel.isNewMember = this.isMemberCreation;
-      this.siLoanApplicationModel.individualMemberDetailsDTO = this.membershipBasicRequiredDetailsModel;
+      
     }
     if (this.memberTypeName == MemberShipTypesData.GROUP) {
       this.groupFlag = true;
@@ -493,7 +440,7 @@ export class SiLoanMembershipDetailsComponent {
       this.memberGroupDetailsModel.isNewMember = this.isMemberCreation;
       this.siLoanApplicationModel.memberGroupDetailsDTO = this.memberGroupDetailsModel;
       this.siLoanApplicationModel.memberTypeName = this.memberTypeName;
-      this.addButton = !this.groupForm.valid;
+      // this.addButton = !this.groupForm.valid;
     }
     if (this.memberTypeName == MemberShipTypesData.INSTITUTION) {
       this.institutionFlag = true;
@@ -503,7 +450,7 @@ export class SiLoanMembershipDetailsComponent {
       this.membershipInstitutionDetailsModel.isNewMember = this.isMemberCreation;
       this.siLoanApplicationModel.memberTypeName = this.memberTypeName;
       this.siLoanApplicationModel.memberInstitutionDTO = this.membershipInstitutionDetailsModel;
-      this.addButton = !this.institutionForm.valid;
+      // this.addButton = !this.institutionForm.valid;
     }
 
     this.siLoanApplicationService.changeData({
@@ -513,7 +460,7 @@ export class SiLoanMembershipDetailsComponent {
       stepperIndex: 0,
     });
   }
-
+ 
   //stepper data save
   save() {
     this.updateData();
@@ -590,7 +537,7 @@ export class SiLoanMembershipDetailsComponent {
       this.responseModel = res;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         this.communityList = this.responseModel.data;
-        this.communityList = this.communityList.filter((obj: any) => obj != null).map((community: { name: any; id: any; }) => {
+        this.communityList = this.communityList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((community: { name: any; id: any; }) => {
           return { label: community.name, value: community.id };
         });
       }
@@ -703,9 +650,10 @@ export class SiLoanMembershipDetailsComponent {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.memberGroupDetailsModel = this.responseModel.data[0];
-
+            this.addButton = false;
+            this.isEdit = true;
             if (this.memberGroupDetailsModel.registrationDate != null && this.memberGroupDetailsModel.registrationDate != undefined)
-              this.memberGroupDetailsModel.registrationDateVal = this.datePipe.transform(this.memberGroupDetailsModel.registrationDateVal, this.orgnizationSetting.datePipe);
+              this.memberGroupDetailsModel.registrationDateVal = this.datePipe.transform(this.memberGroupDetailsModel.registrationDate, this.orgnizationSetting.datePipe);
 
             if (this.memberGroupDetailsModel.admissionDate != null && this.memberGroupDetailsModel.admissionDate != undefined)
               this.memberGroupDetailsModel.admissionDateVal = this.datePipe.transform(this.memberGroupDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
@@ -789,7 +737,8 @@ export class SiLoanMembershipDetailsComponent {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.membershipInstitutionDetailsModel = this.responseModel.data[0];
-
+            this.addButton = false;
+            // this.isEdit = true;
             if (this.membershipInstitutionDetailsModel.registrationDate != null && this.membershipInstitutionDetailsModel.registrationDate != undefined)
               this.membershipInstitutionDetailsModel.registrationDateVal = this.datePipe.transform(this.membershipInstitutionDetailsModel.registrationDate, this.orgnizationSetting.datePipe);
 
@@ -872,24 +821,29 @@ export class SiLoanMembershipDetailsComponent {
       this.institutionFlag = false;
       this.groupFlag = false;
       this.membershipBasicRequiredDetailsModel.memberTypeId = 1;
+      this.siLoanApplicationModel.memberTypeId = 1;
     }
     else if (event.value == 2) {
       this.groupFlag = true;
       this.individualFlag = false;
       this.institutionFlag = false;
       this.memberGroupDetailsModel.memberTypeId = 2;
+      this.siLoanApplicationModel.memberTypeId = 1;
+
     }
     else if (event.value == 3) {
       this.institutionFlag = true;
       this.individualFlag = false;
       this.groupFlag = false;
       this.membershipInstitutionDetailsModel.memberTypeId = 3;
+      this.siLoanApplicationModel.memberTypeId = 1;
+
     }
     this.updateData();
   }
-
-
+ 
   editPromoter(rowData: any) {
+   this.promoterDetailsForm.reset();
     this.commonComponent.startSpinner();
     this.cancleButtonFlag = true;
     this.addButton = true;
@@ -906,10 +860,16 @@ export class SiLoanMembershipDetailsComponent {
           this.submitDisableForImage = true;
           this.isFileUploadedPromoterPhoto = applicationConstants.TRUE;
         }
+        else{
+          this.isFileUploadedPromoterPhoto = applicationConstants.FALSE;
+        }
         if (this.promoterDetailsModel.uploadSignature != null && this.promoterDetailsModel.uploadSignature != undefined) {
           this.promoterDetailsModel.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadSignature, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadSignature);
           this.submitDisableForSignature = true;
           this.isFileUploadedPromoterSignature = applicationConstants.TRUE;
+        }
+        else{
+          this.isFileUploadedPromoterSignature = applicationConstants.FALSE;
         }
         if (this.promoterDetailsModel.isExistingMember) {
           this.admissionNumberDropDown = true;
@@ -933,7 +893,7 @@ export class SiLoanMembershipDetailsComponent {
   }
 
   editInstitutionPromoter(rowData: any) {
-    this.commonComponent.startSpinner();
+    this.promoterDetailsForm.reset();    this.commonComponent.startSpinner();
     this.cancleButtonFlag = true;
     this.addButton = true;
     this.EditDeleteDisable = true;
@@ -949,10 +909,16 @@ export class SiLoanMembershipDetailsComponent {
           this.submitDisableForImage = true;
           this.isFileUploadedPromoterPhoto = applicationConstants.TRUE;
         }
+        else{
+          this.isFileUploadedPromoterPhoto = applicationConstants.FALSE;
+        }
         if (this.institutionPromoterDetailsModel.uploadSignature != null && this.institutionPromoterDetailsModel.uploadSignature != undefined) {
           this.institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadSignature, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionPromoterDetailsModel.uploadSignature);
           this.submitDisableForSignature = true;
           this.isFileUploadedPromoterSignature = applicationConstants.TRUE;
+        }
+        else{
+          this.isFileUploadedPromoterSignature = applicationConstants.FALSE;
         }
         if (this.institutionPromoterDetailsModel.isExistingMember) {
           this.admissionNumberDropDown = true;
@@ -975,14 +941,15 @@ export class SiLoanMembershipDetailsComponent {
     }
     this.updateData();
   }
+ 
 
   onRowAddInstitution() {
     this.isFileUploadedPromoterPhoto = applicationConstants.FALSE;
     this.isFileUploadedPromoterSignature = applicationConstants.FALSE;
+    this.EditDeleteDisable =  applicationConstants.TRUE;
+    this.addButton = applicationConstants.TRUE;
     this.institutionPromoterPopUp = true;
     this.cancleButtonFlag = false;
-    this.EditDeleteDisable = true;
-    this.addButton = true;
     this.institutionPromoterDetailsModel = new InstitutionPromoterDetailsModel();
     this.institutionPromoterDetailsModel.uniqueId = this.institutionPromoter.length + 1
     this.promoterDetailsForm.reset();
@@ -1051,25 +1018,28 @@ export class SiLoanMembershipDetailsComponent {
   dateConverstion() {
     if (this.memberGroupDetailsModel != null && this.memberGroupDetailsModel != undefined) {
       if (this.memberGroupDetailsModel.admissionDateVal != null && this.memberGroupDetailsModel.admissionDateVal != undefined)
-        this.memberGroupDetailsModel.admissionDate = this.commonFunctionsService.getUTCEpochWithTime(this.memberGroupDetailsModel.admissionDateVal);
+        this.memberGroupDetailsModel.admissionDate = this.commonFunctionsService.getUTCEpoch(this.memberGroupDetailsModel.admissionDateVal);
 
       if (this.memberGroupDetailsModel.registrationDateVal != null && this.memberGroupDetailsModel.registrationDateVal != undefined)
-        this.memberGroupDetailsModel.registrationDate = this.commonFunctionsService.getUTCEpochWithTime(this.memberGroupDetailsModel.registrationDateVal);
+        this.memberGroupDetailsModel.registrationDate = this.commonFunctionsService.getUTCEpoch(this.memberGroupDetailsModel.registrationDateVal);
+      this.admissionDateOnSelect();
     }
     if (this.membershipBasicRequiredDetailsModel != null && this.membershipBasicRequiredDetailsModel != undefined) {
       if (this.membershipBasicRequiredDetailsModel.admissionDateVal != null && this.membershipBasicRequiredDetailsModel.admissionDateVal != undefined)
-        this.membershipBasicRequiredDetailsModel.admissionDate = this.commonFunctionsService.getUTCEpochWithTime(this.membershipBasicRequiredDetailsModel.admissionDateVal);
+        this.membershipBasicRequiredDetailsModel.admissionDate = this.commonFunctionsService.getUTCEpoch(this.membershipBasicRequiredDetailsModel.admissionDateVal);
 
       if (this.membershipBasicRequiredDetailsModel.dobVal != null && this.membershipBasicRequiredDetailsModel.dobVal != undefined)
-        this.membershipBasicRequiredDetailsModel.dob = this.commonFunctionsService.getUTCEpochWithTime(this.membershipBasicRequiredDetailsModel.dobVal);
+        this.membershipBasicRequiredDetailsModel.dob = this.commonFunctionsService.getUTCEpoch(this.membershipBasicRequiredDetailsModel.dobVal);
     }
     if (this.membershipInstitutionDetailsModel != null && this.membershipInstitutionDetailsModel != undefined) {
       if (this.membershipInstitutionDetailsModel.admissionDateVal != null && this.membershipInstitutionDetailsModel.admissionDateVal != undefined)
-        this.membershipInstitutionDetailsModel.admissionDate = this.commonFunctionsService.getUTCEpochWithTime(this.membershipInstitutionDetailsModel.admissionDateVal);
+        this.membershipInstitutionDetailsModel.admissionDate = this.commonFunctionsService.getUTCEpoch(this.membershipInstitutionDetailsModel.admissionDateVal);
 
       if (this.membershipInstitutionDetailsModel.registrationDateVal != null && this.membershipInstitutionDetailsModel.registrationDateVal != undefined)
-        this.membershipInstitutionDetailsModel.registrationDate = this.commonFunctionsService.getUTCEpochWithTime(this.membershipInstitutionDetailsModel.registrationDateVal);
+        this.membershipInstitutionDetailsModel.registrationDate = this.commonFunctionsService.getUTCEpoch(this.membershipInstitutionDetailsModel.registrationDateVal);
+      this.institutiobnAdmissionDateOnSelect()
     }
+   
     this.updateData();
   }
 
@@ -1365,7 +1335,7 @@ export class SiLoanMembershipDetailsComponent {
       if (model.age && model.age > 0) {
         const calculatedDob = this.calculateDobFromAge(model.age);
         model.dobVal = calculatedDob;
-        this.membershipBasicRequiredDetailsModel.dob = this.commonFunctionsService.getUTCEpochWithTime(model.dobVal);
+        this.membershipBasicRequiredDetailsModel.dob = this.commonFunctionsService.getUTCEpoch(new Date(model.dobVal));
       } else if (model.age != null && model.age <= 0) {
         this.memberCreationForm.get('age')?.reset();
         this.msgs = [{ severity: 'error', detail: "Age should not be zero or negative" }];
@@ -1381,7 +1351,7 @@ export class SiLoanMembershipDetailsComponent {
     if (type === 1) {
       if (model.admissionDateVal) {
         // const calculatedAge = this.calculateAge(model.dobVal);
-        this.membershipBasicRequiredDetailsModel.admissionDate = this.commonFunctionsService.getUTCEpochWithTime(model.admissionDateVal);
+        this.membershipBasicRequiredDetailsModel.admissionDate = this.commonFunctionsService.getUTCEpoch(new Date(model.admissionDateVal));
       }
     }
   }
@@ -1403,15 +1373,16 @@ export class SiLoanMembershipDetailsComponent {
     this.siLoanApplicationModel.pacsId = this.pacsId;
     this.siLoanApplicationModel.branchId = this.branchId;
     this.memberTypeId = this.siLoanApplicationModel.memberTypeId;
+    this.addButton = false;
 
     if (this.siLoanApplicationModel.applicationDateVal != null && this.siLoanApplicationModel.applicationDateVal != undefined)
-      this.siLoanApplicationModel.applicationDate = this.commonFunctionsService.getUTCEpochWithTime(this.siLoanApplicationModel.applicationDateVal);
+      this.siLoanApplicationModel.applicationDate = this.commonFunctionsService.getUTCEpoch(new Date(this.siLoanApplicationModel.applicationDateVal));
 
     if (this.siLoanApplicationModel.sanctionDateVal != null && this.siLoanApplicationModel.sanctionDateVal != undefined)
-      this.siLoanApplicationModel.sanctionDate = this.commonFunctionsService.getUTCEpochWithTime(this.siLoanApplicationModel.sanctionDateVal);
+      this.siLoanApplicationModel.sanctionDate = this.commonFunctionsService.getUTCEpoch(new Date(this.siLoanApplicationModel.sanctionDateVal));
 
     if (this.siLoanApplicationModel.loanDueDateVal != null && this.siLoanApplicationModel.loanDueDateVal != undefined)
-      this.siLoanApplicationModel.loanDueDate = this.commonFunctionsService.getUTCEpochWithTime(this.siLoanApplicationModel.loanDueDateVal);
+      this.siLoanApplicationModel.loanDueDate = this.commonFunctionsService.getUTCEpoch(new Date(this.siLoanApplicationModel.loanDueDateVal));
 
     if (this.siLoanApplicationModel.id != null && this.siLoanApplicationModel.id != undefined) {
       this.siLoanApplicationService.updateSILoanApplication(this.siLoanApplicationModel).subscribe((response: any) => {
@@ -1509,6 +1480,7 @@ export class SiLoanMembershipDetailsComponent {
         this.responseModel = response;
         this.siLoanApplicationModel = this.responseModel.data[0];
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+          this.isEdit = true;
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != undefined && this.responseModel.data[0] != null) {
             this.memberTypeName = this.responseModel.data[0].memberTypeName;
             if (this.responseModel.data[0].id != undefined && this.responseModel.data[0].id != null)
@@ -1549,6 +1521,8 @@ export class SiLoanMembershipDetailsComponent {
   onRowAddSave() {
     // this.promoterDetailsForm.get("photoUpload").reset();
     // this.promoterDetailsForm.get("signatureUpload").reset();
+    this.EditDeleteDisable =  applicationConstants.TRUE;
+    this.addButton = applicationConstants.TRUE;
     this.isFileUploadedPromoterPhoto = applicationConstants.FALSE;
     this.isFileUploadedPromoterSignature = applicationConstants.FALSE;
     this.groupPromoters = true;
@@ -1563,6 +1537,11 @@ export class SiLoanMembershipDetailsComponent {
 
   }
   onChangeExistedPrmoter(isExistingMember: any) {
+  //  if(flag){
+  //       this.resetFields();
+        // this.promoterDetailsModel = new promoterDetailsModel();
+        // this.institutionPromoterDetailsModel = new InstitutionPromoterDetailsModel();
+  //     }
     if (isExistingMember) {
       this.admissionNumberDropDown = true;
       this.getAllTypeOfMembershipDetails(this.pacsId, this.branchId);
@@ -1616,6 +1595,8 @@ export class SiLoanMembershipDetailsComponent {
     this.promoterDetailsForm.get('aadharNumber').reset();
     this.promoterDetailsForm.get('emailId').reset();
     this.promoterDetailsForm.get('startDate').reset();
+    this.promoterDetailsForm.get('authorizedSignatory').reset();
+    
   }
   disableFormFields() {
     const fieldsToDisable = [
@@ -1638,6 +1619,7 @@ export class SiLoanMembershipDetailsComponent {
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
           this.membershipBasicRequiredDetailsModel = this.responseModel.data[0];
+            
           if (this.membershipBasicRequiredDetailsModel != null && this.membershipBasicRequiredDetailsModel != undefined) {
             this.promoterDetailsModel.name = this.membershipBasicRequiredDetailsModel.name,
               this.promoterDetailsModel.surname = this.membershipBasicRequiredDetailsModel.surname;
@@ -1654,6 +1636,78 @@ export class SiLoanMembershipDetailsComponent {
             if (this.promoterDetailsModel.startDate != null && this.promoterDetailsModel.startDate != undefined)
               this.promoterDetailsModel.startDateVal = this.datePipe.transform(this.promoterDetailsModel.startDate, this.orgnizationSetting.datePipe);
 
+           
+            this.promoterDetailsModel.uploadImage = this.membershipBasicRequiredDetailsModel.photoCopyPath;
+            this.promoterDetailsModel.uploadSignature = this.membershipBasicRequiredDetailsModel.signatureCopyPath;
+
+          
+            if (this.promoterDetailsModel.uploadImage != null && this.promoterDetailsModel.uploadImage != undefined) {
+              this.promoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadImage, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadImage);
+              this.isFileUploadedPromoterPhoto = applicationConstants.TRUE;
+            }
+            if (this.promoterDetailsModel.uploadSignature != null && this.promoterDetailsModel.uploadSignature != undefined) {
+              this.promoterDetailsModel.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadSignature, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadSignature);
+              this.isFileUploadedPromoterSignature = applicationConstants.TRUE;
+            }
+            
+            this.duplicateForPromoter(this.promoterDetailsModel);
+            this.disableFormFields();
+          }
+        }
+      }
+      else {
+        this.commonComponent.stopSpinner();
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      }
+
+    }, error => {
+      this.commonComponent.stopSpinner();
+      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    });
+  }
+  getMemberDetailsByAdmissionNUmberForInstitutionPromoter(admissionNumber: any) {
+    this.institutionPromoterDetailsModel = new InstitutionPromoterDetailsModel();
+    this.membershipBasicDetailsService.getMembershipBasicDetailsByAdmissionNumber(admissionNumber).subscribe((data: any) => {
+      this.responseModel = data;
+      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+        if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+          this.membershipBasicRequiredDetailsModel = this.responseModel.data[0];
+            
+          if (this.membershipBasicRequiredDetailsModel != null && this.membershipBasicRequiredDetailsModel != undefined) {
+            this.institutionPromoterDetailsModel.name = this.membershipBasicRequiredDetailsModel.name,
+              this.institutionPromoterDetailsModel.surname = this.membershipBasicRequiredDetailsModel.surname;
+            this.institutionPromoterDetailsModel.aadharNumber = this.membershipBasicRequiredDetailsModel.aadharNumber;
+            this.institutionPromoterDetailsModel.dob = this.membershipBasicRequiredDetailsModel.dob;
+            if (this.institutionPromoterDetailsModel.dob != null && this.institutionPromoterDetailsModel.dob != undefined)
+              this.institutionPromoterDetailsModel.memDobVal = this.datePipe.transform(this.institutionPromoterDetailsModel.dob, this.orgnizationSetting.datePipe);
+            this.institutionPromoterDetailsModel.age = this.membershipBasicRequiredDetailsModel.age;
+            this.institutionPromoterDetailsModel.genderId = this.membershipBasicRequiredDetailsModel.genderId;
+            this.institutionPromoterDetailsModel.martialId = this.membershipBasicRequiredDetailsModel.martialId;
+            this.institutionPromoterDetailsModel.mobileNumber = this.membershipBasicRequiredDetailsModel.mobileNumber;
+            this.institutionPromoterDetailsModel.emailId = this.membershipBasicRequiredDetailsModel.emailId;
+            this.institutionPromoterDetailsModel.startDate = this.membershipBasicRequiredDetailsModel.admissionDate;
+            if (this.institutionPromoterDetailsModel.startDate != null && this.institutionPromoterDetailsModel.startDate != undefined)
+              this.institutionPromoterDetailsModel.startDateVal = this.datePipe.transform(this.institutionPromoterDetailsModel.startDate, this.orgnizationSetting.datePipe);
+
+            this.institutionPromoterDetailsModel.uploadImage = this.membershipBasicRequiredDetailsModel.photoCopyPath;
+            this.institutionPromoterDetailsModel.uploadSignature = this.membershipBasicRequiredDetailsModel.signatureCopyPath;
+
+            if (this.institutionPromoterDetailsModel.uploadImage != null && this.institutionPromoterDetailsModel.uploadImage != undefined) {
+              this.institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadImage, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadImage);
+              this.isFileUploadedPromoterPhoto = applicationConstants.TRUE;
+            }
+            if (this.institutionPromoterDetailsModel.uploadSignature != null && this.institutionPromoterDetailsModel.uploadSignature != undefined) {
+              this.institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadSignature, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadSignature);
+              this.isFileUploadedPromoterSignature = applicationConstants.TRUE;
+            }
+            
+            this.duplicateInsitutionForPromoter(this.institutionPromoterDetailsModel)
             this.disableFormFields();
             // this.promoterDetailsForm.get('admissionNumber').setValidators(Validators.compose([Validators.required]));
           }
@@ -1684,13 +1738,9 @@ export class SiLoanMembershipDetailsComponent {
     this.addButton = false;
     this.EditDeleteDisable = false;
     promoterDetailsModel.pacsId = 1;
-    this.addButton = false;
     this.EditDeleteDisable = false;
     if (promoterDetailsModel.memDobVal != null && promoterDetailsModel.memDobVal != undefined) {
       promoterDetailsModel.dob = this.commonFunctionsService.getUTCEpoch(new Date(promoterDetailsModel.memDobVal));
-    }
-    if (promoterDetailsModel.dob != null && promoterDetailsModel.dob != undefined) {
-      promoterDetailsModel.memDobVal = this.datePipe.transform(promoterDetailsModel.dob, this.orgnizationSetting.datePipe);
     }
     if (promoterDetailsModel.startDateVal != null && promoterDetailsModel.startDateVal != undefined) {
       promoterDetailsModel.startDate = this.commonFunctionsService.getUTCEpoch(new Date(promoterDetailsModel.startDateVal));
@@ -1700,9 +1750,6 @@ export class SiLoanMembershipDetailsComponent {
     }
     else {
       promoterDetailsModel.authorizedSignatoryName = applicationConstants.NO;
-    }
-    if (promoterDetailsModel.startDate != null && promoterDetailsModel.startDate != undefined) {
-      promoterDetailsModel.startDateVal = this.datePipe.transform(promoterDetailsModel.startDate, this.orgnizationSetting.datePipe);
     }
     if (!this.memberGroupDetailsModel.groupPromotersDTOList) {
       this.memberGroupDetailsModel.groupPromotersDTOList = []; // Initialize it as an empty array
@@ -1736,7 +1783,6 @@ export class SiLoanMembershipDetailsComponent {
         }
         // this.getSILoanApplicationById(this.loanAccId);
         this.getAllPromotersByGroupId();
-        // this.groupPromoters = false;
       }, error => {
         this.commonComponent.stopSpinner();
         this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
@@ -1763,7 +1809,7 @@ export class SiLoanMembershipDetailsComponent {
         this.getAllPromotersByGroupId();
         // this.getSILoanApplicationById(this.loanAccId);
 
-        // this.groupPromoters = false;
+        this.groupPromoters = false;
       }, error => {
         this.commonComponent.stopSpinner();
         this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
@@ -1782,7 +1828,6 @@ export class SiLoanMembershipDetailsComponent {
     this.addButton = false;
     this.EditDeleteDisable = false;
     institutionPromoterDetailsModel.pacsId = 1;
-    this.addButton = false;
     this.EditDeleteDisable = false;
     if (institutionPromoterDetailsModel.memDobVal != null && institutionPromoterDetailsModel.memDobVal != undefined) {
       institutionPromoterDetailsModel.dob = this.commonFunctionsService.getUTCEpoch(new Date(institutionPromoterDetailsModel.memDobVal));
@@ -1962,25 +2007,31 @@ export class SiLoanMembershipDetailsComponent {
     });
 
   }
+  
   /**
         * @implements fileUpload for promoter in group
         * @param event 
         * @param fileUpload 
         * @param filePathName 
         */
-  fileUploaderForPromoters(event: any, fileUpload: FileUpload, filePathName: any) {
+  fileUploaderForPromoters(event: any, fileUploadPhoto: FileUpload,fileUploadSign: FileUpload, filePathName: any) {
     this.multipleFilesList = [];
     if (this.isEdit && this.promoterDetailsModel.filesDTOList == null || this.promoterDetailsModel.filesDTOList == undefined) {
       this.promoterDetailsModel.filesDTOList = [];
     }
+    let selectedFiles = [...event.files];
     if (filePathName === "groupPromoterImage") {
       this.isFileUploadedPromoterPhoto = applicationConstants.FALSE;
+      this.promoterDetailsModel.multipartFileListForPhotoCopyPath =[];
+      fileUploadPhoto.clear();
     }
     if (filePathName === "groupPromoterSignature") {
       this.isFileUploadedPromoterSignature = applicationConstants.FALSE;
+      this.promoterDetailsModel.multipartFileListForsignatureCopyPath =[];
+      fileUploadSign.clear();
     }
     let files: FileUploadModel = new FileUploadModel();
-    for (let file of event.files) {
+    for (let file of selectedFiles) {
       let reader = new FileReader();
       reader.onloadend = (e) => {
         let timeStamp = this.commonComponent.getTimeStamp();
@@ -1996,26 +2047,25 @@ export class SiLoanMembershipDetailsComponent {
           this.isFileUploadedPromoterPhoto = applicationConstants.TRUE;
           this.promoterDetailsModel.filesDTOList.push(files);
           this.promoterDetailsModel.uploadImage = null;
-          this.promoterDetailsModel.multipartFileListForPhotoCopyPath =[];
+          this.promoterDetailsModel.multipartFileListForPhotoCopyPath.push(files);
           this.promoterDetailsModel.filesDTOList[this.promoterDetailsModel.filesDTOList.length - 1].fileName = "Group_Promoter_Photo_copy" + "_" + timeStamp + "_" + file.name;
           this.promoterDetailsModel.uploadImage = "Group_Promoter_Photo_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
         }
         if (filePathName === "groupPromoterSignature") {
           this.isFileUploadedPromoterSignature = applicationConstants.TRUE
-          this.promoterDetailsModel.multipartFileListForsignatureCopyPath =[];
+          this.promoterDetailsModel.multipartFileListForsignatureCopyPath.push(files);
           this.promoterDetailsModel.filesDTOList.push(files);
           this.promoterDetailsModel.uploadSignature = null;
           this.promoterDetailsModel.filesDTOList[this.promoterDetailsModel.filesDTOList.length - 1].fileName = "Group_Promoter_signed_copy" + "_" + timeStamp + "_" + file.name;
           this.promoterDetailsModel.uploadSignature = "Group_Promoter_signed_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
         }
-        let index1 = event.files.findIndex((x: any) => x === file);
-        fileUpload.remove(event, index1);
-        fileUpload.clear();
+       
         this.updateData();
       }
       reader.readAsDataURL(file);
     }
   }
+  
   cancelPromoter() {
     this.addButton = false;
     this.groupPromoters = false;
@@ -2024,26 +2074,29 @@ export class SiLoanMembershipDetailsComponent {
     this.updateData();
   }
 
-  fileUploaderForInstitutionPromoters(event: any, fileUpload: FileUpload, filePathName: any) {
-
+  fileUploaderForInstitutionPromoters(event: any, fileUploadPhotos: FileUpload,fileUploadSigna: FileUpload, filePathName: any) {
     this.multipleFilesList = [];
     if (this.isEdit && this.institutionPromoterDetailsModel.filesDTOList == null || this.institutionPromoterDetailsModel.filesDTOList == undefined) {
       this.institutionPromoterDetailsModel.filesDTOList = [];
     }
+    let selectedFiles = [...event.files];
     if (filePathName === "institutionPromoterImage") {
       this.isFileUploadedPromoterPhoto = applicationConstants.FALSE;
+      this.institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath =[];
+      fileUploadPhotos.clear();
     }
     if (filePathName === "insitutionPromoterSignature") {
       this.isFileUploadedPromoterSignature = applicationConstants.FALSE;
+      this.institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath =[];
+      fileUploadSigna.clear();
     }
-    let files: FileUploadModel = new FileUploadModel();
-    for (let file of event.files) {
+    for (let file of selectedFiles) {
       let reader = new FileReader();
       reader.onloadend = (e) => {
         let timeStamp = this.commonComponent.getTimeStamp();
         let files = new FileUploadModel();
         this.uploadFileData = e.currentTarget;
-        files.fileName = "Institution_Photo_copy" + "_" + timeStamp + "_" + file.name;
+        files.fileName = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
         files.fileType = file.type.split('/')[1];
         files.value = this.uploadFileData.result.split(',')[1];
         files.imageValue = this.uploadFileData.result;
@@ -2053,19 +2106,19 @@ export class SiLoanMembershipDetailsComponent {
           this.isFileUploadedPromoterPhoto = applicationConstants.TRUE;
           this.institutionPromoterDetailsModel.filesDTOList.push(files);
           this.institutionPromoterDetailsModel.uploadImage = null;
+          this.institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath.push(files);
           this.institutionPromoterDetailsModel.filesDTOList[this.institutionPromoterDetailsModel.filesDTOList.length - 1].fileName = "Institution_Promoter_Photo_copy" + "_" + timeStamp + "_" + file.name;
           this.institutionPromoterDetailsModel.uploadImage = "Institution_Promoter_Photo_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
         }
         if (filePathName === "insitutionPromoterSignature") {
-          this.isFileUploadedPromoterSignature = applicationConstants.TRUE;
+          this.isFileUploadedPromoterSignature = applicationConstants.TRUE
+          this.institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath.push(files);
           this.institutionPromoterDetailsModel.filesDTOList.push(files);
           this.institutionPromoterDetailsModel.uploadSignature = null;
-          this.institutionPromoterDetailsModel.filesDTOList[this.institutionPromoterDetailsModel.filesDTOList.length - 1].fileName = "Institution_Promoter_signed_copy" + "_" + timeStamp + "_" + file.name;
-          this.institutionPromoterDetailsModel.uploadSignature = "Institution_Promoter_signed_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
+          this.institutionPromoterDetailsModel.filesDTOList[this.institutionPromoterDetailsModel.filesDTOList.length - 1].fileName = "Institution_Promoter_Photo_copy" + "_" + timeStamp + "_" + file.name;
+          this.institutionPromoterDetailsModel.uploadSignature = "Institution_Promoter_Photo_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
         }
-        let index1 = event.files.findIndex((x: any) => x === file);
-        fileUpload.remove(event, index1);
-        fileUpload.clear();
+       
         this.updateData();
       }
       reader.readAsDataURL(file);
@@ -2078,7 +2131,120 @@ export class SiLoanMembershipDetailsComponent {
     this.institutionPromoter;
     this.updateData();
   }
+  admissionDateOnSelect(){
+    if(this.memberGroupDetailsModel != null && this.memberGroupDetailsModel != undefined){
+    if(this.memberGroupDetailsModel.admissionDateVal != undefined && this.memberGroupDetailsModel.registrationDateVal != undefined){
+      if(this.memberGroupDetailsModel.admissionDateVal < this.memberGroupDetailsModel.registrationDateVal){
+        this.groupForm.get('registrationDate')?.reset();
+        this.groupForm.get('admissionDate')?.reset();
+        this.groupForm.updateValueAndValidity();
+        this.msgs = [{ severity: 'warning', detail: applicationConstants.REGISTRATION_DATE_SHOULD_LESSTHAN_ADMISSION_DATE }];
+        setTimeout(() => {
+          this.msgs = [];        
+        }, 2000);
+      }
+    }
+    }
 
+  }
+
+  institutiobnAdmissionDateOnSelect(){
+    if(this.membershipInstitutionDetailsModel != null && this.membershipInstitutionDetailsModel != undefined){
+    if(this.membershipInstitutionDetailsModel.admissionDateVal != undefined && this.membershipInstitutionDetailsModel.registrationDateVal != undefined){
+      if(this.membershipInstitutionDetailsModel.admissionDateVal < this.membershipInstitutionDetailsModel.registrationDateVal){
+        this.institutionForm.get('registrationDate')?.reset();
+        this.institutionForm.get('admissionDate')?.reset();
+        this.institutionForm.updateValueAndValidity();
+        this.msgs = [{ severity: 'warning', detail: applicationConstants.REGISTRATION_DATE_SHOULD_LESSTHAN_ADMISSION_DATE }];
+        setTimeout(() => {
+          this.msgs = [];        
+        }, 2000);
+      }
+    }
+    }
+
+  }
+
+  duplicateForPromoter(rowData: any) {
+    if (rowData != null && rowData != undefined) {
+      if (this.promoterDetails != null && this.promoterDetails != undefined && this.promoterDetails.length > 0) {
+        for (let item of this.promoterDetails) {
+          if (item != null && item != undefined && item.admissionNumber != null && item.admissionNumber === rowData.admissionNumber &&
+            item.groupId != null && item.groupId === this.groupId) {
+            // this.promoterDetailsModel = new promoterDetailsModel();
+            this.promoterDetailsForm.reset();
+            this.msgs = [];
+            this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "promoter details already exists" }];
+            setTimeout(() => {
+              this.msgs = [];
+            }, 1500);
+          }
+        }
+      }
+    }
+  }
+  duplicateInsitutionForPromoter(rowData: any) {
+    if (rowData != null && rowData != undefined) {
+      if (this.institutionPromoter != null && this.institutionPromoter != undefined && this.institutionPromoter.length > 0) {
+        for (let item of this.institutionPromoter) {
+          if (item != null && item != undefined && item.admissionNumber != null && item.admissionNumber === rowData.admissionNumber &&
+            item.institutionId != null && item.institutionId === this.institutionId) {
+            // this.promoterDetailsModel = new promoterDetailsModel();
+            this.promoterDetailsForm.reset();
+            this.msgs = [];
+            this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "promoter details already exists" }];
+            setTimeout(() => {
+              this.msgs = [];
+            }, 1500);
+          }
+        }
+      }
+    }
+  }
+
+  datesValidationCheckAgeAndDobForGroupPromoter(model: any, type: number): void {
+    if (type === 2) {
+      if (model.memDobVal) {
+        const calculatedAge = this.calculateAge(model.memDobVal);
+        model.age = calculatedAge;
+      }
+    } else if (type === 1) {
+      if (model.age && model.age > 0) {
+        const calculatedDob = this.calculateDobFromAge(model.age);
+        model.memDobVal = calculatedDob;
+        this.promoterDetailsModel.dob = this.commonFunctionsService.getUTCEpoch(new Date(model.memDobVal));
+      } else if (model.age != null && model.age <= 0) {
+        this.memberCreationForm.get('age')?.reset();
+        this.msgs = [{ severity: 'error', detail: "Age should not be zero or negative" }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+
+      }
+    }
+  }
+  datesValidationCheckAgeAndDobForInstitutionPromoter(model: any, type: number): void {
+   
+    if (type === 2) {
+      if (model.memDobVal) {
+        const calculatedAge = this.calculateAge(model.memDobVal);
+        model.age = calculatedAge;
+      }
+    } else if (type === 1) {
+      if (model.age && model.age > 0) {
+        const calculatedDob = this.calculateDobFromAge(model.age);
+        model.memDobVal = calculatedDob;
+        this.institutionPromoterDetailsModel.dob = this.commonFunctionsService.getUTCEpoch(new Date(model.memDobVal));
+      } else if (model.age != null && model.age <= 0) {
+        this.memberCreationForm.get('age')?.reset();
+        this.msgs = [{ severity: 'error', detail: "Age should not be zero or negative" }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+
+      }
+    }
+  }
 
 }
 

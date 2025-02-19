@@ -113,7 +113,7 @@ export class DepositInvestmentApprovalComponent {
               }
 
               this.remarks = this.investmentApplicationDetailsModel.remarks;
-              this.status = this.investmentApplicationDetailsModel.status;
+              this.status = this.investmentApplicationDetailsModel.accountStatus;
 
               if (this.investmentApplicationDetailsModel.autoRenewalType != null && this.investmentApplicationDetailsModel.autoRenewalType != undefined) {
                 this.autoRenewalTypeList.filter(data => data.value == this.investmentApplicationDetailsModel.autoRenewalType).map(count => {
@@ -164,7 +164,7 @@ export class DepositInvestmentApprovalComponent {
   onChangeStatus(status: any) {
     if (status != null && status != undefined) {
       this.statusList.filter(data => data.value == status).map(count => {
-        this.investmentApplicationDetailsModel.statusName = count.label;
+        this.investmentApplicationDetailsModel.accountStatusName = count.label;
       });
       this.submitFlag = false;
     } else

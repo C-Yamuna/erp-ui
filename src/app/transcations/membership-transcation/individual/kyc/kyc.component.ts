@@ -15,6 +15,7 @@ import { MembershipBasicDetailsService } from '../../shared/membership-basic-det
 import { DocumentTypesService } from 'src/app/configurations/membership-config/document-types/shared/document-types.service';
 import { KycDocumentTypesService } from 'src/app/configurations/common-config/kyc-document-types/shared/kyc-document-types.service';
 import { FileUploadService } from 'src/app/shared/file-upload.service';
+import { DOCUMENT_TYPES } from 'src/app/transcations/common-status-data.json';
 
 
 @Component({
@@ -81,7 +82,7 @@ export class KYCComponent  implements OnInit {
   mandatoryDocList: any[]=[];
   saveButtonDisable: boolean= false;
   isMaximized: boolean = false;
-
+  isPanNumber: boolean = false;
 
   constructor(private formBuilder: FormBuilder,
     private kycService: MembershipKycDetailsService,
@@ -96,7 +97,7 @@ export class KYCComponent  implements OnInit {
 
       this.kycForm = this.formBuilder.group({
         'kycDocumentTypeId': new FormControl('', Validators.required),
-        'documentNumber': new FormControl('',[Validators.required, Validators.pattern(/^[^\s]+(\s.*)?$/)]),
+        'documentNumber': new FormControl('',[Validators.required]),
         'nameAsPerDocument': new FormControl('',[Validators.required,Validators.pattern(applicationConstants.NEW_NAME_PATTERN), Validators.maxLength(40), Validators.pattern(/^[^\s]+(\s.*)?$/)]),
         'kycFilePath': new FormControl(''),
       });
@@ -365,6 +366,10 @@ export class KYCComponent  implements OnInit {
             else{
               this.saveButtonDisable = false;
             }
+            
+            if(this.kycModel.kycDocumentTypeName != null && this.kycModel.kycDocumentTypeName != undefined){
+              this.documentNumberDynamicValidation(this.kycModel.kycDocumentTypeName );
+            }
           }
         }
       });
@@ -461,11 +466,19 @@ export class KYCComponent  implements OnInit {
               this.msgs = [];
             }, 1500);
           }
+         
         }
+      }
+      let documnetTypes = this.docTypeList.find((data: any) => null != data && this.kycModel.kycDocumentTypeId != null && data.value == this.kycModel.kycDocumentTypeId);
+      if (documnetTypes != null && undefined != documnetTypes)
+        this.kycModel.kycDocumentTypeName = documnetTypes.label;
+      if (this.kycModel.kycDocumentTypeName != null && this.kycModel != undefined) {
+        this.documentNumberDynamicValidation(this.kycModel.kycDocumentTypeName);
       }
     }
 
   }
+  
     delete(rowDataId: any) {
       this.kycService.deleteMembershipKycDetails(rowDataId).subscribe((response: any) => {
         this.responseModel = response;
@@ -543,4 +556,42 @@ export class KYCComponent  implements OnInit {
       this.imageElement.nativeElement.style.objectFit = 'contain';
     }
   }
+   /**
+     * @implements document number dynamic Vaildation
+     * @author k.yamuna
+     */
+     documentNumberDynamicValidation(docTypeName: any) {
+      if (DOCUMENT_TYPES.AADHAR == this.kycModel.kycDocumentTypeName) {
+        const controlTow = this.kycForm.get('documentNumber');
+        if (controlTow) {
+          controlTow.setValidators([
+            Validators.required,
+            Validators.pattern(applicationConstants.AADHAR_PATTERN)
+          ]);
+          controlTow.updateValueAndValidity();
+        }
+        this.isPanNumber = false;
+      }
+      else if (DOCUMENT_TYPES.PANNUMBER == this.kycModel.kycDocumentTypeName) {
+        const controlTow = this.kycForm.get('documentNumber');
+        if (controlTow) {
+          controlTow.setValidators([
+            Validators.required,
+            Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN)
+          ]);
+          controlTow.updateValueAndValidity();
+        }
+        this.isPanNumber = true;
+      }
+      else {
+        const controlTow = this.kycForm.get('documentNumber');
+        if (controlTow) {
+          controlTow.setValidators([
+            Validators.required,
+          ]);
+          controlTow.updateValueAndValidity();
+        }
+        this.isPanNumber = false;
+      }
+    }
 }

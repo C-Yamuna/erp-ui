@@ -394,8 +394,8 @@
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12">
                         <div class="col-12 p-0">
-                            <div class="global-card-bg-color view-carddata icon-size pb-1">
-                                <div class="col-12">
+                            <div class="global-card-bg-color view-carddata icon-size pb-2">
+                                <div class="col-12 p-0">
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="d-flex">
@@ -410,7 +410,7 @@
                                         </div>
                                     </div>
         
-                                    <div class="col-12 px-0" *ngIf = "!isKycEmpty">
+                                    <div class="col-12 p-0" *ngIf = "!isKycEmpty">
                                         <div class="row g-3">
                                         
                                                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12" *ngFor="let document of kycGridList ; let i = index">
@@ -419,28 +419,25 @@
                                                         <div class="row">
                                                             <div class="col-lg-7 col-md-7 col-sm-7 col-xs-6 d-flex align-items-center">
                                                                 <div class="card-leftbody">
-                                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px" *ngIf="!individualFlag">
+                                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 " *ngIf="!individualFlag">
                                                                         <h6 class="label-view">Promoter Name</h6>
                                                                         <p class="label-input-text">{{document.promoterName}}</p>
                                                                     </div>
-                                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                     <h6 class="label-view">Document Type</h6>
                                                                     <p class="label-input-text">{{document.kycDocumentTypeName}}</p>
                                                                 </div>
-                                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                     <h6 class="label-view">Document Number</h6>
                                                                     <p class="label-input-text">{{document.documentNumber}}</p>
                                                                 </div>
-                                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                                     <h6 class="label-view">Name as per Document</h6>
                                                                     <p class="label-input-text docname-texteclipse" >{{document.nameAsPerDocument}} </p>
                                                                 </div>
                                                             </div>
                                                             </div>
-                                                            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end">
-                                                                <div class="kycview-done icon-size text-right"><i class="fa fa-check-circle mr-0" aria-hidden="true"></i></div>
-                                                                        <div class="col-12 px-0">
-                                                                        <div class="col-12 px-0" *ngFor="let img of document.multipartFileList">
+                                                                                                                                    <!-- <div class="col-12 px-0" *ngFor="let img of document.multipartFileList">
                                                                                 <div class="col-12 p-0" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                                                                     <a href="{{img.imageValue}}">
                                                                                         <img src="{{img.imageValue}}" class="upload-img img-fluid" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
@@ -452,8 +449,7 @@
                                                                                     </a>
                                                                                 </div>
                                                                             </div>
-                                                                        </div>
-                                                                        </div>
+                                                                        </div> -->
                                                                        
                                                                         <!-- <div class="col-12 border-top" *ngFor="let img of document.multipartFileList">
                                                                             <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
@@ -462,10 +458,22 @@
                                                                                 </a>
                                                                             </div>
                                                                         </div> -->
-                    
-                                                                    </div>
-            
-                                                                    
+                                                                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end d-flex right-actions">
+                                                                            <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClickkycPhotoCopy(document)"><i class="fa fa-eye m-0" aria-hidden="true"></i></div>
+                                                                            <div *ngIf="!preveiwFalg">
+                                                                            <div class="carddownload-icon icon-size text-right" *ngFor="let img of document.multipartFileList">
+                                                                                <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                                                    <a href="{{img.imageValue}}">
+                                                                                        <i class="fa fa-download ml-3 mr-0" aria-hidden="true">
+                                                                                            <!-- <img src="{{img.imageValue}}"> -->
+                                                                                        </i>
+                                                                                    </a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                            <div><img src="assets/images/verify.png" alt="" class="verifykyc ml-3"></div>
+                                                                        </div>
+                                                                    </div>        
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -481,8 +489,8 @@
 
                     <div class="col-lg-12 col-md-12 col-sm-12">
                         <div class="col-12 p-0">
-                            <div class="global-card-bg-color view-carddata icon-size">
-                                <div class="col-12">
+                            <div class="global-card-bg-color view-carddata icon-size pb-2">
+                                <div class="col-12 p-0">
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="d-flex">
@@ -496,40 +504,40 @@
                                                 (click)="communicationEdit(viewSavingBankModel)"></p-button>
                                         </div>
                                     </div>
-                                    <div class="col-12 px-0">
+                                    <div class="col-12 p-0">
                                         <div class="row g-3">
                                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                 <div class="nominee-card p-3 pb-1 mb-2">
                                         <div class="row">
                                             <h6 class="super-sub-heading mt-1">{{'ERP.REGISTERED' | translate}}</h6>
                                         <div class="col-12">
-                                            <div class="row mt-2">
+                                            <div class="row">
                                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                     <div class="row">
-                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                 <h6 class="label-view">State</h6>
                                                 <p class="label-input-text">{{communicationDetailsModel.stateName}}</p>
                                             </div>
-                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                 <h6 class="label-view">District</h6>
                                                 <p class="label-input-text">{{communicationDetailsModel.districtName}}</p>
                                             </div>
 
-                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                 <h6 class="label-view">Sub District</h6>
                                                 <p class="label-input-text">{{communicationDetailsModel.subDistrictName}}</p>
                                             </div>
-                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                 <h6 class="label-view">Village</h6>
                                                 <p class="label-input-text">{{communicationDetailsModel.villageName}}
                                                 </p>
                                             </div>
-                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                 <h6 class="label-view">Address</h6>
                                                 <p class="label-input-text">{{communicationDetailsModel.address1}}
                                                 </p>
                                             </div>
-                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                 <h6 class="label-view">Pincode</h6>
                                                 <p class="label-input-text">{{communicationDetailsModel.pincode}}
                                                 </p>
@@ -545,33 +553,33 @@
                                     <div class="nominee-card p-3 pb-1 mb-2">
                                     <div class="row">
                                                 <h6 class="super-sub-heading mt-1">{{'ERP.PERMANENT' | translate}}</h6>
-                                        <div class="col-12">
-                                            <div class="row mt-2">
+                                        <div class="col-12 ">
+                                            <div class="row">
                                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                     <div class="row">
-                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                 <h6 class="label-view">State</h6>
                                                 <p class="label-input-text">{{communicationDetailsModel.permenentStateName}}</p>
                                             </div>
-                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                 <h6 class="label-view">District</h6>
                                                 <p class="label-input-text">{{communicationDetailsModel.permenentDistrictName}}
                                                 </p>
                                             </div>
-                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                 <h6 class="label-view">Sub District</h6>
                                                 <p class="label-input-text">{{communicationDetailsModel.permenentSubDistrictName}}
                                                 </p>
                                             </div>
-                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                 <h6 class="label-view">Village</h6>
                                                 <p class="label-input-text">{{communicationDetailsModel.permenentVillageName}}</p>
                                             </div>
-                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                 <h6 class="label-view">Address</h6>
                                                 <p class="label-input-text">{{communicationDetailsModel.permntAddress1}}</p>
                                             </div>
-                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                 <h6 class="label-view">Pincode</h6>
                                                 <p class="label-input-text">{{communicationDetailsModel.permntPincode}}</p>
                                             </div>
@@ -616,8 +624,8 @@
 
                     <div class="col-lg-12 col-md-12 col-sm-12">
                         <div class="col-12 p-0">
-                            <div class=" global-card-bg-color view-carddata icon-size">
-                                <div class="col-12">
+                            <div class=" global-card-bg-color view-carddata icon-size pb-1">
+                                <div class="col-12 p-0">
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="d-flex">
@@ -631,33 +639,33 @@
                                         </div>
                                     </div>
         
-                                    <div class="col-12 px-0">
+                                    <div class="col-12 p-0">
                                         <div class="row">
-                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                 <h6 class="label-view">{{'ERP.PRODUCT_TYPE' | translate}}</h6>
                                                 <p class="label-input-text">{{viewSavingBankModel.productName}}</p>
                                             </div>
-                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                 <h6 class="label-view">{{'ERP.ACCOUNT_TYPE' | translate}}</h6>
                                                 <p class="label-input-text">{{viewSavingBankModel.accountTypeName}}</p>
                                             </div>
-                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                 <h6 class="label-view">{{'ERP.ACCOUNT_NUMBER' | translate}}</h6>
                                                 <p class="label-input-text">{{viewSavingBankModel.accountNumber}}</p>
                                             </div>
                                             <!-- </div>
                                         <div class="row"> -->
-                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                 <h6 class="label-view">{{'ERP.MIN_BALENCE_REQUIRED' | translate}}</h6>
                                                 <p class="label-input-text">{{viewSavingBankModel.minBalance}}</p>
                                             </div>
-                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                 <h6 class="label-view">{{'ERP.ACCOUNT_OPENENIG_DATE' | translate}}</h6>
                                                 <p class="label-input-text">{{viewSavingBankModel.accountOpenDateVal}}</p>
                                             </div>
-                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 " *ngIf="individualFlag">
                                                 <h6 class="label-view">{{'ERP.IS_STAFF' | translate}}</h6>
-                                                <p class="label-input-text">{{membershipBasicRequiredDetails.isStaff}}</p>
+                                                <p class="label-input-text">{{isStaff}}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -670,7 +678,7 @@
                     <div class="col-lg-12 col-md-12 col-sm-12"  *ngIf="jointHoldersFlag" >
                         <div class="col-12 p-0">
                             <div class="global-card-bg-color view-carddata icon-size">
-                                <div class="col-12">
+                                <div class="col-12 p-0">
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="d-flex">
@@ -692,50 +700,50 @@
                                                 <div class="col"></div>
                                                 <div class="w-100 mt-1 mb-2 h-90p">
                                                     <div class="row">
-                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                             <div class="col">
                                                             <span class="label-view">{{'ERP.ADMISSION_NO' | translate}}</span>
                                                             <p class="font-semibold text-break m-0 label-input-text">{{jointHolderDetails.admissionNumber}}</p>
                                                         </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                             <div class="col">
                                                             <span class="label-view">{{'ERP.NAME' | translate}}</span>
                                                             <p class="font-semibold text-break m-0 label-input-text">{{jointHolderDetails.name}}</p>
                                                         </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                             <div class="col">
                                                             <span class="label-view">{{'ERP.MEMBER_TYPE' | translate}}</span>
                                                             <p class="font-semibold text-break m-0 label-input-text">{{jointHolderDetails.memberTypeName}}</p>
                                                         </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                             <div class="col">
                                                             <span class="label-view">{{'ERP.CLASS' | translate}}</span>
                                                             <p class="font-semibold text-break m-0 label-input-text">{{jointHolderDetails.memberClass}}</p>
                                                         </div>
                                                         </div>
             
-                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                         <div class="col">
                                                             <span class="label-view">{{'ERP.ADMISSION_DATE' | translate}}</span>
                                                             <p class="font-semibold text-break label-input-text">{{jointHolderDetails.admissionDateVal}}</p>
                                                         </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                             <div class="col">
                                                             <span class="label-view">{{'ERP.AADHAR_NO' | translate}}</span>
                                                             <p class="font-semibold text-break label-input-text">{{jointHolderDetails.aadharNumber}}</p>
                                                         </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                             <div class="col">
                                                             <span class="label-view">{{'ERP.PAN_NO' | translate}}</span>
                                                             <p class="font-semibold text-break label-input-text">{{jointHolderDetails.panNumber}}</p>
                                                         </div>
                                                         </div>
-                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                             <div class="col">
                                                             <span class="label-view">{{'ERP.KYC' | translate}}</span>
                                                             <p class="font-semibold text-break label-input-text">{{jointHolderDetails.isKycApproved}}</p>
@@ -755,8 +763,8 @@
 
                     <div class="col-lg-12 col-md-12 col-sm-12">
                         <div class="col-12 p-0">
-                            <div class="global-card-bg-color view-carddata icon-size">
-                                <div class="col-12">
+                            <div class="global-card-bg-color view-carddata icon-size pb-2">
+                                <div class="col-12 p-0">
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="d-flex">
@@ -771,31 +779,55 @@
                                         </div>
                                     </div>
         
-                                    <div class="col-12 px-0">
+                                    <div class="col-12 p-0">
                                         <div class="row g-3">
                                             
                                                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12" *ngFor="let document of requiredDocumentsList ; let i = index">
-                                                    <div class="stepper-doc-card p-3 mb-2">
+                                                    <div class="stepper-kyc-card p-3 mb-2">
                                                         <!-- view card -->
                                                         <div class="row">
             
-                                                            <div class="col-lg-7 col-md-7 col-sm-7 d-flex align-items-center">
+                                                            <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10 d-flex align-items-center">
                                                                 <div class="card-leftbody">
-                                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
-                                                                    <h6 class="label-view">Document Type</h6>
+                                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+                                                                    <h6 class="label-view">{{'ERP.DOCUMENT_TYPE' | translate}}</h6>
                                                                     <p class="label-input-text">{{document.requiredDocumentTypeName}}</p>
                                                                 </div>
-                                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
-                                                                    <h6 class="label-view">Document Number</h6>
+                                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+                                                                    <h6 class="label-view">{{'ERP.DOCUMENT_NUMBER' | translate}}</h6>
                                                                     <p class="label-input-text">{{document.documentNumber}}</p>
                                                                 </div>
-                                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                <!-- <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
                                                                     <h6 class="label-view">Document Name</h6>
                                                                     <p class="label-input-text docname-texteclipse" pTooltip="{{document.requiredDocumentFilePath}}" tooltipPosition="bottom">{{document.requiredDocumentFilePath}}</p>
+                                                                </div> -->
+                                                            </div>
+                                                            </div>
+                                                            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2 justify-content-end d-flex right-actions">
+                                                                <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClickdoccPhotoCopy(document)"><i class="fa fa-eye m-0" aria-hidden="true"></i></div>
+                                                                <div *ngIf="!preveiwFalg">
+                                                                <div class="carddownload-icon icon-size text-right" *ngFor="let img of document.multipartFileList">
+                                                                    <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                                        <a href="{{img.imageValue}}">
+                                                                            <i class="fa fa-download ml-3 mr-0" aria-hidden="true">
+                                                                                <!-- <img src="{{img.imageValue}}"> -->
+                                                                            </i>
+                                                                        </a>
+                                                                    </div>
                                                                 </div>
                                                             </div>
+                                                                <!-- <div class="kycview-done icon-size text-right"><i class="fa fa-check-circle mr-0" aria-hidden="true"></i></div>
+                                                                <div class="col-12 px-0">
+                                                                    <div class="col-12 px-0" *ngFor="let img of document.multipartFileList">
+                                                                        <div class="col-12 p-0" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                                            <a href="{{img.imageValue}}">
+                                                                                <img src="{{img.imageValue}}" class="upload-img img-fluid" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div> -->
                                                             </div>
-                                                            <div class="col-lg-5 col-md-5 col-sm-5 justify-content-end">
+                                                            <!-- <div class="col-lg-5 col-md-5 col-sm-5 justify-content-end">
                                                                         <div class="col-12 px-0 mt-4">
                                                                         <div class="col-12 px-0" *ngFor="let img of document.multipartFileList">
                                                                                 <div class="col-12 p-0" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
@@ -810,19 +842,8 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                       
-                                                                        <!-- <div class="col-12 border-top" *ngFor="let img of document.multipartFileList">
-                                                                            <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                                                <a href="{{img.imageValue}}">
-                                                                                    <img src="{{img.imageValue}}" width="50px" height="50px" >
-                                                                                </a>
-                                                                            </div>
-                                                                        </div> -->
                     
-                                                             </div>
-            
-                                                                    
-                                                                </div>
+                                                             </div> -->
                                                             </div>
                                                         </div>
                                                         </div>
@@ -921,7 +942,7 @@
                     <div class="col-lg-12 col-md-12 col-sm-12" *ngIf="individualFlag">
                         <div class="col-12 p-0">
                             <div class=" global-card-bg-color view-carddata icon-size pb-1">
-                                <div class="col-12">
+                                <div class="col-12 p-0">
                                     <div class="row">
                                         <div class="col-6">
                                                             <div class="d-flex">
@@ -935,48 +956,74 @@
                                                                 (click)="nomineeEdit(viewSavingBankModel)"></p-button>
                                                         </div>
                                                     </div>
-                                                    <div class="col-12 px-0">
+                                                    <div class="col-12 p-0">
                                                         <div class="row g-3">
                                                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                                 <div class="stepper-nominee-card p-3 pb-1 mb-2">
                                                                     <div class="row">
-                                                                        <h6 class="super-sub-heading mt-1">{{'ERP.NOMINEE' | translate}}</h6>
-                                                                        <div class="col-12">
+                                                                        <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                                                            <h6 class="super-sub-heading mt-1">{{'ERP.NOMINEE' | translate}}</h6>
+                                                                        </div>
+                                                                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4 justify-content-end d-flex">
+                                                                            <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClicknomineePhotoCopy()"><i class="fa fa-eye m-0" aria-hidden="true"></i></div>
+                                                                            <div *ngIf="!preveiwFalg">
+                                                                            <div class="carddownload-icon icon-size text-right" *ngFor="let img of memberNomineeDetailsModel.multipartFileList">
+                                                                                <!-- Image -->
+                                                                                <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                                                                                    <a href="{{img.imageValue}}">
+                                                                                        <i class="fa fa-download ml-3 mr-0" aria-hidden="true">
+                                                                                            <!-- <img src="{{img.imageValue}}"> -->
+                                                                                        </i>
+                                                                                    </a>
+                                                                                </div>
+                                                                                <!-- PDF -->
+                                                                                <div *ngIf=" img.fileType =='pdf'">
+                                                                                    <a href="{{img.imageValue}}">
+                                                                                        <i class="fa fa-download ml-3 mr-0" aria-hidden="true">
+                                                                                            <!-- <img src="{{img.imageValue}}"> -->
+                                                                                        </i>
+                                                                                    </a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        </div>
+                                                                        </div>
+                                                                        <div class="col-12 p-0 pt-1">
                                                                             <div class="row">
                                                                                 <div class="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center" >
                                                                                     <div class="card-leftbody">
                                                                                         <div class="row">
-                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                                 <h6 class="label-view">{{'ERP.NOMINEE_TYPE' | translate}}</h6>
                                                                                                 <p class="label-input-text">{{nomineeDetailsModel.nomineeTypeName}}</p>
                                                                                             </div>
-                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px"
+                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
                                                                                                 *ngIf="nomineeDetailsModel.nomineeType == 3">
                                                                                                 <h6 class="label-view">{{'ERP.REMARKS' | translate}}</h6>
                                                                                                 <p class="label-input-text">{{nomineeDetailsModel.remarks}}</p>
                                                                                             </div>
-                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px"
+                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
                                                                                                 *ngIf="nomineeDetailsModel.nomineeType != 3">
                                                                                                 <h6 class="label-view">{{'ERP.RELATIONSHIP_WITH_MEMBER' | translate}}</h6>
                                                                                                 <p class="label-input-text">{{nomineeDetailsModel.relationshipTypeName}}</p>
                                                                                             </div>
-                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px"
+                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
                                                                                                 *ngIf="nomineeDetailsModel.nomineeType != 3">
                                                                                                 <h6 class="label-view">{{'ERP.NAME' | translate}}</h6>
                                                                                                 <p class="label-input-text">{{nomineeDetailsModel.name}}</p>
                                                                                             </div>
-                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px"
+                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
                                                                                                 *ngIf="nomineeDetailsModel.nomineeType != 3">
                                                                                                 <h6 class="label-view">{{'ERP.AADHAR_NO' | translate}}</h6>
                                                                                                 <p class="label-input-text">{{nomineeDetailsModel.aadharNumber}}</p>
                                                                                             </div>
-                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px"
+                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
                                                                                                 *ngIf="nomineeDetailsModel.nomineeType != 3">
                                                                                                 <h6 class="label-view">{{'ERP.CONTACT' | translate}}</h6>
                                                                                                 <p class="label-input-text">{{nomineeDetailsModel.mobileNumber}}
                                                                                                 </p>
                                                                                             </div>
-                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px"
+                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
                                                                                                 *ngIf="nomineeDetailsModel.nomineeType != 3">
                                                                                                 <h6 class="label-view">{{'ERP.EMAIL' | translate}}</h6>
                                                                                                 <p class="label-input-text">{{nomineeDetailsModel.nomineeEmail}}
@@ -985,7 +1032,7 @@
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
-                                                                                <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-xs-12 justify-content-end"
+                                                                                <!-- <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-xs-12 justify-content-end"
                                                                                     >
                                                                                     <div class="col-12 px-0">
                                                                                         <div class="px-0"
@@ -1005,45 +1052,67 @@
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
-                                                                                </div>
+                                                                                </div> -->
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
                                                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngIf="guardainFormEnable">
                                                                 <div class="stepper-nominee-card p-3 pb-1 mb-2">
                                                                     <div class="row">
-                                                                        <h6 class="super-sub-heading mt-1">{{'ERP.GUARDIAN' | translate}}</h6>
-                                                    
+                                                                        <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                                                            <h6 class="super-sub-heading mt-1">{{'ERP.GUARDIAN' | translate}}</h6>
+                                                                        </div>
                                                                         <!-- <div class="col-6">
                                                                                                                 <p-button *ngIf="preveiwFalg" icon="fa fa-pencil-square-o"
                                                                                                                     class="kyc-edit-btn pull-right"
                                                                                                                     (click)="nomineeEdit(viewSavingBankModel)"></p-button>
                                                                                                             </div> -->
-                                                    
+                                                                                                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4 justify-content-end d-flex">
+                                                                                                                <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClickguardianPhotoCopy()"><i class="fa fa-eye m-0" aria-hidden="true"></i></div>
+                                                                                                                <div *ngIf="!preveiwFalg">
+                                                                                                                <div class="carddownload-icon icon-size text-right" *ngFor="let img of memberGuardianDetailsDetailsModel.multipartsFileList">
+                                                                                                                    <!-- Image -->
+                                                                                                                    <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                                                                                                                        <a href="{{img.imageValue}}">
+                                                                                                                            <i class="fa fa-download ml-3 mr-0" aria-hidden="true">
+                                                                                                                                <!-- <img src="{{img.imageValue}}"> -->
+                                                                                                                            </i>
+                                                                                                                        </a>
+                                                                                                                    </div>
+                                                                                                                    <!-- PDF -->
+                                                                                                                    <div *ngIf="img.fileType =='pdf'">
+                                                                                                                        <a href="{{img.imageValue}}">
+                                                                                                                            <i class="fa fa-download ml-3 mr-0" aria-hidden="true">
+                                                                                                                                <!-- <img src="{{img.imageValue}}"> -->
+                                                                                                                            </i>
+                                                                                                                        </a>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            </div>
                                                                         <div class="col-12">
                                                     
                                                                             <div class="row mt-2">
                                                                                 <div class="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center">
                                                                                     <div class="card-leftbody">
                                                                                         <div class="row">
-                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                                 <h6 class="label-view">{{'ERP.GUARDAIN_TYPE' | translate}}</h6>
                                                                                                 <p class="label-input-text">
                                                                                                     {{memberGuardianDetailsModelDetails.guardianTypeName}}</p>
                                                                                             </div>
-                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px"
+                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
                                                                                             *ngIf="memberGuardianDetailsModelDetails.guardianType == 3">
                                                                                             <h6 class="label-view">{{'ERP.REMARKS' | translate}}</h6>
                                                                                             <p class="label-input-text">{{memberGuardianDetailsModelDetails.remarks}}</p>
                                                                                         </div>
-                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px" *ngIf="memberGuardianDetailsModelDetails.guardianType != 3">
+                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 " *ngIf="memberGuardianDetailsModelDetails.guardianType != 3">
                                                                                                 <h6 class="label-view">{{'ERP.RELATIONSHIP_WITH_MEMBER' | translate}}</h6>
                                                                                                 <p class="label-input-text">
                                                                                                     {{memberGuardianDetailsModelDetails.relationshipTypeName}}</p>
                                                                                             </div>
-                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px" *ngIf="memberGuardianDetailsModelDetails.guardianType != 3">
+                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 " *ngIf="memberGuardianDetailsModelDetails.guardianType != 3">
                                                                                                 <h6 class="label-view">{{'ERP.NAME' | translate}}</h6>
                                                                                                 <p class="label-input-text">{{memberGuardianDetailsModelDetails.name}}
                                                                                                 </p>
@@ -1052,18 +1121,18 @@
                                                     
                                                                                             <!-- </div>
                                                                                                                 <div class="row "> -->
-                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px" *ngIf="memberGuardianDetailsModelDetails.guardianType != 3">
+                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 " *ngIf="memberGuardianDetailsModelDetails.guardianType != 3">
                                                                                                 <h6 class="label-view">{{'ERP.AADHAR_NO' | translate}}</h6>
                                                                                                 <p class="label-input-text">
                                                                                                     {{memberGuardianDetailsModelDetails.aadharNumber}}
                                                                                                 </p>
                                                                                             </div>
-                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px" *ngIf="memberGuardianDetailsModelDetails.guardianType != 3">
+                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 " *ngIf="memberGuardianDetailsModelDetails.guardianType != 3">
                                                                                                 <h6 class="label-view">{{'ERP.CONTACT' | translate}}</h6>
                                                                                                 <p class="label-input-text">
                                                                                                     {{memberGuardianDetailsModelDetails.mobileNumber}}</p>
                                                                                             </div>
-                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px" *ngIf="memberGuardianDetailsModelDetails.guardianType != 3">
+                                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 " *ngIf="memberGuardianDetailsModelDetails.guardianType != 3">
                                                                                                 <h6 class="label-view">{{'ERP.EMAIL' | translate}}</h6>
                                                                                                 <p class="label-input-text">
                                                                                                     {{memberGuardianDetailsModelDetails.email}}</p>
@@ -1071,7 +1140,7 @@
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
-                                                                                <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-xs-12 justify-content-end">
+                                                                                <!-- <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-xs-12 justify-content-end">
                                                                                     <div class="col-12 px-0">
                                                                                         <div class="col-12 px-0"
                                                                                             *ngFor="let img of memberGuardianDetailsModelDetails.guardainSighnedMultipartFiles">
@@ -1090,12 +1159,13 @@
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
-                                                                                </div>
+                                                                                </div> -->
                                                     
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                            </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1107,7 +1177,7 @@
                     <div class="col-lg-12 col-md-12 col-sm-12">
                         <div class="col-12 p-0">
                             <div class=" global-card-bg-color view-carddata icon-size">
-                                <div class="col-12">
+                                <div class="col-12 p-0">
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="d-flex">
@@ -1156,20 +1226,19 @@
                     </div>
                 </div>
             </p-scrollPanel>
-            <div class="col-12 viewbottom-footer icon-size" >
+            <div class="col-12 viewbottom-footer icon-size mt-3">
                 <div class="row">
-                    <div class="col-xl-2 col-lg-3 col-md-2 col-sm-3 mt-4">
-                        <p-button *ngIf="isShowSubmit" icon="fa fa-download" iconPos="left"  (click)="pdfDownload()" pTooltip="Filename.pdf" tooltipPosition="top"></p-button>
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4" *ngIf="isShowSubmit">
+                        <div class="view-dow-upload">
+                        <p-button  icon="fa fa-download" iconPos="left"  (click)="pdfDownload()" pTooltip="Filename.pdf" tooltipPosition="top"></p-button>
                         <!-- <p-button icon="fa fa-print" iconPos="left" pTooltip="Print" tooltipPosition="top"></p-button> -->
                        
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-3 col-sm-4 mt-4">
-                            <div class="form-label">
-                                <div class="uplodad-style align-items-center" *ngIf="isShowSubmit">
+                            <div class="form-label -mt-5 pt-1 ml-2">
+                                <div class="uplodad-style align-items-center" >
                                     <!-- Upload Button Column -->
                                     <span class="text-fontwt"><span class="red">*</span>{{'ERP.UPLOAD_SIGNED_COPY' | translate}}</span>
                                     <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]" chooseLabel=" "
-                                        id="apply-leave_fileUp_attach" name="file" accept=".png,.jpg,.jpeg,.pdf" (onRemove)="fileRemoeEvent()"
+                                        id="apply-leave_fileUp_attach" name="file" accept=".pdf" (onRemove)="fileRemoeEvent()"
                                         [customUpload]="true" formContralName="fileUpload" (onSelect)="pdfUploader($event,fileUpload)">
                                     </p-fileUpload>
                         
@@ -1191,20 +1260,43 @@
                                 </div>
                             </div>
                         </div>
+                        </div>
                         
-                        <div class="col-xl-3 col-lg-4 col-md-3 col-sm-4 mt-4">
+                        <div class="col-xl-2 col-lg-3 col-md-3 col-sm-2 mt-3" *ngIf="!isShowSubmit">
+                            <span class="text-fontwt"><span class="red">*</span>{{'ERP.UPLOAD_SIGNED_COPY' | translate}}</span>
+                            <div class="col-12 d-flex p-1 contant-body" *ngFor="let img of viewSavingBankModel.multipartFileList">
+                                <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                    <a href="{{img.imageValue}}">
+                                        <img src="{{img.imageValue}}" width="22" height="22">
+                                    </a>
+                                </span>
+                                <span *ngIf="img.fileType=='pdf'">
+                                    <a href="{{img.imageValue}}"> <img src="assets/images/pdficon-img.png" width="22" height="22"></a>
+                                </span>
+                                <span class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                    {{img.fileName}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 -mt-3">
                             <h6 class="label-view">Status</h6>
                             <p>{{viewSavingBankModel.accountStatusName}}</p>
                         </div>
-                        <div class="col-xl-3 col-lg-4 col-md-3 col-sm-4 mt-4">
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 -mt-3">
                             <h6 class="label-view">Remarks</h6>
                             <p class="label-input-text">{{viewSavingBankModel.remarks}}</p>
                         </div>
                     
-                    <div class="col-xl-7 col-lg-5 col-md-7 col-sm-5 mt-4">
+                    <div class="col-xl-7 col-lg-7 col-md-4 col-sm-4" *ngIf="!isShowSubmit">
                         <div class="d-flex justify-content-end">
                             <p-button (click)="backbutton()" label="BACK"></p-button>
                             <p-button *ngIf="isShowSubmit " [disabled]="!isFileUploaded" label="{{'TERMDEPOSITSTRANSACTION.SUBMIT' | translate}}"  (click)="submit()" ></p-button>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12" *ngIf="isShowSubmit">
+                        <div class="d-flex justify-content-end">
+                            <p-button (click)="backbutton()" label="BACK"></p-button>
+                            <p-button *ngIf="isShowSubmit " [disabled]="(!isFileUploaded)" label="{{'TERMDEPOSITSTRANSACTION.SUBMIT' | translate}}"  (click)="submit()" ></p-button>
                         </div>
                     </div>
                 </div>
@@ -1686,3 +1778,70 @@
         </div>
     </div> -->
 </p-dialog>
+
+<!-- KYC Photo Copy -->
+<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="kycPhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
+    <div class="col-12">
+    <div *ngFor="let img of multipleFilesList">
+        <div class="mb-3 imgcustom-class" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+            <!-- <a href="{{img.imageValue}}"> -->
+                    <img src="{{img.imageValue}}" class="doc-photocopy">
+            <!-- </a> -->
+        </div>
+    </div>
+    
+</div>
+</p-dialog>
+
+<!-- DOC Photo Copy -->
+<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="docPhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
+    <div class="col-12">
+        <div *ngFor="let img of multipleFilesList">
+            <div class="mb-3 imgcustom-class" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                <!-- <a href="{{img.imageValue}}"> -->
+                        <img src="{{img.imageValue}}" class="doc-photocopy">
+                <!-- </a> -->
+            </div>
+        </div>
+    </div>
+</p-dialog>
+
+<!-- Nominee Photo Copy -->
+<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="nomineePhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
+    <div class="col-12">
+    <div *ngFor="let img of memberNomineeDetailsModel.multipartFileList">
+        <!-- Image -->
+        <div class="mb-3 imgcustom-class" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+            <!-- <a href="{{img.imageValue}}"> -->
+                    <img src="{{img.imageValue}}" class="doc-photocopy">
+            <!-- </a> -->
+        </div>
+        <!-- PDF -->
+        <div class="mb-3 imgcustom-class" *ngIf=" img.fileType =='pdf'">
+            <!-- <a href="{{img.imageValue}}"> -->
+                    <img src="{{img.imageValue}}" class="doc-photocopy">
+            <!-- </a> -->
+        </div>
+    </div>
+</div>
+    </p-dialog>
+
+<!-- Guardian Photo Copy -->
+    <p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="guardianPhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
+        <div class="col-12">
+        <div *ngFor="let img of memberGuardianDetailsDetailsModel.multipartsFileList">
+            <!-- Image -->
+            <div class="mb-3 imgcustom-class" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                <!-- <a href="{{img.imageValue}}"> -->
+                        <img src="{{img.imageValue}}" class="doc-photocopy">
+                <!-- </a> -->
+            </div>
+            <!-- PDF -->
+            <div class="mb-3 imgcustom-class" *ngIf="img.fileType =='pdf'">
+                <!-- <a href="{{img.imageValue}}"> -->
+                        <img src="{{img.imageValue}}" class="doc-photocopy">
+                <!-- </a> -->
+            </div>
+        </div>
+    </div>
+        </p-dialog>

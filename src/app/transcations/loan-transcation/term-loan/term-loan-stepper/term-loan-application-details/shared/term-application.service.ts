@@ -52,9 +52,14 @@ export class TermApplicationService {
 getQualificationTypes(){
   return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.QUALIFICATION + Configuration.GET_ALL);
 }
-
+getAllQualificationSubQualification() {
+  return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.QUALIFICATION + Configuration.GET_ALL_QUALIFICATION_AND_SUB_QUALIFICATION)
+}
 getCastes(){
   return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.CASTE + Configuration.GET_ALL);
+}
+getAllCasteSubCaste() {
+  return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.CASTE + Configuration.GET_ALL_CAST_AND_SUB_CASTE)
 }
 
 getAllOperationTypes(){
@@ -130,8 +135,8 @@ getAllGenders() {
 getAllInsuranceVendors() {
   return this.commonHttpService.getAll(ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.INSURANCE_VENDOR_DETAILS + ERP_TRANSACTION_CONSTANTS.GET_ALL);
 }
-getTermProductDefinitionByProductIdAndApplicationDate(productId: any, applicationDate: any) {
-  let headers = new HttpHeaders({ 'productId': productId + '', 'applicationDate': applicationDate + '' })
+getTermProductDefinitionByProductIdAndApplicationDate(pacsId: any, productId: any, applicationDate: any) {
+  let headers = new HttpHeaders({ 'pacsId': pacsId + '', 'productId': productId + '','applicationDate': applicationDate + '' })
   return this.commonHttpService.getById(headers, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.TERM_PRODUCT_DEFINITIONS + ERP_TRANSACTION_CONSTANTS.GET_PRODUCT_DETAILS_BY_PRODUCT_ID_AND_APPLICATION_DATE);
 }
 getAllCommunityTypes() {
@@ -166,7 +171,7 @@ deleteTermLoanDisbursementSchedule(id: string) {
 }
 getTermLoanDisbursementScheduleByLoanApplicationId(id: string) {
   let headers = new HttpHeaders({ 'id': id + '' })
-  return this.commonHttpService.getById(headers,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.TERM_LOAN_DISBURSEMENT_SCHEDULE + ERP_TRANSACTION_CONSTANTS.GET_CI_LOAN_DISBURSEMENT_SCHEDULE_BY_LOAN_APPLICATION_ID);
+  return this.commonHttpService.getById(headers,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.TERM_LOAN_DISBURSEMENT_SCHEDULE + ERP_TRANSACTION_CONSTANTS.GET_TERM_LOAN_DISBURSEMENT_SCHEDULE_BY_LOAN_APPLICATION_ID);
 }
 
 
@@ -188,5 +193,6 @@ addInstituionPromoterDetails(object: any) {
 updateInstituionPromoterDetails(object: any) {
   return this.commonHttpService.put(object, Headers, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.INSTITUTION_PROMOTER_DETAILS + ERP_TRANSACTION_CONSTANTS.UPDATE);
 }
+
 
 }

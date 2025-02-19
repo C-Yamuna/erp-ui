@@ -55,7 +55,7 @@
                     <p class="label-input-text text-danger mt-2" *ngIf="mandatoryDoxsTextShow">Note : {{requiredDocumentsNames}}</p>
                     <div class="col-12 p-0 pt-2">
                         <div class="row g-3">
-                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12" *ngFor="let document of kycModelList ; let i = index">
+                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 mt-2" *ngFor="let document of kycModelList ; let i = index">
                                 <div class="stepper-kyc-card p-3 pb-1 mb-2"  *ngIf="editIndex != i || editDocumentOfKycFalg">
                                     <!-- view card -->
                                     <div class="row">
@@ -84,10 +84,10 @@
                                             </div>
                             
                                             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end d-flex right-actions">
-                                                <div class="cardview-icon icon-size text-right cursor-pointer -mt-1" (click)="onClickkycPhotoCopy(document)"><i class="fa fa-eye mr-3" aria-hidden="true"></i></div>
+                                                <div class="cardview-icon icon-size text-right cursor-pointer -mt-1" (click)="onClickkycPhotoCopy(document)"><i class="fa fa-eye mr-3" aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}" tooltipPosition="top"></i></div>
                                                     <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn"
-                                                        (click)="toggleEditForm(i ,document)" [disabled]="editButtonDisable"></p-button>
-                                                        <p-button icon="fa fa-trash" class="kyc-edit-btn ml-3" (click)="deletDilogBox(document)"></p-button>
+                                                        (click)="toggleEditForm(i ,document)" [disabled]="editButtonDisable" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
+                                                        <p-button icon="fa fa-trash" class="kyc-edit-btn ml-3" (click)="deletDilogBox(document)" pTooltip="{{'ERP.DELETE' | translate}}" tooltipPosition="top"></p-button>
                             
                                                 <!-- <div class="col-12 px-0">
                                                     <div class="col-12 px-0" *ngFor="let img of document.multipleFilesList">
@@ -128,7 +128,7 @@
                                             </p-dropdown>
                                         </div>
                                     </div>
-                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <!-- <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                             <div class="form-label">
                                             <label><span class="red">*</span>Document Number</label>
                                             <input id="documentNumber" type="text" pInputText formControlName="documentNumber"
@@ -137,6 +137,15 @@
                                                 *ngIf="!kycForm.controls['documentNumber'].valid && kycForm.controls['documentNumber'].dirty">
                                             </p-message>
                                         </div>
+                                    </div> -->
+                                    <div class="form-label">
+                                        <label *ngIf="!isPanNumber"><span class="red">*</span>Document Number</label>
+                                        <label *ngIf="isPanNumber"><span class="red">*</span>Pan Number(AFZPK7190K)</label>
+                                        <input id="documentNumber" type="text" formControlName="documentNumber" pInputText
+                                            [(ngModel)]="kycModel.documentNumber" placeholder="Enter Document Number">
+                                        <p-message severity="error" text="Enter Valid Number"
+                                            *ngIf="!kycForm.controls['documentNumber'].valid && kycForm.controls['documentNumber'].dirty">
+                                        </p-message>
                                     </div>
                                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                             <div class="form-label">
@@ -184,7 +193,7 @@
                             </div>
 
                         <!-- add form -->
-                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12" *ngIf="addDocumentOfKycFalg">
+                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 mt-2" *ngIf="addDocumentOfKycFalg">
                             <div class="col-12 p-3 global-border bg-label-colorfull">
                             <div class="row g-3 mt-n1">
                                 <div class="form-label">
@@ -202,38 +211,47 @@
                                 </div>
                                 </div>
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="form-label">
+                                    <!-- <div class="form-label">
                                     <label><span class="red">*</span>Document Number</label>
                                     <input id="documentNumber" type="text" pInputText formControlName="documentNumber"
                                         [(ngModel)]="kycModel.documentNumber" placeholder="Enter Document Number">
                                         <p-message severity="error" text="Enter Valid Name As Document Number"
                                                 *ngIf="!kycForm.controls['documentNumber'].valid && kycForm.controls['documentNumber'].dirty">
                                             </p-message>
-                                </div>
-                            </div>
-                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="form-label">
-                                    <label><span class="red">*</span>Name as per Document</label>
-                                    <input id="nameAsPerDocument" type="text" pInputText formControlName="nameAsPerDocument"
-                                        [(ngModel)]="kycModel.nameAsPerDocument" placeholder="Enter Name As Per Document">
-                                        <p-message severity="error" text="Enter Valid Name As Per Document"
-                                                *ngIf="!kycForm.controls['nameAsPerDocument'].valid && kycForm.controls['nameAsPerDocument'].dirty">
-                                            </p-message>
+                                </div> -->
+                                <div class="form-label">
+                                    <label *ngIf="!isPanNumber"><span class="red">*</span>Document Number</label>
+                                    <label *ngIf="isPanNumber"><span class="red">*</span>Pan Number(AFZPK7190K)</label>
+                                    <input id="documentNumber" type="text" formControlName="documentNumber" pInputText
+                                        [(ngModel)]="kycModel.documentNumber" placeholder="Enter Document Number">
+                                    <p-message severity="error" text="Enter Valid Number"
+                                        *ngIf="!kycForm.controls['documentNumber'].valid && kycForm.controls['documentNumber'].dirty">
+                                    </p-message>
                                 </div>
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
-                                <div class="ml-2"><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.DOCUMENT_COPY' |translate}}</div>
-                                <div class="uplodad-style align-items-center">
-
-                                    <p-fileUpload #fileUpload name="myfile[]" id="apply-leave_fileUp_attach"
-                                        chooseLabel=" " name="file" accept=".png,.jpg,.jpeg,.pdf" [customUpload]="true"
-                                        (onSelect)="imageUploader($event,fileUpload)" formContralName="fileUpload">
-                                    </p-fileUpload>
-                                </div>
+                                    <label><span class="red">*</span>Name as per Document</label>
+                                    <input id="nameAsPerDocument" type="text" pInputText formControlName="nameAsPerDocument"
+                                        [(ngModel)]="kycModel.nameAsPerDocument" placeholder="Enter Name As Per Document">
+                                    <p-message severity="error" text="Enter Valid Name As Per Document"
+                                        *ngIf="!kycForm.controls['nameAsPerDocument'].valid && kycForm.controls['nameAsPerDocument'].dirty">
+                                    </p-message>
                                 </div>
                             </div>
-                                <div class="col-12">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="form-label">
+                                    <div class="ml-2"><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.DOCUMENT_COPY' |translate}}</div>
+                                    <div class="uplodad-style align-items-center">
+                            
+                                        <p-fileUpload #fileUpload name="myfile[]" id="apply-leave_fileUp_attach" chooseLabel=" " name="file"
+                                            accept=".png,.jpg,.jpeg,.pdf" [customUpload]="true" (onSelect)="imageUploader($event,fileUpload)"
+                                            formContralName="fileUpload">
+                                        </p-fileUpload>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
                                     <div class="justify-content-end d-flex">
                                         <p-button  label="{{'cancle' | translate}}" (click)="cancel()"></p-button>
                                         <p-button  [disabled]="!kycForm.valid || !saveButtonDisable" label="{{'save' | translate}}"

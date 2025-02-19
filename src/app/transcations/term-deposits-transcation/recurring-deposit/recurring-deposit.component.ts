@@ -11,6 +11,8 @@ import { applicationConstants } from 'src/app/shared/applicationConstants';
 import { RdAccountsService } from '../shared/rd-accounts.service';
 import { termdeposittransactionconstant } from '../term-deposit-transaction-constant';
 import { DatePipe } from '@angular/common';
+import { ERP_TRANSACTION_CONSTANTS } from '../../erp-transaction-constants';
+import { FileUploadService } from 'src/app/shared/file-upload.service';
 
 @Component({
   selector: 'app-recurring-deposit',
@@ -42,6 +44,7 @@ export class RecurringDepositComponent {
     private commonComponent: CommonComponent, private encryptDecryptService:
       EncryptDecryptService, private commonFunctionsService: CommonFunctionsService,
       private datePipe: DatePipe,
+      private fileUploadService : FileUploadService,
     private rdAccountsService: RdAccountsService) { }
 
   ngOnInit() {
@@ -57,10 +60,10 @@ export class RecurringDepositComponent {
     });
 
     this.operationslist = [
-      { label: "Interest Payment", value: 1 },
-      { label: "Foreclosure", value: 2 },
-      { label: "Closure", value: 3 },
-      { label: "Renewal", value: 4 },
+      // { label: "Interest Payment", value: 1 },
+      { label: "Foreclosure/Closure", value: 1 },
+      // { label: "Closure", value: 3 },
+      { label: "Renewal", value: 2 },
 
     ]
     this.termdeposits = [
@@ -95,7 +98,7 @@ export class RecurringDepositComponent {
   }
 
 
-  navigateToOperations(event: any) {
+  navigateToOperations(event: any,rowData:any) {
   //   if (event.value === 1)
   // this.router.navigate([termdeposittransactionconstant.TERMDEPOSIT_INTEREST_PAYMENT]);
   // else if (event.value === 2)
@@ -104,6 +107,11 @@ export class RecurringDepositComponent {
   // this.router.navigate([termdeposittransactionconstant.TERMDEPOSIT_CLOSURE]);
   // else if (event.value === 4)
   // this.router.navigate([termdeposittransactionconstant.TERMDEPOSIT_RENEWAL]);
+  if (event.value === 1)
+    this.router.navigate([termdeposittransactionconstant.RD_FORECLOSURE],{ queryParams: { id: this.encryptDecryptService.encrypt(rowData.id) }, });
+  else if (event.value === 2)
+    this.router.navigate([termdeposittransactionconstant.RD_RENEWAL],{ queryParams: { id: this.encryptDecryptService.encrypt(rowData.id) }, });
+
 }
 
   getGridListData() {
@@ -114,10 +122,34 @@ export class RecurringDepositComponent {
 
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         this.gridListData = this.responseModel.data;
-      this.gridListData = this.gridListData.map(rd => {
+        this.gridListData = this.gridListData.map(rd => {
         if (rd.depositDate != null && rd.depositDate != undefined) {
           rd.depositDate = this.datePipe.transform(rd.depositDate,this.orgnizationSetting.datePipe);
         }
+          rd.multipartFileListForPhotoCopy = null;
+          rd.multipartFileListForSignatureCopy = null;
+          if (rd.memberPhotoCopyPath != null && rd.memberPhotoCopyPath != undefined && rd.isNewMember) {
+            rd.multipartFileListForPhotoCopy = this.fileUploadService.getFile(rd.memberPhotoCopyPath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + rd.memberPhotoCopyPath);
+            rd.photoCopy = true;
+          }
+          else if (rd.memberPhotoCopyPath != null && rd.memberPhotoCopyPath != undefined) {
+            rd.multipartFileListForPhotoCopy = this.fileUploadService.getFile(rd.memberPhotoCopyPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + rd.memberPhotoCopyPath);
+            rd.photoCopy = true;
+          }
+          else {
+            rd.photoCopy = false;
+          }
+          if (rd.memberSignatureCopyPath != null && rd.memberSignatureCopyPath != undefined && rd.isNewMember) {
+            rd.multipartFileListForSignatureCopy = this.fileUploadService.getFile(rd.memberSignatureCopyPath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + rd.memberSignatureCopyPath);
+            rd.signatureCopy = true;
+          }
+          else if (rd.memberSignatureCopyPath != null && rd.memberSignatureCopyPath != undefined) {
+            rd.multipartFileListForSignatureCopy = this.fileUploadService.getFile(rd.memberSignatureCopyPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + rd.memberSignatureCopyPath);
+            rd.signatureCopy = true;
+          }
+          else {
+            rd.signatureCopy = false;
+          }
         return rd;
       });
       } else {
@@ -156,4 +188,5 @@ export class RecurringDepositComponent {
   closePhoto() {
     this.memberPhotoCopyZoom = false;
   }
+  
 }

@@ -113,6 +113,8 @@ export class InstitutionBasicDetailsModel{
 
       institutionType:any;
 
+      societyAdmissionNumber:any;
+
 }
 
 export class InstituteCommunicationModel{

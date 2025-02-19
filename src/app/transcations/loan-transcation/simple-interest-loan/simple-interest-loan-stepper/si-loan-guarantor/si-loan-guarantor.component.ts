@@ -1,7 +1,7 @@
 import { SiLoanGuarantorDetailsService } from './../../../shared/si-loans/si-loan-guarantor-details.service';
 import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { applicationConstants } from 'src/app/shared/applicationConstants';
 import { CommonComponent } from 'src/app/shared/common.component';
@@ -47,6 +47,8 @@ export class SiLoanGuarantorComponent {
   siLoanApplicationModel: SiLoanApplication = new SiLoanApplication();
   siLoanProductDefinitionModel: SiLoanProductDefinition = new SiLoanProductDefinition();
   siLoanGuarantorModel: SiLoanGuarantor = new SiLoanGuarantor();
+  memberTypeName: any;
+  saveAndNextButton: boolean = false;
 
     constructor(private router: Router, private formBuilder: FormBuilder,private siLoanApplicationService : SiLoanApplicationService,private activateRoute: ActivatedRoute,
       private commonComponent: CommonComponent ,private encryptDecryptService: EncryptDecryptService,private membershipBasicDetailsService: MembershipBasicDetailsService,private datePipe: DatePipe,
@@ -54,7 +56,7 @@ export class SiLoanGuarantorComponent {
     )
     { 
       this.siLoanGuarantorForm = this.formBuilder.group({
-        admissionNo: [''],
+           admissionNo: ['',[Validators.required]],
   
       })
     }
@@ -90,13 +92,20 @@ export class SiLoanGuarantorComponent {
     }
     updateData() {
       this.siLoanGuarantorModel.siLoanApplicationId = this.loanId;
+      // this.siLoanGuarantorModel.memberTypeName = this.memberTypeName;
       this.siLoanGuarantorModel.admissionNumber = this.admissionNumber;
       this.siLoanGuarantorModel.siLoanGuarantorDetailsDTOList = this.selectedList;
-      if(this.siLoanGuarantorModel.siLoanGuarantorDetailsDTOList != null && this.siLoanGuarantorModel.siLoanGuarantorDetailsDTOList.length > 0)
+      // if(this.siLoanGuarantorModel.siLoanGuarantorDetailsDTOList != null && this.siLoanGuarantorModel.siLoanGuarantorDetailsDTOList.length > 0){
+      //   this.saveAndNextButton = true;
+      // }
+      // else{
+      //   this.saveAndNextButton = false;
+      // }
       this.siLoanApplicationService.changeData({
         formValid: !this.siLoanGuarantorForm.valid ? true : false,
         data: this.siLoanGuarantorModel,
-        isDisable: (!this.siLoanGuarantorForm.valid),
+        isDisable: this.siLoanGuarantorModel.siLoanGuarantorDetailsDTOList.length == 0 || (!this.siLoanGuarantorForm.valid),
+        
         // isDisable:false,
         stepperIndex: 6,
       });
@@ -158,7 +167,8 @@ export class SiLoanGuarantorComponent {
         if (this.responseModel != null && this.responseModel != undefined) {
           if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
             if (this.responseModel.data && this.responseModel.data.length > 0) {
-              this.allTypesOfmembershipList = this.responseModel.data.filter((data: any) => data.memberTypeName == "Individual" && data.statusName == CommonStatusData.APPROVED).map((relationType: any) => {
+              this.allTypesOfmembershipList = this.responseModel.data.filter((data: any) => data.memberTypeName == "Individual" && data.statusName == CommonStatusData.APPROVED &&
+              data.admissionNumber != this.admissionNumber).map((relationType: any) => {
                 return {
                   label: `${relationType.name} - ${relationType.admissionNumber} - ${relationType.memberTypeName}`,
                   value: relationType.admissionNumber,
@@ -185,11 +195,14 @@ export class SiLoanGuarantorComponent {
           if (this.responseModel.data != undefined && this.responseModel.data != null && this.responseModel.data.length > 0) {
             if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
               this.siLoanApplicationModel = this.responseModel.data[0];
+              if(this.siLoanApplicationModel.memberTypeName != null && this.siLoanApplicationModel.memberTypeName != undefined)
+              this.memberTypeName = this.siLoanApplicationModel.memberTypeName;
               if (this.siLoanApplicationModel.siLoanGuarantorDetailsDTOList != null) {
                 this.guarantorDetailsList = this.siLoanApplicationModel.siLoanGuarantorDetailsDTOList;
                 this.getSiLoanGuarantorDetailsByApplicationId(this.loanId);
               }
             }
+            this.updateData();
           }
         }
         else {

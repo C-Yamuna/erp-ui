@@ -42,6 +42,7 @@ export const savingsbanktransactionconstant = {
     REQUEST_FOR_RESUBIMSSION:"Request for Resubmission",
     DORMANT:"Dormant",
     CLOSURE:"Closed",
+    CLOSURE_REQUEST:'Request For Closure',
 
 
     AGE_SHOULD_NOT_BE_ZERO : "Age Should Not Be Zero",

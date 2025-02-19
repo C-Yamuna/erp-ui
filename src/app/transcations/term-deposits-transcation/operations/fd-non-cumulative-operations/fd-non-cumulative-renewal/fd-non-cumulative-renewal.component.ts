@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { Responsemodel } from 'src/app/shared/responsemodel';
 import { FdNonCumulativeApplication } from '../../../fd-non-cumulative/fd-non-cumulative-stepper/fd-non-cumulative-application/shared/fd-non-cumulative-application.model';
 import { GroupPromoterDetailsModel, MemberGroupDetailsModel, MembershipInstitutionDetailsModel, NewMembershipAdd } from '../../../fd-non-cumulative/fd-non-cumulative-stepper/new-membership-add/shared/new-membership-add.model';
-import { FdNonCummulativeInterestPayment } from '../fd-non-cumulative-interest-payment/shared/fd-non-cummulative-interest-payment.model';
+import { FdNonCummulativeInterestPayment, FdNonCummulativeTransaction } from '../fd-non-cumulative-interest-payment/shared/fd-non-cummulative-interest-payment.model';
 import { applicationConstants } from 'src/app/shared/applicationConstants';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FdNonCumulativeApplicationService } from '../../../fd-non-cumulative/fd-non-cumulative-stepper/fd-non-cumulative-application/shared/fd-non-cumulative-application.service';
 import { CommonComponent } from 'src/app/shared/common.component';
@@ -19,6 +19,9 @@ import { MemberShipTypesData } from 'src/app/transcations/common-status-data.jso
 import { FileUpload } from 'primeng/fileupload';
 import { FileUploadModel } from 'src/app/layout/mainmenu/shared/file-upload-model.model';
 import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-constants';
+import { FdNonCumulativeCommunication } from '../../../fd-non-cumulative/fd-non-cumulative-stepper/fd-non-cumulative-communication/shared/fd-non-cumulative-communication.model';
+import { FdNonCumulativeKyc } from '../../../fd-non-cumulative/fd-non-cumulative-stepper/fd-non-cumulative-kyc/shared/fd-non-cumulative-kyc.model';
+import { FdNonCumulativeNominee, MemberGuardianDetailsModelDetails } from '../../../fd-non-cumulative/fd-non-cumulative-stepper/fd-non-cumulative-nominee/shared/fd-non-cumulative-nominee.model';
 
 @Component({
   selector: 'app-fd-non-cumulative-renewal',
@@ -41,12 +44,19 @@ export class FdNonCumulativeRenewalComponent {
   addressOne: any;
   addressTwo: any;
   fdNonCumulativeApplicationModel: FdNonCumulativeApplication = new FdNonCumulativeApplication();
+  newFdNonCumulativeApplicationModel: FdNonCumulativeApplication = new FdNonCumulativeApplication();
+  fdNonCumulativeCommunicationModel: FdNonCumulativeCommunication = new FdNonCumulativeCommunication();
+  kycDetailsModel: FdNonCumulativeKyc = new FdNonCumulativeKyc();
+  nomineeDetailsModel: FdNonCumulativeNominee = new FdNonCumulativeNominee();
+  memberGuardianDetailsModel: MemberGuardianDetailsModelDetails = new MemberGuardianDetailsModelDetails();
   membershipBasicRequiredDetailsModel: NewMembershipAdd = new NewMembershipAdd();
   memberGroupDetailsModel: MemberGroupDetailsModel = new MemberGroupDetailsModel();
   membershipInstitutionDetailsModel: MembershipInstitutionDetailsModel = new MembershipInstitutionDetailsModel();
+  fdNonCumulativeKycModel: FdNonCumulativeKyc = new FdNonCumulativeKyc();
   promoterDetailsModel: GroupPromoterDetailsModel = new GroupPromoterDetailsModel();
-  interestPaymentModel: FdNonCummulativeInterestPayment = new FdNonCummulativeInterestPayment();
   kycDetailsColumns: any[] = [];
+  interestPaymentModel: FdNonCummulativeInterestPayment = new FdNonCummulativeInterestPayment();
+  fdNonCummulativeTransactionModel: FdNonCummulativeTransaction = new FdNonCummulativeTransaction();
   serviceTypesColumns: any[] = [];
   serviceTypesGridList: any[] = [];
   nomineeMemberFullName: any;
@@ -108,23 +118,31 @@ export class FdNonCumulativeRenewalComponent {
   isHistory: boolean = false;
   interestPayment: any[] = [];
   interestPaymentList: any[] = [];
-  transaction: any[]= [];
-  accountTransactionList : any[] =[];
+  transaction: any[] = [];
+  accountTransactionList: any[] = [];
   termAccId: any;
   verifiedList: any[] = [];
-  reasonList: any[]=[];
+  reasonList: any[] = [];
+  // transactionForm: FormGroup;
+  // closureForm:FormGroup;
+  // foreclosureForm:FormGroup;
   currentDate: any;
   isForeclosure: boolean = false;
   isClosure: boolean = false;
   statusTypesList: any[] = [];
-  renewalForm:  FormGroup;
+  check: boolean = false;
+  renewalForm: FormGroup;
+  renewalTypeList: any[] = [];
+  selectedRenewalType = null;
+  renewalFLag: boolean = false;
+
 
   constructor(private router: Router,
     private fdNonCumulativeApplicationService: FdNonCumulativeApplicationService,
     private commonComponent: CommonComponent,
     private activateRoute: ActivatedRoute,
     private datePipe: DatePipe,
-    private formBuilder:FormBuilder,
+    private formBuilder: FormBuilder,
     private interestPaymentService: FdNonCummulativeInterestPaymentService,
     private encryptDecryptService: EncryptDecryptService, private translate: TranslateService,
     private commonFunctionsService: CommonFunctionsService,
@@ -162,30 +180,34 @@ export class FdNonCumulativeRenewalComponent {
       { field: 'startDateVal', header: 'TERMDEPOSITSTRANSACTION.START_DATE' },
     ];
     this.renewalForm = this.formBuilder.group({
-      foreClosureDate: new FormControl({ value: '', disabled: true }),
-      reason: new FormControl(''),
-      penalityAmount: new FormControl({ value: '', disabled: true }),
-      balanceAmount: new FormControl({ value: '', disabled: true }),
-      transactionMode: new FormControl({ value: '', disabled: true }),
-      isVerified: new FormControl(''),
+      transactionDate: new FormControl({ value: '', disabled: true }),
+      transactionAmount: new FormControl({ value: '', disabled: true }),
+      transactionType: new FormControl('',),
+      transactionMode: new FormControl('', [Validators.required]),
+      accountNumber: new FormControl(''),
+      isVerified: new FormControl('', [Validators.required]),
       remarks: new FormControl(''),
-      accountStatusName: new FormControl('')
     })
   }
 
   ngOnInit() {
-    this.interestPayment = [
-      { field: 'interestPostingDate', header: 'TERMDEPOSITSTRANSACTION.INTEREST_PAYMENT_DATE' },
-      { field: 'transactionMode', header: 'TERMDEPOSITSTRANSACTION.PAYMENT_MODE' },
-      { field: 'interestAmount', header: 'TERMDEPOSITSTRANSACTION.INTEREST_AMOUNT' },
-      { field: 'transcationDate', header: 'TERMDEPOSITSTRANSACTION.PAID_DATE ' },
-      { field: 'statusName', header: 'TERMDEPOSITSTRANSACTION.STATUS' },
-    ];
+    this.renewalTypeList = [
+      { label: "Principal", value: 1 },
+      { label: "Principle+Intrest", value: 2 },
+      { label: "Manual Renewal Amount", value: 3 },
+    ]
+    // this.interestPayment = [
+    //   { field: 'interestPostingDate', header: 'TERMDEPOSITSTRANSACTION.INTEREST_PAYMENT_DATE' },
+    //   { field: 'transactionMode', header: 'TERMDEPOSITSTRANSACTION.PAYMENT_MODE' },
+    //   { field: 'interestAmount', header: 'TERMDEPOSITSTRANSACTION.INTEREST_AMOUNT' },
+    //   { field: 'transcationDate', header: 'TERMDEPOSITSTRANSACTION.PAID_DATE ' },
+    //   { field: 'statusName', header: 'TERMDEPOSITSTRANSACTION.STATUS' },
+    // ];
     this.transaction = [
       { field: 'transactionDate', header: 'TERMDEPOSITSTRANSACTION.INTEREST_PAYMENT_DATE' },
-      { field: 'transactionType', header: 'TERMDEPOSITSTRANSACTION.PAYMENT_MODE' },
-      { field: 'transactionModeName', header: 'TERMDEPOSITSTRANSACTION.INTEREST_AMOUNT' },
-      { field: 'transactionAmount', header: 'TERMDEPOSITSTRANSACTION.PAID_DATE' },
+      { field: 'transactionType', header: 'TERMDEPOSITSTRANSACTION.PAYMENT_TYPE' },
+      { field: 'transactionModeName', header: 'TERMDEPOSITSTRANSACTION.PAYMENT_MODE' },
+      { field: 'transactionAmount', header: 'TERMDEPOSITSTRANSACTION.INTEREST_AMOUNT' },
       { field: 'statusName', header: 'TERMDEPOSITSTRANSACTION.STATUS' },
     ];
     this.roleName = this.commonFunctionsService.getStorageValue(applicationConstants.roleName);
@@ -197,14 +219,15 @@ export class FdNonCumulativeRenewalComponent {
         this.fdNonCummulativeAccId = this.encryptDecryptService.decrypt(params['id']);
         this.getFdNonCummApplicationById(this.fdNonCummulativeAccId);
       }
-        // if (params['flag'] != undefined && params['flag'] != null) {
-        //   let isGrid = this.encryptDecryptService.decrypt(params['flag']);
-        //   if (isGrid === "0") {
-        //     this.isClosure = true;
-        //   } else {
-        //     this.isForeclosure = true;
-        //   }
-        // }
+      // if (params['flag'] != undefined && params['flag'] != null) {
+      //   let isGrid = this.encryptDecryptService.decrypt(params['flag']);
+      //   if (isGrid === "0") {
+      //     this.isClosure = true;
+      //   } else {
+      //     this.isForeclosure = true;
+      //   }
+      // }
+      // this.currentDate = new Date();
     });
     this.getAllTransactionModes();
   }
@@ -220,21 +243,19 @@ export class FdNonCumulativeRenewalComponent {
       if (this.responseModel.status != null && this.responseModel.status != undefined && this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
           this.fdNonCumulativeApplicationModel = this.responseModel.data[0];
-          this.fdNonCumulativeApplicationModel.foreClosureDate = new Date();
-          this.fdNonCumulativeApplicationModel.closureDate = new Date();
+          this.fdNonCummulativeTransactionModel.transactionDate = new Date();
           if (this.fdNonCumulativeApplicationModel.depositDate != null && this.fdNonCumulativeApplicationModel.depositDate != undefined) {
             this.fdNonCumulativeApplicationModel.depositDate = this.datePipe.transform(this.fdNonCumulativeApplicationModel.depositDate, this.orgnizationSetting.datePipe);
           }
-
           if (this.fdNonCumulativeApplicationModel.admissionNumber != null && this.fdNonCumulativeApplicationModel.admissionNumber != undefined) {
             this.admissionNumber = this.fdNonCumulativeApplicationModel.admissionNumber;
           }
-          // if (this.fdNonCumulativeApplicationModel.accountNumber != null && this.fdNonCumulativeApplicationModel.accountNumber != undefined) {
-          //   this.interestPaymentModel.accountNumber = this.fdNonCumulativeApplicationModel.accountNumber;
-          //   this.accountNumber = this.fdNonCumulativeApplicationModel.accountNumber;
-          //   this.termAccId = this.fdNonCummulativeAccId;
-          //   this.getAllPaymentsByAccountIdAndAccountNumber();
-          // }
+          if (this.fdNonCumulativeApplicationModel.accountNumber != null && this.fdNonCumulativeApplicationModel.accountNumber != undefined) {
+            this.fdNonCummulativeTransactionModel.accountNumber = this.fdNonCumulativeApplicationModel.accountNumber;
+            this.accountNumber = this.fdNonCumulativeApplicationModel.accountNumber;
+            this.termAccId = this.fdNonCummulativeAccId;
+            // this.getAllPaymentsByAccountIdAndAccountNumber();
+          }
           if (this.fdNonCumulativeApplicationModel.fdNonCummulativeproductId != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeproductId != undefined) {
             this.productId = this.fdNonCumulativeApplicationModel.fdNonCummulativeproductId;
           }
@@ -246,19 +267,11 @@ export class FdNonCumulativeRenewalComponent {
               this.fdNonCumulativeApplicationModel.accountTypeName = applicationConstants.SINGLE_ACCOUNT_TYPE;
             }
           }
-          if (this.fdNonCumulativeApplicationModel.interestPaymentsList != null && this.fdNonCumulativeApplicationModel.interestPaymentsList != undefined) {
-            this.interestPaymentList = this.fdNonCumulativeApplicationModel.interestPaymentsList;
-            for( let payment of this.interestPaymentList){
-              if(payment.interestPostingDate != null && payment.interestPostingDate != undefined){
-                payment.interestPostingDate = this.datePipe.transform(payment.interestPostingDate, this.orgnizationSetting.datePipe);
-              }
-            }
-          }
 
           if (this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountsTransactionDTOList != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountsTransactionDTOList != undefined) {
             this.accountTransactionList = this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountsTransactionDTOList;
-            for( let transactionPayment of this.accountTransactionList){
-              if(transactionPayment.transactionDate != null && transactionPayment.transactionDate != undefined){
+            for (let transactionPayment of this.accountTransactionList) {
+              if (transactionPayment.transactionDate != null && transactionPayment.transactionDate != undefined) {
                 transactionPayment.transactionDate = this.datePipe.transform(transactionPayment.transactionDate, this.orgnizationSetting.datePipe);
               }
             }
@@ -269,6 +282,62 @@ export class FdNonCumulativeRenewalComponent {
             this.membershipBasicDetails();//individual
             this.groupDetails();//group
             this.InstitutionDetails();//institution
+          }
+
+          if (this.fdNonCumulativeApplicationModel.fdNonCummulativeRequiredDocumentDetailsDTOList != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeRequiredDocumentDetailsDTOList != undefined && this.fdNonCumulativeApplicationModel.fdNonCummulativeRequiredDocumentDetailsDTOList.length > 0) {
+            this.requiredDocumentsList = this.fdNonCumulativeApplicationModel.fdNonCummulativeRequiredDocumentDetailsDTOList;
+            for (let document of this.requiredDocumentsList) {
+              if (document.requiredDocumentFilePath != null && document.requiredDocumentFilePath != undefined) {
+                document.multipartFileList = this.fileUploadService.getFile(document.requiredDocumentFilePath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + document.requiredDocumentFilePath);
+              }
+            }
+          }
+          //kyc list
+          if (this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountKycList != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountKycList != undefined) {
+            this.kycGridList = this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountKycList;
+            for (let kyc of this.kycGridList) {
+              if (kyc.kycFilePath != null && kyc.kycFilePath != undefined) {
+                if (kyc.kycFilePath != null && kyc.kycFilePath != undefined) {
+                  if (this.fdNonCumulativeApplicationModel.isNewMember)
+                    kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
+                  else {
+                    kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
+                  }
+                }
+              }
+            }
+          }
+          else {
+            this.isKycEmpty = true;
+          }
+          if (this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountCommunicationList != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountCommunicationList != undefined &&
+            this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountCommunicationList[0] != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountCommunicationList[0] != undefined)
+            this.fdNonCumulativeCommunicationModel = this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountCommunicationList[0];
+
+
+          if (this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountNomineeList != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountNomineeList != undefined &&
+            this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountNomineeList[0] != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountNomineeList[0] != undefined)
+            this.nomineeDetailsModel = this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountNomineeList[0];
+          if (this.nomineeDetailsModel.nomineeFilePath != null && this.nomineeDetailsModel.nomineeFilePath != undefined) {
+            this.nomineeDetailsModel.nomineeSighnedFormMultiPartList = this.fileUploadService.getFile(this.nomineeDetailsModel.nomineeFilePath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.nomineeDetailsModel.nomineeFilePath);
+          }
+          if (this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountGaurdianList != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountGaurdianList != undefined &&
+            this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountGaurdianList[0] != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountGaurdianList[0] != undefined)
+            this.memberGuardianDetailsModel = this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountGaurdianList[0];
+          if (this.memberGuardianDetailsModel.uploadFilePath != null && this.memberGuardianDetailsModel.uploadFilePath != undefined) {
+            this.memberGuardianDetailsModel.guardainSighnedMultipartFiles = this.fileUploadService.getFile(this.memberGuardianDetailsModel.uploadFilePath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.memberGuardianDetailsModel.uploadFilePath);
+          }
+          //joint holder
+          if (this.fdNonCumulativeApplicationModel.accountTypeName != null && this.fdNonCumulativeApplicationModel.accountTypeName != undefined && this.fdNonCumulativeApplicationModel.accountTypeName === "Joint") {
+            this.jointHoldersFlag = true;
+          }
+          //joint holder
+          if (this.fdNonCumulativeApplicationModel.fdNonCummulativeJointAccHolderDetailsDTOList != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeJointAccHolderDetailsDTOList != undefined && this.fdNonCumulativeApplicationModel.fdNonCummulativeJointAccHolderDetailsDTOList.length > 0) {
+            this.jointHoldersFlag = true;
+            this.jointHolderDetailsList = this.fdNonCumulativeApplicationModel.fdNonCummulativeJointAccHolderDetailsDTOList;
+            this.jointHolderDetailsList.map((joint: any) => {
+              joint.admissionDateVal = this.datePipe.transform(joint.admissionDate, this.orgnizationSetting.datePipe);
+            });
           }
         }
       } else {
@@ -537,27 +606,16 @@ export class FdNonCumulativeRenewalComponent {
     }
   }
 
+
   // {@code update  application details by id} :
   // @implNote:update  application details by  Id
   // @author bhargavi
-  updateFdNonCummulativeDetails(fdNonCumulativeApplicationModel: any) {
-    // this.fdNonCumulativeApplicationModel.statusName = CommonStatusData.FORECLOSURE;
-    if (this.fdNonCumulativeApplicationModel.closureDate != null && this.fdNonCumulativeApplicationModel.closureDate != undefined) {
-      this.fdNonCumulativeApplicationModel.closureDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdNonCumulativeApplicationModel.closureDate));
+  saveAccountOnRenewal(newFdNonCumulativeApplicationModel: any) {
+    this.newFdNonCumulativeApplicationModel.fdNonCummulativeAccountsTransactionDTO = this.setTransactionFields();
+    if (newFdNonCumulativeApplicationModel.depositDate != null && newFdNonCumulativeApplicationModel.depositDate != undefined) {
+      newFdNonCumulativeApplicationModel.depositDate = this.commonFunctionsService.getUTCEpoch(new Date(newFdNonCumulativeApplicationModel.depositDate));
     }
-    if (this.fdNonCumulativeApplicationModel.foreClosureDate != null && this.fdNonCumulativeApplicationModel.foreClosureDate != undefined) {
-      this.fdNonCumulativeApplicationModel.foreClosureDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdNonCumulativeApplicationModel.foreClosureDate));
-    }
-    if (this.fdNonCumulativeApplicationModel.depositDate != null && this.fdNonCumulativeApplicationModel.depositDate != undefined) {
-      this.fdNonCumulativeApplicationModel.depositDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdNonCumulativeApplicationModel.depositDate));
-    }
-    if(this.fdNonCumulativeApplicationModel.interestPaymentsList[0].interestPostingDate != null && this.fdNonCumulativeApplicationModel.interestPaymentsList[0].interestPostingDate != undefined) {
-      this.fdNonCumulativeApplicationModel.interestPaymentsList.interestPostingDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdNonCumulativeApplicationModel.interestPaymentsList[0].interestPostingDate));
-    }
-    if(this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountsTransactionDTOList.transactionDate != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountsTransactionDTOList.transactionDate  != undefined) {
-      this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountsTransactionDTOList.transactionDate  = this.commonFunctionsService.getUTCEpoch(new Date(this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountsTransactionDTOList.transactionDate ));
-    }
-    this.fdNonCumulativeApplicationService.updateFdNonCummApplication(fdNonCumulativeApplicationModel).subscribe((response: any) => {
+    this.fdNonCumulativeApplicationService.saveAccountOnRenewal(this.newFdNonCumulativeApplicationModel).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data[0] != undefined && this.responseModel.data[0] != null && this.responseModel.data.length > 0) {
@@ -569,6 +627,7 @@ export class FdNonCumulativeRenewalComponent {
           this.getFdNonCummApplicationById(this.id);
         }
       }
+      this.router.navigate([termdeposittransactionconstant.FD_NON_CUMMULATIVE]);
     }, (error: any) => {
       this.commonComponent.stopSpinner();
       this.getFdNonCummApplicationById(this.id);
@@ -578,6 +637,7 @@ export class FdNonCumulativeRenewalComponent {
       }, 3000);
     });
   }
+
   showHistoryDialog(position: string) {
     this.position = position;
     this.isHistory = true;
@@ -592,33 +652,64 @@ export class FdNonCumulativeRenewalComponent {
   imageUploader(event: any, fileUpload: FileUpload) {
     this.isFileUploaded = applicationConstants.FALSE;
     this.multipleFilesList = [];
-    this.fdNonCumulativeApplicationModel.filesDTOList = [];
-    this.fdNonCumulativeApplicationModel.foreClosureReqSignedCopy = null;
+    if (this.isEdit && this.fdNonCummulativeTransactionModel.filesDTOList == null || this.fdNonCummulativeTransactionModel.filesDTOList == undefined) {
+      this.fdNonCummulativeTransactionModel.filesDTOList = [];
+    }
     let files: FileUploadModel = new FileUploadModel();
     for (let file of event.files) {
       let reader = new FileReader();
       reader.onloadend = (e) => {
-        this.isFileUploaded = applicationConstants.TRUE;
         let files = new FileUploadModel();
         this.uploadFileData = e.currentTarget;
         files.fileName = file.name;
         files.fileType = file.type.split('/')[1];
         files.value = this.uploadFileData.result.split(',')[1];
         files.imageValue = this.uploadFileData.result;
-        let index = this.multipleFilesList.findIndex(x => x.fileName == files.fileName);
-        if (index === -1) {
-          this.multipleFilesList.push(files);
-          this.fdNonCumulativeApplicationModel.filesDTOList.push(files); // Add to filesDTOList array
-        }
+        this.multipleFilesList.push(files);
         let timeStamp = this.commonComponent.getTimeStamp();
-        this.fdNonCumulativeApplicationModel.filesDTOList[0].fileName = "FD_NON_KYC_" + this.termAccId + "_" +timeStamp+ "_"+ file.name ;
-        this.fdNonCumulativeApplicationModel.foreClosureReqSignedCopy = "FD_NON_KYC_" + this.termAccId + "_" +timeStamp+"_"+ file.name; // This will set the last file's name as docPath
-        let index1 = event.files.findIndex((x: any) => x === file);
-        fileUpload.remove(event, index1);
-        fileUpload.clear();
+        this.fdNonCummulativeTransactionModel.multipartFileList = [];
+        this.fdNonCummulativeTransactionModel.filesDTOList.push(files);
+        this.fdNonCummulativeTransactionModel.signedCopyPath = null;
+        this.fdNonCummulativeTransactionModel.filesDTOList[this.fdNonCummulativeTransactionModel.filesDTOList.length - 1].fileName = "FD_Filled_pdf" + "_" + timeStamp + "_" + file.name;
+        this.fdNonCummulativeTransactionModel.signedCopyPath = "FD_Filled_pdf" + "_" + timeStamp + "_" + file.name;
+        this.isDisableSubmit = false;
       }
       reader.readAsDataURL(file);
     }
   }
 
+  setTransactionFields() {
+    this.newFdNonCumulativeApplicationModel = new FdNonCumulativeApplication();
+    this.newFdNonCumulativeApplicationModel = this.fdNonCumulativeApplicationModel;
+
+    if (this.fdNonCummulativeTransactionModel.transactionDate != null && this.fdNonCummulativeTransactionModel.transactionDate != undefined) {
+      this.fdNonCummulativeTransactionModel.transactionDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdNonCummulativeTransactionModel.transactionDate));
+    }
+    let fdNonCummulativeAccountsTransactionDTO = this.newFdNonCumulativeApplicationModel.fdNonCummulativeAccountsTransactionDTOList[0]
+    this.newFdNonCumulativeApplicationModel.fdNonCummulativeAccountsTransactionDTO = fdNonCummulativeAccountsTransactionDTO;
+    this.newFdNonCumulativeApplicationModel.fdNonCummulativeAccountsTransactionDTO.transactionDate = this.fdNonCummulativeTransactionModel.transactionDate;
+    this.newFdNonCumulativeApplicationModel.renewalType = this.fdNonCummulativeTransactionModel.transactionType.value;
+    this.newFdNonCumulativeApplicationModel.fdNonCummulativeAccountsTransactionDTO.transactionAmount = this.fdNonCummulativeTransactionModel.transactionAmount;
+    this.newFdNonCumulativeApplicationModel.fdNonCummulativeAccountsTransactionDTO.isVerified = this.fdNonCummulativeTransactionModel.isVerified.value;
+    this.newFdNonCumulativeApplicationModel.fdNonCummulativeAccountsTransactionDTO.signatureCopyPath = this.fdNonCummulativeTransactionModel.signedCopyPath;
+    this.newFdNonCumulativeApplicationModel.fdNonCummulativeAccountsTransactionDTO.remarks = this.fdNonCummulativeTransactionModel.remarks;
+    this.newFdNonCumulativeApplicationModel.fdNonCummulativeAccountsTransactionDTOList = [];
+  }
+
+
+  onRenewalTypeChange(renewalType: any) {
+    if(renewalType.value == 1){
+      this.renewalFLag = false;
+      this.fdNonCummulativeTransactionModel.transactionAmount = this.fdNonCumulativeApplicationModel.depositAmount; 
+    }else if(renewalType.value == 2){
+      this.renewalFLag = false;
+      this.fdNonCummulativeTransactionModel.transactionAmount = this.fdNonCumulativeApplicationModel.maturityAmount;
+    }else if(renewalType.value == 3){
+      // this.fdNonCummulativeTransactionModel.transactionAmount; // Allow manual entry
+      this.renewalFLag = true;
+    }
+  }
+
+ 
+  
 }

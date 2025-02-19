@@ -215,6 +215,10 @@ export class RecurringDepositStepperComponent implements OnInit {
       }
 
       if (data != undefined) {
+        if(data.data.memberTypeName != null && data.data.memberTypeName != undefined){
+          this.memberTypeName = data.data.memberTypeName;
+        }
+        this.itemList();
         this.activeIndex = data.stepperIndex;
         // this.previouseButtonDisable = false;
         this.changeStepperSelector(this.activeIndex);
@@ -231,20 +235,17 @@ export class RecurringDepositStepperComponent implements OnInit {
                 this.memberTypeName = this.rdAccountsModel.memberTypeName;
               this.memberTypeCheck(this.memberTypeName, this.rdAccountsModel);
             }
-            this.itemList();
           }
           else if (this.activeIndex == 1) {
             // this.previouseButtonDisable = data.isDisable;
             if (data.data != null && data.data != undefined) {
               this.rdKycModel = data.data;
             }
-            this.itemList();
           }
           else if (this.activeIndex == 2) {
             if (data.data != null && data.data != undefined) {
               this.rdAccountCommunicationModel = data.data;
             }
-            this.itemList();
           }
           else if (this.activeIndex == 3) {
             if (data.data != null && data.data != undefined) {
@@ -280,7 +281,6 @@ export class RecurringDepositStepperComponent implements OnInit {
                 }
               }
             }
-            this.itemList();
           } else if (this.activeIndex == 6) {
             if (data.data != null && data.data != undefined) {
               this.requiredDocumentDetails = data.data;
@@ -288,7 +288,6 @@ export class RecurringDepositStepperComponent implements OnInit {
                 this.memberTypeName = data.data.memberTypeName;
               }
             }
-            this.itemList();
           }
         }
       }
@@ -1173,6 +1172,9 @@ export class RecurringDepositStepperComponent implements OnInit {
     if (this.rdAccountsModel.depositDateVal != null && this.rdAccountsModel.depositDateVal != undefined) {
       this.rdAccountsModel.depositDate = this.commonFunctionsService.getUTCEpoch(new Date(this.rdAccountsModel.depositDateVal));
     }
+    if (this.rdAccountsModel.maturityDate != null && this.rdAccountsModel.maturityDate != undefined) {
+      this.rdAccountsModel.maturityDate = this.commonFunctionsService.getUTCEpoch(new Date(this.rdAccountsModel.maturityDate));
+    }
     if (this.isApplicationEdit) {
       this.rdAccountsModel.accountStatusName = applicationConstants.IN_PROGRESS;
       this.rdAccountsService.updateRdApplicationWithMemberModuleDetails(this.rdAccountsModel).subscribe((response: any) => {
@@ -1351,6 +1353,9 @@ export class RecurringDepositStepperComponent implements OnInit {
     }
     if (this.rdAccountsModel.depositDateVal != null && this.rdAccountsModel.depositDateVal != undefined) {
       this.rdAccountsModel.depositDate = this.commonFunctionsService.getUTCEpoch(new Date(this.rdAccountsModel.depositDateVal));
+    }
+    if (this.rdAccountsModel.maturityDate != null && this.rdAccountsModel.maturityDate != undefined) {
+      this.rdAccountsModel.maturityDate = this.commonFunctionsService.getUTCEpoch(new Date(this.rdAccountsModel.maturityDate));
     }
     if (this.isApplicationEdit) {
       this.rdAccountsModel.accountStatusName = applicationConstants.IS_ACTIVE;

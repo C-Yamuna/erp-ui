@@ -1,3 +1,5 @@
+<p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
+    [hideTransitionOptions]="'500ms'"></p-messages>
 <div class="col-12">
     <div class="stepper-top-section-strip">
         <div class="row">
@@ -81,7 +83,7 @@
                             <ng-template pTemplate="output">{{rowData.name}}</ng-template>
                         </p-cellEditor>
                     </td>
-                    <td>
+                    <!-- <td>
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <p-dropdown [options]="relationTypeList" formControlName="relationWithApplicantName"
@@ -90,8 +92,25 @@
                             </ng-template>
                             <ng-template pTemplate="output">{{rowData.relationWithApplicantName}}</ng-template>
                         </p-cellEditor>
+                    </td> -->
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <p-dropdown [options]="relationTypeList"
+                                            formControlName="relationWithApplicantName"
+                                            [(ngModel)]="rowData.relationWithApplicantName"
+                                            placeholder="select"
+                                            [appendTo]="'body'"
+                                            >
+                                </p-dropdown>
+                            </ng-template>
+                            <ng-template pTemplate="output">{{rowData.relationWithApplicantName}}</ng-template>
+                        </p-cellEditor>
                     </td>
-
+                    
+                    <!-- Simple Error Message Display -->
+                    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+                    
                     <td>
                         <p-cellEditor>
                             <ng-template pTemplate="input">

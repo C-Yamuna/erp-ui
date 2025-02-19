@@ -1,5 +1,6 @@
 // The file maintail all application constants and resuse across the application.
 import { environment } from 'src/environments/environment.development';
+import { Disbursement } from '../transcations/loan-transcation/operations/disbursement/shared/disbursement.model';
 export const applicationConstants = {
 
     AUTHENTICATION: environment.rbac,
@@ -244,8 +245,39 @@ export const applicationConstants = {
     KHATA_NUMBER_CANNOT_BE_REMOVED_KHATA_NUMBER_ALREADY_EXITS_IN_SURVEY:'Khata Book No. cannot be removed, Khata Number already exists in survey details.',
     MIN_PERIOD_IN_MONTHS_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAX_PERIOD_IN_MONTHS:"Minimum Period In Months should be less Than Or Equal To Maximum Period In Months",
     MAX_PERIOD_IN_MONTHS_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAX_PERIOD_IN_MONTHS:"Maximum period in Months should be greater than or equal to Minimum period in Months",
+    MINIMUM_DEPOSIT_LIMIT_PER_DAY_WITH_PAN_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MINIMUM_DEPOSIT_LIMIT_PER_DAY_WITH_OUT_PAN:"Minimum Deposit Limit Per Day With Pan Should be Less Than or Equal To Minimum Deposit Limit Per Day Without Pan",
+    MINIMUM_DEPOSIT_LIMIT_PER_DAY_WITH_OUT_PAN_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MINIMUM_DEPOSIT_LIMIT_PER_DAY_WITH_PAN:"Minimum Deposit Limit Per Day Without Pan Should be Greater Than or Equal To Minimum Deposit Limit Per Day With Pan",
+    MAXIMUM_DEPOSIT_LIMIT_PER_DAY_WITH_PAN_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAXIMUM_DEPOSIT_LIMIT_PER_DAY_WITH_OUT_PAN:"Maximum Deposit Limit Per Day With Pan Should be Less Than or Equal To Maximum Deposit Limit Per Day Without Pan",
+    MAXIMUM_DEPOSIT_LIMIT_PER_DAY_WITH_OUT_PAN_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MAXIMUM_DEPOSIT_LIMIT_PER_DAY_WITH_PAN:"Maximum Deposit Limit Per Day Without Pan Should be Greater Than or Equal To Maximum Deposit Limit Per Day With Pan",
+    MINIMUM_WITH_DRAW_LIMIT_PER_DAY_WITH_PAN_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MINIMUM_WITH_DRAW_LIMIT_PER_DAY_WITH_OUT_PAN:"Miniimum Withdraw Limit Per Day With Pan Should be Less Than or Equal To Miniimum Withdraw Limit Per Day Without Pan",
+    MINIMUM_WITH_DRAW_LIMIT_PER_DAY_WITH_OUT_PAN_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MINIMUM_WITH_DRAW_LIMIT_PER_DAY_WITH_PAN:"Minimum Withdraw Limit Per Day Without Pan Should be Greater Than or Equal To Miniimum Withdraw Limit Per Day With Pan",
+    MAXIMUM_WITH_DRAW_LIMIT_SAME_BRANCH_ATM_PER_DAY_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAXIMUM_WITH_DRAW_LIMIT_OTHER_BRANCH_ATM_PER_DAY:"Maximum Withdraw Limit Same Branch ATM Per Day Should be Less Than or Equal To Maximum Withdraw Limit Other branch ATM Per Day ",
+    MAXIMUM_WITH_DRAW_LIMIT_OTHER_BRANCH_ATM_PER_DAY_WITH_OUT_PAN_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MAXIMUM_WITH_DRAW_SAME_BRANCH_ATM_LIMIT_PER_DAY:"Maximum Withdraw Limit Other Branch ATM Per Day Should be Greater Than or Equal To Maximum Withdraw Limit Same Branch ATM Per Day ",
     DAILY_DEPOSITS: "Daily Deposits",
+    CLOSURE:"Closure",
+    FORECLOSURE:"Foreclosure",
+    SB_ACCOUNT:"sbAccount",
+    CASH:"cash",
+    PRINCIPLE:"Principle",
+    PRINCIPLE_AND_INTEREST:"Principle And Interest",
+    MANUAL_RENEWAL_AMOUNT:"Manual Renewal Amount",
     SCHEDULED:'Scheduled',
+    DEPOSITE_DATE_SHOULD_BE_LESSTHAN_PRODUCT_EFF_END_DATE:"Deposite date should be less than or equal to effective end date ",
+    DEPOSITE_DATE_SHOULD_BE_GRATERTHAN_PRODUCT_EFF_START_DATE:"Deposite date should be grater than or equal to effective start date",
+    DEPOSIT_AMOUNT_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAXIMUM_DEPOSIT_AMOUNT: " Deposit Amount should be less than or equal to Maximum Deposit Amount",
+    DEPOSIT_AMOUNT_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MINIMUM_DEPOSIT_AMOUNT: " Deposit Amount should be greater than or equal to Minimum Deposit Amount",
+   
+    SANCTION_AMOUNT_SHOULD_BE_MIN_AND_MAX_AMOUNT:'Sanction amount should be in between eligible min and max amount',
+    LOAN_PERIOD_IN_MOTHS_SHOULD_BE_MIN_AND_MAX_AMOUNT:'Loan period in months should be in between minLoanPeriod and maxLoanPeriod',
+    COLLECTION:'Collection',
+    DISBURSEMENT:'Disbursement',
+    MINIMUM_AMOUNT_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAXIMUM_AMOUNT: "Minimum Amount should be less than or equal to Maximum Amount",
+    MAXIMUM_AMOUNT_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MINIMUM_AMOUNT: "Maximum Amount should be greater than or equal to Minimum Amount",
+    SANCTION_DATE_SHOULD_BE_IN_BETWEEN_MIN_AND_MAX_DATES:'Sanction date should be in between product min and max dates',
+    RELATION_TYPE_ALREADY_EXIST:'Relation Type Already Exit',
+    DATE_OF_BIRTH_SHOULD_NOT_BE_GREATER_THAN_ADMISSION_DATE:'Date Of Birth Should Not Be Greater Than Admission Date',
+    AGE_SHOULD_NOT_BE_ZERO:'Age Shound Not Be Zero'
+
 };
 
 

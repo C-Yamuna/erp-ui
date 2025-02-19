@@ -5,6 +5,7 @@
             number:&nbsp;{{admissionNumber}})</span></h6>
 
     <form [formGroup]="kycForm" id="exit_types_form">
+        <p class="label-input-text text-danger mt-2" *ngIf="mandatoryDoxsTextShow">Note : {{requiredDocumentsNamesText}}</p>
         <div class="col-12 px-0">
         <div class="col-12 p-0 pt-2">
             <div class="row g-3">
@@ -61,7 +62,7 @@
                                 <div class="form-label">
                                     <label><span class="red">*</span>Promoter</label>
                                     <p-dropdown placeholder="{{'ERP.SELECT'| translate}}" formControlName="promoter" [options]="promotersList"
-                                        id="docTypeId" [(ngModel)]="ciLoanKycModel.promoterId">
+                                        id="docTypeId" [(ngModel)]="ciLoanKycModel.promoterId" (onChange)="ciLoanKycModelDuplicateCheck(ciLoanKycModel)">
                                     </p-dropdown>
                                 </div>
                             </div>
@@ -71,13 +72,14 @@
                                     <p-dropdown placeholder="{{'LOAN_TRANSACTION.SELECT'| translate}}" formControlName="kycDocumentTypeName"
                                         [options]="documentNameList" id="docTypeId"
                                         [(ngModel)]=" ciLoanKycModel.kycDocumentTypeId"
-                                        (onChange)="ciLoanKycModelDuplicateCheck(ciLoanKycModel.kycDocumentTypeId)">
+                                        (onChange)="ciLoanKycModelDuplicateCheck(ciLoanKycModel)">
                                     </p-dropdown>
                                 </div>
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
-                                    <label><span class="red">*</span>{{'LOAN_TRANSACTION.DOCUMENT_NUMBER' | translate }}</label>
+                                    <label *ngIf="!isPanNumber"><span class="red">*</span>{{'LOAN_TRANSACTION.DOCUMENT_NUMBER' | translate }}</label>
+                                    <label *ngIf="isPanNumber"><span class="red">*</span>{{'ERP.PAN_NUMBER' | translate }}</label>
                                     <input id="documentNumber" type="text" formControlName="documentNumber"
                                         [(ngModel)]=" ciLoanKycModel.documentNumber" pInputText
                                         placeholder="Enter Document Number">

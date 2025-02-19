@@ -9,7 +9,7 @@
             </div>
             <div class="main-heading mt-1 justify-content-start" *ngIf="preveiwFalg">
                 {{'TERMDEPOSITSTRANSACTION.FD_NON_CUMMULATIVE' | translate}} <i
-                    class="fa fa-angle-right font-bold mr-3 ml-3"></i>{{'TERMDEPOSITSTRANSACTION.PREVIEW' | translate}}
+                    class="fa fa-angle-right font-bold mr-3 ml-3"></i>{{'TERMDEPOSITSTRANSACTION.EDIT' | translate}}
             </div>
 
         </div>
@@ -458,8 +458,8 @@
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
-                                <div class="global-card-bg-color view-carddata icon-size pb-1">
-                                    <div class="col-12">
+                                <div class="global-card-bg-color view-carddata icon-size pb-2">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -475,25 +475,25 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-12 px-0" *ngIf="!isKycEmpty">
+                                        <div class="col-12 p-0" *ngIf="!isKycEmpty">
                                             <div class="row g-3">
 
                                                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12"
                                                     *ngFor="let document of kycGridList ; let i = index">
-                                                    <div class="stepper-kyc-card p-3 mb-2">
+                                                    <div class="stepper-kyc-card p-3 pb-1 mb-2">
                                                         <!-- view card -->
                                                         <div class="row">
                                                             <div
                                                                 class="col-lg-7 col-md-7 col-sm-7 col-xs-6 d-flex align-items-center">
                                                                 <div class="card-leftbody">
-                                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px"
+                                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 "
                                                                         *ngIf="!individualFlag">
                                                                         <h6 class="label-view">Promoter Name</h6>
                                                                         <p class="label-input-text">
                                                                             {{document.promoterName}}</p>
                                                                     </div>
                                                                     <div
-                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                         <h6 class="label-view">
                                                                             {{'TERMDEPOSITSTRANSACTION.DOCUMENT_TYPE' |
                                                                             translate}}</h6>
@@ -501,7 +501,7 @@
                                                                             {{document.kycDocumentTypeName}}</p>
                                                                     </div>
                                                                     <div
-                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                         <h6 class="label-view">
                                                                             {{'TERMDEPOSITSTRANSACTION.DOCUMENT_NUMBER'
                                                                             | translate}}</h6>
@@ -509,7 +509,7 @@
                                                                             {{document.documentNumber}}</p>
                                                                     </div>
                                                                     <div
-                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                         <h6 class="label-view">
                                                                             {{'TERMDEPOSITSTRANSACTION.DOCUMENT_NAME' |
                                                                             translate}}</h6>
@@ -563,8 +563,8 @@
 
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
-                                <div class="global-card-bg-color view-carddata icon-size">
-                                    <div class="col-12">
+                                <div class="global-card-bg-color view-carddata icon-size pb-2">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -579,7 +579,7 @@
                                                     (click)="communicationEdit(fdNonCumulativeApplicationModel)"></p-button>
                                             </div>
                                         </div>
-                                        <div class="col-12 px-0">
+                                        <div class="col-12 p-0">
                                             <div class="row g-3">
                                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <div class="nominee-card p-3 pb-1 mb-2">
@@ -588,12 +588,12 @@
                                                                 {{'TERMDEPOSITSTRANSACTION.REGISTERED' | translate}}
                                                             </h6>
                                                             <div class="col-12">
-                                                                <div class="row mt-2">
+                                                                <div class="row">
                                                                     <div
                                                                         class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                                         <div class="row">
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">
                                                                                     {{'TERMDEPOSITSTRANSACTION.STATE' |
                                                                                     translate}}</h6>
@@ -602,7 +602,7 @@
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">
                                                                                     {{'TERMDEPOSITSTRANSACTION.DISTRICT'
                                                                                     | translate}}</h6>
@@ -612,7 +612,7 @@
                                                                             </div>
 
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">
                                                                                     {{'TERMDEPOSITSTRANSACTION.SUB_DISTRICT'
                                                                                     | translate}}</h6>
@@ -621,7 +621,7 @@
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">
                                                                                     {{'TERMDEPOSITSTRANSACTION.VILLAGE'
                                                                                     | translate}}</h6>
@@ -630,7 +630,7 @@
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">
                                                                                     {{'TERMDEPOSITSTRANSACTION.ADDRESS'
                                                                                     | translate}}</h6>
@@ -639,7 +639,7 @@
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">
                                                                                     {{'TERMDEPOSITSTRANSACTION.PINCODE'
                                                                                     | translate}}</h6>
@@ -660,12 +660,12 @@
                                                             <h6 class="super-sub-heading mt-1">
                                                                 {{'TERMDEPOSITSTRANSACTION.PERMANENT' | translate}}</h6>
                                                             <div class="col-12">
-                                                                <div class="row mt-2">
+                                                                <div class="row">
                                                                     <div
                                                                         class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                                         <div class="row">
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">
                                                                                     {{'TERMDEPOSITSTRANSACTION.STATE' |
                                                                                     translate}}</h6>
@@ -674,7 +674,7 @@
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">
                                                                                     {{'TERMDEPOSITSTRANSACTION.DISTRICT'
                                                                                     | translate}}</h6>
@@ -683,7 +683,7 @@
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">
                                                                                     {{'TERMDEPOSITSTRANSACTION.SUB_DISTRICT'
                                                                                     | translate}}</h6>
@@ -692,7 +692,7 @@
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">
                                                                                     {{'TERMDEPOSITSTRANSACTION.VILLAGE'
                                                                                     | translate}}</h6>
@@ -701,7 +701,7 @@
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">
                                                                                     {{'TERMDEPOSITSTRANSACTION.ADDRESS'
                                                                                     | translate}}</h6>
@@ -710,7 +710,7 @@
                                                                                 </p>
                                                                             </div>
                                                                             <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">
                                                                                     {{'TERMDEPOSITSTRANSACTION.PINCODE'
                                                                                     | translate}}</h6>
@@ -760,7 +760,7 @@
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
                                 <div class=" global-card-bg-color view-carddata icon-size">
-                                    <div class="col-12">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -777,59 +777,80 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-12 px-0">
+                                        <div class="col-12 p-0">
                                             <div class="row">
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.PRODUCT_TYPE' |
                                                         translate}}</h6>
                                                     <p class="label-input-text">
                                                         {{fdNonCumulativeApplicationModel.fdNonCummulativeProductName}}
                                                     </p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.ACCOUNT_TYPE' |
                                                         translate}}</h6>
                                                     <p class="label-input-text">
                                                         {{fdNonCumulativeApplicationModel.accountTypeName}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.ACCOUNT_NUMBER' |
                                                         translate}}</h6>
                                                     <p class="label-input-text">
                                                         {{fdNonCumulativeApplicationModel.accountNumber}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.DEPOSIT_DATE' |
                                                         translate}}
                                                     </h6>
                                                     <p class="label-input-text">
                                                         {{fdNonCumulativeApplicationModel.depositDate}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.TENURE_IN_DAYS' |
                                                         translate}}</h6>
                                                     <p class="label-input-text">
                                                         {{fdNonCumulativeApplicationModel.tenureInDays}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.TENURE_IN_MONTHS'
                                                         | translate}}</h6>
                                                     <p class="label-input-text">
                                                         {{fdNonCumulativeApplicationModel.tenureInMonths}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.TENURE_IN_YEARS' |
                                                         translate}}
                                                     </h6>
                                                     <p class="label-input-text">
                                                         {{fdNonCumulativeApplicationModel.tenureInYears}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.INTEREST_PAYEMNET_FREQUENCY' |
                                                         translate}}
                                                     </h6>
                                                     <p class="label-input-text">
-                                                        {{fdNonCumulativeApplicationModel.interestPaymentFrequencyId}}</p>
+                                                        {{fdNonCumulativeApplicationModel.interestPaymentFrequencyName}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.MATURITY_AMOUNT' |
+                                                        translate}}
+                                                    </h6>
+                                                    <p class="label-input-text">
+                                                        {{fdNonCumulativeApplicationModel.maturityAmount}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.MATURITY_DATE' |
+                                                        translate}}
+                                                    </h6>
+                                                    <p class="label-input-text">
+                                                        {{fdNonCumulativeApplicationModel.maturityDate}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.IS_AUTO_RENEWAL' |
+                                                        translate}}
+                                                    </h6>
+                                                    <p class="label-input-text">
+                                                        {{fdNonCumulativeApplicationModel.isAutoRenewal? 'Yes':'No'}}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -842,7 +863,7 @@
                         <div class="col-lg-12 col-md-12 col-sm-12" *ngIf="jointHoldersFlag">
                             <div class="col-12 p-0">
                                 <div class="global-card-bg-color view-carddata icon-size">
-                                    <div class="col-12">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -868,7 +889,7 @@
                                                     <div class="col"></div>
                                                     <div class="w-100 mt-1 mb-2 h-90p">
                                                         <div class="row">
-                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                                 <span
                                                                     class="label-view">{{'TERMDEPOSITSTRANSACTION.ADMISSION_NO'
                                                                     | translate}}</span>
@@ -876,7 +897,7 @@
                                                                     class="font-semibold text-break m-0 label-input-text">
                                                                     {{jointHolderDetails.admissionNumber}}</p>
                                                             </div>
-                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                                 <span
                                                                     class="label-view">{{'TERMDEPOSITSTRANSACTION.NAME'
                                                                     | translate}}</span>
@@ -884,7 +905,7 @@
                                                                     class="font-semibold text-break m-0 label-input-text">
                                                                     {{jointHolderDetails.name}}</p>
                                                             </div>
-                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                                 <span
                                                                     class="label-view">{{'TERMDEPOSITSTRANSACTION.MEMBER_TYPE'
                                                                     | translate}}</span>
@@ -892,7 +913,7 @@
                                                                     class="font-semibold text-break m-0 label-input-text">
                                                                     {{jointHolderDetails.memberTypeName}}</p>
                                                             </div>
-                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                                 <span
                                                                     class="label-view">{{'TERMDEPOSITSTRANSACTION.ADMISSION_DATE'
                                                                     | translate}}</span>
@@ -900,7 +921,7 @@
                                                                     class="font-semibold text-break m-0 label-input-text">
                                                                     {{jointHolderDetails.admissionDateVal}}</p>
                                                             </div>
-                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                                 <span
                                                                     class="label-view">{{'TERMDEPOSITSTRANSACTION.AADHAR_NO'
                                                                     | translate}}</span>
@@ -908,7 +929,7 @@
                                                                     class="font-semibold text-break m-0 label-input-text">
                                                                     {{jointHolderDetails.aadharNumber}}</p>
                                                             </div>
-                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                                 <span
                                                                     class="label-view">{{'TERMDEPOSITSTRANSACTION.PAN_NUMBER'
                                                                     | translate}}</span>
@@ -916,7 +937,7 @@
                                                                     class="font-semibold text-break m-0 label-input-text">
                                                                     {{jointHolderDetails.panNumber}}</p>
                                                             </div>
-                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                                 <span
                                                                     class="label-view">{{'TERMDEPOSITSTRANSACTION.POC_MOBILE_NO'
                                                                     | translate}}</span>
@@ -924,7 +945,7 @@
                                                                     class="font-semibold text-break m-0 label-input-text">
                                                                     {{jointHolderDetails.mobileNumber}}</p>
                                                             </div>
-                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                                 <span
                                                                     class="label-view">{{'TERMDEPOSITSTRANSACTION.EMAIL'
                                                                     | translate}}</span>
@@ -1036,8 +1057,8 @@
 
                         <div class="col-lg-12 col-md-12 col-sm-12" *ngIf="individualFlag">
                             <div class="col-12 p-0">
-                                <div class=" global-card-bg-color view-carddata icon-size pb-1">
-                                    <div class="col-12">
+                                <div class=" global-card-bg-color view-carddata icon-size pb-2">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -1052,7 +1073,7 @@
                                                     (click)="nomineeEdit(fdNonCumulativeApplicationModel)"></p-button>
                                             </div>
                                         </div>
-                                        <div class="col-12 px-0">
+                                        <div class="col-12 p-0">
                                             <div class="row g-3">
                                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <div class="stepper-nominee-card p-3 pb-1 mb-2">
@@ -1060,13 +1081,13 @@
                                                             <h6 class="super-sub-heading mt-1">
                                                                 {{'TERMDEPOSITSTRANSACTION.NOMINEE' | translate}}</h6>
                                                             <div class="col-12">
-                                                                <div class="row mt-2">
+                                                                <div class="row">
                                                                     <div
                                                                         class="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center">
                                                                         <div class="card-leftbody">
                                                                             <div class="row">
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'TERMDEPOSITSTRANSACTION.NOMINEE_TYPE'
                                                                                         | translate}}</h6>
@@ -1075,7 +1096,7 @@
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'TERMDEPOSITSTRANSACTION.RELATIONSHIP_WITH_MEMBER'
                                                                                         | translate}}</h6>
@@ -1084,7 +1105,7 @@
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'TERMDEPOSITSTRANSACTION.NAME'
                                                                                         | translate}}</h6>
@@ -1096,7 +1117,7 @@
                                                         <div class="row "> -->
 
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'TERMDEPOSITSTRANSACTION.AADHAR'
                                                                                         | translate}}</h6>
@@ -1105,7 +1126,7 @@
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'TERMDEPOSITSTRANSACTION.CONTACT'
                                                                                         | translate}}</h6>
@@ -1114,7 +1135,7 @@
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'TERMDEPOSITSTRANSACTION.EMAIL'
                                                                                         | translate}}</h6>
@@ -1175,7 +1196,7 @@
                                                                         <div class="card-leftbody">
                                                                             <div class="row">
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'TERMDEPOSITSTRANSACTION.GUARDAIN_TYPE'
                                                                                         | translate}}</h6>
@@ -1184,7 +1205,7 @@
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'TERMDEPOSITSTRANSACTION.RELATIONSHIP_WITH_MEMBER'
                                                                                         | translate}}</h6>
@@ -1193,7 +1214,7 @@
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'TERMDEPOSITSTRANSACTION.NAME'
                                                                                         | translate}}</h6>
@@ -1206,7 +1227,7 @@
                                                                                 <!-- </div>
                                                             <div class="row "> -->
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'TERMDEPOSITSTRANSACTION.AADHAR'
                                                                                         | translate}}</h6>
@@ -1215,7 +1236,7 @@
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'TERMDEPOSITSTRANSACTION.CONTACT'
                                                                                         | translate}}</h6>
@@ -1224,7 +1245,7 @@
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'TERMDEPOSITSTRANSACTION.EMAIL'
                                                                                         | translate}}</h6>
@@ -1277,7 +1298,7 @@
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
                                 <div class="global-card-bg-color view-carddata icon-size">
-                                    <div class="col-12">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -1294,12 +1315,12 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-12 px-0">
+                                        <div class="col-12 p-0">
                                             <div class="row g-3">
 
                                                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12"
                                                     *ngFor="let document of requiredDocumentsList ; let i = index">
-                                                    <div class="stepper-doc-card p-3 mb-2">
+                                                    <div class="stepper-doc-card p-3 pb-1 mb-2">
                                                         <!-- view card -->
                                                         <div class="row">
 
@@ -1307,19 +1328,19 @@
                                                                 class="col-lg-7 col-md-7 col-sm-7 d-flex align-items-center">
                                                                 <div class="card-leftbody">
                                                                     <div
-                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                         <h6 class="label-view">Document Type</h6>
                                                                         <p class="label-input-text">
                                                                             {{document.requiredDocumentTypeName}}</p>
                                                                     </div>
                                                                     <div
-                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                         <h6 class="label-view">Document Number</h6>
                                                                         <p class="label-input-text">
                                                                             {{document.documentNumber}}</p>
                                                                     </div>
                                                                     <div
-                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                                                         <h6 class="label-view">Document Name</h6>
                                                                         <p class="label-input-text docname-texteclipse"
                                                                             pTooltip="{{document.requiredDocumentFilePath}}"

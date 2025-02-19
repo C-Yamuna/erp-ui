@@ -13,6 +13,7 @@ import { NewMembershipAddService } from '../new-membership-add/shared/new-member
 import { FdNonCumulativeApplication } from '../fd-non-cumulative-application/shared/fd-non-cumulative-application.model';
 import { FdNonCumulativeJointHolder } from './shared/fd-non-cumulative-joint-holder.model';
 import { FdNonCumulativeJointHolderService } from './shared/fd-non-cumulative-joint-holder.service';
+import { CommonStatusData } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-fd-non-cumulative-joint-holder-details',
@@ -205,7 +206,7 @@ export class FdNonCumulativeJointHolderDetailsComponent implements OnInit {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.membershipList = this.responseModel.data;
-            this.admissionNumberList = this.membershipList.filter((obj: any) => obj != null && obj.memberTypeId == 1).map((relationType: { id: any; name: any; admissionNumber: any; memberTypeName: any }) => {
+            this.admissionNumberList = this.membershipList.filter((obj: any) => obj != null && obj.statusName == CommonStatusData.APPROVED && obj.memberTypeId == 1).map((relationType: { id: any; name: any; admissionNumber: any; memberTypeName: any }) => {
               return {
                 label: relationType.admissionNumber
 

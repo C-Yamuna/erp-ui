@@ -125,7 +125,6 @@ export class FdNonCumulativeStepperComponent implements OnInit {
     private fdNonCumulativeNomineeService: FdNonCumulativeNomineeService,
     private commonFunctionsService: CommonFunctionsService,
     private translate: TranslateService,
-    private ref: ChangeDetectorRef,
     private membershipServiceService: NewMembershipAddService,
     private datePipe: DatePipe,
     private fdNonCumulativeJointHolderService: FdNonCumulativeJointHolderService, private fileUploadService: FileUploadService) {
@@ -220,8 +219,11 @@ export class FdNonCumulativeStepperComponent implements OnInit {
       } else {
         this.translate.use(this.commonFunctionsService.getStorageValue('language'));
       }
-
       if (data != undefined) {
+        if(data.data.memberTypeName != null && data.data.memberTypeName != undefined){
+          this.memberTypeName = data.data.memberTypeName;
+        }
+        this.itemList();
         this.activeIndex = data.stepperIndex
         this.changeStepperSelector(this.activeIndex);
         this.buttonDisabled = data.isDisable
@@ -238,19 +240,16 @@ export class FdNonCumulativeStepperComponent implements OnInit {
               this.memberTypeCheck(this.memberTypeName, data.data);
               this.fdNonCumulativeApplicationModel = data.data;
             }
-            this.itemList();
           }
           else if (this.activeIndex == 1) {
             if (data.data != null && data.data != undefined) {
               this.fdNonCumulativeKycModel = data.data;
             }
-            this.itemList();
           }
           else if (this.activeIndex == 2) {
             if (data.data != null && data.data != undefined) {
               this.fdNonCumulativeCommunicationModel = data.data;
             }
-            this.itemList();
           }
           else if (this.activeIndex == 3) {
             if (data.data != null && data.data != undefined) {
@@ -299,7 +298,6 @@ export class FdNonCumulativeStepperComponent implements OnInit {
                 }
               }
             }
-            this.itemList();
           } else if (this.activeIndex == 6) {
             if (data.data != null && data.data != undefined) {
               this.fdNonCummulativeRequiredDocumentsModel = data.data;
@@ -307,7 +305,6 @@ export class FdNonCumulativeStepperComponent implements OnInit {
                 this.memberTypeName = data.data.memberTypeName;
               }
             }
-            this.itemList();
           }
         }
       }
@@ -484,7 +481,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
                 }
               },
               {
-                label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
+                label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.FD_NON_CUMM_JOINTACCOUNT, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
                 disabled: this.menuDisabled,
                 command: (event: any) => {
                   this.activeIndex = 4;
@@ -1174,6 +1171,9 @@ export class FdNonCumulativeStepperComponent implements OnInit {
     if (this.fdNonCumulativeApplicationModel.depositDateVal != null && this.fdNonCumulativeApplicationModel.depositDateVal != undefined) {
       this.fdNonCumulativeApplicationModel.depositDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdNonCumulativeApplicationModel.depositDateVal));
     }
+    if (this.fdNonCumulativeApplicationModel.maturityDate != null && this.fdNonCumulativeApplicationModel.maturityDate != undefined) {
+      this.fdNonCumulativeApplicationModel.maturityDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdNonCumulativeApplicationModel.maturityDate));
+    }
     if (this.isApplicationEdit) {
       this.fdNonCumulativeApplicationModel.accountStatusName = applicationConstants.IS_ACTIVE;
       this.fdNonCumulativeApplicationService.updateFdNonCummApplicationWithMemberModuleDetails(this.fdNonCumulativeApplicationModel).subscribe((response: any) => {
@@ -1355,6 +1355,9 @@ export class FdNonCumulativeStepperComponent implements OnInit {
     if (this.fdNonCumulativeApplicationModel.depositDateVal != null && this.fdNonCumulativeApplicationModel.depositDateVal != undefined) {
       this.fdNonCumulativeApplicationModel.depositDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdNonCumulativeApplicationModel.depositDateVal));
     }
+    if (this.fdNonCumulativeApplicationModel.maturityDate != null && this.fdNonCumulativeApplicationModel.maturityDate != undefined) {
+      this.fdNonCumulativeApplicationModel.maturityDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdNonCumulativeApplicationModel.maturityDate));
+    }
     if (this.isApplicationEdit) {
       this.fdNonCumulativeApplicationModel.accountStatusName = applicationConstants.IS_ACTIVE;
       this.fdNonCumulativeApplicationService.updateFdNonCummApplication(this.fdNonCumulativeApplicationModel).subscribe((response: any) => {
@@ -1498,6 +1501,9 @@ export class FdNonCumulativeStepperComponent implements OnInit {
     }
     else {
       this.isNomineeEdit = true;
+    }
+    if (this.fdNonCumulativeNomineeModel.nomineeDobVal != null && this.fdNonCumulativeNomineeModel.nomineeDobVal != undefined) {
+      this.fdNonCumulativeNomineeModel.nomineeDob = this.commonFunctionsService.getUTCEpoch(this.fdNonCumulativeNomineeModel.nomineeDobVal);
     }
     if (this.isNomineeEdit) {
       this.fdNonCumulativeNomineeService.updateNomineeDetails(this.fdNonCumulativeNomineeModel).subscribe((response: any) => {
@@ -1768,7 +1774,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
       if (this.fdNonCumulativeApplicationModel.accountTypeName != AccountTypes.JOINT) {
         this.items = [
           {
-            label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL,
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAILS,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 0;
@@ -1806,7 +1812,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
       } else {
         this.items = [
           {
-            label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL,
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAILS,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 0;
@@ -1956,7 +1962,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
       if (this.fdNonCumulativeApplicationModel.accountTypeName != AccountTypes.JOINT) {
         this.items = [
           {
-            label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL,
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAILS,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 0;
@@ -1994,7 +2000,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
       } else {
         this.items = [
           {
-            label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAIL,
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.MEMBERSHIP_DETAILS,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 0;

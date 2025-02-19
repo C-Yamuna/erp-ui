@@ -102,6 +102,7 @@ export class FdCumulativeCommunicationComponent {
         this. fdCumulativeCommunicationModel.fdCummulativeAccId = this.id;
       if(this.accountNumber != null && this.accountNumber != undefined)
         this. fdCumulativeCommunicationModel.accountNumber = this.accountNumber;
+      this. fdCumulativeCommunicationModel.memberTypeName = this.memberTypeName;
       this.fdCumulativeApplicationService.changeData({
         formValid: !this.communicationForm.valid ? true : false,
         data: this. fdCumulativeCommunicationModel,
@@ -271,7 +272,7 @@ export class FdCumulativeCommunicationComponent {
           if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
             if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
               this.statesList = this.responseModel.data;
-              this.statesList = this.responseModel.data.filter((obj: any) => obj != null).map((state: { name: any; id: any; }) => {
+              this.statesList = this.responseModel.data.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((state: { name: any; id: any; }) => {
                 return { label: state.name, value: state.id };
               });
               this.sameAsRegisterAddress();
@@ -293,6 +294,10 @@ export class FdCumulativeCommunicationComponent {
         this.communicationForm.get('districtId').reset();
         this.communicationForm.get('subDistrictId').reset();
         this.communicationForm.get('villageId').reset();
+        this.communicationForm.get('address1').reset();
+        this.communicationForm.get('pinCode').reset();
+        this.communicationForm.get('permanentAddress1')?.reset();
+        this.communicationForm.get('permanentPinCode')?.reset();
         this.districtsList = [];
         this.mandalsList = [];
         this.villageList = [];
@@ -301,7 +306,7 @@ export class FdCumulativeCommunicationComponent {
         this.responseModel = response;
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           this.districtsList = this.responseModel.data;
-          this.districtsList = this.districtsList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+          this.districtsList = this.districtsList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
             return { label: relationType.name, value: relationType.id };
           });
           const state = this.statesList.find((item: { value: any; }) => item.value === id);
@@ -322,6 +327,10 @@ export class FdCumulativeCommunicationComponent {
       if (isResetIds) {
         this.communicationForm.get('subDistrictId').reset();
         this.communicationForm.get('villageId').reset();
+        this.communicationForm.get('address1').reset();
+        this.communicationForm.get('pinCode').reset();
+        this.communicationForm.get('permanentAddress1')?.reset();
+        this.communicationForm.get('permanentPinCode')?.reset();
         this.mandalsList = [];
         this.villageList = [];
       }
@@ -329,7 +338,7 @@ export class FdCumulativeCommunicationComponent {
         this.responseModel = response;
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           this.mandalsList = this.responseModel.data;
-          this.mandalsList = this.mandalsList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+          this.mandalsList = this.mandalsList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
             return { label: relationType.name, value: relationType.id };
           });
           const district = this.districtsList.find((item: { value: any; }) => item.value === id);
@@ -349,6 +358,10 @@ export class FdCumulativeCommunicationComponent {
     getAllVillagesByMandalId(id: any, isResetIds: any) {
       if (isResetIds) {
         this.communicationForm.get('villageId').reset();
+        this.communicationForm.get('address1').reset();
+        this.communicationForm.get('pinCode').reset();
+        this.communicationForm.get('permanentAddress1')?.reset();
+        this.communicationForm.get('permanentPinCode')?.reset();
         this.villageList = [];
       }
       this.fdCumulativeCommunicationService.getvillagesByMandalId(id).subscribe((response: any) => {
@@ -357,7 +370,7 @@ export class FdCumulativeCommunicationComponent {
           if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
             if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
               this.villageList = this.responseModel.data;
-              this.villageList = this.villageList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+              this.villageList = this.villageList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
                 return { label: relationType.name, value: relationType.id };
               });
               const mandal = this.mandalsList.find((item: { value: any; }) => item.value === id);
@@ -389,7 +402,7 @@ export class FdCumulativeCommunicationComponent {
           if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
             if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
               this.permanentStatesList = this.responseModel.data;
-              this.permanentStatesList = this.responseModel.data.filter((obj: any) => obj != null).map((state: { name: any; id: any; }) => {
+              this.permanentStatesList = this.responseModel.data.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((state: { name: any; id: any; }) => {
                 return { label: state.name, value: state.id };
               });
             }
@@ -410,6 +423,8 @@ export class FdCumulativeCommunicationComponent {
         this.communicationForm.get('permanentDistrictId').reset();
         this.communicationForm.get('permanentSubDistrictId').reset();
         this.communicationForm.get('permanentVillageId').reset();
+        this.communicationForm.get('permanentAddress1')?.reset();
+        this.communicationForm.get('permanentPinCode')?.reset();
         this.permenentDistrictList = [];
         this.permenentSubDistrictList = [];
         this.permenentVillageList = [];
@@ -418,7 +433,7 @@ export class FdCumulativeCommunicationComponent {
         this.responseModel = response;
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           this.permenentDistrictList = this.responseModel.data;
-          this.permenentDistrictList = this.permenentDistrictList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+          this.permenentDistrictList = this.permenentDistrictList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
             return { label: relationType.name, value: relationType.id };
           });
           const perState = this.permanentStatesList.find((item: { value: any; }) => item.value === id);
@@ -438,6 +453,8 @@ export class FdCumulativeCommunicationComponent {
       if (isResetIds) {
         this.communicationForm.get('permanentSubDistrictId').reset();
         this.communicationForm.get('permanentVillageId').reset();
+        this.communicationForm.get('permanentAddress1')?.reset();
+        this.communicationForm.get('permanentPinCode')?.reset();
         this.permenentSubDistrictList = [];
         this.permenentVillageList = [];
       }
@@ -445,7 +462,7 @@ export class FdCumulativeCommunicationComponent {
         this.responseModel = response;
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           this.permenentSubDistrictList = this.responseModel.data;
-          this.permenentSubDistrictList = this.permenentSubDistrictList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+          this.permenentSubDistrictList = this.permenentSubDistrictList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
             return { label: relationType.name, value: relationType.id };
           });
           const perDistrict = this.permenentDistrictList.find((item: { value: any; }) => item.value === id);
@@ -463,6 +480,8 @@ export class FdCumulativeCommunicationComponent {
     getAllPermanentVillagesByMandalId(id: any, isResetIds: any) {
       if (isResetIds) {
         this.communicationForm.get('permanentVillageId').reset();
+        this.communicationForm.get('permanentAddress1')?.reset();
+        this.communicationForm.get('permanentPinCode')?.reset();
         this.permenentVillageList = [];
       }
       this.fdCumulativeCommunicationService.getvillagesByMandalId(id).subscribe((response: any) => {
@@ -471,7 +490,7 @@ export class FdCumulativeCommunicationComponent {
           if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
             if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
               this.permenentVillageList = this.responseModel.data;
-              this.permenentVillageList = this.permenentVillageList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+              this.permenentVillageList = this.permenentVillageList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
                 return { label: relationType.name, value: relationType.id };
               });
               const perMandal = this.permenentSubDistrictList.find((item: { value: any; }) => item.value === id);

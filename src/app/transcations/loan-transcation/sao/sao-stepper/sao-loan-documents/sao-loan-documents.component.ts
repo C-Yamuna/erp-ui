@@ -68,7 +68,7 @@ export class SaoLoanDocumentsComponent {
     private saoRequiredDocumentsConfigService: SaoRequiredDocumentsConfigService, private datePipe: DatePipe, private fileUploadService: FileUploadService) {
     this.documentForm = this.formBuilder.group({
       'documentTypeName': new FormControl('', Validators.required),
-      'documentNo': new FormControl('', Validators.required),
+      'documentNo': new FormControl('', [Validators.pattern(applicationConstants.ALPHANUMERIC)]),
       'filePath': new FormControl('',),
       'remarks': new FormControl(''),
     });
@@ -111,6 +111,7 @@ export class SaoLoanDocumentsComponent {
   //@akhila
   //add document
   addDocument(event: any) {
+    this.isFileUploaded = applicationConstants.FALSE;
     this.getDocumentsByProductDefinition(this.productId);
     this.multipleFilesList = [];
     this.addDocumentOfKycFalg = !this.addDocumentOfKycFalg;
@@ -198,6 +199,7 @@ export class SaoLoanDocumentsComponent {
                 file.fileName = name
                 multipleFilesListForView.push(file);
                 this.saoLoanDocumentModel.multipartFileList = multipleFilesListForView;
+                this.isFileUploaded = applicationConstants.TRUE;
               }
             }
           }
@@ -305,9 +307,11 @@ export class SaoLoanDocumentsComponent {
     this.isFileUploaded = applicationConstants.FALSE;
     this.multipleFilesList = [];
     this.saoLoanDocumentModel.filesDTOList = [];
+    this.saoLoanDocumentModel.multipartFileList = [];
     this.saoLoanDocumentModel.filePath = null;
     let files: FileUploadModel = new FileUploadModel();
     for (let file of event.files) {
+      this.isFileUploaded = applicationConstants.TRUE;
       let reader = new FileReader();
       reader.onloadend = (e) => {
         let files = new FileUploadModel();
@@ -394,7 +398,8 @@ export class SaoLoanDocumentsComponent {
                 }
               }
             }
-            this.buttonDisabled = false;
+            this.buttonDisabled = applicationConstants.FALSE;
+            this.isFileUploaded = applicationConstants.FALSE;
           }
         }
       }
@@ -484,6 +489,9 @@ export class SaoLoanDocumentsComponent {
 
   }
   fileRemoeEvent() {
+    
+    this.saoLoanDocumentModel.multipartFileList=[];
+    this.isFileUploaded = applicationConstants.FALSE;
     if (this.saoLoanDocumentModel.filesDTOList != null && this.saoLoanDocumentModel.filesDTOList != undefined && this.saoLoanDocumentModel.filesDTOList.length > 0) {
       let removeFileIndex = this.saoLoanDocumentModel.filesDTOList.findIndex((obj: any) => obj && obj.fileName === this.saoLoanDocumentModel.filePath);
       if (removeFileIndex != null && removeFileIndex != undefined) {

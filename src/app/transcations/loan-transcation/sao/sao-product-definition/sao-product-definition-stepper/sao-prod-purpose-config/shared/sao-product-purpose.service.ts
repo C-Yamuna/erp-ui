@@ -31,8 +31,8 @@ export class SaoProductPurposeService {
     let headers = new HttpHeaders({ 'id': id + '', })
     return this.commonHttpService.delete( headers, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.SAO_PROD_PURPOSE_CONFIG + ERP_TRANSACTION_CONSTANTS.DELETE);
   }
-  getSaoProductPurposeByProductId(productId: any){
-    let headers = new HttpHeaders({ 'productId': productId + '', })
-    return this.commonHttpService.getById( headers, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.SAO_PROD_PURPOSE_CONFIG + ERP_TRANSACTION_CONSTANTS.SAO_GET_BY_PRODUCT_ID);
+  getSaoProductPurposeByProductId(id: any){
+    let headers = new HttpHeaders({ 'id': id + '', })
+    return this.commonHttpService.getById( headers, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.SAO_PROD_PURPOSE_CONFIG + ERP_TRANSACTION_CONSTANTS.GET_SAO_PROD_PURPOSE_BY_PRODUCT_ID);
   }
 }

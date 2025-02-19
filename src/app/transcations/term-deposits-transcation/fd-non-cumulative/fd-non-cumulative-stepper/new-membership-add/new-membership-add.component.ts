@@ -995,7 +995,8 @@ export class NewMembershipAddComponent {
       this.addButton = true;
       this.EditDeleteDisable = true;
       this.groupPromoters = true;
-      this.promoterDetailsModel = new GroupPromoterDetailsModel();
+      this.onChangeExistedPrmoter(rowData.isExistingMember , false);
+      this.promoterDetailsModel = new GroupPromoterDetailsModel();     
       this.promoterDetailsModel = rowData;
       // this.promoterDetailsModel = this.promoterDetails.find((obj:any) => (obj != null && obj != undefined) && obj.uniqueId === rowData.uniqueId );
       if(this.promoterDetailsModel.isExistingMember ){
@@ -1010,7 +1011,6 @@ export class NewMembershipAddComponent {
       }
       this.isFileUploadedPromoterPhoto = applicationConstants.TRUE;
       this.isFileUploadedPromoterSignature = applicationConstants.TRUE;
-      this.onChangeExistedPrmoter(this.promoterDetailsModel.isExistingMember , false);
       this.updateData();
     }
   
@@ -1165,6 +1165,7 @@ export class NewMembershipAddComponent {
       this.addButton = true;
       this.EditDeleteDisable = true;
       this.institutionPromoterPopUp = true;
+      this.onChangeExistedPrmoter(rowData.isExistingMember , false);
       this.institutionPromoterDetailsModel = new InstitutionPromoterDetailsModel();
      
       // this.institutionPromoterDetailsModel =  this.institutionPromoter.find((obj:any) => (obj != null && obj != undefined) && obj.uniqueId === rowData.uniqueId );
@@ -1183,7 +1184,6 @@ export class NewMembershipAddComponent {
      
       this.isFileUploadedPromoterPhoto = applicationConstants.TRUE;
       this.isFileUploadedPromoterSignature = applicationConstants.TRUE;
-      this.onChangeExistedPrmoter(this.institutionPromoterDetailsModel.isExistingMember , false);
       this.updateData();
     }
     /**
@@ -1201,6 +1201,7 @@ export class NewMembershipAddComponent {
       this.institutionPromoterDetailsModel = new InstitutionPromoterDetailsModel();
       this.institutionPromoterDetailsModel.uniqueId = uniqueId; 
       this.promoterDetailsForm.reset();
+      this.onChangeExistedPrmoter(false , true);
       this.admissionNumberDropDown = false;
       this.updateData();
     }
@@ -1440,6 +1441,8 @@ export class NewMembershipAddComponent {
     onChangeExistedPrmoter(isExistingMember :any ,flag :boolean){
       if(flag){
         this.resetFields();
+        this.promoterDetailsModel = new GroupPromoterDetailsModel();
+        this.institutionPromoterDetailsModel = new InstitutionPromoterDetailsModel();
       }
       if(isExistingMember){
           this.admissionNumberDropDown = true;

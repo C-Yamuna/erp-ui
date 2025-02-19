@@ -20,6 +20,7 @@ import { FileUploadModel } from 'src/app/layout/mainmenu/shared/file-upload-mode
 import { TermRequiredDocuments } from 'src/app/transcations/borrowing-transaction/term-borrowing/term-borrowing-product-definition/term-borrowing-product-definition-stepper/term-required-documents/shared/term-required-documents.model';
 import { TermApplication } from '../term-loan-application-details/shared/term-application.model';
 import { TermLoanRequiredDocumentsService } from '../../term-loan-product-definition/term-loan-product-definition-stepper/term-loan-required-documents/shared/term-loan-required-documents.service';
+import { MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-term-loan-documents',
@@ -27,11 +28,9 @@ import { TermLoanRequiredDocumentsService } from '../../term-loan-product-defini
   styleUrls: ['./term-loan-documents.component.css']
 })
 export class TermLoanDocumentsComponent {
-  termLoanDocumentsList: any[] = [];
-  termDocumentDetailsForm: FormGroup;
+  @ViewChild('document', { static: false }) private document!: Table;
 
-  carrats: any[] = [];
-  gender: any[] | undefined;
+  termDocumentDetailsForm: FormGroup;
   maritalstatus: any[] | undefined;
   checked: boolean = false;
   responseModel!: Responsemodel;
@@ -41,36 +40,23 @@ export class TermLoanDocumentsComponent {
   orgnizationSetting: any;
   msgs: any[] = [];
   columns: any[] = [];
-  insuranceVendorDetailsList: any[] = [];
-  occupationTypesList: any[] = [];
-  gendersList: any[] = [];
-  relationshipTypesList: any[] = [];
   isMemberCreation: boolean = false;
+
   membershipBasicRequiredDetailsModel: MembershipBasicRequiredDetails = new MembershipBasicRequiredDetails();
   memberGroupDetailsModel: MemberGroupDetailsModel = new MemberGroupDetailsModel();
   membershipInstitutionDetailsModel: MembershipInstitutionDetailsModel = new MembershipInstitutionDetailsModel();
   termLoanDocumentsModel: TermLoanDocuments = new TermLoanDocuments();
   termLoanApplicationModel: TermApplication = new TermApplication();
   memberTypeName: any;
-  loanAccId: any;
+  termLoanApplicationId: any;
   isEdit: boolean = false;
   admissionNumber: any;
-  termLoanDocumentsModelList: any[] = [];
-  institutionPromoter: any[] = [];
   visible: boolean = false;
   isFormValid: Boolean = false;
-
-  @ViewChild('document', { static: false }) private document!: Table;
-
   addButton: boolean = false;
   newRow: any;
   EditDeleteDisable: boolean = false;
   documentDetails: any[] = [];
-  collateralType: any;
-  tempDocumentDetailsList: any[] = [];
-  mainDocumentDetailsList: any[] = [];
-  updatedDocumentDetailsList: any[] = [];
-  documentsList: any[] = [];
   addButtonService: boolean = false;
   editDeleteDisable: boolean = false;
   showForm: any;
@@ -87,21 +73,14 @@ export class TermLoanDocumentsComponent {
   documentTypeList: any[] = [];
   fileName: any;
   documentModelList: any[] = [];
-  adhaarFilesList: any[] = [];
-  signFilesList: any[] = [];
-  panFilesList: any[] = [];
   uploadFileData: any;
   isFileUploaded: boolean = false;
   submitFlag: boolean = false;
   displayPosition: boolean = false;
   documentNameList: any[] = [];
   position: any;
-  docFilesList: any[] = [];
   filesList: any[] = [];
-  exerciseFileList: any[] = [];
-  lastDot = applicationConstants.LAST_DOT;
   memberId: any;
-  kycListByMemberId: any[] = [];
   typeFlag: boolean = false;
   addKycButton: boolean = false;
   addDocumentOfKycFalg: boolean = false;
@@ -115,17 +94,12 @@ export class TermLoanDocumentsComponent {
   individualFlag: boolean = false;
   groupFlag: boolean = false;
   institutionFlag: boolean = false;
-  promoterDetails: any[] = [];
-  memberName: any;
-  mobileNumer: any;
-  aadharNumber: any;
-  qualificationName: any;
-  panNumber: any;
   memberTypeId: any;
   displayDialog: boolean = false;
-  productId: any;
   requiredDocumentsNamesText: any;
   mandatoryDoxsTextShow: boolean = false;
+  saveAndNextEnable : boolean = false;
+
   constructor(private router: Router, private formBuilder: FormBuilder,
     private translate: TranslateService, private commonFunctionsService: CommonFunctionsService,
     private encryptDecryptService: EncryptDecryptService, private commonComponent: CommonComponent,
@@ -136,11 +110,11 @@ export class TermLoanDocumentsComponent {
     private termLoanDocumentsService: TermLoanDocumentsService,
     private fileUploadService: FileUploadService) {
 
-    this.termDocumentDetailsForm = this.formBuilder.group({
-      documentType: new FormControl('', Validators.required),
-      documentNo: new FormControl('', Validators.required),
-      fileUpload: new FormControl(''),
-    })
+      this.termDocumentDetailsForm = this.formBuilder.group({
+        documentType: new FormControl('', Validators.required),
+        documentNo: new FormControl('', Validators.required),
+        fileUpload: new FormControl(''),
+      })
   }
 
   ngOnInit(): void {
@@ -151,12 +125,11 @@ export class TermLoanDocumentsComponent {
     if (this.documentsData.length >= 1) {
       this.uploadFlag = true;
     }
-    // this.getAllDocumentTypes();
     this.activateRoute.queryParams.subscribe(params => {
       if (params['id'] != undefined) {
         let queryParams = this.encryptDecryptService.decrypt(params['id']);
-        this.loanAccId = Number(queryParams);
-        this.getTermApplicationByTermAccId(this.loanAccId);
+        this.termLoanApplicationId = Number(queryParams);
+        this.getTermApplicationByTermAccId(this.termLoanApplicationId);
         this.isEdit = true;
 
       } else {
@@ -173,48 +146,6 @@ export class TermLoanDocumentsComponent {
     this.updateData();
   }
 
-  // getAllDocumentTypes() {
-  //   this.termLoanDocumentsService.getAllDocuments().subscribe((res: any) => {
-  //     this.responseModel = res;
-  //     if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
-  //       this.documentNameList = this.responseModel.data.filter((kyc: any) => kyc.status == applicationConstants.ACTIVE).map((count: any) => {
-  //         return { label: count.name, value: count.id }
-  //       });
-  //     }
-  //   }, error => {
-  //     this.commonComponent.stopSpinner();
-  //     this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
-  //     setTimeout(() => {
-  //       this.msgs = [];
-  //     }, 3000);
-  //   });
-  // }
-  /**
-    * @implements get documents by product deffinition
-    * @param id 
-    * @author akhila.m
-    */
-  getDocumentsByProductDefinition(id: any) {
-    this.termLoanRequiredDocumentsService.getTermLoanRequiredDocumentsByProductId(id).subscribe((data: any) => {
-      this.responseModel = data;
-      if (this.responseModel != null && this.responseModel != undefined) {
-        if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
-          if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
-            this.documentNameList = this.responseModel.data.filter((data: any) => data != null && data.isRequired != null).map((item: { documentTypeName: string, documentType: any }) => ({
-              label: item.documentTypeName,
-              value: item.documentType
-            }));
-          }
-        }
-        else {
-          this.msgs = [];
-          this.commonComponent.stopSpinner();
-          this.msgs.push({ severity: 'error', detail: this.responseModel.statusMsg });
-        }
-      }
-    });
-  }
-
   imageUploader(event: any, fileUpload: FileUpload) {
     this.isFileUploaded = applicationConstants.FALSE;
     this.termLoanDocumentsModel.multipartFileList = [];
@@ -222,6 +153,7 @@ export class TermLoanDocumentsComponent {
     this.termLoanDocumentsModel.filePath = null;
     let files: FileUploadModel = new FileUploadModel();
     for (let file of event.files) {
+      this.isFileUploaded = applicationConstants.TRUE;
       let reader = new FileReader();
       reader.onloadend = (e) => {
         let files = new FileUploadModel();
@@ -237,8 +169,8 @@ export class TermLoanDocumentsComponent {
           this.termLoanDocumentsModel.filesDTOList.push(files); // Add to filesDTOList array
         }
         let timeStamp = this.commonComponent.getTimeStamp();
-        this.termLoanDocumentsModel.filesDTOList[0].fileName = "TERM_LOAN_DOCUMENT_" + this.loanAccId + "_" + timeStamp + "_" + file.name;
-        this.termLoanDocumentsModel.filePath = "TERM_LOAN_DOCUMENT_" + this.loanAccId + "_" + timeStamp + "_" + file.name; // This will set the last file's name as filePath
+        this.termLoanDocumentsModel.filesDTOList[0].fileName = "TERM_LOAN_DOCUMENT_" + this.termLoanApplicationId + "_" + timeStamp + "_" + file.name;
+        this.termLoanDocumentsModel.filePath = "TERM_LOAN_DOCUMENT_" + this.termLoanApplicationId + "_" + timeStamp + "_" + file.name; // This will set the last file's name as filePath
         let index1 = event.files.findIndex((x: any) => x === file);
         fileUpload.remove(event, index1);
         fileUpload.clear();
@@ -253,15 +185,31 @@ export class TermLoanDocumentsComponent {
   }
 
   updateData() {
-    this.termLoanDocumentsModel.termLoanApplicationId = this.loanAccId;
+    this.termLoanDocumentsModel.termLoanApplicationId = this.termLoanApplicationId;
     this.termLoanDocumentsModel.admissionNumber = this.admissionNumber;
     this.termLoanDocumentsModel.memberTypeName = this.memberTypeName;
     this.termLoanDocumentsModel.memberType = this.memberTypeId;
     this.termLoanDocumentsModel.memberId = this.memberId;
+    this.saveAndNextEnable = false;
+    if(this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0){
+      let documentNameList = this.documentNameList.filter((obj:any)=> obj.isRequired);
+    if (this.documentModelList != null && this.documentModelList != undefined && this.documentModelList.length > 0 && documentNameList != null && documentNameList != undefined && documentNameList.length >0) {
+      const missingItems = this.documentModelList.filter(document => !documentNameList.some(mandatoryDocument => document.requiredDocumentTypeId === mandatoryDocument.value));
+      if ((documentNameList.length  != this.documentModelList.length - missingItems.length) || this.buttonDisabled) {
+        this.saveAndNextEnable = true;
+      }
+    }
+    else if (((this.documentModelList == null || this.documentModelList == undefined || this.documentModelList.length === 0) && documentNameList != null && documentNameList != undefined && documentNameList.length > 0) || this.buttonDisabled) {
+      this.saveAndNextEnable = true;
+    }
+  }
+  else if(this.buttonDisabled) {
+    this.saveAndNextEnable = true;
+  }
     this.termLoanApplicationsService.changeData({
       formValid: this.termDocumentDetailsForm.valid,
       data: this.termLoanDocumentsModel,
-      isDisable: this.buttonDisabled,
+      isDisable: this.saveAndNextEnable,
       stepperIndex: 8,
     });
   }
@@ -271,8 +219,10 @@ export class TermLoanDocumentsComponent {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         this.documentModelList = this.responseModel.data;
-        this.getTermLoanDocumentsDetailsByLoanAccId(this.loanAccId);
+        this.getTermLoanDocumentsDetailsByLoanAccId(this.termLoanApplicationId);
         this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+        this.termDocumentDetailsForm.reset();
+        this.termLoanDocumentsModel = new TermLoanDocuments();
         setTimeout(() => {
           this.msgs = [];
         }, 3000);
@@ -293,12 +243,12 @@ export class TermLoanDocumentsComponent {
     });
   }
 
-  getTermLoanDocumentsDetailsByLoanAccId(loanAccId: any) {
-    this.termLoanDocumentsService.getTermLoanDocumentsDetailsByLoanAccId(this.loanAccId).subscribe((response: any) => {
+  getTermLoanDocumentsDetailsByLoanAccId(termLoanApplicationId: any) {
+    this.termLoanDocumentsService.getTermLoanDocumentsDetailsByLoanAccId(termLoanApplicationId).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel != null && this.responseModel != undefined) {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-          if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+          if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 ) {
             this.documentModelList = this.responseModel.data;
             if (this.documentModelList != null && this.documentModelList != undefined) {
               this.editDocumentOfKycFalg = true;
@@ -308,10 +258,18 @@ export class TermLoanDocumentsComponent {
                     document.multipartFileList = this.fileUploadService.getFile(document.filePath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + document.filePath);
 
                   }
+                  this.updateData();
                 }
               }
             }
             this.buttonDisabled = false;
+          }
+          else {
+            this.termLoanDocumentsModel = new  TermLoanDocuments();
+            this.isFileUploaded = applicationConstants.FALSE;
+            this.addDocumentOfKycFalg = true;
+            this.buttonDisabled = true;
+            this.updateData();
           }
         }
       }
@@ -325,7 +283,7 @@ export class TermLoanDocumentsComponent {
   }
 
   saveDocument(row: any) {
-    this.termLoanDocumentsModel.termLoanApplicationId = this.loanAccId;
+    this.termLoanDocumentsModel.termLoanApplicationId = this.termLoanApplicationId;
     this.termLoanDocumentsModel.admissionNumber = this.admissionNumber;
     this.termLoanDocumentsModel.memberTypeName = this.memberTypeName;
     this.termLoanDocumentsModel.memberType = this.memberTypeId;
@@ -337,9 +295,6 @@ export class TermLoanDocumentsComponent {
         this.termLoanDocumentsModel.documentName = filteredObj.label;
       }
     }
-    // this.documentNameList.filter((state: any) => state != null && state.value == this.termLoanDocumentsModel.documentType).map((act: { label: any; }) => {
-    //   this.termLoanDocumentsModel.documentName = act.label;
-    // });
     this.termLoanDocumentsService.addTermLoanDocumentsDetails(this.termLoanDocumentsModel).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
@@ -356,7 +311,7 @@ export class TermLoanDocumentsComponent {
       }
       this.addKycButton = false;
       this.buttonDisabled = false;
-      this.getTermLoanDocumentsDetailsByLoanAccId(this.loanAccId);
+      this.getTermLoanDocumentsDetailsByLoanAccId(this.termLoanApplicationId);
       this.updateData();
     }, error => {
       this.commonComponent.stopSpinner();
@@ -376,36 +331,25 @@ export class TermLoanDocumentsComponent {
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.termLoanApplicationModel = this.responseModel.data[0];
+            if (this.responseModel.data[0].accountOpenDate != null && this.responseModel.data[0].accountOpenDate != undefined) {
+              this.accountOpeningDateVal = this.datePipe.transform(this.responseModel.data[0].accountOpenDate, this.orgnizationSetting.datePipe);
+            }
+            if(this.termLoanApplicationModel.memberTypeName != MemberShipTypesData.INDIVIDUAL){
+              this.termLoanApplicationModel.operationTypeName = applicationConstants.SINGLE_ACCOUNT_TYPE;
+            }
 
             if (this.responseModel.data[0].admissionNo != null && this.responseModel.data[0].admissionNo != undefined) {
               this.admissionNumber = this.responseModel.data[0].admissionNo;
             }
-            if (this.responseModel.data[0].termProductId != null && this.responseModel.data[0].termProductId != undefined) {
-              this.productId = this.responseModel.data[0].termProductId;
-              this.getDocumentsByProductDefinition(this.productId);
-            }
-            if (this.responseModel.data[0].termRequiredDocumentsConfigDTOList != null && this.responseModel.data[0].termRequiredDocumentsConfigDTOList != undefined) {
-              this.documentNameList = this.responseModel.data[0].termRequiredDocumentsConfigDTOList.filter((docs: any) => docs.status == applicationConstants.ACTIVE).map((count: any) => {
-                return { label: count.documentTypeName, value: count.documentTypeId, isRequired: count.isRequired }
-              });
-            }
-            let i = 0;
-            for (let doc of this.documentNameList) {
-              if (i == 0)
-                this.requiredDocumentsNamesText = "Please Upload Mandatory Documents ("
-              if (doc.isRequired) {
-                i = i + 1;
-                this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + "'" + doc.label + "'";
-              }
-            }
-            this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + ")";
-            if (i > 0) {
-              this.mandatoryDoxsTextShow = true;
-            }
             if (this.responseModel.data[0].memberTypeName != null && this.responseModel.data[0].memberTypeName != undefined)
               this.memberTypeName = this.responseModel.data[0].memberTypeName;
-            if (this.responseModel.data[0].termLoanDocumentsDetailsDTOList != null && this.responseModel.data[0].termLoanDocumentsDetailsDTOList != undefined) {
+
+              this.getProductDefinitionByProductId(this.responseModel.data[0].termProductId);
+            if (this.responseModel.data[0].termLoanDocumentsDetailsDTOList != null && this.responseModel.data[0].termLoanDocumentsDetailsDTOList != undefined && this.responseModel.data[0].termLoanDocumentsDetailsDTOList.length >0) {
               this.documentModelList = this.responseModel.data[0].termLoanDocumentsDetailsDTOList;
+
+              this.addDocumentOfKycFalg = false;
+              this.buttonDisabled = false;
 
               if (this.documentModelList != null && this.documentModelList != undefined) {
                 this.editDocumentOfKycFalg = true;
@@ -413,17 +357,37 @@ export class TermLoanDocumentsComponent {
                   if (document.filePath != null && document.filePath != undefined) {
                     if (document.filePath != null && document.filePath != undefined) {
                       document.multipartFileList = this.fileUploadService.getFile(document.filePath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + document.filePath);
-
                     }
                   }
                 }
               }
-
             }
             else {
               this.addDocumentOfKycFalg = true;
               this.buttonDisabled = true;
             }
+            //required documents
+            if(this.responseModel.data[0].termRequiredDocumentsConfigDTOList != null && this.responseModel.data[0].termRequiredDocumentsConfigDTOList != undefined){
+              this.documentNameList = this.responseModel.data[0].termRequiredDocumentsConfigDTOList.filter((docs: any) => docs.status == applicationConstants.ACTIVE).map((count: any) => {
+                return { label: count.documentTypeName, value: count.documentTypeId ,isRequired :count.isRequired }
+              });
+            }
+            let i = 0;
+            for( let doc of this.documentNameList){
+              if(i == 0)
+                this.requiredDocumentsNamesText = "Please Upload Mandatory Documents ("
+              if(doc.isRequired){
+                i = i+1;
+                this.requiredDocumentsNamesText = this.requiredDocumentsNamesText+"'"+doc.label+"'";
+              }
+            }
+            this.requiredDocumentsNamesText = this.requiredDocumentsNamesText+")";
+            if(i > 0){
+              this.mandatoryDoxsTextShow = true;
+            }
+            if(this.responseModel.data[0].memberTypeName != null && this.responseModel.data[0].memberTypeName != undefined)
+              this.memberTypeName = this.responseModel.data[0].memberTypeName;
+           
             this.updateData();
 
           }
@@ -442,15 +406,41 @@ export class TermLoanDocumentsComponent {
       }, 3000);
     });
   }
-
+ /**
+   * @implements get product details for product pop up
+   * @param id 
+   * @author jyothi.naidana
+   */
+ getProductDefinitionByProductId(id: any) {
+  this.termLoanApplicationsService.getPreviewDetailsByProductId(id).subscribe((data: any) => {
+    this.responseModel = data;
+    if (this.responseModel != null && this.responseModel != undefined) {
+      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+        if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
+          if (this.responseModel.data[0].termRequiredDocumentsConfigDTOList != null && this.responseModel.data[0].termRequiredDocumentsConfigDTOList != undefined && this.responseModel.data[0].termRequiredDocumentsConfigDTOList.length > 0) {
+            this.documentNameList = this.responseModel.data[0].termRequiredDocumentsConfigDTOList.filter((data: any) => data != null).map((item: { documentTypeName: string, documentType: any }) => ({
+              label: item.documentTypeName,
+                value: item.documentType
+            }));
+          }
+        }
+      }
+      else {
+        this.msgs = [];
+        this.commonComponent.stopSpinner();
+        this.msgs.push({ severity: 'error', detail: this.responseModel.statusMsg });
+      }
+    }
+  });
+}
 
   addDocument(event: any) {
-    this.getDocumentsByProductDefinition(this.productId);
+    this.isFileUploaded = applicationConstants.FALSE;
     this.multipleFilesList = [];
     this.addDocumentOfKycFalg = !this.addDocumentOfKycFalg;
     this.buttonDisabled = true;
     this.editButtonDisable = true;
-    this.termLoanDocumentsModel = new TermRequiredDocuments();
+    this.termLoanDocumentsModel = new TermLoanDocuments();
     this.updateData();
   }
 
@@ -458,7 +448,7 @@ export class TermLoanDocumentsComponent {
     this.addDocumentOfKycFalg = !this.addDocumentOfKycFalg;
     this.buttonDisabled = false;
     this.editButtonDisable = false;
-    this.getTermLoanDocumentsDetailsByLoanAccId(this.loanAccId);
+    this.getTermLoanDocumentsDetailsByLoanAccId(this.termLoanApplicationId);
     this.updateData();
   }
 
@@ -485,13 +475,12 @@ export class TermLoanDocumentsComponent {
     this.editDocumentOfKycFalg = true;
     this.buttonDisabled = false;
     this.editButtonDisable = false;
-    this.getTermLoanDocumentsDetailsByLoanAccId(this.loanAccId);
+    this.getTermLoanDocumentsDetailsByLoanAccId(this.termLoanApplicationId);
     this.updateData();
   }
 
   editsave(row: any) {
-    this.getDocumentsByProductDefinition(this.productId);
-    this.termLoanDocumentsModel.termLoanApplicationId = this.loanAccId;
+    this.termLoanDocumentsModel.termLoanApplicationId = this.termLoanApplicationId;
     this.termLoanDocumentsModel.admissionNumber = this.admissionNumber;
     this.termLoanDocumentsModel.memberTypeName = this.memberTypeName;
     this.termLoanDocumentsModel.memberType = this.memberTypeId;
@@ -521,7 +510,7 @@ export class TermLoanDocumentsComponent {
       }
       this.addKycButton = false;
       this.buttonDisabled = false;
-      this.getTermLoanDocumentsDetailsByLoanAccId(this.loanAccId);
+      this.getTermLoanDocumentsDetailsByLoanAccId(this.termLoanApplicationId);
       this.updateData();
     }, error => {
       this.commonComponent.stopSpinner();
@@ -542,6 +531,7 @@ export class TermLoanDocumentsComponent {
               this.termLoanDocumentsModel = this.responseModel.data[0];
               if (this.termLoanDocumentsModel.filePath != undefined && this.termLoanDocumentsModel.filePath != null) {
                 this.termLoanDocumentsModel.multipartFileList = this.fileUploadService.getFile(this.termLoanDocumentsModel.filePath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.termLoanDocumentsModel.filePath);
+                this.isFileUploaded = applicationConstants.TRUE;
               }
             }
           }
@@ -575,6 +565,7 @@ export class TermLoanDocumentsComponent {
   }
 
   fileRemoveEvent() {
+    this.isFileUploaded = applicationConstants.FALSE;
     if (this.termLoanDocumentsModel.filesDTOList != null && this.termLoanDocumentsModel.filesDTOList != undefined && this.termLoanDocumentsModel.filesDTOList.length > 0) {
       let removeFileIndex = this.termLoanDocumentsModel.filesDTOList.findIndex((obj: any) => obj && obj.fileName === this.termLoanDocumentsModel.filePath);
       if (removeFileIndex != null && removeFileIndex != undefined) {

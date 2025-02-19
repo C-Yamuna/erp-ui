@@ -208,10 +208,10 @@ export class ForeclosureComponent {
   }
 
   onPaymentTypeChange(element: any): void {
-    if (element.value.value === 'sbAccount') {
+    if (element.value.value === applicationConstants.SB_ACCOUNT) {
       this.showSbAccountNumber = true;
       this.accountsModel.transactionMode=2;
-    } else if(element.value.value === 'cash'){
+    } else if(element.value.value === applicationConstants.CASH){
       this.showSbAccountNumber = false;
       this.accountsModel.transactionMode=1;
     }
@@ -386,10 +386,10 @@ export class ForeclosureComponent {
     }
   }
   onstatusSelection(element: any): void {
-    if (element.value.value === 'Closure') {
+    if (element.value.value === applicationConstants.CLOSURE) {
       this.accountsModel.status = CommonStatusDataValue.CLOSED;
       this.accountsModel.statusName = CommonStatusData.CLOSED;
-    } else if(element.value.value === 'Foreclosure'){
+    } else if(element.value.value === applicationConstants.FORECLOSURE){
       this.accountsModel.status = CommonStatusDataValue.FORCLOSURE;
       this.accountsModel.statusName =  CommonStatusData.FORECLOSURE;
       this.accountsModel.isForeClosure = applicationConstants.TRUE;

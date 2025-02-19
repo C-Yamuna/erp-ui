@@ -52,5 +52,5 @@ export class TermLoanGuarantor {
 
        termLoanGuarantorDetailsDTOList?: any;
 
-       GuarantorDetailsList?: any;
+       guarantorDetailsList:any;
       }

@@ -168,23 +168,23 @@ export class FdNonCumulativePreviewComponent {
         let idEdit = this.encryptDecryptService.decrypt(params['editbutton']);
         this.fdNonCummulativeAccId = Number(id);
 
-        if (idEdit == "1"){
-          this.preveiwFalg = true;
-          this.viewButton = false;
-        }else {
-          this.preveiwFalg = false;
-          this.viewButton = true;
-        }
-
-        if (params['isGridPage'] != undefined && params['isGridPage'] != null) {
-          let isGrid = this.encryptDecryptService.decrypt(params['isGridPage']);
-          if (isGrid === "0") {
-            this.isShowSubmit = applicationConstants.FALSE;
-            this.editFlag = true;
-          } else {
-            this.isShowSubmit = applicationConstants.TRUE;
+        if (idEdit == "1") {
+            this.preveiwFalg = true;
+            this.isShowSubmit = applicationConstants.TRUE; // Allow Submit
+            this.viewButton = false;
+            this.editFlag = false;
+        } else {
             this.preveiwFalg = false;
-          }
+        }
+        if (params['isGridPage'] != undefined && params['isGridPage'] != null) {
+            let isGrid = this.encryptDecryptService.decrypt(params['isGridPage']);
+            if (isGrid === "0") {
+                this.isShowSubmit = applicationConstants.FALSE;
+                this.viewButton = true;
+                this.editFlag = false;
+            } else {
+                this.isShowSubmit = applicationConstants.TRUE;
+            }
         }
         this.getFdNonCummApplicationById();
       }
@@ -202,6 +202,9 @@ export class FdNonCumulativePreviewComponent {
   submit() {
     if (this.fdNonCumulativeApplicationModel.depositDate != null && this.fdNonCumulativeApplicationModel.depositDate != undefined) {
       this.fdNonCumulativeApplicationModel.depositDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdNonCumulativeApplicationModel.depositDate));
+    }
+    if (this.fdNonCumulativeApplicationModel.maturityDate != null && this.fdNonCumulativeApplicationModel.maturityDate != undefined) {
+      this.fdNonCumulativeApplicationModel.maturityDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdNonCumulativeApplicationModel.maturityDate));
     }
     this.fdNonCumulativeApplicationModel.id = this.fdNonCummulativeAccId ;
     this.fdNonCumulativeApplicationModel.accountStatus = 5;
@@ -252,7 +255,9 @@ export class FdNonCumulativePreviewComponent {
           if (this.fdNonCumulativeApplicationModel.depositDate != null && this.fdNonCumulativeApplicationModel.depositDate != undefined) {
             this.fdNonCumulativeApplicationModel.depositDate = this.datePipe.transform(this.fdNonCumulativeApplicationModel.depositDate, this.orgnizationSetting.datePipe);
           }
-
+          if (this.fdNonCumulativeApplicationModel.maturityDate != null && this.fdNonCumulativeApplicationModel.maturityDate != undefined) {
+            this.fdNonCumulativeApplicationModel.maturityDate = this.datePipe.transform(this.fdNonCumulativeApplicationModel.maturityDate, this.orgnizationSetting.datePipe);
+          }
           if (this.fdNonCumulativeApplicationModel.memberTypeName != null && this.fdNonCumulativeApplicationModel.memberTypeName != undefined) {
             this.memberTypeName = this.fdNonCumulativeApplicationModel.memberTypeName;
             this.memberTypeCheck(this.memberTypeName);
@@ -447,17 +452,19 @@ export class FdNonCumulativePreviewComponent {
     })
 
   }
+  
   /**
 * @implements onFileremove from file value
 * @param fileName 
 * @author Bhargavi
 */
   fileRemoveEvent() {
-    this.isFileUploaded = applicationConstants.FALSE;
-    let removeFileIndex = this.fdNonCumulativeApplicationModel.filesDTOList.findIndex((obj: any) => obj && obj.fileName === this.fdNonCumulativeApplicationModel.signedCopyPath);
-    let obj = this.fdNonCumulativeApplicationModel.filesDTOList.find((obj: any) => obj && obj.fileName === this.fdNonCumulativeApplicationModel.signedCopyPath);
-    this.fdNonCumulativeApplicationModel.filesDTOList.splice(removeFileIndex, 1);
-    this.fdNonCumulativeApplicationModel.signedCopyPath = null;
+    if (this.fdNonCumulativeApplicationModel.filesDTOList != null && this.fdNonCumulativeApplicationModel.filesDTOList != undefined && this.fdNonCumulativeApplicationModel.filesDTOList.length > 0) {
+      let removeFileIndex = this.fdNonCumulativeApplicationModel.filesDTOList.findIndex((obj: any) => obj && obj.fileName === this.fdNonCumulativeApplicationModel.signedCopyPath);
+      this.fdNonCumulativeApplicationModel.filesDTOList.splice(removeFileIndex, 1);
+      this.fdNonCumulativeApplicationModel.signedCopyPath = null;
+      this.isDisableSubmit = true;
+    }
   }
 
   membershipBasicDetails() {

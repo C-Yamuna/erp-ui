@@ -108,24 +108,24 @@
         <ng-template pTemplate="body" let-rowData let-investmentApplicationDetails>
             <tr [pSelectableRow]="rowData">
                 <td *ngFor="let col of columns">
-                    <div *ngIf="col.field !='statusName'"> {{rowData[col.field]}}</div>
-                    <div *ngIf="rowData.statusName == 'Approved'">
-                        <div class="status-style statusactive" *ngIf="col.field =='statusName'"> 
+                    <div *ngIf="col.field !='accountStatusName'"> {{rowData[col.field]}}</div>
+                    <div *ngIf="rowData.accountStatusName == 'Approved'">
+                        <div class="status-style statusactive" *ngIf="col.field =='accountStatusName'"> 
                             {{rowData[col.field]}}
                         </div>
                     </div>
-                    <div *ngIf="rowData.statusName == 'Submission for Approval'">
-                        <div class="status-style statussubmissionforapproval" *ngIf="col.field =='statusName'"> 
+                    <div *ngIf="rowData.accountStatusName == 'Submission for Approval'">
+                        <div class="status-style statussubmissionforapproval" *ngIf="col.field =='accountStatusName'"> 
                             {{rowData[col.field]}}
                         </div>
                     </div>
-                    <div *ngIf="rowData.statusName == 'Rejected'">
-                        <div class="status-style statusreject" *ngIf="col.field =='statusName'"> 
+                    <div *ngIf="rowData.accountStatusName == 'Rejected'">
+                        <div class="status-style statusreject" *ngIf="col.field =='accountStatusName'"> 
                             {{rowData[col.field]}}
                         </div>
                     </div>
-                    <div *ngIf="rowData.statusName == 'Request for Resubmission'">
-                        <div class="status-style statusrequestforresumission" *ngIf="col.field =='statusName'"> 
+                    <div *ngIf="rowData.accountStatusName == 'Request for Resubmission'">
+                        <div class="status-style statusrequestforresumission" *ngIf="col.field =='accountStatusName'"> 
                             {{rowData[col.field]}}
                         </div>
                     </div>
@@ -133,8 +133,8 @@
                 </td>
                 <td>
                     <div class="global-action-btn flex align-items-center justify-content-center">
-                        <p-button class="action-view" *ngIf="rowData.statusName == 'Submission for Approval'" label="Approve" (click)="navigateToApprove(rowData)"></p-button>
-                        <p-button class="action-view" *ngIf="rowData.statusName != 'Submission for Approval'" label="View" (click)="navigateToView(rowData)"></p-button>
+                        <p-button class="action-view" *ngIf="rowData.accountStatusName == 'Submission for Approval'" label="Approve" (click)="navigateToApprove(rowData)"></p-button>
+                        <p-button class="action-view" *ngIf="rowData.accountStatusName != 'Submission for Approval'" label="View" (click)="navigateToView(rowData)"></p-button>
                     </div>
                 </td>
             </tr>

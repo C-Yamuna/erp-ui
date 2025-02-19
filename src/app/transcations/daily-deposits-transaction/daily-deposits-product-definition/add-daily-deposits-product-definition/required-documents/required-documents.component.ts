@@ -330,7 +330,7 @@ export class RequiredDocumentsComponent {
     );
   
     if (isDuplicate) {
-      this.requiredDocumentsForm.get('documentTypeName')?.reset();
+      this.requiredDocumentsForm.get('documentTypeId')?.reset();
       this.msgs = [{ severity: 'error',  detail:applicationConstants.DOCUMENT_TYPE_ALREADY_EXIST}];
       setTimeout(() => {
         this.msgs = [];

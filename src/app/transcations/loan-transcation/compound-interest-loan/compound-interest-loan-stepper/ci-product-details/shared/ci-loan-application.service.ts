@@ -110,12 +110,12 @@ export class CiLoanApplicationService {
     return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.RELATIONSHIP_TYPES + Configuration.GET_ALL);
   }
 
-  getQualificationTypes(){
-    return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.QUALIFICATION + Configuration.GET_ALL);
+  getAllQualificationSubQualification() {
+    return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.QUALIFICATION + Configuration.GET_ALL_QUALIFICATION_AND_SUB_QUALIFICATION)
   }
 
-  getCastes(){
-    return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.CASTE + Configuration.GET_ALL);
+  getAllCasteSubCaste() {
+    return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.CASTE + Configuration.GET_ALL_CAST_AND_SUB_CASTE)
   }
 
   getAllOperationTypes(){
@@ -189,4 +189,9 @@ export class CiLoanApplicationService {
     let headers = new HttpHeaders({ 'id': id + '' })
     return this.commonHttpService.getById(headers,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.CI_LOAN_DISBURSEMENT_SCHEDULES + ERP_TRANSACTION_CONSTANTS.GET_CI_LOAN_DISBURSEMENT_SCHEDULE_BY_LOAN_APPLICATION_ID);
   }
+
+  updateCiLoanApplication(loanapplication: any) {
+    return this.commonHttpService.put(loanapplication,Headers, ERP_TRANSACTION_CONSTANTS.LOANS+ ERP_TRANSACTION_CONSTANTS.CI_LOAN_APPLICATION + ERP_TRANSACTION_CONSTANTS.UPDATE)
+  }
+ 
 }

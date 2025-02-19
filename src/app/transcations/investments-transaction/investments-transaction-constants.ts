@@ -41,6 +41,6 @@ export const InvestmentsTransactionConstant = {
 
     SHARES_INVESTMENT_APPROVAL:'/menu/approval_transactions/shares_approval',
 
-    INVESTMENTS_APPROVAL:'//menu/approval_transactions/investment_approval_details'
+    INVESTMENTS_APPROVAL:'/menu/approval_transactions/investment_approval_details'
 
 }

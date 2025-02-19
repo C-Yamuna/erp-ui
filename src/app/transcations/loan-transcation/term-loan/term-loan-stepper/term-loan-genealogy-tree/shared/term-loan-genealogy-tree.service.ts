@@ -30,7 +30,7 @@ export class TermLoanGenealogyTreeService {
   }
   getTermGenealogyTreeDetailsByLoanApplicationId(id: string) {
     let headers = new HttpHeaders({ 'id': id + '' })
-    return this.commonHttpService.getById(headers, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.TERM_LOAN_GENEALOGY_TREE + ERP_TRANSACTION_CONSTANTS.GET_SI_GENEALOGY_TREE_DETAILS_BY_LOAN_APPLICATION_ID);
+    return this.commonHttpService.getById(headers, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.TERM_LOAN_GENEALOGY_TREE + ERP_TRANSACTION_CONSTANTS.GET_TERM_GENEALOGY_TREE_DETAILS_BY_LOAN_APPLICATION_ID);
   }
 
   getMemberByAdmissionNumber(admissionNumber: any) {

@@ -85,7 +85,7 @@ export class SiLoanNominee {
     nomineeSighnedFormMultiPartList : any;
 
     memberTypeName: any;
-    
+
 }
 
 export class MemberGuardianDetailsModelDetaila {

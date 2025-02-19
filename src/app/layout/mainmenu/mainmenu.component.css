@@ -1448,3 +1448,5 @@ background-color:var(--member-top-section-strip);
 .p-chips .p-chips-multiple-container .p-chips-token{
   background-color: var(--member-top-section-strip) !important;
 }
+
+.right-prfile-language  .p-dropdown-items .p-element .p-dropdown-item {width: 190px;}

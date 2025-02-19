@@ -516,6 +516,7 @@ export class TermLoansCommunicationComponent {
     }
   
     getMandalsByDistrctId(id: any) {
+      this.termLoanCommunicationModel.subDistrictId = null;
       this.termLoanCommunicationModel.villageId = null;
       this.termLoanCommunicationService.getMandalsByDistrictId(id).subscribe((response: any) => {
         this.responseModel = response;
@@ -540,6 +541,7 @@ export class TermLoansCommunicationComponent {
     }
   
     getAllVillagesByMandalId(id: any) {
+      this.termLoanCommunicationModel.villageId = null;
       this.termLoanCommunicationService.getvillagesByMandalId(id).subscribe((response: any) => {
         this.responseModel = response;
         if (this.responseModel != null && this.responseModel != undefined) {
@@ -674,18 +676,40 @@ export class TermLoansCommunicationComponent {
   
     onChangeState(stateId: any) {
       this.getDistrictsByStateId(stateId);
+      this.communicationForm.get('regesteredAddressOne').reset();
+      this.communicationForm.get('pinCode').reset();
+
     }
   
     onChangeDistrict(districtId: any) {
       this.getMandalsByDistrctId(districtId);
+      this.communicationForm.get('regesteredAddressOne').reset();
+      this.communicationForm.get('pinCode').reset();
+      if (this.termLoanCommunicationModel.isSameAddress != null && this.termLoanCommunicationModel.isSameAddress != undefined && this.termLoanCommunicationModel.isSameAddress) {
+        this.termLoanCommunicationModel.permanentDistrictId = districtId;
+        this.onChangePermanentDistrict(districtId);
+      }
     }
   
     onChangeMandal(mandalId: any) {
       this.getAllVillagesByMandalId(mandalId);
+      this.communicationForm.get('regesteredAddressOne').reset();
+      this.communicationForm.get('pinCode').reset();
+      if (this.termLoanCommunicationModel != null && this.termLoanCommunicationModel != undefined &&  this.termLoanCommunicationModel.isSameAddress) {
+        this.termLoanCommunicationModel.permanentSubDistrictId = mandalId;
+        this.onChangePermanentSubDistrict(mandalId);
+      }
     }
   
     onChangeVillage(villageId: any) {
-      let village = this.villageList.find((data: any) => null != data && villageId != null && data.value == villageId);
+      this.communicationForm.get('regesteredAddressOne').reset();
+      if (this.termLoanCommunicationModel != null && this.termLoanCommunicationModel != undefined &&  this.termLoanCommunicationModel.isSameAddress) {
+        this.termLoanCommunicationModel.permanentVillageId = villageId;
+        let permanentVillage = this.villageList.find((data: any) => null != data && this.termLoanCommunicationModel.permanentVillageId != null && data.value == this.termLoanCommunicationModel.permanentVillageId);
+        if (permanentVillage != null && undefined != permanentVillage)
+          this.termLoanCommunicationModel.permanentVillageName = permanentVillage.label;
+      }
+      let village = this.villageList.find((data: any) => null != data && this.termLoanCommunicationModel.villageId != null && data.value == this.termLoanCommunicationModel.villageId);
       if (village != null && undefined != village)
         this.termLoanCommunicationModel.villageName = village.label;
     }

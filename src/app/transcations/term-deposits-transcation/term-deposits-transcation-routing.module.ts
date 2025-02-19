@@ -65,6 +65,10 @@ import { FdNonCumulativeInterestPaymentComponent } from './operations/fd-non-cum
 import { FdNonCumulativeForeclosureComponent } from './operations/fd-non-cumulative-operations/fd-non-cumulative-foreclosure/fd-non-cumulative-foreclosure.component';
 import { FdNonCumulativeClosureComponent } from './operations/fd-non-cumulative-operations/fd-non-cumulative-closure/fd-non-cumulative-closure.component';
 import { FdNonCumulativeRenewalComponent } from './operations/fd-non-cumulative-operations/fd-non-cumulative-renewal/fd-non-cumulative-renewal.component';
+import { FdCumulativeForclosureClosureComponent } from './operations/fd-cumulative-operations/fd-cumulative-forclosure-closure/fd-cumulative-forclosure-closure.component';
+import { FdCumulativeRenewalComponent } from './operations/fd-cumulative-operations/fd-cumulative-renewal/fd-cumulative-renewal.component';
+import { RecurringDepositRenewalComponent } from './operations/rd-operations/recurring-deposit-renewal/recurring-deposit-renewal.component';
+import { RecurringDepositForeclosureClosureComponent } from './operations/rd-operations/recurring-deposit-foreclosure-closure/recurring-deposit-foreclosure-closure.component';
 
 
 const routes: Routes = [
@@ -162,6 +166,12 @@ const routes: Routes = [
       { path: 'fd_non_cummulative_foreclosure', component: FdNonCumulativeForeclosureComponent },
       { path: 'fd_non_cummulative_closure', component: FdNonCumulativeClosureComponent },
       { path: 'fd_non_cummulative_renewal', component: FdNonCumulativeRenewalComponent },
+
+      { path: 'fd_cummulative_foreclosure_closure', component: FdCumulativeForclosureClosureComponent },
+      { path: 'fd_cummulative_renewal', component: FdCumulativeRenewalComponent },
+
+      { path: 'rd_foreclosure_closure', component: RecurringDepositForeclosureClosureComponent },
+      { path: 'rd_renewal', component: RecurringDepositRenewalComponent },
 
     ]
   },

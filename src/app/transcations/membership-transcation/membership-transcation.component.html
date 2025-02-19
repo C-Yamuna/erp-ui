@@ -221,7 +221,7 @@
                             label="{{'ERP.EDIT' | translate}}" class="action-view"></p-button>
 
                         <!-- </div> -->
-                        <p-dropdown *ngIf="rowData.viewButton" id="bunit_txt_status" class="action-operation" placeholder="operations"
+                        <p-dropdown *ngIf="rowData.viewButton && rowData.isOpereationButton" id="bunit_txt_status" class="action-operation" placeholder="operations"
                             [filter]="true" [options]="operationslist" [(ngModel)]="operations"
                             (onChange)="navigateToClosure(rowData)" [appendTo]="'body'"></p-dropdown>
                     </div>

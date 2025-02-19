@@ -86,6 +86,10 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
   flag: boolean = false;
   filesDTOList: any[] = [];
   id: any;
+  isFileUploadedNominee: boolean = false;
+  isFileUploadedGuardian: boolean = false;
+  isSaveAndNextEnable : boolean = false;
+
   constructor(private router: Router, private formBuilder: FormBuilder,
     private fdNonCumulativeApplicationService: FdNonCumulativeApplicationService,
     private commonComponent: CommonComponent,
@@ -103,7 +107,7 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
       email: ['',],
       dateOfBirth: new FormControl('',),
       nomineeType: ['', Validators.required],
-
+      remarks: new FormControl('', ),
       //guardian form fields
       relationNameOfGuardian: ['',],
       guardianName: ['',],
@@ -114,7 +118,7 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
       guardianAddress: ['',],
       guardainType: [''],
       fileUpload: ['',],
-
+      guardianRemarks: new FormControl('', ),
     });
     this.nomineeFields = [
       { field: 'name', header: 'Name' },
@@ -196,6 +200,10 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
       this.memberGuardianDetailsModelDetails.fdNonCummulativeAccId = this.fdNonCummulativeAccId;
       this.memberGuardianDetailsModelDetails.accountNumber = this.accountNumber;
       this.fdNonCumulativeNomineeModel.memberGuardianDetailsModelDetails = this.memberGuardianDetailsModelDetails;
+      this.isSaveAndNextEnable = (!this.nomineeForm.valid) || !(this.isFileUploadedNominee && this.isFileUploadedGuardian)
+    }
+    else {
+      this.isSaveAndNextEnable = (!this.nomineeForm.valid) || (!this.isFileUploadedNominee);
     }
     this.fdNonCumulativeNomineeModel.accountNumber = this.accountNumber;
     this.fdNonCumulativeNomineeModel.fdNonCummulativeAccId = this.fdNonCummulativeAccId;
@@ -203,7 +211,8 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
     this.fdNonCumulativeApplicationService.changeData({
       formValid: !this.nomineeForm.valid ? true : false,
       data: this.fdNonCumulativeNomineeModel,
-      isDisable: (!this.nomineeForm.valid),
+      // isDisable: (!this.nomineeForm.valid),
+      isDisable: this.isSaveAndNextEnable,
       // isDisable:false,
       stepperIndex: 5,
     });
@@ -292,7 +301,7 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
             if (this.responseModel.data[0].accountNumber != null && this.responseModel.data[0].accountNumber != undefined) {
               this.accountNumber = this.responseModel.data[0].accountNumber;
               if (this.historyFLag) {
-                this.getNomineeHistoryByfdAccountNumber(this.accountNumber);
+                // this.getNomineeHistoryByfdAccountNumber(this.accountNumber);
               }
             }
             if (this.responseModel.data[0].memberTypeName == MemberShipTypesData.INDIVIDUAL) {
@@ -305,25 +314,55 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
             }
             this.fdNonCumulativeApplicationModel = this.responseModel.data[0];
             if (this.fdNonCumulativeApplicationModel != null && this.fdNonCumulativeApplicationModel != undefined) {
-              if (this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountNomineeList != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountNomineeList != undefined &&
-                this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountNomineeList[0] != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountNomineeList[0] != undefined)
-                this.fdNonCumulativeNomineeModel = this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountNomineeList[0];
-              if (this.fdNonCumulativeNomineeModel.nomineeFilePath != null && this.fdNonCumulativeNomineeModel.nomineeFilePath != undefined) {
-                this.fdNonCumulativeNomineeModel.nomineeSighnedFormMultiPartList = this.fileUploadService.getFile(this.fdNonCumulativeNomineeModel.nomineeFilePath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.fdNonCumulativeNomineeModel.nomineeFilePath);
+              if (this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountNomineeList[0] != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountNomineeList[0]  != undefined) {
+                this.fdNonCumulativeNomineeModel = this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountNomineeList[0] ;
+                if (this.fdNonCumulativeNomineeModel.nomineeFilePath != null && this.fdNonCumulativeNomineeModel.nomineeFilePath != undefined) {
+                  this.fdNonCumulativeNomineeModel.nomineeSighnedFormMultiPartList = this.fileUploadService.getFile(this.fdNonCumulativeNomineeModel.nomineeFilePath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.fdNonCumulativeNomineeModel.nomineeFilePath);
+                  if (this.fdNonCumulativeNomineeModel.nomineeType != null && this.fdNonCumulativeNomineeModel.nomineeType != undefined) {
+                    if (this.fdNonCumulativeNomineeModel.nomineeType != 2) {
+                      this.fdNonCumulativeNomineeModel.nomineeSighnedFormMultiPartList = this.fileUploadService.getFile(this.fdNonCumulativeNomineeModel.nomineeFilePath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.fdNonCumulativeNomineeModel.nomineeFilePath);
+                    }
+                    else {
+                      this.fdNonCumulativeNomineeModel.nomineeSighnedFormMultiPartList = this.fileUploadService.getFile(this.fdNonCumulativeNomineeModel.nomineeFilePath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.fdNonCumulativeNomineeModel.nomineeFilePath);
+                    }
+                    this.isFileUploadedNominee = applicationConstants.TRUE;
+                  }
+                }
+
               }
-              if (this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountGaurdianList != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountGaurdianList != undefined &&
-                this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountGaurdianList[0] != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountGaurdianList[0] != undefined)
+              else {
+                this.isFileUploadedNominee = applicationConstants.FALSE;
+              }
+              if (this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountGaurdianList[0] != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountGaurdianList[0] != undefined) {
                 this.memberGuardianDetailsModelDetails = this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountGaurdianList[0];
 
-              if (this.memberGuardianDetailsModelDetails.uploadFilePath != null && this.memberGuardianDetailsModelDetails.uploadFilePath != undefined) {
-                this.memberGuardianDetailsModelDetails.guardainSighnedMultipartFiles = this.fileUploadService.getFile(this.memberGuardianDetailsModelDetails.uploadFilePath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.memberGuardianDetailsModelDetails.uploadFilePath);
+                if (this.memberGuardianDetailsModelDetails.uploadFilePath != null && this.memberGuardianDetailsModelDetails.uploadFilePath != undefined) {
+                  if (this.memberGuardianDetailsModelDetails.guardianType != null && this.memberGuardianDetailsModelDetails.guardianType != undefined) {
+                    if (this.memberGuardianDetailsModelDetails.guardianType != 2) {
+                      this.memberGuardianDetailsModelDetails.guardainSighnedMultipartFiles = this.fileUploadService.getFile(this.memberGuardianDetailsModelDetails.uploadFilePath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.memberGuardianDetailsModelDetails.uploadFilePath);
+                    }
+                    else {
+                      this.memberGuardianDetailsModelDetails.guardainSighnedMultipartFiles = this.fileUploadService.getFile(this.memberGuardianDetailsModelDetails.uploadFilePath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.memberGuardianDetailsModelDetails.uploadFilePath);
+                    }
+                    this.isFileUploadedGuardian = applicationConstants.TRUE;
+                  }
+                }
+                else {
+                  this.isFileUploadedGuardian = applicationConstants.FALSE;
+                }
               }
-
               if (this.fdNonCumulativeNomineeModel.nomineeType != null && this.fdNonCumulativeNomineeModel.nomineeType != undefined) {
                 this.onChange(this.fdNonCumulativeNomineeModel.nomineeType, this.flag);
               }
-              if (this.guarntorDetailsFalg && this.memberGuardianDetailsModelDetails.gaurdianType != null && this.memberGuardianDetailsModelDetails.gaurdianType != undefined) {
-                this.onChangeGuardain(this.memberGuardianDetailsModelDetails.gaurdianType, this.flag);
+
+              if (this.responseModel.data[0].individualMemberDetailsDTO.age != null && this.responseModel.data[0].individualMemberDetailsDTO.age != undefined) {
+                this.age = this.responseModel.data[0].individualMemberDetailsDTO.age;
+                if (this.age < 18) {
+                  this.guarntorDetailsFalg = true;
+                }
+              }
+              if (this.guarntorDetailsFalg && this.memberGuardianDetailsModelDetails.guardianType != null && this.memberGuardianDetailsModelDetails.guardianType != undefined) {
+                this.onChangeGuardain(this.memberGuardianDetailsModelDetails.guardianType, this.flag);
               }
             }
             else if (this.guarntorDetailsFalg) {
@@ -572,7 +611,8 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
             if (this.responseModel.data[0].memberShipNomineeDetailsDTOList[0].nomineeFilePath != null && this.responseModel.data[0].memberShipNomineeDetailsDTOList[0].nomineeFilePath != undefined) {
               this.fdNonCumulativeNomineeModel.nomineeSighnedFormMultiPartList = this.fileUploadService.getFile(this.responseModel.data[0].memberShipNomineeDetailsDTOList[0].nomineeFilePath,
                 ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.responseModel.data[0].memberShipNomineeDetailsDTOList[0].nomineeFilePath);
-            }
+                this.isFileUploadedNominee = applicationConstants.TRUE;
+              }
             this.fdNonCumulativeNomineeModel.nomineeType = 2;
           }
         } else {
@@ -631,7 +671,8 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
             if (this.responseModel.data[0].memberShipGuadianDetailsDTOList[0].uploadFilePath != null && this.responseModel.data[0].memberShipGuadianDetailsDTOList[0].uploadFilePath != undefined) {
               this.memberGuardianDetailsModelDetails.guardainSighnedMultipartFiles = this.fileUploadService.getFile(this.responseModel.data[0].memberShipGuadianDetailsDTOList[0].uploadFilePath,
                 ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.responseModel.data[0].memberShipGuadianDetailsDTOList[0].uploadFilePath);
-            }
+                this.isFileUploadedGuardian = applicationConstants.TRUE;
+              }
             this.memberGuardianDetailsModelDetails.gaurdianType = 2;
           }
         } else {
@@ -665,9 +706,17 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
     this.multipleFilesList = [];
     if (this.fdNonCumulativeNomineeModel != null && this.fdNonCumulativeNomineeModel != undefined && this.isEdit && this.fdNonCumulativeNomineeModel.filesDTOList == null || this.fdNonCumulativeNomineeModel.filesDTOList == undefined) {
       this.fdNonCumulativeNomineeModel.filesDTOList = [];
+      this.fdNonCumulativeNomineeModel.nomineeSighnedFormMultiPartList = [];
+      this.fdNonCumulativeNomineeModel.nomineeFilePath = null;
     }
     if (this.isEdit && this.memberGuardianDetailsModelDetails != null && this.memberGuardianDetailsModelDetails != undefined && this.memberGuardianDetailsModelDetails.filesDTOList == null || this.memberGuardianDetailsModelDetails.filesDTOList == undefined) {
       this.memberGuardianDetailsModelDetails.filesDTOList = [];
+    }
+    if (filePathName === "Nominee") {
+      this.isFileUploadedNominee = applicationConstants.FALSE;
+    }
+    if (filePathName === "Guardain") {
+      this.isFileUploadedGuardian = applicationConstants.FALSE;
     }
     let files: FileUploadModel = new FileUploadModel();
     for (let file of event.files) {
@@ -684,12 +733,14 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
         // Add to filesDTOList array
         let timeStamp = this.commonComponent.getTimeStamp();
         if (filePathName === "Nominee") {
+          this.isFileUploadedNominee = applicationConstants.TRUE;
           this.fdNonCumulativeNomineeModel.filesDTOList.push(files);
           this.fdNonCumulativeNomineeModel.nomineeFilePath = null;
           this.fdNonCumulativeNomineeModel.filesDTOList[this.fdNonCumulativeNomineeModel.filesDTOList.length - 1].fileName = "FD_NON_CUMMULATIVE_NOMINEE" + this.fdNonCummulativeAccId + "_" + timeStamp + "_" + file.name;
           this.fdNonCumulativeNomineeModel.nomineeFilePath = "FD_NON_CUMMULATIVE_NOMINEE" + this.fdNonCummulativeAccId + "_" + timeStamp + "_" + file.name;
         }
         if (filePathName === "Guardain") {
+          this.isFileUploadedGuardian = applicationConstants.TRUE;
           this.memberGuardianDetailsModelDetails.filesDTOList.push(files);
           this.memberGuardianDetailsModelDetails.uploadFilePath = null;
           this.memberGuardianDetailsModelDetails.filesDTOList[this.memberGuardianDetailsModelDetails.filesDTOList.length - 1].fileName = "FD_NON_CUMMULATIVE_GUARDAIN" + "_" + timeStamp + "_" + file.name;
@@ -910,6 +961,7 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
    */
   fileRemoeEvent(fileName: any) {
     if (fileName == "Nominee") {
+      this.isFileUploadedNominee = applicationConstants.FALSE;
       if (this.fdNonCumulativeNomineeModel.filesDTOList != null && this.fdNonCumulativeNomineeModel.filesDTOList != undefined && this.fdNonCumulativeNomineeModel.filesDTOList.length > 0) {
         let removeFileIndex = this.fdNonCumulativeNomineeModel.filesDTOList.findIndex((obj: any) => obj && obj.fileName === this.fdNonCumulativeNomineeModel.nomineeFilePath);
         this.fdNonCumulativeNomineeModel.filesDTOList[removeFileIndex] = null;
@@ -917,6 +969,7 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
       }
     }
     if (fileName == "Guardain") {
+      this.isFileUploadedGuardian = applicationConstants.FALSE;
       if (this.memberGuardianDetailsModelDetails.filesDTOList != null && this.memberGuardianDetailsModelDetails.filesDTOList != undefined && this.memberGuardianDetailsModelDetails.filesDTOList.length > 0) {
         let removeFileIndex = this.memberGuardianDetailsModelDetails.filesDTOList.findIndex((obj: any) => obj && obj.fileName === this.memberGuardianDetailsModelDetails.uploadFilePath);
         this.memberGuardianDetailsModelDetails.filesDTOList[removeFileIndex] = null;

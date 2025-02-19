@@ -210,13 +210,23 @@ export class MembershipTranscationComponent {
             }
 
             membership.isRejected = false;
-            if (membership.statusName == CommonStatusData.APPROVED || membership.statusName == CommonStatusData.REJECTED ||  membership.statusName == CommonStatusData.CLOSED) {
+            if (membership.statusName == CommonStatusData.APPROVED || membership.statusName == CommonStatusData.REJECTED ||  membership.statusName == CommonStatusData.CLOSED
+              || membership.statusName == CommonStatusData.SUBMISSION_FOR_APPROVAL
+            ) {
               if (membership.statusName == CommonStatusData.REJECTED) {
                 membership.isRejected = true;
               }
+              
+
               membership.viewButton = true;
             } else {
               membership.viewButton = false;
+            }
+            if (membership.statusName == CommonStatusData.SUBMISSION_FOR_APPROVAL) {
+              membership.isOpereationButton = false;
+            }
+            else{
+              membership.isOpereationButton = true;
             }
 
             this.createdCount = this.gridListData.filter(membership => membership.statusName === CommonStatusData.IN_PROGRESS).length;

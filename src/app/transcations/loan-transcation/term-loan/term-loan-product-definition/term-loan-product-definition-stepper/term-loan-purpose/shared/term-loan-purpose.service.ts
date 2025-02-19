@@ -31,8 +31,8 @@ export class TermLoanPurposeService {
     let headers = new HttpHeaders({ 'id': id + '', })
     return this.commonHttpService.delete( headers, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.TERM_PROD_PURPOSE_CONFIGS + ERP_TRANSACTION_CONSTANTS.DELETE);
   }
-  getTermLoanPurposeByProductId(productId: any){
-    let headers = new HttpHeaders({ 'productId': productId + '', })
+  getTermLoanPurposeByProductId(id: any){
+    let headers = new HttpHeaders({ 'id': id + '', })
     return this.commonHttpService.getById( headers, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.TERM_PROD_PURPOSE_CONFIGS + ERP_TRANSACTION_CONSTANTS.GET_PROD_PURPOSE_CONFIG_LIST_BY_PRODUCT_ID);
   }
 }

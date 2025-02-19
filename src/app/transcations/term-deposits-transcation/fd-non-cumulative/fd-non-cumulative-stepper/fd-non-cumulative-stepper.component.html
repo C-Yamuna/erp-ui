@@ -77,6 +77,12 @@
                                     </div>
 
                                 </div>
+                                <div class="text-center min-h-50px">
+                                    <span class="text-fontwt">{{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' | translate}}</span>
+                                    <p class="font-semibold text-break"><span
+                                            class="border-bottom">{{membershipBasicRequiredDetailsModel.admissionNumber}}</span>
+                                    </p>
+                                </div>
 
                                 <div class="text-center min-h-50px">
                                     <span class="text-fontwt">{{'TERMDEPOSITSTRANSACTION.NAME' | translate}}</span>
@@ -337,10 +343,10 @@
             <div class="col-12 m-0" *ngIf="showForm && activeIndex<1">
                 <!-- <p-steps [model]="items" styleClass="steper-style" [readonly]="false" [activeIndex]="activeIndex"></p-steps> -->
                 <p-tabMenu [model]="items" [activeItem]="items[activeIndex]" [class.disabled]="menuDisabled"
-                    styleClass="tab-menu-style"></p-tabMenu>
-                <div class="col-12 p-2 bg-card min-hight65">
-                    <router-outlet></router-outlet>
-                </div>
+                styleClass="tab-menu-style"></p-tabMenu>
+            <div class="col-12 p-2 bg-card min-hight65">
+                <router-outlet></router-outlet>
+            </div>
                 <div class="col-12 btn-footer px-0">
                     <div class="col-12 d-flex justify-content-end px-0 mt-1 group-button-bottom">
                         <p-button *ngIf="activeIndex==0" label="{{'TERMDEPOSITSTRANSACTION.BACK'|translate }}"
@@ -365,10 +371,8 @@
             <!-- Right side menu -->
             <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10 right-sidecard"
                 *ngIf="(showForm && activeIndex>0) || !showForm">
-                <!-- <p-tabMenu [model]="items" [activeItem]="items[activeIndex]"
-                        [class.disabled]="menuDisabled && activeItem !== items" styleClass="tab-menu-style"></p-tabMenu> -->
-                <p-tabMenu [model]="items" [activeItem]="items[activeIndex]" [class.disabled]="menuDisabled"
-                    styleClass="tab-menu-style"></p-tabMenu>
+                <p-tabMenu [model]="items" [activeItem]="items[activeIndex]"
+                    [class.disabled]="menuDisabled && activeItem !== items" styleClass="tab-menu-style"></p-tabMenu>
                 <div class="col-12 p-2 bg-card min-hight65">
                     <router-outlet></router-outlet>
                 </div>
@@ -434,6 +438,12 @@
     </div>
     <div class="col-12 popup-basic-details">
         <div class="row">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.MEMBER_TYPE' |
+                    translate}}</p>
+                <p class="label-input-text">
+                    {{membershipBasicRequiredDetailsModel.memberTypeName}}</p>
+            </div>
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="form-group">
                     <span class="fw-light">{{'ERP.SURNAME' | translate}}</span>

@@ -70,7 +70,7 @@ export class SavingsBankJointAccountComponent implements OnInit {
 
     this.jointAccountForm = this.formBuilder.group({
       admissionNumber: [''],
-      noOfJointHolders: ['']
+      noOfJointHolders:  [{ value: '', disabled: true }],
     });
   }
   ngOnInit(): void {
@@ -101,6 +101,7 @@ export class SavingsBankJointAccountComponent implements OnInit {
     });
   }
   updateData() {
+    // this.selectAllAdmissionNumber();
     this.savingAccountJointHolderModel.jointHolderList = this.jointHolderDetailsList;
     this.savingAccountJointHolderModel.memberTypeName = this.memberTypeName;
     this.savingBankApplicationService.changeData({
@@ -231,6 +232,29 @@ export class SavingsBankJointAccountComponent implements OnInit {
     }
   }
 
+  /**
+   * @implements selected all admissionNumebr
+   * @author jyothi.naidana
+   */
+  selectAllAdmissionNumber() {
+    this.tempJointHolderList = [];
+    this.numberOfJointHolders = 0;
+    this.jointHolderDetailsList = [];
+    this.selectedAdmissionNumberList = [];
+    if (null != this.selectedAdmissionNumberList && undefined != this.selectedAdmissionNumberList && this.selectedAdmissionNumberList.length > 0) {
+      for (let admissionNumber of this.selectedAdmissionNumberList) {
+        let check = this.selectedAdmissionNumberList.push(admissionNumber);
+        this.numberOfJointHolders = this.selectedAdmissionNumberList.length;
+        let membershipObj = this.membershipList.filter((obj:any) =>obj.admissionNumber == admissionNumber.label);
+        this.tempJointHolderList.push(membershipObj[0]);
+        this.jointHolderDetailsList = this.tempJointHolderList;
+      }
+    }
+    else {
+      this.jointHolderDetailsList = [];
+    }
+  }
+
   onClear(admissionNumber: any) {
     // const index = this.admissionNumberList.indexOf(admissionNumber);
     // if (index >= 0) {
@@ -279,7 +303,6 @@ export class SavingsBankJointAccountComponent implements OnInit {
   }
 
   getMembershipDetails(admisionNumber: any) {
-    
     this.jointHolderDetailsList = [];
     this.membershipServiceService.getMembershipBasicDetailsByAdmissionNumber(admisionNumber).subscribe((response: any) => {
       this.responseModel = response;
@@ -320,5 +343,17 @@ export class SavingsBankJointAccountComponent implements OnInit {
         this.msgs = [];
       }, 2000);
     });
+  }
+
+  onHide(event: any) {
+    console.log("Dropdown Closed:", event);
+  }
+  
+  onShow(event: any) {
+    console.log("Dropdown Opened:", event);
+  }
+  
+  onPanelClick(event: any) {
+    console.log("Dropdown Panel Clicked:", event);
   }
 }

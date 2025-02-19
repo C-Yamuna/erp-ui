@@ -3,7 +3,7 @@ import { Responsemodel } from 'src/app/shared/responsemodel';
 import { FdNonCumulativeApplication } from '../../../fd-non-cumulative/fd-non-cumulative-stepper/fd-non-cumulative-application/shared/fd-non-cumulative-application.model';
 import { NewMembershipAdd } from '../../../fd-cumulative/fd-cumulative-stepper/new-membership-add/shared/new-membership-add.model';
 import { GroupPromoterDetailsModel, MemberGroupDetailsModel, MembershipInstitutionDetailsModel } from '../../../fd-non-cumulative/fd-non-cumulative-stepper/new-membership-add/shared/new-membership-add.model';
-import { FdNonCummulativeInterestPayment } from '../fd-non-cumulative-interest-payment/shared/fd-non-cummulative-interest-payment.model';
+import { FdNonCummulativeInterestPayment, FdNonCummulativeTransaction } from '../fd-non-cumulative-interest-payment/shared/fd-non-cummulative-interest-payment.model';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { applicationConstants } from 'src/app/shared/applicationConstants';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -47,6 +47,7 @@ export class FdNonCumulativeForeclosureComponent {
   membershipInstitutionDetailsModel: MembershipInstitutionDetailsModel = new MembershipInstitutionDetailsModel();
   promoterDetailsModel: GroupPromoterDetailsModel = new GroupPromoterDetailsModel();
   interestPaymentModel: FdNonCummulativeInterestPayment = new FdNonCummulativeInterestPayment();
+  fdNonCummulativeTransactionModel: FdNonCummulativeTransaction = new FdNonCummulativeTransaction();
   kycDetailsColumns: any[] = [];
   serviceTypesColumns: any[] = [];
   serviceTypesGridList: any[] = [];
@@ -114,12 +115,14 @@ export class FdNonCumulativeForeclosureComponent {
   termAccId: any;
   verifiedList: any[] = [];
   reasonList: any[]=[];
-  closureForm:FormGroup;
-  foreclosureForm:FormGroup;
+  transactionForm: FormGroup;
+  // closureForm:FormGroup;
+  // foreclosureForm:FormGroup;
   currentDate: any;
   isForeclosure: boolean = false;
   isClosure: boolean = false;
   statusTypesList: any[] = [];
+  check: boolean = false;
 
   constructor(private router: Router,
     private fdNonCumulativeApplicationService: FdNonCumulativeApplicationService,
@@ -158,39 +161,49 @@ export class FdNonCumulativeForeclosureComponent {
         { field: 'aadharNumber', header: 'TERMDEPOSITSTRANSACTION.AADHAR' },
         { field: 'startDateVal', header: 'TERMDEPOSITSTRANSACTION.START_DATE' },
       ];
-    this.foreclosureForm = this.formBuilder.group({
-      foreClosureDate: new FormControl({ value: '', disabled: true }),
-      reason: new FormControl(''),
-      penalityAmount: new FormControl({ value: '', disabled: true }),
-      balanceAmount: new FormControl({ value: '', disabled: true }),
-      transactionMode: new FormControl({ value: '', disabled: true }),
-      isVerified: new FormControl(''),
+    // this.foreclosureForm = this.formBuilder.group({
+    //   foreClosureDate: new FormControl({ value: '', disabled: true }),
+    //   reason: new FormControl(''),
+    //   penalityAmount: new FormControl({ value: '', disabled: true }),
+    //   balanceAmount: new FormControl({ value: '', disabled: true }),
+    //   transactionMode: new FormControl({ value: '', disabled: true }),
+    //   isVerified: new FormControl(''),
+    //   remarks: new FormControl(''),
+    //   accountStatusName: new FormControl('')
+    // })
+    // this.closureForm = this.formBuilder.group({
+    //   closureDate: new FormControl({ value: '', disabled: true }),
+    //   maturityAmount: new FormControl(''),
+    //   transactionMode: new FormControl({ value: '', disabled: true }),
+    //   isVerified: new FormControl(''),
+    //   remarks: new FormControl(''),
+    //   accountStatusName: new FormControl('')
+    // })
+    this.transactionForm = this.formBuilder.group({
+      transactionDate : new FormControl({ value: '', disabled: true }),
+      interestPostingDate: new FormControl(''),
+      transactionAmount: new FormControl(''),
+      transactionMode: new FormControl('', [Validators.required]),
+      accountNumber: new FormControl(''),
+      isVerified:new FormControl('', [Validators.required]),
       remarks: new FormControl(''),
-      accountStatusName: new FormControl('')
-    })
-    this.closureForm = this.formBuilder.group({
-      closureDate: new FormControl({ value: '', disabled: true }),
-      maturityAmount: new FormControl(''),
-      transactionMode: new FormControl({ value: '', disabled: true }),
-      isVerified: new FormControl(''),
-      remarks: new FormControl(''),
-      accountStatusName: new FormControl('')
+      // fileUpload: new FormControl('')
     })
   }
 
   ngOnInit() {
     this.interestPayment = [
       { field: 'interestPostingDate', header: 'TERMDEPOSITSTRANSACTION.INTEREST_PAYMENT_DATE' },
-      { field: 'transactionMode', header: 'TERMDEPOSITSTRANSACTION.PAYMENT_MODE' },
+      { field: 'transactionModeName', header: 'TERMDEPOSITSTRANSACTION.PAYMENT_MODE' },
       { field: 'interestAmount', header: 'TERMDEPOSITSTRANSACTION.INTEREST_AMOUNT' },
-      { field: 'transcationDate', header: 'TERMDEPOSITSTRANSACTION.PAID_DATE ' },
+      { field: 'transcationDate', header: 'TERMDEPOSITSTRANSACTION.PAID_DATE' },
       { field: 'statusName', header: 'TERMDEPOSITSTRANSACTION.STATUS' },
     ];
     this.transaction = [
       { field: 'transactionDate', header: 'TERMDEPOSITSTRANSACTION.INTEREST_PAYMENT_DATE' },
-      { field: 'transactionType', header: 'TERMDEPOSITSTRANSACTION.PAYMENT_MODE' },
-      { field: 'transactionModeName', header: 'TERMDEPOSITSTRANSACTION.INTEREST_AMOUNT' },
-      { field: 'transactionAmount', header: 'TERMDEPOSITSTRANSACTION.PAID_DATE' },
+      { field: 'transactionTypeName', header: 'TERMDEPOSITSTRANSACTION.PAYMENT_TYPE' },
+      { field: 'transactionModeName', header: 'TERMDEPOSITSTRANSACTION.PAYMENT_MODE' },
+      { field: 'transactionAmount', header: 'TERMDEPOSITSTRANSACTION.INTEREST_AMOUNT' },
       { field: 'statusName', header: 'TERMDEPOSITSTRANSACTION.STATUS' },
     ];
     this.roleName = this.commonFunctionsService.getStorageValue(applicationConstants.roleName);
@@ -210,6 +223,7 @@ export class FdNonCumulativeForeclosureComponent {
         //     this.isForeclosure = true;
         //   }
         // }
+      this.currentDate = new Date();
     });
     this.getAllTransactionModes();
   }
@@ -225,14 +239,31 @@ export class FdNonCumulativeForeclosureComponent {
       if (this.responseModel.status != null && this.responseModel.status != undefined && this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
           this.fdNonCumulativeApplicationModel = this.responseModel.data[0];
-          this.fdNonCumulativeApplicationModel.foreClosureDate = new Date();
-          this.fdNonCumulativeApplicationModel.closureDate = new Date();
+          const currentDate = new Date();
+          let currentDateLong = this.commonFunctionsService.getUTCEpoch(new Date(currentDate));
+          if(this.fdNonCumulativeApplicationModel.maturityDate < currentDateLong){
+            this.check = false;
+          }else{
+            this.check = true;
+          }
+          if (this.fdNonCumulativeApplicationModel.maturityDate != null && this.fdNonCumulativeApplicationModel.maturityDate != undefined) {
+            this.fdNonCumulativeApplicationModel.maturityDate = this.datePipe.transform(this.fdNonCumulativeApplicationModel.maturityDate, this.orgnizationSetting.datePipe);
+          }
+          // this.check = this.fdNonCumulativeApplicationModel.maturityDate < this.currentDate? true:false;
+
+          this.fdNonCummulativeTransactionModel.transactionDate = new Date();
           if (this.fdNonCumulativeApplicationModel.depositDate != null && this.fdNonCumulativeApplicationModel.depositDate != undefined) {
             this.fdNonCumulativeApplicationModel.depositDate = this.datePipe.transform(this.fdNonCumulativeApplicationModel.depositDate, this.orgnizationSetting.datePipe);
           }
 
           if (this.fdNonCumulativeApplicationModel.admissionNumber != null && this.fdNonCumulativeApplicationModel.admissionNumber != undefined) {
             this.admissionNumber = this.fdNonCumulativeApplicationModel.admissionNumber;
+          }
+          if (this.fdNonCumulativeApplicationModel.accountNumber != null && this.fdNonCumulativeApplicationModel.accountNumber != undefined) {
+            this.fdNonCummulativeTransactionModel.accountNumber = this.fdNonCumulativeApplicationModel.accountNumber;
+            this.accountNumber = this.fdNonCumulativeApplicationModel.accountNumber;
+            this.termAccId = this.fdNonCummulativeAccId;
+            // this.getAllPaymentsByAccountIdAndAccountNumber();
           }
           if (this.fdNonCumulativeApplicationModel.fdNonCummulativeproductId != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeproductId != undefined) {
             this.productId = this.fdNonCumulativeApplicationModel.fdNonCummulativeproductId;
@@ -250,6 +281,9 @@ export class FdNonCumulativeForeclosureComponent {
             for( let payment of this.interestPaymentList){
               if(payment.interestPostingDate != null && payment.interestPostingDate != undefined){
                 payment.interestPostingDate = this.datePipe.transform(payment.interestPostingDate, this.orgnizationSetting.datePipe);
+              }
+              if(payment.transactionDate != null && payment.transactionDate != undefined){
+                payment.transactionDate = this.datePipe.transform(payment.transactionDate, this.orgnizationSetting.datePipe);
               }
             }
           }
@@ -539,44 +573,132 @@ export class FdNonCumulativeForeclosureComponent {
   // {@code update  application details by id} :
   // @implNote:update  application details by  Id
   // @author bhargavi
-  updateFdNonCummulativeDetails(fdNonCumulativeApplicationModel: any) {
-    // this.fdNonCumulativeApplicationModel.statusName = CommonStatusData.FORECLOSURE;
-    if (this.fdNonCumulativeApplicationModel.closureDate != null && this.fdNonCumulativeApplicationModel.closureDate != undefined) {
-      this.fdNonCumulativeApplicationModel.closureDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdNonCumulativeApplicationModel.closureDate));
-    }
-    if (this.fdNonCumulativeApplicationModel.foreClosureDate != null && this.fdNonCumulativeApplicationModel.foreClosureDate != undefined) {
-      this.fdNonCumulativeApplicationModel.foreClosureDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdNonCumulativeApplicationModel.foreClosureDate));
-    }
-    if (this.fdNonCumulativeApplicationModel.depositDate != null && this.fdNonCumulativeApplicationModel.depositDate != undefined) {
-      this.fdNonCumulativeApplicationModel.depositDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdNonCumulativeApplicationModel.depositDate));
-    }
-    if(this.fdNonCumulativeApplicationModel.interestPaymentsList[0].interestPostingDate != null && this.fdNonCumulativeApplicationModel.interestPaymentsList[0].interestPostingDate != undefined) {
-      this.fdNonCumulativeApplicationModel.interestPaymentsList.interestPostingDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdNonCumulativeApplicationModel.interestPaymentsList[0].interestPostingDate));
-    }
-    if(this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountsTransactionDTOList.transactionDate != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountsTransactionDTOList.transactionDate  != undefined) {
-      this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountsTransactionDTOList.transactionDate  = this.commonFunctionsService.getUTCEpoch(new Date(this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountsTransactionDTOList.transactionDate ));
-    }
-    this.fdNonCumulativeApplicationService.updateFdNonCummApplication(fdNonCumulativeApplicationModel).subscribe((response: any) => {
-      this.responseModel = response;
-      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
-        if (this.responseModel.data[0] != undefined && this.responseModel.data[0] != null && this.responseModel.data.length > 0) {
-          this.fdNonCumulativeApplicationModel = this.responseModel.data[0];
-          this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 1200);
-          this.getFdNonCummApplicationById(this.id);
-        }
+  // updateFdNonCummulativeDetails(fdNonCumulativeApplicationModel: any) {
+  //   // this.fdNonCumulativeApplicationModel.statusName = CommonStatusData.FORECLOSURE;
+  //   if (this.fdNonCumulativeApplicationModel.closureDate != null && this.fdNonCumulativeApplicationModel.closureDate != undefined) {
+  //     this.fdNonCumulativeApplicationModel.closureDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdNonCumulativeApplicationModel.closureDate));
+  //   }
+  //   if (this.fdNonCumulativeApplicationModel.foreClosureDate != null && this.fdNonCumulativeApplicationModel.foreClosureDate != undefined) {
+  //     this.fdNonCumulativeApplicationModel.foreClosureDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdNonCumulativeApplicationModel.foreClosureDate));
+  //   }
+  //   if (this.fdNonCumulativeApplicationModel.depositDate != null && this.fdNonCumulativeApplicationModel.depositDate != undefined) {
+  //     this.fdNonCumulativeApplicationModel.depositDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdNonCumulativeApplicationModel.depositDate));
+  //   }
+  //   if(this.fdNonCumulativeApplicationModel.interestPaymentsList[0].interestPostingDate != null && this.fdNonCumulativeApplicationModel.interestPaymentsList[0].interestPostingDate != undefined) {
+  //     this.fdNonCumulativeApplicationModel.interestPaymentsList.interestPostingDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdNonCumulativeApplicationModel.interestPaymentsList[0].interestPostingDate));
+  //   }
+  //   if(this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountsTransactionDTOList.transactionDate != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountsTransactionDTOList.transactionDate  != undefined) {
+  //     this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountsTransactionDTOList.transactionDate  = this.commonFunctionsService.getUTCEpoch(new Date(this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountsTransactionDTOList.transactionDate ));
+  //   }
+  //   this.fdNonCumulativeApplicationService.updateFdNonCummApplication(fdNonCumulativeApplicationModel).subscribe((response: any) => {
+  //     this.responseModel = response;
+  //     if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+  //       if (this.responseModel.data[0] != undefined && this.responseModel.data[0] != null && this.responseModel.data.length > 0) {
+  //         this.fdNonCumulativeApplicationModel = this.responseModel.data[0];
+  //         this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+  //         setTimeout(() => {
+  //           this.msgs = [];
+  //         }, 1200);
+  //         this.getFdNonCummApplicationById(this.id);
+  //       }
+  //     }
+  //   }, (error: any) => {
+  //     this.commonComponent.stopSpinner();
+  //     this.getFdNonCummApplicationById(this.id);
+  //     this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
+  //     setTimeout(() => {
+  //       this.msgs = [];
+  //     }, 3000);
+  //   });
+  // }
+
+      saveFdNonCummulativeTransaction(fdNonCummulativeTransactionModel: any) {
+      this.termAccId = this.fdNonCummulativeAccId;
+      fdNonCummulativeTransactionModel.transcationDate = this.fdNonCummulativeTransactionModel.transactionDate;
+      this.fdNonCummulativeTransactionModel.termAccId = this.termAccId;
+      if (fdNonCummulativeTransactionModel.interestPostingDate != null && fdNonCummulativeTransactionModel.interestPostingDate != undefined) {
+        fdNonCummulativeTransactionModel.interestPostingDate = this.commonFunctionsService.getUTCEpoch(new Date(fdNonCummulativeTransactionModel.interestPostingDate));
       }
-    }, (error: any) => {
-      this.commonComponent.stopSpinner();
-      this.getFdNonCummApplicationById(this.id);
-      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
-      setTimeout(() => {
-        this.msgs = [];
-      }, 3000);
-    });
-  }
+      if (fdNonCummulativeTransactionModel.transactionDate != null && fdNonCummulativeTransactionModel.transactionDate != undefined) {
+        fdNonCummulativeTransactionModel.transactionDate = this.commonFunctionsService.getUTCEpoch(new Date(fdNonCummulativeTransactionModel.transactionDate));
+      }
+      this.fdNonCummulativeTransactionModel.transactionMode = this.transactionForm.get('transactionMode')?.value.value;
+      this.fdNonCummulativeTransactionModel.isVerified = this.transactionForm.get('isVerified')?.value.value;
+      if (fdNonCummulativeTransactionModel.id != null && fdNonCummulativeTransactionModel.id != undefined) {
+        this.interestPaymentService.updateFdNonCumTransaction(fdNonCummulativeTransactionModel).subscribe((data: any) => {
+          this.responseModel = data;
+          if (this.responseModel != null && this.responseModel != undefined && this.responseModel.status != null && this.responseModel.status != undefined && this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+            if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
+              if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+                this.fdNonCummulativeTransactionModel = this.responseModel.data[0];
+                this.msgs = [];
+                this.commonComponent.stopSpinner();
+                this.msgs = [{ severity: 'success', detail: this.responseModel.statusMsg }];
+                setTimeout(() => {
+                  this.msgs = [];
+                }, 2000);
+              }
+            }
+            this.getFdNonCummApplicationById(this.id);
+            this.backbutton();
+          }
+          else {
+            this.msgs = [];
+            this.commonComponent.stopSpinner();
+            this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+            setTimeout(() => {
+              this.msgs = [];
+            }, 2000);
+          }
+        },
+          error => {
+            this.msgs = [];
+            this.commonComponent.stopSpinner();
+            this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+            setTimeout(() => {
+              this.msgs = [];
+            }, 2000);
+          });
+      }
+      else {
+        // fdNonCummulativeTransactionModel.status = applicationConstants.ACTIVE;
+        this.interestPaymentService.addFdNonCumTransaction(fdNonCummulativeTransactionModel).subscribe((data: any) => {//create or save
+          this.responseModel = data;
+          if (this.responseModel != null && this.responseModel != undefined && this.responseModel.status != null && this.responseModel.status != undefined && this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+            if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
+              if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+                this.msgs = [];
+                this.commonComponent.stopSpinner();
+                this.msgs = [{ severity: 'success', detail: this.responseModel.statusMsg }];
+                setTimeout(() => {
+                  this.msgs = [];
+                }, 2000);
+                // this.getInterestPayment(this.accountNumber);
+              }
+            }
+            this.getFdNonCummApplicationById(this.id);
+            this.backbutton();
+          }
+          else {
+            this.msgs = [];
+            this.commonComponent.stopSpinner();
+            this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+            setTimeout(() => {
+              this.msgs = [];
+            }, 2000);
+          }
+        },
+          error => {
+            this.msgs = [];
+            this.commonComponent.stopSpinner();
+            this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+            setTimeout(() => {
+              this.msgs = [];
+            }, 2000);
+          });
+      }
+    }
+
   showHistoryDialog(position: string) {
     this.position = position;
     this.isHistory = true;
@@ -619,13 +741,4 @@ export class FdNonCumulativeForeclosureComponent {
       reader.readAsDataURL(file);
     }
   }
-
-    onstatusSelection(element: any): void {
-      if (element.value.value === 'Closed') {
-        this.fdNonCumulativeApplicationModel.isForeClosure = CommonStatusData.CLOSED;
-      } else {
-        this.showSbAccountNumber = false;
-      }
-    }
-
 }

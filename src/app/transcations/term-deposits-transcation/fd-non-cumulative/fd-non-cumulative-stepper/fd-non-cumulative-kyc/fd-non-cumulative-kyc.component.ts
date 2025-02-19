@@ -224,8 +224,6 @@ export class FdNonCumulativeKycComponent {
     this.fdNonCumulativeKycModel.fdNonCummulativeAccId = this.fdNonCummulativeAccId;
     this.fdNonCumulativeKycModel.admissionNumber = this.admissionNumber;
     this.fdNonCumulativeKycModel.memberTypeName = this.memberTypeName;
-    this.fdNonCumulativeKycModel.memberType = this.memberTypeId;
-    this.fdNonCumulativeKycModel.memberId = this.memberId;
     //for manadatory KYC Documents check
     this.saveAndNextEnable = false;
     if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0) {

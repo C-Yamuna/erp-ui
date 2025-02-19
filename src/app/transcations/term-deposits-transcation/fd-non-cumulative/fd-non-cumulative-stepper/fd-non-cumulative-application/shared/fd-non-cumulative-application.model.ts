@@ -182,6 +182,10 @@ export class FdNonCumulativeApplication {
      
      transactionMode: any;
 
+     transactionDate:any;
+
+     interestPaymentFrequencyName:any;
+
 }
 
 export class FdNonCummProductDefinitionModel {

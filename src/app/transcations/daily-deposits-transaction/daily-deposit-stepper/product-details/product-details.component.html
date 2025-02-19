@@ -5,7 +5,7 @@
         </div>
 
         <div class="col-6 text-end">
-            <a (click)="onChangeProduct(accountModel.productId)" class="text-end cursor-pointer">View
+            <a (click)="productViewPopUp()" class="text-end cursor-pointer">View
                 Product Details</a>
         </div>
     </div>
@@ -22,7 +22,7 @@
                         </label>
                         <p-dropdown placeholder="Select" [options]="productsList" formControlName="productId"
                             [(ngModel)]="accountModel.productId" [disabled]="isProductDisable"
-                            (onChange)="getProductDefinitionByProductIdAndDepositDate($event)">
+                            (onChange)="onChangeProduct($event)" >
                         </p-dropdown>
                     </div>
                 </div>
@@ -37,13 +37,13 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
-                        <label for="code">
+                        <label for="code"> <span class="red">*</span>
                             {{'ERP.DEPOSIT_DATE' | translate}}
                         </label>
                         <p-calendar formControlName="depositDate" [showIcon]="true"
                             [dateFormat]="orgnizationSetting.calendar" placeholder="DD/MM/YYYY"
                             [(ngModel)]="accountModel.depositDateVal"
-                            (onSelect)="onSelectdepositDate()">
+                            (onSelect)="onSelectdepositDate(accountModel.depositDateVal)">
                         </p-calendar>
                     </div>
                 </div>
@@ -78,9 +78,10 @@
 
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
-                        <label>{{'ERP.DEPOSIT_AMOUNT' | translate}}</label>
+                        <label><span class="red">*</span>{{'ERP.DEPOSIT_AMOUNT' | translate}}</label>
                             <input pInputText id="state_txt_name" type="text" formControlName="depositAmount"
-                                [(ngModel)]=" accountModel.depositAmount" placeholder="Enter Amount">
+                                [(ngModel)]=" accountModel.depositAmount" placeholder="Enter Amount"
+                                (focusout)="amountValidation(accountModel.depositAmount)">
                     </div>
                 </div>
 

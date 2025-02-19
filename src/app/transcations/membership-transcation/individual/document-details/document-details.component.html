@@ -52,7 +52,7 @@
                 <p class="label-input-text text-danger mt-2" *ngIf="mandatoryDoxsTextShow">Note : {{requiredDocumentsNames}}</p>
             <div class="col-12 p-0 pt-2">
                 <div class="row g-3">
-                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12"
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 mt-2"
                         *ngFor="let document of requiredDocumentsList ; let i = index">
                         <div class="stepper-kyc-card p-3 pb-1 mb-2" *ngIf="editIndex != i || editDocumentOfKycFalg">
                             <!-- view card -->
@@ -76,12 +76,12 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end d-flex right-actions">
-                                    <div class="cardview-icon icon-size text-right cursor-pointer -mt-1" (click)="onClickdocPhotoCopy(document)"><i class="fa fa-eye mr-3" aria-hidden="true"></i></div>
+                                    <div class="cardview-icon icon-size text-right cursor-pointer -mt-1" (click)="onClickdocPhotoCopy(document)"><i class="fa fa-eye mr-3" aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}" tooltipPosition="top"></i></div>
                                         <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn"
                                             (click)="toggleEditForm(i ,document)"
-                                            [disabled]="editButtonDisable"></p-button>
+                                            [disabled]="editButtonDisable" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                         <p-button icon="fa fa-trash" class="kyc-edit-btn ml-3"
-                                            (click)="deletDilogBox(document)"></p-button>
+                                            (click)="deletDilogBox(document)"pTooltip="{{'ERP.DELETE' | translate}}" tooltipPosition="top"></p-button>
 
                                     <!-- <div class="col-12 px-0">
                                         <div class="col-12 px-0" *ngFor="let img of document.">
@@ -171,7 +171,7 @@
                     </div>
 
                     <!-- add form -->
-                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12" *ngIf="addDocumentOfKycFalg">
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 mt-2" *ngIf="addDocumentOfKycFalg">
                         <div class="col-12 p-3 global-border bg-label-colorfull">
                             <div class="row g-3 mt-n1">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">

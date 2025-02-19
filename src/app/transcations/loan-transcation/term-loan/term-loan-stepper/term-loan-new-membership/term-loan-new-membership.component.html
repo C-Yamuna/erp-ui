@@ -24,7 +24,7 @@
                             <label>{{'ERP.SURNAME' | translate}}</label>
                           
                                 <input pInputText type="text" formControlName="surName"
-                                    [(ngModel)]=" membershipBasicRequiredDetailsModel.surname" placeholder="Enter Surname">
+                                    [(ngModel)]="membershipBasicRequiredDetailsModel.surname" placeholder="Enter Surname">
                             
                             <p-message severity="error" text="Enter Valid Name"
                                 *ngIf="!memberCreationForm.controls['surName'].valid && memberCreationForm.controls['surName'].dirty">
@@ -36,7 +36,7 @@
                             <label><span class="red">*</span>{{'ERP.NAME' | translate}}</label>
                            
                                 <input pInputText type="text" formControlName="name"
-                                    [(ngModel)]=" membershipBasicRequiredDetailsModel.name" placeholder="Enter Name">
+                                    [(ngModel)]="membershipBasicRequiredDetailsModel.name" placeholder="Enter Name">
                                 <p-message severity="error" text="Enter Valid Name"
                                     *ngIf="!memberCreationForm.controls['name'].valid && memberCreationForm.controls['name'].dirty">
                                 </p-message>
@@ -46,7 +46,7 @@
                             <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.AGE' | translate}}</label>
                                 <input pInputText type="text" formControlName="age"
-                                    [(ngModel)]=" membershipBasicRequiredDetailsModel.age" placeholder="Enter Age">
+                                    [(ngModel)]="membershipBasicRequiredDetailsModel.age" placeholder="Enter Age" (keyup)="ageCaluculation(true)">
                                 <p-message severity="error" text="Enter Valid age"
                                     *ngIf="!memberCreationForm.controls['age'].valid && memberCreationForm.controls['age'].dirty">
                                 </p-message>
@@ -58,7 +58,7 @@
                             
                                 <p-calendar formControlName="dateOfBirth" [showIcon]="true"
                                     dateFormat="{{orgnizationSetting.calendar}}" placeholder="DD/MM/YYYY"
-                                    [(ngModel)]=" membershipBasicRequiredDetailsModel.dobVal" (onSelect)="dateConverstion()">
+                                    [(ngModel)]="membershipBasicRequiredDetailsModel.dobVal" (onSelect)="dateConverstion()"  [maxDate]="today">
                                 </p-calendar>
                             </div>
                         </div>
@@ -68,7 +68,7 @@
                            
                                 <p-dropdown placeholder="{{'ERP.SELECT' | translate}}" [options]="genderList"
                                     formControlName="gender"
-                                    [(ngModel)]=" membershipBasicRequiredDetailsModel.genderId"></p-dropdown>
+                                    [(ngModel)]="membershipBasicRequiredDetailsModel.genderId"></p-dropdown>
                                 </div>
                         </div>
                         </div>
@@ -79,7 +79,7 @@
                                
                                     <p-dropdown placeholder="{{'ERP.SELECT' | translate}}" [options]="maritalstatusList"
                                         formControlName="maritalStatus"
-                                        [(ngModel)]=" membershipBasicRequiredDetailsModel.martialId"></p-dropdown>
+                                        [(ngModel)]="membershipBasicRequiredDetailsModel.martialId"></p-dropdown>
                                     </div>
                             </div>
                             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
@@ -88,7 +88,7 @@
                                
                                     <p-dropdown placeholder="{{'ERP.SELECT' | translate}}" [options]="relationTypesList"
                                         formControlName="relationName" (onChange)="onChangeRelationTypeChange($event)"
-                                        [(ngModel)]=" membershipBasicRequiredDetailsModel.relationId"></p-dropdown>
+                                        [(ngModel)]="membershipBasicRequiredDetailsModel.relationId"></p-dropdown>
                                     </div> 
                             </div>
                             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
@@ -96,7 +96,7 @@
                                 <label><span class="red">*</span>{{'ERP.RELATION_NAME' | translate}}</label>
                                 
                                     <input pInputText type="text" formControlName="relationWithMember"
-                                        [(ngModel)]=" membershipBasicRequiredDetailsModel.relativeName" placeholder="Enter Relation Name">
+                                        [(ngModel)]="  membershipBasicRequiredDetailsModel.relativeName" placeholder="Enter Relation Name">
                                     <p-message severity="error" text="Enter Valid relativeName"
                                         *ngIf="!memberCreationForm.controls['relationWithMember'].valid && memberCreationForm.controls['relationWithMember'].dirty">
                                     </p-message>
@@ -106,10 +106,19 @@
                             <div class="form-label">
                                 <label><span class="red">*</span>{{'ERP.QUALIFICATON' | translate}}</label>
                                
-                                    <p-dropdown placeholder="{{'ERP.SELECT' | translate}}"
+                                    <!-- <p-dropdown placeholder="{{'ERP.SELECT' | translate}}"
                                         [options]="qualificationTypes" formControlName="quslification"
-                                        [(ngModel)]=" membershipBasicRequiredDetailsModel.qualificationId"></p-dropdown>
-                                    </div>
+                                        [(ngModel)]="  membershipBasicRequiredDetailsModel.qualificationId"></p-dropdown>
+                                    </div> -->
+                                     <p-dropdown [options]="groupedQualificationSubQualification"
+                                    [(ngModel)]="membershipBasicRequiredDetailsModel.qualificationId" formControlName="quslification"
+                                    placeholder="Select" [group]="true" [filter]="true" (onChange)="onChangeQualificationChange()">
+                                    <ng-template let-group pTemplate="group">
+                                        <span>{{group.label}}</span>
+                                    </ng-template>
+                        
+                                </p-dropdown>
+                            </div>
                             
                         </div>
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
@@ -118,7 +127,7 @@
                               
                                     <p-dropdown placeholder="{{'ERP.SELECT' | translate}}"
                                         [options]="occupationTypeList" formControlName="occupation"
-                                        [(ngModel)]=" membershipBasicRequiredDetailsModel.occupationId"></p-dropdown>
+                                        [(ngModel)]="  membershipBasicRequiredDetailsModel.occupationId"></p-dropdown>
 
                                     </div> 
                         </div>
@@ -126,13 +135,19 @@
                         <div class="row g-3 mt-0">
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                             <div class="form-label">
-                            <label><span class="red">*</span>{{'ERP.CASTE' | translate}}</label>
-                           
-                                <p-dropdown placeholder="{{'ERP.SELECT' | translate}}" [options]="castesList"
-                                    formControlName="caste"
-                                    [(ngModel)]=" membershipBasicRequiredDetailsModel.casteId"></p-dropdown>
-
-                                </div> 
+                                <label><span class="red">*</span>{{'ERP.CASTE' | translate}}</label>
+                        
+                                <!-- <p-dropdown placeholder="{{'ERP.SELECT' | translate}}" [options]="castesList"
+                                                            formControlName="caste"
+                                                            [(ngModel)]="  membershipBasicRequiredDetailsModel.casteId"></p-dropdown> -->
+                                <p-dropdown [options]="groupedCasteSubCaste" [(ngModel)]="membershipBasicRequiredDetailsModel.casteId"
+                                    formControlName="caste" placeholder="Select" [group]="true" [filter]="true"
+                                    (onChange)="onChangeCasteChange()">
+                                    <ng-template let-group pTemplate="group">
+                                        <span>{{group.label}}</span>
+                                    </ng-template>
+                                </p-dropdown>
+                            </div>
                         </div>
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                             <div class="form-label">
@@ -140,7 +155,7 @@
                            
                             <p-dropdown placeholder="{{'ERP.SELECT' | translate}}" [options]="communityList"
                             formControlName="community"
-                            [(ngModel)]=" membershipBasicRequiredDetailsModel.communityId"></p-dropdown>
+                            [(ngModel)]="  membershipBasicRequiredDetailsModel.communityId"></p-dropdown>
 
                                 </div> 
                         </div>
@@ -151,8 +166,8 @@
                             <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.AADHAR_NUMBER' | translate}}</label>
                            
-                                <input pInputText type="text" formControlName="aadharNumber"
-                                    [(ngModel)]=" membershipBasicRequiredDetailsModel.aadharNumber" placeholder="Enter Aadhar Number">
+                                <input pInputText type="text" formControlName="aadharNumber" minlength="12" maxlength="12" pKeyFilter="pint"
+                                    [(ngModel)]="  membershipBasicRequiredDetailsModel.aadharNumber" placeholder="Enter Aadhar Number">
                                 <p-message severity="error" text="Enter Valid aadharNumber"
                                     *ngIf="!memberCreationForm.controls['aadharNumber'].valid && memberCreationForm.controls['aadharNumber'].dirty">
                                 </p-message>
@@ -163,7 +178,7 @@
                             <label><span class="red">*</span>{{'ERP.PAN_NUMBER' | translate}}</label>
                            
                                 <input pInputText type="text" formControlName="panNumber"
-                                    [(ngModel)]=" membershipBasicRequiredDetailsModel.panNumber" placeholder="Enter PAN Number">
+                                    [(ngModel)]="  membershipBasicRequiredDetailsModel.panNumber" placeholder="Enter PAN Number">
                                 <p-message severity="error" text="Enter Valid Pan Number"
                                     *ngIf="!memberCreationForm.controls['panNumber'].valid && memberCreationForm.controls['panNumber'].dirty">
                                 </p-message>
@@ -175,8 +190,8 @@
                             <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.MOBILE_NUMBER' | translate}}</label>
                             
-                                <input pInputText type="text" formControlName="mobileNumber" minlength="10" maxlength="10"
-                                    [(ngModel)]=" membershipBasicRequiredDetailsModel.mobileNumber" placeholder="Enter Mobile Number">
+                                <input pInputText type="text" formControlName="mobileNumber" minlength="10" maxlength="10" pKeyFilter="pint"
+                                    [(ngModel)]="  membershipBasicRequiredDetailsModel.mobileNumber" placeholder="Enter Mobile Number">
                                 <p-message severity="error" text="Enter Valid Mobile Number"
                                     *ngIf="!memberCreationForm.controls['mobileNumber'].valid && memberCreationForm.controls['mobileNumber'].dirty">
                                 </p-message>
@@ -187,7 +202,7 @@
                             <label>{{'ERP.EMAIL' | translate}}</label>
                             
                                 <input pInputText type="text" formControlName="email"
-                                    [(ngModel)]=" membershipBasicRequiredDetailsModel.emailId" placeholder="Enter Email">
+                                    [(ngModel)]="  membershipBasicRequiredDetailsModel.emailId" placeholder="Enter Email">
                                 <p-message severity="error" text="Enter Valid email"
                                     *ngIf="!memberCreationForm.controls['email'].valid && memberCreationForm.controls['email'].dirty">
                                 </p-message>
@@ -201,7 +216,7 @@
                            
                                 <p-calendar formControlName="admissionDate" [showIcon]="true"
                                     dateFormat="{{orgnizationSetting.calendar}}" placeholder="DD/MM/YYYY"
-                                    [(ngModel)]=" membershipBasicRequiredDetailsModel.admissionDateVal" (onSelect)="dateConverstion()">
+                                    [(ngModel)]="  membershipBasicRequiredDetailsModel.admissionDateVal" (onSelect)="dateConverstion()">
                                 </p-calendar>
                             </div>
                         </div>
@@ -209,16 +224,16 @@
                             <div class="form-label">
                                 <label for="username">{{'ERP.ADMISSION_FEE' | translate}}
                                 </label>
-                                <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="admissionFee" [(ngModel)]=" membershipBasicRequiredDetailsModel.admissionFee" placeholder="Enter Admission Fee">
+                                <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="admissionFee" [(ngModel)]="  membershipBasicRequiredDetailsModel.admissionFee" placeholder="Enter Admission Fee">
                             </div>
                         </div>
-                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 pt-4">
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                             <div class="form-label">
-                                <p-checkbox [binary]="true" formControlName="isStaff"
-                                    [(ngModel)]=" membershipBasicRequiredDetailsModel.isStaff"
-                                    inputId="binary"></p-checkbox>
-                                    <span class="mt-2" for="username">&nbsp;&nbsp;{{'ERP.IS_STAFF' | translate}}</span>
-                        </div>
+                                <label><span class="red">*</span>{{'ERP.IS_STAFF' | translate}}
+                                </label>
+                                <p-dropdown placeholder="{{'ERP.SELECT' | translate}}" [options]="statusList" formControlName="isStaff"
+                                    [(ngModel)]="membershipBasicRequiredDetailsModel.isStaff"></p-dropdown>
+                            </div>
                         </div>
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
                             <div class="form-label">
@@ -226,12 +241,12 @@
                             <div class="uplodad-style align-items-center">
                                 <!-- Upload Button Column -->
                                 
-                                <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
-                                    id="apply-leave_fileUp_attach" chooseLabel=" " name="file"
-                                    accept=".png,.jpg,.jpeg" (onRemove)="fileRemoeEvent('individualPhotoCopy')" 
-                                    (onSelect)="fileUploader($event,fileUpload,'individualPhotoCopy')" >
+                                <p-fileUpload #fileUploadIndividualPhoto class="qua-upld file-attach semi-bold" name="myfile[]"
+                                    id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".png,.jpg,.jpeg"
+                                    (onRemove)="fileRemoeEvent('individualPhotoCopy')"
+                                    (onSelect)="fileUploader($event,fileUploadIndividualPhoto,fileUploadIndividualSign ,'individualPhotoCopy')">
                                 </p-fileUpload>
-                                <div  class="col-12  d-flex p-1 contant-body" *ngFor="let img of  membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy">
+                                <div  class="col-12  d-flex p-1 contant-body" *ngFor="let img of membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy">
                                     <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                         <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22"
                                                 height="22"></a>
@@ -250,9 +265,9 @@
                             <span class=""> <span class="red">*</span>{{ 'ERP.UPLOAD_SIGNATURE' | translate }} </span>
                             <div class="uplodad-style align-items-center">
                                 <!-- Upload Button Column -->
-                                <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                                <p-fileUpload #fileUploadIndividualSign class="qua-upld file-attach semi-bold" name="myfile[]"
                                 id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".png,.jpg,.jpeg" (onRemove)="fileRemoeEvent('individualSighnedCopy')"
-                                (onSelect)="fileUploader($event,fileUpload ,'individualSighnedCopy')">
+                                (onSelect)="fileUploader($event,fileUploadIndividualPhoto,fileUploadIndividualSign ,'individualSighnedCopy')">
                                 </p-fileUpload>
                                 <div class="col-12  d-flex p-1 contant-body" *ngFor="let img of  membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath">
                                     <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
@@ -285,7 +300,7 @@
                             <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.GROUP_NAME' | translate}}</label>
                                 <input pInputText id="bunit_txt_name" maxlength="40" type="text"
-                                    formControlName="name" [(ngModel)]="memberGroupDetailsModel.name" placeholder="Enter Group Name">
+                                    formControlName="name" [(ngModel)]="  memberGroupDetailsModel.name" placeholder="Enter Group Name">
                                 <p-message severity="error" text="Enter Valid name"
                                     *ngIf="!groupForm.controls['name'].valid && groupForm.controls['name'].dirty">
                                 </p-message>
@@ -296,7 +311,7 @@
                             <label><span class="red">*</span>{{'ERP.REGISTERED_NO' | translate}}</label>
                                 <input pInputText id="bunit_txt_name" maxlength="40" type="text"
                                     formControlName="registrationNumber" placeholder="Enter Registered Number"
-                                    [(ngModel)]="memberGroupDetailsModel.registrationNumber">
+                                    [(ngModel)]="  memberGroupDetailsModel.registrationNumber">
                                 <p-message severity="error" text="Enter Valid registrationNumber"
                                     *ngIf="!groupForm.controls['registrationNumber'].valid && groupForm.controls['registrationNumber'].dirty">
                                 </p-message>
@@ -307,7 +322,7 @@
                             <label><span class="red">*</span>{{'ERP.REGISTERED_DATE' | translate}}</label>
                                 <p-calendar [showIcon]="true" formControlName="registrationDate" [showIcon]="true"
                                 dateFormat="{{orgnizationSetting.calendar}}" placeholder="DD/MM/YYYY"
-                                    [(ngModel)]="memberGroupDetailsModel.registrationDateVal" (onSelect)="dateConverstion()"></p-calendar>
+                                    [(ngModel)]="  memberGroupDetailsModel.registrationDateVal" (onSelect)="dateConverstion()"></p-calendar>
                             </div>
                         </div>
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
@@ -315,7 +330,7 @@
                             <label><span class="red">*</span>{{'ERP.ADMISSION_DATE' | translate}}</label>
                                 <p-calendar [showIcon]="true" formControlName="admissionDate" [showIcon]="true"
                                 dateFormat="{{orgnizationSetting.calendar}}" placeholder="DD/MM/YYYY"
-                                    [(ngModel)]="memberGroupDetailsModel.admissionDateVal" (onSelect)="dateConverstion()"></p-calendar>
+                                    [(ngModel)]="  memberGroupDetailsModel.admissionDateVal" (onSelect)="dateConverstion()"></p-calendar>
                             </div>
                         </div>
                         </div>
@@ -324,7 +339,7 @@
                                 <div class="form-label">
                                 <label><span class="red">*</span>{{'ERP.POC_NAME' | translate}}</label>
                                     <input pInputText id="bunit_txt_name"  type="text"
-                                        formControlName="pocName" placeholder="Enter POC Name" [(ngModel)]="memberGroupDetailsModel.pocName"
+                                        formControlName="pocName" placeholder="Enter POC Name" [(ngModel)]="  memberGroupDetailsModel.pocName"
                                         >
                                     <p-message severity="error" text="Enter Valid poc name"
                                         *ngIf="!groupForm.controls['pocName'].valid && groupForm.controls['pocName'].dirty">
@@ -336,7 +351,7 @@
                             <label><span class="red">*</span>{{'ERP.POC_MOBILE_NO' | translate}}</label>
                                 <input pInputText id="bunit_txt_name" minlength="10" maxlength="10" type="text"
                                     formControlName="mobileNumber" placeholder="Enter POC Mobile Number"
-                                    [(ngModel)]="memberGroupDetailsModel.pocNumber">
+                                    [(ngModel)]="  memberGroupDetailsModel.pocNumber">
                                 <p-message severity="error" text="Enter Valid mobileNumber"
                                     *ngIf="!groupForm.controls['mobileNumber'].valid && groupForm.controls['mobileNumber'].dirty">
                                 </p-message>
@@ -346,7 +361,7 @@
                             <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.PAN_NUMBER' | translate}}</label>
                                 <input pInputText id="bunit_txt_name" maxlength="40" type="text"
-                                    formControlName="panNumber" [(ngModel)]="memberGroupDetailsModel.panNumber" placeholder="Enter PAN Number">
+                                    formControlName="panNumber" [(ngModel)]="  memberGroupDetailsModel.panNumber" placeholder="Enter PAN Number">
                                 <p-message severity="error" text="Enter Valid panNumber"
                                     *ngIf="!groupForm.controls['panNumber'].valid && groupForm.controls['panNumber'].dirty">
                                 </p-message>
@@ -356,7 +371,7 @@
                             <div class="form-label">
                             <label>{{'ERP.TAN_NUMBER' | translate}}</label>
                                 <input pInputText id="bunit_txt_name" maxlength="40" type="text"
-                                    formControlName="tanNumber" [(ngModel)]="memberGroupDetailsModel.tanNumber" placeholder="Enter TAN Number">
+                                    formControlName="tanNumber" [(ngModel)]="  memberGroupDetailsModel.tanNumber" placeholder="Enter TAN Number">
                                 <p-message severity="error" text="Enter Valid tan Number"
                                     *ngIf="!groupForm.controls['tanNumber'].valid && groupForm.controls['tanNumber'].dirty">
                                 </p-message>
@@ -366,7 +381,7 @@
                             <div class="form-label">
                             <label>{{'ERP.GST_NUMBER' | translate}}</label>
                                 <input pInputText id="bunit_txt_name" maxlength="40" type="text"
-                                    formControlName="gstNumber" [(ngModel)]="memberGroupDetailsModel.gstNumber" placeholder="Enter GST Number">
+                                    formControlName="gstNumber" [(ngModel)]="  memberGroupDetailsModel.gstNumber" placeholder="Enter GST Number">
                                 <p-message severity="error" text="Enter Valid gstNumber"
                                     *ngIf="!groupForm.controls['gstNumber'].valid && groupForm.controls['gstNumber'].dirty">
                                 </p-message>
@@ -394,7 +409,9 @@
                                     <div class="search">
                                         <span class="p-input-icon-right">
                                             <i class="pi pi-search global-search-icon"></i>
-                                            <input type="text" pInputText class="searchbox" placeholder="Search" />
+                                            <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                            placeholder="Search" class="searchbox"
+                                            #searchInput (input)="dt.filterGlobal(searchInput.value, 'contains')">
                                         </span>
                                     </div>
                                 </div>
@@ -609,7 +626,9 @@
                                     <div class="search">
                                         <span class="p-input-icon-right">
                                             <i class="pi pi-search global-search-icon"></i>
-                                            <input type="text" pInputText class="searchbox" placeholder="Search" />
+                                            <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                            placeholder="Search" class="searchbox"
+                                            #searchInput (input)="dt1.filterGlobal(searchInput.value, 'contains')">
                                         </span>
                                     </div>
                                 </div>
@@ -804,7 +823,7 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
-                        <label><span class="red">*</span>{{'ERP.EMAIL' | translate}}</label>
+                        <label>{{'ERP.EMAIL' | translate}}</label>
                         <input pInputText type="text" [(ngModel)]="promoterDetailsModel.emailId"
                             formControlName="emailId" placeholder="Enter Email">
                             <p-message severity="error" text="Enter Valid Email. Id"
@@ -812,12 +831,16 @@
                         </p-message>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 pt-4">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 pt-12">
                     <div class="form-label">
-                        <p-checkbox [binary]="true" formControlName="authorizedSignatory" 
-                            [(ngModel)]="promoterDetailsModel.authorizedSignatory" 
-                            inputId="binary"></p-checkbox>
-                            <span class="mt-2" for="username">&nbsp;&nbsp;{{'ERP.AUTHORIZED_SIGNATORY' | translate}}</span>
+                        <!-- <p-checkbox [binary]="true" formControlName="authorizedSignatory" 
+                                            [(ngModel)]="promoterDetailsModel.authorizedSignatory" 
+                                            inputId="binary"></p-checkbox>
+                                            <span class="mt-2" for="username">&nbsp;&nbsp;{{'DEMANDDEPOSITS.AUTHORIZED_SIGNATORY' | translate}}</span> -->
+                        <label><span class="red">*</span>{{'DEMANDDEPOSITS.AUTHORIZED_SIGNATORY' | translate}}</label>
+                        <p-dropdown [filter]="true" [options]="trueFalseList" placeholder="Select"
+                            [(ngModel)]="promoterDetailsModel.authorizedSignatory" formControlName="authorizedSignatory"
+                            [appendTo]="'body'"></p-dropdown>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
@@ -843,9 +866,9 @@
                     <div class="form-label">
                         <div class="ml-2"><span class="red">*</span>{{'ERP.UPLOAD_IMAGE' | translate}}</div>
                         <div class="uplodad-style align-items-center">
-                            <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                            <p-fileUpload #fileUploadPhotoPromoter class="qua-upld file-attach semi-bold" name="myfile[]"
                                 id="apply-leave_fileUp_attach" chooseLabel=" " name="file" formControlName="photoUpload" accept=".png,.jpg,.jpeg" (onRemove)="fileRemoeEvent('promoterPhot')" 
-                                (onSelect)="fileUploaderForPromoters($event,fileUpload ,'groupPromoterImage')">
+                                (onSelect)="fileUploaderForPromoters($event,fileUploadPhotoPromoter, fileUpload,'groupPromoterImage')">
                             </p-fileUpload>
                             <div class="col-12  d-flex p-1 contant-body"
                                 *ngFor="let img of promoterDetailsModel.multipartFileListForPhotoCopyPath">
@@ -864,7 +887,7 @@
                         <div class="uplodad-style align-items-center">
                             <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
                                 id="apply-leave_fileUp_attach" chooseLabel=" " formControlName="signatureUpload" name="file" accept=".png,.jpg,.jpeg" (onRemove)="fileRemoeEvent('promoterSignature' )" 
-                                (onSelect)="fileUploaderForPromoters($event,fileUpload ,'groupPromoterSignature')" > 
+                                (onSelect)="fileUploaderForPromoters($event,fileUploadPhotoPromoter,fileUpload ,'groupPromoterSignature')" > 
                             </p-fileUpload>
                             <div class="col-12  d-flex p-1 contant-body"
                                 *ngFor="let img of promoterDetailsModel.multipartFileListForSignatureCopyPath">
@@ -877,12 +900,16 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 pt-4">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 pt-12">
                     <div class="form-label">
-                            <p-checkbox  [binary]="true" formControlName="isGroupLeader"
-                            [(ngModel)]="promoterDetailsModel.isGroupLeader"
-                            inputId="binary" (onChange)="onGroupLeaderSelect(true)"></p-checkbox>
-                            <span class="mt-2" for="username">&nbsp;&nbsp;{{'DEMANDERPDEPOSITS.IS_GROUP_LEADER' | translate}}</span>
+                        <!-- <p-checkbox  [binary]="true" formControlName="isGroupLeader"
+                                            [(ngModel)]="promoterDetailsModel.isGroupLeader"
+                                            inputId="binary" (onChange)="onGroupLeaderSelect(true)"></p-checkbox>
+                                            <span class="mt-2" for="username">&nbsp;&nbsp;{{'DEMANDDEPOSITS.IS_GROUP_LEADER' | translate}}</span> -->
+                        <label><span class="red">*</span>{{'DEMANDDEPOSITS.IS_GROUP_LEADER' | translate}}</label>
+                        <p-dropdown [filter]="true" [options]="trueFalseList" placeholder="Select"
+                            [(ngModel)]="promoterDetailsModel.isGroupLeader" formControlName="isGroupLeader" [appendTo]="'body'"
+                            (onChange)="onGroupLeaderSelect(true,promoterDetailsModel.isGroupLeader)"></p-dropdown>
                     </div>
                 </div>
 
@@ -1000,7 +1027,7 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
-                        <label><span class="red">*</span>{{'ERP.EMAIL' | translate}}</label>
+                        <label>{{'ERP.EMAIL' | translate}}</label>
                         <input pInputText type="text" [(ngModel)]="institutionPromoterDetailsModel.emailId"
                             formControlName="emailId" placeholder="Enter Email">
                             <p-message severity="error" text="Enter Valid Email Id"
@@ -1027,12 +1054,16 @@
                         </p-calendar>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 pt-4">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 pt-12">
                     <div class="form-label">
-                        <p-checkbox [binary]="true" formControlName="authorizedSignatory" 
+                        <!-- <p-checkbox [binary]="true" formControlName="authorizedSignatory" 
                             [(ngModel)]="institutionPromoterDetailsModel.authorizedSignatory" 
                             inputId="binary"></p-checkbox>
-                            <span class="mt-2" for="username">&nbsp;&nbsp;{{'ERP.AUTHORIZED_SIGNATORY' | translate}}</span>
+                            <span class="mt-2" for="username">&nbsp;&nbsp;{{'ERP.AUTHORIZED_SIGNATORY' | translate}}</span> -->
+                        <label><span class="red">*</span>{{'DEMANDDEPOSITS.AUTHORIZED_SIGNATORY' | translate}}</label>
+                        <p-dropdown [filter]="true" [options]="trueFalseList" placeholder="Select"
+                            [(ngModel)]="institutionPromoterDetailsModel.authorizedSignatory" formControlName="authorizedSignatory"
+                            [appendTo]="'body'"></p-dropdown>
                       
                     </div>
                 </div>
@@ -1040,9 +1071,9 @@
                     <div class="form-label">
                         <div class="ml-2"><span class="red">*</span>{{'ERP.UPLOAD_IMAGE' | translate}}</div>
                         <div class="uplodad-style align-items-center">
-                            <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                            <p-fileUpload #fileUploadPromotePhoto class="qua-upld file-attach semi-bold" name="myfile[]"
                                 id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".png,.jpg,.jpeg" (onRemove)="fileRemoeEvent('promoterPhot')"
-                                (onSelect)="fileUploaderForInstitutionPromoters($event,fileUpload ,'institutionPromoterImage')">
+                                (onSelect)="fileUploaderForInstitutionPromoters($event,fileUploadInstitutionPromoterSign,fileUploadPromotePhoto,'institutionPromoterImage')">
                             </p-fileUpload>
                             <div class="col-12  d-flex p-1 contant-body"
                                 *ngFor="let img of institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath">
@@ -1059,9 +1090,9 @@
                     <div class="form-label">
                         <div class="ml-2"><span class="red">*</span>{{'ERP.UPLOAD_SIGNATURE' | translate}}</div>
                         <div class="uplodad-style align-items-center">
-                            <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                            <p-fileUpload #fileUploadInstitutionPromoterSign class="qua-upld file-attach semi-bold" name="myfile[]"
                                 id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".png,.jpg,.jpeg" (onRemove)="fileRemoeEvent('promoterSignature')"
-                                (onSelect)="fileUploaderForInstitutionPromoters($event,fileUpload ,'insitutionPromoterSignature')" > 
+                                (onSelect)="fileUploaderForInstitutionPromoters($event,fileUploadInstitutionPromoterSign,fileUploadPromotePhoto,'insitutionPromoterSignature')" > 
                             </p-fileUpload>
                             <div class="col-12  d-flex p-1 contant-body"
                                 *ngFor="let img of institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath">
@@ -1074,12 +1105,17 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 pt-4">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 pt-12">
                     <div class="form-label">
-                            <p-checkbox  [binary]="true" formControlName="isGroupLeader"
-                            [(ngModel)]="promoterDetailsModel.isGroupLeader"
-                            inputId="binary" (onChange)="onGroupLeaderSelect(true)"></p-checkbox>
-                            <span class="mt-2" for="username">&nbsp;&nbsp;{{'ERP.IS_GROUP_LEADER' | translate}}</span>
+                        <!-- <p-checkbox  [binary]="true" formControlName="isGroupLeader"
+                                            [(ngModel)]="promoterDetailsModel.isGroupLeader"
+                                            inputId="binary" (onChange)="onGroupLeaderSelect(true ,promoterDetailsModel.isGroupLeader)"></p-checkbox>
+                                            <span class="mt-2" for="username">&nbsp;&nbsp;{{'ERP.IS_GROUP_LEADER' | translate}}</span> -->
+                
+                        <label><span class="red">*</span>{{'DEMANDDEPOSITS.IS_GROUP_LEADER' | translate}}</label>
+                        <p-dropdown [filter]="true" [options]="trueFalseList" placeholder="Select"
+                            [(ngModel)]="institutionPromoterDetailsModel.isGroupLeader" formControlName="isGroupLeader" [appendTo]="'body'"
+                            (onChange)="onGroupLeaderSelect(true,institutionPromoterDetailsModel.isGroupLeader)"></p-dropdown>
                     </div>
                 </div>
 

@@ -14,6 +14,7 @@ import { CommonComponent } from 'src/app/shared/common.component';
 import { TermLoanGenealogyTreeService } from './shared/term-loan-genealogy-tree.service';
 import { TermApplicationService } from '../term-loan-application-details/shared/term-application.service';
 import { TermApplication } from '../term-loan-application-details/shared/term-application.model';
+import { MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-term-loan-genealogy-tree',
@@ -21,63 +22,42 @@ import { TermApplication } from '../term-loan-application-details/shared/term-ap
   styleUrls: ['./term-loan-genealogy-tree.component.css']
 })
 export class TermLoanGenealogyTreeComponent {
+  @ViewChild('genealogy', { static: false }) private genealogy!: Table;
   termGenealogyTreeForm: FormGroup;
   termLoanGenealogyTreeList: any[] = [];
-
-  carrats: any[] = [];
-  gender: any[] | undefined;
-  maritalstatus: any[] | undefined;
   checked: boolean = false;
   responseModel!: Responsemodel;
-  productsList: any[] = [];
-  operationTypesList: any[] = [];
-  schemeTypesList: any[] = [];
   orgnizationSetting: any;
   msgs: any[] = [];
   columns: any[] = [];
-  insuranceVendorDetailsList: any[] = [];
-  occupationTypesList: any[] = [];
-  gendersList: any[] = [];
   relationshipTypesList: any[] = [];
-  accountOpeningDateVal: any;
-  minBalence: any;
-  accountType: any;
-  productName: any;
   isMemberCreation: boolean = false;
+  termLoanApplicationId: any;
+  isEdit: boolean = false;
+  visible: boolean = false;
+  isFormValid: Boolean = false;
+  addButton: boolean = false;
+  newRow: any;
+  EditDeleteDisable: boolean = false;
+  promoterColumns: any[] = [];
+  genealogyTreeDetails: any[] = [];
+  addButtonService: boolean = false;
+  editDeleteDisable: boolean = false;
+
+  productName:any;
+  accountType:any;
+  minBalence:any;
+  accountOpeningDateVal:any;
+  
   membershipBasicRequiredDetailsModel: MembershipBasicRequiredDetails = new MembershipBasicRequiredDetails();
   memberGroupDetailsModel: MemberGroupDetailsModel = new MemberGroupDetailsModel();
   membershipInstitutionDetailsModel: MembershipInstitutionDetailsModel = new MembershipInstitutionDetailsModel();
   termLoanGenealogyTreeModel: TermLoanGenealogyTree = new TermLoanGenealogyTree();
   termLoanApplicationModel: TermApplication = new TermApplication();
-  memberTypeName: any;
-  loanAccId: any;
-  isEdit: boolean = false;
   admissionNumber: any;
-
-
-
-  institutionPromoter: any[] = [];
-  visible: boolean = false;
-  isFormValid: Boolean = false;
-
-  @ViewChild('genealogy', { static: false }) private genealogy!: Table;
-
-  addButton: boolean = false;
-  newRow: any;
-  EditDeleteDisable: boolean = false;
-  promoterColumns: any[] = [];
-
-  collateralType: any;
-
-  tempGeneaolgyTreeDetailsList: any[] = [];
-  mainGeneaolgyTreeDetailsList: any[] = [];
-  updatedGeneaolgyTreeDetailsList: any[] = [];
-
-  genealogyTreeDetails: any[] = [];
-  addButtonService: boolean = false;
-
-  editDeleteDisable: boolean = false;
-
+  saveAndNextDisable: boolean = false;
+  grenealogyTreeId: any;
+  displayDialog: boolean = false;
   constructor(private router: Router, private formBuilder: FormBuilder,
     private translate: TranslateService, private commonFunctionsService: CommonFunctionsService,
     private encryptDecryptService: EncryptDecryptService, private commonComponent: CommonComponent,
@@ -90,14 +70,14 @@ export class TermLoanGenealogyTreeComponent {
 
     this.genealogyTreeDetails = [
       { field: 'name', header: 'NAME' },
-      { field: 'relationWithApplicant', header: 'RELATION WITH MEMBER' },
+      { field: 'relationWithApplicantName', header: 'RELATION WITH MEMBER' },
       // { field: 'remarks', header: 'REMARKS' },
       // { field: 'Action', header: 'ACTION' },
     ];
 
     this.termGenealogyTreeForm = this.formBuilder.group({
-      name: new FormControl('', Validators.required),
-      relationWithApplicant: new FormControl(''),
+      name :new FormControl('', [Validators.required, Validators.pattern(applicationConstants.NAME_PATTERN)]),
+      relationWithApplicantName: new FormControl('', Validators.required),
       // remarks: new FormControl('')
     })
   }
@@ -109,23 +89,22 @@ export class TermLoanGenealogyTreeComponent {
       if (params['id'] != undefined) {
         this.commonComponent.startSpinner();
         let id = this.encryptDecryptService.decrypt(params['id']);
-        this.loanAccId = Number(id);
+        this.termLoanApplicationId = Number(id);
         this.isEdit = true;
-        this.getTermLoanGenealogyTreeById(this.loanAccId);
+        this.getTermLoanGenealogyTreesById(this.termLoanApplicationId);
+        this.getTermApplicationByTermAccId(this.termLoanApplicationId);
         this.commonComponent.stopSpinner();
       } else {
         this.isEdit = false;
         this.commonComponent.stopSpinner();
       }
     });
-
     this.termGenealogyTreeForm.valueChanges.subscribe((data: any) => {
       this.updateData();
       if (this.termGenealogyTreeForm.valid) {
         this.save();
       }
     });
-    this.getTermLoanApplicationDetailsById(this.loanAccId);
   }
 
   save() {
@@ -133,15 +112,20 @@ export class TermLoanGenealogyTreeComponent {
   }
 
   updateData() {
-    // this.saveAndNextDisable = !this.serviceForm.valid;
-    if (this.editDeleteDisable != null) {
-      // this.saveAndNextDisable = this.editDeleteDisable;
+    if(this.termLoanGenealogyTreeList == null || this.termLoanGenealogyTreeList == undefined || this.termLoanGenealogyTreeList.length == 0){
+      this.saveAndNextDisable = true;
     }
-    this.termLoanGenealogyTreeModel.termLoanApplicationId = this.loanAccId;
+    else {
+      this.saveAndNextDisable = false;
+    }
+    if(this.addButtonService){
+      this.saveAndNextDisable = true;
+    }
+    this.termLoanGenealogyTreeModel.termLoanApplicationId = this.termLoanApplicationId;
     this.termLoanApplicationsService.changeData({
-      formValid: this.termGenealogyTreeForm.valid,
+      formValid: this.termGenealogyTreeForm.valid  ,
       data: this.termLoanGenealogyTreeModel,
-      isDisable: (!this.termGenealogyTreeForm.valid),
+      isDisable: this.saveAndNextDisable,
       stepperIndex: 9,
     });
   }
@@ -153,12 +137,20 @@ export class TermLoanGenealogyTreeComponent {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.relationshipTypesList = this.responseModel.data;
-            this.relationshipTypesList = this.responseModel.data.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+            this.relationshipTypesList = this.responseModel.data.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
               return { label: relationType.name, value: relationType.id };
             });
-            let relationshiptype = this.relationshipTypesList.find((data: any) => null != data && data.value == this.termLoanGenealogyTreeModel.relationWithApplicant);
-            if (relationshiptype != null && undefined != relationshiptype)
-              this.termLoanGenealogyTreeModel.relationWithApplicantName = relationshiptype.label;
+            // let relationshiptype = this.relationshipTypesList.find((data: any) => null != data && data.value == this.termLoanGenealogyTreeModel.relationWithApplicant);
+            // if (relationshiptype != null && undefined != relationshiptype)
+            //   this.termLoanGenealogyTreeModel.relationWithApplicantName = relationshiptype.label;
+            for(let tree of this.termLoanGenealogyTreeList){
+              this.relationshipTypesList.filter((obj:any) =>(obj.value == tree.relationWithApplicant)).map((obj) => {
+               if (obj.label != null) {
+                 tree.relationWithApplicantName = obj.label;
+               }
+               return obj;
+             });
+           }
           } else {
             this.msgs = [];
             this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
@@ -177,31 +169,46 @@ export class TermLoanGenealogyTreeComponent {
       }, 2000);
     });
   }
-  getTermLoanApplicationDetailsById(id: any) {
-    this.termLoanApplicationsService.getTermApplicationByTermAccId(id).subscribe((response: any) => {
-      this.responseModel = response;
-      if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-        this.termLoanApplicationModel = this.responseModel.data[0];
-        if(this.termLoanApplicationModel.admissionNo != null && this.termLoanApplicationModel.admissionNo != undefined)
-          this.admissionNumber = this.termLoanApplicationModel.admissionNo;
-      }
-      else {
-        this.msgs = [];
-        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-        setTimeout(() => {
-          this.msgs = [];
-        }, 2000);
-      }
-    });
-  }
-  getTermLoanGenealogyTreeById(loanAccId: any) {
-    this.termLoanGenealogyTreeService.getTermLoanGenealogyTreeById(loanAccId).subscribe((data: any) => {
+
+  getTermLoanGenealogyTreesById(termLoanApplicationId: any) {
+    this.commonFunctionsService
+    this.termLoanGenealogyTreeService.getTermGenealogyTreeDetailsByLoanApplicationId(termLoanApplicationId).subscribe((data: any) => {
       this.responseModel = data;
       if (this.responseModel != null && this.responseModel != undefined) {
         if (this.responseModel.data != null && this.responseModel.data != undefined) {
           if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
             this.termLoanGenealogyTreeList = this.responseModel.data;
-            this.updateData();
+            for(let tree of this.termLoanGenealogyTreeList){
+               this.relationshipTypesList.filter((obj:any) =>(obj.value == tree.relationWithApplicant)).map((obj) => {
+                if (obj.label != null) {
+                  tree.relationWithApplicantName = obj.label;
+                }
+                return obj;
+              });
+            }
+          }
+        }
+        this.updateData();
+      }
+      
+    });
+  }
+  getTermApplicationByTermAccId(termLoanApplicationId: any) {
+    this.commonFunctionsService
+    this.termLoanApplicationsService.getTermApplicationByTermAccId(termLoanApplicationId).subscribe((data: any) => {
+      this.responseModel = data;
+      if (this.responseModel != null && this.responseModel != undefined) {
+        if (this.responseModel != null && this.responseModel != undefined) {
+          if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+            if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+              if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+                this.termLoanApplicationModel = this.responseModel.data[0];
+                this.admissionNumber = this.responseModel.data[0].admissionNo;
+                if(this.termLoanApplicationModel.memberTypeName != MemberShipTypesData.INDIVIDUAL){
+                  this.termLoanApplicationModel.operationTypeName = applicationConstants.SINGLE_ACCOUNT_TYPE;
+                }
+              }
+            }
           }
         }
       }
@@ -223,31 +230,39 @@ export class TermLoanGenealogyTreeComponent {
   }
 
   saveService(row: any) {
-    
     this.addButtonService = false;
     this.editDeleteDisable = false;
     this.termLoanGenealogyTreeModel = row;
+    this.termLoanGenealogyTreeList = [];
 
     const relation = this.relationshipTypesList.find((item: { value: any; }) => item.value === row.relationWithApplicant);
-      this.termLoanGenealogyTreeModel.relationWithApplicantName = relation.label;
-    this.termLoanGenealogyTreeModel.termLoanApplicationId = this.loanAccId;
+    this.termLoanGenealogyTreeModel.relationWithApplicantName = relation.label;
+    if (this.relationtypeDuplicateCheck(this.termLoanGenealogyTreeModel.relationWithApplicant)) {
+      return;
+    }
+    this.termLoanGenealogyTreeModel.termLoanApplicationId = this.termLoanApplicationId;
     this.termLoanGenealogyTreeModel.status = applicationConstants.ACTIVE;
     if (row.id != null && row.id != undefined) {
       this.termLoanGenealogyTreeService.updateTermLoanGenealogyTree(this.termLoanGenealogyTreeModel).subscribe((response: any) => {
         this.responseModel = response;
         if (this.responseModel != null && this.responseModel != undefined) {
           if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
-            if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+            if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0  ) {
               this.termLoanGenealogyTreeModel = this.responseModel.data;
-              this.addButtonService = false;
               if (this.responseModel.data[0].termLoanApplicationId != null && this.responseModel.data[0].termLoanApplicationId != undefined) {
-                this.getTermLoanGenealogyTreeById(this.responseModel.data[0].termLoanApplicationId);
+                this.getTermLoanGenealogyTreesById(this.responseModel.data[0].termLoanApplicationId);
               }
+              this.msgs = [];
+              this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+              setTimeout(() => {
+                this.msgs = [];
+              }, 2000);
             }
           }
           else {
             this.msgs = [];
             this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+            this.getTermLoanGenealogyTreesById(this.termLoanApplicationId);
             setTimeout(() => {
               this.msgs = [];
             }, 2000);
@@ -266,17 +281,22 @@ export class TermLoanGenealogyTreeComponent {
         this.responseModel = response;
         if (this.responseModel != null && this.responseModel != undefined) {
           if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
-            if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+            if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 ) {
               this.termLoanGenealogyTreeModel = this.responseModel.data;
-              this.addButtonService = false;
               if (this.responseModel.data[0].termLoanApplicationId != null && this.responseModel.data[0].termLoanApplicationId != undefined) {
-                this.getTermLoanGenealogyTreeById(this.responseModel.data[0].termLoanApplicationId);
+                this.getTermLoanGenealogyTreesById(this.responseModel.data[0].termLoanApplicationId);
               }
+              this.msgs = [];
+              this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+              setTimeout(() => {
+                this.msgs = [];
+              }, 2000);
             }
           }
           else {
             this.msgs = [];
             this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+            this.getTermLoanGenealogyTreesById(this.termLoanApplicationId);
             setTimeout(() => {
               this.msgs = [];
             }, 2000);
@@ -296,7 +316,7 @@ export class TermLoanGenealogyTreeComponent {
     this.termLoanGenealogyTreeList = [];
     this.addButtonService = false;
     this.editDeleteDisable = false;
-    this.getTermLoanGenealogyTreeById(this.loanAccId);
+    this.getTermLoanGenealogyTreesById(this.termLoanApplicationId);
   }
 
   editService(rowData: any) {
@@ -304,7 +324,7 @@ export class TermLoanGenealogyTreeComponent {
     this.editDeleteDisable = true;
     this.updateData();
     // this.getAllRelationshipTypes();
-    this.termLoanGenealogyTreeService.getTermGenealogyTreeDetailsByLoanApplicationId(rowData.id).subscribe((response: any) => {
+    this.termLoanGenealogyTreeService.getTermLoanGenealogyTreeById(rowData.id).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel != null && this.responseModel != undefined) {
         if (this.responseModel.status != null && this.responseModel.status != undefined && this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
@@ -329,18 +349,43 @@ export class TermLoanGenealogyTreeComponent {
     });
   }
 
+  /**
+   * @implements delete confirm enble
+   * @param row 
+   */
   delete(row: any) {
-    this.termLoanGenealogyTreeService.deleteTermLoanGenealogyTree(row.id).subscribe((response: any) => {
+    this.grenealogyTreeId = row.id ;
+    this.displayDialog = true;
+  }
+
+
+  /**
+   * @implements submit delete
+
+   */
+  submitDelete() {
+    this.termLoanGenealogyTreeService.deleteTermLoanGenealogyTree(this.grenealogyTreeId).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-        this.termLoanGenealogyTreeList = this.responseModel.data;
-        this.getTermLoanGenealogyTreeById(this.loanAccId);
+        this.displayDialog = false;
+        // this.termLoanGenealogyTreeList = this.responseModel.data;
+        this.getTermLoanGenealogyTreesById(this.termLoanApplicationId);
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+
       }
     });
   }
 
+
+
+  /**\
+   * @implements onChange relation Type
+
+   */
   onChangeRelationTypeType(event: any) {
-    
     if (event.value != null && event.value != undefined) {
       const relation = this.relationshipTypesList.find((item: { value: any; }) => item.value === event.value);
       this.termLoanGenealogyTreeModel.relationWithApplicantName = relation.label;
@@ -348,5 +393,29 @@ export class TermLoanGenealogyTreeComponent {
     }
   }
 
+  /**
+   * @implements cancle
 
+   */
+  cancelForDialogBox(){
+    this.displayDialog = false;
+  }
+  relationtypeDuplicateCheck(selectedpurposeType: any) {
+    // Check if there is any row in the list with the same purposetypes as the selected one
+    const isDuplicate = this.termLoanGenealogyTreeList.some(row =>
+      row.relationWithApplicant === selectedpurposeType &&
+      row.id !== this.termLoanGenealogyTreeModel.id  // Exclude the current row being edited (if applicable)
+    );
+
+    if (isDuplicate) {
+      this.termGenealogyTreeForm.get('relationWithApplicantName')?.reset();
+      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.RELATION_TYPE_ALREADY_EXIST }];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 2000);
+      return applicationConstants.TRUE;
+    }
+
+    return applicationConstants.FALSE;
+  }
 }

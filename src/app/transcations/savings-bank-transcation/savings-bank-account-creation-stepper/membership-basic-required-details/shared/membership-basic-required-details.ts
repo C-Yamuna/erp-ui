@@ -136,7 +136,12 @@ export class MembershipBasicRequiredDetails {
     subProductName: any;
 
     societyAdmissionNumber:any;
+    
     isStaffName: any;
+
+    mcrDocumentCopy:any;
+
+    multipartFileListForMCRCopyPath:any;
 }
 export class MemberGroupDetailsModel {
 
@@ -406,6 +411,7 @@ export class InstitutionPromoterDetailsModel {
 
     multipartFileListForPhotoCopyPath:any;
 
+    isGroupLeader:any;
     
 
 }

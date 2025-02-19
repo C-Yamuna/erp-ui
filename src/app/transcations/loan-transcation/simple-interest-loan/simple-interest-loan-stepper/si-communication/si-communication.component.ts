@@ -362,7 +362,7 @@ export class SiCommunicationComponent {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.statesList = this.responseModel.data;
-            this.statesList = this.responseModel.data.filter((obj: any) => obj != null).map((state: { name: any; id: any; }) => {
+            this.statesList = this.responseModel.data.filter((obj: any) => obj != null && obj.status != null && obj.status == applicationConstants.ACTIVE ).map((state: { name: any; id: any; }) => {
               return { label: state.name, value: state.id };
             });
           }
@@ -384,7 +384,7 @@ export class SiCommunicationComponent {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.districtsList = this.responseModel.data;
-            this.districtsList = this.districtsList.filter((obj: any) => obj != null).map((district: { name: any; id: any; }) => {
+            this.districtsList = this.districtsList.filter((obj: any) => obj != null && obj.status != null && obj.status == applicationConstants.ACTIVE).map((district: { name: any; id: any; }) => {
               return { label: district.name, value: district.id };
             });
           }
@@ -406,7 +406,7 @@ export class SiCommunicationComponent {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.mandalsList = this.responseModel.data;
-            this.mandalsList = this.mandalsList.filter((obj: any) => obj != null).map((mandal: { name: any; id: any; }) => {
+            this.mandalsList = this.mandalsList.filter((obj: any) => obj != null && obj.status != null && obj.status == applicationConstants.ACTIVE).map((mandal: { name: any; id: any; }) => {
               return { label: mandal.name, value: mandal.id };
             });
           }
@@ -428,7 +428,7 @@ export class SiCommunicationComponent {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.villageList = this.responseModel.data;
-            this.villageList = this.villageList.filter((obj: any) => obj != null).map((village: { name: any; id: any; }) => {
+            this.villageList = this.villageList.filter((obj: any) => obj != null && obj.status != null && obj.status == applicationConstants.ACTIVE).map((village: { name: any; id: any; }) => {
               return { label: village.name, value: village.id };
             });
           }
@@ -463,7 +463,7 @@ export class SiCommunicationComponent {
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
           this.districtsList = this.responseModel.data;
-          this.districtsList = this.districtsList.filter((obj: any) => obj != null).map((district: { name: any; id: any; }) => {
+          this.districtsList = this.districtsList.filter((obj: any) => obj != null && obj.status != null && obj.status == applicationConstants.ACTIVE).map((district: { name: any; id: any; }) => {
             return { label: district.name, value: district.id };
           });
           let state = this.statesList.find((data: any) => null != data && this.siLoanCommunicationModel.stateId != null && data.value == this.siLoanCommunicationModel.stateId);
@@ -489,7 +489,7 @@ export class SiCommunicationComponent {
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
           this.mandalsList = this.responseModel.data;
-          this.mandalsList = this.mandalsList.filter((obj: any) => obj != null).map((mandal: { name: any; id: any; }) => {
+          this.mandalsList = this.mandalsList.filter((obj: any) => obj != null && obj.status != null && obj.status == applicationConstants.ACTIVE).map((mandal: { name: any; id: any; }) => {
             return { label: mandal.name, value: mandal.id };
           });
           let district = this.districtsList.find((data: any) => null != data && this.siLoanCommunicationModel.districtId != null && data.value == this.siLoanCommunicationModel.districtId);
@@ -513,7 +513,7 @@ export class SiCommunicationComponent {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.villageList = this.responseModel.data;
-            this.villageList = this.villageList.filter((obj: any) => obj != null).map((village: { name: any; id: any; }) => {
+            this.villageList = this.villageList.filter((obj: any) => obj != null && obj.status != null && obj.status == applicationConstants.ACTIVE).map((village: { name: any; id: any; }) => {
               return { label: village.name, value: village.id };
             });
             let subDistrict = this.mandalsList.find((data: any) => null != data && this.siLoanCommunicationModel.subDistrictId != null && data.value == this.siLoanCommunicationModel.subDistrictId);
@@ -544,7 +544,7 @@ export class SiCommunicationComponent {
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data != null && this.responseModel.data != undefined ) {
           this.permanentDistrictList = this.responseModel.data;
-          this.permanentDistrictList = this.permanentDistrictList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+          this.permanentDistrictList = this.permanentDistrictList.filter((obj: any) => obj != null && obj.status != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
             return { label: relationType.name, value: relationType.id };
           });
           let permanentDistrictName = this.permanentDistrictList.find((data: any) => null != data && this.siLoanCommunicationModel.permanentDistrictId != null && data.value == this.siLoanCommunicationModel.permanentDistrictId);
@@ -576,7 +576,7 @@ export class SiCommunicationComponent {
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
         this.permanentMandalsList = this.responseModel.data;
-        this.permanentMandalsList = this.permanentMandalsList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+        this.permanentMandalsList = this.permanentMandalsList.filter((obj: any) => obj != null && obj.status != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
           return { label: relationType.name, value: relationType.id };
         });
           let permanentDistrictName = this.permanentMandalsList.find((data: any) => null != data && this.siLoanCommunicationModel.permanentSubDistrictId  != null && data.value == this.siLoanCommunicationModel.permanentSubDistrictId);
@@ -609,7 +609,7 @@ export class SiCommunicationComponent {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 ) {
             this.permanentVillagesList = this.responseModel.data;
-            this.permanentVillagesList = this.permanentVillagesList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+            this.permanentVillagesList = this.permanentVillagesList.filter((obj: any) => obj != null && obj.status != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
               return { label: relationType.name, value: relationType.id };
             });
           let permanentDistrictName = this.permanentVillagesList.find((data: any) => null != data && this.siLoanCommunicationModel.permanentVillageId != null && data.value == this.siLoanCommunicationModel.permanentVillageId);
@@ -706,6 +706,8 @@ export class SiCommunicationComponent {
     }
     this.siLoanCommunicationModel.villageId = null;
     this.siLoanCommunicationModel.villageName = null;
+    this.siLoanCommunicationModel.pinCode = null;
+    this.siLoanCommunicationModel.address1 = null;
 
     this.villageList = [];
   }
@@ -743,6 +745,8 @@ export class SiCommunicationComponent {
   onChangePermenentVillagesByPermenentMandals(mandalId : any){
     this.siLoanCommunicationModel.permanentPinCode = null;
     this.siLoanCommunicationModel.permanentAddress1 = null;
+    this.siLoanCommunicationModel.permanentVillageId = null;
+
     this.permanentVillagesList = [];
     this.getPermenentVilagesByPermenetMandalId(mandalId);
   }

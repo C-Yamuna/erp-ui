@@ -13,6 +13,7 @@ import { MemberGroupDetailsModel, MembershipBasicDetail, MembershipInstitutionDe
 import { RdAccountsModel, RdJointHolder } from '../../../shared/term-depost-model.model';
 import { MembershipServiceService } from 'src/app/transcations/savings-bank-transcation/savings-bank-account-creation-stepper/membership-basic-required-details/shared/membership-service.service';
 import { RdJointAccountHolderDetailsService } from '../../../shared/rd-joint-account-holder-details.service';
+import { CommonStatusData } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-recurring-deposit-joint-holder-details',
@@ -202,7 +203,7 @@ export class RecurringDepositJointHolderDetailsComponent implements OnInit {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.membershipList = this.responseModel.data;
-            this.admissionNumberList = this.membershipList.filter((obj: any) => obj != null && obj.memberTypeId == 1).map((relationType: { id: any; name: any; admissionNumber: any; memberTypeName: any }) => {
+            this.admissionNumberList = this.membershipList.filter((obj: any) => obj != null  && obj.statusName == CommonStatusData.APPROVED && obj.memberTypeId == 1).map((relationType: { id: any; name: any; admissionNumber: any; memberTypeName: any }) => {
               return {
                 label: relationType.admissionNumber
 

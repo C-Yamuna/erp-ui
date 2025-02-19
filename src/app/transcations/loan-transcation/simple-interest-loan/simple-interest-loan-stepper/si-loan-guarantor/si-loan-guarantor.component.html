@@ -40,8 +40,8 @@
                 <div class="col-lg-3 col-md-4 col-sm-12">
                     <label for="number"> <span class="red">*</span>{{'ERP.ADMISSION_NUMBER' | translate}} </label>
                     <p-multiSelect [options]="allTypesOfmembershipList" [(ngModel)]="selectedMembers"
-                        optionLabel="label" optionValue="value" placeholder="Select"  [showClear]="false" (onClear)="onClear($event)"
-                        (onChange)="OnChangeAdmissionNumber(selectedMembers)" formControlName="admissionNo">
+                        optionLabel="label" optionValue="value" placeholder="Select"  [showClear]="false" (onClear)="onClear($event)" formControlName="admissionNo"
+                        (onChange)="OnChangeAdmissionNumber(selectedMembers)" >
                     </p-multiSelect>
             
                 </div>
@@ -63,26 +63,38 @@
                         <div class="row">
                             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
                                 <div class="col">
-                                <span class="label-view">{{ 'ERP.NAME' | translate }}</span>
-                                <p class="label-input-text text-break m-0">{{ member.name }}</p>
-                            </div>
-                            </div>
-                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
-                                <div class="col">
-                                <span class="label-view">{{ 'ERP.CONTACT' | translate }}</span>
-                                <p class="label-input-text text-break m-0">{{ member.mobileNumber }}</p>
-                            </div>
+                                    <span class="label-view">{{ 'ERP.ADMISSION_NUMBER' | translate }}</span>
+                                    <p class="label-input-text text-break m-0">{{ member.admissionNumber }}</p>
+                                </div>
                             </div>
                             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
                                 <div class="col">
-                                <span class="label-view">{{ 'ERP.AADHAR_NUMBER' | translate }} </span>
-                                <p class="label-input-text text-break m-0">{{ member.aadharNumber }}</p>
-                            </div>
+                                    <span class="label-view">{{ 'ERP.NAME' | translate }}</span>
+                                    <p class="label-input-text text-break m-0">{{ member.name }}</p>
+                                </div>
                             </div>
                             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
                                 <div class="col">
-                                <span class="label-view">{{ 'ERP.EMAIL' | translate }}</span>
-                                <p class="label-input-text text-break m-0">{{ member.emailId }}</p>
+                                    <span class="label-view">{{ 'ERP.MEMBER_TYPE' | translate }}</span>
+                                    <p class="label-input-text text-break m-0">{{ member.memberTypeName }}</p>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                <div class="col">
+                                    <span class="label-view">{{ 'ERP.CONTACT' | translate }}</span>
+                                    <p class="label-input-text text-break m-0">{{ member.mobileNumber }}</p>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                <div class="col">
+                                    <span class="label-view">{{ 'ERP.AADHAR_NUMBER' | translate }} </span>
+                                    <p class="label-input-text text-break m-0">{{ member.aadharNumber }}</p>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                                <div class="col">
+                                    <span class="label-view">{{ 'ERP.EMAIL' | translate }}</span>
+                                    <p class="label-input-text text-break m-0">{{ member.emailId }}</p>
                                 </div>
                             </div>
                         </div>

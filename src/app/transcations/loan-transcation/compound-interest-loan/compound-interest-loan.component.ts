@@ -194,13 +194,13 @@ export class CompoundInterestLoanComponent {
     this.router.navigate([Loantransactionconstant.COMPOUND_INTEREST_LOANS_PREVIEW], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id), editbutton: this.encryptDecryptService.encrypt(2) } });
   }
 
-  navigateToOperations(event: any) {
+  navigateToOperations(event: any,rowData: any) {
     if (event.value === 1)
-    this.router.navigate([Loantransactionconstant.LOANS_DISBURSEMENT]);
+    this.router.navigate([Loantransactionconstant.CI_LOAN_DISBURSEMENT],{ queryParams: { id: this.encryptDecryptService.encrypt(rowData.id)}});
     else if (event.value === 2)
-    this.router.navigate([Loantransactionconstant.LOANS_COLLECTIONS]);
+    this.router.navigate([Loantransactionconstant.CI_LOAN_COLLECTION],{ queryParams: { id: this.encryptDecryptService.encrypt(rowData.id)}});
     else if (event.value === 3)
-    this.router.navigate([Loantransactionconstant.LOANS_CLOSURE]);
+    this.router.navigate([Loantransactionconstant.CI_LOAN_CLOSURE],{ queryParams: { id: this.encryptDecryptService.encrypt(rowData.id)}});
   }
 
   onChange(){

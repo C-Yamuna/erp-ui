@@ -38,7 +38,7 @@
                                 </div>
                         </div>
                             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end d-flex right-actions">
-                                    <div class="cardview-icon icon-size text-right cursor-pointer -mt-1" (click)="onClickkycPhotoCopy()"><i class="fa fa-eye mr-3" aria-hidden="true"></i></div>
+                                    <div class="cardview-icon icon-size text-right cursor-pointer -mt-1" (click)="onClickkycPhotoCopy(document)"><i class="fa fa-eye mr-3" aria-hidden="true"></i></div>
                                     <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn"
                                         (click)="toggleEditForm(i ,document)" [disabled]="editButtonDisable"></p-button>
                                         <p-button icon="fa fa-trash" class="kyc-edit-btn ml-3" (click)="deletDilogBox(document)"
@@ -203,33 +203,33 @@
                                                                                                                     <input #fileUpload id="fileUpload" type="file" (change)="imageUploader($event,fileUpload)" formContralName="fileUpload">
                                                                                                                 </div> -->
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="form-label">
-                            <div class="ml-2"><span class="red">*</span> {{ 'ERP.UPLOAD_DOCUMENT' | translate }} </div>
                             <div class="uplodad-style align-items-center">
                                 <!-- Upload Button Column -->
-
-                                <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
-                                    chooseLabel=" " id="apply-leave_fileUp_attach" name="file" (onRemove)="fileRemoeEvent()"
-                                    accept=".png,.jpg,.jpeg,.pdf" [customUpload]="true" formContralName="fileUpload"
-                                    (onSelect)="imageUploader($event,fileUpload)">
+                                <div class="ml-2"><span class="red">*</span> {{ 'ERP.UPLOAD_DOCUMENT' | translate }} </div>
+                                <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]" chooseLabel=" "
+                                    id="apply-leave_fileUp_attach" name="file" (onRemove)="fileRemoeEvent()" accept=".png,.jpg,.jpeg,.pdf"
+                                    [customUpload]="true" formContralName="fileUpload" (onSelect)="imageUploader($event,fileUpload)">
                                 </p-fileUpload>
-
-                                <!-- Uploaded Files Display Column -->
-
-                                <div class="col-12 d-flex p-1 contant-body" *ngFor="let img of ciLoanKycModel.multipartFileList">
-                                    <!-- <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                                        <a href="{{img.imageValue}}">
-                                                                    <img src="{{img.imageValue}}">
-                                                                </a>
-                                                                </div>&nbsp;&nbsp; -->
-                                    <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                        {{img.fileName}}
+                                <div class="form-label">
+                                   
+                                    <div class="col-12 d-flex p-1 contant-body" *ngFor="let img of ciLoanKycModel.multipartFileList">
+                                        <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                            <a href="{{img.imageValue}}">
+                                                <img src="{{img.imageValue}}" width="22" height="22">
+                                            </a>
+                                        </span>
+                                        <span *ngIf="img.fileType=='pdf'">
+                                            <a href="{{img.imageValue}}"> <img src="assets/images/pdficon-img.png" width="22" height="22"></a>
+                                        </span>
+                                        <span class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                            {{img.fileName}}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
-                            </div>
-
                         </div>
+                        
+                        
                         <div class="col-12">
                             <div class="justify-content-end d-flex">
                                 <p-button label="{{'cancel' | translate}}" (click)="cancel()"></p-button>
@@ -264,8 +264,7 @@
   <!-- KYC Photo Copy -->
   <p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="kycPhotoCopyZoom" styleClass="doc-photo-dialog">
     <div class="col-12">
-    <div *ngFor="let document of kycModelList ; let i = index">
-    <div *ngFor="let img of document.multipartFileList">
+    <div *ngFor="let img of multipleFilesList">
         <div class="mb-3" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
             <a href="{{img.imageValue}}">
                 <img src="{{img.imageValue}}" class="doc-photocopy">
@@ -276,7 +275,6 @@
                 <img src="assets\images\pdf.png" class="doc-photocopy">
             </a>
         </div>
-    </div>
     </div>
 </div>
 </p-dialog>

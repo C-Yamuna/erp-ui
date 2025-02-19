@@ -162,21 +162,21 @@ export class FdNonCumulativeInterestPaymentComponent {
     this.transactionForm = this.formBuilder.group({
       transactionDate : new FormControl({ value: '', disabled: true }),
       interestPostingDate: new FormControl(''),
-      transactionAmount: new FormControl('', [Validators.required]),
+      transactionAmount: new FormControl(''),
       transactionMode: new FormControl('', [Validators.required]),
       accountNumber: new FormControl(''),
-      isVerified:new FormControl(''),
+      isVerified:new FormControl('',[Validators.required]),
       remarks: new FormControl(''),
-      // fileUpload: new FormControl('')
+      // fileUpload: new FormControl('',[Validators.required])
     })
   }
 
   ngOnInit() {
     this.interestPayment = [
       { field: 'interestPostingDate', header: 'TERMDEPOSITSTRANSACTION.INTEREST_PAYMENT_DATE' },
-      { field: 'transactionMode', header: 'TERMDEPOSITSTRANSACTION.PAYMENT_MODE' },
+      { field: 'transactionModeName', header: 'TERMDEPOSITSTRANSACTION.PAYMENT_MODE' },
       { field: 'interestAmount', header: 'TERMDEPOSITSTRANSACTION.INTEREST_AMOUNT' },
-      { field: 'transcationDate', header: 'TERMDEPOSITSTRANSACTION.PAID_DATE ' },
+      { field: 'transcationDate', header: 'TERMDEPOSITSTRANSACTION.PAID_DATE' },
       { field: 'statusName', header: 'TERMDEPOSITSTRANSACTION.STATUS' },
     ];
     this.transaction = [
@@ -218,6 +218,9 @@ export class FdNonCumulativeInterestPaymentComponent {
           if (this.fdNonCumulativeApplicationModel.depositDate != null && this.fdNonCumulativeApplicationModel.depositDate != undefined) {
             this.fdNonCumulativeApplicationModel.depositDate = this.datePipe.transform(this.fdNonCumulativeApplicationModel.depositDate, this.orgnizationSetting.datePipe);
           }
+          if (this.fdNonCumulativeApplicationModel.maturityDate != null && this.fdNonCumulativeApplicationModel.maturityDate != undefined) {
+            this.fdNonCumulativeApplicationModel.maturityDate = this.datePipe.transform(this.fdNonCumulativeApplicationModel.maturityDate, this.orgnizationSetting.datePipe);
+          }
           this.fdNonCummulativeTransactionModel.transactionDate = new Date();
           if (this.fdNonCumulativeApplicationModel.admissionNumber != null && this.fdNonCumulativeApplicationModel.admissionNumber != undefined) {
             this.admissionNumber = this.fdNonCumulativeApplicationModel.admissionNumber;
@@ -245,6 +248,9 @@ export class FdNonCumulativeInterestPaymentComponent {
               if(payment.interestPostingDate != null && payment.interestPostingDate != undefined){
                 payment.interestPostingDate = this.datePipe.transform(payment.interestPostingDate, this.orgnizationSetting.datePipe);
               }
+              if(payment.transcationDate != null && payment.transcationDate != undefined){
+                payment.transcationDate = this.datePipe.transform(payment.transcationDate, this.orgnizationSetting.datePipe);
+              }
             }
           }
 
@@ -257,6 +263,10 @@ export class FdNonCumulativeInterestPaymentComponent {
             }
             this.getDueInterestAmount();
            }
+           if (this.fdNonCummulativeTransactionModel.interestPostingDate != null && this.fdNonCummulativeTransactionModel.interestPostingDate != undefined) {
+            this.fdNonCummulativeTransactionModel.interestPostingDate = this.datePipe.transform(this.fdNonCummulativeTransactionModel.interestPostingDate, this.orgnizationSetting.datePipe);
+          }
+
           //membership details
           if (this.fdNonCumulativeApplicationModel != null && this.fdNonCumulativeApplicationModel != undefined) {
             this.membershipBasicDetails();//individual
@@ -284,16 +294,23 @@ export class FdNonCumulativeInterestPaymentComponent {
   getDueInterestAmount() {
     let totalInterestAmount = 0;
     const currentDate = new Date();
-      let currentDateLong = this.commonFunctionsService.getUTCEpoch(new Date(currentDate));
-    if (this.interestPaymentList && this.interestPaymentList.length > 0) {
-     this.interestPaymentList
-        .filter(transaction => transaction.statusName === 'Due').map(count => {
-          count.interestPostingDate = this.commonFunctionsService.getUTCEpoch(new Date(count.interestPostingDate));
-          if(count.interestPostingDate <= currentDateLong){
-            totalInterestAmount = totalInterestAmount + count.interestAmount;
-          }
-            return this.fdNonCummulativeTransactionModel.transactionAmount = totalInterestAmount;
-          });
+    let currentDateLong = this.commonFunctionsService.getUTCEpoch(new Date(currentDate));
+    if (this.interestPaymentList != null && this.interestPaymentList != undefined && this.interestPaymentList.length > 0) {
+      this.interestPaymentList.filter(transaction => transaction.statusName === 'Due').map(count => {
+        count.interestPostingDate = this.commonFunctionsService.getUTCEpoch(new Date(count.interestPostingDate));
+        if (count.interestPostingDate <= currentDateLong) {
+          totalInterestAmount = totalInterestAmount + count.interestAmount;
+        }
+        return this.fdNonCummulativeTransactionModel.transactionAmount = totalInterestAmount;
+      });
+      for (let payment of this.interestPaymentList) {
+        if (payment.interestPostingDate != null && payment.interestPostingDate != undefined) {
+          payment.interestPostingDate = this.datePipe.transform(payment.interestPostingDate, this.orgnizationSetting.datePipe);
+        }
+        if (payment.transcationDate != null && payment.transcationDate != undefined) {
+          payment.transcationDate = this.datePipe.transform(payment.transcationDate, this.orgnizationSetting.datePipe);
+        }
+      }
     }
   }
   onClick() {
@@ -617,6 +634,7 @@ export class FdNonCumulativeInterestPaymentComponent {
       fdNonCummulativeTransactionModel.transactionDate = this.commonFunctionsService.getUTCEpoch(new Date(fdNonCummulativeTransactionModel.transactionDate));
     }
     this.fdNonCummulativeTransactionModel.transactionMode = this.transactionForm.get('transactionMode')?.value.value;
+    this.fdNonCummulativeTransactionModel.isVerified = this.transactionForm.get('isVerified')?.value.value;
     if (fdNonCummulativeTransactionModel.id != null && fdNonCummulativeTransactionModel.id != undefined) {
       this.interestPaymentService.updateFdNonCumTransaction(fdNonCummulativeTransactionModel).subscribe((data: any) => {
         this.responseModel = data;
@@ -630,9 +648,10 @@ export class FdNonCumulativeInterestPaymentComponent {
               setTimeout(() => {
                 this.msgs = [];
               }, 2000);
-              // this.getInterestPayment(this.accountNumber);
             }
           }
+          this.getFdNonCummApplicationById(this.id);
+          this.backbutton();
         }
         else {
           this.msgs = [];
@@ -665,9 +684,10 @@ export class FdNonCumulativeInterestPaymentComponent {
               setTimeout(() => {
                 this.msgs = [];
               }, 2000);
-              // this.getInterestPayment(this.accountNumber);
             }
           }
+          this.getFdNonCummApplicationById(this.id);
+          this.backbutton();
         }
         else {
           this.msgs = [];
@@ -681,6 +701,7 @@ export class FdNonCumulativeInterestPaymentComponent {
         error => {
           this.msgs = [];
           this.commonComponent.stopSpinner();
+          this.getFdNonCummApplicationById(this.id);
           this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
           setTimeout(() => {
             this.msgs = [];

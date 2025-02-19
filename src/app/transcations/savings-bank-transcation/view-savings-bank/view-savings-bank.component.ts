@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { savingsbanktransactionconstant } from '../savingsbank-transaction-constant';
 import { SavingsAccountService } from '../shared/savings-account.service';
@@ -18,6 +18,7 @@ import { FileUploadService } from 'src/app/shared/file-upload.service';
 import { TranslateService } from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
 import { MemberShipTypesData } from '../../common-status-data.json';
+import { MemberGuardianDetailsModel, MemberNomineeDetails } from '../../membership-transcation/shared/member-basic-details.model';
 
 @Component({
   selector: 'app-view-savings-bank',
@@ -33,7 +34,8 @@ export class ViewSavingsBankComponent {
   kycDetailsModel : KycDetailsModel = new KycDetailsModel();
   membershipBasicRequiredDetails: MembershipBasicRequiredDetails = new MembershipBasicRequiredDetails();
   memberGuardianDetailsModelDetails: MemberGuardianDetailsModelDetaila = new MemberGuardianDetailsModelDetaila();
-
+  memberNomineeDetailsModel: MemberNomineeDetails = new MemberNomineeDetails();
+  memberGuardianDetailsDetailsModel: MemberGuardianDetailsModel = new MemberGuardianDetailsModel();
   memberGroupDetailsModel: MemberGroupDetailsModel = new MemberGroupDetailsModel();
   membershipInstitutionDetailsModel: MembershipInstitutionDetailsModel = new MembershipInstitutionDetailsModel();
   responseModel!: Responsemodel;
@@ -89,6 +91,13 @@ export class ViewSavingsBankComponent {
   individualFlag: boolean = false;
   institutionFlag: boolean = false;
   groupFlag: boolean = false;
+  kycPhotoCopyZoom: boolean = false;
+  isMaximized: boolean = false;
+  docPhotoCopyZoom:boolean = false;
+  nomineePhotoCopyZoom:boolean = false;
+  guardianPhotoCopyZoom:boolean = false;
+  submitForApprovalMessage: any;
+  submitForApprovalValidation: boolean = true;
 ;
   constructor(private router: Router, private formBuilder:FormBuilder , private savingsAccountService: SavingsAccountService ,private commonComponent : CommonComponent  ,private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService , private commonFunctionsService :CommonFunctionsService ,private datePipe: DatePipe ,private fileUploadService :FileUploadService , private translate: TranslateService) { 
     this.amountblock = [
@@ -107,7 +116,7 @@ export class ViewSavingsBankComponent {
       { field: 'chargesCollectionFrequencyName', header: 'ERP.FREQUENCY_TYPE' },
       { field: 'serviceCharges', header: 'ERP.SERVICE_CHARGES'},
       { field: 'requestDocPath', header: 'ERP.FILE' },
-      { field: 'statusName', header: 'ERP.STATUS' },
+      // { field: 'statusName', header: 'ERP.STATUS' },
       
     ];
     this.columns = [
@@ -188,39 +197,42 @@ export class ViewSavingsBankComponent {
    * @implements submit for approval
    * @author jyothi.naidana
    */
-  submit(){
-    this.viewSavingBankModel.accountStatusName = savingsbanktransactionconstant.SUBMISSION_FOR_APPROVAL;
-    this.savingsAccountService.updateSavingsAccountDetails(this.viewSavingBankModel).subscribe((response: any) => {
-      this.responseModel = response;
-      if (this.responseModel != null && this.responseModel != undefined) {
-        if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-          this.commonComponent.stopSpinner();
+  submit() {
+    this.submitForApprovalCheck();
+    if (this.submitForApprovalValidation) {
+      this.viewSavingBankModel.accountStatusName = savingsbanktransactionconstant.SUBMISSION_FOR_APPROVAL;
+      this.savingsAccountService.updateSavingsAccountDetails(this.viewSavingBankModel).subscribe((response: any) => {
+        this.responseModel = response;
+        if (this.responseModel != null && this.responseModel != undefined) {
+          if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+            this.commonComponent.stopSpinner();
+            this.msgs = [];
+            this.msgs = [{ severity: 'success', detail: this.responseModel.statusMsg }];
+            setTimeout(() => {
+              this.msgs = [];
+              this.router.navigate([savingsbanktransactionconstant.SB_TRANSACTION]);
+            }, 2000);
+
+          }
+          else {
+            this.commonComponent.stopSpinner();
+            this.msgs = [];
+            this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
+            setTimeout(() => {
+              this.msgs = [];
+            }, 2000);
+          }
+        }
+      },
+        error => {
           this.msgs = [];
-          this.msgs = [{ severity: 'success', detail: this.responseModel.statusMsg }];
+          this.commonComponent.stopSpinner();
+          this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
           setTimeout(() => {
             this.msgs = [];
-            this.router.navigate([savingsbanktransactionconstant.SB_TRANSACTION]);
           }, 2000);
-          
-        }
-        else {
-          this.commonComponent.stopSpinner();
-          this.msgs = [];
-          this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 2000);
-        }
-      }
-    },
-      error => {
-        this.msgs = [];
-        this.commonComponent.stopSpinner();
-        this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
-        setTimeout(() => {
-          this.msgs = [];
-        }, 2000);
-      });
+        });
+    }
   }
   /**
    * @implements get savings application details by account id
@@ -331,6 +343,7 @@ export class ViewSavingsBankComponent {
               this.viewSavingBankModel.multipartFileList = this.fileUploadService.getFile(this.viewSavingBankModel.applicationSignedForm, ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.viewSavingBankModel.applicationSignedForm);
               this.isFileUploaded = applicationConstants.TRUE;
             }
+            
 
           }
           // this.msgs = [];
@@ -354,6 +367,47 @@ export class ViewSavingsBankComponent {
       }, 2000);
     });
 
+  }
+
+  /**
+   * @implements submit for approval Check
+   * @author jyothi.naidana
+   */
+  submitForApprovalCheck() {
+    if (this.individualFlag) {
+      if (this.viewSavingBankModel == null || this.viewSavingBankModel == undefined || this.viewSavingBankModel.productId == null || this.viewSavingBankModel.kycList == null || this.viewSavingBankModel.kycList == undefined || this.viewSavingBankModel.kycList.length == 0 || this.communicationDetailsModel == null || this.communicationDetailsModel == undefined || this.membershipBasicRequiredDetails == null || this.membershipBasicRequiredDetails == undefined) {
+        this.submitForApprovalMessage = "please update mandotory details application,Kyc,Communication";
+        this.submitForApprovalValidation = false;
+        this.msgs = [];
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.submitForApprovalMessage }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
+    }
+    else if (this.groupFlag) {
+      if (this.viewSavingBankModel == null || this.viewSavingBankModel == undefined || this.viewSavingBankModel.productId == null || this.viewSavingBankModel.kycList == null || this.viewSavingBankModel.kycList == undefined || this.viewSavingBankModel.kycList.length == 0 || this.communicationDetailsModel == null || this.communicationDetailsModel == undefined || this.memberGroupDetailsModel == null || this.memberGroupDetailsModel == undefined) {
+        this.submitForApprovalMessage = "please update mandotory details application,Kyc,Communication";
+        this.submitForApprovalValidation = false;
+        this.msgs = [];
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.submitForApprovalMessage }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
+    }
+    else if (this.institutionFlag) {
+      if (this.viewSavingBankModel == null || this.viewSavingBankModel == undefined || this.viewSavingBankModel.productId == null || this.viewSavingBankModel.kycList == null || this.viewSavingBankModel.kycList == undefined || this.viewSavingBankModel.kycList.length == 0 || this.communicationDetailsModel == null || this.communicationDetailsModel == undefined || this.membershipInstitutionDetailsModel == null || this.membershipInstitutionDetailsModel == undefined) {
+        this.submitForApprovalMessage = "please update mandotory details application,Kyc,Communication";
+        this.submitForApprovalValidation = false;
+        this.msgs = [];
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.submitForApprovalMessage}];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
+    }
+    
   }
 
   applicationEdit(rowData: any) {
@@ -651,5 +705,41 @@ export class ViewSavingsBankComponent {
 
     }
   }
-
+  onClickkycPhotoCopy(rowData :any){
+    this.multipleFilesList = [];
+    this.kycPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
+  }
+  onClickdoccPhotoCopy(rowData :any){
+    this.multipleFilesList = [];
+    this.docPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
+  }
+  onClicknomineePhotoCopy(){
+    this.nomineePhotoCopyZoom = true;
+  }
+  onClickguardianPhotoCopy(){
+    this.guardianPhotoCopyZoom = true;
+  }
+  // Popup Maximize
+              @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+              
+                onDialogResize(event: any) {
+                  this.isMaximized = event.maximized;
+              
+                  if (this.isMaximized) {
+                    // Restore original image size when maximized
+                    this.imageElement.nativeElement.style.width = 'auto';
+                    this.imageElement.nativeElement.style.height = 'auto';
+                    this.imageElement.nativeElement.style.maxWidth = '100%';
+                    this.imageElement.nativeElement.style.maxHeight = '100vh';
+                  } else {
+                    // Fit image inside the dialog without scrollbars
+                    this.imageElement.nativeElement.style.width = '100%';
+                    this.imageElement.nativeElement.style.height = '100%';
+                    this.imageElement.nativeElement.style.maxWidth = '100%';
+                    this.imageElement.nativeElement.style.maxHeight = '100%';
+                    this.imageElement.nativeElement.style.objectFit = 'contain';
+                  }
+                }
 }

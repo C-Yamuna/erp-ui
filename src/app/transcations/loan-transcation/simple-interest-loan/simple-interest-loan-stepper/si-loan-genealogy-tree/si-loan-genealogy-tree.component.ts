@@ -42,14 +42,14 @@ export class SiLoanGenealogyTreeComponent {
   minBalence: any;
   accountType: any;
   productName: any;
-  displayDialog: boolean = false;
-  deleteId: any;
   isMemberCreation: boolean = false;
   membershipBasicRequiredDetails: MembershipBasicRequiredDetails = new MembershipBasicRequiredDetails();
   memberGroupDetailsModel: MemberGroupDetailsModel = new MemberGroupDetailsModel();
   membershipInstitutionDetailsModel: MembershipInstitutionDetailsModel = new MembershipInstitutionDetailsModel();
   siLoanGenealogyTreeModel: SiLoanGenealogyTree = new SiLoanGenealogyTree();
   siLoanApplicationModel: SiLoanApplication = new SiLoanApplication();
+  displayDialog: boolean = false;
+  deleteId: any;
   
 
   memberTypeName: any;
@@ -187,7 +187,7 @@ export class SiLoanGenealogyTreeComponent {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.siLoanApplicationModel = this.responseModel.data[0];
           
-            if (this.responseModel.data[0].admissionNo != null && this.responseModel.data[0].admissionNumber != undefined) {
+            if (this.responseModel.data[0].admissionNo != null && this.responseModel.data[0].admissionNo != undefined) {
               this.admissionNumber = this.responseModel.data[0].admissionNo;
             }
 
@@ -223,7 +223,6 @@ export class SiLoanGenealogyTreeComponent {
     this.addButtonService = true;
     this.editDeleteDisable = true;
     this.saveAndNextDisable = true;
-
     /**
      * for update validation
      */
@@ -239,7 +238,8 @@ export class SiLoanGenealogyTreeComponent {
     this.addButtonService = false;
     this.editDeleteDisable = false;
     this.siLoanGenealogyTreeModel = row;
-    this.saveAndNextDisable = false;
+   
+
     const relation = this.relationshipTypesList.find((item: { value: any; }) => item.value === row.relationWithApplicant);
       this.siLoanGenealogyTreeModel.relationWithApplicantName = relation.label;
 
@@ -283,6 +283,7 @@ export class SiLoanGenealogyTreeComponent {
             if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
               this.siLoanGenealogyTreeModel = this.responseModel.data;
               this.addButtonService = false;
+              this.saveAndNextDisable = false;
               if (this.responseModel.data[0].siLoanApplicationId != null && this.responseModel.data[0].siLoanApplicationId != undefined) {
                 this.getSILoanGenealogyTreeDetailsByLoanAccId(this.responseModel.data[0].siLoanApplicationId);
               }
@@ -355,45 +356,6 @@ export class SiLoanGenealogyTreeComponent {
   //   });
   // }
 
-  delete(rowId : any){
-      this.siLoanGenealogyTreeService.deleteSILoanGenealogyTree(rowId).subscribe((response : any ) => {
-        this.responseModel = response;
-        if(this.responseModel.status == applicationConstants.STATUS_SUCCESS){
-          if(this.loanAccId != null && this.loanAccId != undefined){
-            this.getSILoanGenealogyTreeDetailsByLoanAccId(this.loanAccId);
-          }  
-         
-        }
-          else {
-            this.msgs = [];
-            this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-            setTimeout(() => {
-              this.msgs = [];
-            }, 2000);
-          }
-        }, error => {
-          this.commonComponent.stopSpinner();
-          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 3000);
-        });
-      }
-
-      deletDilogBox(row:any){
-        this.displayDialog = true;
-        this.deleteId = row.id;
-      }
-
-      submitDelete(){
-        this.delete(this.deleteId);
-        this.displayDialog = false;
-      }
-
-
-      cancelForDialogBox() {
-        this.displayDialog = false;
-      }
   onChangeRelationTypeType(event: any) {
     
     if (event.value != null && event.value != undefined) {
@@ -401,6 +363,65 @@ export class SiLoanGenealogyTreeComponent {
       this.siLoanGenealogyTreeModel.relationWithApplicantName = relation.label;
       this.updateData();
     }
+  }
+  //duplicate method for relation with member name
+   familyDplicate(id: any) {
+      if (id != null && id != undefined) {
+        if (this.siLoanGenealogyTreeList != null && this.siLoanGenealogyTreeList != undefined && this.siLoanGenealogyTreeList.length > 0) {
+          for (let item of this.siLoanGenealogyTreeList) {
+            if (item != null && item != undefined  && item.status== applicationConstants.ACTIVE && item.relationWithApplicant != null && item.relationWithApplicant != undefined && item.relationWithApplicant === id) {
+              this.siGenealogyTreeForm.reset();
+              this.msgs = [];
+              this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "relation with member already exists" }];
+              setTimeout(() => {
+                this.msgs = [];
+              }, 1500);
+            }
+          }
+        }
+      }
+    }
+    //delete dialoge box 
+    deletDilogBox(row:any){
+      this.displayDialog = true;
+      this.deleteId = row.id;
+    }
+    //submit for delete record inactive
+    submitDelete(){
+      this.delete(this.deleteId);
+      this.displayDialog = false;
+    }
+    // cancle for no delete 
+    cancelForDialogBox() {
+      this.displayDialog = false;
+    }
+    //delete record for active to inactive in the list 
+  delete(rowId: any) {
+    this.siLoanGenealogyTreeService.deleteSILoanGenealogyTree(rowId).subscribe((response: any) => {
+      this.responseModel = response;
+      if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+        this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 1200);
+        if (this.loanAccId != null && this.loanAccId != undefined) {
+          this.getSILoanGenealogyTreeDetailsByLoanAccId(this.loanAccId);
+        }
+      }
+      else {
+        this.msgs = [];
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
+    }, error => {
+      this.commonComponent.stopSpinner();
+      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    });
   }
 
 }

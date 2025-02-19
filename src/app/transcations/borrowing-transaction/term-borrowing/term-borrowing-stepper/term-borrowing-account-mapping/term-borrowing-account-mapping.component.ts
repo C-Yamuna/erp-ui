@@ -74,7 +74,7 @@ export class TermBorrowingAccountMappingComponent {
         this.termborrowingAccountMappedLoansDTOList.forEach(row => {
           row.selected = this.borrowingsAccountMappinglist.some(item => item.loanAccountNumber === row.accountNumber);
         });
-        this.updateHeaderCheckboxState()
+        
         this.getBytermBorrowingAccountId(this.borrowingAccountId);
         if (this.borrowingAccountId != "" && this.borrowingAccountId != null && this.borrowingAccountId != undefined) {
           this.termAccountDetailsService.getTermAccountDetailsById(this.borrowingAccountId).subscribe(res => {
@@ -106,7 +106,7 @@ export class TermBorrowingAccountMappingComponent {
       }
     }) 
     this.save();
-    
+    this.updateHeaderCheckboxState();
 
   }
 
@@ -128,8 +128,12 @@ export class TermBorrowingAccountMappingComponent {
           );
         });  
         this.updateData();
+        this.updateHeaderCheckboxState();
         }
       } else {
+        this.termborrowingAccountMappedLoansDTOList = []; // Reset data to avoid issues
+        this.selectAllChecked = false;
+   
         this.commonComponent.stopSpinner();
         this.msgs = [];
         this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
@@ -203,10 +207,12 @@ selectAll(event: any) {
   this.updateData();  
 }
 
-
-
 updateHeaderCheckboxState() {
-  this.selectAllChecked = this.termborrowingAccountMappedLoansDTOList.every(row => row.selected);
+  if (!this.termborrowingAccountMappedLoansDTOList || this.termborrowingAccountMappedLoansDTOList.length === 0) {
+    this.selectAllChecked = false; 
+  } else {
+    this.selectAllChecked = this.termborrowingAccountMappedLoansDTOList.every(row => row.selected);
+  }
 }
   save() {
     this.updateData();
@@ -251,6 +257,7 @@ updateHeaderCheckboxState() {
         });
         this.commonComponent.stopSpinner();
       } else {
+       
         this.commonComponent.stopSpinner();
         this.msgs = [];
         this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];

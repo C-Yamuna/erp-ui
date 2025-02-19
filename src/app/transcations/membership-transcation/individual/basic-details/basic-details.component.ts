@@ -108,6 +108,7 @@ export class BasicDetailsComponent {
       'admissionDate': new FormControl('', Validators.required),      
       'admissionFee': new FormControl(''),
       'isStaff':new FormControl('', Validators.required),
+      'societyAdmissionNo': new FormControl('', Validators.required),
 
     })
   }

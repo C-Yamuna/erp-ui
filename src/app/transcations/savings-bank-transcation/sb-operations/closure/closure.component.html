@@ -572,15 +572,15 @@
 
                             </div>
                             <div>
-                                <span>{{'ERP.ROI' | translate}}:{{term.roi}}  </span>
+                                <span>{{'ERP.ROI' | translate}}:{{term.effectiveRoi}}  </span>
 
                             </div>
                             <div>
-                                <span>{{'ERP.SANCTION_AMOUNT' | translate}}:{{term.sactionAmount}} </span>
+                                <span>{{'ERP.SANCTION_AMOUNT' | translate}}:{{term.sanctionAmount}} </span>
 
                             </div>
                             <div>
-                                <span>{{'ERP.SANCTION_DATE' | translate}}:{{term.sactionDateVal}} </span>
+                                <span>{{'ERP.SANCTION_DATE' | translate}}:{{term.sanctionDate}} </span>
 
                             </div>
                             <div>
@@ -595,7 +595,7 @@
                         </div>
 
                     </div>
-
+                    <p-button label="{{'ERP.BACK' | translate}}" (click)="backbutton()" *ngIf="isStanderedInstrctionsActive"></p-button>
                     <!--<div class="col-lg-4 col-md-6 col-sm-6">
                         <div class="col-12 border-top border-success border-5 bg-body-tertiary text-center text-break">
                             <div class="col-12">
@@ -747,9 +747,9 @@
             </div>
             <div class="col-12 btn-footer px-0">
                 <div class="col-12 d-flex justify-content-end p-0 pt-1 group-button-bottom">
-                    <p-button label="{{'ERP.BACK' | translate}}" (click)="backbutton()" ></p-button>
+                    <p-button label="{{'ERP.BACK' | translate}}" (click)="backbutton()" *ngIf="!isStanderedInstrctionsActive"z></p-button>
                     <!-- <p-button label="{{'ERP.CLEAR' | translate}}" (click)="backbutton()"></p-button> -->
-                    <p-button label="{{'ERP.SUBMIT' | translate}}"  [disabled] ="!closureform.valid " (click)="savingsAccountClosureUpdate()" *ngIf="!isStanderedInstrctionsActive"></p-button>
+                    <p-button label="{{'ERP.SUBMIT' | translate}}"  [disabled] ="(!closureform.valid) || !(isFileUpload)" (click)="savingsAccountClosureUpdate()" *ngIf="!isStanderedInstrctionsActive"></p-button>
                 </div>
             </div>
         </div>
@@ -1147,19 +1147,19 @@
                             </div> -->
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
                     <div class="form-group">
-                        <span class="label-view">{{'ERP.TAN_NUMBER' | translate}}</span>
+                        <span class="label-view">{{'ERP.TAN_NO' | translate}}</span>
                         <p class="label-input-text">{{memberGroupDetailsModel.tanNumber}}</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
                     <div class="form-group">
-                        <span class="label-view">{{'ERP.PAN' | translate}}</span>
+                        <span class="label-view">{{'ERP.PAN_NO' | translate}}</span>
                         <p class="label-input-text">{{memberGroupDetailsModel.panNumber}}</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
                     <div class="form-group">
-                        <span class="label-view">{{'ERP.GST' | translate}}</span>
+                        <span class="label-view">{{'ERP.GST_NO' | translate}}</span>
                         <p class="label-input-text">{{memberGroupDetailsModel.gstNumber}}</p>
                     </div>
                 </div>

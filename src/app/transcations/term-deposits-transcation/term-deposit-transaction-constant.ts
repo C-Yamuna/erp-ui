@@ -88,4 +88,10 @@ export const termdeposittransactionconstant = {
       FD_NON_CUMULATIVE_RENEWAL:"/menu/term_deposit_transaction/fd_non_cummulative_renewal",
       AGE_SHOULD_NOT_BE_ZERO : "Age Should Not Be Zero",
 
+      FD_CUMULATIVE_FORECLOSURE:"/menu/term_deposit_transaction/fd_cummulative_foreclosure_closure",
+      FD_CUMULATIVE_RENEWAL:"/menu/term_deposit_transaction/fd_cummulative_renewal",
+
+      RD_FORECLOSURE:"/menu/term_deposit_transaction/rd_foreclosure_closure",
+      RD_RENEWAL:"/menu/term_deposit_transaction/rd_renewal",
+
 }

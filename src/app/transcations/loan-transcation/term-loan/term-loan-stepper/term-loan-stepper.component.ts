@@ -30,7 +30,8 @@ import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-
 import { TermLoanGuarantorService } from './term-loans-loan-guarantor/shared/term-loan-guarantor.service';
 import { TermLoanNewMembershipService } from './term-loan-new-membership/shared/term-loan-new-membership.service';
 import { TranslateService } from '@ngx-translate/core';
-import { AccountTypes, CollateralTypes, MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
+import { AccountTypes, CollateralTypes, CommonStatusData, MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
+import { TermLoanMortgageService } from './term-loan-mortgage/shared/term-loan-mortgage.service';
 
 @Component({
   selector: 'app-term-loan-stepper',
@@ -41,6 +42,7 @@ export class TermLoanStepperComponent {
   items: MenuItem[] = [];
   activeIndex: number = 0;
   buttonDisabled: boolean = false;
+  termLoanApplicationId: any;
   activeItem: any;
   societyId: any;
   branchId: any;
@@ -49,9 +51,8 @@ export class TermLoanStepperComponent {
   msgs: any[] = [];
   completed: any;
   flagForLabelName: boolean = false;
-
   admissionNumber: any;
-  pacsCode?: any;
+  previouseButtonDisable: boolean = false;
   surName: any;
   name: any;
   gender: any;
@@ -62,8 +63,6 @@ export class TermLoanStepperComponent {
   mobileNumber: any;
   email: any;
   dateOfBirth: any;
-  termLoanApplicationId: any;
-  sbCommunicationId: any;
   accountType: any;
   flag: Boolean = false;
   isApplicationEdit: boolean = false;
@@ -71,22 +70,19 @@ export class TermLoanStepperComponent {
   isJointEdit: boolean = false;
   isKycEdit: boolean = false;
   isNomineeEdit: boolean = false;
-  isGuarantorEdit: boolean = false;
-  isMortgageEdit: boolean = false;
   isDocumentEdit: boolean = false;
-  isGenealogyEdit: boolean = false;
   flagForNomineeTypeValue: any;
   isPerminentAddressIsSameFalg: boolean = false;
   accountNumber: any;
   memberTypeName: any;
-  menuDisabled: any;
+  menuDisabled: boolean = true;
   checked: Boolean = false;
   showForm: boolean = false;
   tabviewButton: boolean = true;
   pacsId: any;
   operationTypeName: any;
+  operationTypeId: any;
   allTypesOfmembershipList: any;
-  admisionNumber: any;
   // memberCard feilds 
   individualFlag: boolean = true;
   groupFlag: boolean = false;
@@ -95,7 +91,31 @@ export class TermLoanStepperComponent {
   permenentAllTypesOfmembershipList: any;
   orgnizationSetting: any;
   memberDropDownDisable: boolean = false;
-  guarantorDetailsList: any[] = [];
+  rdJointHolderList: any[] = [];
+  memberTypeId: any;
+  admissionNumberDropDownDisable: boolean = false;
+  previousStepFlag: boolean = false;
+  membreIndividualFlag: boolean = false;
+  memberPhotoCopyZoom: boolean = false;
+  institutionPromoterFlag: boolean = false;
+  groupPromotersPopUpFlag: boolean = false;
+  groupPrmotersList: any[] = [];
+  groupPrmoters: any[] = [];
+  institionPromotersList: any[] = [];
+  institutionPrmoters: any[] = [];
+  columns: any[] = [];
+  photoCopyFlag: boolean = false;
+  memberSignatureCopyZoom: boolean = false;
+  memberDetails: any;
+  isKycApproved: any;
+  jointAccountHolderList: any[] = [];
+  memberTypeList: any[] = [];
+  guarantorDetailsList: any;
+  isGuarantorEdit: boolean = false;
+  isMortgageEdit: boolean = false;
+  isGenealogyEdit: boolean = false;
+  pacsCode: any;
+  
   membershipBasicRequiredDetailsModel: MembershipBasicRequiredDetails = new MembershipBasicRequiredDetails();
   memberGroupDetailsModel: MemberGroupDetailsModel = new MemberGroupDetailsModel();
   membershipInstitutionDetailsModel: MembershipInstitutionDetailsModel = new MembershipInstitutionDetailsModel();
@@ -117,27 +137,6 @@ export class TermLoanStepperComponent {
   institutionPromoterDetailsModel: InstitutionPromoterDetailsModel = new InstitutionPromoterDetailsModel();
   termLoanGuardianDetailsModel: TermLoanGuardianDetails = new TermLoanGuardianDetails()
   termPropertyMortgageLoanModel: TermPropertyMortgageLoan = new TermPropertyMortgageLoan();
-
-  memberTypeId: any;
-  previousStepFlag: boolean = false;
-  membreIndividualFlag: boolean = false;
-  memberPhotoCopyZoom: boolean = false;
-  institutionPromoterFlag: boolean = false;
-  groupPromotersPopUpFlag: boolean = false;
-  groupPrmotersList: any[] = [];
-  groupPrmoters: any[] = [];
-  institutionPrmoters: any[] = [];
-  institutionPrmotersList: any[] = [];
-  columns: any[] = [];
-  photoCopyFlag: boolean = false;
-  memberSignatureCopyZoom: boolean = false;
-  memberDetails: any;
-  isKycApproved: any;
-  jointHolderList: any[] = [];
-  memberTypeList: any[] = [];
-  jointHolderDetailsList: any[] = [];
-  accountTypeId: any;
-  admissionNumberDropDownDisable: boolean = false;
   constructor(private router: Router, private commonComponent: CommonComponent,
     private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService,
     private commonFunctionsService: CommonFunctionsService, private ref: ChangeDetectorRef,
@@ -146,7 +145,7 @@ export class TermLoanStepperComponent {
     private termLoanNomineeService: TermLoanNomineeService, private termLoanGuarantorDetailsService: TermLoanGuarantorService,
     private termLoanGenealogyTreeService: TermLoanGenealogyTreeService,
     private membershipService: TermLoanNewMembershipService, private formBuilder: FormBuilder, private datePipe: DatePipe,
-    private fileUploadService: FileUploadService, private translate: TranslateService,) {
+    private fileUploadService: FileUploadService, private translate: TranslateService, private termLoanMortgageService: TermLoanMortgageService,) {
     this.institutionPrmoters = [
       { field: 'surname', header: 'surname' },
       { field: 'name', header: 'name' },
@@ -180,16 +179,22 @@ export class TermLoanStepperComponent {
     this.pacsId = this.commonFunctionsService.getStorageValue(applicationConstants.PACS_ID);
     this.branchId = this.commonFunctionsService.getStorageValue(applicationConstants.BRANCH_ID);
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
+
     this.showForm = this.commonFunctionsService.getStorageValue(applicationConstants.B_CLASS_MEMBER_CREATION);
+
     this.activateRoute.queryParams.subscribe(params => {
       if (params['id'] != undefined || params['admissionNo'] != undefined || params['falg'] != undefined || params['showForm'] != undefined) {
         if (params['id'] != undefined) {
           let queryParams = Number(this.encryptDecryptService.decrypt(params['id']));
           let qParams = queryParams;
           this.termLoanApplicationId = qParams;
+          this.menuDisabled = false;
           this.getTermApplicationByTermAccId(this.termLoanApplicationId);
         }
-       
+        if (params['falg'] != undefined || params['showForm'] != undefined) {
+          this.refreshTheMemberCardData();
+        }
+
         if (params['admissionNo'] != undefined) {
           let queryParams = Number(this.encryptDecryptService.decrypt(params['admissionNo']));
           let qParams = queryParams;
@@ -203,13 +208,11 @@ export class TermLoanStepperComponent {
         this.isEdit = false;
         this.flagForLabelName = false;
       }
-      this.refreshTheMemberCardData();
       this.itemList();
     });
     if (this.memberDetails != null && this.memberDetails != undefined) {
       this.membershipBasicRequiredDetailsModel = this.memberDetails
     }
-    this.itemList();
     if (!this.showForm) {
       this.getAllTypeOfMembershipDetails(this.pacsId, this.branchId);
     }
@@ -226,19 +229,18 @@ export class TermLoanStepperComponent {
 
 
   appendCurrentStepperData() {
-    this.itemList();
     this.termLoanApplicationsService.currentStep.subscribe((data: any) => {
       if (data) {
         this.translate.use(this.commonFunctionsService.getStorageValue('language'));
       } else {
         this.translate.use(this.commonFunctionsService.getStorageValue('language'));
       }
-
       if (data != undefined) {
         this.itemList();
-        this.activeIndex = data.stepperIndex
+        this.activeIndex = data.stepperIndex;
+        this.previouseButtonDisable = false;
         this.changeStepperSelector(this.activeIndex);
-        this.buttonDisabled = data.isDisable
+        this.buttonDisabled = data.isDisable;
         if (data.data != null && data.data != undefined) {
           if (this.activeIndex == 0) {
             this.termLoanApplicationModel = data.data;
@@ -251,19 +253,17 @@ export class TermLoanStepperComponent {
                 this.memberTypeName = this.termLoanApplicationModel.memberTypeName;
               this.memberTypeCheck(this.memberTypeName, this.termLoanApplicationModel);
             }
-            this.itemList();
           }
           else if (this.activeIndex == 1) {
+            this.previouseButtonDisable = data.isDisable;
             if (data.data != null && data.data != undefined) {
               this.termLoanKycModel = data.data;
             }
-            this.itemList();
           }
           else if (this.activeIndex == 2) {
             if (data.data != null && data.data != undefined) {
               this.termLoanCommunicationModel = data.data;
             }
-            this.itemList();
           }
           else if (this.activeIndex == 3) {
             if (data.data != null && data.data != undefined) {
@@ -271,73 +271,78 @@ export class TermLoanStepperComponent {
             }
             this.itemList();
           }
-
           else if (this.activeIndex == 4) {
-            // if (data.data != null && data.data != undefined) {
-            //   if (data.data.admissionNumber != null && data.data.admissionNumber != undefined) {
-            //     this.termLoanApplicationModel.admissionNo = data.data.admissionNumber;
-            //   }
-
-            //   if (data.data.jointHolderList != null && data.data.jointHolderList != undefined && data.data.jointHolderList.length > 0) {
-            //     this.jointHolderList = data.data.jointHolderList;
-            //   }
-            //   this.termLoanJointHolderModel = data.data;
-            // }
-            // this.itemList();
             if (data.data != null && data.data != undefined) {
+              if (data.data.accountTypeId != null && data.data.accountTypeId != undefined) {
+                this.operationTypeId = data.data.accountTypeId;
+              }
               if (data.data.admissionNumber != null && data.data.admissionNumber != undefined) {
                 this.termLoanApplicationModel.admissionNo = data.data.admissionNumber;
               }
-
+              if (data.data.termLoanApplicationId != null && data.data.termLoanApplicationId != undefined) {
+                this.termLoanApplicationId = data.data.termLoanApplicationId;
+              }
+              if(data.data.memberTypeName != null && data.data.memberTypeName != undefined){
+                this.memberTypeName = data.data.memberTypeName;
+              }
               if (data.data.jointHolderList != null && data.data.jointHolderList != undefined && data.data.jointHolderList.length > 0) {
-                this.jointHolderList = data.data.jointHolderList;
+                this.jointAccountHolderList = data.data.jointHolderList;
               }
               this.termLoanJointHolderModel = data.data;
             }
             this.itemList();
           }
           else if (this.activeIndex == 5) {
-
             if (data.data != null && data.data != undefined) {
               this.termLoanGuardianDetailsModel = new TermLoanGuardianDetails();
-              if (data.data.termMemberGuardianDetailsDTO != null && data.data.termMemberGuardianDetailsDTO != undefined) {
-                this.termLoanGuardianDetailsModel = data.data.termMemberGuardianDetailsDTO;
+              if (data.data.termLoanGuardian != null && data.data.termLoanGuardian != undefined) {
+                this.termLoanGuardianDetailsModel = data.data.termLoanGuardian;
               }
               this.termLoanNomineeModel = data.data;
             }
             this.itemList();
-          } else if (this.activeIndex == 6) {
+          }
+          else if (this.activeIndex == 6) {
             if (data.data != null && data.data != undefined) {
-              if (data.data.accountTypeId != null && data.data.accountTypeId != undefined) {
-                this.operationTypeName = data.data.accountTypeId;
-              }
+            
               if (data.data.admissionNumber != null && data.data.admissionNumber != undefined) {
                 this.termLoanGuarantorModel.admissionNumber = data.data.admissionNumber;
               }
-              if (data.data.termLoanApplication != null && data.data.termLoanApplication != undefined) {
-                this.termLoanApplicationId = data.data.termLoanApplication;
+              if (data.data.termLoanApplicationId != null && data.data.termLoanApplicationId != undefined) {
+                this.termLoanApplicationId = data.data.termLoanApplicationId;
               }
-              if (data.data.termLoanGuarantorDetailsDTOList != null && data.data.termLoanGuarantorDetailsDTOList != undefined && data.data.termLoanGuarantorDetailsDTOList.length > 0) {
-                this.guarantorDetailsList = data.data.termLoanGuarantorDetailsDTOList;
+              if (data.data.guarantorDetailsList != null && data.data.guarantorDetailsList != undefined && data.data.guarantorDetailsList.length > 0) {
+                this.guarantorDetailsList = data.data.guarantorDetailsList;
               }
             }
-          } else if (this.activeIndex == 7) {
+            this.itemList();
+          }
+          else if (this.activeIndex == 7) {
             if (data.data.collateralType == 1) {
               this.termGoldLoanMortgageModel = data.data;
             } else if (data.data.collateralType == 2) {
-              this.termLandLoanMortgageModel = data.data;
+              this.termGoldLoanMortgageModel = data.data;
             } else if (data.data.collateralType == 3) {
-              this.termBondLoanMortgageModel = data.data;
+              this.termGoldLoanMortgageModel = data.data;
             } else if (data.data.collateralType == 4) {
+              this.termGoldLoanMortgageModel = data.data;
               this.termVehicleLoanMortgageModel = data.data;
             } else if (data.data.collateralType == 5) {
-              this.termStorageLoanMortgageModel = data.data;
+              this.termGoldLoanMortgageModel = data.data;
             } else if (data.data.collateralType == 6) {
-              this.termOtherLoanMortgageModel = data.data;
+              this.termGoldLoanMortgageModel = data.data;
             }
-          } else if (this.activeIndex == 8) {
+            else if (data.data.collateralType == 7) {
+              this.termGoldLoanMortgageModel = data.data;
+            }
+            this.itemList();
+          }
+          else if (this.activeIndex == 8) {
             this.termLoanDocumentsModel = data.data;
-          } else if (this.activeIndex == 9) {
+            this.itemList();
+          }
+          
+          else if (this.activeIndex == 9) {
             this.termLoanGenealogyTreeModel = data.data;
           }
         }
@@ -345,281 +350,6 @@ export class TermLoanStepperComponent {
     });
   }
 
-  // itemList() {
-  //   if (this.showForm) {
-  //     if (this.termLoanApplicationModel.operationTypeName != "Joint") {
-  //       this.items = [
-  //         {
-  //           label: 'Member Details', icon: 'fa fa-id-badge', routerLink: Loantransactionconstant.TERMLOANS_NEW_MEMBERSHIP,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 0;
-  //           }
-  //         },
-  //         {
-  //           label: 'KYC', icon: 'fa fa-podcast', routerLink: Loantransactionconstant.TERMLOANS_KYC,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 1;
-  //           }
-  //         },
-  //         {
-  //           label: 'Communication', icon: 'fa fa-map-marker', routerLink: Loantransactionconstant.TERMLOANS_COMMUNICATION,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 2;
-  //           }
-  //         },
-  //         {
-  //           label: 'Application', icon: 'fa fa-id-badge', routerLink: Loantransactionconstant.TERMLOANS_APPLICATION_DETAILS,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 3;
-  //           }
-  //         },
-  //         {
-  //           label: 'Nominee', icon: 'fa fa-user-o', routerLink: Loantransactionconstant.TERMLOANS_NOMINEE,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 5;
-  //           }
-  //         },
-  //         {
-  //           label: 'Loan Guarantor', icon: 'fa fa-male', routerLink: Loantransactionconstant.TERMLOANS_GUARANTOR,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 6;
-  //           }
-  //         },
-  //         {
-  //           label: 'Loan Mortagage', icon: 'fa fa-puzzle-piece', routerLink: Loantransactionconstant.TERMLOANS_MORTAGAGE,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 7;
-  //           }
-  //         },
-  //         {
-  //           label: 'Loan Documents', icon: 'fa fa-files-o', routerLink: Loantransactionconstant.TERM_LOAN_DOCUMENTS,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 8;
-  //           }
-  //         },
-  //         {
-  //           label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERMLOANS_GENEALOGY_TREE,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 9;
-  //           }
-  //         }
-  //       ];
-  //     }
-  //     else {
-  //       this.items = [
-  //         {
-  //           label: 'Member Details', icon: 'fa fa-id-badge', routerLink: Loantransactionconstant.TERMLOANS_NEW_MEMBERSHIP,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 0;
-  //           }
-  //         },
-  //         {
-  //           label: 'KYC', icon: 'fa fa-podcast', routerLink: Loantransactionconstant.TERMLOANS_KYC,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 1;
-  //           }
-  //         },
-  //         {
-  //           label: 'Communication', icon: 'fa fa-map-marker', routerLink: Loantransactionconstant.TERMLOANS_COMMUNICATION,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 2;
-  //           }
-  //         },
-  //         {
-  //           label: 'Application', icon: 'fa fa-id-badge', routerLink: Loantransactionconstant.TERMLOANS_APPLICATION_DETAILS,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 3;
-  //           }
-  //         },
-  //         {
-  //           label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: Loantransactionconstant.TERMLOANS_JOINT_ACCOUNT,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 4;
-  //           }
-  //         },
-  //         {
-  //           label: 'Nominee', icon: 'fa fa-user-o', routerLink: Loantransactionconstant.TERMLOANS_NOMINEE,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 5;
-  //           }
-  //         },
-  //         {
-  //           label: 'Loan Guarantor', icon: 'fa fa-male', routerLink: Loantransactionconstant.TERMLOANS_GUARANTOR,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 6;
-  //           }
-  //         },
-  //         {
-  //           label: 'Loan Mortagage', icon: 'fa fa-puzzle-piece', routerLink: Loantransactionconstant.TERMLOANS_MORTAGAGE,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 7;
-  //           }
-  //         },
-  //         {
-  //           label: 'Loan Documents', icon: 'fa fa-files-o', routerLink: Loantransactionconstant.TERM_LOAN_DOCUMENTS,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 8;
-  //           }
-  //         },
-  //         {
-  //           label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERMLOANS_GENEALOGY_TREE,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 9;
-  //           }
-  //         }
-  //       ];
-  //     }
-  //   }
-  //   else {
-  //     if (this.termLoanApplicationModel.operationTypeName != "Joint") {
-  //       this.items = [
-  //         {
-  //           label: 'KYC', icon: 'fa fa-podcast', routerLink: Loantransactionconstant.TERMLOANS_MEMBERSHIP,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 0;
-  //           }
-  //         },
-  //         {
-  //           label: 'Communication', icon: 'fa fa-map-marker', routerLink: Loantransactionconstant.TERMLOANS_COMMUNICATION,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 2;
-  //           }
-  //         },
-  //         {
-  //           label: 'Application', icon: 'fa fa-id-badge', routerLink: Loantransactionconstant.TERMLOANS_APPLICATION_DETAILS,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 3;
-  //           }
-  //         },
-  //         {
-  //           label: 'Nominee', icon: 'fa fa-user-o', routerLink: Loantransactionconstant.TERMLOANS_NOMINEE,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 5;
-  //           }
-  //         },
-  //         {
-  //           label: 'Loan Guarantor', icon: 'fa fa-male', routerLink: Loantransactionconstant.TERMLOANS_GUARANTOR,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 6;
-  //           }
-  //         },
-  //         {
-  //           label: 'Loan Mortagage', icon: 'fa fa-puzzle-piece', routerLink: Loantransactionconstant.TERMLOANS_MORTAGAGE,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 7;
-  //           }
-  //         },
-  //         {
-  //           label: 'Loan Documents', icon: 'fa fa-files-o', routerLink: Loantransactionconstant.TERM_LOAN_DOCUMENTS,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 8;
-  //           }
-  //         },
-  //         {
-  //           label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERMLOANS_GENEALOGY_TREE,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 9;
-  //           }
-  //         }
-  //       ];
-  //     }
-  //     else {
-  //       this.items = [
-  //         {
-  //           label: 'KYC', icon: 'fa fa-podcast', routerLink: Loantransactionconstant.TERMLOANS_MEMBERSHIP,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 0;
-  //           }
-  //         },
-  //         {
-  //           label: 'Communication', icon: 'fa fa-map-marker', routerLink: Loantransactionconstant.TERMLOANS_COMMUNICATION,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 2;
-  //           }
-  //         },
-  //         {
-  //           label: 'Application', icon: 'fa fa-id-badge', routerLink: Loantransactionconstant.TERMLOANS_APPLICATION_DETAILS,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 3;
-  //           }
-  //         },
-  //         {
-  //           label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: Loantransactionconstant.TERMLOANS_JOINT_ACCOUNT,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 4;
-  //           }
-  //         },
-  //         {
-  //           label: 'Nominee', icon: 'fa fa-user-o', routerLink: Loantransactionconstant.TERMLOANS_NOMINEE,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 5;
-  //           }
-  //         },
-  //         {
-  //           label: 'Loan Guarantor', icon: 'fa fa-male', routerLink: Loantransactionconstant.TERMLOANS_GUARANTOR,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 6;
-  //           }
-  //         },
-  //         {
-  //           label: 'Loan Mortagage', icon: 'fa fa-puzzle-piece', routerLink: Loantransactionconstant.TERMLOANS_MORTAGAGE,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 7;
-  //           }
-  //         },
-  //         {
-  //           label: 'Loan Documents', icon: 'fa fa-files-o', routerLink: Loantransactionconstant.TERM_LOAN_DOCUMENTS,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 8;
-  //           }
-  //         },
-  //         {
-  //           label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERMLOANS_GENEALOGY_TREE,
-  //           disabled: this.menuDisabled,
-  //           command: (event: any) => {
-  //             this.activeIndex = 9;
-  //           }
-  //         }
-  //       ];
-  //     }
-  //   }
-  //   this.activeItem = this.items[this.activeIndex];
-  // }
   itemList() {
     this.items = [];
     if(this.memberTypeName != MemberShipTypesData.INDIVIDUAL){
@@ -907,6 +637,7 @@ export class TermLoanStepperComponent {
     
   }
 
+
   memberTypeCheck(memberType: any, data: any) {
     if (memberType == MemberShipTypesData.INDIVIDUAL) {
       this.individualFlag = true;
@@ -919,8 +650,16 @@ export class TermLoanStepperComponent {
       if (this.membershipBasicRequiredDetailsModel.admissionDate != null && this.membershipBasicRequiredDetailsModel.admissionDate != undefined) {
         this.membershipBasicRequiredDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
       }
+      if(this.membershipBasicRequiredDetailsModel.isNewMember){
+        this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.photoCopyPath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.photoCopyPath);
+      }
+      else {
+        this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.photoCopyPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.photoCopyPath);
+      }
+      this.membershipBasicRequiredDetailsModel.tempAdmissionNumber = this.membershipBasicRequiredDetailsModel.admissionNumber;
+      // this.getMultiPartFileList();
     }
-    else if (memberType == "Group") {
+    else if (memberType == MemberShipTypesData.GROUP) {
       this.groupFlag = true;
       this.institutionFlag = false;
       this.individualFlag = false;
@@ -931,14 +670,25 @@ export class TermLoanStepperComponent {
       if (this.memberGroupDetailsModel.admissionDate != null && this.memberGroupDetailsModel.admissionDate != undefined) {
         this.memberGroupDetailsModel.admissionDateVal = this.datePipe.transform(this.memberGroupDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
       }
-      if (this.memberGroupDetailsModel.groupPromoterList != null && this.memberGroupDetailsModel.groupPromoterList != undefined && this.memberGroupDetailsModel.groupPromoterList.length > 0) {
-        this.groupPrmotersList = this.memberGroupDetailsModel.groupPromoterList;
+      if(this.memberGroupDetailsModel.admissionNumber != null && this.memberGroupDetailsModel.admissionNumber != undefined){
+        this.memberGroupDetailsModel.tempAdmissionNumber = this.memberGroupDetailsModel.admissionNumber;
+      }
+      if (this.memberGroupDetailsModel.isNewMember) {
+            this.groupPrmotersList=this.memberGroupDetailsModel.groupPromoterList ;
+          //   for(let promoter of this.groupPrmotersList){
+          //   if (promoter.dob != null && promoter.dob != undefined) {
+          //     promoter.memberDobVal = this.datePipe.transform(this.membershipInstitutionDetailsModel.registrationDate, this.orgnizationSetting.datePipe);
+          //   }
+          //   if (promoter.startDate != null && promoter.startDate != undefined) {
+          //     promoter.startDateVal = this.datePipe.transform(this.membershipInstitutionDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
+          //   }
+          // }
       }
     }
-    else if (memberType == "Institution") {
+    else if (memberType == MemberShipTypesData.INSTITUTION) {
       this.institutionFlag = true;
-      this.individualFlag = false;
       this.groupFlag = false;
+      this.individualFlag = false;
       this.membershipInstitutionDetailsModel = data.memberInstitutionDTO;
       if (this.membershipInstitutionDetailsModel.registrationDate != null && this.membershipInstitutionDetailsModel.registrationDate != undefined) {
         this.membershipInstitutionDetailsModel.registrationDateVal = this.datePipe.transform(this.membershipInstitutionDetailsModel.registrationDate, this.orgnizationSetting.datePipe);
@@ -946,8 +696,11 @@ export class TermLoanStepperComponent {
       if (this.membershipInstitutionDetailsModel.admissionDate != null && this.membershipInstitutionDetailsModel.admissionDate != undefined) {
         this.membershipInstitutionDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipInstitutionDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
       }
-      if (this.membershipInstitutionDetailsModel.institutionPromoterList != null && this.membershipInstitutionDetailsModel.institutionPromoterList != undefined && this.membershipInstitutionDetailsModel.institutionPromoterList.length > 0) {
-        this.institutionPrmotersList = this.membershipInstitutionDetailsModel.institutionPromoterList;
+      if (this.membershipInstitutionDetailsModel.isNewMember ) {
+        this.institionPromotersList=this.membershipInstitutionDetailsModel.institutionPromoterList ;
+      }
+      if(this.membershipInstitutionDetailsModel.admissionNumber != null && this.membershipInstitutionDetailsModel.admissionNumber != undefined){
+        this.membershipInstitutionDetailsModel.tempAdmissionNumber = this.membershipInstitutionDetailsModel.admissionNumber;
       }
     }
   }
@@ -955,27 +708,22 @@ export class TermLoanStepperComponent {
   isEditCheck(activeIndex: any) {
     if (activeIndex == 0) {
       this.isEdit = true;
-    }
-    else if (activeIndex == 1) {
+    } else if (activeIndex == 1) {
       this.isApplicationEdit = true
-    }
-    else if (activeIndex == 2) {
+    } else if (activeIndex == 2) {
       this.isJointEdit = true
-    }
-    else if (activeIndex == 3) {
+    } else if (activeIndex == 3) {
       this.isCommunicationEdit = true
-    }
-    else if (activeIndex == 4) {
+    } else if (activeIndex == 4) {
       this.isKycEdit = true
-    }
-    else if (activeIndex == 5) {
-      this.isNomineeEdit = true
+    } else if (activeIndex == 4) {
+      this.isJointEdit = true
     } else if (activeIndex == 6) {
-      this.isGuarantorEdit = true
+      this.isNomineeEdit = true
     } else if (activeIndex == 7) {
-      this.isMortgageEdit = true
+      this.isGuarantorEdit = true
     } else if (activeIndex == 8) {
-      this.isDocumentEdit = true
+      this.isMortgageEdit = true
     } else if (activeIndex == 9) {
       this.isGenealogyEdit = true
     }
@@ -986,18 +734,23 @@ export class TermLoanStepperComponent {
       return; // Do nothing if menu is disabled
     }
     this.activeItem = item;
-    this.menuDisabled = true;
+    // this.menuDisabled = !this.menuDisabled;
   }
+
+  ngAfterContentChecked(): void {
+    this.ref.detectChanges();
+  }
+
 
   //membership module admissionNumbers 
   getAllTypeOfMembershipDetails(pacsId: any, branchId: any) {
-    this.membershipService.getAllTypeOfMemberDetailsListFromMemberModule(this.pacsId, this.branchId).subscribe((response: any) => {
+    this.membershipService.getAllTypeOfMemberDetailsListFromMemberModule(pacsId, branchId).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel != null && this.responseModel != undefined) {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.permenentAllTypesOfmembershipList = this.responseModel.data;
-            this.allTypesOfmembershipList = this.permenentAllTypesOfmembershipList.filter((obj: any) => obj != null).map((relationType: { id: any; name: any; admissionNumber: any; memberTypeName: any }) => {
+            this.allTypesOfmembershipList = this.permenentAllTypesOfmembershipList.filter((obj: any) => obj != null && obj.statusName == CommonStatusData.APPROVED).map((relationType: { id: any; name: any; admissionNumber: any; memberTypeName: any }) => {
               return {
                 label: `${relationType.name} - ${relationType.admissionNumber} - ${relationType.memberTypeName}`,
                 value: relationType.admissionNumber
@@ -1016,89 +769,109 @@ export class TermLoanStepperComponent {
     });
   }
 
-  navigateTo(activeIndex: number, savedId: any) {
+  navigateTo(activeIndex: any, termLoanApplicationId: any) {
     this.itemList();
     switch (activeIndex) {
       case 0:
         if (!this.showForm) {
-          this.router.navigate([Loantransactionconstant.TERMLOANS_MEMBERSHIP], { queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId) } });
+          this.router.navigate([Loantransactionconstant.TERMLOANS_MEMBERSHIP], { queryParams: { id: this.encryptDecryptService.encrypt(termLoanApplicationId) } });
         }
         else {
-          this.router.navigate([Loantransactionconstant.TERMLOANS_NEW_MEMBERSHIP], { queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId) } });
+          this.router.navigate([Loantransactionconstant.TERMLOANS_NEW_MEMBERSHIP], { queryParams: { id: this.encryptDecryptService.encrypt(termLoanApplicationId) } });
         }
         break;
       case 1:
-        this.router.navigate([Loantransactionconstant.TERMLOANS_KYC], { queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId) } });
+        this.router.navigate([Loantransactionconstant.TERMLOANS_KYC], { queryParams: { id: this.encryptDecryptService.encrypt(termLoanApplicationId) } });
         break;
       case 2:
-        this.router.navigate([Loantransactionconstant.TERMLOANS_COMMUNICATION], { queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId) } });
+        this.router.navigate([Loantransactionconstant.TERMLOANS_COMMUNICATION], { queryParams: { id: this.encryptDecryptService.encrypt(termLoanApplicationId) } });
         break;
       case 3:
-        this.router.navigate([Loantransactionconstant.TERMLOANS_APPLICATION_DETAILS], { queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId) } });
+        this.router.navigate([Loantransactionconstant.TERMLOANS_APPLICATION_DETAILS], { queryParams: { id: this.encryptDecryptService.encrypt(termLoanApplicationId) } });
         break;
       case 4:
-        this.router.navigate([Loantransactionconstant.TERMLOANS_JOINT_ACCOUNT], { queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId) } });
+        this.router.navigate([Loantransactionconstant.TERMLOANS_JOINT_ACCOUNT], { queryParams: { id: this.encryptDecryptService.encrypt(termLoanApplicationId) } });
         break;
       case 5:
-        this.router.navigate([Loantransactionconstant.TERMLOANS_NOMINEE], { queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId) } });
+        this.router.navigate([Loantransactionconstant.TERMLOANS_NOMINEE], { queryParams: { id: this.encryptDecryptService.encrypt(termLoanApplicationId) } });
         break;
       case 6:
-        this.router.navigate([Loantransactionconstant.TERMLOANS_GUARANTOR], { queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId) } });
+        this.router.navigate([Loantransactionconstant.TERMLOANS_GUARANTOR], { queryParams: { id: this.encryptDecryptService.encrypt(termLoanApplicationId) } });
         break;
       case 7:
-        this.router.navigate([Loantransactionconstant.TERMLOANS_MORTAGAGE], { queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId) } });
+        this.router.navigate([Loantransactionconstant.TERMLOANS_MORTAGAGE], { queryParams: { id: this.encryptDecryptService.encrypt(termLoanApplicationId) } });
         break;
       case 8:
-        this.router.navigate([Loantransactionconstant.TERM_LOAN_DOCUMENTS], { queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId) } });
+        this.router.navigate([Loantransactionconstant.TERM_LOAN_DOCUMENTS], { queryParams: { id: this.encryptDecryptService.encrypt(termLoanApplicationId) } });
         break;
       case 9:
-        this.router.navigate([Loantransactionconstant.TERMLOANS_GENEALOGY_TREE], { queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId) } });
+        this.router.navigate([Loantransactionconstant.TERMLOANS_GENEALOGY_TREE], { queryParams: { id: this.encryptDecryptService.encrypt(termLoanApplicationId) } });
         break;
-
     }
   }
 
   prevStep(activeIndex: number) {
+    debugger
     this.activeIndex = activeIndex - 1;
     if (activeIndex == 0) {
       this.navigateTo(this.activeIndex, this.termLoanApplicationId);
-    } else if (activeIndex == 1) {
-      this.navigateTo(this.activeIndex, this.admissionNumber);
-    } else if (activeIndex == 2) {
+    }
+    else if (activeIndex == 1) {
+      this.navigateTo(this.activeIndex, this.termLoanApplicationId);
+    }
+    else if (activeIndex == 2) {
       if (!this.showForm) {
         this.activeIndex = this.activeIndex - 1;
       }
       this.navigateTo(this.activeIndex, this.termLoanApplicationId);
-    } else if (activeIndex == 3) {
+    }
+    else if (activeIndex == 3) {
       this.navigateTo(this.activeIndex, this.termLoanApplicationId);
-    } else if (activeIndex == 4) {
+    }
+    else if (activeIndex == 4) {
       this.navigateTo(this.activeIndex, this.termLoanApplicationId);
-    } else if (activeIndex == 5) {
-      if (this.termLoanApplicationModel.operationTypeName != "Joint") {
+    }
+    else if (activeIndex == 5) {
+      if (this.termLoanApplicationModel.operationTypeName !=AccountTypes.JOINT) {
         this.flag = false;
         this.activeIndex = this.activeIndex - 1;
       }
       this.navigateTo(this.activeIndex, this.termLoanApplicationId);
-    } else if (activeIndex == 6) {
+    
+    }
+    else if (activeIndex == 6) {
+      if (!this.individualFlag) {
+        if (this.termLoanApplicationModel.operationTypeName != AccountTypes.JOINT) {
+          this.flag = false;
+          this.activeIndex = this.activeIndex -2;
+        }
+        else {
+          this.activeIndex = this.activeIndex - 1;
+        }
+      }    
       this.navigateTo(this.activeIndex, this.termLoanApplicationId);
-    } else if (activeIndex == 7) {
+    }
+    else if (activeIndex == 7) {
       this.navigateTo(this.activeIndex, this.termLoanApplicationId);
-    } else if (activeIndex == 8) {
+    }
+    else if (activeIndex == 8) {
       this.navigateTo(this.activeIndex, this.termLoanApplicationId);
-    } else if (activeIndex == 9) {
+    }
+    else if (activeIndex == 9) {
       this.navigateTo(this.activeIndex, this.termLoanApplicationId);
     }
   }
+
   nextStep(activeIndex: number) {
     if (activeIndex == 0) {
-      if (this.memberTypeName == MemberShipTypesData.INDIVIDUAL) {
+      if (this.memberTypeName == "Individual") {
         this.setMemberDetailsToTermApplicationDetails(this.termLoanApplicationModel.individualMemberDetailsDTO);
       } else if (this.memberTypeName == "Group") {
         this.setMemberDetailsToTermApplicationDetails(this.termLoanApplicationModel.memberGroupDetailsDTO);
       } else if (this.memberTypeName == "Institution") {
         this.setMemberDetailsToTermApplicationDetails(this.termLoanApplicationModel.memberInstitutionDTO);
       }
-      this.saveAndUpdateApplicationDetails(activeIndex, "next");
+      this.addAOrUpdateTermApplicationDetails(activeIndex, "next");
     }
     else if (activeIndex == 2) {
       this.addOrUpdateCommunicationDetails(activeIndex, "next");
@@ -1108,38 +881,37 @@ export class TermLoanStepperComponent {
       } else {
         this.flagForNomineeTypeValue = this.termLoanNomineeModel.flagForNomineeTypeValue;
       }
-      this.saveAndUpdateApplicationDetails(activeIndex, "next");
+      this.addAOrUpdateTermApplicationDetails(activeIndex, "next");
     } else if (activeIndex == 4) {
-      this.addAOrUpdateTermJointHolderDetails();
+      this.saveJointHolder();
     } else if (activeIndex == 5) {
-
+      // this.activeIndex = activeIndex + 1;
+      // this.navigateTo(this.activeIndex, this.termLoanApplicationId);
       if (this.memberTypeName == MemberShipTypesData.INDIVIDUAL) {
-        this.saveOrUpdateNomineeDetails(activeIndex, "next");
-        if (this.termLoanGuardianDetailsModel != null && this.termLoanGuardianDetailsModel != undefined  && Object.keys(this.termLoanGuardianDetailsModel).length > 0) {
-          this.saveOrUpdateGuardianDetails(activeIndex, "next");
-        }
-      } else {
-        this.activeIndex += 1;
-        this.navigateTo(this.activeIndex, this.termLoanApplicationId);
-      } 
+      this.addOrUpdateNomineeDetails();
+      if (this.termLoanGuardianDetailsModel != null && this.termLoanGuardianDetailsModel != undefined  && Object.keys(this.termLoanGuardianDetailsModel).length > 0) {
+        this.addOrUpdateGuardianDetails();
+      }
+    } else {
+      this.activeIndex += 1;
+      this.navigateTo(this.activeIndex, this.termLoanApplicationId);
+    } 
     } else if (activeIndex == 6) {
-      this.saveOrUpdateGuarantorDetails(activeIndex, "next");
+      this.saveOrUpdateGuarantorDetails();
     } else if (activeIndex == 7) {
-      if (this.termGoldLoanMortgageModel.collateralType ==  CollateralTypes.GOLD_MORTGAGE) {
+      if (this.termGoldLoanMortgageModel.collateralType == CollateralTypes.GOLD_MORTGAGE) {
         this.saveOrUpdateGoldLoanMortagageDetails(activeIndex, "next");
-      } else if (this.termLandLoanMortgageModel.collateralType == CollateralTypes.LAND_MORTGAGE) {
+      } else if (this.termLandLoanMortgageModel.collateralType === CollateralTypes.LAND_MORTGAGE) {
         this.saveOrUpdateLandLoanMortagageDetails(activeIndex, "next");
-      } else if (this.termBondLoanMortgageModel.collateralType == CollateralTypes.BONDS_MORTGAGE) {
+      } else if (this.termBondLoanMortgageModel.collateralType=== CollateralTypes.BONDS_MORTGAGE) {
         this.saveOrUpdateBondLoanMortagageDetails(activeIndex, "next");
-      } else if (this.termVehicleLoanMortgageModel.collateralType == CollateralTypes.VEHICLE_MORTGAGE) {
+      } else if (this.termVehicleLoanMortgageModel.collateralType === CollateralTypes.VEHICLE_MORTGAGE) {
         this.saveOrUpdateVehicleLoanMortagageDetails(activeIndex, "next");
-      } else if (this.termStorageLoanMortgageModel.collateralType == CollateralTypes.STORAGE_MORTGAGE) {
+      } else if (this.termStorageLoanMortgageModel.collateralType === CollateralTypes.STORAGE_MORTGAGE) {
         this.saveOrUpdateStorageLoanMortagageDetails(activeIndex, "next");
-      }
-       else if (this.termPropertyMortgageLoanModel.collateralType == CollateralTypes.PROPERTY_MORTGAGE) {
-        this.saveOrUpdatePropertyMortgageDetails(activeIndex, "next");
-      }
-      else if (this.termOtherLoanMortgageModel.collateralType === CollateralTypes.OTHER_MORTGAGE) {
+      } else if (this.termPropertyMortgageLoanModel.collateralType === CollateralTypes.PROPERTY_MORTGAGE) {
+          this.saveOrUpdatePropertyMortgageDetails(activeIndex, "next");
+      }else if (this.termOtherLoanMortgageModel.collateralType === CollateralTypes.OTHER_MORTGAGE) {
         this.saveOrUpdateOtherLoanMortagageDetails(activeIndex, "next");
       }
       else {
@@ -1157,9 +929,9 @@ export class TermLoanStepperComponent {
 
   setMemberDetailsToTermApplicationDetails(memeberdetailsObj: any) {
     this.termLoanApplicationModel.memberTypeId = memeberdetailsObj.memberTypeId;
-    this.termLoanApplicationModel.memberTypeName = memeberdetailsObj.memberTypeName;
+    // this.termLoanApplicationModel.memberTypeName = memeberdetailsObj.memberTypeName;
     // this.termLoanApplicationModel.name = memeberdetailsObj.name;
-    // // this.savingBankApplicationModel.surName = memeberdetailsObj.surName;
+    // // this.termLoanApplicationModel.surName = memeberdetailsObj.surName;
     // this.termLoanApplicationModel.email = memeberdetailsObj.emailId;
     // this.termLoanApplicationModel.mobileNumber = memeberdetailsObj.mobileNumber;
   }
@@ -1171,19 +943,15 @@ export class TermLoanStepperComponent {
     this.router.navigate([Loantransactionconstant.TERM_LOAN]);
   }
 
-  saveAndPreview() {
-    this.buttonDisabled = true;
-    this.router.navigate([Loantransactionconstant.PREVIEW_TERM_LOAN], { queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId), editOpt: this.encryptDecryptService.encrypt(2), isGridPage: this.encryptDecryptService.encrypt(applicationConstants.ACTIVE) } });
-  }
-
   navigateToPreview() {
+    this.buttonDisabled = true;
     this.router.navigate([Loantransactionconstant.PREVIEW_TERM_LOAN], { queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId), editbutton: this.encryptDecryptService.encrypt(applicationConstants.ACTIVE), isGridPage: this.encryptDecryptService.encrypt(applicationConstants.ACTIVE) } });
   }
 
 
   onChange() {
-
     this.commonFunctionsService.setStorageValue(applicationConstants.B_CLASS_MEMBER_CREATION, this.showForm);
+    // this.itemList();
     if (this.showForm) {
       this.router.navigate([Loantransactionconstant.TERMLOANS_NEW_MEMBERSHIP], { queryParams: { showForm: this.encryptDecryptService.encrypt(this.showForm) } });
     }
@@ -1196,129 +964,140 @@ export class TermLoanStepperComponent {
     this.termLoanApplicationsService.getTermApplicationByTermAccId(id).subscribe((data: any) => {
       this.responseModel = data;
       if (this.responseModel != null && this.responseModel != undefined) {
+        if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+          if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+            if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+              this.memberDropDownDisable = true;
+              this.termLoanApplicationModel = this.responseModel.data[0];
+              this.admissionNumberDropDownDisable = true;
+              this.isNewMemberCreation = true;
+              this.admissionNumber = this.termLoanApplicationModel.admissionNo;
 
-        if (this.responseModel.status != null && this.responseModel.status != undefined && this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+              if (this.termLoanApplicationModel.individualMemberDetailsDTO != null && this.termLoanApplicationModel.individualMemberDetailsDTO != undefined) {
+                this.membershipBasicRequiredDetailsModel = this.termLoanApplicationModel.individualMemberDetailsDTO;
 
-          if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
-            this.termLoanApplicationModel = this.responseModel.data[0];
-            this.memberDropDownDisable = true;
-            this.isNewMemberCreation = true;
-            this.admissionNumber = this.termLoanApplicationModel.admissionNo;
-            if (this.termLoanApplicationModel.individualMemberDetailsDTO != null && this.termLoanApplicationModel.individualMemberDetailsDTO != undefined) {
-              this.membershipBasicRequiredDetailsModel = this.termLoanApplicationModel.individualMemberDetailsDTO;
-              if (this.membershipBasicRequiredDetailsModel.dob != null && this.membershipBasicRequiredDetailsModel.dob != undefined) {
-                this.membershipBasicRequiredDetailsModel.dobVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.dob, this.orgnizationSetting.datePipe);
-              }
-              if (this.membershipBasicRequiredDetailsModel.admissionDate != null && this.membershipBasicRequiredDetailsModel.admissionDate != undefined) {
-                this.membershipBasicRequiredDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
-              }
-              if (this.membershipBasicRequiredDetailsModel.photoCopyPath != null && this.membershipBasicRequiredDetailsModel.photoCopyPath != undefined) {
-                this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.photoCopyPath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.photoCopyPath);
-                this.photoCopyFlag = true;
-              }
-              if (this.membershipBasicRequiredDetailsModel.signaturePath != null && this.membershipBasicRequiredDetailsModel.signaturePath != undefined) {
-                this.membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.signaturePath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.signaturePath);
-                this.photoCopyFlag = true;
-              }
-              if (this.membershipBasicRequiredDetailsModel.isKycApproved != null && this.membershipBasicRequiredDetailsModel.isKycApproved != undefined && this.membershipBasicRequiredDetailsModel.isKycApproved) {
-                this.isKycApproved = applicationConstants.KYC_APPROVED_NAME;
-              }
-              else {
-                this.isKycApproved = applicationConstants.KYC_NOT_APPROVED_NAME;
-              }
-              this.individualFlag = true;
-              this.groupFlag = false;
-              this.institutionFlag = false;
-              this.showForm = this.membershipBasicRequiredDetailsModel.isNewMember
-            }
-            if (this.termLoanApplicationModel.memberGroupDetailsDTO != null && this.termLoanApplicationModel.memberGroupDetailsDTO != undefined) {
-              this.groupFlag = true;
-              this.institutionFlag = false;
-              this.individualFlag = false;
-              this.memberGroupDetailsModel = this.termLoanApplicationModel.memberGroupDetailsDTO;
-              this.showForm = this.memberGroupDetailsModel.isNewMember;
-              if (this.memberGroupDetailsModel.registrationDate != null && this.memberGroupDetailsModel.registrationDate != undefined) {
-                this.memberGroupDetailsModel.registrationDateVal = this.datePipe.transform(this.memberGroupDetailsModel.registrationDate, this.orgnizationSetting.datePipe);
-              }
-              if (this.memberGroupDetailsModel.admissionDate != null && this.memberGroupDetailsModel.admissionDate != undefined) {
-                this.memberGroupDetailsModel.admissionDateVal = this.datePipe.transform(this.memberGroupDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
-              }
-              if (this.memberGroupDetailsModel.groupPromoterList != null && this.memberGroupDetailsModel.groupPromoterList != undefined && this.memberGroupDetailsModel.groupPromoterList.length > 0) {
-                this.groupPrmotersList = this.memberGroupDetailsModel.groupPromoterList.map((member: any) => {
-                  if (member != null && member != undefined) {
-                    if (member.dob != null && member.dob != undefined) {
-                      member.memDobVal = this.datePipe.transform(member.dob, this.orgnizationSetting.datePipe);
-                    }
-                    if (member.startDate != null && member.startDate != undefined) {
-                      member.startDateVal = this.datePipe.transform(member.startDate, this.orgnizationSetting.datePipe);
-                    }
-
+                if (this.membershipBasicRequiredDetailsModel.photoCopyPath != null && this.membershipBasicRequiredDetailsModel.photoCopyPath != undefined) {
+                  if(this.membershipBasicRequiredDetailsModel.isNewMember){
+                    this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.photoCopyPath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.photoCopyPath);
                   }
-                  return member;
-                });
-                if (this.memberGroupDetailsModel.memberTypeName != null && this.memberGroupDetailsModel.memberTypeName != undefined) {
-                  this.termLoanApplicationModel.memberTypeName = this.memberGroupDetailsModel.memberTypeName;
-                }
-                if (this.memberGroupDetailsModel != null && this.memberGroupDetailsModel != undefined) {
-                  this.termLoanApplicationModel.memberGroupDetailsDTO = this.memberGroupDetailsModel;
-                }
-              }
-              if (this.memberGroupDetailsModel.isKycApproved != null && this.memberGroupDetailsModel.isKycApproved != undefined) {
-                this.isKycApproved = applicationConstants.KYC_APPROVED_NAME;
-              }
-              else {
-                this.isKycApproved = applicationConstants.KYC_NOT_APPROVED_NAME;
-              }
-            }
-            if (this.termLoanApplicationModel.memberInstitutionDTO != null && this.termLoanApplicationModel.memberInstitutionDTO != undefined) {
-              this.institutionFlag = true;
-              this.individualFlag = false;
-              this.groupFlag = false;
-              this.membershipInstitutionDetailsModel = this.termLoanApplicationModel.memberInstitutionDTO;
-              this.showForm = this.membershipBasicRequiredDetailsModel.isNewMember;
-              if (this.membershipInstitutionDetailsModel.registrationDate != null && this.membershipInstitutionDetailsModel.registrationDate != undefined) {
-                this.membershipInstitutionDetailsModel.registrationDateVal = this.datePipe.transform(this.membershipInstitutionDetailsModel.registrationDate, this.orgnizationSetting.datePipe);
-              }
-              if (this.membershipInstitutionDetailsModel.admissionDate != null && this.membershipInstitutionDetailsModel.admissionDate != undefined) {
-                this.membershipInstitutionDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipInstitutionDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
-              }
-              if (this.membershipInstitutionDetailsModel.institutionPromoterList != null && this.membershipInstitutionDetailsModel.institutionPromoterList != undefined && this.membershipInstitutionDetailsModel.institutionPromoterList.length > 0) {
-                this.institutionPrmotersList = this.membershipInstitutionDetailsModel.institutionPromoterList.map((member: any) => {
-                  if (member != null && member != undefined) {
-                    if (member.dob != null && member.dob != undefined) {
-                      member.memDobVal = this.datePipe.transform(member.dob, this.orgnizationSetting.datePipe);
-                    }
-                    if (member.startDate != null && member.startDate != undefined) {
-                      member.startDateVal = this.datePipe.transform(member.startDate, this.orgnizationSetting.datePipe);
-                    }
-
-
-
+                  else {
+                    this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.photoCopyPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.photoCopyPath);
                   }
-                  return member;
-                });
-                if (this.memberGroupDetailsModel.memberTypeName != null && this.memberGroupDetailsModel.memberTypeName != undefined) {
-                  this.termLoanApplicationModel.memberTypeName = this.memberGroupDetailsModel.memberTypeName;
+                  this.photoCopyFlag = true;
                 }
-                if (this.memberGroupDetailsModel != null && this.memberGroupDetailsModel != undefined) {
-                  this.termLoanApplicationModel.memberGroupDetailsDTO = this.memberGroupDetailsModel;
+                if (this.membershipBasicRequiredDetailsModel.signatureCopyPath != null && this.membershipBasicRequiredDetailsModel.signatureCopyPath != undefined) {
+                  if(this.membershipBasicRequiredDetailsModel.isNewMember){
+                    this.membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.signatureCopyPath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.signatureCopyPath);
+                  }
+                  else {
+                    this.membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.signatureCopyPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.signatureCopyPath);
+                  }
                 }
+
+                if (this.termLoanApplicationModel.memberTypeId != null && this.termLoanApplicationModel.memberTypeId != undefined)
+                  this.memberTypeId = this.membershipBasicRequiredDetailsModel.memberTypeId;
+
+                if (this.termLoanApplicationModel.memberTypeName != null && this.termLoanApplicationModel.memberTypeName != undefined)
+                  this.memberTypeName = this.membershipBasicRequiredDetailsModel.memberTypeName;
+
+                if (this.membershipBasicRequiredDetailsModel.isNewMember != undefined && this.membershipBasicRequiredDetailsModel.isNewMember != null) {
+                  this.showForm = this.membershipBasicRequiredDetailsModel.isNewMember;
+                  this.itemList();
+                }
+
+                if (this.membershipBasicRequiredDetailsModel.dob != null && this.membershipBasicRequiredDetailsModel.dob != undefined)
+                  this.membershipBasicRequiredDetailsModel.dobVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.dob, this.orgnizationSetting.datePipe);
+
+                if (this.membershipBasicRequiredDetailsModel.admissionDate != null && this.membershipBasicRequiredDetailsModel.admissionDate != undefined)
+                  this.membershipBasicRequiredDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
+
+                if (this.membershipBasicRequiredDetailsModel.isKycApproved != null && this.membershipBasicRequiredDetailsModel.isKycApproved != undefined && this.membershipBasicRequiredDetailsModel.isKycApproved)
+                  this.isKycApproved = applicationConstants.KYC_APPROVED_NAME;
+                else
+                  this.isKycApproved = applicationConstants.KYC_NOT_APPROVED_NAME;
+
+                this.individualFlag = true;
+                this.groupFlag = false;
+                this.institutionFlag = false;
+                this.admissionNumber = this.termLoanApplicationModel.admissionNo;
+                
               }
-              if (this.membershipInstitutionDetailsModel.isKycApproved != null && this.membershipInstitutionDetailsModel.isKycApproved != undefined) {
-                this.isKycApproved = applicationConstants.KYC_APPROVED_NAME;
+              if (this.termLoanApplicationModel.memberGroupDetailsDTO != null && this.termLoanApplicationModel.memberGroupDetailsDTO != undefined) {
+                this.memberGroupDetailsModel = this.termLoanApplicationModel.memberGroupDetailsDTO;
+                this.memberGroupDetailsModel.admissionNumber = this.termLoanApplicationModel.memberGroupDetailsDTO.tempAdmissionNumber;
+                if (this.memberGroupDetailsModel.memberTypeId != null && this.memberGroupDetailsModel.memberTypeId != undefined)
+                  this.memberTypeId = this.memberGroupDetailsModel.memberTypeId;
+
+                if (this.memberGroupDetailsModel.memberTypeName != null && this.memberGroupDetailsModel.memberTypeName != undefined)
+                  this.memberTypeName = this.memberGroupDetailsModel.memberTypeName;
+
+                if (this.memberGroupDetailsModel.isNewMember != undefined && this.memberGroupDetailsModel.isNewMember != null) {
+                  this.showForm = this.memberGroupDetailsModel.isNewMember;
+                  this.itemList();
+                }
+
+                if (this.memberGroupDetailsModel.registrationDate != null && this.memberGroupDetailsModel.registrationDate != undefined)
+                  this.memberGroupDetailsModel.registrationDateVal = this.datePipe.transform(this.memberGroupDetailsModel.registrationDate, this.orgnizationSetting.datePipe);
+
+                if (this.memberGroupDetailsModel.admissionDate != null && this.memberGroupDetailsModel.admissionDate != undefined)
+                  this.memberGroupDetailsModel.admissionDateVal = this.datePipe.transform(this.memberGroupDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
+
+                if (this.memberGroupDetailsModel.isKycApproved != null && this.memberGroupDetailsModel.isKycApproved != undefined && this.memberGroupDetailsModel.isKycApproved)
+                  this.isKycApproved = applicationConstants.KYC_APPROVED_NAME;
+                else
+                  this.isKycApproved = applicationConstants.KYC_NOT_APPROVED_NAME;
+
+                if (this.memberGroupDetailsModel.groupPromoterList != null && this.memberGroupDetailsModel.groupPromoterList != undefined)
+                  this.groupPrmotersList = this.memberGroupDetailsModel.groupPromoterList;
+                for(let promoter of this.groupPrmotersList){
+                    promoter.memDobVal = this.datePipe.transform(promoter.dob, this.orgnizationSetting.datePipe);
+                    promoter.startDateVal = this.datePipe.transform(promoter.startDate, this.orgnizationSetting.datePipe);
+                }
+
+                this.individualFlag = false;
+                this.groupFlag = true;
+                this.institutionFlag = false;
+                this.admissionNumber = this.termLoanApplicationModel.admissionNo;
               }
-              else {
-                this.isKycApproved = applicationConstants.KYC_NOT_APPROVED_NAME;
+              if (this.termLoanApplicationModel.memberInstitutionDTO != null && this.termLoanApplicationModel.memberInstitutionDTO != undefined) {
+                this.membershipInstitutionDetailsModel = this.termLoanApplicationModel.memberInstitutionDTO;
+
+                if (this.membershipInstitutionDetailsModel.memberTypeId != null && this.membershipInstitutionDetailsModel.memberTypeId != undefined)
+                  this.memberTypeId = this.membershipInstitutionDetailsModel.memberTypeId;
+
+                if (this.membershipInstitutionDetailsModel.memberTypeName != null && this.membershipInstitutionDetailsModel.memberTypeName != undefined)
+                  this.memberTypeName = this.membershipInstitutionDetailsModel.memberTypeName;
+
+                if (this.membershipInstitutionDetailsModel.isNewMember != undefined && this.membershipInstitutionDetailsModel.isNewMember != null) {
+                  this.showForm = this.membershipInstitutionDetailsModel.isNewMember;
+                  this.itemList();
+                }
+
+                if (this.membershipInstitutionDetailsModel.registrationDate != null && this.membershipInstitutionDetailsModel.registrationDate != undefined)
+                  this.membershipInstitutionDetailsModel.registrationDateVal = this.datePipe.transform(this.membershipInstitutionDetailsModel.registrationDate, this.orgnizationSetting.datePipe);
+
+                if (this.membershipInstitutionDetailsModel.admissionDate != null && this.membershipInstitutionDetailsModel.admissionDate != undefined)
+                  this.membershipInstitutionDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipInstitutionDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
+
+                if (this.membershipInstitutionDetailsModel.isKycApproved != null && this.membershipInstitutionDetailsModel.isKycApproved != undefined && this.membershipInstitutionDetailsModel.isKycApproved)
+                  this.isKycApproved = applicationConstants.KYC_APPROVED_NAME;
+                else
+                  this.isKycApproved = applicationConstants.KYC_NOT_APPROVED_NAME;
+
+                if (this.membershipInstitutionDetailsModel.institutionPromoterList.length && this.membershipInstitutionDetailsModel.institutionPromoterList != null && this.membershipInstitutionDetailsModel.institutionPromoterList != undefined)
+                  this.institionPromotersList = this.membershipInstitutionDetailsModel.institutionPromoterList;
+                for(let promoter of this.institionPromotersList){
+                  promoter.memDobVal = this.datePipe.transform(promoter.dob, this.orgnizationSetting.datePipe);
+                  promoter.startDateVal = this.datePipe.transform(promoter.startDate, this.orgnizationSetting.datePipe);
+                }
+
+                this.individualFlag = false;
+                this.groupFlag = false;
+                this.institutionFlag = true;
+                this.admissionNumber = this.termLoanApplicationModel.admissionNo;
               }
             }
           }
-        }
-        else {
-          this.commonComponent.stopSpinner();
-          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 3000);
         }
       }
     }, error => {
@@ -1342,13 +1121,12 @@ export class TermLoanStepperComponent {
       this.groupFlag = false;
       this.institutionFlag = false;
       this.getMemberDetailsByAdmissionNUmber(admissionNo);
-    } else if (this.membershipBasicRequiredDetailsModel.memberTypeName == "Group") {
+    } else if (this.membershipBasicRequiredDetailsModel.memberTypeName ==  MemberShipTypesData.GROUP) {
       this.groupFlag = true;
       this.institutionFlag = false;
       this.individualFlag = false;
       this.getGroupDetailsByAdmissionNumber(admissionNo);
-    }
-    else if (this.membershipBasicRequiredDetailsModel.memberTypeName == "Institution") {
+    } else if (this.membershipBasicRequiredDetailsModel.memberTypeName ==  MemberShipTypesData.INSTITUTION) {
       this.institutionFlag = true;
       this.individualFlag = false;
       this.groupFlag = false;
@@ -1357,162 +1135,161 @@ export class TermLoanStepperComponent {
     this.router.navigate([Loantransactionconstant.TERMLOANS_MEMBERSHIP], { queryParams: { admissionNo: this.encryptDecryptService.encrypt(admissionNo) } });
 
   }
+  //get member module data by admissionNUmber
+  getMemberDetailsByAdmissionNUmber(admissionNumber: any) {
+    this.membershipService.getMembershipBasicDetailsByAdmissionNumber(admissionNumber).subscribe((data: any) => {
+      this.responseModel = data;
+      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+        if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+          this.membershipBasicRequiredDetailsModel = this.responseModel.data[0];
+          this.membershipBasicRequiredDetailsModel.memberShipCommunicationDetailsDTOList = this.responseModel.data[0].memberShipCommunicationDetailsDTO;
 
-    //get member module data by admissionNUmber
-    getMemberDetailsByAdmissionNUmber(admissionNumber: any) {
-      this.membershipService.getMembershipBasicDetailsByAdmissionNumber(admissionNumber).subscribe((data: any) => {
-        this.responseModel = data;
-        if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
-          if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
-            this.membershipBasicRequiredDetailsModel = this.responseModel.data[0];
-            this.membershipBasicRequiredDetailsModel.memberShipCommunicationDetailsDTOList = this.responseModel.data[0].memberShipCommunicationDetailsDTO;
-  
-            if (this.membershipBasicRequiredDetailsModel.dob != null && this.membershipBasicRequiredDetailsModel.dob != undefined) {
-              this.membershipBasicRequiredDetailsModel.dobVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.dob, this.orgnizationSetting.datePipe);
-            }
-            if (this.membershipBasicRequiredDetailsModel.admissionDate != null && this.membershipBasicRequiredDetailsModel.admissionDate != undefined) {
-              this.membershipBasicRequiredDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
-            }
-            if (this.membershipBasicRequiredDetailsModel.memberShipCommunicationDetailsDTOList != null && this.membershipBasicRequiredDetailsModel.memberShipCommunicationDetailsDTOList != undefined) {
-              this.termLoanCommunicationModel = this.membershipBasicRequiredDetailsModel.memberShipCommunicationDetailsDTOList;
-            }
-            if (this.membershipBasicRequiredDetailsModel.photoCopyPath != null && this.membershipBasicRequiredDetailsModel.photoCopyPath != undefined) {
-              this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.photoCopyPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.photoCopyPath);
-              this.photoCopyFlag = true;
-            }
-            if (this.membershipBasicRequiredDetailsModel.signatureCopyPath != null && this.membershipBasicRequiredDetailsModel.signatureCopyPath != undefined) {
-              this.membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.signatureCopyPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.signatureCopyPath);
-            }
-            if (this.membershipBasicRequiredDetailsModel.isKycApproved != null && this.membershipBasicRequiredDetailsModel.isKycApproved != undefined && this.membershipBasicRequiredDetailsModel.isKycApproved) {
-              this.isKycApproved = applicationConstants.KYC_APPROVED_NAME;
-            }
-            else {
-              this.isKycApproved = applicationConstants.KYC_NOT_APPROVED_NAME;
-            }
-            this.admissionNumber = this.membershipBasicRequiredDetailsModel.admissionNumber;
-            this.membershipBasicRequiredDetailsModel.tempAdmissionNumber = this.membershipBasicRequiredDetailsModel.admissionNumber;
-            this.termLoanApplicationModel.memberTypeName = this.membershipBasicRequiredDetailsModel.memberTypeName;
-            this.termLoanApplicationModel.individualMemberDetailsDTO = this.membershipBasicRequiredDetailsModel;
+          if (this.membershipBasicRequiredDetailsModel.dob != null && this.membershipBasicRequiredDetailsModel.dob != undefined) {
+            this.membershipBasicRequiredDetailsModel.dobVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.dob, this.orgnizationSetting.datePipe);
           }
+          if (this.membershipBasicRequiredDetailsModel.admissionDate != null && this.membershipBasicRequiredDetailsModel.admissionDate != undefined) {
+            this.membershipBasicRequiredDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
+          }
+          if (this.membershipBasicRequiredDetailsModel.memberShipCommunicationDetailsDTOList != null && this.membershipBasicRequiredDetailsModel.memberShipCommunicationDetailsDTOList != undefined) {
+            this.termLoanCommunicationModel = this.membershipBasicRequiredDetailsModel.memberShipCommunicationDetailsDTOList;
+          }
+          if (this.membershipBasicRequiredDetailsModel.photoCopyPath != null && this.membershipBasicRequiredDetailsModel.photoCopyPath != undefined) {
+            this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.photoCopyPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.photoCopyPath);
+            this.photoCopyFlag = true;
+          }
+          if (this.membershipBasicRequiredDetailsModel.signatureCopyPath != null && this.membershipBasicRequiredDetailsModel.signatureCopyPath != undefined) {
+            this.membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.signatureCopyPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.signatureCopyPath);
+          }
+          if (this.membershipBasicRequiredDetailsModel.isKycApproved != null && this.membershipBasicRequiredDetailsModel.isKycApproved != undefined && this.membershipBasicRequiredDetailsModel.isKycApproved) {
+            this.isKycApproved = applicationConstants.KYC_APPROVED_NAME;
+          }
+          else {
+            this.isKycApproved = applicationConstants.KYC_NOT_APPROVED_NAME;
+          }
+          this.admissionNumber = this.membershipBasicRequiredDetailsModel.admissionNumber;
+          this.membershipBasicRequiredDetailsModel.tempAdmissionNumber = this.membershipBasicRequiredDetailsModel.admissionNumber;
+          this.termLoanApplicationModel.memberTypeName = this.membershipBasicRequiredDetailsModel.memberTypeName;
+          this.termLoanApplicationModel.individualMemberDetailsDTO = this.membershipBasicRequiredDetailsModel;
         }
-        else {
-          this.commonComponent.stopSpinner();
-          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 3000);
-        }
-  
-      }, error => {
+      }
+      else {
         this.commonComponent.stopSpinner();
-        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
         setTimeout(() => {
           this.msgs = [];
         }, 3000);
-      });
-    }
-  
-    //get group details from member module data by admissionNumber
-    getGroupDetailsByAdmissionNumber(admissionNUmber: any) {
-      this.membershipService.getMemberGroupByAdmissionNumber(admissionNUmber).subscribe((data: any) => {
-        this.responseModel = data;
-        if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
-          if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
-            this.memberGroupDetailsModel = this.responseModel.data[0];
-  
-            this.memberTypeName = this.responseModel.data[0].memberTypeName;
-            if (this.memberGroupDetailsModel.registrationDate != null && this.memberGroupDetailsModel.registrationDate != undefined) {
-              this.memberGroupDetailsModel.registrationDateVal = this.datePipe.transform(this.memberGroupDetailsModel.registrationDate, this.orgnizationSetting.datePipe);
-            }
-            if (this.memberGroupDetailsModel.admissionDate != null && this.memberGroupDetailsModel.admissionDate != undefined) {
-              this.memberGroupDetailsModel.admissionDateVal = this.datePipe.transform(this.memberGroupDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
-            }
-            if (this.memberGroupDetailsModel.groupPromoterList != null && this.memberGroupDetailsModel.groupPromoterList != undefined) {
-              this.groupPrmotersList = this.memberGroupDetailsModel.groupPromoterList;
-              for(let promoter of this.groupPrmotersList){
-                promoter.memDobVal = this.datePipe.transform(promoter.dob, this.orgnizationSetting.datePipe);
-                promoter.startDateVal = this.datePipe.transform(promoter.startDate, this.orgnizationSetting.datePipe);
-              }
-            }
-            if (this.memberGroupDetailsModel.isKycApproved != null && this.memberGroupDetailsModel.isKycApproved != undefined) {
-              this.isKycApproved = applicationConstants.KYC_APPROVED_NAME;
-            }
-            else {
-              this.isKycApproved = applicationConstants.KYC_NOT_APPROVED_NAME;
-            }
-            this.admissionNumber = this.memberGroupDetailsModel.admissionNumber;
-            this.memberGroupDetailsModel.tempAdmissionNumber = this.memberGroupDetailsModel.admissionNumber;
-            this.termLoanApplicationModel.memberTypeName = this.memberGroupDetailsModel.memberTypeName;
-            this.termLoanApplicationModel.memberGroupDetailsDTO = this.memberGroupDetailsModel;
-          }
-        }
-        else {
-          this.commonComponent.stopSpinner();
-          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 3000);
-        }
-      }, error => {
-        this.commonComponent.stopSpinner();
-        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
-        setTimeout(() => {
-          this.msgs = [];
-        }, 3000);
-      });
-    }
-  
-    //get member institution details from member module by admissionNumber
-    getInstitutionDetailsByAdmissionNumber(admissionNumber: any) {
-      this.membershipService.getMemberIstitutionByAdmissionNumber(admissionNumber).subscribe((data: any) => {
-        this.responseModel = data;
-        if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
-          if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
-            this.membershipInstitutionDetailsModel = this.responseModel.data[0];
-            this.memberTypeName = this.membershipInstitutionDetailsModel.memberTypeName;
-            this.termLoanApplicationModel.memberTypeName = this.membershipInstitutionDetailsModel.memberTypeName;
-  
-            if (this.membershipInstitutionDetailsModel.registrationDate != null && this.membershipInstitutionDetailsModel.registrationDate != undefined) {
-              this.membershipInstitutionDetailsModel.registrationDateVal = this.datePipe.transform(this.membershipInstitutionDetailsModel.registrationDate, this.orgnizationSetting.datePipe);
-            }
-            if (this.membershipInstitutionDetailsModel.admissionDate != null && this.membershipInstitutionDetailsModel.admissionDate != undefined) {
-              this.membershipInstitutionDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipInstitutionDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
-            }
-            if (this.membershipInstitutionDetailsModel.institutionPromoterList.length && this.membershipInstitutionDetailsModel.institutionPromoterList != null && this.membershipInstitutionDetailsModel.institutionPromoterList != undefined) {
-              this.institutionPrmotersList = this.membershipInstitutionDetailsModel.institutionPromoterList;
-              for(let promoter of this.institutionPrmotersList){
-                promoter.memDobVal = this.datePipe.transform(promoter.dob, this.orgnizationSetting.datePipe);
-                promoter.startDateVal = this.datePipe.transform(promoter.startDate, this.orgnizationSetting.datePipe);
-              }
-            }
-            if (this.membershipInstitutionDetailsModel.isKycApproved != null && this.membershipInstitutionDetailsModel.isKycApproved != undefined) {
-              this.isKycApproved = applicationConstants.KYC_APPROVED_NAME;
-            }
-            else {
-              this.isKycApproved = applicationConstants.KYC_NOT_APPROVED_NAME;
-            }
-            this.admissionNumber = this.membershipInstitutionDetailsModel.admissionNumber;
-            this.membershipInstitutionDetailsModel.tempAdmissionNumber = this.membershipInstitutionDetailsModel.admissionNumber;
-          }
-        }
-        else {
-          this.commonComponent.stopSpinner();
-          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 3000);
-        }
-      }, error => {
-        this.commonComponent.stopSpinner();
-        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
-        setTimeout(() => {
-          this.msgs = [];
-        }, 3000);
-      });
-    }
+      }
 
-  // add or update term loan accounts account with member/group/institution details
-  saveAndUpdateApplicationDetails(activeIndex: any, buttonName: any) {
+    }, error => {
+      this.commonComponent.stopSpinner();
+      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    });
+  }
+
+  //get group details from member module data by admissionNumber
+  getGroupDetailsByAdmissionNumber(admissionNUmber: any) {
+    this.membershipService.getMemberGroupByAdmissionNumber(admissionNUmber).subscribe((data: any) => {
+      this.responseModel = data;
+      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+        if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+          this.memberGroupDetailsModel = this.responseModel.data[0];
+
+          this.memberTypeName = this.responseModel.data[0].memberTypeName;
+          if (this.memberGroupDetailsModel.registrationDate != null && this.memberGroupDetailsModel.registrationDate != undefined) {
+            this.memberGroupDetailsModel.registrationDateVal = this.datePipe.transform(this.memberGroupDetailsModel.registrationDate, this.orgnizationSetting.datePipe);
+          }
+          if (this.memberGroupDetailsModel.admissionDate != null && this.memberGroupDetailsModel.admissionDate != undefined) {
+            this.memberGroupDetailsModel.admissionDateVal = this.datePipe.transform(this.memberGroupDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
+          }
+          if (this.memberGroupDetailsModel.groupPromoterList != null && this.memberGroupDetailsModel.groupPromoterList != undefined) {
+            this.groupPrmotersList = this.memberGroupDetailsModel.groupPromoterList;
+            for(let promoter of this.groupPrmotersList){
+              promoter.memDobVal = this.datePipe.transform(promoter.dob, this.orgnizationSetting.datePipe);
+              promoter.startDateVal = this.datePipe.transform(promoter.startDate, this.orgnizationSetting.datePipe);
+            }
+          }
+          if (this.memberGroupDetailsModel.isKycApproved != null && this.memberGroupDetailsModel.isKycApproved != undefined) {
+            this.isKycApproved = applicationConstants.KYC_APPROVED_NAME;
+          }
+          else {
+            this.isKycApproved = applicationConstants.KYC_NOT_APPROVED_NAME;
+          }
+          this.admissionNumber = this.memberGroupDetailsModel.admissionNumber;
+          this.memberGroupDetailsModel.tempAdmissionNumber = this.memberGroupDetailsModel.admissionNumber;
+          this.termLoanApplicationModel.memberTypeName = this.memberGroupDetailsModel.memberTypeName;
+          this.termLoanApplicationModel.memberGroupDetailsDTO = this.memberGroupDetailsModel;
+        }
+      }
+      else {
+        this.commonComponent.stopSpinner();
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      }
+    }, error => {
+      this.commonComponent.stopSpinner();
+      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    });
+  }
+
+  //get member institution details from member module by admissionNumber
+  getInstitutionDetailsByAdmissionNumber(admissionNumber: any) {
+    this.membershipService.getMemberIstitutionByAdmissionNumber(admissionNumber).subscribe((data: any) => {
+      this.responseModel = data;
+      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+        if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+          this.membershipInstitutionDetailsModel = this.responseModel.data[0];
+          this.memberTypeName = this.membershipInstitutionDetailsModel.memberTypeName;
+          this.termLoanApplicationModel.memberTypeName = this.membershipInstitutionDetailsModel.memberTypeName;
+
+          if (this.membershipInstitutionDetailsModel.registrationDate != null && this.membershipInstitutionDetailsModel.registrationDate != undefined) {
+            this.membershipInstitutionDetailsModel.registrationDateVal = this.datePipe.transform(this.membershipInstitutionDetailsModel.registrationDate, this.orgnizationSetting.datePipe);
+          }
+          if (this.membershipInstitutionDetailsModel.admissionDate != null && this.membershipInstitutionDetailsModel.admissionDate != undefined) {
+            this.membershipInstitutionDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipInstitutionDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
+          }
+          if (this.membershipInstitutionDetailsModel.institutionPromoterList.length && this.membershipInstitutionDetailsModel.institutionPromoterList != null && this.membershipInstitutionDetailsModel.institutionPromoterList != undefined) {
+            this.institionPromotersList = this.membershipInstitutionDetailsModel.institutionPromoterList;
+            for(let promoter of this.institionPromotersList){
+              promoter.memDobVal = this.datePipe.transform(promoter.dob, this.orgnizationSetting.datePipe);
+              promoter.startDateVal = this.datePipe.transform(promoter.startDate, this.orgnizationSetting.datePipe);
+            }
+          }
+          if (this.membershipInstitutionDetailsModel.isKycApproved != null && this.membershipInstitutionDetailsModel.isKycApproved != undefined) {
+            this.isKycApproved = applicationConstants.KYC_APPROVED_NAME;
+          }
+          else {
+            this.isKycApproved = applicationConstants.KYC_NOT_APPROVED_NAME;
+          }
+          this.admissionNumber = this.membershipInstitutionDetailsModel.admissionNumber;
+          this.membershipInstitutionDetailsModel.tempAdmissionNumber = this.membershipInstitutionDetailsModel.admissionNumber;
+        }
+      }
+      else {
+        this.commonComponent.stopSpinner();
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      }
+    }, error => {
+      this.commonComponent.stopSpinner();
+      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    });
+  }
+
+
+  addAOrUpdateTermApplicationDetails(activeIndex: any, buttonName: any) {
     this.termLoanApplicationModel.pacsId = this.pacsId;
     this.termLoanApplicationModel.pacsCode = this.pacsCode;
     this.termLoanApplicationModel.branchId = this.branchId;
@@ -1670,6 +1447,8 @@ export class TermLoanStepperComponent {
             if (this.responseModel.data[0].accountNumber != null && this.responseModel.data[0].accountNumber != undefined) {
               this.accountNumber = this.responseModel.data[0].accountNumber;
             }
+            if (this.responseModel.data[0].memberTypeName != null && this.responseModel.data[0].memberTypeName != undefined)
+              this.memberTypeName = this.responseModel.data[0].memberTypeName;
             if (this.responseModel.data[0].admissionNo != null && this.responseModel.data[0].admissionNo != undefined) {
               this.admissionNumber = this.responseModel.data[0].admissionNo;
             }
@@ -1686,8 +1465,8 @@ export class TermLoanStepperComponent {
           if (this.activeIndex === 0 || this.activeIndex === 1) {
             this.activeIndexIncrement();
           }
-          else if (this.activeIndex == 3) {
-            this.activeIndex = this.accountTypeBasedActiveIndexInscrement(this.termLoanApplicationModel.operationTypeName);
+          else if (this.activeIndex === 3) {
+            this.activeIndex = this.accountTypeBasedActiveIndexInscrement(this.termLoanApplicationModel.operationTypeName );
           }
           this.navigateTo(this.activeIndex, this.responseModel.data[0].id)
           this.completed = 1;
@@ -1707,10 +1486,8 @@ export class TermLoanStepperComponent {
     }
   }
 
-  // add or update Term Loan Communication Details
+  // add or update fd non cumulative Communication Details
   addOrUpdateCommunicationDetails(activeIndex: any, buttonName: any) {
-    this.termLoanCommunicationModel.memberShipId = this.termLoanApplicationId;
-    this.termLoanCommunicationModel.memberTypeName = this.memberTypeName;
     this.termLoanCommunicationModel.admissionNumber = this.admissionNumber;
     this.termLoanCommunicationModel.termLoanApplicationId = this.termLoanApplicationId;
     if (this.termLoanCommunicationModel.isSameAddress == true) {
@@ -1776,11 +1553,8 @@ export class TermLoanStepperComponent {
     }
   }
 
-  addAOrUpdateTermJointHolderDetails() {
-    this.termLoanJointHolderModel.termLoanApplicationId = this.termLoanApplicationId;
-    this.termLoanJointHolderModel.memberName = this.memberTypeName;
-    this.termLoanJointHolderModel.admissionNumber = this.admissionNumber;
-    this.termLoanJointHolderService.saveJointHolderListSave(this.jointHolderList).subscribe((response: any) => {
+  saveJointHolder() {
+    this.termLoanJointHolderService.saveJointHolderListSave(this.jointAccountHolderList).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != null) {
@@ -1790,9 +1564,6 @@ export class TermLoanStepperComponent {
         setTimeout(() => {
           this.msgs = [];
         }, 1200);
-        // this.activeIndex = this.activeIndex + 1;
-        // this.navigateTo(this.activeIndex, this.termLoanApplicationId);
-        // console.log("Navigation executed, activeIndex: ", this.activeIndex);
         if(this.activeIndex == 4){
           if(this.memberTypeName == MemberShipTypesData.INDIVIDUAL){
             this.activeIndex = this.activeIndex + 1;
@@ -1802,6 +1573,9 @@ export class TermLoanStepperComponent {
             this.navigateTo(this.activeIndex, this.termLoanApplicationId);
           }
         }
+        // this.activeIndex = this.activeIndex + 1;
+        // this.navigateTo(this.activeIndex, this.termLoanApplicationId);
+        // console.log("Navigation executed, activeIndex: ", this.activeIndex);
         this.completed = 1;
       } else {
         this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
@@ -1818,18 +1592,17 @@ export class TermLoanStepperComponent {
       }, 2000);
     });
   }
-  // add or update Term Loan Nominee Details
-  saveOrUpdateNomineeDetails(activeIndex: any, buttonName: any) {
-    this.termLoanNomineeModel.pacsId = this.pacsId;
-    this.termLoanNomineeModel.branchId = this.branchId;
+
+  // add or update fd non cumulative Nominee Details
+  addOrUpdateNomineeDetails() {
     this.termLoanNomineeModel.termLoanApplicationId = this.termLoanApplicationId;
+    // this.termLoanNomineeModel.accountNumber = this.accountNumber;
+    // this. fdCumulativeNominee.isNewMember = this.showForm;
     if (this.termLoanNomineeModel.id == null) {
       this.isNomineeEdit = false;
-    } else {
-      this.isNomineeEdit = true;
     }
-    if (this.termLoanNomineeModel.nomineeDobVal != null && this.termLoanNomineeModel.nomineeDobVal != undefined) {
-      this.termLoanNomineeModel.nomineeDob = this.commonFunctionsService.getUTCEpochWithTime(this.termLoanNomineeModel.nomineeDobVal);
+    else {
+      this.isNomineeEdit = true;
     }
     if (this.isNomineeEdit) {
       this.termLoanNomineeService.updateNomineeDetails(this.termLoanNomineeModel).subscribe((response: any) => {
@@ -1841,7 +1614,6 @@ export class TermLoanStepperComponent {
           }, 1200);
           this.activeIndex = this.activeIndex + 1;
           this.navigateTo(this.activeIndex, this.termLoanApplicationId);
-          console.log("Navigation executed, activeIndex: ", this.activeIndex);
           this.completed = 1;
         } else {
           this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
@@ -1849,14 +1621,15 @@ export class TermLoanStepperComponent {
             this.msgs = [];
           }, 3000);
         }
-      }, error => {
+      }, (error: any) => {
         this.commonComponent.stopSpinner();
         this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
         setTimeout(() => {
           this.msgs = [];
         }, 3000);
       });
-    } else {
+    }
+    else {
       this.termLoanNomineeService.addNomineeDetails(this.termLoanNomineeModel).subscribe((response: any) => {
         this.responseModel = response;
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
@@ -1866,7 +1639,6 @@ export class TermLoanStepperComponent {
           }, 1200);
           this.activeIndex = this.activeIndex + 1;
           this.navigateTo(this.activeIndex, this.termLoanApplicationId);
-          console.log("Navigation executed, activeIndex: ", this.activeIndex);
           this.completed = 1;
         } else {
           this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
@@ -1874,7 +1646,7 @@ export class TermLoanStepperComponent {
             this.msgs = [];
           }, 3000);
         }
-      }, error => {
+      }, (error: any) => {
         this.commonComponent.stopSpinner();
         this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
         setTimeout(() => {
@@ -1884,16 +1656,14 @@ export class TermLoanStepperComponent {
     }
   }
 
-  //save and update guardian details
-  saveOrUpdateGuardianDetails(activeIndex: any, buttonName: any) {
+  addOrUpdateGuardianDetails() {
     this.termLoanGuardianDetailsModel.termLoanApplicationId = this.termLoanApplicationId;
-    this.termLoanGuardianDetailsModel.admissionNumber = this.admisionNumber;
-    this.termLoanGuardianDetailsModel.memberTypeId = this.memberTypeId;
-    this.termLoanGuardianDetailsModel.memberTypeName = this.memberTypeName;
-
+    // this.termLoanGuardianDetailsModel.accountNumber = this.accountNumber;
+    // this.termLoanGuardianDetailsModel.isNewMember = this.showForm;
     if (this.termLoanGuardianDetailsModel.id == null) {
       this.isNomineeEdit = false;
-    } else {
+    }
+    else {
       this.isNomineeEdit = true;
     }
     if (this.isNomineeEdit) {
@@ -1904,6 +1674,7 @@ export class TermLoanStepperComponent {
           setTimeout(() => {
             this.msgs = [];
           }, 1200);
+          this.navigateTo(this.activeIndex, this.termLoanApplicationId);
           this.completed = 1;
         } else {
           this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
@@ -1911,14 +1682,15 @@ export class TermLoanStepperComponent {
             this.msgs = [];
           }, 3000);
         }
-      }, error => {
+      }, (error: any) => {
         this.commonComponent.stopSpinner();
         this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
         setTimeout(() => {
           this.msgs = [];
         }, 3000);
       });
-    } else {
+    }
+    else {
       this.termLoanNomineeService.addGuardinaDetails(this.termLoanGuardianDetailsModel).subscribe((response: any) => {
         this.responseModel = response;
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
@@ -1926,6 +1698,7 @@ export class TermLoanStepperComponent {
           setTimeout(() => {
             this.msgs = [];
           }, 1200);
+          this.navigateTo(this.activeIndex, this.termLoanApplicationId);
           this.completed = 1;
         } else {
           this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
@@ -1933,7 +1706,7 @@ export class TermLoanStepperComponent {
             this.msgs = [];
           }, 3000);
         }
-      }, error => {
+      }, (error: any) => {
         this.commonComponent.stopSpinner();
         this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
         setTimeout(() => {
@@ -1942,10 +1715,14 @@ export class TermLoanStepperComponent {
       });
     }
   }
-  saveOrUpdateGuarantorDetails(activeIndex: any, buttonName: any) {
+
+  saveOrUpdateGuarantorDetails() {
     this.termLoanGuarantorDetailsService.saveGuarantorDetailsList(this.guarantorDetailsList).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+        if (this.responseModel.data > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != null) {
+          this.termLoanApplicationId = this.responseModel.data[0].termLoanApplicationId;
+        }
         this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
         setTimeout(() => {
           this.msgs = [];
@@ -1971,7 +1748,7 @@ export class TermLoanStepperComponent {
   }
 
   saveOrUpdateGoldLoanMortagageDetails(activeIndex: any, buttonName: any) {
-    this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+    this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: "Gold Mortgage Details Updated Successfully" }];
     setTimeout(() => {
       this.msgs = [];
     }, 1200);
@@ -1982,7 +1759,7 @@ export class TermLoanStepperComponent {
   }
 
   saveOrUpdateLandLoanMortagageDetails(activeIndex: any, buttonName: any) {
-    this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+    this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS,  detail: "Land Mortgage Details Updated Successfully"  }];
     setTimeout(() => {
       this.msgs = [];
     }, 1200);
@@ -1993,7 +1770,7 @@ export class TermLoanStepperComponent {
   }
 
   saveOrUpdateBondLoanMortagageDetails(activeIndex: any, buttonName: any) {
-    this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+    this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: "Bond Mortgage Details Updated Successfully"  }];
     setTimeout(() => {
       this.msgs = [];
     }, 1200);
@@ -2004,7 +1781,79 @@ export class TermLoanStepperComponent {
   }
 
   saveOrUpdateVehicleLoanMortagageDetails(activeIndex: any, buttonName: any) {
-    this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+    if (this.termVehicleLoanMortgageModel.id != null && this.termVehicleLoanMortgageModel.id != undefined) {
+      this.termLoanMortgageService.updateTermVehicleLoanMortagageDetails(this.termVehicleLoanMortgageModel).subscribe((response: any) => {
+        this.responseModel = response;
+        if (this.responseModel != null && this.responseModel != undefined) {
+          if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+            if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+              this.termVehicleLoanMortgageModel = this.responseModel.data[0];
+            }
+            this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+            setTimeout(() => {
+              this.msgs = [];
+            }, 1200);
+            this.activeIndex = this.activeIndex + 1;
+            this.navigateTo(this.activeIndex, this.termLoanApplicationId);
+            console.log("Navigation executed, activeIndex: ", this.activeIndex);
+            this.completed = 1;
+          }
+          else {
+            this.msgs = [];
+            this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+            setTimeout(() => {
+              this.msgs = [];
+            }, 2000);
+          }
+        }
+      }, error => {
+        this.commonComponent.stopSpinner();
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      });
+    }
+    else {
+      this.termLoanMortgageService.addTermVehicleLoanMortagageDetails(this.termVehicleLoanMortgageModel).subscribe((response: any) => {
+        this.responseModel = response;
+        if (this.responseModel != null && this.responseModel != undefined) {
+          if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+            if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+              this.termVehicleLoanMortgageModel = this.responseModel.data[0];
+              if (this.responseModel.data[0].termLoanApplicationId != null && this.responseModel.data[0].termLoanApplicationId != undefined) {
+              }
+              this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+            setTimeout(() => {
+              this.msgs = [];
+            }, 1200);
+            this.activeIndex = this.activeIndex + 1;
+            this.navigateTo(this.activeIndex, this.termLoanApplicationId);
+            console.log("Navigation executed, activeIndex: ", this.activeIndex);
+            this.completed = 1;
+            }
+          }
+          else {
+            this.msgs = [];
+            this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+            setTimeout(() => {
+              this.msgs = [];
+            }, 2000);
+          }
+        }
+      }, error => {
+        this.commonComponent.stopSpinner();
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      });
+    }
+   
+  }
+
+  saveOrUpdateStorageLoanMortagageDetails(activeIndex: any, buttonName: any) {
+    this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: "Storage Mortgage Details Updated Successfully"  }];
     setTimeout(() => {
       this.msgs = [];
     }, 1200);
@@ -2014,8 +1863,8 @@ export class TermLoanStepperComponent {
     this.completed = 1;
   }
 
-  saveOrUpdateStorageLoanMortagageDetails(activeIndex: any, buttonName: any) {
-    this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+  saveOrUpdateOtherLoanMortagageDetails(activeIndex: any, buttonName: any) {
+    this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: "Land Mortgage Details Updated Successfully" }];
     setTimeout(() => {
       this.msgs = [];
     }, 1200);
@@ -2024,6 +1873,20 @@ export class TermLoanStepperComponent {
     console.log("Navigation executed, activeIndex: ", this.activeIndex);
     this.completed = 1;
   }
+
+  
+
+  saveOrUpdateDocumentDetails(activeIndex: any, buttonName: any) {
+    this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: "Loan Documents Update Succussfully" }];
+    setTimeout(() => {
+      this.msgs = [];
+    }, 1200);
+    this.activeIndex = this.activeIndex + 1;
+    this.navigateTo(this.activeIndex, this.termLoanApplicationId);
+    console.log("Navigation executed, activeIndex: ", this.activeIndex);
+    this.completed = 1;
+  }
+
   saveOrUpdatePropertyMortgageDetails(activeIndex: any, buttonName: any) {
     this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
     setTimeout(() => {
@@ -2035,35 +1898,13 @@ export class TermLoanStepperComponent {
     this.completed = 1;
   }
 
-  saveOrUpdateOtherLoanMortagageDetails(activeIndex: any, buttonName: any) {
-    this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
-    setTimeout(() => {
-      this.msgs = [];
-    }, 1200);
-    this.activeIndex = this.activeIndex + 1;
-    this.navigateTo(this.activeIndex, this.termLoanApplicationId);
-    console.log("Navigation executed, activeIndex: ", this.activeIndex);
-    this.completed = 1;
-  }
-
-  saveOrUpdateDocumentDetails(activeIndex: any, buttonName: any) {
-    this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
-    setTimeout(() => {
-      this.msgs = [];
-    }, 1200);
-    this.activeIndex = this.activeIndex + 1;
-    this.navigateTo(this.activeIndex, this.termLoanApplicationId);
-    console.log("Navigation executed, activeIndex: ", this.activeIndex);
-    this.completed = 1;
-  }
-
   saveOrUpdateGenealogyDetails(activeIndex: any, buttonName: any) {
-    this.termLoanGenealogyTreeModel.pacsId = this.pacsId;
-    this.termLoanGenealogyTreeModel.pacsCode = this.pacsCode;
-    this.termLoanGenealogyTreeModel.branchId = this.branchId;
-    this.termLoanGenealogyTreeModel.termLoanApplicationId = this.termLoanApplicationId;
-    this.termLoanGenealogyTreeModel.accountNumber = this.accountNumber;
-    this.termLoanGenealogyTreeModel.applicantAdmissionNo = this.admisionNumber;
+    // this.termLoanGenealogyTreeModel.pacsId = this.pacsId;
+    // this.termLoanGenealogyTreeModel.pacsCode = this.pacsCode;
+    // this.termLoanGenealogyTreeModel.branchId = this.branchId;
+    this.termLoanGenealogyTreeModel.id = this.termLoanApplicationId;
+    // this.termLoanGenealogyTreeModel.accountNumber = this.accountNumber;
+    this.termLoanGenealogyTreeModel.applicantAdmissionNo = this.admissionNumber;
     if (this.termLoanGenealogyTreeModel.id == null) {
       this.isGenealogyEdit = false;
     } else {
@@ -2121,6 +1962,7 @@ export class TermLoanStepperComponent {
       });
     }
   }
+
   activeIndexIncrement() {
     if (!this.showForm) {
       this.activeIndex = this.activeIndex + 2
@@ -2171,6 +2013,7 @@ export class TermLoanStepperComponent {
     this.memberSignatureCopyZoom = false;
     this.memberPhotoCopyZoom = false;
   }
+
   itemListWithoutParams(){
     if (this.showForm) {
       if (this.termLoanApplicationModel.operationTypeName != AccountTypes.JOINT) {

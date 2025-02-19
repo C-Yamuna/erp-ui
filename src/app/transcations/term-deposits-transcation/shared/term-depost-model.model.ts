@@ -186,6 +186,8 @@ export class RdAccountsModel {
     accountStatus:any;
 
     accountStatusName: any;
+
+    interestPaymentsList:any;
 }
 
 export class RdAccountCommunication {

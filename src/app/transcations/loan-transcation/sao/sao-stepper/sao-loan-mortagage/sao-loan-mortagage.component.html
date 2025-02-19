@@ -59,7 +59,7 @@
         <p-table #dt [value]="gridList" dataKey="id" editMode="row" styleClass="p-datatable-striped"
             [rows]="5" [paginator]="true" [showJumpToPageDropdown]="true" [showPageLinks]="false" [pageLinks]="1"
             [responsive]="true" rowExpandMode="single"
-            [globalFilterFields]="['passbookNumber', 'surveyNo', 'landType', 'landUnits', 'landSubUnits', 'value', 'declaredLandUnits', 'declaredLandSubUnits' ,'remarks']">
+            [globalFilterFields]="['villageName','passbookNumber', 'surveyNo', 'landType', 'landUnits', 'landSubUnits', 'value', 'declaredLandUnits', 'declaredLandSubUnits' ,'remarks']">
             <ng-template pTemplate="header" let-goldColumns>
                 <tr>
                     <th>{{'LOAN_TRANSACTION.VILLAGE' | translate}}</th>
@@ -143,7 +143,7 @@
                         <label><span class="red">*</span>{{'LOAN_TRANSACTION.VILLAGE' |
                             translate}}</label>
                         <p-dropdown id="bunit_txt_status" placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}"
-                            [filter]="true" [options]="villagesList" formControlName="village"
+                            [filter]="true" [options]="villagesList" formControlName="villageName"
                             [(ngModel)]="saoLoanLandMortageDetailsModel.villageId" [appendTo]="'body'"></p-dropdown>
 
                     </div>

@@ -173,7 +173,14 @@ export class FdCumulativeApplication {
     accountStatus:any;
 
     accountStatusName: any;
+
+    interestPaymentsList: any;
+
+    foreClosureDate:any;
+
+    transactionMode:any;
     
+    transactionDate:any;
 }
 
 export class FdCummProductDefinitionModel {

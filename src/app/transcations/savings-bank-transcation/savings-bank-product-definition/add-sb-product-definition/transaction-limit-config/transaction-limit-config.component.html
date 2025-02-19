@@ -1,4 +1,5 @@
 <div class="col-12">
+    <p-messages label="Info" [(value)]="msgs" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"></p-messages>
     <div class="stepper-top-section-strip">
             <div class="row">
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-xs-12">
@@ -71,7 +72,7 @@
                                 <label for="username"><span class="red">*</span>{{'DEMANDDEPOSITS.WITH_PAN' | translate}}
                                 </label>
                                 <input pInputText id="bunit_txt_name" maxlength="40" type="text"
-                                formControlName="maxDepositLimitPerDayWithPan" [(ngModel)]="transactionLimitConfigModel.maxDepositLimitPerDayWithPan">
+                                formControlName="maxDepositLimitPerDayWithPan" [(ngModel)]="transactionLimitConfigModel.maxDepositLimitPerDayWithPan" (focusout)="checkMaxDepositAmountBasedOnPan(1)">
                                 <p-message severity="error" text="Enter Valid Numbers"
                                 *ngIf="!transactionlimitconfigform.controls['maxDepositLimitPerDayWithPan'].valid && transactionlimitconfigform.controls['maxDepositLimitPerDayWithPan'].dirty">
                             </p-message>
@@ -80,7 +81,7 @@
                                 <label for="username"><span class="red">*</span>{{'DEMANDDEPOSITS.WITHOUT_PAN' | translate}}
                                 </label>
                                 <input pInputText id="bunit_txt_name" maxlength="40" type="text"
-                                formControlName="maxDepositLimitPerDayWithoutPan" [(ngModel)]="transactionLimitConfigModel.maxDepositLimitPerDayWithoutPan">
+                                formControlName="maxDepositLimitPerDayWithoutPan" [(ngModel)]="transactionLimitConfigModel.maxDepositLimitPerDayWithoutPan" (focusout)="checkMaxDepositAmountBasedOnPan(2)">
                                 <p-message severity="error" text="Enter Valid Numbers"
                                 *ngIf="!transactionlimitconfigform.controls['maxDepositLimitPerDayWithoutPan'].valid && transactionlimitconfigform.controls['maxDepositLimitPerDayWithoutPan'].dirty">
                             </p-message>
@@ -99,7 +100,7 @@
                                 <label for="username">{{'DEMANDDEPOSITS.WITH_PAN' | translate}}
                                 </label>
                                 <input pInputText id="bunit_txt_name" maxlength="40" type="text"
-                                formControlName="minWithdrawLimitPerDayWithPan" [(ngModel)]="transactionLimitConfigModel.minWithdrawLimitPerDayWithPan" >
+                                formControlName="minWithdrawLimitPerDayWithPan" [(ngModel)]="transactionLimitConfigModel.minWithdrawLimitPerDayWithPan" (focusout)="checkMinimumWithdrawAmountBasedOnPan(1)" >
                                 <p-message severity="error" text="Enter Valid Numbers"
                                 *ngIf="!transactionlimitconfigform.controls['minWithdrawLimitPerDayWithPan'].valid && transactionlimitconfigform.controls['minWithdrawLimitPerDayWithPan'].dirty">
                             </p-message>
@@ -108,7 +109,7 @@
                                 <label for="username">{{'DEMANDDEPOSITS.WITHOUT_PAN' | translate}}
                                 </label>
                                 <input pInputText id="bunit_txt_name" maxlength="40" type="text"
-                                formControlName="minWithdrawLimitPerDayWithOutPan" [(ngModel)]="transactionLimitConfigModel.minWithdrawLimitPerDayWithoutPan">
+                                formControlName="minWithdrawLimitPerDayWithOutPan" [(ngModel)]="transactionLimitConfigModel.minWithdrawLimitPerDayWithoutPan" (focusout)="checkMinimumWithdrawAmountBasedOnPan(2)">
                                 <p-message severity="error" text="Enter Valid Numbers"
                                 *ngIf="!transactionlimitconfigform.controls['minWithdrawLimitPerDayWithOutPan'].valid && transactionlimitconfigform.controls['minWithdrawLimitPerDayWithOutPan'].dirty">
                             </p-message>
@@ -127,7 +128,7 @@
                                 <label for="username"><span class="red">*</span>{{'DEMANDDEPOSITS.SAME_BRANCH_ATM' | translate}}
                                 </label>
                                 <input pInputText id="bunit_txt_name" maxlength="40" type="text"
-                                formControlName="maxWithdrawLimitSameBranchAtmInDay" [(ngModel)]="transactionLimitConfigModel.maxWithdrawLimitSameBranchAtmInDay">
+                                formControlName="maxWithdrawLimitSameBranchAtmInDay" [(ngModel)]="transactionLimitConfigModel.maxWithdrawLimitSameBranchAtmInDay" (focusout)="checkMaximumWithdrawAmountBasedOnPan(1)">
                                 <p-message severity="error" text="Enter Valid Numbers"
                                 *ngIf="!transactionlimitconfigform.controls['maxWithdrawLimitSameBranchAtmInDay'].valid && transactionlimitconfigform.controls['maxWithdrawLimitSameBranchAtmInDay'].dirty">
                             </p-message>
@@ -136,7 +137,7 @@
                                 <label for="username"><span class="red">*</span>{{'DEMANDDEPOSITS.OTHER_BRANCH_ATM' | translate}}
                                 </label>
                                 <input pInputText id="bunit_txt_name" maxlength="40" type="text"
-                                formControlName="maxWithdrawLimitOtherBranchAtmInDay" [(ngModel)]="transactionLimitConfigModel.maxWithdrawLimitOtherBranchAtmInDay">
+                                formControlName="maxWithdrawLimitOtherBranchAtmInDay" [(ngModel)]="transactionLimitConfigModel.maxWithdrawLimitOtherBranchAtmInDay" (focusout)="checkMaximumWithdrawAmountBasedOnPan(2)">
                                 <p-message severity="error" text="Enter Valid Numbers"
                                 *ngIf="!transactionlimitconfigform.controls['maxWithdrawLimitOtherBranchAtmInDay'].valid && transactionlimitconfigform.controls['maxWithdrawLimitOtherBranchAtmInDay'].dirty">
                             </p-message>

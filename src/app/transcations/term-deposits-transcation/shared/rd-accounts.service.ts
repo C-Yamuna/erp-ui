@@ -331,4 +331,8 @@ export class RdAccountsService {
   addGroupPromoterDetails(TermDepostModel: any) {
     return this.commonHttpService.post(TermDepostModel,Headers, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS+ ERP_TRANSACTION_CONSTANTS.GROUP_PROMOTERS + ERP_TRANSACTION_CONSTANTS.ADD)
   }
+  getAllTransactionModes(){
+    return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.TRANSACTION_MODES + Configuration.GET_ALL);
+  }
+  
 }

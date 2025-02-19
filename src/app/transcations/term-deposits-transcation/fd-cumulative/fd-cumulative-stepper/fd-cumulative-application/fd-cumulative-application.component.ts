@@ -15,6 +15,7 @@ import { FileUploadService } from 'src/app/shared/file-upload.service';
 import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-constants';
 import { InterestPolicy } from '../../../term-deposit-product-definition/add-td-product-definition/interest-policy/shared/interest-policy.model';
 import { RequiredDocuments } from '../../../term-deposit-product-definition/add-td-product-definition/required-documents/shared/required-documents.model';
+import { MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-fd-cumulative-application',
@@ -45,8 +46,8 @@ export class FdCumulativeApplicationComponent {
   membershipBasicRequiredDetails: NewMembershipAdd = new NewMembershipAdd();
   memberGroupDetailsModel: MemberGroupDetailsModel = new MemberGroupDetailsModel();
   membershipInstitutionDetailsModel: MembershipInstitutionDetailsModel = new MembershipInstitutionDetailsModel();
-    interestPolicyModel :InterestPolicy = new InterestPolicy();
-    requiredDocumentsModel :RequiredDocuments = new RequiredDocuments();
+  interestPolicyModel: InterestPolicy = new InterestPolicy();
+  requiredDocumentsModel: RequiredDocuments = new RequiredDocuments();
   memberTypeName: any;
   fdCummulativeAccId: any;
   isEdit: boolean = false;
@@ -68,9 +69,10 @@ export class FdCumulativeApplicationComponent {
   deleteId: any;
   pacsId: any;
   branchId: any;
-  interestPolicyList: any[] =[];
-  requireddocumentlist: any[] =[];
+  interestPolicyList: any[] = [];
+  requireddocumentlist: any[] = [];
   renewalList: any[] = [];
+  accountTypeDropDownHide: boolean = false;
   constructor(
     private formBuilder: FormBuilder,
     private fdCumulativeApplicationService: FdCumulativeApplicationService,
@@ -80,25 +82,25 @@ export class FdCumulativeApplicationComponent {
     private commonFunctionsService: CommonFunctionsService,
     private datePipe: DatePipe, private fileUploadService: FileUploadService) {
 
-      this.applicationForm = this.formBuilder.group({
-        'fdCummulativeProductId':['', [Validators.required]],
-        'accountNumber': [{ value: '', disabled: true }],
-        'roi': [{ value: '', disabled: true },[Validators.required]],
-        'depositDate': [{ value: '', disabled: true }],
-        'penalRoi': [{ value: '', disabled: true }],
-        'monthlyIncome': ['', ],
-        'tenureInDays': ['', ],
-        'tenureInMonths':['',],
-        'tenureInYears':['',],
-        'depositAmount': ['',],
-        'accountType': ['', [Validators.required]],
-        'isRenewal' : [''],
-        'maturityDate':[{ value: '', disabled: true }],
-        'maturityAmount':[{ value: '', disabled: true }]
-        })
+    this.applicationForm = this.formBuilder.group({
+      'fdCummulativeProductId': ['', [Validators.required]],
+      'accountNumber': [{ value: '', disabled: true }],
+      'roi': [{ value: '', disabled: true }, [Validators.required]],
+      'depositDate': [{ value: '', disabled: true }],
+      'penalRoi': [{ value: '', disabled: true }],
+      'monthlyIncome': ['',],
+      'tenureInDays': ['',],
+      'tenureInMonths': ['',],
+      'tenureInYears': ['',],
+      'depositAmount': ['',],
+      'accountType': ['', [Validators.required]],
+      'isRenewal': [{ value: '', disabled: true }],
+      'maturityDate': [{ value: '', disabled: true }],
+      'maturityAmount': [{ value: '', disabled: true }]
+    })
   }
 
- 
+
   ngOnInit() {
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
     this.isMemberCreation = this.commonFunctionsService.getStorageValue('b-class-member_creation');
@@ -154,7 +156,7 @@ export class FdCumulativeApplicationComponent {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.productsList = this.responseModel.data;
-            this.productsList = this.productsList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+            this.productsList = this.productsList.filter((obj: any) => obj != null && obj.statusName == applicationConstants.APPROVED).map((relationType: { name: any; id: any; }) => {
               return { label: relationType.name, value: relationType.id };
             });
           }
@@ -196,19 +198,19 @@ export class FdCumulativeApplicationComponent {
       this.getProductDefinitionByProductId(event.value);
     }
   }
-  productViewPopUp(){
+  productViewPopUp() {
     this.displayDialog = true;
-    if(this.fdCumulativeApplicationModel.fdCummulativeProductId != null && this.fdCumulativeApplicationModel.fdCummulativeProductId != undefined){
+    if (this.fdCumulativeApplicationModel.fdCummulativeProductId != null && this.fdCumulativeApplicationModel.fdCummulativeProductId != undefined) {
       this.getProductDefinitionByProductId(this.fdCumulativeApplicationModel.fdCummulativeProductId);
     }
     else {
       this.msgs = [];
-          this.msgs = [{ severity: 'error', detail: "Please Select Product" }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 2000);
+      this.msgs = [{ severity: 'error', detail: "Please Select Product" }];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 2000);
     }
-    
+
   }
   onChangeAccountType(event: any) {
     if (event.value != null && event.value != undefined) {
@@ -217,9 +219,6 @@ export class FdCumulativeApplicationComponent {
       this.updateData();
     }
   }
-
-
-
 
   //get account details by admissionNumber list
   getFdCummApplicationById(fdCummulativeAccId: any) {
@@ -230,19 +229,22 @@ export class FdCumulativeApplicationComponent {
           if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.fdCumulativeApplicationModel = this.responseModel.data[0];
 
-            if(this.fdCumulativeApplicationModel.depositDate == null || this.fdCumulativeApplicationModel.depositDate == undefined){
+            if (this.fdCumulativeApplicationModel.depositDate == null || this.fdCumulativeApplicationModel.depositDate == undefined) {
               this.fdCumulativeApplicationModel.depositDateVal = this.commonFunctionsService.currentDate();
 
               if (this.fdCumulativeApplicationModel.depositDateVal != null && this.fdCumulativeApplicationModel.depositDateVal != undefined) {
                 this.fdCumulativeApplicationModel.depositDate = this.commonFunctionsService.getUTCEpochWithTimedateConversionToLong(this.fdCumulativeApplicationModel.depositDateVal);
               }
             }
-            else if(this.fdCumulativeApplicationModel.depositDate != null && this.fdCumulativeApplicationModel.depositDate != undefined){
+            else if (this.fdCumulativeApplicationModel.depositDate != null && this.fdCumulativeApplicationModel.depositDate != undefined) {
               this.fdCumulativeApplicationModel.depositDateVal = this.commonFunctionsService.dateConvertionIntoFormate(this.fdCumulativeApplicationModel.depositDate);
             }
             // if (this.fdNonCumulativeApplicationModel.fdNonCummulativeproductId != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeproductId != undefined)
             //   this.isProductDisable = applicationConstants.TRUE;
 
+            if (this.fdCumulativeApplicationModel.maturityDate != null && this.fdCumulativeApplicationModel.maturityDate != undefined) {
+              this.fdCumulativeApplicationModel.maturityDate = this.datePipe.transform(this.fdCumulativeApplicationModel.maturityDate, this.orgnizationSetting.datePipe);
+            }
             if (this.fdCumulativeApplicationModel.memberShipBasicDetailsDTO != undefined) {
               this.membershipBasicRequiredDetails = this.fdCumulativeApplicationModel.memberShipBasicDetailsDTO;
 
@@ -260,11 +262,28 @@ export class FdCumulativeApplicationComponent {
             // if (this.fdNonCumulativeApplicationModel.depositDate != null && this.fdNonCumulativeApplicationModel.depositDate != undefined)
             //   this.fdNonCumulativeApplicationModel.depositDateVal = this.datePipe.transform(this.fdNonCumulativeApplicationModel.depositDate, this.orgnizationSetting.datePipe);
 
-           
+
             if (this.fdCumulativeApplicationModel.memberTypeName != null && this.fdCumulativeApplicationModel.memberTypeName != undefined) {
               this.memberTypeName = this.fdCumulativeApplicationModel.memberTypeName;
               if (this.fdCumulativeApplicationModel.memberTypeName == "Individual")
                 this.isIndividual = true;
+              if (this.memberTypeName != MemberShipTypesData.INDIVIDUAL) { 
+                this.accountTypeDropDownHide = true;
+                const controlName = this.applicationForm.get('accountType');
+                if (controlName) {
+                  controlName.setValidators(null); // Set the required validator null
+                  controlName.updateValueAndValidity();
+                }
+              }
+              else {
+                const controlName = this.applicationForm.get('accountType');
+                if (controlName) {
+                  controlName.setValidators([
+                    Validators.required,
+                  ]);
+                  controlName.updateValueAndValidity();
+                }
+              }
             }
             if (this.fdCumulativeApplicationModel.admissionNumber != null && this.fdCumulativeApplicationModel.admissionNumber != undefined)
               this.admissionNumber = this.fdCumulativeApplicationModel.admissionNumber;
@@ -279,9 +298,9 @@ export class FdCumulativeApplicationComponent {
             if (this.fdCumulativeApplicationModel.fdCummulativeProductName != null && this.fdCumulativeApplicationModel.fdCummulativeProductName != undefined)
               this.productInfoFalg = true;
 
-            if(this.fdCumulativeApplicationModel.fdCummulativeProductId!= null && this.fdCumulativeApplicationModel.fdCummulativeProductId != undefined){
+            if (this.fdCumulativeApplicationModel.fdCummulativeProductId != null && this.fdCumulativeApplicationModel.fdCummulativeProductId != undefined) {
               this.getProductDefinitionByProductId(this.fdCumulativeApplicationModel.fdCummulativeProductId);
-              
+
             }
             if (this.fdCumulativeApplicationModel.fdCummulativeProductDefinitionDTO != null && this.fdCumulativeApplicationModel.fdCummulativeProductDefinitionDTO != undefined) {
               this.productDefinitionModel = this.fdCumulativeApplicationModel.fdCummulativeProductDefinitionDTO;
@@ -289,10 +308,7 @@ export class FdCumulativeApplicationComponent {
                 this.interestPolicyModel = this.productDefinitionModel.intestPolicyConfigList[0];
               if (this.productDefinitionModel.effectiveStartDate != null && this.productDefinitionModel.effectiveStartDate != undefined)
                 this.productDefinitionModel.effectiveStartDateVal = this.datePipe.transform(this.productDefinitionModel.effectiveStartDate, this.orgnizationSetting.datePipe);
-  
             }
-           
-
           }
           this.updateData();
         }
@@ -316,19 +332,22 @@ export class FdCumulativeApplicationComponent {
 
           if (this.productDefinitionModel.intestPolicyConfigList != null && this.productDefinitionModel.intestPolicyConfigList != undefined && this.productDefinitionModel.intestPolicyConfigList.length > 0) {
             this.interestPolicyList = this.productDefinitionModel.intestPolicyConfigList;
-           
+
           }
           if (this.productDefinitionModel.intestPolicyConfigList != null && this.productDefinitionModel.intestPolicyConfigList != undefined) {
             if (this.productDefinitionModel.intestPolicyConfigList[0].roi != undefined && this.productDefinitionModel.intestPolicyConfigList[0].roi != null)
               this.fdCumulativeApplicationModel.roi = this.productDefinitionModel.intestPolicyConfigList[0].roi;
-  
+
             if (this.productDefinitionModel.intestPolicyConfigList[0].penaltyRoi != undefined && this.productDefinitionModel.intestPolicyConfigList[0].penaltyRoi != null)
               this.fdCumulativeApplicationModel.penalRoi = this.productDefinitionModel.intestPolicyConfigList[0].penaltyRoi;
           }
-         
+
           if (this.productDefinitionModel.requiredDocumentsConfigList != null && this.productDefinitionModel.requiredDocumentsConfigList != undefined && this.productDefinitionModel.requiredDocumentsConfigList.length > 0) {
             this.requireddocumentlist = this.productDefinitionModel.requiredDocumentsConfigList;
-           
+
+          }
+          if (this.productDefinitionModel.isAutoRenewal != null && this.productDefinitionModel.isAutoRenewal != undefined) {
+            this.fdCumulativeApplicationModel.isAutoRenewal = this.productDefinitionModel.isAutoRenewal;
           }
 
         }
@@ -350,11 +369,36 @@ export class FdCumulativeApplicationComponent {
     this.visible = true;
   }
 
-
-
   closeProductDefinition() {
     this.productDefinitionFlag = false;
   }
 
+  calculateMaturity() {
+    let depositAmount = parseFloat(this.applicationForm.get('depositAmount')?.value) || 0;
+    let roi = parseFloat(this.applicationForm.get('roi')?.value) || 0;
+    let tenureInDays = parseInt(this.applicationForm.get('tenureInDays')?.value) || 0;
+    let tenureInMonths = parseInt(this.applicationForm.get('tenureInMonths')?.value) || 0;
+    let tenureInYears = parseInt(this.applicationForm.get('tenureInYears')?.value) || 0;
+    let depositDate = this.applicationForm.get('depositDate')?.value;
+    if (!depositAmount || !roi || (tenureInDays === 0 && tenureInMonths === 0 && tenureInYears === 0)) {
+      return;
+    }
+    let tenureInYearsTotal = tenureInYears + (tenureInMonths / 12) + (tenureInDays / 365);
+    let maturityAmount = depositAmount * Math.pow((1 + roi / 100), tenureInYearsTotal);
+    this.applicationForm.get('maturityAmount')?.setValue(maturityAmount.toFixed(2));
+    if (depositDate) {
+      let maturityDate = new Date(depositDate);
+      if (isNaN(maturityDate.getTime())) {
+        return;
+      }
+      maturityDate.setFullYear(maturityDate.getFullYear() + tenureInYears);
+      maturityDate.setMonth(maturityDate.getMonth() + tenureInMonths);
+      maturityDate.setDate(maturityDate.getDate() + tenureInDays);
+      const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'short', year: 'numeric' };
+      const maturityDateFormatted = maturityDate.toLocaleDateString('en-GB', options).replace(',', '/');
+      this.applicationForm.get('maturityDate')?.setValue(maturityDateFormatted);
+    }
+  }
+  
 
 }

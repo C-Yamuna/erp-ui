@@ -1,31 +1,31 @@
 <div class="col-12">
     <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
         [hideTransitionOptions]="'500ms'"></p-messages>
-    <h6 class="sub-heading">{{'DEMANDDEPOSITS.DOCUMENTS' | translate}}<span class="admission-text">(Admission
+    <h6 class="sub-heading">{{'LOAN_TRANSACTION.DOCUMENTS' | translate}}<span class="admission-text">(Admission
             number:&nbsp;{{admissionNumber}})</span></h6>
     <div class="stepper-top-section-strip">
         <div class="row">
             <div class="col-lg-3 col-md-3 col-sm-12">
                 <div class="form-group">
-                    <span>{{'ERP.PRODUCT' | translate}}</span>
+                    <span>{{'LOAN_TRANSACTION.PRODUCT_NAME' | translate}}</span>
                     <p class="mb-0">{{termLoanApplicationModel.termProductName}}</p>
                 </div>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-12">
                 <div class="form-group">
-                    <span>{{'ERP.OPERATION_TYPE' | translate}}</span>
+                    <span>{{'LOAN_TRANSACTION.ACCOUNT_TYPE' | translate}}</span>
                     <p class="mb-0">{{termLoanApplicationModel.operationTypeName}}</p>
                 </div>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-12">
                 <div class="form-group">
-                    <span>{{'ERP.LOAN_ACCOUNT_NO' | translate}}</span>
+                    <span>{{'LOAN_TRANSACTION.ACCOUNT_NUMBER' | translate}}</span>
                     <p class="mb-0">{{termLoanApplicationModel.accountNumber}}</p>
                 </div>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-12">
                 <div class="form-group">
-                    <span>{{'ERP.REQUEST_AMOUNT' | translate}}</span>
+                    <span>{{'LOAN_TRANSACTION.REQUEST_AMOUNT' | translate}}</span>
                     <p class="mb-0">{{termLoanApplicationModel.requestedAmount}}</p>
                 </div>
             </div>
@@ -97,7 +97,7 @@
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
                                     <label><span class="red">*</span>Document Type</label>
-                                    <p-dropdown placeholder="{{'ERP.SELECT'| translate}}" formControlName="documentType"
+                                    <p-dropdown placeholder="{{'LOAN_TRANSACTION.SELECT'| translate}}" formControlName="documentType"
                                         [options]="documentNameList" id="docTypeId"
                                         [(ngModel)]="termLoanDocumentsModel.documentType">
                                     </p-dropdown>
@@ -114,7 +114,7 @@
                             
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
-                                    <span class=""><span class="red">*</span>{{ 'ERP.UPLOAD_DOCUMENT' | translate }} </span>
+                                    <label><span class="red">*</span>{{ 'LOAN_TRANSACTION.UPLOAD_DOCUMENT' | translate }} </label>
                                     <div class="uplodad-style align-items-center">
                                         <!-- Upload Button Column -->
                                         <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
@@ -140,8 +140,8 @@
 
                             <div class="col-12">
                                 <div class="justify-content-end d-flex">
-                                    <p-button label="{{'cancle' | translate}}" (onClick)="editCancle()"></p-button>
-                                    <p-button label="{{'save' | translate}}" [disabled]="!termDocumentDetailsForm.valid"
+                                    <p-button label="{{'LOAN_TRANSACTION.CANCEL' | translate}}" (onClick)="editCancle()"></p-button>
+                                    <p-button label="{{'LOAN_TRANSACTION.SAVE' | translate}}" [disabled]="(!termDocumentDetailsForm.valid) || !isFileUploaded"
                                         (onClick)="editsave(termLoanDocumentsModel)"></p-button>
                                 </div>
                             </div>
@@ -156,7 +156,7 @@
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
                                     <label><span class="red">*</span>Document Type</label>
-                                    <p-dropdown placeholder="{{'ERP.SELECT' | translate}}"
+                                    <p-dropdown placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}"
                                         formControlName="documentType" [options]="documentNameList" id="docTypeId"
                                         [(ngModel)]="termLoanDocumentsModel.documentType">
                                     </p-dropdown>
@@ -172,7 +172,7 @@
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
-                                    <span class=""><span class="red">*</span>{{ 'ERP.UPLOAD_DOCUMENT' | translate }} </span>
+                                    <label><span class="red">*</span>{{ 'LOAN_TRANSACTION.UPLOAD_DOCUMENT' | translate }} </label>
                                     <div class="uplodad-style align-items-center">
                                         <!-- Upload Button Column -->
                                         <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
@@ -198,8 +198,8 @@
 
                             <div class="col-12">
                                 <div class="justify-content-end d-flex">
-                                    <p-button label="{{'cancle' | translate}}" (click)="cancel()"></p-button>
-                                    <p-button label="{{'save' | translate}}" [disabled]="!termDocumentDetailsForm.valid"
+                                    <p-button label="{{'LOAN_TRANSACTION.CANCEL' | translate}}" (click)="cancel()"></p-button>
+                                    <p-button label="{{'LOAN_TRANSACTION.SAVE' | translate}}" [disabled]="(!termDocumentDetailsForm.valid) || !isFileUploaded"
                                         (click)="saveDocument(termLoanDocumentsModel)"></p-button>
                                 </div>
                             </div>
@@ -214,12 +214,12 @@
 <p-dialog [(visible)]="displayDialog" [closable]="false" styleClass="delete-popup" [responsive]="true">
     <div class="col-12">
         <i class="fa fa-times-circle text-center" aria-hidden="true"></i>
-        <p class="text-center popup-header">{{'ERP.ARE_YOU_SURE_TO_DELETE' | translate}}</p>
-        <p class="text-center pop-subheader">{{'ERP.DO_YOU_REALLY_TO_DELETE_THESE_RECORDS' | translate}}</p>
+        <p class="text-center popup-header">{{'LOAN_TRANSACTION.ARE_YOU_SURE_TO_DELETE' | translate}}</p>
+        <p class="text-center pop-subheader">{{'LOAN_TRANSACTION.DO_YOU_REALLY_TO_DELETE_THESE_RECORDS' | translate}}</p>
     </div>
     <div class="col-12 text-center p-2">
-        <p-button pRipple class="yes-button" label="{{'ERP.DELETE' | translate}}" (click)="submitDelete()"></p-button>
-        <p-button pRipple class="no-button" label="{{'ERP.CANCEL' | translate}}"
+        <p-button pRipple class="yes-button" label="{{'LOAN_TRANSACTION.DELETE' | translate}}" (click)="submitDelete()"></p-button>
+        <p-button pRipple class="no-button" label="{{'LOAN_TRANSACTION.CANCEL' | translate}}"
             (click)="cancelForDialogBox()"></p-button>
     </div>
 </p-dialog>

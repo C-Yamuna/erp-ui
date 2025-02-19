@@ -43,6 +43,7 @@ export class SaoLoanGenealogyTreeComponent {
   saoLoanApplicatonModel: SaoLoanApplication = new SaoLoanApplication();
   statusList: any[] = [];
   deleteId: any;
+  errorMessage: string = '';
   constructor(private router: Router,private formBuilder: FormBuilder,private saoLoanGenealogyTreeService: SaoLoanGenealogyTreeService,private encryptDecryptService: EncryptDecryptService,
     private commonComponent: CommonComponent,private activateRoute: ActivatedRoute,private saoLoanApplicationService : SaoLoanApplicationService,
     private saoLoanNomineeDetailsService:SaoLoanNomineeDetailsService
@@ -128,9 +129,26 @@ addGenology(){
   this.dt.value.unshift({ securityType: ''});
   this.dt.initRowEdit(this.dt.value[0]);
   }
+  isDuplicateRelation(relationName: string, currentId?: string): boolean {
+    for (let record of this.gridList) {
+        if (record.relationWithApplicantName === relationName && record.id !== currentId) {
+            return true; 
+        }
+    }
+    return false;  
+  }
   addOrUpdateGenealogyDetails(saoLoanGenealogyModel:any) {
     this.addButton = false;
     this.editDeleteDisable = false;
+    if (this.isDuplicateRelation(saoLoanGenealogyModel.relationWithApplicantName)) {
+      this.msgs = [{ severity: 'error', detail: 'Duplicate relation with applicant detected!' }];
+      this.getSaoGenealogyTreeDetailsByLoanApplicationId(this.loanId);
+
+      setTimeout(() => {
+          this.msgs = [];
+      }, 2000);
+      return;  
+    }
     saoLoanGenealogyModel.saoLoanApplicationId = this.loanId;
     if (saoLoanGenealogyModel.id != undefined) {
       this.saoLoanGenealogyTreeService.updateSaoLoanGenealogyTree(saoLoanGenealogyModel).subscribe((res: any) => {
@@ -175,6 +193,7 @@ addGenology(){
         }, 2000);
       })
     }
+    
   }
   getSaoGenealogyTreeDetailsByLoanApplicationId(loanId:any) {
     this.editDeleteDisable = true;
@@ -185,7 +204,7 @@ addGenology(){
         this.gridList = this.responseModel.data;
         if(this.gridList != null && this.gridList.length >0){
           this.editDeleteDisable = false;
-        this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+        // this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
         setTimeout(() => {
           this.msgs = [];
         }, 2000);

@@ -42,7 +42,7 @@ export class InvestmentApprovalDetailsComponent {
         { field: 'depositAmount', header: 'INVESTMENTS_TRANSACTIONS.DEPOSIT_AMOUNT_EACH_SHARE_AMOUNT' },
         { field: 'roi', header: 'INVESTMENTS_TRANSACTIONS.ROI' },
         { field: 'depositDate', header: 'INVESTMENTS_TRANSACTIONS.DEPOSIT_DATE_PURCHASE_DATE' },
-        { field: 'statusName', header: 'INVESTMENTS_TRANSACTIONS.STATUS' },
+        { field: 'accountStatusName', header: 'INVESTMENTS_TRANSACTIONS.STATUS' },
       ];
   }
   ngOnInit() {
@@ -66,8 +66,8 @@ export class InvestmentApprovalDetailsComponent {
       this.responseModel = data;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         this.gridListData = this.responseModel.data;
-        this.gridListData = this.responseModel.data.filter((data: any) => data.statusName == CommonStatusData.SUBMISSION_FOR_APPROVAL ||
-          data.statusName == CommonStatusData.APPROVED ||  data.statusName == CommonStatusData.REJECTED).map((item: any) => {
+        this.gridListData = this.responseModel.data.filter((data: any) => data.accountStatusName == CommonStatusData.SUBMISSION_FOR_APPROVAL ||
+          data.accountStatusName == CommonStatusData.APPROVED ||  data.accountStatusName == CommonStatusData.REJECTED).map((item: any) => {
             item.depositDate = this.datePipe.transform(item.depositDate, this.orgnizationSetting.datePipe);
             item.maturityDate = this.datePipe.transform(item.maturityDate, this.orgnizationSetting.datePipe);
             if(item.roi == null || item.roi == undefined)

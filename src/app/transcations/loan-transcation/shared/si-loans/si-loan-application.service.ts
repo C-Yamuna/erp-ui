@@ -4,6 +4,7 @@ import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-
 import { CommonHttpService } from 'src/app/shared/common-http.service';
 import { Configuration } from 'src/app/configurations/configurations-constants';
 import { BehaviorSubject } from 'rxjs';
+import { CommonFunctionsService } from 'src/app/shared/commonfunction.service';
 
 export type stepperDataModel = {
   formValid?: boolean,
@@ -27,7 +28,7 @@ export class SiLoanApplicationService {
     this.organizationDetailsStepper.next(null); // or initial value
   }
 
-  constructor(private commonHttpService: CommonHttpService) { }
+  constructor(private commonHttpService: CommonHttpService, private commonFunctionService: CommonFunctionsService) { }
 
   changeData(data: stepperDataModel) {
     this.organizationDetailsStepper.next(data)
@@ -160,6 +161,13 @@ export class SiLoanApplicationService {
   getSILoanApplicationWithKycDetailsByLoanAccId(loanAccId: any) {
     let headers = new HttpHeaders({ 'loanAccId': loanAccId + '', })
     return this.commonHttpService.getById(headers, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.SI_LOAN_APPLICATION + ERP_TRANSACTION_CONSTANTS.GET_LOAN_APPLICATION_DETAILS_BY_LOAN_APPLICATION_ID);
+  }
+
+  downloadPreviewPDf(id: any) {
+    let status = this.commonFunctionService.getStorageValue('language');
+    let url = ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.SI_LOAN_APPLICATION + ERP_TRANSACTION_CONSTANTS.SI_LOAN_APPLICATION_PREVIEW_DOWNLOAD + "/" + id + "/" + status;
+    const headers = new HttpHeaders({});
+    return this.commonHttpService.generateAssetSheet(headers, url);
   }
 
 }

@@ -123,7 +123,7 @@ export class TermLoansKycComponent {
         'docNumber': ['', [ Validators.compose([Validators.required])]],
         'docTypeName': ['',  Validators.compose([Validators.required])],
         'fileUpload': ['', ],
-        'nameAsPerDocument':[Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS),Validators.compose([Validators.required])],
+        'nameAsPerDocument':[Validators.pattern(applicationConstants.ALPHA_NAME_PATTERN),Validators.compose([Validators.required])],
         'promoter': ['', ],
       });
     }

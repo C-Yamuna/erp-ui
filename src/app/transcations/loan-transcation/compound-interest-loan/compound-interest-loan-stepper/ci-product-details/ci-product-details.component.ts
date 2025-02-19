@@ -15,6 +15,7 @@ import { CiLoanApplicationService } from './shared/ci-loan-application.service';
 import { CompoundInterestProductDefinitionService } from '../../compound-interest-product-definition/shared/compound-interest-product-definition.service';
 import { applicationConstants } from 'src/app/shared/applicationConstants';
 import { Table } from 'primeng/table';
+import { AccountTypes } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-ci-product-details',
@@ -59,7 +60,7 @@ export class CiProductDetailsComponent {
   ciLoanInsuranceDetailsModel: CiLoanInsuranceDetails = new CiLoanInsuranceDetails();
   ciLoanInterestPolicyModel: CiInterestPolicy = new CiInterestPolicy();
   ciLoanDisbursementScheduleModel:CiLoanDisbursementScheduleModel = new CiLoanDisbursementScheduleModel()
-  addButton: boolean = false;
+  addButton: boolean = true;
   displayDialog: boolean = false;
   interestConfigList: any[]=[];
   collateralList: any[]=[];
@@ -75,6 +76,12 @@ export class CiProductDetailsComponent {
   disbursmentScheduleList: any[] = [];
   collectionTypeList: any[] = [];
   schedulerForm: FormGroup;
+  insuranceDetailsFlag: boolean = false;
+  saveAndNextEnableDisable: boolean = false;
+  isDisbursementsNotMatchedCheck: boolean = true;
+  applicationSubmitEnable : boolean = false;
+  today :any;
+  pacsId: any;
   constructor(private router: Router,
     private formBuilder: FormBuilder,
     private translate: TranslateService,
@@ -89,24 +96,24 @@ export class CiProductDetailsComponent {
     this.ciLoanApplicationForm = this.formBuilder.group({
       ciProductId: ['', [Validators.required]],
       accountNumber: [{ value: '', disabled: true }],
-      applicationDate: ['', [Validators.required]],
+      applicationDate:  [{ value: '', disabled: true }],
       operationTypeId: ['', ],
       effectiveRoi: [{ value: '', disabled: true }],
       penalRoi: [{ value: '', disabled: true }],
       iod: [{ value: '', disabled: true }],
-      repaymentFrequency: ['', [Validators.required]],
+      repaymentFrequency:  [{ value: '', disabled: true }],
       monthlyIncome: ['', [Validators.pattern(applicationConstants.NEW_AMOUNT_PATTERN), Validators.compose([Validators.required])]],
       purposeId:['', [Validators.required]],
       requestedAmount:  ['', [Validators.pattern(applicationConstants.NEW_AMOUNT_PATTERN), Validators.compose([Validators.required])]],
-      // sanctionAmount:  ['', [Validators.pattern(applicationConstants.NEW_AMOUNT_PATTERN), Validators.compose([Validators.required])]],
+      sanctionAmount:  ['', [Validators.pattern(applicationConstants.NEW_AMOUNT_PATTERN), Validators.compose([Validators.required])]],
       sanctionDate:['', [Validators.required]],
-      plannedDisbursements:  ['', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.compose([Validators.required])]],
+      plannedDisbursements: ['', [Validators.required]],
       loanPeriod:  ['', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.compose([Validators.required])]],
       loanDueDate: ['', [Validators.required]],
     })
 
     this.insuranceForm = this.formBuilder.group({
-      vendorId: ['', [Validators.required]],
+      vendorId: ['', Validators.required],
       policyName: ['', [Validators.pattern(applicationConstants.NAME_PATTERN), Validators.compose([Validators.required])]],
       policyNumber: ['', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.compose([Validators.required])]],
       sumInsured:['', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.compose([Validators.required])]],
@@ -121,8 +128,10 @@ export class CiProductDetailsComponent {
       'disbursementOrder': ['',],
       'statusName': ['',],
     })
+    this.today = new Date();//for future date set to disable
   }
   ngOnInit() {
+    this.pacsId =1;
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
     this.statusList = this.commonComponent.status();
     this.collectionTypeList = [
@@ -132,21 +141,20 @@ export class CiProductDetailsComponent {
     this.isMemberCreation = this.commonFunctionsService.getStorageValue('b-class-member_creation');
     this.getAllProducts();
     this.getAllRepaymentFrequency();
-    this.getAllLoanPurpose();
+    // this.getAllLoanPurpose();
     this.getAllAccountTypes();
     this.getAllInsuranceVendors();
 
     this.activateRoute.queryParams.subscribe(params => {
       if (params['id'] != undefined) {
-        this.commonComponent.startSpinner();
+       
         let id = this.encryptDecryptService.decrypt(params['id']);
         this.ciLoanApplicationId = Number(id);
         this.isEdit = true;
         this.getCiLoanApplicationById(this.ciLoanApplicationId);
-        this.commonComponent.stopSpinner();
+       
       } else {
         this.isEdit = false;
-        this.commonComponent.stopSpinner();
       }
     })
     this.ciLoanApplicationForm.valueChanges.subscribe((data: any) => {
@@ -162,21 +170,33 @@ export class CiProductDetailsComponent {
   }
 
   updateData() {
+    if(this.insuranceDetailsFlag){
+      this.saveAndNextEnableDisable = (!((this.ciLoanApplicationForm.valid) && (this.insuranceForm.valid) && this.isDisbursementsNotMatchedCheck))||this.editDeleteDisable;
+    }
+    else {
+      this.saveAndNextEnableDisable = (!(this.ciLoanApplicationForm.valid && this.isDisbursementsNotMatchedCheck))||this.editDeleteDisable;
+    }
+    // if(this.isDisbursementsNotMatchedCheck){
+    //   this.saveAndNextEnableDisable = 
+    // }
     this.ciLoanApplicationModel.ciLoanInsuranceDetailsDTO = this.ciLoanInsuranceDetailsModel;
     this.ciLoanApplicationService.changeData({
       formValid: (!this.ciLoanApplicationForm.valid && !this.insuranceForm.valid )? true : false,
       data: this.ciLoanApplicationModel,
-      isDisable: (!this.ciLoanApplicationForm.valid) && (!this.insuranceForm.valid),
+      isDisable: this.saveAndNextEnableDisable,
       stepperIndex: 3,
     });
   }
 
+  /**
+   * @implements get all product details
+   * @author jyothi.naidana
+   */
   getAllProducts() {
-    this.commonComponent.startSpinner();
-    this.ciProductDefinitionService.getAllCompoundInterestProductDefinition().subscribe(response => {
+    this.ciProductDefinitionService.getActiveProductsBasedOnPacsId(this.pacsId).subscribe(response => {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-        this.commonComponent.stopSpinner();
+
         this.productsList = this.responseModel.data.filter((product: { status: number; }) => product.status == 3).map((product: any) => {
           return { label: product.name, value: product.id };
         });
@@ -184,7 +204,7 @@ export class CiProductDetailsComponent {
     },
       error => {
         this.msgs = [];
-        this.commonComponent.stopSpinner();
+
         this.msgs.push({ severity: 'error', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST });
       })
   }
@@ -203,8 +223,34 @@ export class CiProductDetailsComponent {
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
             this.ciProductDefinitionModel = this.responseModel.data[0];
+            if(this.ciProductDefinitionModel.loanLinkedshareCapitalApplicable != null && this.ciProductDefinitionModel.loanLinkedshareCapitalApplicable != undefined && this.ciProductDefinitionModel.loanLinkedshareCapitalApplicable)
+              this.ciProductDefinitionModel.loanLinkedshareCapitalApplicable = applicationConstants.YES;
+            else 
+              this.ciProductDefinitionModel.loanLinkedshareCapitalApplicable = applicationConstants.NO;
+
+              if(this.ciProductDefinitionModel.isInsuranceAppicable != null && this.ciProductDefinitionModel.isInsuranceAppicable != undefined && this.ciProductDefinitionModel.isInsuranceAppicable)
+                this.ciProductDefinitionModel.isInsuranceAppicable = applicationConstants.YES;
+              else 
+                this.ciProductDefinitionModel.isInsuranceAppicable = applicationConstants.NO
+
             if (null != this.ciProductDefinitionModel.effectiveStartDate && undefined != this.ciProductDefinitionModel.effectiveStartDate)
-              this.ciProductDefinitionModel.effectiveStartDate = this.datePipe.transform(this.ciProductDefinitionModel.effectiveStartDate, this.orgnizationSetting.datePipe);
+                this.ciProductDefinitionModel.effectiveStartDate = this.datePipe.transform(this.ciProductDefinitionModel.effectiveStartDate, this.orgnizationSetting.datePipe);
+
+            if (null != this.ciProductDefinitionModel.interestPostingFrequency && undefined != this.ciProductDefinitionModel.interestPostingFrequency)
+              this.ciLoanApplicationModel.repaymentFrequency = this.ciProductDefinitionModel.interestPostingFrequency;
+
+            let repamentFrequency = this.repaymentFrequencyList.filter((obj:any)=> obj.value == this.ciProductDefinitionModel.interestPostingFrequency );
+            if(repamentFrequency != null && repamentFrequency != undefined){
+              this.ciProductDefinitionModel.interestPostingFrequencyName = repamentFrequency[0].label;
+              this.ciLoanApplicationModel.repaymentFrequencyName = repamentFrequency[0].label;
+            }
+              
+              //insurance details
+              this.insuranceDetailsFlag = this.ciProductDefinitionModel.isInsuranceAppicable;
+              if(this.insuranceDetailsFlag){
+                if(this.ciLoanApplicationModel.ciLoanInsuranceDetailsDTO != null && this.ciLoanApplicationModel.ciLoanInsuranceDetailsDTO != undefined)
+                  this.ciLoanInsuranceDetailsModel= this.ciLoanApplicationModel.ciLoanInsuranceDetailsDTO;
+              }
 
             if (this.ciProductDefinitionModel.ciProdCollateralsConfigDTOList) {
               this.collateralList = this.ciProductDefinitionModel.ciProdCollateralsConfigDTOList
@@ -249,7 +295,11 @@ export class CiProductDetailsComponent {
                 object.effectiveStartDate = this.datePipe.transform(object.effectiveStartDate, this.orgnizationSetting.datePipe);
                 return object;
               });
+              this.loanPurposeList = this.responseModel.data[0].ciProdPurposeConfigDTOList.filter((docs: any) => docs.status == applicationConstants.ACTIVE).map((count: any) => {
+                return { label: count.loanPurposeName, value: count.purposeId }
+              });
             }
+            
 
             if (this.ciProductDefinitionModel.ciRequiredDocumentsConfigDTOList != null && this.ciProductDefinitionModel.ciRequiredDocumentsConfigDTOList != undefined && this.ciProductDefinitionModel.ciRequiredDocumentsConfigDTOList.length > 0) {
               this.requiredDocumentsList = this.ciProductDefinitionModel.ciRequiredDocumentsConfigDTOList;
@@ -258,11 +308,12 @@ export class CiProductDetailsComponent {
                 return object;
               });
             }
+            this.updateData();
           }
         }
         else {
           this.msgs = [];
-          this.commonComponent.stopSpinner();
+         
           this.msgs.push({ severity: 'error', detail: this.responseModel.statusMsg });
         }
       }
@@ -270,11 +321,11 @@ export class CiProductDetailsComponent {
   }
 
   getAllRepaymentFrequency() {
-    this.commonComponent.startSpinner();
+    
     this.ciLoanApplicationService.getAllRepaymentFrequency().subscribe(response => {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-        this.commonComponent.stopSpinner();
+       
         this.repaymentFrequencyList = this.responseModel.data.filter((repaymentFrequency: { status: number; }) => repaymentFrequency.status == applicationConstants.ACTIVE).map((repaymentFrequency: any) => {
           return { label: repaymentFrequency.name, value: repaymentFrequency.id };
         });
@@ -282,17 +333,15 @@ export class CiProductDetailsComponent {
     },
       error => {
         this.msgs = [];
-        this.commonComponent.stopSpinner();
+       
         this.msgs.push({ severity: 'error', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST });
       })
   }
 
   getAllLoanPurpose() {
-    this.commonComponent.startSpinner();
     this.ciLoanApplicationService.getAllLoanPurpose().subscribe(response => {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-        this.commonComponent.stopSpinner();
         this.loanPurposeList = this.responseModel.data.filter((loanPurpose: { status: number; }) => loanPurpose.status == 1).map((loanPurpose: any) => {
           return { label: loanPurpose.name, value: loanPurpose.id };
         });
@@ -300,7 +349,7 @@ export class CiProductDetailsComponent {
     },
       error => {
         this.msgs = [];
-        this.commonComponent.stopSpinner();
+       
         this.msgs.push({ severity: 'error', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST });
       })
   }
@@ -312,7 +361,7 @@ export class CiProductDetailsComponent {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.operationTypesList = this.responseModel.data;
-            this.operationTypesList = this.operationTypesList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+            this.operationTypesList = this.operationTypesList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
               return { label: relationType.name, value: relationType.id };
             });
           }
@@ -324,17 +373,16 @@ export class CiProductDetailsComponent {
       }
     }, error => {
       this.msgs = [];
-      this.commonComponent.stopSpinner();
+     
       this.msgs.push({ severity: 'error', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST });
     })
   }
 
   getAllInsuranceVendors() {
-    this.commonComponent.startSpinner();
     this.ciLoanApplicationService.getAllInsuranceVendors().subscribe(response => {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-        this.commonComponent.stopSpinner();
+       
         this.insuranceVendorDetailsList = this.responseModel.data.filter((insuranceVendor: { status: number; }) => insuranceVendor.status == 1).map((insuranceVendor: any) => {
           let newObj = { label: insuranceVendor.name, value: insuranceVendor.id };
           return newObj;
@@ -343,7 +391,7 @@ export class CiProductDetailsComponent {
     },
       error => {
         this.msgs = [];
-        this.commonComponent.stopSpinner();
+       
         this.msgs.push({ severity: 'error', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST });
       })
   }
@@ -388,8 +436,13 @@ export class CiProductDetailsComponent {
     // }
   }
 
-  //get account details by admissionNumber list
+  /**
+   * @implements get ci Loand application details by Id
+   * @param ciLoanApplicationId 
+   * @author jyothi.naidana
+   */
   getCiLoanApplicationById(ciLoanApplicationId: any) {
+    this.commonComponent.startSpinner();
     this.ciLoanApplicationService.getLoanApplicationDetailsByLoanApplicationId(ciLoanApplicationId).subscribe((data: any) => {
       this.responseModel = data;
       if (this.responseModel != null && this.responseModel != undefined) {
@@ -412,15 +465,18 @@ export class CiProductDetailsComponent {
                   this.ciLoanApplicationModel.applicationDateVal = this.datePipe.transform(this.ciLoanApplicationModel.applicationDate, this.orgnizationSetting.datePipe);
                 }
                 if (this.ciLoanApplicationModel.sanctionDate != null && this.ciLoanApplicationModel.sanctionDate != undefined) {
-                  this.ciLoanApplicationModel.sanctionDate = this.datePipe.transform(this.ciLoanApplicationModel.sanctionDate, this.orgnizationSetting.datePipe);
+                  this.ciLoanApplicationModel.sanctionDateVal = this.datePipe.transform(this.ciLoanApplicationModel.sanctionDate, this.orgnizationSetting.datePipe);
                 }
                 if (this.ciLoanApplicationModel.loanDueDate != null && this.ciLoanApplicationModel.loanDueDate != undefined) {
-                  this.ciLoanApplicationModel.loanDueDate = this.datePipe.transform(this.ciLoanApplicationModel.loanDueDate, this.orgnizationSetting.datePipe);
+                  this.ciLoanApplicationModel.loanDueDateVal = this.datePipe.transform(this.ciLoanApplicationModel.loanDueDate, this.orgnizationSetting.datePipe);
                 }
                 if (this.ciLoanApplicationModel.memberTypeName != null && this.ciLoanApplicationModel.memberTypeName != undefined) {
                   this.memberTypeName = this.ciLoanApplicationModel.memberTypeName;
                   if (this.ciLoanApplicationModel.memberTypeName == "Individual")
                     this.isIndividual = true;
+                  else 
+                    this.ciLoanApplicationModel.operationTypeName = AccountTypes.SINGLE;
+                  
                 }
                 if (this.ciLoanApplicationModel.admissionNo != null && this.ciLoanApplicationModel.admissionNo != undefined) {
                   this.admissionNumber = this.ciLoanApplicationModel.admissionNo;
@@ -431,12 +487,34 @@ export class CiProductDetailsComponent {
                 if (this.ciLoanApplicationModel.ciProductName != null && this.ciLoanApplicationModel.ciProductName != undefined) {
                   this.productInfoFalg = true;
                 }
+                if(this.ciLoanApplicationModel.applicationDate == null || this.ciLoanApplicationModel.applicationDate == undefined){
+                  this.ciLoanApplicationModel.applicationDateVal = this.commonFunctionsService.currentDate();
+                  if (this.ciLoanApplicationModel.applicationDateVal != null && this.ciLoanApplicationModel.applicationDateVal != undefined) {
+                    this.ciLoanApplicationModel.applicationDate = this.commonFunctionsService.getUTCEpochWithTimedateConversionToLong(this.ciLoanApplicationModel.applicationDateVal);
+                  }
+                }
+                else if(this.ciLoanApplicationModel.applicationDate != null && this.ciLoanApplicationModel.applicationDate != undefined){
+                  this.ciLoanApplicationModel.applicationDateVal = this.commonFunctionsService.dateConvertionIntoFormate(this.ciLoanApplicationModel.applicationDate);
+                }
+                this.commonComponent.stopSpinner();
                 if (this.ciLoanApplicationModel.ciLoanInsuranceDetailsDTO != null && this.ciLoanApplicationModel.ciLoanInsuranceDetailsDTO != undefined) {
                   this.ciLoanInsuranceDetailsModel = this.ciLoanApplicationModel.ciLoanInsuranceDetailsDTO;
                 }
                 this.getProductDefinitionByProductId(this.ciLoanApplicationModel.ciProductId);
                 if (this.ciLoanApplicationModel.ciLoanDisbursementScheduleDTOList != null) {
                   this.disbursmentScheduleList = this.ciLoanApplicationModel.ciLoanDisbursementScheduleDTOList;
+                }
+                this.onChangePlannedDisbursements(this.ciLoanApplicationModel.plannedDisbursements);
+                if(this.ciLoanApplicationForm.valid && this.insuranceForm.valid){
+                  this.applicationSubmitEnable = false;
+                }
+                if(this.ciLoanApplicationModel.plannedDisbursements != null && this.ciLoanApplicationModel.plannedDisbursements != undefined){
+                  this.ciLoanApplicationForm.get("plannedDisbursements")?.disable();
+                  const controlTow = this.ciLoanApplicationForm.get('plannedDisbursements');
+                  if (controlTow) {
+                    controlTow.setValidators(null); // Set the required validator null
+                    controlTow.updateValueAndValidity();
+                  }
                 }
                 this.updateData();
               }
@@ -495,6 +573,7 @@ export class CiProductDetailsComponent {
   
   }
   addData() {
+    this.applicationSubmitEnable = true;
     this.addButton = true;
     this.editDeleteDisable = true;
     this.updateData();
@@ -510,19 +589,21 @@ export class CiProductDetailsComponent {
     }
   }
 
+  /**
+   * @implements addOrUpdateDisbursementList
+   * @param rowData 
+   */
   addOrUpdateSchedulerDetails(rowData: any) {
-    this.addButton = false;
-    this.editDeleteDisable = false;
+    this.disbursmentScheduleList = [];
     rowData.ciLoanApplicationId = this.ciLoanApplicationId;
     this.ciLoanDisbursementScheduleModel = rowData;
     if (rowData.id != undefined) {
-
       this.ciLoanApplicationService.updateCiLoanDisbursementSchedule(this.ciLoanDisbursementScheduleModel).subscribe((res: any) => {
         this.responseModel = res;
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-          this.getCiLoanApplicationById(this.ciLoanApplicationId);
           this.msgs = [{ severity: 'success', detail: this.responseModel.statusMsg }];
           setTimeout(() => {
+            this.getCiLoanApplicationById(this.ciLoanApplicationModel.id);
             this.msgs = [];
           }, 2000);
         } else {
@@ -531,15 +612,15 @@ export class CiProductDetailsComponent {
             this.msgs = [];
           }, 2000);
         }
+        this.applicationSubmitEnable = false;
+        this.editDeleteDisable = false;
       }, error => {
         this.msgs = [{ severity: 'error', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST }];
       })
     } else {
-
       this.ciLoanApplicationService.addCiLoanDisbursementSchedule(this.ciLoanDisbursementScheduleModel).subscribe((res: any) => {
         this.responseModel = res;
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-          this.getCiLoanApplicationById(this.ciLoanApplicationId);
           this.msgs = [{ severity: 'success', detail: this.responseModel.statusMsg }];
           setTimeout(() => {
             this.msgs = [];
@@ -547,9 +628,12 @@ export class CiProductDetailsComponent {
         } else {
           this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
           setTimeout(() => {
+            this.getCiLoanApplicationById(this.ciLoanApplicationModel.id);
             this.msgs = [];
           }, 2000);
         }
+        this.applicationSubmitEnable = false;
+        this.editDeleteDisable = false;
       }, error => {
         this.msgs = [({ severity: 'error', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST })];
         setTimeout(() => {
@@ -561,26 +645,160 @@ export class CiProductDetailsComponent {
 
   cancelSchedulerDetails() {
     this.disbursmentScheduleList = [];
+    this.applicationSubmitEnable = false;
     this.addButton = false;
     this.editDeleteDisable = false;
     this.getCiLoanApplicationById(this.ciLoanApplicationId);
     this.updateData();
   }
 
+  /**
+   * @implements edit schedulerDetails
+   * @param row 
+   */
   editSchedulerDetailsRow(row: any) {
-    this.addButton = false;
-    this.editDeleteDisable = false;
+    this.applicationSubmitEnable = true;
+    this.addButton = true;
+    this.editDeleteDisable = true;
     this.ciLoanDisbursementScheduleModel = row;
     this.ciLoanDisbursementScheduleModel.ciLoanApplicationId = this.ciLoanApplicationId;
     this.ciLoanApplicationService.getCiLoanDisbursementScheduleById(this.ciLoanDisbursementScheduleModel.id).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         this.ciLoanDisbursementScheduleModel = this.responseModel.data;
-
       }
-      this.getCiLoanApplicationById(this.ciLoanApplicationId);
     });
     this.updateData();
+  }
+
+  /**
+   * @implements application submit
+   * @param obj 
+   * @author jyothi.naidana
+   */
+  applicationSubmit(obj: any) {
+    this.editDeleteDisable = false;
+    this.ciLoanApplicationModel.ciLoanInsuranceDetailsDTO = this.ciLoanInsuranceDetailsModel;
+    this.ciLoanApplicationModel.sanctionDate = this.commonFunctionsService.getUTCEpoch(new Date(this.ciLoanApplicationModel.sanctionDateVal));
+    this.ciLoanApplicationModel.loanDueDate = this.commonFunctionsService.getUTCEpoch(new Date(this.ciLoanApplicationModel.loanDueDateVal));
+    this.ciLoanApplicationModel.applicationDate = this.commonFunctionsService.getUTCEpoch(new Date(this.ciLoanApplicationModel.applicationDate));
+    if (this.ciLoanApplicationModel.id != undefined) {
+      this.ciLoanApplicationService.updateCiLoanApplication(this.ciLoanApplicationModel).subscribe((res: any) => {
+        this.responseModel = res;
+        if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+          this.msgs = [{ severity: 'success', detail: this.responseModel.statusMsg }];
+          setTimeout(() => {
+            this.getCiLoanApplicationById(this.ciLoanApplicationModel.id);
+            this.msgs = [];
+          }, 2000);
+        } else {
+          this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        }
+      }, error => {
+        this.msgs = [{ severity: 'error', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST }];
+      })
+    }
+  }
+
+  /**
+   * @implements onChangePlanned Disbursements need to validate disbursement table
+   * @author jyothi.naidana
+   * @param disbursementsNumber 
+   */
+  onChangePlannedDisbursements(disbursementsNumber: any) {
+    if (this.ciLoanApplicationModel.plannedDisbursements != null && this.ciLoanApplicationModel.plannedDisbursements != null && this.ciLoanApplicationModel.plannedDisbursements != "") {
+      if (this.disbursmentScheduleList.length == this.ciLoanApplicationModel.plannedDisbursements) {
+        this.isDisbursementsNotMatchedCheck =true;
+        this.addButton = true;
+      }
+      else {
+        this.isDisbursementsNotMatchedCheck =false;
+        this.addButton = false;
+      }
+    }
+    else {
+      this.isDisbursementsNotMatchedCheck =true;
+      this.addButton = true;
+    }
+  }
+
+   /**
+   * @implements on ApplicationDate Change saction date due date checks
+   * @param applicationDate 
+   * @author jyothi.naidana
+   */
+  onSactionDateSelect(sactionDate: any) {
+    this.ciLoanApplicationModel.sanctionDate = this.commonFunctionsService.getUTCEpoch(new Date(sactionDate));
+    if (this.ciLoanApplicationModel.applicationDate != null && this.ciLoanApplicationModel.applicationDate != undefined && this.ciLoanApplicationModel.sanctionDate < this.ciLoanApplicationModel.applicationDate) {
+      this.msgs = [{ severity: 'error', detail: "Saction Date Should Be Greater Than Application Date"}];
+      this.ciLoanApplicationModel.sanctionDate = null;
+      this.ciLoanApplicationModel.sanctionDateVal = null;
+      this.ciLoanApplicationForm.get("sanctionDate")?.reset;
+      setTimeout(() => {
+        this.msgs = [];
+      }, 2000);
+    }
+    if (this.ciLoanApplicationModel.loanDueDate != null && this.ciLoanApplicationModel.loanDueDate != undefined && this.ciLoanApplicationModel.sanctionDate > this.ciLoanApplicationModel.loanDueDate) {
+      this.msgs = [{ severity: 'error', detail: "Saction Date Should Be Greater Than Loan Due Date"}];
+      this.ciLoanApplicationModel.sanctionDate = null;
+      this.ciLoanApplicationModel.sanctionDateVal = null;
+      this.ciLoanApplicationModel.loanDueDate = null;
+      this.ciLoanApplicationModel.loanDueDateVal = null;
+      this.ciLoanApplicationForm.get("loanDueDate")?.reset;
+      this.ciLoanApplicationForm.get("sanctionDate")?.reset;
+      setTimeout(() => {
+        this.msgs = [];
+      }, 2000);
+    }
+  }
+
+  /**
+    * @implements on ApplicationDate Change saction date due date checks
+   * @param applicationDate 
+   * @author jyothi.naidana
+   */
+  onLoanDeuDateSelect(loanDueDate: any) {
+    this.ciLoanApplicationModel.loanDueDate = this.commonFunctionsService.getUTCEpoch(new Date(loanDueDate));
+    if (this.ciLoanApplicationModel.applicationDate != null && this.ciLoanApplicationModel.applicationDate != undefined && this.ciLoanApplicationModel.loanDueDate < this.ciLoanApplicationModel.applicationDate) {
+      this.msgs = [{ severity: 'error', detail: "Due Date Should Be Greater Than Application Date"}];
+      this.ciLoanApplicationModel.loanDueDate = null;
+      this.ciLoanApplicationModel.loanDueDateVal = null;
+      this.ciLoanApplicationForm.get("loanDueDate")?.reset;
+      setTimeout(() => {
+        this.msgs = [];
+      }, 2000);
+    }
+    if (this.ciLoanApplicationModel.sanctionDate != null && this.ciLoanApplicationModel.sanctionDate != undefined && this.ciLoanApplicationModel.sanctionDate > this.ciLoanApplicationModel.loanDueDate) {
+      this.msgs = [{ severity: 'error', detail: "Due Date Should Be Greater Than Saction Due Date"}];
+      this.ciLoanApplicationModel.sanctionDate = null;
+      this.ciLoanApplicationModel.sanctionDateVal = null;
+      this.ciLoanApplicationModel.loanDueDate = null;
+      this.ciLoanApplicationModel.loanDueDateVal = null;
+      this.ciLoanApplicationForm.get("loanDueDate")?.reset;
+      this.ciLoanApplicationForm.get("sanctionDate")?.reset;
+      setTimeout(() => {
+        this.msgs = [];
+      }, 2000);
+    }
+
+  }
+
+  /**
+   * @implements onChange Loan Period check with product definition
+   * @param loanPeriod 
+   * @author jyothi.naidana
+   */
+  onChangeLoanPeriod(loanPeriod:any){
+    if(this.ciProductDefinitionModel.minLoanPeriod > loanPeriod || this.ciProductDefinitionModel.maxLoanPeriod < loanPeriod){
+      this.msgs = [{ severity: 'error', detail: "Loan Period Should Be in Between "+this.ciProductDefinitionModel.minLoanPeriod +" , "+ this.ciProductDefinitionModel.maxLoanPeriod}];
+      this.ciLoanApplicationModel.loanPeriod = null;
+      setTimeout(() => {
+        this.msgs = [];
+      }, 2000);
+    }
   }
 
 }

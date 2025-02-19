@@ -44,4 +44,8 @@ export class SharesInvestments {
    multipartFileList : any;
 
    signedCopyPath: any;
+
+   accountStatus: any;
+
+   accountStatusName: any;
 }

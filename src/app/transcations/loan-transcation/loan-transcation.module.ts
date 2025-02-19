@@ -123,6 +123,12 @@ import { SimpleInterestProductConfigurationComponent } from './simple-interest-l
 import { TermLoanNewMembershipComponent } from './term-loan/term-loan-stepper/term-loan-new-membership/term-loan-new-membership.component';
 import { TermLoanMembershipComponent } from './term-loan/term-loan-stepper/term-loan-membership/term-loan-membership.component';
 import { CiLoanPreviewComponent } from './compound-interest-loan/compound-interest-loan-stepper/ci-loan-preview/ci-loan-preview.component';
+import { CiLoanDisbursementComponent } from './compound-interest-loan/ci-loan-operations/ci-loan-disbursement/ci-loan-disbursement.component';
+import { CiLoanCollectionComponent } from './compound-interest-loan/ci-loan-operations/ci-loan-collection/ci-loan-collection.component';
+import { CiLoanClosureComponent } from './compound-interest-loan/ci-loan-operations/ci-loan-closure/ci-loan-closure.component';
+import { TermLoanDisbursementComponent } from './term-loan/term-loan-operations/term-loan-disbursement/term-loan-disbursement.component';
+import { TermLoanCollectionComponent } from './term-loan/term-loan-operations/term-loan-collection/term-loan-collection.component';
+import { FileUploadModule } from 'primeng/fileupload';
 @NgModule({
   declarations: [
     LoanTranscationComponent,
@@ -236,6 +242,11 @@ import { CiLoanPreviewComponent } from './compound-interest-loan/compound-intere
     TermLoanNewMembershipComponent,
     TermLoanMembershipComponent,
     CiLoanPreviewComponent,
+    CiLoanDisbursementComponent,
+    CiLoanCollectionComponent,
+    CiLoanClosureComponent,
+    TermLoanDisbursementComponent,
+    TermLoanCollectionComponent,
  
   ],
   imports: [
@@ -244,6 +255,7 @@ import { CiLoanPreviewComponent } from './compound-interest-loan/compound-intere
     PrimengMaterialUiModule,
     FormsModule,
     MessageModule,
+    FileUploadModule,
     DialogModule,
     TranslateModule.forRoot({
       loader: {

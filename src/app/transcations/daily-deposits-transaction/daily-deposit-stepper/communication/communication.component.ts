@@ -157,7 +157,7 @@ export class CommunicationComponent {
         this.communicationForm.get('permanentSubDistrictName').disable();
         this.communicationForm.get('permanentVillageName').disable();
         this.communicationForm.get('permanentAddress1').disable();
-        // this.communicationForm.get('permanentPinCode').disable();
+        this.communicationForm.get('permanentPinCode').disable();
         this.RegAddressToComAddress();
       }
     }
@@ -502,6 +502,7 @@ export class CommunicationComponent {
         this.getAllPermanentVillagesBySubDistrictId(this.accountCommunicationModel.permanentSubDistrictId, false);
         this.accountCommunicationModel.permanentVillageId = this.accountCommunicationModel.villageId;
       }
+      this.getVillage(this.accountCommunicationModel.villageId);
     }
   }
 
@@ -577,7 +578,7 @@ export class CommunicationComponent {
   RegAddressToComAddress() {
     if (this.accountCommunicationModel.isSameAddress == true) {
       this.accountCommunicationModel.permanentAddress1 = this.accountCommunicationModel.address1;
-      // this.accountCommunicationModel.permanentPinCode = this.accountCommunicationModel.pinCode;
+      this.accountCommunicationModel.permanentPinCode = this.accountCommunicationModel.pinCode;
     }
   }
 }

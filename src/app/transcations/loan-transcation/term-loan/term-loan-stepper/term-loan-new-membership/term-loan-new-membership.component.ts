@@ -37,7 +37,6 @@ export class TermLoanNewMembershipComponent {
   genderList: any[] = [];
   maritalstatusList: any[] = [];
   communityList: any[] = [];
-
   membershipBasicRequiredDetailsModel: MembershipBasicRequiredDetails = new MembershipBasicRequiredDetails();
   memberGroupDetailsModel: MemberGroupDetailsModel = new MemberGroupDetailsModel();
   membershipInstitutionDetailsModel: MembershipInstitutionDetailsModel = new MembershipInstitutionDetailsModel();
@@ -92,7 +91,7 @@ export class TermLoanNewMembershipComponent {
   branchId: any;
   allTypesOfmembershipList: any;
   permenentAllTypesOfmembershipList: any;
- termLoanApplicationId: any;
+  termLoanApplicationId: any;
   multipleFilesList: any;
   uploadFileData: any;
   isFileUploadedPhoto: Boolean =false;
@@ -115,6 +114,17 @@ export class TermLoanNewMembershipComponent {
   isFileUploadedPromoterSignature: boolean = false;
 
   groupOrInstitutionDisable : boolean = false;
+  statusList: any []= [];
+  trueFalseList: any[] = [];
+  groupTypes :any[]=[];
+  institutionTypes:any[]=[];
+  groupedQualificationSubQualification: any[]=[];
+  subQualificationList: any[]=[];
+  tempSubQualificationList: any[]=[];
+  tempSubCasteList: any[]=[];
+  groupedCasteSubCaste: any[]=[];
+  subCasteList: any[]=[];
+  today :any;
 
   constructor(private router: Router, private formBuilder: FormBuilder,
     private commonComponent: CommonComponent, private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService,
@@ -140,7 +150,7 @@ export class TermLoanNewMembershipComponent {
         caste:  ['',Validators.compose([Validators.required])],
         email: ['', [Validators.pattern(applicationConstants.EMAIL_PATTERN)]],
         admissionDate: ['',Validators.compose([Validators.required])],
-        isStaff: [''],
+        isStaff: ['',Validators.compose([Validators.required])],
         fileUpload:[''],
         admissionFee:['']
       })
@@ -179,25 +189,28 @@ export class TermLoanNewMembershipComponent {
         martialId: ['', Validators.required],
         mobileNumber: ['', [Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.compose([Validators.required])]],
         aadharNumber: ['', [Validators.pattern(applicationConstants.AADHAR_PATTERN), Validators.compose([Validators.required])]],
-        emailId: ['', [Validators.pattern(applicationConstants.EMAIL_PATTERN), Validators.compose([Validators.required])]],
+        emailId: ['', [Validators.pattern(applicationConstants.EMAIL_PATTERN)]],
         startDate: ['', Validators.required],
         promterType: ['',],
-        isGroupLeader :['',],
+        isGroupLeader :['', Validators.required],
         admissionNumber :['',],
         photoUpload :['',],
         signatureUpload :['',],
-        authorizedSignatory:['',],
+        authorizedSignatory:['', Validators.required],
       })
+      this.today = new Date();//for future date set to disable
     }
   
   
     ngOnInit(): void {
-      this.membershipBasicRequiredDetailsModel.filesDTOList = [];
+      this.  membershipBasicRequiredDetailsModel.filesDTOList = [];
       this.pacsId = 1;
       this.branchId = 1;
       this.showForm = this.commonFunctionsService.getStorageValue(applicationConstants.B_CLASS_MEMBER_CREATION);
       this.orgnizationSetting = this.commonComponent.orgnizationSettings()
       this.maritalStatusList = this.commonComponent.maritalStatusList();
+      this.statusList = this.commonComponent.requiredlist();
+      this.trueFalseList = this.commonComponent.requiredlist();
     
       this.genderList = [
         { label: 'Male', value: 1 },
@@ -260,7 +273,7 @@ export class TermLoanNewMembershipComponent {
   
     /**
      * @implements get all community Types
- 
+   
      */
     getAllCommunityTypes() {
       this.commonComponent.startSpinner();
@@ -293,7 +306,7 @@ export class TermLoanNewMembershipComponent {
     /**
      * @implements get sb account details by id
      * @param id 
- 
+   
      */
     getTermApplicationByTermAccId(id: any) {
       this.termLoanApplicationsService.getTermApplicationByTermAccId(id).subscribe((data: any) => {
@@ -405,7 +418,7 @@ export class TermLoanNewMembershipComponent {
     }
     /**
       * @implements member form reset
-  
+    
       */
     memberFormReset(flag: any) {
       if (flag) {
@@ -418,17 +431,17 @@ export class TermLoanNewMembershipComponent {
     }
     /**
      * @implements update
- 
+   
      */
     updateData() {
-      this.termLoanApplicationModel.memberTypeId = this.memberTypeId;
+      this.  termLoanApplicationModel.memberTypeId = this.memberTypeId;
       if (this.memberTypeName == "Individual") {
         this.individualFlag = true;
         this.isDisableFlag = (!this.memberCreationForm.valid) || !(this.isFileUploadedPhoto && this.isFileUploadedsignature)
-        this.termLoanApplicationModel.memberTypeName = this.memberTypeName;
-        this.membershipBasicRequiredDetailsModel.memberTypeName = this.memberTypeName;
-        this.membershipBasicRequiredDetailsModel.isNewMember = this.showForm;
-        this.termLoanApplicationModel.individualMemberDetailsDTO = this.membershipBasicRequiredDetailsModel;
+        this.  termLoanApplicationModel.memberTypeName = this.memberTypeName;
+        this.  membershipBasicRequiredDetailsModel.memberTypeName = this.memberTypeName;
+        this.  membershipBasicRequiredDetailsModel.isNewMember = this.showForm;
+        this.  termLoanApplicationModel.individualMemberDetailsDTO = this.  membershipBasicRequiredDetailsModel;
       }
       if (this.memberTypeName == "Group") {
         this.groupFlag = true;
@@ -446,21 +459,21 @@ export class TermLoanNewMembershipComponent {
         this.membershipInstitutionDetailsModel.memberTypeId = this.memberTypeId;
         this.membershipInstitutionDetailsModel.memberTypeName = this.memberTypeName;
         this.membershipInstitutionDetailsModel.isNewMember = this.showForm;
-        this.termLoanApplicationModel.memberTypeName = this.memberTypeName;
-        this.termLoanApplicationModel.memberInstitutionDTO = this.membershipInstitutionDetailsModel;
+        this.  termLoanApplicationModel.memberTypeName = this.memberTypeName;
+        this.  termLoanApplicationModel.memberInstitutionDTO = this.membershipInstitutionDetailsModel;
         this.addButton = !this.institutionForm.valid;
     }
      
-      this.termLoanApplicationsService.changeData({
+      this.  termLoanApplicationsService.changeData({
         formValid: this.memberCreationForm.valid ? true : false || (this.institutionForm.valid) ? true : false || (this.groupForm.valid) ? true : false,
-        data: this.termLoanApplicationModel,
+        data: this.  termLoanApplicationModel,
         isDisable: this.isDisableFlag,
         stepperIndex: 0,
       });
     }
     /**
      * @implements update save
- 
+   
      */
     save() {
       this.updateData();
@@ -468,19 +481,19 @@ export class TermLoanNewMembershipComponent {
   
     /**
      * @implements on Change Relation Type
- 
+   
      */
     onChangeRelationTypeChange(event: any) {
       const filteredItem = this.relationTypesList.find(item => item.value === event.value);
-      this.membershipBasicRequiredDetailsModel.relationTypeName = filteredItem.label;
+      this.  membershipBasicRequiredDetailsModel.relationTypeName = filteredItem.label;
   
     }
     /**
      * @implements get getAll relation Types
- 
+   
      */
     getAllRelationTypes() {
-      this.termLoanApplicationsService.getAllRelationTypes().subscribe((res: any) => {
+      this.  termLoanApplicationsService.getAllRelationTypes().subscribe((res: any) => {
         this.responseModel = res;
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           this.relationTypesList = this.responseModel.data;
@@ -492,10 +505,10 @@ export class TermLoanNewMembershipComponent {
     }
     /**
      * @implements get getAll Occupation Types
- 
+   
      */
     getAllOccupationTypes() {
-      this.termLoanApplicationsService.getAllOccupationTypesList().subscribe((res: any) => {
+      this.  termLoanApplicationsService.getAllOccupationTypesList().subscribe((res: any) => {
         this.responseModel = res;
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           this.occupationTypeList = this.responseModel.data;
@@ -508,13 +521,23 @@ export class TermLoanNewMembershipComponent {
     }
     /**
      * @implements get getAll Qualification Types
- 
+   
      */
     getAllQualificationType() {
-      this.termLoanApplicationsService.getQualificationTypes().subscribe((res: any) => {
+      this.termLoanApplicationsService.getAllQualificationSubQualification().subscribe((res: any) => {
         this.responseModel = res;
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           this.qualificationTypes = this.responseModel.data;
+          this.groupedQualificationSubQualification = this.responseModel.data.filter((qualification:any) => qualification.status == applicationConstants.ACTIVE).map((count:any) => {
+            this.subQualificationList = [];
+            count.subQualificationList.filter((subCaste:any) => subCaste.status == applicationConstants.ACTIVE).map((subCount:any) => {
+              this.subQualificationList.push({ label: subCount.name, value: subCount.id})
+              this.tempSubQualificationList.push({ label: subCount.name, value: subCount.id})
+            });
+            return {
+              label: count.name, value: count.id, items: this.subQualificationList
+            }
+          });
           this.qualificationTypes = this.qualificationTypes.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
             return { label: relationType.name, value: relationType.id };
           });
@@ -522,27 +545,38 @@ export class TermLoanNewMembershipComponent {
       });
     }
   
-    /**
-     * @implements get castes list
+  /**
+   * @implements get castes list
  
-     */
-    getCastesList() {
-      this.termLoanApplicationsService.getCastes().subscribe((res: any) => {
-        this.responseModel = res;
-        if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-          this.castesList = this.responseModel.data;
-          this.castesList = this.castesList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
-            return { label: relationType.name, value: relationType.id };
+   */
+  getCastesList() {
+    this.termLoanApplicationsService.getAllCasteSubCaste().subscribe((res: any) => {
+      this.responseModel = res;
+      if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+        this.castesList = this.responseModel.data;
+        this.tempSubCasteList = [];
+        this.groupedCasteSubCaste = this.responseModel.data.filter((caste: any) => caste.status == applicationConstants.ACTIVE).map((count: any) => {
+          this.subCasteList = [];
+          count.subCastesList.filter((subCaste: any) => subCaste.status == applicationConstants.ACTIVE).map((subCount: any) => {
+            this.subCasteList.push({ label: subCount.name, value: subCount.id })
+            this.tempSubCasteList.push({ label: subCount.name, value: subCount.id })
           });
-        }
-      });
-    }
+          return {
+            label: count.name, value: count.id, items: this.subCasteList
+          }
+        });
+        this.castesList = this.castesList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
+          return { label: relationType.name, value: relationType.id };
+        });
+      }
+    });
+  }
   
    
    /**
      * @implements get membership detaild by admission Number
      * @param admissionNumber 
- 
+   
      */
     getMemberDetailsByAdmissionNumber(admisionNumber: any) {
       this.termLoanApplicationsService.getMemberByAdmissionNumber(admisionNumber).subscribe((response: any) => {
@@ -550,25 +584,25 @@ export class TermLoanNewMembershipComponent {
         if (this.responseModel != null && this.responseModel != undefined) {
           if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
             if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
-              this.membershipBasicRequiredDetailsModel = this.responseModel.data[0];
-              if (this.membershipBasicRequiredDetailsModel.dob != null && this.membershipBasicRequiredDetailsModel.dob != undefined) {
-                this.membershipBasicRequiredDetailsModel.dobVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.dob, this.orgnizationSetting.datePipe);
+              this.  membershipBasicRequiredDetailsModel = this.responseModel.data[0];
+              if (this.  membershipBasicRequiredDetailsModel.dob != null && this.  membershipBasicRequiredDetailsModel.dob != undefined) {
+                this.  membershipBasicRequiredDetailsModel.dobVal = this.datePipe.transform(this.  membershipBasicRequiredDetailsModel.dob, this.orgnizationSetting.datePipe);
               }
-              if (this.membershipBasicRequiredDetailsModel.admissionDate != null && this.membershipBasicRequiredDetailsModel.admissionDate != undefined) {
-                this.membershipBasicRequiredDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
+              if (this.  membershipBasicRequiredDetailsModel.admissionDate != null && this.  membershipBasicRequiredDetailsModel.admissionDate != undefined) {
+                this.  membershipBasicRequiredDetailsModel.admissionDateVal = this.datePipe.transform(this.  membershipBasicRequiredDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
               }
-              if(this.membershipBasicRequiredDetailsModel.memberTypeId != undefined && this.membershipBasicRequiredDetailsModel.memberTypeId){
-                this.memberTypeId = this.membershipBasicRequiredDetailsModel.memberTypeId;
+              if(this.  membershipBasicRequiredDetailsModel.memberTypeId != undefined && this.  membershipBasicRequiredDetailsModel.memberTypeId){
+                this.memberTypeId = this.  membershipBasicRequiredDetailsModel.memberTypeId;
               }
-              if (this.membershipBasicRequiredDetailsModel.photoCopyPath != null && this.membershipBasicRequiredDetailsModel.photoCopyPath != undefined) {
-                this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.photoCopyPath ,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.photoCopyPath  );
+              if (this.  membershipBasicRequiredDetailsModel.photoCopyPath != null && this.  membershipBasicRequiredDetailsModel.photoCopyPath != undefined) {
+                this.  membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.  membershipBasicRequiredDetailsModel.photoCopyPath ,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.  membershipBasicRequiredDetailsModel.photoCopyPath  );
                 this.isFileUploadedPhoto = applicationConstants.TRUE;
               }
-              if (this.membershipBasicRequiredDetailsModel.signatureCopyPath != null && this.membershipBasicRequiredDetailsModel.signatureCopyPath != undefined) {
-                this.membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.signatureCopyPath ,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.signatureCopyPath  );
+              if (this.  membershipBasicRequiredDetailsModel.signatureCopyPath != null && this.  membershipBasicRequiredDetailsModel.signatureCopyPath != undefined) {
+                this.  membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.  membershipBasicRequiredDetailsModel.signatureCopyPath ,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.  membershipBasicRequiredDetailsModel.signatureCopyPath  );
                 this.isFileUploadedsignature = applicationConstants.TRUE;
               }
-              this.termLoanApplicationModel.individualMemberDetailsDTO = this.membershipBasicRequiredDetailsModel;
+              this.  termLoanApplicationModel.individualMemberDetailsDTO = this.  membershipBasicRequiredDetailsModel;
               this.updateData();
               this.disableMemberType = true;
             }
@@ -595,10 +629,10 @@ export class TermLoanNewMembershipComponent {
     /**
      * @implements get group detaild by admission Number
      * @param admissionNumber 
- 
+   
      */
     getGroupByAdmissionNumber(admissionNumber: any) {
-      this.termLoanApplicationsService.getGroupByAdmissionNumber(admissionNumber).subscribe((response: any) => {
+      this.  termLoanApplicationsService.getGroupByAdmissionNumber(admissionNumber).subscribe((response: any) => {
         this.responseModel = response;
         if (this.responseModel != null && this.responseModel != undefined) {
           if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
@@ -642,10 +676,10 @@ export class TermLoanNewMembershipComponent {
                   }
                 }
                 if(this.  memberGroupDetailsModel.memberTypeName != null && this.  memberGroupDetailsModel.memberTypeName != undefined){
-                  this.termLoanApplicationModel.memberTypeName = this.  memberGroupDetailsModel.memberTypeName;
+                  this.  termLoanApplicationModel.memberTypeName = this.  memberGroupDetailsModel.memberTypeName;
                 }
                 if(this.  memberGroupDetailsModel != null && this.  memberGroupDetailsModel != undefined){
-                this.termLoanApplicationModel.memberGroupDetailsDTO = this.  memberGroupDetailsModel;
+                this.  termLoanApplicationModel.memberGroupDetailsDTO = this.  memberGroupDetailsModel;
                 }
               
               this.updateData();
@@ -678,10 +712,10 @@ export class TermLoanNewMembershipComponent {
     /**
      * @implements get institution details by admission Number
      * @param admissionNumber 
- 
+   
      */
     getInstitutionByAdmissionNumber(admissionNumber: any) {
-      this.termLoanApplicationsService.getInstitutionDetails(admissionNumber).subscribe((response: any) => {
+      this.  termLoanApplicationsService.getInstitutionDetails(admissionNumber).subscribe((response: any) => {
         this.responseModel = response;
         if (this.responseModel != null && this.responseModel != undefined) {
           if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
@@ -723,8 +757,8 @@ export class TermLoanNewMembershipComponent {
                   }
                 }
               }
-              this.termLoanApplicationModel.memberTypeName = this.membershipInstitutionDetailsModel.memberTypeName;
-              this.termLoanApplicationModel.memberInstitutionDTO = this.membershipInstitutionDetailsModel;
+              this.  termLoanApplicationModel.memberTypeName = this.membershipInstitutionDetailsModel.memberTypeName;
+              this.  termLoanApplicationModel.memberInstitutionDTO = this.membershipInstitutionDetailsModel;
               this.updateData();
               this.disableMemberType = true;
             }
@@ -754,7 +788,7 @@ export class TermLoanNewMembershipComponent {
     /**
      * @implements onChange member Type
      * @param event 
- 
+   
      */
     OnChangeMemberType(event: any) {
       const filteredItem = this.memberTypeList.find((item: { value: any; }) => item.value === event.value);
@@ -765,6 +799,13 @@ export class TermLoanNewMembershipComponent {
         this.groupFlag = false;
         this.membershipBasicRequiredDetailsModel.memberTypeId = 1;
         this.termLoanApplicationModel.memberTypeId = 1;
+
+        this.termLoanApplicationModel.memberGroupDetailsDTO = null;
+        // this.memberGroupDetailsModel = new MemberGroupDetailsModel();
+        // this.membershipInstitutionDetailsModel = new MembershipInstitutionDetailsModel();
+        this.termLoanApplicationModel.memberInstitutionDTO = null;
+        this.groupForm.reset();
+        this.institutionForm.reset();
       }
       else if (event.value == 2) {
         this.addButton = false;
@@ -773,7 +814,15 @@ export class TermLoanNewMembershipComponent {
         this.individualFlag = false;
         this.institutionFlag = false;
         this.  memberGroupDetailsModel.memberTypeId = 2;
-        this.termLoanApplicationModel.memberTypeId =2;
+        this.  termLoanApplicationModel.memberTypeId =2;
+
+        // refressing the form with data
+        this.termLoanApplicationModel.individualMemberDetailsDTO = null;
+        this.termLoanApplicationModel.memberInstitutionDTO = null;
+        this.memberCreationForm.reset();
+        this.institutionForm.reset();
+        // this.membershipBasicRequiredDetails = new MembershipBasicRequiredDetails();
+        // this.membershipInstitutionDetailsModel = new MembershipInstitutionDetailsModel();
       }
       else if (event.value == 3) {
         this.addButton = false;
@@ -783,6 +832,14 @@ export class TermLoanNewMembershipComponent {
         this.groupFlag = false;
         this.membershipInstitutionDetailsModel.memberTypeId = 3;
         this.termLoanApplicationModel.memberTypeId =3;
+
+        this.termLoanApplicationModel.memberInstitutionDTO = null;
+        this.termLoanApplicationModel.individualMemberDetailsDTO = null;
+        // this.membershipBasicRequiredDetails = new MembershipBasicRequiredDetails();;
+        
+        // this.memberGroupDetailsModel = new MemberGroupDetailsModel();
+        this.groupForm.reset();
+        this.memberCreationForm.reset();
       }
       this.updateData();
     }
@@ -791,10 +848,10 @@ export class TermLoanNewMembershipComponent {
    /**
     * @implements save group prmoters
     * @param rowData 
-    * @author jyothi.naidana
+  
     */
     savePromoterDetails(rowData: any) {
-     
+      rowData.isExistingMember = 
       rowData.pacsId = 1;
       rowData.status = applicationConstants.ACTIVE;
       this.addButton = false;
@@ -853,7 +910,7 @@ export class TermLoanNewMembershipComponent {
   
     /**
      * @implements cancle prmoters
- 
+   
      * @param falg 
      */
     cancelPromoter(falg:Boolean) {
@@ -864,38 +921,39 @@ export class TermLoanNewMembershipComponent {
       this.updateData();
     }
     
-    /**
-     * @implements edit promoters
-     * @param rowData 
+     /**
+   * @implements edit promoters
+   * @param rowData 
  
-     */
-    editPromoter(rowData: any) {
-      this.cancleButtonFlag = true;
-      this.addButton = true;
-      this.EditDeleteDisable = true;
-      this.groupPromoters = true;
-      this.promoterDetailsModel = new promoterDetailsModel();
-      this.promoterDetailsModel = rowData;
-      // this.promoterDetailsModel = this.promoterDetails.find((obj:any) => (obj != null && obj != undefined) && obj.uniqueId === rowData.uniqueId );
-      if(this.promoterDetailsModel.isExistingMember ){
-        this.admissionNumberDropDown = true;
-        this.promoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadImage  );
-        this.promoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadSignature  );
-      }
-      else{
-        this.admissionNumberDropDown = false;
-        this.promoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadImage  );
-        this.promoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadSignature  );
-      }
-      this.isFileUploadedPromoterPhoto = applicationConstants.TRUE;
-      this.isFileUploadedPromoterSignature = applicationConstants.TRUE;
-      this.onChangeExistedPrmoter(this.promoterDetailsModel.isExistingMember , false);
-      this.updateData();
+   */
+  editPromoter(rowData: any) {
+    this.cancleButtonFlag = true;
+    this.addButton = true;
+    this.EditDeleteDisable = true;
+    this.groupPromoters = true;
+    this.onChangeExistedPrmoter(rowData.isExistingMember , false);
+    this.promoterDetailsModel = new promoterDetailsModel();
+    this.promoterDetailsModel = rowData;
+    // this.promoterDetailsModel = this.promoterDetails.find((obj:any) => (obj != null && obj != undefined) && obj.uniqueId === rowData.uniqueId );
+    if(this.promoterDetailsModel.isExistingMember ){
+      this.admissionNumberDropDown = true;
+      this.promoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadImage  );
+      this.promoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadSignature  );
     }
+    else{
+      this.admissionNumberDropDown = false;
+      this.promoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadImage  );
+      this.promoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadSignature  );
+    }
+    this.isFileUploadedPromoterPhoto = applicationConstants.TRUE;
+    this.isFileUploadedPromoterSignature = applicationConstants.TRUE;
+    
+    this.updateData();
+  }
   
     /**
      * @implements row add of group promoters
- 
+   
      */
     onRowAddSave() {
       this.promoterDetailsForm.get("photoUpload").reset();
@@ -914,11 +972,11 @@ export class TermLoanNewMembershipComponent {
     }
     /**
      * @implements get all operator Details
- 
+   
      */
     getAllOperatorTypes() {
       this.commonComponent.startSpinner();
-      this.termLoanApplicationsService.getAllOperationTypes().subscribe((res: any) => {
+      this.  termLoanApplicationsService.getAllOperationTypes().subscribe((res: any) => {
         this.responseModel = res;
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data == null || (this.responseModel.data != null && this.responseModel.data.length == 0)) {
@@ -957,7 +1015,7 @@ export class TermLoanNewMembershipComponent {
     /**
      * @implements save institution promoters details
      * @param rowData 
- 
+   
      */
     saveInstitutionPromoterDetails(rowData: any) {
       this.institutionPromoterPopUp = false;
@@ -1024,7 +1082,7 @@ export class TermLoanNewMembershipComponent {
     /**
      * @implements cancle institution promoters
      * @param falg 
- 
+   
      */
     cancelInstitutionPromoter(falg : Boolean) {
       this.addButton = false;
@@ -1035,39 +1093,40 @@ export class TermLoanNewMembershipComponent {
     }
   
     /**
-     * @implements edit institution promoters
-     * @param rowData 
+   * @implements edit institution promoters
+   * @param rowData 
  
-     */
-    editInstitutionPromoter(rowData: any) {
-      this.cancleButtonFlag = false;
-      this.addButton = true;
-      this.EditDeleteDisable = true;
-      this.institutionPromoterPopUp = true;
-      this.institutionPromoterDetailsModel = new InstitutionPromoterDetailsModel();
-     
-      // this.institutionPromoterDetailsModel =  this.institutionPromoter.find((obj:any) => (obj != null && obj != undefined) && obj.uniqueId === rowData.uniqueId );
-      this.institutionPromoterDetailsModel = rowData;
-      if(this.institutionPromoterDetailsModel.isExistingMember ){
-        this.admissionNumberDropDown = true;
-  
-        this.institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionPromoterDetailsModel.uploadImage  );
-        this.institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionPromoterDetailsModel.uploadSignature  );
-      }
-      else{
-        this.admissionNumberDropDown = false;
-        this.institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionPromoterDetailsModel.uploadImage  );
-        this.institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionPromoterDetailsModel.uploadSignature  );
-      }
-     
-      this.isFileUploadedPromoterPhoto = applicationConstants.TRUE;
-      this.isFileUploadedPromoterSignature = applicationConstants.TRUE;
-      this.onChangeExistedPrmoter(this.institutionPromoterDetailsModel.isExistingMember , false);
-      this.updateData();
+   */
+  editInstitutionPromoter(rowData: any) {
+    this.cancleButtonFlag = false;
+    this.addButton = true;
+    this.EditDeleteDisable = true;
+    this.institutionPromoterPopUp = true;
+    this.onChangeExistedPrmoter(rowData.isExistingMember , false);
+    this.institutionPromoterDetailsModel = new InstitutionPromoterDetailsModel();
+   
+    // this.institutionPromoterDetailsModel =  this.institutionPromoter.find((obj:any) => (obj != null && obj != undefined) && obj.uniqueId === rowData.uniqueId );
+    this.institutionPromoterDetailsModel = rowData;
+    if(this.institutionPromoterDetailsModel.isExistingMember ){
+      this.admissionNumberDropDown = true;
+
+      this.institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionPromoterDetailsModel.uploadImage  );
+      this.institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionPromoterDetailsModel.uploadSignature  );
     }
+    else{
+      this.admissionNumberDropDown = false;
+      this.institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionPromoterDetailsModel.uploadImage  );
+      this.institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionPromoterDetailsModel.uploadSignature  );
+    }
+   
+    this.isFileUploadedPromoterPhoto = applicationConstants.TRUE;
+    this.isFileUploadedPromoterSignature = applicationConstants.TRUE;
+   
+    this.updateData();
+  }
     /**
      * @implements on institution promoter add
- 
+   
      */
     onRowAddInstitution() {
       this.promoterDetailsForm.get("photoUpload").reset();
@@ -1086,7 +1145,7 @@ export class TermLoanNewMembershipComponent {
   
     /**
      * @implements get All member types 
- 
+   
      */
     getAllMemberType() {
       this.membershipServiceService.getAllMemberTypes().subscribe((data: any) => {
@@ -1114,9 +1173,9 @@ export class TermLoanNewMembershipComponent {
   
     /**
      * @implements membership module data
- 
+   
      */
-    membershipDataFromCIModule() {
+    membershipDataFromTermModule() {
       if (this.memberTypeName == "Individual") {
         this.individualFlag = true;
         this.getMemberDetailsByAdmissionNumber(this.admisionNumber);
@@ -1129,106 +1188,110 @@ export class TermLoanNewMembershipComponent {
       }
     }
   
-    /**
-     * @implements image uploader
-     * @param event 
-     * @param fileUpload 
+     /**
+   * @implements image uploader
+   * @param event 
+   * @param fileUpload 
  
-     */
-    fileUploader(event: any, fileUpload: FileUpload, filePathName: any) {
-      
-      this.multipleFilesList = [];
-      if(this.isEdit && this.membershipBasicRequiredDetailsModel.filesDTOList == null || this.membershipBasicRequiredDetailsModel.filesDTOList == undefined){
-        this.membershipBasicRequiredDetailsModel.filesDTOList = [];
-      }
-      if (filePathName === "individualPhotoCopy") {
-        this.isFileUploadedPhoto = applicationConstants.FALSE;
-      }
-      if (filePathName === "individualSighnedCopy") {
-        this.isFileUploadedsignature = applicationConstants.FALSE;
-      }
-      let files: FileUploadModel = new FileUploadModel();
-      for (let file of event.files) {
-        let reader = new FileReader();
-        reader.onloadend = (e) => {
-          let timeStamp = this.commonComponent.getTimeStamp();
-          let files = new FileUploadModel();
-          this.uploadFileData = e.currentTarget;
-          files.fileName = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
-          files.fileType = file.type.split('/')[1];
-          files.value = this.uploadFileData.result.split(',')[1];
-          files.imageValue = this.uploadFileData.result;
-          this.multipleFilesList.push(files);
-           // Add to filesDTOList array
-          if (filePathName === "individualPhotoCopy") {
-            this.isFileUploadedPhoto = applicationConstants.TRUE;
-            this.membershipBasicRequiredDetailsModel.filesDTOList.push(files);
-            this.membershipBasicRequiredDetailsModel.photoCopyPath = null;
-            this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy = [];
-            this.membershipBasicRequiredDetailsModel.filesDTOList[this.membershipBasicRequiredDetailsModel.filesDTOList.length - 1].fileName = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
-            this.membershipBasicRequiredDetailsModel.photoCopyPath = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
-          }
-          if (filePathName === "individualSighnedCopy") {
-            this.isFileUploadedsignature = applicationConstants.TRUE;
-            this.membershipBasicRequiredDetailsModel.filesDTOList.push(files);
-            this.membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath = [];
-            this.membershipBasicRequiredDetailsModel.signatureCopyPath = null;
-            this.membershipBasicRequiredDetailsModel.filesDTOList[this.membershipBasicRequiredDetailsModel.filesDTOList.length - 1].fileName = "Individual_Member_signed_copy" + "_" + timeStamp + "_" + file.name;
-            this.membershipBasicRequiredDetailsModel.signatureCopyPath = "Individual_Member_signed_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
-          }
-          if (filePathName === "groupPhotoCopy") {
-            this.  memberGroupDetailsModel.filesDTOList.push(files);
-            this.  memberGroupDetailsModel.signatureCopyPath = null;
-            this.  memberGroupDetailsModel.filesDTOList[this.  memberGroupDetailsModel.filesDTOList.length - 1].fileName = "Group_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
-            this.  memberGroupDetailsModel.signatureCopyPath = "Group_Member_Photo_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
-          }
-          if (filePathName === "groupSignatureCopy") {
-            this.  memberGroupDetailsModel.filesDTOList.push(files);
-            this.  memberGroupDetailsModel.signatureCopyPath = null;
-            this.  memberGroupDetailsModel.filesDTOList[this.  memberGroupDetailsModel.filesDTOList.length - 1].fileName = "Group_Member_signed_copy" + "_" + timeStamp + "_" + file.name;
-            this.  memberGroupDetailsModel.signatureCopyPath = "Group_Member_signed_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
-          }
-          if (filePathName === "intistutionPhotoCopy") {
-            this.membershipInstitutionDetailsModel.filesDTOList.push(files);
-            this.membershipInstitutionDetailsModel.signatureCopyPath = null;
-            this.membershipInstitutionDetailsModel.filesDTOList[this.membershipInstitutionDetailsModel.filesDTOList.length - 1].fileName = "Institution_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
-            this.membershipInstitutionDetailsModel.signatureCopyPath = "Institution_Member_Photo_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
-          }
-          if (filePathName === "institutionSignature") {
-            this.membershipInstitutionDetailsModel.filesDTOList.push(files);
-            this.membershipInstitutionDetailsModel.signatureCopyPath = null;
-            this.membershipInstitutionDetailsModel.filesDTOList[this.membershipInstitutionDetailsModel.filesDTOList.length - 1].fileName = "Institution_Member_signed_copy" + "_" + timeStamp + "_" + file.name;
-            this.membershipInstitutionDetailsModel.signatureCopyPath = "Institution_Member_signed_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
-          }
-          // let index1 = event.files.findIndex((x: any) => x === file);
-          // fileUpload.remove(event, index1);
-          // fileUpload.clear();
-          this.updateData();
-        }
-        reader.readAsDataURL(file);
-      }
+   */
+  fileUploader(event: any, fileUploadPhoto: FileUpload, fileUploadSign: FileUpload, filePathName: any) {
+    this.multipleFilesList = [];
+    if(this.isEdit && this.membershipBasicRequiredDetailsModel.filesDTOList == null || this.membershipBasicRequiredDetailsModel.filesDTOList == undefined){
+      this.membershipBasicRequiredDetailsModel.filesDTOList = [];
     }
+    let selectedFiles = [...event.files];
+    if (filePathName === "individualPhotoCopy") {
+      this.isFileUploadedPhoto = applicationConstants.FALSE;
+      this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy = [];
+      // Clear file input before processing files
+      fileUploadPhoto.clear();
+    }
+    if (filePathName === "individualSighnedCopy") {
+      this.isFileUploadedsignature = applicationConstants.FALSE;
+      this.membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath = [];
+      fileUploadSign.clear();
+    }
+   
+    let files: FileUploadModel = new FileUploadModel();
+    for (let file of selectedFiles) {
+      let reader = new FileReader();
+      reader.onloadend = (e) => {
+        let timeStamp = this.commonComponent.getTimeStamp();
+        let files = new FileUploadModel();
+        this.uploadFileData = e.currentTarget;
+        files.fileName = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
+        files.fileType = file.type.split('/')[1];
+        files.value = this.uploadFileData.result.split(',')[1];
+        files.imageValue = this.uploadFileData.result;
+        this.multipleFilesList.push(files);
+         // Add to filesDTOList array
+        if (filePathName === "individualPhotoCopy") {
+          this.isFileUploadedPhoto = applicationConstants.TRUE;
+          this.membershipBasicRequiredDetailsModel.filesDTOList.push(files);
+          this.membershipBasicRequiredDetailsModel.photoCopyPath = null;
+          this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy.push(files);
+          this.membershipBasicRequiredDetailsModel.filesDTOList[this.membershipBasicRequiredDetailsModel.filesDTOList.length - 1].fileName = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
+          this.membershipBasicRequiredDetailsModel.photoCopyPath = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
+        }
+        if (filePathName === "individualSighnedCopy") {
+          this.isFileUploadedsignature = applicationConstants.TRUE;
+          this.membershipBasicRequiredDetailsModel.filesDTOList.push(files);
+          this.membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath.push(files);
+          this.membershipBasicRequiredDetailsModel.signatureCopyPath = null;
+          this.membershipBasicRequiredDetailsModel.filesDTOList[this.membershipBasicRequiredDetailsModel.filesDTOList.length - 1].fileName = "Individual_Member_signed_copy" + "_" + timeStamp + "_" + file.name;
+          this.membershipBasicRequiredDetailsModel.signatureCopyPath = "Individual_Member_signed_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
+        }
+        if (filePathName === "groupPhotoCopy") {
+          this.memberGroupDetailsModel.filesDTOList.push(files);
+          this.memberGroupDetailsModel.photoCopyPath = null;
+          this.memberGroupDetailsModel.filesDTOList[this.memberGroupDetailsModel.filesDTOList.length - 1].fileName = "Group_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
+          this.memberGroupDetailsModel.photoCopyPath = "Group_Member_Photo_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
+        }
+        if (filePathName === "groupSignatureCopy") {
+          this.memberGroupDetailsModel.filesDTOList.push(files);
+          this.memberGroupDetailsModel.signatureCopyPath = null;
+          this.memberGroupDetailsModel.filesDTOList[this.memberGroupDetailsModel.filesDTOList.length - 1].fileName = "Group_Member_signed_copy" + "_" + timeStamp + "_" + file.name;
+          this.memberGroupDetailsModel.signatureCopyPath = "Group_Member_signed_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
+        }
+        if (filePathName === "intistutionPhotoCopy") {
+          this.membershipInstitutionDetailsModel.filesDTOList.push(files);
+          this.membershipInstitutionDetailsModel.photoCopyPath = null;
+          this.membershipInstitutionDetailsModel.filesDTOList[this.membershipInstitutionDetailsModel.filesDTOList.length - 1].fileName = "Institution_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
+          this.membershipInstitutionDetailsModel.photoCopyPath = "Institution_Member_Photo_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
+        }
+        if (filePathName === "institutionSignature") {
+          this.membershipInstitutionDetailsModel.filesDTOList.push(files);
+          this.membershipInstitutionDetailsModel.signatureCopyPath = null;
+          this.membershipInstitutionDetailsModel.filesDTOList[this.membershipInstitutionDetailsModel.filesDTOList.length - 1].fileName = "Institution_Member_signed_copy" + "_" + timeStamp + "_" + file.name;
+          this.membershipInstitutionDetailsModel.signatureCopyPath = "Institution_Member_signed_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
+        }
+        this.updateData();
+      }
+      reader.readAsDataURL(file);
+    }
+  }
+
   
     /**
      * @implements onFileremove from file value
      * @param fileName 
- 
+   
      */
     fileRemoeEvent(fileName: any) {
-        if (this.membershipBasicRequiredDetailsModel.filesDTOList != null && this.membershipBasicRequiredDetailsModel.filesDTOList != undefined && this.membershipBasicRequiredDetailsModel.filesDTOList.length > 0) {
+        if (this.  membershipBasicRequiredDetailsModel.filesDTOList != null && this.  membershipBasicRequiredDetailsModel.filesDTOList != undefined && this.  membershipBasicRequiredDetailsModel.filesDTOList.length > 0) {
           if (fileName == "individualPhotoCopy") {
             this.isFileUploadedPhoto = applicationConstants.FALSE;
-          let removeFileIndex = this.membershipBasicRequiredDetailsModel.filesDTOList.findIndex((obj: any) => obj && obj.fileName === this.membershipBasicRequiredDetailsModel.photoCopyPath);
-          let obj = this.membershipBasicRequiredDetailsModel.filesDTOList.find((obj: any) => obj && obj.fileName === this.membershipBasicRequiredDetailsModel.photoCopyPath);
-          this.membershipBasicRequiredDetailsModel.filesDTOList.splice(removeFileIndex, 1);
-          this.membershipBasicRequiredDetailsModel.photoCopyPath = null;
+          let removeFileIndex = this.  membershipBasicRequiredDetailsModel.filesDTOList.findIndex((obj: any) => obj && obj.fileName === this.  membershipBasicRequiredDetailsModel.photoCopyPath);
+          let obj = this.  membershipBasicRequiredDetailsModel.filesDTOList.find((obj: any) => obj && obj.fileName === this.  membershipBasicRequiredDetailsModel.photoCopyPath);
+          this.  membershipBasicRequiredDetailsModel.filesDTOList.splice(removeFileIndex, 1);
+          this.  membershipBasicRequiredDetailsModel.photoCopyPath = null;
         }
         if (fileName == "individualSighnedCopy") {
           this.isFileUploadedsignature = applicationConstants.FALSE;
-          let removeFileIndex = this.membershipBasicRequiredDetailsModel.filesDTOList.findIndex((obj: any) => obj && obj.fileName === this.membershipBasicRequiredDetailsModel.signatureCopyPath);
-          let obj = this.membershipBasicRequiredDetailsModel.filesDTOList.find((obj: any) => obj && obj.fileName === this.membershipBasicRequiredDetailsModel.signatureCopyPath);
-          this.membershipBasicRequiredDetailsModel.filesDTOList.splice(removeFileIndex, 1);
-          this.membershipBasicRequiredDetailsModel.signatureCopyPath = null;
+          let removeFileIndex = this.  membershipBasicRequiredDetailsModel.filesDTOList.findIndex((obj: any) => obj && obj.fileName === this.  membershipBasicRequiredDetailsModel.signatureCopyPath);
+          let obj = this.  membershipBasicRequiredDetailsModel.filesDTOList.find((obj: any) => obj && obj.fileName === this.  membershipBasicRequiredDetailsModel.signatureCopyPath);
+          this.  membershipBasicRequiredDetailsModel.filesDTOList.splice(removeFileIndex, 1);
+          this.  membershipBasicRequiredDetailsModel.signatureCopyPath = null;
         }
         this.updateData();
       }
@@ -1268,93 +1331,133 @@ export class TermLoanNewMembershipComponent {
       }
     }
   
-    /**
-     * @implements date converstions
+   /**
+   * @implements date converstions
  
-     */
-    dateConverstion() {
-      if(this.  memberGroupDetailsModel.admissionDateVal != undefined && this.  memberGroupDetailsModel.registrationDateVal != undefined){
-        if( new Date(this.  memberGroupDetailsModel.admissionDateVal) <  new Date(this.  memberGroupDetailsModel.registrationDateVal)){
-          this.groupForm.get('registrationDate')?.reset();
-          this.groupForm.get('admissionDate')?.reset();
-          this.groupForm.updateValueAndValidity();
-          this.msgs = [{ severity: 'warning', detail: applicationConstants.REGISTRATION_DATE_SHOULD_LESSTHAN_ADMISSION_DATE }];
-          setTimeout(() => {
-            this.msgs = [];        
-          }, 2000);
-        }
-      }
-  
-      if (this.  memberGroupDetailsModel != null && this.  memberGroupDetailsModel != undefined) {
-        if (this.  memberGroupDetailsModel.admissionDateVal != null && this.  memberGroupDetailsModel.admissionDateVal != undefined) {
-          this.  memberGroupDetailsModel.admissionDate = this.commonFunctionsService.getUTCEpoch(new Date(this.  memberGroupDetailsModel.admissionDateVal));
-        }
-        if (this.  memberGroupDetailsModel.registrationDateVal != null && this.  memberGroupDetailsModel.registrationDateVal != undefined) {
-          this.  memberGroupDetailsModel.registrationDate = this.commonFunctionsService.getUTCEpoch(new Date(this.  memberGroupDetailsModel.registrationDateVal));
-        }
-      }
-      if (this.membershipBasicRequiredDetailsModel != null && this.membershipBasicRequiredDetailsModel != undefined) {
-        if (this.membershipBasicRequiredDetailsModel.admissionDateVal != null && this.membershipBasicRequiredDetailsModel.admissionDateVal != undefined) {
-          this.membershipBasicRequiredDetailsModel.admissionDate = this.commonFunctionsService.getUTCEpoch(new Date(this.membershipBasicRequiredDetailsModel.admissionDateVal));
-        }
-        if (this.membershipBasicRequiredDetailsModel.dobVal != null && this.membershipBasicRequiredDetailsModel.dobVal != undefined) {
-          this.membershipBasicRequiredDetailsModel.dob = this.commonFunctionsService.getUTCEpoch(new Date(this.membershipBasicRequiredDetailsModel.dobVal));
-        }
-      }
-      if (this.membershipInstitutionDetailsModel != null && this.membershipInstitutionDetailsModel != undefined) {
-        if (this.membershipInstitutionDetailsModel.admissionDateVal != null && this.membershipInstitutionDetailsModel.admissionDateVal != undefined) {
-          this.membershipInstitutionDetailsModel.admissionDate = this.commonFunctionsService.getUTCEpoch(new Date(this.membershipInstitutionDetailsModel.admissionDateVal));
-        }
-        if (this.membershipInstitutionDetailsModel.registrationDateVal != null && this.membershipInstitutionDetailsModel.registrationDateVal != undefined) {
-          this.membershipInstitutionDetailsModel.registrationDate = this.commonFunctionsService.getUTCEpoch(new Date(this.membershipInstitutionDetailsModel.registrationDateVal));
-        }
-      }
-      this.updateData();
-    }
-  
-    /**
-     * @implements onchange existed prmoter
- 
-     */
-    onChangeExistedPrmoter(isExistingMember :any ,flag :boolean){
-      if(flag){
-        this.resetFields();
-      }
-      if(isExistingMember){
-          this.admissionNumberDropDown = true;
-          this.promoterDetailsForm.get('surname').disable();
-          this.promoterDetailsForm.get('name').disable();
-          this.promoterDetailsForm.get('operatorTypeId').disable();
-          this.promoterDetailsForm.get('dob').disable();
-          this.promoterDetailsForm.get('age').disable();
-          this.promoterDetailsForm.get('genderId').disable();
-          this.promoterDetailsForm.get('martialId').disable();
-          this.promoterDetailsForm.get('mobileNumber').disable();
-          this.promoterDetailsForm.get('aadharNumber').disable();
-          this.promoterDetailsForm.get('emailId').disable();
-          this.promoterDetailsForm.get('startDate').disable();
-          
-          this.promoterDetailsForm.get('admissionNumber').setValidators( Validators.compose([Validators.required]));
-      }
-      else {
-          this.promoterDetailsForm.get('surname').enable();
-          this.promoterDetailsForm.get('name').enable();
-          this.promoterDetailsForm.get('operatorTypeId').enable();
-          this.promoterDetailsForm.get('dob').enable();
-          this.promoterDetailsForm.get('age').enable();
-          this.promoterDetailsForm.get('genderId').enable();
-          this.promoterDetailsForm.get('martialId').enable();
-          this.promoterDetailsForm.get('mobileNumber').enable();
-          this.promoterDetailsForm.get('aadharNumber').enable();
-          this.promoterDetailsForm.get('emailId').enable();
-          this.promoterDetailsForm.get('startDate').enable();
-          this.admissionNumberDropDown = false;
+   */
+  dateConverstion() {
+    //group dates
+    if(this.memberGroupDetailsModel.admissionDateVal != undefined && this.memberGroupDetailsModel.registrationDateVal != undefined){
+      if( new Date(this.memberGroupDetailsModel.admissionDateVal) <  new Date(this.memberGroupDetailsModel.registrationDateVal)){
+        this.groupForm.get('registrationDate')?.reset();
+        this.groupForm.get('admissionDate')?.reset();
+        this.groupForm.updateValueAndValidity();
+        this.msgs = [{ severity: 'warning', detail: applicationConstants.REGISTRATION_DATE_SHOULD_LESSTHAN_ADMISSION_DATE }];
+        setTimeout(() => {
+          this.msgs = [];        
+        }, 2000);
       }
     }
+    if (this.memberGroupDetailsModel != null && this.memberGroupDetailsModel != undefined) {
+      if (this.memberGroupDetailsModel.admissionDateVal != null && this.memberGroupDetailsModel.admissionDateVal != undefined) {
+        this.memberGroupDetailsModel.admissionDate = this.commonFunctionsService.getUTCEpoch(new Date(this.memberGroupDetailsModel.admissionDateVal));
+      }
+      if (this.memberGroupDetailsModel.registrationDateVal != null && this.memberGroupDetailsModel.registrationDateVal != undefined) {
+        this.memberGroupDetailsModel.registrationDate = this.commonFunctionsService.getUTCEpoch(new Date(this.memberGroupDetailsModel.registrationDateVal));
+      }
+    }
+
+    //individual membershipdates
+    if (this.membershipBasicRequiredDetailsModel != null && this.membershipBasicRequiredDetailsModel != undefined) {
+      if (this.membershipBasicRequiredDetailsModel.admissionDateVal != null && this.membershipBasicRequiredDetailsModel.admissionDateVal != undefined) {
+        this.membershipBasicRequiredDetailsModel.admissionDate = this.commonFunctionsService.getUTCEpoch(new Date(this.membershipBasicRequiredDetailsModel.admissionDateVal));
+        if(this.membershipBasicRequiredDetailsModel.dob != null && this.membershipBasicRequiredDetailsModel.dob != undefined){
+          if(this.membershipBasicRequiredDetailsModel.dob > this.membershipBasicRequiredDetailsModel.admissionDate){
+            this.membershipBasicRequiredDetailsModel.dob = null;
+            this.membershipBasicRequiredDetailsModel.dobVal = null;
+            this.membershipBasicRequiredDetailsModel.age = null;
+            this.memberCreationForm.get('dateOfBirth')?.reset;
+            this.membershipBasicRequiredDetailsModel.admissionDate = null;
+            this.membershipBasicRequiredDetailsModel.admissionDateVal = null;
+            this.memberCreationForm.get('admissionDate')?.reset;
+            this.msgs = [{ severity: 'warning', detail: applicationConstants.DATE_OF_BIRTH_SHOULD_NOT_BE_GREATER_THAN_ADMISSION_DATE }];
+            setTimeout(() => {
+              this.msgs = [];        
+            }, 2000);
+          }
+        }
+      }
+      if (this.membershipBasicRequiredDetailsModel.dobVal != null && this.membershipBasicRequiredDetailsModel.dobVal != undefined) {//dob 
+        this.membershipBasicRequiredDetailsModel.dob = this.commonFunctionsService.getUTCEpoch(new Date(this.membershipBasicRequiredDetailsModel.dobVal));//doc conversion
+        if(this.membershipBasicRequiredDetailsModel.admissionDate != null && this.membershipBasicRequiredDetailsModel.admissionDate != undefined){//dob with admission date check
+          if(this.membershipBasicRequiredDetailsModel.dob > this.membershipBasicRequiredDetailsModel.admissionDate){
+            this.membershipBasicRequiredDetailsModel.dob = null;
+            this.membershipBasicRequiredDetailsModel.dobVal = null;
+            this.membershipBasicRequiredDetailsModel.age = null;
+            this.memberCreationForm.get('dateOfBirth')?.reset;
+            this.membershipBasicRequiredDetailsModel.admissionDate = null;
+            this.membershipBasicRequiredDetailsModel.admissionDateVal = null;
+            this.memberCreationForm.get('admissionDate')?.reset;
+            this.msgs = [{ severity: 'warning', detail: applicationConstants.DATE_OF_BIRTH_SHOULD_NOT_BE_GREATER_THAN_ADMISSION_DATE }];
+            setTimeout(() => {
+              this.msgs = [];        
+            }, 2000);
+          }
+        }
+        this.ageCaluculation(false);
+      }
+    }
+
+    // institution dates
+    if (this.membershipInstitutionDetailsModel != null && this.membershipInstitutionDetailsModel != undefined) {
+      if (this.membershipInstitutionDetailsModel.admissionDateVal != null && this.membershipInstitutionDetailsModel.admissionDateVal != undefined) {
+        this.membershipInstitutionDetailsModel.admissionDate = this.commonFunctionsService.getUTCEpoch(new Date(this.membershipInstitutionDetailsModel.admissionDateVal));
+      }
+      if (this.membershipInstitutionDetailsModel.registrationDateVal != null && this.membershipInstitutionDetailsModel.registrationDateVal != undefined) {
+        this.membershipInstitutionDetailsModel.registrationDate = this.commonFunctionsService.getUTCEpoch(new Date(this.membershipInstitutionDetailsModel.registrationDateVal));
+      }
+    }
+    
+    this.updateData();
+  }
+
   
+    /**
+   * @implements onchange existed prmoter
+ 
+   */
+  onChangeExistedPrmoter(isExistingMember :any ,flag :boolean){
+    if(flag){
+      this.resetFields();
+      this.promoterDetailsModel = new promoterDetailsModel();
+      this.institutionPromoterDetailsModel = new InstitutionPromoterDetailsModel();
+    }
+    if(isExistingMember){
+        this.admissionNumberDropDown = true;
+        this.promoterDetailsForm.get('surname')?.disable();
+        this.promoterDetailsForm.get('name')?.disable();
+        this.promoterDetailsForm.get('operatorTypeId')?.disable();
+        this.promoterDetailsForm.get('dob')?.disable();
+        this.promoterDetailsForm.get('age')?.disable();
+        this.promoterDetailsForm.get('genderId')?.disable();
+        this.promoterDetailsForm.get('martialId')?.disable();
+        this.promoterDetailsForm.get('mobileNumber')?.disable();
+        this.promoterDetailsForm.get('aadharNumber')?.disable();
+        this.promoterDetailsForm.get('emailId')?.disable();
+        this.promoterDetailsForm.get('startDate')?.disable();
+        this.promoterDetailsForm.get('admissionNumber')?.setValidators([Validators.required]); 
+        this.promoterDetailsForm.get('admissionNumber')?.updateValueAndValidity();
+    }
+    else {
+        this.promoterDetailsForm.get('surname')?.enable();
+        this.promoterDetailsForm.get('name')?.enable();
+        this.promoterDetailsForm.get('operatorTypeId')?.enable();
+        this.promoterDetailsForm.get('dob')?.enable();
+        this.promoterDetailsForm.get('age')?.enable();
+        this.promoterDetailsForm.get('genderId')?.enable();
+        this.promoterDetailsForm.get('martialId')?.enable();
+        this.promoterDetailsForm.get('mobileNumber')?.enable();
+        this.promoterDetailsForm.get('aadharNumber')?.enable();
+        this.promoterDetailsForm.get('emailId')?.enable();
+        this.promoterDetailsForm.get('startDate')?.enable();
+        this.promoterDetailsForm.get('admissionNumber')?.setValidators(null); 
+        this.promoterDetailsForm.get('admissionNumber')?.updateValueAndValidity();
+        this.admissionNumberDropDown = false;
+    }
+  }
     /**
      * @implements reset feilds 
- 
+   
      */
     resetFields(){
       this.promoterDetailsForm.get('surname').reset();
@@ -1371,7 +1474,7 @@ export class TermLoanNewMembershipComponent {
     }
     
   /**
- 
+   
      * @implement get member admission Numbers list
      * @argument pacsId,branchId
      */
@@ -1403,7 +1506,7 @@ export class TermLoanNewMembershipComponent {
   }
   
   /**
- 
+   
      * @implement get member module data by admission Number
      * @argument admissionNumber
      */
@@ -1412,38 +1515,41 @@ export class TermLoanNewMembershipComponent {
       this.responseModel = data;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length >0) {
-          this.membershipBasicRequiredDetailsModel = this.responseModel.data[0];
+          this.  membershipBasicRequiredDetailsModel = this.responseModel.data[0];
           
-         this.promoterDetailsModel.name  = this.membershipBasicRequiredDetailsModel.name,
-         this.promoterDetailsModel.surname  = this.membershipBasicRequiredDetailsModel.surname;
-         this.promoterDetailsModel.aadharNumber  = this.membershipBasicRequiredDetailsModel.aadharNumber;
-         this.promoterDetailsModel.dob  = this.membershipBasicRequiredDetailsModel.dob;
+         this.promoterDetailsModel.name  = this.  membershipBasicRequiredDetailsModel.name,
+         this.promoterDetailsModel.surname  = this.  membershipBasicRequiredDetailsModel.surname;
+         this.promoterDetailsModel.aadharNumber  = this.  membershipBasicRequiredDetailsModel.aadharNumber;
+         this.promoterDetailsModel.dob  = this.  membershipBasicRequiredDetailsModel.dob;
          if(this.promoterDetailsModel.dob != null && this.promoterDetailsModel.dob != undefined)
           this.promoterDetailsModel.memDobVal = this.datePipe.transform(this.promoterDetailsModel.dob, this.orgnizationSetting.datePipe);
-         this.promoterDetailsModel.age  = this.membershipBasicRequiredDetailsModel.age;
-         this.promoterDetailsModel.genderId  = this.membershipBasicRequiredDetailsModel.genderId;
-         this.promoterDetailsModel.martialId  = this.membershipBasicRequiredDetailsModel.martialId;
-         this.promoterDetailsModel.mobileNumber  = this.membershipBasicRequiredDetailsModel.mobileNumber;
-         this.promoterDetailsModel.emailId  = this.membershipBasicRequiredDetailsModel.emailId;
-         this.promoterDetailsModel.startDate  = this.membershipBasicRequiredDetailsModel.admissionDate;
+         this.promoterDetailsModel.age  = this.  membershipBasicRequiredDetailsModel.age;
+         this.promoterDetailsModel.genderId  = this.  membershipBasicRequiredDetailsModel.genderId;
+         this.promoterDetailsModel.martialId  = this.  membershipBasicRequiredDetailsModel.martialId;
+         this.promoterDetailsModel.mobileNumber  = this.  membershipBasicRequiredDetailsModel.mobileNumber;
+         this.promoterDetailsModel.emailId  = this.  membershipBasicRequiredDetailsModel.emailId;
+         this.promoterDetailsModel.startDate  = this.  membershipBasicRequiredDetailsModel.admissionDate;
          if(this.promoterDetailsModel.startDate != null && this.promoterDetailsModel.startDate != undefined)
           this.promoterDetailsModel.startDateVal = this.datePipe.transform(this.promoterDetailsModel.startDate, this.orgnizationSetting.datePipe);
   
-         this.promoterDetailsModel.uploadImage = this.membershipBasicRequiredDetailsModel.photoCopyPath;
-         this.promoterDetailsModel.uploadSignature = 	this.membershipBasicRequiredDetailsModel.signatureCopyPath;
+         this.promoterDetailsModel.uploadImage = this.  membershipBasicRequiredDetailsModel.photoCopyPath;
+         this.promoterDetailsModel.uploadSignature = 	this.  membershipBasicRequiredDetailsModel.signatureCopyPath;
   
-         this.institutionPromoterDetailsModel.uploadImage =  this.membershipBasicRequiredDetailsModel.photoCopyPath;
-         this.institutionPromoterDetailsModel.uploadSignature =  	this.membershipBasicRequiredDetailsModel.signatureCopyPath;
+         this.institutionPromoterDetailsModel.uploadImage =  this.  membershipBasicRequiredDetailsModel.photoCopyPath;
+         this.institutionPromoterDetailsModel.uploadSignature =  	this.  membershipBasicRequiredDetailsModel.signatureCopyPath;
   
         if(this.promoterDetailsModel.uploadImage != null && this.promoterDetailsModel.uploadImage != undefined){
           this.promoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadImage  );
+          this.institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadImage  );
           this.isFileUploadedPromoterPhoto= applicationConstants.TRUE;
         }
         if(this.promoterDetailsModel.uploadSignature != null && this.promoterDetailsModel.uploadSignature != undefined){
           this.promoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadSignature  );
+          this.institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadImage  );
+
           this.isFileUploadedPromoterSignature = applicationConstants.TRUE;
         }
-         this.promoterDetailsModel.operatorTypeId  = this.membershipBasicRequiredDetailsModel.occupationId;
+         this.promoterDetailsModel.operatorTypeId  = this.  membershipBasicRequiredDetailsModel.occupationId;
          
         }
       }
@@ -1467,158 +1573,167 @@ export class TermLoanNewMembershipComponent {
   /**
    * @implements onselect group leader
    * @param isGroup 
-   * @author jyothi.naidana
+ 
    */
-    onGroupLeaderSelect(isGroup:any) {
-      if(isGroup){
+  onGroupLeaderSelect(isGroup: any, isGroupLeader: any) {
+    if (isGroup) {
+      if (isGroupLeader) {
         let isGroupLeadeExited = this.promoterDetails.filter((obj: any) => obj.isGroupLeader == true);
-        if (isGroupLeadeExited != null && isGroupLeadeExited != undefined && isGroupLeadeExited.length >0) {
+        if (isGroupLeadeExited != null && isGroupLeadeExited != undefined && isGroupLeadeExited.length > 0) {
+          this.promoterDetailsForm.get('isGroupLeader').reset();
           this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "One Group leader is Already Exist" }];
           setTimeout(() => {
-            this.promoterDetailsForm.get('isGroupLeader').reset();
             this.msgs = [];
           }, 3000);
         }
       }
-      else{
+    }
+    else {
+      if (isGroupLeader) {
         let isGroupLeadeExited = this.institutionPromoter.filter((obj: any) => obj.isGroupLeader == true);
-        if (isGroupLeadeExited != null && isGroupLeadeExited != undefined && isGroupLeadeExited.length >0) {
+        if (isGroupLeadeExited != null && isGroupLeadeExited != undefined && isGroupLeadeExited.length > 0) {
+          this.promoterDetailsForm.get('isGroupLeader').reset();
           this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "One Group leader is Already Exist" }];
           setTimeout(() => {
-            this.promoterDetailsForm.get('isGroupLeader').reset();
             this.msgs = [];
           }, 3000);
         }
       }
-      
     }
+  }
   
   
-    /**
-     * @implements fileUpload for promoter in group
-     * @param event 
-     * @param fileUpload 
-     * @param filePathName 
-     */
-    fileUploaderForPromoters(event: any, fileUpload: FileUpload, filePathName: any) {
-      this.multipleFilesList = [];
-      if(this.isEdit && this.promoterDetailsModel.filesDTOList == null || this.promoterDetailsModel.filesDTOList == undefined){
-        this.promoterDetailsModel.filesDTOList = [];
-      }
-      if (filePathName === "groupPromoterImage") {
-        this.isFileUploadedPromoterPhoto = applicationConstants.FALSE;
-      }
-      if (filePathName === "groupPromoterSignature") {
-        this.isFileUploadedPromoterSignature = applicationConstants.FALSE;
-      }
-      let files: FileUploadModel = new FileUploadModel();
-      for (let file of event.files) {
-        let reader = new FileReader();
-        reader.onloadend = (e) => {
-          let timeStamp = this.commonComponent.getTimeStamp();
-          let files = new FileUploadModel();
-          this.uploadFileData = e.currentTarget;
-          files.fileName = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
-          files.fileType = file.type.split('/')[1];
-          files.value = this.uploadFileData.result.split(',')[1];
-          files.imageValue = this.uploadFileData.result;
-          this.multipleFilesList.push(files);
-           
-          if (filePathName === "groupPromoterImage") {
-            this.isFileUploadedPromoterPhoto = applicationConstants.TRUE;
-            this.promoterDetailsModel.filesDTOList.push(files);
-            this.promoterDetailsModel.uploadImage = null;
-            this.promoterDetailsModel.filesDTOList[this.promoterDetailsModel.filesDTOList.length - 1].fileName = "Group_Promoter_Photo_copy" + "_" + timeStamp + "_" + file.name;
-            this.promoterDetailsModel.uploadImage = "Group_Promoter_Photo_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
-          }
-          if (filePathName === "groupPromoterSignature") {
-            this.isFileUploadedPromoterSignature = applicationConstants.TRUE
-            this.promoterDetailsModel.filesDTOList.push(files);
-            this.promoterDetailsModel.uploadSignature = null;
-            this.promoterDetailsModel.filesDTOList[this.promoterDetailsModel.filesDTOList.length - 1].fileName = "Group_Promoter_signed_copy" + "_" + timeStamp + "_" + file.name;
-            this.promoterDetailsModel.uploadSignature = "Group_Promoter_signed_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
-          }
-          let index1 = event.files.findIndex((x: any) => x === file);
-          fileUpload.remove(event, index1);
-          fileUpload.clear();
-          this.updateData();
+     /**
+   * @implements fileUpload for promoter in group
+   * @param event 
+   * @param fileUpload 
+   * @param filePathName 
+   */
+  fileUploaderForPromoters(event: any, fileUploadPhotoPromoter: FileUpload,fileUpload: FileUpload, filePathName: any) {
+    this.multipleFilesList = [];
+    if(this.isEdit && this.promoterDetailsModel.filesDTOList == null || this.promoterDetailsModel.filesDTOList == undefined){
+      this.promoterDetailsModel.filesDTOList = [];
+    }
+    let selectedFiles = [...event.files];
+    if (filePathName === "groupPromoterImage") {
+      this.isFileUploadedPromoterPhoto = applicationConstants.FALSE;
+      this.promoterDetailsModel.multipartFileListForPhotoCopyPath = [];
+      fileUploadPhotoPromoter.clear();
+    }
+    if (filePathName === "groupPromoterSignature") {
+      this.isFileUploadedPromoterSignature = applicationConstants.FALSE;
+      this.promoterDetailsModel.multipartFileListForSignatureCopyPath = [];
+      fileUpload.clear();
+    }
+    let files: FileUploadModel = new FileUploadModel();
+    for (let file of selectedFiles) {
+      let reader = new FileReader();
+      reader.onloadend = (e) => {
+        let timeStamp = this.commonComponent.getTimeStamp();
+        let files = new FileUploadModel();
+        this.uploadFileData = e.currentTarget;
+        files.fileType = file.type.split('/')[1];
+        files.value = this.uploadFileData.result.split(',')[1];
+        files.imageValue = this.uploadFileData.result;
+
+        if (filePathName === "groupPromoterImage") {
+          files.fileName = "Group_Promoter_Photo_copy" + "_" + timeStamp + "_" + file.name;
+          this.isFileUploadedPromoterPhoto = applicationConstants.TRUE;
+          this.promoterDetailsModel.filesDTOList.push(files);
+          this.promoterDetailsModel.multipartFileListForPhotoCopyPath.push(files);
+          this.promoterDetailsModel.uploadImage = null;
+          this.promoterDetailsModel.filesDTOList[this.promoterDetailsModel.filesDTOList.length - 1].fileName = "Group_Promoter_Photo_copy" + "_" + timeStamp + "_" + file.name;
+          this.promoterDetailsModel.uploadImage = "Group_Promoter_Photo_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
         }
-        reader.readAsDataURL(file);
+        if (filePathName === "groupPromoterSignature") {
+          files.fileName = "Group_Promoter_signed_copy" + "_" + timeStamp + "_" + file.name;
+          this.isFileUploadedPromoterSignature = applicationConstants.TRUE
+          this.promoterDetailsModel.filesDTOList.push(files);
+          this.promoterDetailsModel.multipartFileListForSignatureCopyPath.push(files);
+          this.promoterDetailsModel.uploadSignature = null;
+          this.promoterDetailsModel.filesDTOList[this.promoterDetailsModel.filesDTOList.length - 1].fileName = "Group_Promoter_signed_copy" + "_" + timeStamp + "_" + file.name;
+          this.promoterDetailsModel.uploadSignature = "Group_Promoter_signed_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
+        }
+        this.updateData();
       }
+      reader.readAsDataURL(file);
     }
+  }
   
-    /**
-     * @implements fileUpload for promoter in institution
-     * @param event 
-     * @param fileUpload 
-     * @param filePathName 
-     */
-    fileUploaderForInstitutionPromoters(event: any, fileUpload: FileUpload, filePathName: any) {
-      
-      this.multipleFilesList = [];
-      if(this.isEdit && this.institutionPromoterDetailsModel.filesDTOList == null || this.institutionPromoterDetailsModel.filesDTOList == undefined){
-        this.institutionPromoterDetailsModel.filesDTOList = [];
-      }
-      if (filePathName === "institutionPromoterImage") {
-        this.isFileUploadedPromoterPhoto = applicationConstants.FALSE;
-      }
-      if (filePathName === "insitutionPromoterSignature") {
-        this.isFileUploadedPromoterSignature = applicationConstants.FALSE;
-      }
-      let files: FileUploadModel = new FileUploadModel();
-      for (let file of event.files) {
-        let reader = new FileReader();
-        reader.onloadend = (e) => {
-          let timeStamp = this.commonComponent.getTimeStamp();
-          let files = new FileUploadModel();
-          this.uploadFileData = e.currentTarget;
+     /**
+   * @implements fileUpload for promoter in institution
+   * @param event 
+   * @param fileUpload 
+   * @param filePathName 
+   */
+  fileUploaderForInstitutionPromoters(event: any, fileUploadInstitutionPromoterSign: FileUpload, fileUpload: FileUpload, filePathName: any) {
+
+    if (this.isEdit && this.institutionPromoterDetailsModel.filesDTOList == null || this.institutionPromoterDetailsModel.filesDTOList == undefined) {
+      this.institutionPromoterDetailsModel.filesDTOList = [];
+    }
+    let selectedFiles = [...event.files];
+    if (filePathName === "institutionPromoterImage") {
+      this.isFileUploadedPromoterPhoto = applicationConstants.FALSE;
+      this.institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath = [];
+      fileUpload.clear();
+    }
+    if (filePathName === "insitutionPromoterSignature") {
+      this.isFileUploadedPromoterSignature = applicationConstants.FALSE;
+      this.institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath = [];
+      fileUploadInstitutionPromoterSign.clear();
+    }
+    let files: FileUploadModel = new FileUploadModel();
+    for (let file of selectedFiles) {
+      let reader = new FileReader();
+      reader.onloadend = (e) => {
+        let timeStamp = this.commonComponent.getTimeStamp();
+        let files = new FileUploadModel();
+        this.uploadFileData = e.currentTarget;
+        files.fileType = file.type.split('/')[1];
+        files.value = this.uploadFileData.result.split(',')[1];
+        files.imageValue = this.uploadFileData.result;
+
+        if (filePathName === "institutionPromoterImage") {
           files.fileName = "Institution_Photo_copy" + "_" + timeStamp + "_" + file.name;
-          files.fileType = file.type.split('/')[1];
-          files.value = this.uploadFileData.result.split(',')[1];
-          files.imageValue = this.uploadFileData.result;
-          this.multipleFilesList.push(files);
-           
-          if (filePathName === "institutionPromoterImage") {
-            this.isFileUploadedPromoterPhoto = applicationConstants.TRUE;
-            this.institutionPromoterDetailsModel.filesDTOList.push(files);
-            this.institutionPromoterDetailsModel.uploadImage = null;
-            this.institutionPromoterDetailsModel.filesDTOList[this.institutionPromoterDetailsModel.filesDTOList.length - 1].fileName = "Institution_Promoter_Photo_copy" + "_" + timeStamp + "_" + file.name;
-            this.institutionPromoterDetailsModel.uploadImage = "Institution_Promoter_Photo_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
-          }
-          if (filePathName === "insitutionPromoterSignature") {
-            this.isFileUploadedPromoterSignature = applicationConstants.TRUE;
-            this.institutionPromoterDetailsModel.filesDTOList.push(files);
-            this.institutionPromoterDetailsModel.uploadSignature = null;
-            this.institutionPromoterDetailsModel.filesDTOList[this.institutionPromoterDetailsModel.filesDTOList.length - 1].fileName = "Institution_Promoter_signed_copy" + "_" + timeStamp + "_" + file.name;
-            this.institutionPromoterDetailsModel.uploadSignature = "Institution_Promoter_signed_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
-          }
-          let index1 = event.files.findIndex((x: any) => x === file);
-          fileUpload.remove(event, index1);
-          fileUpload.clear();
-          this.updateData();
+          this.isFileUploadedPromoterPhoto = applicationConstants.TRUE;
+          this.institutionPromoterDetailsModel.filesDTOList.push(files);
+          this.institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath.push(files);
+          this.institutionPromoterDetailsModel.uploadImage = null;
+          this.institutionPromoterDetailsModel.filesDTOList[this.institutionPromoterDetailsModel.filesDTOList.length - 1].fileName = "Institution_Promoter_Photo_copy" + "_" + timeStamp + "_" + file.name;
+          this.institutionPromoterDetailsModel.uploadImage = "Institution_Promoter_Photo_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
         }
-        reader.readAsDataURL(file);
+        if (filePathName === "insitutionPromoterSignature") {
+          files.fileName = "Institution_Promoter_signed_copy" + "_" + timeStamp + "_" + file.name;
+          this.isFileUploadedPromoterSignature = applicationConstants.TRUE;
+          this.institutionPromoterDetailsModel.filesDTOList.push(files);
+          this.institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath.push(files);
+          this.institutionPromoterDetailsModel.uploadSignature = null;
+          this.institutionPromoterDetailsModel.filesDTOList[this.institutionPromoterDetailsModel.filesDTOList.length - 1].fileName = "Institution_Promoter_signed_copy" + "_" + timeStamp + "_" + file.name;
+          this.institutionPromoterDetailsModel.uploadSignature = "Institution_Promoter_signed_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
+        }
+        this.updateData();
       }
+      reader.readAsDataURL(file);
     }
-    
+  }
   
     /**
      * @implements submit group institution details
- 
+   
      */
     submitGropOrInstitution() {
       this.termLoanApplicationModel.pacsId = this.pacsId;
       this.termLoanApplicationModel.pacsCode = 12;
       this.termLoanApplicationModel.branchId = this.branchId;
-      if (this.termLoanApplicationId != null && this. termLoanApplicationId != undefined) {
+      if (this.termLoanApplicationId != null && this.  termLoanApplicationId != undefined) {
         this.termLoanApplicationModel.statusName = applicationConstants.IS_ACTIVE;
-        this.termLoanApplicationsService.updateTermApplication(this.termLoanApplicationModel).subscribe((response: any) => {
+        this.termLoanApplicationsService.updateTermApplication(this.  termLoanApplicationModel).subscribe((response: any) => {
           this.responseModel = response;
           if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
             if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
-             this. termLoanApplicationId =  this.responseModel.data[0].id;
+             this.  termLoanApplicationId =  this.responseModel.data[0].id;
              this.groupOrInstitutionDisable = true;
-             this.getTermApplicationByTermAccId(this. termLoanApplicationId);
+             this.getTermApplicationByTermAccId(this.  termLoanApplicationId);
             }
             this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: "Membership updated Successfully" }];
             setTimeout(() => {
@@ -1639,14 +1754,14 @@ export class TermLoanNewMembershipComponent {
         });
       } else {
         this.termLoanApplicationModel.statusName = applicationConstants.IS_ACTIVE;
-        this.termLoanApplicationModel.accountStatusName = "In Progress";
-        this.termLoanApplicationsService.addTermApplication(this.termLoanApplicationModel).subscribe((response: any) => {
+        this.termLoanApplicationModel.accountStatusName = applicationConstants.IN_PROGRESS;
+        this.termLoanApplicationsService.addTermApplication(this.  termLoanApplicationModel).subscribe((response: any) => {
           this.responseModel = response;
           if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
             if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
-              this. termLoanApplicationId =  this.responseModel.data[0].id;
+              this.  termLoanApplicationId =  this.responseModel.data[0].id;
               this.groupOrInstitutionDisable = true;
-              this.getTermApplicationByTermAccId(this. termLoanApplicationId);
+              this.getTermApplicationByTermAccId(this.  termLoanApplicationId);
             }
             this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: "Membership Created Successfully" }];
             setTimeout(() => {
@@ -1672,13 +1787,13 @@ export class TermLoanNewMembershipComponent {
     saveInstitutionPrmoters(rowData:any){
       if (rowData.id != null && rowData.id != undefined) {
         rowData.statusName = applicationConstants.IS_ACTIVE;
-        this.termLoanApplicationsService.updateInstituionPromoterDetails(rowData).subscribe((response: any) => {
+        this.  termLoanApplicationsService.updateInstituionPromoterDetails(rowData).subscribe((response: any) => {
           this.responseModel = response;
           if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
             this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
             setTimeout(() => {
               this.msgs = [];
-              this.getTermApplicationByTermAccId(this. termLoanApplicationId);
+              this.getTermApplicationByTermAccId(this.  termLoanApplicationId);
             }, 1200);
             
           } else {
@@ -1697,13 +1812,13 @@ export class TermLoanNewMembershipComponent {
       }
       else {
         rowData.statusName = applicationConstants.IS_ACTIVE;
-        this.termLoanApplicationsService.addInstituionPromoterDetails(rowData).subscribe((response: any) => {
+        this.  termLoanApplicationsService.addInstituionPromoterDetails(rowData).subscribe((response: any) => {
           this.responseModel = response;
           if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
             this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
             setTimeout(() => {
               this.msgs = [];
-              this.getTermApplicationByTermAccId(this. termLoanApplicationId);
+              this.getTermApplicationByTermAccId(this.  termLoanApplicationId);
             }, 1200);
             
           } else {
@@ -1725,18 +1840,18 @@ export class TermLoanNewMembershipComponent {
     /**
      * @implements save group promoters
      * @param rowData 
- 
+   
      */
     saveGropPromotersDetails(rowData:any){
       if (rowData.id != null && rowData.id != undefined) {
-        this.termLoanApplicationsService.updateGropDetails(rowData).subscribe((response: any) => {
+        this.  termLoanApplicationsService.updateGropDetails(rowData).subscribe((response: any) => {
           this.responseModel = response;
           if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
             this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
             setTimeout(() => {
               this.msgs = [];
             }, 1200);
-            this.getTermApplicationByTermAccId(this. termLoanApplicationId);
+            this.getTermApplicationByTermAccId(this.  termLoanApplicationId);
           } else {
             this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
             setTimeout(() => {
@@ -1760,7 +1875,7 @@ export class TermLoanNewMembershipComponent {
             setTimeout(() => {
               this.msgs = [];
             }, 1200);
-            this.getTermApplicationByTermAccId(this. termLoanApplicationId);
+            this.getTermApplicationByTermAccId(this.  termLoanApplicationId);
           } else {
             this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
             setTimeout(() => {
@@ -1777,5 +1892,219 @@ export class TermLoanNewMembershipComponent {
         });
       }
     }
+
+      /**
+   * @implements age caluculation
+   * @param age 
+ 
+   */
+  ageCaluculation(flag: any) {
+    if (flag) {//with age to date convertion
+      if (this.membershipBasicRequiredDetailsModel.age != null && this.membershipBasicRequiredDetailsModel.age != undefined) {
+        if (this.membershipBasicRequiredDetailsModel.age > 0) {
+
+          const currentDate = new Date();  // Get the current date
+          const birthYear = currentDate.getFullYear() - this.membershipBasicRequiredDetailsModel.age;  // Subtract the entered age from the current year
+          const birthMonth = currentDate.getMonth();  // Keep the current month
+          const birthDate = currentDate.getDate();   // Keep the current day
+
+          // Construct the calculated Date of Birth
+          const dob = new Date(birthYear, birthMonth, birthDate);
+
+          // Array of month names for formatting (e.g., 'Jan', 'Feb', 'Mar', etc.)
+          const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+          // Format the Date of Birth to 'DD/Mon/YYYY'
+          const formattedDob = `${dob.getDate() < 10 ? '0' + dob.getDate() : dob.getDate()}/${monthNames[dob.getMonth()]}/${dob.getFullYear()}`;
+
+          // Format the Date of Birth to YYYY-MM-DD to match the input type="date" format
+          this.membershipBasicRequiredDetailsModel.dobVal = formattedDob;
+        }
+        else {
+          this.memberCreationForm.get('age')?.reset();
+          this.memberCreationForm.get("dateOfBirth")?.reset();
+          this.msgs = [{ severity: 'error',  detail: applicationConstants.AGE_SHOULD_NOT_BE_ZERO }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 3000);
+        }
+      }
+    }
+    else {//with date to age convertion
+      this.membershipBasicRequiredDetailsModel.dobVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.dobVal, this.orgnizationSetting.datePipe);
+      if (this.membershipBasicRequiredDetailsModel.dobVal) {
+        const dob = new Date(this.membershipBasicRequiredDetailsModel.dobVal);  // Parse the date of birth entered by the user
+        const currentDate = new Date();  // Get the current date
+        let age = currentDate.getFullYear() - dob.getFullYear();  // Calculate age in years
+        const m = currentDate.getMonth() - dob.getMonth();  // Check if birthday has passed in the current year
+        if (m < 0 || (m === 0 && currentDate.getDate() < dob.getDate())) {
+          age--;  // If birthday hasn't occurred yet this year, subtract 1 from the age
+        }
+        this.membershipBasicRequiredDetailsModel.age = age;  // Set the calculated age to the class property
+      }
+    }
+
+  }
+
+   /**
+   * @implements map qulaification name
+ 
+   */
+   onChangeQualificationChange() {
+    let qualification = this.tempSubQualificationList.find((data: any) => null != data && this.membershipBasicRequiredDetailsModel.qualificationId != null && data.value == this.membershipBasicRequiredDetailsModel.qualificationId);
+      if (qualification != null && undefined != qualification)
+          this.membershipBasicRequiredDetailsModel.qualificationName = qualification.label;
+  }
+
+   /**
+   * @implements map qulaification name
+ 
+   */
+  onChangeCasteChange() {
+    let caste = this.tempSubCasteList.find((data: any) => null != data && this.membershipBasicRequiredDetailsModel.casteId != null && data.value == this.membershipBasicRequiredDetailsModel.casteId);
+    if (caste != null && undefined != caste)
+    this.membershipBasicRequiredDetailsModel.casteName = caste.label;
+  }
+
+
+  /**
+   * @implements age caluculation
+   * @param age 
+ 
+   */
+  promoterageCaluculation(flag: any ,isGroupFlag :any) {
+    if(isGroupFlag){
+      if (flag) {//with age to date convertion
+        if (this.promoterDetailsModel.age != null && this.promoterDetailsModel.age != undefined) {
+          if (this.promoterDetailsModel.age > 0) {
+  
+            const currentDate = new Date();  // Get the current date
+            const birthYear = currentDate.getFullYear() - this.promoterDetailsModel.age;  // Subtract the entered age from the current year
+            const birthMonth = currentDate.getMonth();  // Keep the current month
+            const birthDate = currentDate.getDate();   // Keep the current day
+  
+            // Construct the calculated Date of Birth
+            const dob = new Date(birthYear, birthMonth, birthDate);
+  
+            // Array of month names for formatting (e.g., 'Jan', 'Feb', 'Mar', etc.)
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  
+            // Format the Date of Birth to 'DD/Mon/YYYY'
+            const formattedDob = `${dob.getDate() < 10 ? '0' + dob.getDate() : dob.getDate()}/${monthNames[dob.getMonth()]}/${dob.getFullYear()}`;
+  
+            // Format the Date of Birth to YYYY-MM-DD to match the input type="date" format
+            this.promoterDetailsModel.memDobVal = formattedDob;
+          }
+          else {
+            this.promoterDetailsForm.get('age')?.reset();
+            this.promoterDetailsForm.get("dateOfBirth")?.reset();
+            this.msgs = [{ severity: 'error',  detail: applicationConstants.AGE_SHOULD_NOT_BE_ZERO }];
+            setTimeout(() => {
+              this.msgs = [];
+            }, 3000);
+          }
+        }
+      }
+      else {//with date to age convertion
+        this.promoterDetailsModel.memDobVal = this.datePipe.transform(this.promoterDetailsModel.memDobVal, this.orgnizationSetting.datePipe);
+        if (this.promoterDetailsModel.memDobVal) {
+          const dob = new Date(this.promoterDetailsModel.memDobVal);  // Parse the date of birth entered by the user
+          const currentDate = new Date();  // Get the current date
+          let age = currentDate.getFullYear() - dob.getFullYear();  // Calculate age in years
+          const m = currentDate.getMonth() - dob.getMonth();  // Check if birthday has passed in the current year
+          if (m < 0 || (m === 0 && currentDate.getDate() < dob.getDate())) {
+            age--;  // If birthday hasn't occurred yet this year, subtract 1 from the age
+          }
+          this.promoterDetailsModel.age = age;  // Set the calculated age to the class property
+        }
+      }
+    }
+    else {
+      if (flag) {//with age to date convertion
+        if (this.institutionPromoterDetailsModel.age != null && this.institutionPromoterDetailsModel.age != undefined) {
+          if (this.institutionPromoterDetailsModel.age > 0) {
+  
+            const currentDate = new Date();  // Get the current date
+            const birthYear = currentDate.getFullYear() - this.institutionPromoterDetailsModel.age;  // Subtract the entered age from the current year
+            const birthMonth = currentDate.getMonth();  // Keep the current month
+            const birthDate = currentDate.getDate();   // Keep the current day
+  
+            // Construct the calculated Date of Birth
+            const dob = new Date(birthYear, birthMonth, birthDate);
+  
+            // Array of month names for formatting (e.g., 'Jan', 'Feb', 'Mar', etc.)
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  
+            // Format the Date of Birth to 'DD/Mon/YYYY'
+            const formattedDob = `${dob.getDate() < 10 ? '0' + dob.getDate() : dob.getDate()}/${monthNames[dob.getMonth()]}/${dob.getFullYear()}`;
+  
+            // Format the Date of Birth to YYYY-MM-DD to match the input type="date" format
+            this.institutionPromoterDetailsModel.memDobVal = formattedDob;
+          }
+          else {
+            this.promoterDetailsForm.get('age')?.reset();
+            this.promoterDetailsForm.get("dateOfBirth")?.reset();
+            this.msgs = [{ severity: 'error',  detail: applicationConstants.AGE_SHOULD_NOT_BE_ZERO }];
+            setTimeout(() => {
+              this.msgs = [];
+            }, 3000);
+          }
+        }
+      }
+      else {//with date to age convertion
+        this.institutionPromoterDetailsModel.memDobVal = this.datePipe.transform(this.institutionPromoterDetailsModel.memDobVal, this.orgnizationSetting.datePipe);
+        if (this.institutionPromoterDetailsModel.memDobVal) {
+          const dob = new Date(this.institutionPromoterDetailsModel.memDobVal);  // Parse the date of birth entered by the user
+          const currentDate = new Date();  // Get the current date
+          let age = currentDate.getFullYear() - dob.getFullYear();  // Calculate age in years
+          const m = currentDate.getMonth() - dob.getMonth();  // Check if birthday has passed in the current year
+          if (m < 0 || (m === 0 && currentDate.getDate() < dob.getDate())) {
+            age--;  // If birthday hasn't occurred yet this year, subtract 1 from the age
+          }
+          this.institutionPromoterDetailsModel.age = age;  // Set the calculated age to the class property
+        }
+      }
+    }
+  }
+
+  /**
+   * @implements onChangCommunity
+ 
+   */
+  onChangeCommunityChange() {
+    let community = this.communityList.find((data: any) => null != data && this.membershipBasicRequiredDetailsModel.communityId != null && data.value == this.membershipBasicRequiredDetailsModel.communityId);
+    if (community != null && undefined != community)
+    this.membershipBasicRequiredDetailsModel.communityName = community.label;
+  }
+  
+  /**
+   * @implements onChange Occupation
+ 
+   */
+  onChangeOccupationChange() {
+    let occupation = this.occupationTypeList.find((data: any) => null != data && this.membershipBasicRequiredDetailsModel.occupationId != null && data.value == this.membershipBasicRequiredDetailsModel.occupationId);
+    if (occupation != null && undefined != occupation)
+    this.membershipBasicRequiredDetailsModel.occupationName = occupation.label;
+  }
+
+  /**
+   * @implements onChange Occupation
+ 
+   */
+  groupTypeOnChange(){
+    let group = this.groupTypes.find((data: any) => null != data && this.memberGroupDetailsModel.groupTypeId != null && data.value == this.memberGroupDetailsModel.groupTypeId);
+    if (group != null && undefined != group)
+      this.memberGroupDetailsModel.groupName = group.label;
+  }
+
+   /**
+   * @implements onChange Occupation
+ 
+   */
+   institutionTypeOnChange(){
+    let institution = this.institutionTypes.find((data: any) => null != data && this.membershipInstitutionDetailsModel.institution != null && data.value == this.membershipInstitutionDetailsModel.institution);
+    if (institution != null && undefined != institution)
+      this.membershipInstitutionDetailsModel.institutionName = institution.label;
+  }
 
 }

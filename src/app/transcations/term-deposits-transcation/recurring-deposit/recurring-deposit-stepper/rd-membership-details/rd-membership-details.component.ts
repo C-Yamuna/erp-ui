@@ -222,7 +222,7 @@ export class RdMembershipDetailsComponent {
   updateData() {
     if (this.kycModelList != null && this.kycModelList != undefined && this.kycModelList.length > 0) {
       // this.kycDuplicate = this.kycModelDuplicateCheck(this.kycModelList);
-      if (this.kycDuplicate) {
+      if (this.kycDuplicate || this.buttonDisabled) {
         this.isDisableFlag = true;
       }
       else {

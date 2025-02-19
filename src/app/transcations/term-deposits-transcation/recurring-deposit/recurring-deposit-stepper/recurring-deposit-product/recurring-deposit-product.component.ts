@@ -17,6 +17,7 @@ import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-
 import { FileUploadService } from 'src/app/shared/file-upload.service';
 import { RecurringDepositProductDefinition } from '../../../recurring-deposit-product-definition/shared/recurring-deposit-product-definition.model';
 import { RecurringDepositInterestPolicy } from '../../../recurring-deposit-product-definition/add-recurring-deposit-product-definition/recurring-deposit-interest-policy/shared/recurring-deposit-interest-policy.model';
+import { MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-recurring-deposit-product',
@@ -73,6 +74,7 @@ export class RecurringDepositProductComponent implements OnInit {
   requireddocumentlist: any[] =[];
   renewalList: any[] = [];
   installmentfrequencyList: any[]=[];
+  accountTypeDropDownHide: boolean = false;
 
   
   constructor(private router: Router,private datePipe: DatePipe, private formBuilder: FormBuilder, 
@@ -92,7 +94,7 @@ export class RecurringDepositProductComponent implements OnInit {
       'tenureInYears':['',],
       'depositAmount': ['',[Validators.required]],
       'accountType': ['', [Validators.required]],
-      'isRenewal' :[''],
+      'isRenewal' :[{ value: '', disabled: true }],
       'installmentFrequency':[''],
       'maturityDate':[{ value: '', disabled: true }],
       'maturityAmount':[{ value: '', disabled: true }]
@@ -240,7 +242,9 @@ export class RecurringDepositProductComponent implements OnInit {
 
             // if (this.rdAccountModel.rdProductId != null && this.rdAccountModel.rdProductId != undefined)
             //   this.isProductDisable = applicationConstants.TRUE;
-
+            if (this.rdAccountModel.maturityDate != null && this.rdAccountModel.maturityDate != undefined) {
+              this.rdAccountModel.maturityDate = this.datePipe.transform(this.rdAccountModel.maturityDate, this.orgnizationSetting.datePipe);
+            }
             if (this.rdAccountModel.memberShipBasicDetailsDTO != undefined) {
               this.membershipBasicDetail = this.rdAccountModel.memberShipBasicDetailsDTO;
 
@@ -263,6 +267,23 @@ export class RecurringDepositProductComponent implements OnInit {
               this.memberTypeName = this.rdAccountModel.memberTypeName;
               if (this.rdAccountModel.memberTypeName == "Individual")
                 this.isIndividual = true;
+              if (this.memberTypeName != MemberShipTypesData.INDIVIDUAL) {
+                this.accountTypeDropDownHide = true;
+                const controlName = this.applicationForm.get('accountType');
+                if (controlName) {
+                  controlName.setValidators(null); // Set the required validator null
+                  controlName.updateValueAndValidity();
+                }
+              }
+              else {
+                const controlName = this.applicationForm.get('accountType');
+                if (controlName) {
+                  controlName.setValidators([
+                    Validators.required,
+                  ]);
+                  controlName.updateValueAndValidity();
+                }
+              }
             }
             if (this.rdAccountModel.adminssionNumber != null && this.rdAccountModel.adminssionNumber != undefined)
               this.admissionNumber = this.rdAccountModel.adminssionNumber;
@@ -328,6 +349,9 @@ export class RecurringDepositProductComponent implements OnInit {
             this.requireddocumentlist = this.recurringDepositProductDefinitionModel.requiredDocumentsConfigList;
            
           }
+          if (this.recurringDepositProductDefinitionModel.isAutoRenewal != null && this.recurringDepositProductDefinitionModel.isAutoRenewal != undefined) {
+            this.rdAccountModel.isRenewal = this.recurringDepositProductDefinitionModel.isAutoRenewal;
+          }
 
         }
       }
@@ -350,6 +374,32 @@ export class RecurringDepositProductComponent implements OnInit {
 
   closeProductDefinition() {
     this.productDefinitionFlag = false;
+  }
+
+  calculateMaturity() {
+    let depositAmount = parseFloat(this.applicationForm.get('depositAmount')?.value) || 0;
+    let roi = parseFloat(this.applicationForm.get('roi')?.value) || 0;
+    let tenureInMonths = parseInt(this.applicationForm.get('tenureInMonths')?.value) || 0;
+    let tenureInYears = parseInt(this.applicationForm.get('tenureInYears')?.value) || 0;
+    let depositDate = this.applicationForm.get('depositDate')?.value;
+    if (!depositAmount || !roi || (tenureInYears === 0 && tenureInMonths === 0)) {
+      return;
+    }
+    let tenureInYearsTotal = tenureInYears + (tenureInMonths / 12);
+    let maturityAmount = depositAmount * Math.pow((1 + roi / 100), tenureInYearsTotal);
+    this.applicationForm.get('maturityAmount')?.setValue(maturityAmount.toFixed(2));
+
+    if (depositDate) {
+      let maturityDate = new Date(depositDate);
+      if (isNaN(maturityDate.getTime())) {
+        return;
+      }
+      maturityDate.setFullYear(maturityDate.getFullYear() + tenureInYears);
+      maturityDate.setMonth(maturityDate.getMonth() + tenureInMonths);
+      const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'short', year: 'numeric' };
+      const maturityDateFormatted = maturityDate.toLocaleDateString('en-GB', options).replace(',', '/');
+      this.applicationForm.get('maturityDate')?.setValue(maturityDateFormatted);
+    }
   }
 
 }

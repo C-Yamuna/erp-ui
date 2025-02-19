@@ -1,6 +1,8 @@
 <div class="col-12">
+    <p-messages label="Info" life="2000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
+    [hideTransitionOptions]="'500ms'"></p-messages>
     <h6 class="sub-heading">{{'LOAN_TRANSACTION.GENEALOGY_TREE_DETAILS' | translate}}<span class="admission-text">(Admission
-            Number:&nbsp;){{admissionNumber}}</span></h6>
+            Number:&nbsp;{{admissionNumber}})</span></h6>
     <div class="stepper-top-section-strip">
         <div class="row">
             <div class="col-lg-3 col-md-3 col-sm-12">
@@ -42,7 +44,9 @@
                             <div class="search">
                                 <span class="p-input-icon-right">
                                     <i class="pi pi-search global-search-icon"></i>
-                                    <input type="text" pInputText class="searchbox" placeholder="Search" />
+                                    <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                    placeholder="Search" class="searchbox"
+                                    #searchInput (input)="genealogy.filterGlobal(searchInput.value, 'contains')">
                                 </span>
                             </div>
                         </div>
@@ -121,3 +125,18 @@
         </p-table>
     </form>
 </div>
+
+<!-- delete dialog box -->
+<p-dialog [(visible)]="displayDialog" [closable]="false" styleClass="delete-popup" [responsive]="true">
+    <div class="col-12">
+        <i class="fa fa-times-circle text-center" aria-hidden="true"></i>
+    
+        <p class="text-center popup-header">{{'ERP.ARE_YOU_SURE_TO_DELETE' | translate}}</p>
+        <p class="text-center pop-subheader">{{'ERP.DO_YOU_REALLY_TO_DELETE_THESE_RECORDS' | translate}}</p>
+  
+    </div>
+    <div class="col-12 text-center p-2">
+            <p-button pRipple class="yes-button" label="{{'ERP.DELETE' | translate}}" (click)="submitDelete()"></p-button>
+            <p-button pRipple class="no-button" label="{{'ERP.CANCEL' | translate}}" (click)="cancelForDialogBox()"></p-button>
+    </div>
+  </p-dialog>

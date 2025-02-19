@@ -139,6 +139,12 @@
                                                 <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
                                                     {{img.fileName}}</div>
                                             </div>
+                                            <!-- <div *ngFor="let img of saoNomineeModel.nomineeFilePathList">
+                                                <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
+                                                    tooltipPosition="bottom">
+                                                    {{img.fileName}}
+                                                </div>
+                                            </div> -->
                                         </div>
                                         </div>
                                     </div>
@@ -183,12 +189,13 @@
                                                 <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
                                                     {{img.fileName}}</div>
                                             </div>
+                                            
                                         </div>
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                         <div class="form-label">
-                                        <label><span class="red">*</span>{{'ERP.REMARKS' | translate}}</label>
+                                        <label>{{'ERP.REMARKS' | translate}}</label>
             
                                         <textarea type="text" class="form-control" formControlName="remarks" pInputTextarea
                                             [(ngModel)]="saoNomineeModel.remarks" placeholder="Enter Remarks Here"></textarea>

@@ -42,7 +42,7 @@
                         </label>
                         <p-calendar formControlName="applicationDate" [showIcon]="true"
                             [dateFormat]="orgnizationSetting.calendar" placeholder="DD/MM/YYYY"
-                            [(ngModel)]="ciLoanApplicationModel.applicationDateVal">
+                            [(ngModel)]="ciLoanApplicationModel.applicationDateVal" [maxDate]="today">
                         </p-calendar>
                     </div>
                 </div>
@@ -95,13 +95,13 @@
                         <label for="username"><span class="red">*</span>{{'LOAN_TRANSACTION.REQUEST_AMOUNT' | translate}}
                         </label>
                         <input pInputText id="bunit_txt_name" type="text" formControlName="requestedAmount"
-                            [(ngModel)]="ciLoanApplicationModel.requestedAmount" placeholder="Enter Amount" (keyup)="onSactionAmountChange(ciLoanApplicationModel.requestedAmount)">
+                            [(ngModel)]="ciLoanApplicationModel.requestedAmount" placeholder="Enter Amount">
                             <p-message severity="error" text="Enter Valid requested amount"
                             *ngIf="!ciLoanApplicationForm.controls['requestedAmount'].valid && ciLoanApplicationForm.controls['requestedAmount'].dirty">
                         </p-message>
                     </div>
                 </div>
-                <!-- <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label for="username"><span class="red">*</span>{{'LOAN_TRANSACTION.SANCTION_AMOUNT' | translate}}
                         </label>
@@ -111,7 +111,7 @@
                             *ngIf="!ciLoanApplicationForm.controls['sanctionAmount'].valid && ciLoanApplicationForm.controls['sanctionAmount'].dirty">
                         </p-message>
                     </div>
-                </div> -->
+                </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label for="username"><span class="red">*</span>{{'LOAN_TRANSACTION.ROI' | translate}}
@@ -144,7 +144,7 @@
                         </label>
                         <p-calendar formControlName="sanctionDate" [showIcon]="true"
                             [dateFormat]="orgnizationSetting.calendar"
-                            [(ngModel)]="ciLoanApplicationModel.sanctionDate" placeholder="DD/MM/YYYY">
+                            [(ngModel)]="ciLoanApplicationModel.sanctionDateVal" placeholder="DD/MM/YYYY" (onSelect)="onSactionDateSelect(ciLoanApplicationModel.sanctionDateVal)" [minDate]="today">
                         </p-calendar>
                     </div>
                 </div>
@@ -154,7 +154,7 @@
                         </label>
                         <input pInputText id="bunit_txt_name" type="text" formControlName="plannedDisbursements"
                             [(ngModel)]="ciLoanApplicationModel.plannedDisbursements"
-                            placeholder="Enter No of Planned Disbursements">
+                            placeholder="Enter No of Planned Disbursements" (keyup)="onChangePlannedDisbursements(ciLoanApplicationModel.plannedDisbursements)" pKeyFilter="pint">
                             <p-message severity="error" text="Enter Valid planned disbursements"
                             *ngIf="!ciLoanApplicationForm.controls['plannedDisbursements'].valid && ciLoanApplicationForm.controls['plannedDisbursements'].dirty">
                         </p-message>
@@ -165,7 +165,7 @@
                         <label for="username"><span class="red">*</span>{{'LOAN_TRANSACTION.LOAN_PERIOD_IN_MONTHS' | translate}}
                         </label>
                         <input pInputText id="bunit_txt_name" type="text" formControlName="loanPeriod"
-                            [(ngModel)]="ciLoanApplicationModel.loanPeriod" placeholder="Enter Loan Period in Months">
+                            [(ngModel)]="ciLoanApplicationModel.loanPeriod" placeholder="Enter Loan Period in Months" (keyup)="onChangeLoanPeriod(ciLoanApplicationModel.loanPeriod)" pKeyFilter="pint">
                             <p-message severity="error" text="Enter Valid loan period"
                             *ngIf="!ciLoanApplicationForm.controls['loanPeriod'].valid && ciLoanApplicationForm.controls['loanPeriod'].dirty">
                         </p-message>
@@ -178,22 +178,23 @@
                         </label>
                         <p-calendar formControlName="loanDueDate" [showIcon]="true"
                             [dateFormat]="orgnizationSetting.calendar"
-                            [(ngModel)]="ciLoanApplicationModel.loanDueDate" placeholder="DD/MM/YYYY">
+                            [(ngModel)]="ciLoanApplicationModel.loanDueDateVal" placeholder="DD/MM/YYYY"  (onSelect)="onLoanDeuDateSelect(ciLoanApplicationModel.loanDueDateVal)" [minDate]="today">
                         </p-calendar>
                     </div>
                 </div>
             </div>
         </div>
+
     </form>
 </div>
-<div class="col-12 mt-3">
+<div class="col-12 mt-3" *ngIf="insuranceDetailsFlag">
     <h6 class="sub-heading">{{'LOAN_TRANSACTION.INSURANCE_DETAILS' | translate}}</h6>
     <form [formGroup]="insuranceForm">
         <div class="mt-n1  bg-label-colorfull">
             <div class="row g-3">
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
-                        <label for="code">
+                        <label for="code"><span class="red">*</span>
                             {{'LOAN_TRANSACTION.INSURANCE_COMPANY' | translate}}
                         </label>
                         <p-dropdown placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}" [options]="insuranceVendorDetailsList"
@@ -203,7 +204,7 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
-                        <label for="username">{{'LOAN_TRANSACTION.POLICY_NAME' | translate}}
+                        <label for="username"><span class="red">*</span>{{'LOAN_TRANSACTION.POLICY_NAME' | translate}}
                         </label>
                         <input pInputText id="bunit_txt_name" type="text" formControlName="policyName"
                             [(ngModel)]="ciLoanInsuranceDetailsModel.policyName" placeholder="Enter Policy Name">
@@ -214,7 +215,7 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
-                        <label for="username">{{'LOAN_TRANSACTION.POLICY_NUMBER' | translate}}
+                        <label for="username"><span class="red">*</span>{{'LOAN_TRANSACTION.POLICY_NUMBER' | translate}}
                         </label>
                         <input pInputText id="bunit_txt_name" type="text" formControlName="policyNumber"
                             [(ngModel)]="ciLoanInsuranceDetailsModel.policyNumber" placeholder="Enter Policy Number">
@@ -225,7 +226,7 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
-                        <label for="username">{{'LOAN_TRANSACTION.SUM_INSURED' | translate}}
+                        <label for="username"><span class="red">*</span>{{'LOAN_TRANSACTION.SUM_INSURED' | translate}}
                         </label>
                         <input pInputText id="bunit_txt_name" type="text" formControlName="sumInsured"
                             [(ngModel)]="ciLoanInsuranceDetailsModel.sumInsured" placeholder="Enter Sum Insured">
@@ -236,7 +237,7 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
-                        <label for="username">{{'LOAN_TRANSACTION.PREMIUM' | translate}}
+                        <label for="username"><span class="red">*</span>{{'LOAN_TRANSACTION.PREMIUM' | translate}}
                         </label>
                         <input pInputText id="bunit_txt_name" type="text" formControlName="premium"
                             [(ngModel)]="ciLoanInsuranceDetailsModel.premium" placeholder="Enter Premium">
@@ -248,8 +249,9 @@
             </div>
         </div>
     </form>
+    
 </div>
-<div >
+<div>
        
     <form [formGroup]="schedulerForm" id="exit_types_form">
         <div class="flex justify-content-between py-2">
@@ -269,6 +271,10 @@
                                 </span>
                             </div>
                         </div>
+                        <p-button (click)="applicationSubmit(ciLoanInsuranceDetailsModel)" label="{{ 'SUBMIT' | translate }}" 
+                            iconPos="left" [disabled]="(applicationSubmitEnable || (!(ciLoanApplicationForm.valid && insuranceForm.valid)))"  id="bunit_bt_submit" *ngIf="insuranceDetailsFlag"></p-button>
+                        <p-button (click)="applicationSubmit(ciLoanInsuranceDetailsModel)" label="{{ 'SUBMIT' | translate }}" 
+                            iconPos="left" [disabled]="applicationSubmitEnable || !ciLoanApplicationForm.valid" id="bunit_bt_submit" *ngIf="!insuranceDetailsFlag"></p-button>
                         <p-button (click)="addData()" label="{{ 'ADD' | translate }}" icon="fa fa-plus"
                             iconPos="left" [disabled]="addButton" id="bunit_bt_submit"></p-button>
                     </div>
@@ -277,7 +283,7 @@
         </div>
 
         <div class="globel-border-top-color"></div>
-
+        <!-- disbursements schedule table starts -->
         <p-table #dt [value]="disbursmentScheduleList" dataKey="id" editMode="row" styleClass="p-datatable-striped"
             [rows]="5" [paginator]="true" [showJumpToPageDropdown]="true" [showPageLinks]="false" [pageLinks]="1"
             [responsive]="true" rowExpandMode="single" [globalFilterFields]="['disbursementNumber', 'typeName', 'disbursementLimit', 'minDaysForDisbursement','remarks',
@@ -285,7 +291,7 @@
             <ng-template pTemplate="header">
                 <tr>
                     <th><span class="red">*</span>{{'ERP.DISBURSEMENT_NUMBER' | translate}}</th>
-                    <th>{{'ERP.COLLECTION_TYPE' | translate}}</th>
+                    <th>{{'LOANS.COLLECTION_TYPE' | translate}}</th>
                     <th>{{'ERP.DISBURSEMENT_LIMIT' | translate}}</th>
                     <th>{{'ERP.MINIMUM_DAYS_FOR_DISBURSMENT' | translate}}</th>
                     <th>{{'ERP.REMARKS' | translate}}</th>
@@ -388,6 +394,7 @@
                 </tr>
             </ng-template>
         </p-table>
+        <!-- disbursements schedule table end -->
         <span class="float-left text-left pull-left text-danger fw-bold note-text">
             {{'ERP.PLEASE_ENTER'|translate}} {{ciLoanApplicationModel.plannedDisbursements}}
             {{'ERP.VALID_SCHEDULE_RECORDS'|translate}}</span>
@@ -470,7 +477,7 @@
                                                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">
                                                     <h6 class="label-view">{{'LOANS.LINK_SHARE_CAPITAL_APPLICABLE'
                                                         |translate}}</h6>
-                                                    <p class="label-input-text"> {{ ciProductDefinitionModel.loanLinkedshareCapitalApplicable ? 'Yes' : 'No' }}
+                                                    <p class="label-input-text"> {{ ciProductDefinitionModel.loanLinkedshareCapitalApplicable }}
                                                     </p>
                                                 </div>
                                                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">
@@ -481,7 +488,7 @@
                                                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">
                                                     <h6 class="label-view">{{'LOANS.IS_INSURANCE_APPLICABLE'
                                                         |translate}}</h6>
-                                                    <p class="label-input-text"> {{ ciProductDefinitionModel.isInsuranceAppicable ? 'Yes' : 'No' }}
+                                                    <p class="label-input-text"> {{ ciProductDefinitionModel.isInsuranceAppicable }}
                                                     </p>
                                                 </div>
                                                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">

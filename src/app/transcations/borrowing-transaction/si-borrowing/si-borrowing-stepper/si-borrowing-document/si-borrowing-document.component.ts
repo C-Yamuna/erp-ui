@@ -81,7 +81,7 @@ export class SiBorrowingDocumentComponent {
   deleteId: any;
   showAddButton: boolean = applicationConstants.FALSE;
   documentList: any[] = [];
-
+  saveAndNextEnable : boolean = false;
   constructor(private router:Router, private formBuilder:FormBuilder,
     private siBorrowingStepperService : SiBorrowingStepperService,
     private siBorrowingAccountMappingService:SiBorrowingAccountMappingService,
@@ -122,10 +122,14 @@ export class SiBorrowingDocumentComponent {
       this.getAllDocumnetsTypes();
     }
     updateData() {
-      if (this.documentList != null && this.documentList != undefined &&
-        this.documentList.length > 0 && this.buttonsFlag ) {
+      if (this.documentList != null && this.documentList.length > 0 && this.buttonsFlag) {
         this.landFlag = applicationConstants.TRUE;
+        this.saveAndNextEnable = true; // Enable Save and Next when documents exist
+      } else {
+        this.landFlag = applicationConstants.FALSE;
+        this.saveAndNextEnable = false; // Disable Save and Next when no documents
       }
+    
       this.siBorrowingDocumentModel.borrowingAccountId = this.borrowingAccountId;
       this.siBorrowingStepperService.changeData({
         formValid: this.landFlag,

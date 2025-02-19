@@ -70,7 +70,7 @@
                                 <ng-template pTemplate="input">
                                     <!-- <input pInputText type="text" [(ngModel)]="penalityConfigModel.minAmount" formControlName="minAmount"> -->
                                     <input pInputText type="text" [(ngModel)]="penalityConfigModel.minAmount" 
-                                    (keyup)="checkForAmount()" formControlName="minAmount">
+                                    (focusout)="checkForAmount(1)" formControlName="minAmount">
                                 </ng-template>
                                 <ng-template pTemplate="output">{{penalityConfigModel.minAmount}}</ng-template>
                             </p-cellEditor>
@@ -80,7 +80,7 @@
                                 <ng-template pTemplate="input">
                                     <!-- <input pInputText type="text" [(ngModel)]="penalityConfigModel.maxAmount" formControlName="maxAmount" > -->
                                     <input pInputText type="text" [(ngModel)]="penalityConfigModel.maxAmount" 
-                                    (keyup)="checkForAmount()" formControlName="maxAmount">
+                                    (focusout)="checkForAmount(2)" formControlName="maxAmount">
                                 </ng-template>
                                 <ng-template pTemplate="output">{{penalityConfigModel.maxAmount}}</ng-template>
                             </p-cellEditor>

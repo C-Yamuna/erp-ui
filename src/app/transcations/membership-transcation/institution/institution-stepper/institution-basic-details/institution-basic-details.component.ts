@@ -128,6 +128,8 @@ export class InstitutionBasicDetailsComponent implements OnInit{
       'tanNumber': new FormControl('',[Validators.pattern(applicationConstants.TAN_NUMBER)]),
       'resolutionNumber': new FormControl(''),
       'institutionType': new FormControl('',Validators.required),
+      'societyAdmissionNo': new FormControl('',Validators.required),
+      
     })
     this.institutepromoterDetailsForm = this.formBuilder.group({
       'surName':new FormControl('',[Validators.required,Validators.pattern(applicationConstants.NEW_NAME_PATTERN), Validators.maxLength(40), Validators.pattern(/^[^\s]+(\s.*)?$/)]),
@@ -140,7 +142,7 @@ export class InstitutionBasicDetailsComponent implements OnInit{
       'mobileNumber': new FormControl('',[Validators.required,Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.maxLength(10)]),
       'aadharNumber': new FormControl('',[Validators.required,Validators.pattern(applicationConstants.AADHAR_PATTERN), Validators.maxLength(12)]),
       'emailId': new FormControl('', [Validators.pattern(applicationConstants.EMAIL_PATTERN)]),
-      'startDate': new FormControl(''),
+      'startDate':  new FormControl('',Validators.required),
       'authorizedSignatory': new FormControl(''),
       'isExistingMember':new FormControl(''),
       'admissionNumber':new FormControl('')
@@ -386,14 +388,17 @@ export class InstitutionBasicDetailsComponent implements OnInit{
        this.promoterDisplayFlag = true;
        this.cancleButtonFlag = false;
        this.EditDeleteDisable = true;
+       this.submitDisableForImage= false;
+       this.submitDisableForSignature= false;
        this.institutePromoterDetails = new InstitutePromoterDetails();
-       this.institutePromoterDetails.uniqueId = this.promoterDetails.length + 1
+      //  this.institutePromoterDetails.uniqueId = this.promoterDetails.length + 1
        this.institutepromoterDetailsForm.reset();
        this.admissionNumberDropDown = false;
        this. getAllOperatorType();
-      //  this.onChangeExistedPrmoter(false);
+       this.onChangeExistedPrmoter(false);
        this.updateData();
      }
+  
    getAllOperatorType() {
      this.commonComponent.startSpinner();
      this.operatorTypeService.getAllOperationTypes().subscribe((res: any) => {
@@ -577,14 +582,27 @@ export class InstitutionBasicDetailsComponent implements OnInit{
      }
    }
  
-   fileUploadersForPromoter(event: any, fileUpload: FileUpload, filePathName: any,rowData:any) {
+   fileUploadersForPromoter(event: any, fileUploadPhoto: FileUpload,fileUploadSign: FileUpload, filePathName: any,rowData:any) {
      this.isFileUploaded = applicationConstants.FALSE;
      this.multipleFilesList = [];
      if(this.isEdit && rowData.filesDTOList == null || rowData.filesDTOList == undefined){
        rowData.filesDTOList = [];
      }
+     let selectedFiles = [...event.files];
+     if (filePathName === "photoCopyPath") {
+       this.submitDisableForImage = false;
+       rowData.multipartFileListForPhotoCopy = [];
+       // Clear file input before processing files
+       fileUploadPhoto.clear();
+     }
+     if (filePathName === "signaturePath") {
+       this.submitDisableForSignature = applicationConstants.FALSE;
+       rowData.multipartFileListForsignatureCopyPath = [];
+       fileUploadSign.clear();
+     }
+    
      let files: FileUploadModel = new FileUploadModel();
-     for (let file of event.files) {
+     for (let file of selectedFiles) {
        let reader = new FileReader();
        reader.onloadend = (e) => {
          let files = new FileUploadModel();
@@ -597,7 +615,7 @@ export class InstitutionBasicDetailsComponent implements OnInit{
          let timeStamp = this.commonComponent.getTimeStamp();
          if (filePathName === "photoCopyPath") {
           this.submitDisableForImage = true;
-           rowData.multipartFileListForPhotoCopy = [];
+           rowData.multipartFileListForPhotoCopy.push(files);
            rowData.filesDTOList.push(files);
            rowData.uploadImage = null;
            rowData.filesDTOList[rowData.filesDTOList.length - 1].fileName = "Institution_Promoter_Photo_Copy" + "_" + timeStamp + "_" + file.name;
@@ -605,7 +623,7 @@ export class InstitutionBasicDetailsComponent implements OnInit{
          }
          if (filePathName === "signaturePath") {
           this.submitDisableForSignature = true;
-           rowData.multipartFileListForsignatureCopyPath = [];
+           rowData.multipartFileListForsignatureCopyPath.push(files);
            rowData.filesDTOList.push(files);
            rowData.uploadSignature = null;
            rowData.filesDTOList[rowData.filesDTOList.length - 1].fileName = "Institution_Promoter_Signature_Copy" + "_" + timeStamp + "_" + file.name;
@@ -790,7 +808,19 @@ export class InstitutionBasicDetailsComponent implements OnInit{
              if (this.institutePromoterDetails.startDate != null && this.institutePromoterDetails.startDate != undefined)
                this.institutePromoterDetails.startDateVal = this.datePipe.transform(this.institutePromoterDetails.startDate, this.orgnizationSetting.datePipe);
             //  this.institutePromoterDetails.operatorTypeId = this.memberBasicDetailsModel.occupationId;
- 
+
+             this.institutePromoterDetails.uploadImage = this.memberBasicDetailsModel.photoCopyPath;
+             this.institutePromoterDetails.uploadSignature = this.memberBasicDetailsModel.signatureCopyPath;
+
+             if (this.institutePromoterDetails.uploadImage != null && this.institutePromoterDetails.uploadImage != undefined) {
+               this.institutePromoterDetails.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.institutePromoterDetails.uploadImage, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutePromoterDetails.uploadImage);
+               this.submitDisableForImage = applicationConstants.TRUE;
+             }
+             if (this.institutePromoterDetails.uploadSignature != null && this.institutePromoterDetails.uploadSignature != undefined) {
+               this.institutePromoterDetails.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.institutePromoterDetails.uploadSignature, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutePromoterDetails.uploadSignature);
+               this.submitDisableForSignature = applicationConstants.TRUE;
+             }
+
              this.institutepromoterDetailsForm.get('surName').disable();
              this.institutepromoterDetailsForm.get('name').disable();
             //  this.institutepromoterDetailsForm.get('operatorTypeId').disable();

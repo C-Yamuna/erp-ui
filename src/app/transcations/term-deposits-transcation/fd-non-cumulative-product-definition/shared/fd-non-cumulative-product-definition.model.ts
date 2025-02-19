@@ -48,4 +48,8 @@ export class FdNonCumulativeProductDefinition {
   signedCopyPath? : any;
 
   multipartFileListsignedCopyPath? : any;
+
+  tenureType? : any;
+
+  tenureTypeName? : any;
 }

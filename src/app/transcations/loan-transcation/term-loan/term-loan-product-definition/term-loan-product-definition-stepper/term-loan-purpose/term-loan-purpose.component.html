@@ -1,37 +1,39 @@
 <div class="col-12">
-<p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
-    [hideTransitionOptions]="'500ms'"></p-messages>
+    <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
+        [hideTransitionOptions]="'500ms'"></p-messages>
     <div class="stepper-top-section-strip">
-    <div class="row ">
-        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-xs-12">
-            <div class="form-group">
-            <span>{{'LOANS.PRODUCT_NAME' | translate}} </span>
-            <p class="m-0 font-semibold text-break">{{termLoanProductDefinitionModel.name}}</p>
-        </div>
-        </div>
-        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-xs-12 viewcustom-input-number inputnumberht-5px">
-            <div class="form-group">
-            <span>{{'LOANS.MIN_DEPOSIT_AMOUNT' | translate}}</span>
-            <p-inputNumber id="bunit_txt_name" [(ngModel)]="termLoanProductDefinitionModel.eligibleMInAmount" mode="currency"
-                inputId="currency-india" currency="INR" locale="en-IN" [disabled]="true" styleClass="label-input-text"> </p-inputNumber>
+        <div class="row ">
+            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <div class="form-group">
+                    <span>{{'LOANS.PRODUCT_NAME' | translate}} </span>
+                    <p class="m-0 font-semibold text-break">{{termLoanProductDefinitionModel.name}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-xs-12 viewcustom-input-number inputnumberht-5px">
+                <div class="form-group">
+                    <span>{{'LOANS.MIN_DEPOSIT_AMOUNT' | translate}}</span>
+                    <p-inputNumber id="bunit_txt_name" [(ngModel)]="termLoanProductDefinitionModel.eligibleMInAmount"
+                        mode="currency" inputId="currency-india" currency="INR" locale="en-IN" [disabled]="true"
+                        styleClass="label-input-text"> </p-inputNumber>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-xs-12 viewcustom-input-number inputnumberht-5px">
+                <div class="form-group">
+                    <span>{{'LOANS.MAX_DEPOSIT_AMOUNT' | translate}} </span>
+                    <p-inputNumber id="bunit_txt_name" [(ngModel)]="termLoanProductDefinitionModel.eligibleMaxAmount"
+                        mode="currency" inputId="currency-india" currency="INR" locale="en-IN" [disabled]="true"
+                        styleClass="label-input-text"> </p-inputNumber>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <div class="form-group">
+                    <span>{{'LOANS.EFFECTIVE_START_DATE' | translate}} </span>
+                    <p class="m-0 font-semibold text-break">{{termLoanProductDefinitionModel.effectiveStartDate}}</p>
+                </div>
+            </div>
         </div>
     </div>
-        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-xs-12 viewcustom-input-number inputnumberht-5px">
-            <div class="form-group">
-            <span>{{'LOANS.MAX_DEPOSIT_AMOUNT' | translate}} </span>
-            <p-inputNumber id="bunit_txt_name" [(ngModel)]="termLoanProductDefinitionModel.eligibleMaxAmount" mode="currency"
-                inputId="currency-india" currency="INR" locale="en-IN" [disabled]="true" styleClass="label-input-text"> </p-inputNumber>
-        </div>
-    </div>
-        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-xs-12">
-            <div class="form-group">
-            <span>{{'LOANS.EFFECTIVE_START_DATE' | translate}} </span>
-            <p class="m-0 font-semibold text-break">{{termLoanProductDefinitionModel.effectiveStartDate}}</p>
-        </div>
-    </div>
-    </div>
-</div>
-<div class="col-12"></div>
+    <div class="col-12"></div>
 
     <form [formGroup]="purposeForm" id="proj_stakeholder_form">
         <div class="flex justify-content-between py-2">
@@ -42,14 +44,14 @@
                 <div class="col-12 p-0">
                     <div class="d-flex justify-content-end search-input-style">
                         <div class="input-group search-box d-flex justify-content-end">
-                                <div class="search">
-                                    <span class="p-input-icon-right">
-                                        <i class="pi pi-search global-search-icon"></i>
-                                        <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
-                                        placeholder="Search" class="searchbox"
-                                        #searchInput (input)="dt.filterGlobal(searchInput.value, 'contains')">
-                                    </span>
-                                </div>
+                            <div class="search">
+                                <span class="p-input-icon-right">
+                                    <i class="pi pi-search global-search-icon"></i>
+                                    <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                        placeholder="Search" class="searchbox" #searchInput
+                                        (input)="dt.filterGlobal(searchInput.value, 'contains')">
+                                </span>
+                            </div>
                         </div>
 
                         <p-button (click)="addInlineRow()" label="Add" icon="fa fa-plus" iconPos="left" id="add_btn"
@@ -92,8 +94,11 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="termLoanPurposeModel.gesitationPeriod"
-                                    formControlName="gesitationPeriod"  (keyup)="checkForGestationPeriod()">
-
+                                    formControlName="gesitationPeriod" pKeyFilter="num"
+                                    (focusout)="checkForGestationPeriod(1)">
+                                <p-message severity="error" text="Enter Valid GesitationPeriod"
+                                    *ngIf="!purposeForm.controls['gesitationPeriod'].valid && purposeForm.controls['gesitationPeriod'].dirty">
+                                </p-message>
                             </ng-template>
                             <ng-template pTemplate="output">{{termLoanPurposeModel.gesitationPeriod}}</ng-template>
                         </p-cellEditor>
@@ -102,8 +107,11 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="termLoanPurposeModel.maxGesitationPeriod"
-                                    formControlName="maxGesitationPeriod"  (keyup)="checkForGestationPeriod()">
-
+                                    formControlName="maxGesitationPeriod" pKeyFilter="num"
+                                    (focusout)="checkForGestationPeriod(2)">
+                                <p-message severity="error" text="Enter Valid GesitationPeriod"
+                                    *ngIf="!purposeForm.controls['maxGesitationPeriod'].valid && purposeForm.controls['maxGesitationPeriod'].dirty">
+                                </p-message>
                             </ng-template>
                             <ng-template pTemplate="output">{{termLoanPurposeModel.maxGesitationPeriod}}</ng-template>
                         </p-cellEditor>
