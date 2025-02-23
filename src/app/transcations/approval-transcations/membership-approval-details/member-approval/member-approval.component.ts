@@ -96,7 +96,7 @@ export class MemberApprovalComponent {
   previewButton:  boolean = false;
   isDisableSubmit: boolean = false;
   membershiForm: FormGroup;
-  memStatus:any;
+  status:any;
   documnetGridList:any[]=[];
   groupDocumentGridList: any[]=[];
   showdocumentForm: boolean=false;
@@ -120,7 +120,7 @@ export class MemberApprovalComponent {
   }
 
   ngOnInit() {
-    this.memStatus = null;
+    this.status = null;
     this.memberLandDetails = [
       { field: 'passbookNumber', header: 'ERP.PASSBOOK_NUMBER' },
       { field: 'surveyNumber', header: 'ERP.SURVEY_NO' },
@@ -482,7 +482,7 @@ export class MemberApprovalComponent {
   
   submit() {
     this.msgs = [];
-    // this.memberBasicDetailsModel.memStatus = 3;
+    // this.memberBasicDetailsModel.status = 3;
     if (this.memberBasicDetailsModel.memberShipAssertDetailsDTOList != null && this.memberBasicDetailsModel.memberShipAssertDetailsDTOList.length > 0) {
       this.membershipAssetsDetailsList = this.memberBasicDetailsModel.memberShipAssertDetailsDTOList;
       this.membershipAssetsDetailsList = this.membershipAssetsDetailsList.filter((obj:any) => null != obj ).map((asset:any)=>{
@@ -768,7 +768,7 @@ fileRemoveEvent() {
 
     //submit button validation based on status for individual
     getMemStatus(){
-        if(this.memberBasicDetailsModel.memStatus != null && this.memberBasicDetailsModel.memStatus != undefined){
+        if(this.memberBasicDetailsModel.status != null && this.memberBasicDetailsModel.status != undefined){
            this.isDisableSubmit = false;
         }
         else{
@@ -778,7 +778,7 @@ fileRemoveEvent() {
 
     //for submit button validation based on status for Group
     getGroupStatus(){
-      if(this.memberGroupBasicDetails.groupStatus != null && this.memberGroupBasicDetails.groupStatus != undefined){
+      if(this.memberGroupBasicDetails.status != null && this.memberGroupBasicDetails.status != undefined){
          this.isDisableSubmit = false;
       }
       else{
@@ -788,7 +788,7 @@ fileRemoveEvent() {
 
   //for submit button validation based on status for Institution
   getInstitutionStatus(){
-    if(this.institutionBasicDetailsModel.institutionStatus != null && this.institutionBasicDetailsModel.institutionStatus != undefined){
+    if(this.institutionBasicDetailsModel.status != null && this.institutionBasicDetailsModel.status != undefined){
        this.isDisableSubmit = false;
     }
     else{

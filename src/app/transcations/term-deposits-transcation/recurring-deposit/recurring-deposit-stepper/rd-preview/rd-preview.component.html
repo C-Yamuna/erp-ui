@@ -39,7 +39,7 @@
                             <!-- Admission No & Image-part -->
                             <div class="col-xl-12 col-lg-12 col-md-3 col-sm-4 col-xs-4">
                                 <div class="col-12 pic-sig-status">
-                                    <div class="d-flex justify-content-center mb-3" *ngIf="photoCopyFlag">
+                                    <div class="d-flex justify-content-center mb-1" *ngIf="photoCopyFlag">
                                         <div
                                             *ngFor="let img of membershipBasicDetail.multipartFileListForPhotoCopy">
                                             <span class="{{img.imageValue}}" (click)="onClickMemberPhotoCopy()"
@@ -66,23 +66,25 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="text-center min-h-50px">
-                                    <span class="text-fontwt">{{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' |
-                                        translate}}</span>
-                                    <p class="font-semibold text-break">
-                                        {{membershipBasicDetail.tempAdmissionNumber}}</p>
-                                </div>
 
                                 <div class="text-center min-h-50px">
-                                    <span class="text-fontwt">{{'TERMDEPOSITSTRANSACTION.NAME' | translate}}</span>
-                                    <p class="font-semibold text-break"><span
-                                            class="border-bottom">{{membershipBasicDetail.name}}</span>
-                                    </p>
+                                    <p class="text-break view-member-name">{{membershipBasicDetail.name}}</p>
+                                    <div class="d-flex justify-content-center">
+                                        <div class="member-name-border"></div>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
                                 <div class="row">
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                        <span class="basicdata-icons icon-size"><i class="fa fa-address-book"></i></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' |
+                                                translate}}</p>
+                                            <p class="label-input-text">{{membershipBasicDetail.tempAdmissionNumber}}</p>
+                                        </div>
+                                    </div>
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
                                         <span class="basicdata-icons icon-size"><i class="fa fa-id-card-o"></i></span>
                                         <div>
@@ -184,28 +186,31 @@
                             <!-- Admission No & Image-part -->
                             <div class="col-xl-12 col-lg-12 col-md-3 col-sm-4 col-xs-4">
                                 <div class="col-12 pic-sig-status">
-                                    <div class="d-flex justify-content-center mb-3">
+                                    <div class="d-flex justify-content-center mb-1">
                                         <img src="assets/images/avatar-table.png" class="image-user">
                                         <p class="active-status"></p>
                                         <img src="assets/images/sign.png" class="image-sign">
                                     </div>
                                 </div>
-                                <div class="text-center min-h-50px">
-                                    <span class="text-fontwt">{{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' |
-                                        translate}}</span>
-                                    <p class="font-semibold text-break">{{memberGroupDetailsModel.admissionNumber}}</p>
-                                </div>
 
                                 <div class="text-center min-h-50px">
-                                    <span class="text-fontwt">{{'TERMDEPOSITSTRANSACTION.NAME' | translate}}</span>
-                                    <p class="font-semibold text-break"><span
-                                            class="border-bottom">{{memberGroupDetailsModel.name}}</span>
-                                    </p>
+                                    <p class="text-break view-member-name">{{memberGroupDetailsModel.name}}</p>
+                                    <div class="d-flex justify-content-center">
+                                        <div class="member-name-border"></div>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
                                 <div class="row">
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                        <span class="basicdata-icons icon-size"><i class="fa fa-address-book"></i></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' |
+                                                translate}}</p>
+                                            <p class="label-input-text">{{memberGroupDetailsModel.admissionNumber}}</p>
+                                        </div>
+                                    </div>
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
                                         <span class="basicdata-icons icon-size"><i class="fa fa-id-card-o"></i></span>
                                         <div>
@@ -307,29 +312,32 @@
                             <!-- Admission No & Image-part -->
                             <div class="col-xl-12 col-lg-12 col-md-3 col-sm-4 col-xs-4">
                                 <div class="col-12 pic-sig-status">
-                                    <div class="d-flex justify-content-center mb-3">
+                                    <div class="d-flex justify-content-center mb-1">
                                         <img src="assets/images/avatar-table.png" class="image-user">
                                         <p class="active-status"></p>
                                         <img src="assets/images/sign.png" class="image-sign">
                                     </div>
                                 </div>
-                                <div class="text-center min-h-50px">
-                                    <span class="text-fontwt">{{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' |
-                                        translate}}</span>
-                                    <p class="font-semibold text-brek">
-                                        {{membershipInstitutionDetailsModel.tempAdmissionNumber}}</p>
-                                </div>
 
                                 <div class="text-center min-h-50px">
-                                    <span class="text-fontwt">{{'TERMDEPOSITSTRANSACTION.NAME' | translate}}</span>
-                                    <p class="font-semibold text-break"><span
-                                            class="border-bottom">{{membershipInstitutionDetailsModel.name}}</span>
-                                    </p>
+                                    <p class="text-break view-member-name">{{membershipInstitutionDetailsModel.name}}</p>
+                                    <div class="d-flex justify-content-center">
+                                        <div class="member-name-border"></div>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
                                 <div class="row">
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                        <span class="basicdata-icons icon-size"><i class="fa fa-address-book"></i></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' |
+                                                translate}}</p>
+                                            <p class="label-input-text">
+                                                {{membershipInstitutionDetailsModel.tempAdmissionNumber}}</p>
+                                        </div>
+                                    </div>
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
                                         <span class="basicdata-icons icon-size"><i class="fa fa-id-card-o"></i></span>
                                         <div>

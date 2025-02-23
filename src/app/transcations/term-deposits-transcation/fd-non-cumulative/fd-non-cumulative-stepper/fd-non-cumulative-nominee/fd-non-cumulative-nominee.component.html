@@ -1,8 +1,37 @@
 <div class="col-12">
-    <h6 class="sub-heading">{{'TERMDEPOSITSTRANSACTION.NOMINEE_DETAILS' | translate}}<span
+    <!-- <h6 class="sub-heading">{{'TERMDEPOSITSTRANSACTION.NOMINEE_DETAILS' | translate}}<span
             class="admission-text">(Admission
-            Number:&nbsp;{{admissionNumber}})</span></h6>
-
+            Number:&nbsp;{{admissionNumber}})</span></h6> -->
+    <h6 class="sub-heading">{{'TERMDEPOSITSTRANSACTION.NOMINEE_DETAILS' | translate}}</h6>
+    <div class="stepper-top-section-strip">
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 stepper-top-product-name-background">
+                <div class="form-group">
+                    <span>{{'TERMDEPOSITSTRANSACTION.PRODUCT_NAME' | translate}}</span>
+                    <p class="mb-0">{{fdNonCumulativeApplicationModel.fdNonCummulativeProductName}}</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="form-group ml-2">
+                    <span>{{'TERMDEPOSITSTRANSACTION.ACCOUNT_TYPE' | translate}}</span>
+                    <p class="mb-0">{{fdNonCumulativeApplicationModel.accountTypeName}}</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="form-group">
+                    <span>{{'ERP.DEPOSIT_AMOUNT' | translate}}</span>
+                    <p class="mb-0">{{fdNonCumulativeApplicationModel.depositAmount}}</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="form-group">
+                    <span>{{'TERMDEPOSITSTRANSACTION.DEPOSIT_DATE' | translate}}</span>
+                    <p class="mb-0">{{fdNonCumulativeApplicationModel.depositDate}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12"></div>
     <form [formGroup]="nomineeForm" id="exit_types_form">
         <div class="col-12 p-0">
             <div class="col-12 p-0 bg-label-colorfull">
@@ -94,8 +123,8 @@
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
-                                                <span><span
-                                                    class="red">*</span>{{ 'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate }}</span>
+                                                <span><span class="red">*</span>{{
+                                                    'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate }}</span>
                                                 <div class="uplodad-style align-items-center">
                                                     <!-- Upload Button Column -->
 
@@ -137,14 +166,15 @@
                                     <div class="row g-3 mt-n1">
                                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                                             <div class="mt-2 form-label">
-                                                <p-button icon="fa fa-download p-2"
-                                                    label="unsigned letter format" class="kyc-btnm-0"></p-button>
+                                                <p-button icon="fa fa-download p-2" label="unsigned letter format"
+                                                    class="kyc-btnm-0"></p-button>
 
                                             </div>
                                         </div>
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
-                                                <span class=""><span class="red">*</span>  {{ 'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate
+                                                <span class=""><span class="red">*</span> {{
+                                                    'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate
                                                     }} </span>
                                                 <div class="uplodad-style align-items-center">
                                                     <!-- Upload Button Column -->
@@ -172,8 +202,9 @@
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
                                                 <label><span class="red">*</span> {{'ERP.REMARKS' | translate}}</label>
-                                                <textarea type="text" class="form-control" formControlName="remarks" pInputTextarea placeholder="Enter Remarks Here"
-                                                [(ngModel)]="fdNonCumulativeNomineeModel.remarks"></textarea>
+                                                <textarea type="text" class="form-control" formControlName="remarks"
+                                                    pInputTextarea placeholder="Enter Remarks Here"
+                                                    [(ngModel)]="fdNonCumulativeNomineeModel.remarks"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -309,14 +340,15 @@
                                     <div class="row g-3 mt-n1">
                                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                                             <div class="mt-2 form-label">
-                                                <p-button icon="fa fa-download p-2"
-                                                    label="unsigned letter format" class="kyc-btnm-0"></p-button>
+                                                <p-button icon="fa fa-download p-2" label="unsigned letter format"
+                                                    class="kyc-btnm-0"></p-button>
                                             </div>
                                         </div>
 
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
-                                                <span><span class="red">*</span> {{ 'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate }}</span>
+                                                <span><span class="red">*</span> {{
+                                                    'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate }}</span>
                                                 <div class="uplodad-style align-items-center">
                                                     <!-- Upload Button Column -->
                                                     <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold"
@@ -343,8 +375,9 @@
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
                                                 <label><span class="red">*</span> {{'ERP.REMARKS' | translate}}</label>
-                                                <textarea type="text" class="form-control" pInputTextarea formControlName="guardianRemarks" placeholder="Enter Remarks Here"
-                                                [(ngModel)]="memberGuardianDetailsModelDetails.remarks"></textarea>
+                                                <textarea type="text" class="form-control" pInputTextarea
+                                                    formControlName="guardianRemarks" placeholder="Enter Remarks Here"
+                                                    [(ngModel)]="memberGuardianDetailsModelDetails.remarks"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -359,7 +392,7 @@
 
 
     <!-- History table in Edit  -->
-    <div class="mt-4" *ngIf="historyFLag">
+    <!-- <div class="mt-4" *ngIf="historyFLag">
         <h6 class="sub-heading">Nominee History Details</h6>
         <div class="globel-border-top-color"></div>
         <p-table [columns]="nomineeFields" [value]="nomineeHistoryList" dataKey="id" selectionMode="single"
@@ -382,7 +415,7 @@
                 </tr>
             </ng-template>
         </p-table>
-    </div>
+    </div> -->
 
     <!-- </div> -->
 </div>

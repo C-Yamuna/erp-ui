@@ -128,7 +128,11 @@ import { CiLoanCollectionComponent } from './compound-interest-loan/ci-loan-oper
 import { CiLoanClosureComponent } from './compound-interest-loan/ci-loan-operations/ci-loan-closure/ci-loan-closure.component';
 import { TermLoanDisbursementComponent } from './term-loan/term-loan-operations/term-loan-disbursement/term-loan-disbursement.component';
 import { TermLoanCollectionComponent } from './term-loan/term-loan-operations/term-loan-collection/term-loan-collection.component';
+import { SaoFieldVisitConfigComponent } from './sao/sao-product-definition/sao-product-definition-stepper/sao-field-visit-config/sao-field-visit-config.component';
+import { SaoDisbursmentConfigComponent } from './sao/sao-product-definition/sao-product-definition-stepper/sao-disbursment-config/sao-disbursment-config.component';
 import { FileUploadModule } from 'primeng/fileupload';
+import { TermLoanFieldVisitConfigComponent } from './term-loan/term-loan-product-definition/term-loan-product-definition-stepper/term-loan-field-visit-config/term-loan-field-visit-config.component';
+import { TermLoanDisbursementScheduleComponent } from './term-loan/term-loan-product-definition/term-loan-product-definition-stepper/term-loan-disbursement-schedule/term-loan-disbursement-schedule.component';
 @NgModule({
   declarations: [
     LoanTranscationComponent,
@@ -247,6 +251,10 @@ import { FileUploadModule } from 'primeng/fileupload';
     CiLoanClosureComponent,
     TermLoanDisbursementComponent,
     TermLoanCollectionComponent,
+    SaoFieldVisitConfigComponent,
+    SaoDisbursmentConfigComponent,
+    TermLoanFieldVisitConfigComponent,
+    TermLoanDisbursementScheduleComponent
  
   ],
   imports: [

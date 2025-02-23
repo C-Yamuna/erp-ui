@@ -35,10 +35,6 @@
 
                         <input pInputText id="bunit_txt_name" type="text" formControlName="accountNumber"
                             [(ngModel)]="termLoanApplicationModel.accountNumber" placeholder="Enter Loan Account Number">
-
-                            <p-message severity="error" text="Enter Valid Account Number"
-                            *ngIf="!termLoanapplicationForm.controls['accountNumber'].valid && termLoanapplicationForm.controls['accountNumber'].dirty">
-                        </p-message>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
@@ -48,7 +44,8 @@
                         </label>
                         <p-calendar formControlName="applicationDate" [showIcon]="true"
                             [dateFormat]="orgnizationSetting.calendar" placeholder="DD/MM/YYYY"
-                            [(ngModel)]="termLoanApplicationModel.applicationDateVal">
+                            [(ngModel)]="termLoanApplicationModel.applicationDateVal"
+                            >
                         </p-calendar>
                     </div>
                 </div>
@@ -60,19 +57,19 @@
                         <input pInputText id="bunit_txt_name" type="text" formControlName="applicationNumber"
                             [(ngModel)]="termLoanApplicationModel.applicationNumber"
                             placeholder="Enter Loan Application Number">
-                            <p-message severity="error" text="Enter Valid Application Number"
+                            <p-message severity="error" text="Enter Application Number"
                             *ngIf="!termLoanapplicationForm.controls['applicationNumber'].valid && termLoanapplicationForm.controls['applicationNumber'].dirty">
                         </p-message>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12"  *ngIf="isIndividual">
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label for="code">
                             <span class="red">*</span>{{'ERP.OPERATION_TYPE' | translate}}
                         </label>
-                        <p-dropdown [options]="operationTypesList" placeholder="Select" 
+                        <p-dropdown [options]="operationTypesList" placeholder="Select"
                             formControlName="operationTypeId" [(ngModel)]="termLoanApplicationModel.operationTypeId"
-                           (onChange)="onChangeAccountType($event)"></p-dropdown>
+                            [disabled]="applicationType" (onChange)="onChangeAccountType()"></p-dropdown>
                     </div>
                 </div>
 
@@ -103,7 +100,6 @@
                             [(ngModel)]="termLoanApplicationModel.iod" placeholder="Enter IOD">
                     </div>
                 </div>
-
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label for="username">
@@ -122,9 +118,6 @@
                         <p-inputNumber id="bunit_txt_name" formControlName="monthlyIncome"
                             [(ngModel)]="termLoanApplicationModel.monthlyIncome" mode="currency" inputId="currency-india"
                             currency="INR" locale="en-IN">
-                            <p-message severity="error" text="Enter Valid Amount"
-                            *ngIf="!termLoanapplicationForm.controls['monthlyIncome'].valid && termLoanapplicationForm.controls['monthlyIncome'].dirty">
-                        </p-message>
                         </p-inputNumber>
                     </div>
                 </div>
@@ -134,7 +127,7 @@
                             <span class="red">*</span>{{'ERP.LOAN_PURPOSE' | translate}}
                         </label>
                         <p-dropdown placeholder="Select" [options]="loanPurposeList" formControlName="purposeId"
-                           [(ngModel)]="termLoanApplicationModel.purposeId">
+                            (onChange)="onChangePurpose($event)" [(ngModel)]="termLoanApplicationModel.purposeId">
                         </p-dropdown>
                     </div>
                 </div>
@@ -147,9 +140,6 @@
                             [(ngModel)]="termLoanApplicationModel.requestedAmount" mode="currency"
                             inputId="currency-india" currency="INR" locale="en-IN">
                         </p-inputNumber>
-                        <p-message severity="error" text="Enter Valid Amount"
-                        *ngIf="!termLoanapplicationForm.controls['requestedAmount'].valid && termLoanapplicationForm.controls['requestedAmount'].dirty">
-                    </p-message>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
@@ -159,11 +149,8 @@
                         </label>
                         <p-inputNumber id="bunit_txt_name" formControlName="sanctionAmount"
                             [(ngModel)]="termLoanApplicationModel.sanctionAmount" mode="currency" inputId="currency-india"
-                            currency="INR" locale="en-IN" (keyup)="onSactionAmountChange(termLoanApplicationModel.sanctionAmount)">
+                            currency="INR" locale="en-IN"  (focusout)="onSactionAmountChange(termLoanApplicationModel.sanctionAmount)">
                         </p-inputNumber>
-                        <p-message severity="error" text="Enter Valid Amount"
-                        *ngIf="!termLoanapplicationForm.controls['sanctionAmount'].valid && termLoanapplicationForm.controls['sanctionAmount'].dirty">
-                    </p-message>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
@@ -183,36 +170,23 @@
                         <label for="username">
                             <span class="red">*</span>{{'LOANS.PLANNED_DISBURSEMENTS' | translate}}
                         </label>
-                        <input pInputText id="bunit_txt_name" type="text" formControlName="plannedDisbursements"
+                        <input pInputText id="bunit_txt_name" type="text" formControlName="plannedDisbursements" pKeyFilter="int"
                             [(ngModel)]="termLoanApplicationModel.plannedDisbursements"
-                            placeholder="Enter No of Planned Disbursements" (keyup)="checkPlannedDisbursement(termLoanApplicationModel.plannedDisbursements)">
-                            <p-message severity="error" text="Enter Valid Numbers"
+                            placeholder="Enter No of Planned Disbursements" (focusout)="checkPlannedDisbursement()"
+                            >
+                            <!-- <p-message severity="error" text="Enter Planned Disbursements"
                             *ngIf="!termLoanapplicationForm.controls['plannedDisbursements'].valid && termLoanapplicationForm.controls['plannedDisbursements'].dirty">
-                        </p-message>
-                             <!-- Condition to disable input -->
+                        </p-message> Condition to disable input -->
                     </div>
                 </div>
-                <!-- <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                    <div class="form-label">
-                        <label for="username">
-                            <span class="red">*</span>{{'ERP.TOTAL_DISBURSEMENT_AMOUNT' | translate}}
-                        </label>
-                        <p-inputNumber id="bunit_txt_name" formControlName="totalDisbursedAmount"
-                            [(ngModel)]="termLoanApplicationModel.totalDisbursedAmount" mode="currency" inputId="currency-india"
-                            currency="INR" locale="en-IN">
-                        </p-inputNumber>
-                    </div>
-                </div> -->
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label for="username">
                             <span class="red">*</span>{{'LOANS.LOAN_PERIOD_IN_MONTHS' | translate}}
                         </label>
-                        <input pInputText id="bunit_txt_name" type="text" formControlName="loanPeriod" (keyup)="onChangeLoanPeriod(termLoanApplicationModel.loanPeriod)"
-                            [(ngModel)]="termLoanApplicationModel.loanPeriod" placeholder="Enter Loan Period in Months">
-                            <p-message severity="error" text="Enter Valid Numbers"  
-                            *ngIf="!termLoanapplicationForm.controls['loanPeriod'].valid && termLoanapplicationForm.controls['loanPeriod'].dirty">
-                        </p-message>
+                        <input pInputText id="bunit_txt_name" type="text" formControlName="loanPeriod"
+                            [(ngModel)]="termLoanApplicationModel.loanPeriod" placeholder="Enter Loan Period in Months"
+                            (focusout)="onSelectPeriodInMonths(termLoanApplicationModel.loanPeriod)">
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
@@ -254,7 +228,8 @@
                         </label>
                         <input pInputText id="bunit_txt_name" type="text" formControlName="policyName"
                             [(ngModel)]="termLoanInsuranceDetailsModel.policyName" placeholder="Enter Policy Name">
-                            <p-message severity="error" text="Enter Valid policy name"
+
+                            <p-message severity="error" text="Enter Policy Name"
                             *ngIf="!insurenceDetailsForm.controls['policyName'].valid && insurenceDetailsForm.controls['policyName'].dirty">
                         </p-message>
                     </div>
@@ -265,7 +240,7 @@
                         </label>
                         <input pInputText id="bunit_txt_name" type="text" formControlName="policyNumber"
                             [(ngModel)]="termLoanInsuranceDetailsModel.policyNumber" placeholder="Enter Policy Number">
-                            <p-message severity="error" text="Enter Valid policy number"
+                            <p-message severity="error" text="Enter Policy Number"
                             *ngIf="!insurenceDetailsForm.controls['policyNumber'].valid && insurenceDetailsForm.controls['policyNumber'].dirty">
                         </p-message>
                     </div>
@@ -277,10 +252,6 @@
                         <p-inputNumber id="bunit_txt_name" formControlName="sumInsured"
                             [(ngModel)]="termLoanInsuranceDetailsModel.sumInsured" mode="currency"
                             inputId="currency-india" currency="INR" locale="en-IN">
-                            <p-message severity="error" text="Enter Valid sum Insured"
-                            *ngIf="!insurenceDetailsForm.controls['sumInsured'].valid && insurenceDetailsForm.controls['sumInsured'].dirty">
-                           
-                        </p-message>
                         </p-inputNumber>
                     </div>
                 </div>
@@ -292,9 +263,6 @@
                             [(ngModel)]="termLoanInsuranceDetailsModel.premium" mode="currency" inputId="currency-india"
                             currency="INR" locale="en-IN">
                         </p-inputNumber>
-                        <p-message severity="error" text="Enter Valid premium"
-                        *ngIf="!insurenceDetailsForm.controls['premium'].valid && insurenceDetailsForm.controls['premium'].dirty">
-                    </p-message>
                     </div>
                 </div>
             </div>
@@ -533,7 +501,7 @@
                                                             <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">
                                                                 <h6 class="label-view">{{'LOANS.LINK_SHARE_CAPITAL_APPLICABLE'
                                                                     |translate}}</h6>
-                                                                <p class="label-input-text"> {{ termLoanProductDefinitionModel.loanLinkedshareCapitalApplicable  }}
+                                                                <p class="label-input-text"> {{ termLoanProductDefinitionModel.loanLinkedshareCapitalApplicable ? 'Yes' : '' }}
                                                                 </p>
                                                             </div>
                                                             <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">
@@ -544,7 +512,7 @@
                                                             <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">
                                                                 <h6 class="label-view">{{'LOANS.IS_INSURANCE_APPLICABLE'
                                                                     |translate}}</h6>
-                                                                <p class="label-input-text"> {{ termLoanProductDefinitionModel.isInsuranceAppicable  }}
+                                                                <p class="label-input-text"> {{ termLoanProductDefinitionModel.isInsuranceAppicable ? 'Yes' : '' }}
                                                                 </p>
                                                             </div>
                                                             <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">

@@ -163,7 +163,7 @@ export class GroupDocumentDetailsComponent {
             this.docTypeList = this.responseModel.data.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((state: any) => {
               return { label: state.name, value: state.id };
             });
-            this.requiredDocumentList = this.responseModel.data.filter((obj: any) => obj != null && obj.isMandatory == applicationConstants.TRUE);
+            this.requiredDocumentList = this.responseModel.data.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE && obj.isMandatory == applicationConstants.TRUE);
           }
           else {
             this.msgs = [];
@@ -185,9 +185,9 @@ export class GroupDocumentDetailsComponent {
         this.requiredDocumentsList?.some(uploadedDoc => uploadedDoc.requiredDocumentTypeId === doc.id)
     );
     if (mandatoryDocuments.length > 0) {
-        this.requiredDocumentsNames = "Please Upload Mandatory Required Documents (";
-        this.requiredDocumentsNames += mandatoryDocuments.map(doc => `'${doc.name}'`).join(", ");
-        this.requiredDocumentsNames += ")";
+        this.requiredDocumentsNames = "Please Upload Mandatory Required Documents ";
+        this.requiredDocumentsNames += mandatoryDocuments.map(doc => `${doc.name}`).join(", ");
+        // this.requiredDocumentsNames += ")";
         this.mandatoryDoxsTextShow = true;
     } else {
         this.mandatoryDoxsTextShow = false;

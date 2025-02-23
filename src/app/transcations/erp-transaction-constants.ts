@@ -382,6 +382,7 @@ export const ERP_TRANSACTION_CONSTANTS = {
     GET_SAO_GENEALOGY_TREE_DETAILS_BY_LOAN_APPLICATION_ID: '/get_sao_genealogy_tree_details_by_loan_application_id',
     SAO_LOAN_DOCUMENTS_DETAILS: '/sao_loan_documents_details',
     SAO_LOAN_DISBURSEMENT_SCHEDULE: '/sao_loan_disbursement_schedule',
+    SAO_FIELD_VISIT:'/sao_loan_field_visit_config',
     GET_SAO_LOAN_DISBURSEMENT_SCHEDULE_BY_LOAN_APPLICATION_ID: '/get_sao_loan_disbursement_schedule_by_loan_application_id',
     SAO_LOAN_CHARGES_DETAILS: '/sao_loan_charges_details',
     SAO_LOAN_APPRAISER_DETAILS: '/sao_loan_appraiser_details',
@@ -492,6 +493,7 @@ export const ERP_TRANSACTION_CONSTANTS = {
     GET_CI_GENEALOGY_TREE_DETAILS_BY_LOAN_APPLICATION_ID: '/get_ci_genealogy_tree_details_by_loan_application_id',
     CI_LOAN_DOCUMENTS_DETAILS: '/ci_loan_documents_details',
     CI_LOAN_DISBURSEMENT_SCHEDULES: '/ci_loan_disbursement_schedules',
+    CI_LOAN_DISBURSEMENT:'ci_loan_',
     CI_LOAN_CO_APPLICANT_DETAILS: '/ci_loan_co_applicant_details',
     GET_CI_LOAN_CO_APPLICANT_BY_LOAN_APPLICATION_ID: '/get_ci_loan_co_applicant_by_loan_application_id',
     CI_LOAN_CHARGES_DETAILS: '/ci_loan_charges_details',
@@ -950,5 +952,6 @@ export const ERP_TRANSACTION_CONSTANTS = {
    GET_ALL_AGENT_TRANSACTION_BY_AGENT_ID:'/get_agent_transaction_by_agent_id' ,
    GET_DAILY_DEPOSIT_TRANSCATION_BY_ACCOUNT_ID:'/get_latest_five_transaction_details_by_acc_id',
    SI_LOAN_APPLICATION_PREVIEW_DOWNLOAD :'/si_loan_application_preview_download',
+   TERM_LOAN_FIELD_VISIT_CONFIG:'/term_loan_field_visit_config'
 
 }

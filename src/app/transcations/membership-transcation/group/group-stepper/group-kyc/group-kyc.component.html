@@ -10,6 +10,13 @@
                         memberGroupBasicDetails.subProductName }})</p>
                 </div>
             </div>
+             
+            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+                <div class="form-group">
+                    <span>{{'ERP.ADMISSION_NUMBER' | translate}}</span>
+                    <p class="mb-0">{{memberGroupBasicDetails.admissionNumber}}</p>
+                </div>
+            </div>
             <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
                 <div class="form-group">
                     <span>{{'ERP.NAME' | translate}}</span>
@@ -46,8 +53,10 @@
 
     <div class="col-12"></div>
 
-    <h6 class="sub-heading">{{'ERP.KYC' | translate}}<span class="admission-text">(Admission
-        Number : {{memberGroupBasicDetails.admissionNumber}})</span></h6>
+    <h6 class="sub-heading">{{'ERP.KYC' | translate}}</h6>
+    <!-- //<span class="admission-text">
+        (Admission
+        Number : {{memberGroupBasicDetails.admissionNumber}})</span> -->
         <div class="col-12 px-0">
             <form [formGroup]="groupKYCForm" id="exit_types_form">
                 <p-button icon="fa fa-plus" label="{{'ADD ANOTHER DOCUMENT' | translate}}" (click)="addKyc($event)"
@@ -149,9 +158,34 @@
                                         </div>
                                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                             <div class="form-label">
+                                                <span class=""><span class="red">*</span>{{ 'MEMBERSHIP_TRANSACTION.DOCUMENT_COPY' | translate }} </span>
+                                                <div class="uplodad-style align-items-center">
+                                                    <!-- Upload Button Column -->
+                                                    <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                                                        id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".pdf"
+                                                        (onRemove)="fileRemoveEvent()"
+                                                        (onSelect)="imageUploader($event,fileUpload )">
+                                                    </p-fileUpload>
+                                                    <div class="col-12  d-flex p-1 contant-body"
+                                                    *ngFor="let img of groupKycDeatilsModel.multipleFilesList">
+                                                        <div *ngIf="img.fileType=='pdf'">
+                                                            <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22"
+                                                                    height="22"></a>
+                                                        </div>
+                                                        <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
+                                                            tooltipPosition="bottom">
+                                                            {{img.fileName}}
+                                                        </div>
+                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                        
+                                        </div>
+                                        <!-- <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <div class="form-label">
                                             <div class="ml-2"><span class="red">*</span>{{ 'MEMBERSHIP_TRANSACTION.DOCUMENT_COPY' | translate }} </div>
                                             <div class="uplodad-style align-items-center">
-                                                <!-- Upload Button Column -->
         
                                                 <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
                                                     chooseLabel=" " id="apply-leave_fileUp_attach" name="file"
@@ -170,7 +204,9 @@
                                             </div>
                                             </div>
         
-                                        </div>
+                                        </div> -->
+                        
+                                        
                                         <div class="col-12">
                                             <div class="justify-content-end d-flex">
                                                 <p-button label="{{'cancel' | translate}}" (onClick)="editCancle()"></p-button>
@@ -225,10 +261,11 @@
                                 <div class="ml-2"> <span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.DOCUMENT_COPY' |translate}}</div>
                                 <div class="uplodad-style align-items-center">
 
-                                    <p-fileUpload #fileUpload name="myfile[]" id="apply-leave_fileUp_attach"
-                                        chooseLabel=" " name="file" accept=".png,.jpg,.jpeg,.pdf" [customUpload]="true"
-                                        (onSelect)="imageUploader($event,fileUpload)" formContralName="fileUpload">
-                                    </p-fileUpload>
+                                    <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                                            id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".pdf"
+                                            (onRemove)="fileRemoveEvent()"
+                                            (onSelect)="imageUploader($event,fileUpload )">
+                                        </p-fileUpload>
                                 </div>
                                 </div>
                             </div>

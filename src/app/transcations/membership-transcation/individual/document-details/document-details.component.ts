@@ -192,9 +192,9 @@ export class DocumentDetailsComponent {
         this.requiredDocumentsList?.some(uploadedDoc => uploadedDoc.requiredDocumentTypeId === doc.id)
     );
     if (mandatoryDocuments.length > 0) {
-        this.requiredDocumentsNames = "Please Upload Mandatory KYC Documents (";
-        this.requiredDocumentsNames += mandatoryDocuments.map(doc => `'${doc.name}'`).join(", ");
-        this.requiredDocumentsNames += ")";
+        this.requiredDocumentsNames = "Please Upload Mandatory KYC Documents ";
+        this.requiredDocumentsNames += mandatoryDocuments.map(doc => `${doc.name}`).join(", ");
+        // this.requiredDocumentsNames += ")";
         this.mandatoryDoxsTextShow = true;
     } else {
         this.mandatoryDoxsTextShow = false;

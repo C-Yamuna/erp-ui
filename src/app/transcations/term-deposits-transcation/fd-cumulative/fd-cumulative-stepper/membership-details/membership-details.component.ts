@@ -556,10 +556,12 @@ ngOnInit(): void {
     this.isFileUploaded = applicationConstants.FALSE;
     this.multipleFilesList = [];
     this.fdCumulativeKycModel.filesDTOList = [];
-    this.fdCumulativeKycModel.multipartFileList = [];
+    this.fdCumulativeKycModel.multipartFileList =[];
     this.fdCumulativeKycModel.kycFilePath = null;
     let files: FileUploadModel = new FileUploadModel();
-    for (let file of event.files) {
+    let selectedFiles = [...event.files];
+    fileUpload.clear();
+    for (let file of selectedFiles) {
       let reader = new FileReader();
       reader.onloadend = (e) => {
         let files = new FileUploadModel();
@@ -573,10 +575,11 @@ ngOnInit(): void {
         if (index === -1) {
           this.multipleFilesList.push(files);
           this.fdCumulativeKycModel.filesDTOList.push(files); // Add to filesDTOList array
+          this.fdCumulativeKycModel.multipartFileList.push(files);
         }
         let timeStamp = this.commonComponent.getTimeStamp();
-        this.fdCumulativeKycModel.filesDTOList[0].fileName = "FD_CUMMULATIVE_KYC_" + this.fdCummulativeAccId + "_" + timeStamp + "_" + file.name;
-        this.fdCumulativeKycModel.kycFilePath = "FD_CUMMULATIVE_KYC_" + this.fdCummulativeAccId + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
+        this.fdCumulativeKycModel.filesDTOList[0].fileName = "FD_NON_CUM_KYC_" + this.fdCummulativeAccId + "_" +timeStamp+ "_"+ file.name ;
+        this.fdCumulativeKycModel.kycFilePath = "FD_NON_CUM_KYC_" + this.fdCummulativeAccId + "_" +timeStamp+"_"+ file.name; // This will set the last file's name as docPath
         this.fdCumulativeKycModel.multipartFileList = this.fdCumulativeKycModel.filesDTOList;
         let index1 = event.files.findIndex((x: any) => x === file);
         // this.addOrEditKycTempList(this.fdCumulativeKycModel);
@@ -721,8 +724,6 @@ ngOnInit(): void {
     this.editDocumentOfKycFalg = true;
     this.buttonDisabled = false;
     this.editButtonDisable = false;
-    this.buttonDisabled = false;
-    this.editButtonDisable = false;
     let docType = this.documentNameList.filter((obj: any) => row.kycDocumentTypeId == obj.value);
     if (docType != null && docType != undefined && docType.length > 0) {
       row.kycDocumentTypeName = docType[0].label;
@@ -756,6 +757,7 @@ ngOnInit(): void {
     // this.kycModelList[existingIndex].push(row);
     this.addKycButton = false;
     this.buttonDisabled = false;
+    this.updateData();
   }
 
   /**

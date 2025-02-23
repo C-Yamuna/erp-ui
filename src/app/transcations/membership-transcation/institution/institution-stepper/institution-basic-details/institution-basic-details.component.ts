@@ -122,19 +122,22 @@ export class InstitutionBasicDetailsComponent implements OnInit{
       'registrationDate': new FormControl('',Validators.required),
       'gstNumber':new FormControl('',[Validators.pattern(applicationConstants.GST_NUMBER_PATTERN) ]),
       'admissionDate': new FormControl('',Validators.required),
-      'pocName': new FormControl('', [Validators.required,Validators.pattern(applicationConstants.NEW_NAME_PATTERN), Validators.maxLength(40), Validators.pattern(/^[^\s]+(\s.*)?$/)]),
-      'pocNumber': new FormControl('',[Validators.required,Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.maxLength(10)]),
+      // 'pocName': new FormControl('', [Validators.required,Validators.pattern(applicationConstants.NEW_NAME_PATTERN), Validators.maxLength(40), Validators.pattern(/^[^\s]+(\s.*)?$/)]),
+      // 'pocNumber': new FormControl('',[Validators.required,Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.maxLength(10)]),
       'panNumber': new FormControl('',[Validators.required,Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN),]),
       'tanNumber': new FormControl('',[Validators.pattern(applicationConstants.TAN_NUMBER)]),
       'resolutionNumber': new FormControl(''),
       'institutionType': new FormControl('',Validators.required),
       'societyAdmissionNo': new FormControl('',Validators.required),
+      'resolutionDate': new FormControl(''),
+      'operatorTypeId': new FormControl('',Validators.required),
+
       
     })
     this.institutepromoterDetailsForm = this.formBuilder.group({
       'surName':new FormControl('',[Validators.required,Validators.pattern(applicationConstants.NEW_NAME_PATTERN), Validators.maxLength(40), Validators.pattern(/^[^\s]+(\s.*)?$/)]),
       'name':new FormControl('',[Validators.required,Validators.pattern(applicationConstants.NEW_NAME_PATTERN), Validators.maxLength(40), Validators.pattern(/^[^\s]+(\s.*)?$/)]),
-      'operatorTypeId': new FormControl('',Validators.required),
+      // 'operatorTypeId': new FormControl('',Validators.required),
       'dob': new FormControl('',Validators.required),
       'age': new FormControl('',Validators.required),
       'genderId': new FormControl(''),
@@ -143,9 +146,11 @@ export class InstitutionBasicDetailsComponent implements OnInit{
       'aadharNumber': new FormControl('',[Validators.required,Validators.pattern(applicationConstants.AADHAR_PATTERN), Validators.maxLength(12)]),
       'emailId': new FormControl('', [Validators.pattern(applicationConstants.EMAIL_PATTERN)]),
       'startDate':  new FormControl('',Validators.required),
-      'authorizedSignatory': new FormControl(''),
+      'endDate':  new FormControl(''),
+      'authorizedSignatory': new FormControl('',Validators.required),
       'isExistingMember':new FormControl(''),
-      'admissionNumber':new FormControl('')
+      'admissionNumber':new FormControl(''),
+      "isPoc":new FormControl('')
     })
   }
  ngOnInit(): void {
@@ -178,7 +183,7 @@ export class InstitutionBasicDetailsComponent implements OnInit{
          this.isEdit = false;
          // this.getMemberPreviewsDetails();
          this.generateNewAdmissionNumber();
-         this.ginstitutionBasicDetailsModel.institutionStatus = this.statusList[0].value;
+         this.ginstitutionBasicDetailsModel.status = this.statusList[0].value;
        }
      });
    
@@ -189,6 +194,8 @@ export class InstitutionBasicDetailsComponent implements OnInit{
        }
      });
      this.getAllSubProducts();
+     this.getAllOperatorType();
+
     }
 
     //  updateData() {
@@ -209,7 +216,7 @@ export class InstitutionBasicDetailsComponent implements OnInit{
       if (
         this.ginstitutionBasicDetailsModel.institutionPromoterList &&
         this.ginstitutionBasicDetailsModel.institutionPromoterList.length >= 1 &&
-        (this.buttonsFlag && this.instituteBasicDetailsForm.valid)
+        (this.buttonsFlag && this.instituteBasicDetailsForm.valid )
       ) {
         this.landFlag = true;
       } else {
@@ -243,6 +250,9 @@ export class InstitutionBasicDetailsComponent implements OnInit{
            this.ginstitutionBasicDetailsModel.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.ginstitutionBasicDetailsModel.resolutionCopyPath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.ginstitutionBasicDetailsModel.resolutionCopyPath  );
            this.submitDisableForResolution = true;
          }
+         if (this.ginstitutionBasicDetailsModel.resolutionDate != null && this.ginstitutionBasicDetailsModel.resolutionDate != undefined) {
+          this.ginstitutionBasicDetailsModel.resolutionDateVal = this.datePipe.transform(this.ginstitutionBasicDetailsModel.resolutionDate, this.orgnizationSetting.datePipe);
+        }
          if (this.ginstitutionBasicDetailsModel.applicationCopyPath != null && this.ginstitutionBasicDetailsModel.applicationCopyPath != undefined) {
            this.ginstitutionBasicDetailsModel.applicationCopyList = this.fileUploadService.getFile(this.ginstitutionBasicDetailsModel.applicationCopyPath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.ginstitutionBasicDetailsModel.applicationCopyPath  );
            this.submitDisableForApplication = true;
@@ -255,6 +265,9 @@ export class InstitutionBasicDetailsComponent implements OnInit{
             //  member.uniqueId = i;
              member.memDobVal = this.datePipe.transform(member.dob, this.orgnizationSetting.datePipe);
              member.startDateVal = this.datePipe.transform(member.startDate, this.orgnizationSetting.datePipe);
+
+             if(member.endDate != undefined && member.endDate != undefined)
+             member.endDateVal = this.datePipe.transform(member.endDate, this.orgnizationSetting.datePipe);
              
              if (member.uploadImage != null && member.uploadImage != undefined) {
                member.multipartFileListForPhotoCopy = this.fileUploadService.getFile(member.uploadImage ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + member.uploadImage );
@@ -325,6 +338,7 @@ export class InstitutionBasicDetailsComponent implements OnInit{
      this.EditDeleteDisable = true;
      this.buttonsFlag = false;
      this.landFlag = false;
+     this.getAllOperatorType();
      rowData.institutionId = this.institutionId;
      if (rowData.id != null) {
        this.promoterDisplayFlag = true;
@@ -343,6 +357,9 @@ export class InstitutionBasicDetailsComponent implements OnInit{
            this.institutePromoterDetails.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.institutePromoterDetails.uploadSignature ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutePromoterDetails.uploadSignature  );
            this.submitDisableForSignature = true;
          }
+         if(this.institutePromoterDetails.endDate != undefined && this.institutePromoterDetails.endDate != undefined)
+          this.institutePromoterDetails.endDateVal = this.datePipe.transform(this.institutePromoterDetails.endDate, this.orgnizationSetting.datePipe);
+
          if (this.institutePromoterDetails.isExistingMember) {
            this.admissionNumberDropDown = true;
            this.getAllTypeOfMembershipDetails(this.pacsId, this.branchId);
@@ -352,7 +369,7 @@ export class InstitutionBasicDetailsComponent implements OnInit{
            this.enableFormFields();
          }
        
-         this.getAllOperatorType();
+        
          this.commonComponent.stopSpinner();
        },
          error => {
@@ -374,7 +391,7 @@ export class InstitutionBasicDetailsComponent implements OnInit{
   
   enableFormFields() {
     const fieldsToEnable = [
-      'surname', 'name', 'operatorTypeId', 'dob', 'age', 'genderId', 
+      'surname', 'name',  'dob', 'age', 'genderId', 
       'martialId', 'mobileNumber', 'aadharNumber', 'emailId', 'startDate'
     ];
     fieldsToEnable.forEach(field => this.institutepromoterDetailsForm.get(field).enable());
@@ -444,6 +461,9 @@ export class InstitutionBasicDetailsComponent implements OnInit{
    
        if (rowData.startDateVal != undefined && rowData.memDobVal != null)
          rowData.startDate = this.commonFunctionsService.getUTCEpoch(new Date(rowData.startDateVal));
+
+       if (rowData.endDateVal != undefined && rowData.endDateVal != null)
+        rowData.endDate = this.commonFunctionsService.getUTCEpoch(new Date(rowData.endDateVal));
    
    
        this.operatorTypeList.filter(data => data != null && data.value == rowData.operatorTypeId).map(count => {
@@ -650,6 +670,7 @@ export class InstitutionBasicDetailsComponent implements OnInit{
       rowData.filesDTOList.splice(removeFileIndex, 1);
       rowData.applicationCopyPath = null;
     }
+    this.updateData();
   }
  fileRemoveEventForPromoter(fileName: any,rowData:any) {
    if (rowData.filesDTOList != null && rowData.filesDTOList != undefined && rowData.filesDTOList.length > 0) {
@@ -723,7 +744,7 @@ export class InstitutionBasicDetailsComponent implements OnInit{
          this.institutepromoterDetailsForm.get('admissionNumber').reset();
          this.institutepromoterDetailsForm.get('surName').enable();
          this.institutepromoterDetailsForm.get('name').enable();
-         this.institutepromoterDetailsForm.get('operatorTypeId').enable();
+        //  this.institutepromoterDetailsForm.get('operatorTypeId').enable();
          this.institutepromoterDetailsForm.get('dob').enable();
          this.institutepromoterDetailsForm.get('age').enable();
          this.institutepromoterDetailsForm.get('genderId').enable();
@@ -742,7 +763,7 @@ export class InstitutionBasicDetailsComponent implements OnInit{
      resetFields(){
        this.institutepromoterDetailsForm.get('surName').reset();
        this.institutepromoterDetailsForm.get('name').reset();
-       this.institutepromoterDetailsForm.get('operatorTypeId').reset();
+      //  this.institutepromoterDetailsForm.get('operatorTypeId').reset();
        this.institutepromoterDetailsForm.get('dob').reset();
        this.institutepromoterDetailsForm.get('age').reset();
        this.institutepromoterDetailsForm.get('genderId').reset();
@@ -914,6 +935,13 @@ calculateDobFromAge(age: number): Date {
     if(rowData.admissionDateVal != undefined &&rowData.admissionDateVal != null)
     rowData.admissionDate = this.commonFunctionsService.getUTCEpoch(new Date(rowData.admissionDateVal));
 
+    if(rowData.resolutionDateVal != undefined &&rowData.resolutionDateVal != null)
+      rowData.resolutionDate = this.commonFunctionsService.getUTCEpoch(new Date(rowData.resolutionDateVal));
+
+    this.operatorTypeList.filter(data => data != null && data.value == rowData.operatorTypeId).map(count => {
+      rowData.operatorTypeName = count.label;
+    })
+
     if (rowData.id != null) {
    
     this.memInstitutionService.updateMemInstitution(rowData).subscribe((response: any) => {
@@ -983,5 +1011,24 @@ calculateDobFromAge(age: number): Date {
       });
   }
 }
+//is poc Name check
+isPosCheck(isPoc: any) {
+  if (this.promoterDetails && this.promoterDetails.length > 0) {
+    let duplicate = this.promoterDetails.find(
+      (obj: any) =>
+        obj && obj.status === applicationConstants.ACTIVE && obj.isPoc === applicationConstants.TRUE
+    );
+    if (isPoc === applicationConstants.TRUE && duplicate) {
+      this.institutepromoterDetailsForm.reset();
+      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.POC_ALREADY_EXIST }];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+      return;
+    }
+  }
+}
+
+  
  }
  

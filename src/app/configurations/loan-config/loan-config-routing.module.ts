@@ -29,6 +29,8 @@ import { ServiceTypesComponent } from './service-types/service-types.component';
 import { AddServiceTypesComponent } from './service-types/add-service-types/add-service-types.component';
 import { AddApportionTypesComponent } from './apportion-types/add-apportion-types/add-apportion-types.component';
 import { ApportionTypesComponent } from './apportion-types/apportion-types.component';
+import { GoldRatesComponent } from './gold-rates/gold-rates.component';
+import { AddGoldRatesComponent } from './gold-rates/add-gold-rates/add-gold-rates.component';
 
 
 const routes: Routes = [
@@ -63,6 +65,8 @@ const routes: Routes = [
         { path: 'add_document_type', component:AddDocumentTypesComponent },
         { path: 'service_types', component:ServiceTypesComponent },
         { path: 'add_service_type', component:AddServiceTypesComponent },
+        { path: 'gold_rates', component:GoldRatesComponent },
+        { path: 'add_gold_rates', component:AddGoldRatesComponent },
       ]
   }]
 

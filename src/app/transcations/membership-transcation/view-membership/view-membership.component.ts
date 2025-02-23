@@ -130,7 +130,6 @@ export class ViewMembershipComponent {
 
   ngOnInit() {
     this.roleName = this.commonFunctionsService.getStorageValue(applicationConstants.roleName);
- 
     this.columns = [
       { field: 'coveredVillagename', header: 'MEMBERSHIP_TRANSACTION.VILLAGE' },
       { field: 'passbookNumber', header: 'MEMBERSHIP_TRANSACTION.PASSBOOK_NO' },
@@ -142,7 +141,6 @@ export class ViewMembershipComponent {
       { field: 'landOwnershipName', header: 'MEMBERSHIP_TRANSACTION.LAND_OWNERSHIP' },
       { field: 'waterSourceName', header: 'MEMBERSHIP_TRANSACTION.SOURCE' },
     ];
-
     this.memberFamilyDetails = [
       { field: 'relationTypeName', header: 'ERP.RELATION_TYPE' },
       { field: 'surname', header: 'ERP.SURNAME' },
@@ -154,7 +152,6 @@ export class ViewMembershipComponent {
       { field: 'mobileNumber', header: 'ERP.MOBILE_NUMBER' },
       // { field: 'docFilePath', header: 'ERP.DOCUMENT_COPY' }
     ];
-
 
     this.memberPromoterDetails = [
       { field: 'name', header: 'ERP.NAME' },
@@ -172,8 +169,6 @@ export class ViewMembershipComponent {
       { field: 'uploadSignature', header: 'ERP.UPLOAD_SIGNATURE' }
 
     ];
-
-
     this.memberAssetDetails = [
       { field: 'assetTypeName', header: 'ERP.ASSET_TYPES' },
       { field: 'assetName', header: 'ERP.ASSET_NAME' },
@@ -183,7 +178,6 @@ export class ViewMembershipComponent {
       { field: 'currentValue', header: 'ERP.CURRENT_VALUE' },
       { field: 'depreciationPercentage', header: 'MEMBERSHIPCONFIG.DEPRECIATION_PERCENTAGE' },
       // { field: 'assetFilePath', header: 'ERP.UPLOAD_DOCUMENT' },
-
     ];
 
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
@@ -274,6 +268,10 @@ export class ViewMembershipComponent {
 
         if (this.memberBasicDetailsModel.admissionDate != null) {
           this.memberBasicDetailsModel.admissionDateVal = this.datePipe.transform(this.memberBasicDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
+        }
+
+        if (this.memberBasicDetailsModel.resolutionDate != null) {
+          this.memberBasicDetailsModel.resolutionDateVal = this.datePipe.transform(this.memberBasicDetailsModel.resolutionDate, this.orgnizationSetting.datePipe);
         }
 
         if (this.memberBasicDetailsModel.dob != null) {
@@ -417,6 +415,10 @@ export class ViewMembershipComponent {
           this.memberGroupBasicDetails.admissionDateVal = this.datePipe.transform(this.memberGroupBasicDetails.admissionDate, this.orgnizationSetting.datePipe);
         }
 
+        if (this.memberGroupBasicDetails.resolutionDate != null) {
+          this.memberGroupBasicDetails.resolutionDateVal = this.datePipe.transform(this.memberGroupBasicDetails.resolutionDate, this.orgnizationSetting.datePipe);
+        }
+
         if (this.memberGroupBasicDetails.registrationDate != null) {
           this.memberGroupBasicDetails.registrationDateVal = this.datePipe.transform(this.memberGroupBasicDetails.registrationDate, this.orgnizationSetting.datePipe);
         }
@@ -437,6 +439,8 @@ export class ViewMembershipComponent {
           this.groupPromoterList =    this.groupPromoterList.filter((obj:any) => null != obj && obj.dob != null).map((promoter:any)=>{
             promoter.dob = this.datePipe.transform(promoter.dob, this.orgnizationSetting.datePipe);
             promoter.startDate = this.datePipe.transform(promoter.startDate, this.orgnizationSetting.datePipe);
+            if(promoter.endDate != null && promoter.endDate != undefined)
+            promoter.endDateVal = this.datePipe.transform(promoter.endDate, this.orgnizationSetting.datePipe);
 
             if (promoter.uploadImage != null && promoter.uploadImage != undefined) {
               this.photoCopyFlag =true;
@@ -493,6 +497,9 @@ export class ViewMembershipComponent {
         if (this.institutionBasicDetailsModel.admissionDate != null) {
           this.institutionBasicDetailsModel.admissionDateVal = this.datePipe.transform(this.institutionBasicDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
         }
+        if (this.institutionBasicDetailsModel.resolutionDate != null) {
+          this.institutionBasicDetailsModel.resolutionDateVal = this.datePipe.transform(this.institutionBasicDetailsModel.resolutionDate, this.orgnizationSetting.datePipe);
+        }
 
         if (this.institutionBasicDetailsModel.registrationDate != null) {
           this.institutionBasicDetailsModel.registrationDateVal = this.datePipe.transform(this.institutionBasicDetailsModel.registrationDate, this.orgnizationSetting.datePipe);
@@ -538,6 +545,9 @@ export class ViewMembershipComponent {
             promoter.dob = this.datePipe.transform(promoter.dob, this.orgnizationSetting.datePipe);
             promoter.startDate = this.datePipe.transform(promoter.startDate, this.orgnizationSetting.datePipe);
 
+            if(promoter.endDate != null && promoter.endDate != undefined)
+              promoter.endDateVal = this.datePipe.transform(promoter.endDate, this.orgnizationSetting.datePipe);
+
             if (promoter.uploadImage != null && promoter.uploadImage != undefined) {
               promoter.multipartFileListForPhotoCopy = this.fileUploadService.getFile(promoter.uploadImage ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + promoter.uploadImage );
             }
@@ -564,7 +574,7 @@ export class ViewMembershipComponent {
   }
   submit() {
     this.msgs = [];
-    this.memberBasicDetailsModel.memStatus = 5;
+    this.memberBasicDetailsModel.status = 5;
     if (this.memberBasicDetailsModel.memberShipAssertDetailsDTOList != null && this.memberBasicDetailsModel.memberShipAssertDetailsDTOList.length > 0) {
       this.membershipAssetsDetailsList = this.memberBasicDetailsModel.memberShipAssertDetailsDTOList;
       this.membershipAssetsDetailsList = this.membershipAssetsDetailsList.filter((obj:any) => null != obj ).map((asset:any)=>{
@@ -606,7 +616,7 @@ export class ViewMembershipComponent {
   }
   submitForGroup() {
     this.msgs = [];
-    this.memberGroupBasicDetails.groupStatus = 5;
+    this.memberGroupBasicDetails.status = 5;
     if (this.memberGroupBasicDetails.groupPromoterList != null && this.memberGroupBasicDetails.groupPromoterList.length > 0) {
       this.groupPromoterList = this.memberGroupBasicDetails.groupPromoterList;
       this.groupPromoterList =    this.groupPromoterList.filter((obj:any) => null != obj && obj.dob != null).map((promoter:any)=>{
@@ -642,7 +652,7 @@ export class ViewMembershipComponent {
 
   submitForInstitution() {
     this.msgs = [];
-    this.institutionBasicDetailsModel.institutionStatus = 5;
+    this.institutionBasicDetailsModel.status = 5;
     if (this.institutionBasicDetailsModel.institutionPromoterList != null && this.institutionBasicDetailsModel.institutionPromoterList.length > 0) {
       this.institutePromoterList = this.institutionBasicDetailsModel.institutionPromoterList;
       this.institutePromoterList =    this.institutePromoterList.filter((obj:any) => null != obj && obj.dob != null).map((promoter:any)=>{

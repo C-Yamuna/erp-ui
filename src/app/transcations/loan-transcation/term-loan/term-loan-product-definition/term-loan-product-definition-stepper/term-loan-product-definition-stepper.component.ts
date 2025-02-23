@@ -17,6 +17,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { DatePipe } from '@angular/common';
 import { Loantransactionconstant } from '../../../loan-transaction-constant';
 import { CommonStatusData } from 'src/app/transcations/common-status-data.json';
+import { TermLoanDisbursementSchedule } from './term-loan-disbursement-schedule/shared/term-loan-disbursement-schedule.model';
+import { TermLoanFieldVisit } from './term-loan-field-visit-config/shared/term-loan-field-visit.model';
 
 @Component({
   selector: 'app-term-loan-product-definition-stepper',
@@ -30,6 +32,8 @@ export class TermLoanProductDefinitionStepperComponent {
   termLoanChargesModel : TermLoanCharges = new TermLoanCharges();
   termLoanPurposeModel : TermLoanPurpose = new TermLoanPurpose();
   termLoanRequiredDocumentsModel : TermLoanRequiredDocuments = new TermLoanRequiredDocuments();
+  termLoanDisbursementScheduleModel : TermLoanDisbursementSchedule = new TermLoanDisbursementSchedule();
+  termLoanFieldVisitModel : TermLoanFieldVisit = new TermLoanFieldVisit();
   responseModel!: Responsemodel;
   activeIndex: number = 0;
   msgs: any[] = [];
@@ -48,6 +52,8 @@ export class TermLoanProductDefinitionStepperComponent {
   penalityConfig: any;
   savedID: any;
   isEdit: any;
+  FieldVisitConfig: any;
+  Disbursement: any
   orgnizationSetting: any;
   saveAndContinueFlag: boolean = applicationConstants.TRUE;
   isSaveContinueEnable: boolean = applicationConstants.FALSE;
@@ -119,6 +125,18 @@ ngOnInit() {
         command: (event: any) => {
           this.activeIndex = 5;
         }
+      },
+      {
+        label: 'Field Visit Config',icon: 'fa fa-file-text', routerLink: Loantransactionconstant.TERM_LOAN_FIELD_VISIT_CONFIG,
+        command: (event: any) => {
+          this.activeIndex = 6;
+        }
+      },
+      {
+        label: 'Disbursement',icon: 'fa fa-file-text', routerLink: Loantransactionconstant.TERM_LOAN_DISBURSEMENT_CONFIG,
+        command: (event: any) => {
+          this.activeIndex = 7;
+        }
       }
     ];
   });
@@ -146,6 +164,10 @@ this.currentStepper();
             this.termLoanPurposeModel = data.data;
           } else if (this.activeIndex == 5) {
             this.termLoanRequiredDocumentsModel = data.data;
+          }else if (this.activeIndex == 6) {
+            this.termLoanFieldVisitModel = data.data;
+          }else if (this.activeIndex == 7) {
+            this.termLoanDisbursementScheduleModel = data.data;
           }
         }
       }
@@ -176,6 +198,12 @@ navigateTo(activeIndex: any,saveId:any) {
       break;
       case 5:
         this.router.navigate([Loantransactionconstant.TERM_LOAN_REQUIRED_DOCUMENT_CONFIG], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
+        break;
+      case 6:
+        this.router.navigate([Loantransactionconstant.TERM_LOAN_FIELD_VISIT_CONFIG], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
+        break;
+      case 7:
+        this.router.navigate([Loantransactionconstant.TERM_LOAN_DISBURSEMENT_CONFIG], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
         break;
   }
 }
@@ -222,6 +250,14 @@ saveAndNext(activeIndex: number) {
     this.activeIndex = activeIndex + 1;
     this.navigateTo(this.activeIndex,this.savedID);
   }
+  else if (activeIndex == 6) {
+    this.activeIndex = activeIndex + 1;
+    this.navigateTo(this.activeIndex,this.savedID);
+  }
+  else if (activeIndex == 7) {
+    this.activeIndex = activeIndex + 1;
+    this.navigateTo(this.activeIndex,this.savedID);
+  }
 }
 
 /**
@@ -232,7 +268,7 @@ saveAndNext(activeIndex: number) {
 saveContinue(activeIndex:any) {
   this.activeIndex = 0;
   this.router.navigate([Loantransactionconstant.TERM_LOAN_PRODUCT_DEFINITION]);
-  this.stepperCreation();
+  // this.stepperCreation();
 }
 
 /**
@@ -318,6 +354,13 @@ cancel(activeIndex: any){
       });
       this.translate.get('Loantransactionconstant.REQUIRED_DOCUMENTS').subscribe((text: string) => {
         this.reqiredDocumentsDetails = text;
+      });
+      this.translate.get('Loantransactionconstant.FIELD_VISIT_CONFIG').subscribe((text: string) => {
+        this.purpose = text;
+      });
+      this.translate.get('Loantransactionconstant.DISBURSEMENT').subscribe((text: string) => {
+        this.purpose = text;
+     
         this.items = [
           {
             label: this.productDefinition
@@ -336,6 +379,12 @@ cancel(activeIndex: any){
           },
           {
             label: this.reqiredDocumentsDetails
+          },
+          {
+            label: this.FieldVisitConfig
+          },
+          {
+            label: this.Disbursement
           }
         ];
         
@@ -422,7 +471,7 @@ cancel(activeIndex: any){
       } else if (buttonName == "saveAndContinue") {
         this.activeIndex = 0;
         this.router.navigate([]);
-        this.stepperCreation();
+        // this.stepperCreation();
       } else {
         this.router.navigate([]);
       }

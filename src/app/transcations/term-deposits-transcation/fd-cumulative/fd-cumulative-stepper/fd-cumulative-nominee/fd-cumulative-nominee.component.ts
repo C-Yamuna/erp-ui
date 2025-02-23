@@ -69,7 +69,8 @@ export class FdCumulativeNomineeComponent implements OnInit {
   institutionPromoter: any;
   promoterDetails: any;
   admissionNumber: any;
-
+  depositDateVal: any;
+  depositAmount: any;
   nomineeEdit: Boolean = false;
   nomineeHistoryList: any[] = [];
   nomineeFields: any[] = [];
@@ -85,6 +86,10 @@ export class FdCumulativeNomineeComponent implements OnInit {
   historyFLag: boolean = false;
   flag: boolean = false;
   filesDTOList: any[] = [];
+  isFileUploadedNominee: boolean = false;
+  isFileUploadedGuardian: boolean = false;
+  isSaveAndNextEnable: boolean = false;
+
   constructor(private router: Router, private formBuilder: FormBuilder,
     private fdCumulativeApplicationService: FdCumulativeApplicationService,
     private commonComponent: CommonComponent, private activateRoute: ActivatedRoute,
@@ -99,9 +104,9 @@ export class FdCumulativeNomineeComponent implements OnInit {
       aadhaar: ['',],
       mobileNumber: ['',],
       email: ['',],
-      dateOfBirth: new FormControl('',),
       nomineeType: ['', Validators.required],
-
+      dateOfBirth: new FormControl('',),
+      remarks: new FormControl('',),
       //guardian form fields
       relationNameOfGuardian: ['',],
       guardianName: ['',],
@@ -112,7 +117,7 @@ export class FdCumulativeNomineeComponent implements OnInit {
       guardianAddress: ['',],
       guardainType: [''],
       fileUpload: ['',],
-
+      guardianRemarks: new FormControl('',),
     });
     this.nomineeFields = [
       { field: 'name', header: 'Name' },
@@ -194,13 +199,18 @@ export class FdCumulativeNomineeComponent implements OnInit {
       this.memberGuardianDetailsModelDetails.fdCummulativeAccId = this.fdCummulativeAccId;
       this.memberGuardianDetailsModelDetails.accountNumber = this.accountNumber;
       this.fdCumulativeNomineeModel.memberGuardianDetailsModelDetails = this.memberGuardianDetailsModelDetails;
+      this.isSaveAndNextEnable = (!this.nomineeForm.valid) || !(this.isFileUploadedNominee && this.isFileUploadedGuardian)
+    }
+    else {
+      this.isSaveAndNextEnable = (!this.nomineeForm.valid) || (!this.isFileUploadedNominee);
     }
     this.fdCumulativeNomineeModel.accountNumber = this.accountNumber;
     this.fdCumulativeNomineeModel.fdCummulativeAccId = this.fdCummulativeAccId;
     this.fdCumulativeApplicationService.changeData({
       formValid: !this.nomineeForm.valid ? true : false,
       data: this.fdCumulativeNomineeModel,
-      isDisable: (!this.nomineeForm.valid),
+      // isDisable: (!this.nomineeForm.valid),
+      isDisable: this.isSaveAndNextEnable,
       // isDisable:false,
       stepperIndex: 5,
     });
@@ -210,6 +220,15 @@ export class FdCumulativeNomineeComponent implements OnInit {
   }
   //on change nominee type need to update validation
   onChange(event: any, flag: boolean) {
+    this.nomineeForm.get('relationName')?.reset();
+    this.nomineeForm.get('nomineeName')?.reset();
+    this.nomineeForm.get('aadhaar')?.reset();
+    this.nomineeForm.get('mobileNumber')?.reset();
+    this.nomineeForm.get('email')?.reset();
+    if (flag) {
+      this.fdCumulativeNomineeModel.nomineeSighnedFormMultiPartList = [];
+      this.isFileUploadedNominee = false;
+    }
     if (event == 1) {//new nominee
       this.newNomineeType(flag);
     }
@@ -226,6 +245,11 @@ export class FdCumulativeNomineeComponent implements OnInit {
    * @param event guardain Type
    */
   onChangeGuardain(event: any, flag: boolean) {
+    this.nomineeForm.get('relationNameOfGuardian')?.reset();
+    this.nomineeForm.get('guardianName')?.reset();
+    this.nomineeForm.get('guardianAadhar')?.reset();
+    this.nomineeForm.get('guardianMobile')?.reset();
+    this.nomineeForm.get('guardianEmail')?.reset();
     if (event == 1) {//new guardain
       this.newGuardainType(flag);
     }
@@ -234,6 +258,24 @@ export class FdCumulativeNomineeComponent implements OnInit {
     }
     else if (event == 3) {//no guardain
       this.noGuardainaType(flag);
+    }
+  }
+
+  /**
+ * @implements memberType Check For Guardian And Nominee typwe List
+ * @author bhargavi
+ */
+  memberTypeCheck(memberTypeName: any) {
+    if (memberTypeName != "Individual") {
+      this.nomineeList = [
+        { label: 'New Nominee', value: 1 },
+        { label: 'No Nominee', value: 3 },
+      ]
+      this.guadianTypesList = [
+        { label: 'New Guardain', value: 1 },
+        { label: 'No Guardain', value: 3 },
+      ]
+      this.accountType = applicationConstants.SINGLE_ACCOUNT_TYPE;
     }
   }
 
@@ -246,8 +288,8 @@ export class FdCumulativeNomineeComponent implements OnInit {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.fdCumulativeNomineeModel = this.responseModel.data[0];
-            if (this.fdCumulativeNomineeModel.nominatedDate != null && this.fdCumulativeNomineeModel.nominatedDate != undefined) {
-              this.fdCumulativeNomineeModel.nominatedDateVal = this.datePipe.transform(this.fdCumulativeNomineeModel.nominatedDate, this.orgnizationSetting.datePipe);
+            if (this.fdCumulativeNomineeModel.nomineeDob != null && this.fdCumulativeNomineeModel.nomineeDob != undefined) {
+              this.fdCumulativeNomineeModel.nomineeDob = this.datePipe.transform(this.fdCumulativeNomineeModel.nomineeDob, this.orgnizationSetting.datePipe);
             }
             if (this.fdCumulativeNomineeModel.nomineeType != 0) {
               this.onChange(this.fdCumulativeNomineeModel.nomineeType, this.flag);
@@ -266,6 +308,10 @@ export class FdCumulativeNomineeComponent implements OnInit {
       }
     })
   }
+
+
+
+
   //get fd account details for header data  
   getFdCummApplicationById(id: any) {
     this.fdCumulativeApplicationService.getFdCummApplicationById(id).subscribe((data: any) => {
@@ -285,7 +331,7 @@ export class FdCumulativeNomineeComponent implements OnInit {
             if (this.responseModel.data[0].accountNumber != null && this.responseModel.data[0].accountNumber != undefined) {
               this.accountNumber = this.responseModel.data[0].accountNumber;
               if (this.historyFLag) {
-                this.getNomineeHistoryByfdAccountNumber(this.accountNumber);
+                // this.getNomineeHistoryByfdAccountNumber(this.accountNumber);
               }
             }
             if (this.responseModel.data[0].memberTypeName == MemberShipTypesData.INDIVIDUAL) {
@@ -298,27 +344,56 @@ export class FdCumulativeNomineeComponent implements OnInit {
             }
             this.fdCumulativeApplicationModel = this.responseModel.data[0];
             if (this.fdCumulativeApplicationModel != null && this.fdCumulativeApplicationModel != undefined) {
-              if (this.fdCumulativeApplicationModel.fdCummulativeAccountNomineeList != null && this.fdCumulativeApplicationModel.fdCummulativeAccountNomineeList != undefined &&
-                this.fdCumulativeApplicationModel.fdCummulativeAccountNomineeList[0] != null && this.fdCumulativeApplicationModel.fdCummulativeAccountNomineeList[0] != undefined)
+              if (this.fdCumulativeApplicationModel.fdCummulativeAccountNomineeList[0] != null && this.fdCumulativeApplicationModel.fdCummulativeAccountNomineeList[0] != undefined) {
                 this.fdCumulativeNomineeModel = this.fdCumulativeApplicationModel.fdCummulativeAccountNomineeList[0];
-              if (this.fdCumulativeNomineeModel.nomineeFilePath != null && this.fdCumulativeNomineeModel.nomineeFilePath != undefined) {
-                this.fdCumulativeNomineeModel.nomineeSighnedFormMultiPartList = this.fileUploadService.getFile(this.fdCumulativeNomineeModel.nomineeFilePath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.fdCumulativeNomineeModel.nomineeFilePath);
+                if (this.fdCumulativeNomineeModel.nomineeFilePath != null && this.fdCumulativeNomineeModel.nomineeFilePath != undefined) {
+                  this.fdCumulativeNomineeModel.nomineeSighnedFormMultiPartList = this.fileUploadService.getFile(this.fdCumulativeNomineeModel.nomineeFilePath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.fdCumulativeNomineeModel.nomineeFilePath);
+                  if (this.fdCumulativeNomineeModel.nomineeType != null && this.fdCumulativeNomineeModel.nomineeType != undefined) {
+                    if (this.fdCumulativeNomineeModel.nomineeType != 2) {
+                      this.fdCumulativeNomineeModel.nomineeSighnedFormMultiPartList = this.fileUploadService.getFile(this.fdCumulativeNomineeModel.nomineeFilePath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.fdCumulativeNomineeModel.nomineeFilePath);
+                    }
+                    else {
+                      this.fdCumulativeNomineeModel.nomineeSighnedFormMultiPartList = this.fileUploadService.getFile(this.fdCumulativeNomineeModel.nomineeFilePath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.fdCumulativeNomineeModel.nomineeFilePath);
+                    }
+                    this.isFileUploadedNominee = applicationConstants.TRUE;
+                  }
+                }
+
               }
-              if (this.fdCumulativeApplicationModel.fdCummulativeAccountGaurdianList != null && this.fdCumulativeApplicationModel.fdCummulativeAccountGaurdianList != undefined &&
-                this.fdCumulativeApplicationModel.fdCummulativeAccountGaurdianList[0] != null && this.fdCumulativeApplicationModel.fdCummulativeAccountGaurdianList[0] != undefined)
+              else {
+                this.isFileUploadedNominee = applicationConstants.FALSE;
+              }
+              if (this.fdCumulativeApplicationModel.fdCummulativeAccountGaurdianList[0] != null && this.fdCumulativeApplicationModel.fdCummulativeAccountGaurdianList[0] != undefined) {
                 this.memberGuardianDetailsModelDetails = this.fdCumulativeApplicationModel.fdCummulativeAccountGaurdianList[0];
 
-              if (this.memberGuardianDetailsModelDetails.uploadFilePath != null && this.memberGuardianDetailsModelDetails.uploadFilePath != undefined) {
-                this.memberGuardianDetailsModelDetails.guardainSighnedMultipartFiles = this.fileUploadService.getFile(this.memberGuardianDetailsModelDetails.uploadFilePath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.memberGuardianDetailsModelDetails.uploadFilePath);
+                if (this.memberGuardianDetailsModelDetails.uploadFilePath != null && this.memberGuardianDetailsModelDetails.uploadFilePath != undefined) {
+                  if (this.memberGuardianDetailsModelDetails.guardianType != null && this.memberGuardianDetailsModelDetails.guardianType != undefined) {
+                    if (this.memberGuardianDetailsModelDetails.guardianType != 2) {
+                      this.memberGuardianDetailsModelDetails.guardainSighnedMultipartFiles = this.fileUploadService.getFile(this.memberGuardianDetailsModelDetails.uploadFilePath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.memberGuardianDetailsModelDetails.uploadFilePath);
+                    }
+                    else {
+                      this.memberGuardianDetailsModelDetails.guardainSighnedMultipartFiles = this.fileUploadService.getFile(this.memberGuardianDetailsModelDetails.uploadFilePath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.memberGuardianDetailsModelDetails.uploadFilePath);
+                    }
+                    this.isFileUploadedGuardian = applicationConstants.TRUE;
+                  }
+                }
+                else {
+                  this.isFileUploadedGuardian = applicationConstants.FALSE;
+                }
               }
-
               if (this.fdCumulativeNomineeModel.nomineeType != null && this.fdCumulativeNomineeModel.nomineeType != undefined) {
                 this.onChange(this.fdCumulativeNomineeModel.nomineeType, this.flag);
+              }
+
+              if (this.responseModel.data[0].individualMemberDetailsDTO.age != null && this.responseModel.data[0].individualMemberDetailsDTO.age != undefined) {
+                this.age = this.responseModel.data[0].individualMemberDetailsDTO.age;
+                if (this.age < 18) {
+                  this.guarntorDetailsFalg = true;
+                }
               }
               if (this.guarntorDetailsFalg && this.memberGuardianDetailsModelDetails.guardianType != null && this.memberGuardianDetailsModelDetails.guardianType != undefined) {
                 this.onChangeGuardain(this.memberGuardianDetailsModelDetails.guardianType, this.flag);
               }
-
             }
             else if (this.guarntorDetailsFalg) {
               const controlName = this.nomineeForm.get('guardainType');
@@ -380,6 +455,9 @@ export class FdCumulativeNomineeComponent implements OnInit {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.memberGuardianDetailsModelDetails = this.responseModel.data[0];
+            if (this.memberGuardianDetailsModelDetails.guardianDob != null && this.memberGuardianDetailsModelDetails.guardianDob != undefined) {
+              this.memberGuardianDetailsModelDetails.guardianDob = this.datePipe.transform(this.memberGuardianDetailsModelDetails.guardianDob, this.orgnizationSetting.datePipe);
+            }
             if (this.memberGuardianDetailsModelDetails.guardianType != null && this.memberGuardianDetailsModelDetails.guardianType != undefined) {
               this.onChangeGuardain(this.memberGuardianDetailsModelDetails.guardianType, this.flag);
             }
@@ -657,9 +735,18 @@ export class FdCumulativeNomineeComponent implements OnInit {
     this.multipleFilesList = [];
     if (this.fdCumulativeNomineeModel != null && this.fdCumulativeNomineeModel != undefined && this.isEdit && this.fdCumulativeNomineeModel.filesDTOList == null || this.fdCumulativeNomineeModel.filesDTOList == undefined) {
       this.fdCumulativeNomineeModel.filesDTOList = [];
+      this.fdCumulativeNomineeModel.nomineeSighnedFormMultiPartList = [];
+      this.fdCumulativeNomineeModel.nomineeFilePath = null;
     }
     if (this.isEdit && this.memberGuardianDetailsModelDetails != null && this.memberGuardianDetailsModelDetails != undefined && this.memberGuardianDetailsModelDetails.filesDTOList == null || this.memberGuardianDetailsModelDetails.filesDTOList == undefined) {
       this.memberGuardianDetailsModelDetails.filesDTOList = [];
+    }
+    if (filePathName === "Nominee") {
+      this.isFileUploadedNominee = applicationConstants.FALSE;
+      this.fdCumulativeNomineeModel.nomineeSighnedFormMultiPartList = [];
+    }
+    if (filePathName === "Guardain") {
+      this.isFileUploadedGuardian = applicationConstants.FALSE;
     }
     let files: FileUploadModel = new FileUploadModel();
     for (let file of event.files) {
@@ -676,16 +763,18 @@ export class FdCumulativeNomineeComponent implements OnInit {
         // Add to filesDTOList array
         let timeStamp = this.commonComponent.getTimeStamp();
         if (filePathName === "Nominee") {
+          this.isFileUploadedNominee = applicationConstants.TRUE;
           this.fdCumulativeNomineeModel.filesDTOList.push(files);
           this.fdCumulativeNomineeModel.nomineeFilePath = null;
-          this.fdCumulativeNomineeModel.filesDTOList[this.fdCumulativeNomineeModel.filesDTOList.length - 1].fileName = "FD_CUMMULATIVE_NOMINEE" + this.fdCummulativeAccId + "_" + timeStamp + "_" + file.name;
-          this.fdCumulativeNomineeModel.nomineeFilePath = "FD_CUMMULATIVE_NOMINEE" + this.fdCummulativeAccId + "_" + timeStamp + "_" + file.name;
+          this.fdCumulativeNomineeModel.filesDTOList[this.fdCumulativeNomineeModel.filesDTOList.length - 1].fileName = "FD_NON_CUMMULATIVE_NOMINEE" + this.fdCummulativeAccId + "_" + timeStamp + "_" + file.name;
+          this.fdCumulativeNomineeModel.nomineeFilePath = "FD_NON_CUMMULATIVE_NOMINEE" + this.fdCummulativeAccId + "_" + timeStamp + "_" + file.name;
         }
         if (filePathName === "Guardain") {
+          this.isFileUploadedGuardian = applicationConstants.TRUE;
           this.memberGuardianDetailsModelDetails.filesDTOList.push(files);
           this.memberGuardianDetailsModelDetails.uploadFilePath = null;
-          this.memberGuardianDetailsModelDetails.filesDTOList[this.memberGuardianDetailsModelDetails.filesDTOList.length - 1].fileName = "FD_CUMMULATIVE_GUARDAIN" + "_" + timeStamp + "_" + file.name;
-          this.memberGuardianDetailsModelDetails.uploadFilePath = "FD_CUMMULATIVE_GUARDAIN" + "_" + timeStamp + "_" + file.name;
+          this.memberGuardianDetailsModelDetails.filesDTOList[this.memberGuardianDetailsModelDetails.filesDTOList.length - 1].fileName = "FD_NON_CUMMULATIVE_GUARDAIN" + "_" + timeStamp + "_" + file.name;
+          this.memberGuardianDetailsModelDetails.uploadFilePath = "FD_NON_CUMMULATIVE_GUARDAIN" + "_" + timeStamp + "_" + file.name;
         }
         this.updateData();
       }
@@ -755,37 +844,38 @@ export class FdCumulativeNomineeComponent implements OnInit {
     }
   }
 
+
   /**
    * @implements getNomineeHistory
    * @param accountNumber 
    */
-  getNomineeHistoryByfdAccountNumber(accountNumber: any) {
-    this.fdCumulativeNomineeService.getNomineeDetailsByFdAccId(accountNumber).subscribe((response: any) => {
-      this.responseModel = response;
-      if (this.responseModel != null && this.responseModel != undefined) {
-        if (this.responseModel.status != null && this.responseModel.status != undefined && this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-          if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
-            this.nomineeHistoryList = this.responseModel.data;
-          }
-        }
-        else {
-          this.msgs = [];
-          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 2000);
-        }
-      }
-    },
-      error => {
-        this.msgs = [];
-        this.commonComponent.stopSpinner();
-        this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
-        setTimeout(() => {
-          this.msgs = [];
-        }, 2000);
-      });
-  }
+  // getNomineeHistoryByfdAccountNumber(accountNumber: any) {
+  //   this.fdCumulativeNomineeService.getNomineeDetailsByFdAccId(accountNumber).subscribe((response: any) => {
+  //     this.responseModel = response;
+  //     if (this.responseModel != null && this.responseModel != undefined) {
+  //       if (this.responseModel.status != null && this.responseModel.status != undefined && this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+  //         if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
+  //           this.nomineeHistoryList = this.responseModel.data;
+  //         }
+  //       }
+  //       else {
+  //         this.msgs = [];
+  //         this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+  //         setTimeout(() => {
+  //           this.msgs = [];
+  //         }, 2000);
+  //       }
+  //     }
+  //   },
+  //     error => {
+  //       this.msgs = [];
+  //       this.commonComponent.stopSpinner();
+  //       this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+  //       setTimeout(() => {
+  //         this.msgs = [];
+  //       }, 2000);
+  //     });
+  // }
 
   /**
    * @implements gurdain form validation based on guardain type
@@ -808,12 +898,42 @@ export class FdCumulativeNomineeComponent implements OnInit {
     this.nomineeForm.get('aadhaar')?.disable();
     this.nomineeForm.get('mobileNumber')?.disable();
     this.nomineeForm.get('email')?.disable();
-    this.nomineeForm.get('fileUpload')?.disable();
+    const controlName = this.nomineeForm.get('relationName');
+    if (controlName) {
+      controlName.setValidators(null); // Set the required validator null
+      controlName.updateValueAndValidity();
+    }
+
+    const controlTow = this.nomineeForm.get('nomineeName');
+    if (controlTow) {
+      controlTow.setValidators(null); // Set the required validator null
+      controlTow.updateValueAndValidity();
+    }
+    const controlFour = this.nomineeForm.get('aadhaar');
+    if (controlFour) {
+      controlFour.setValidators(null); // Set the required validator null
+      controlFour.updateValueAndValidity();
+    }
+    const controlFive = this.nomineeForm.get('mobileNumber');
+    if (controlFive) {
+      controlFive.setValidators(null); // Set the required validator null
+      controlFive.updateValueAndValidity();
+    }
+    const controlSix = this.nomineeForm.get('email');
+    if (controlSix) {
+      controlSix.setValidators(null); // Set the required validator null
+      controlSix.updateValueAndValidity();
+    }
+    const controlSeven = this.nomineeForm.get('remarks');
+    if (controlSeven) {
+      controlSeven.setValidators(null);
+      controlSeven.updateValueAndValidity();
+    }
     this.updateData();
   }
   /**
    * @implements nominee required valdation
-   */
+     */
   nomineeValidatorsRequired() {
     this.nomineeForm.get('relationName')?.enable();
     this.nomineeForm.get('nomineeName')?.enable();
@@ -860,6 +980,11 @@ export class FdCumulativeNomineeComponent implements OnInit {
       ]);
       controlSix.updateValueAndValidity();
     }
+    const controlSeven = this.nomineeForm.get('remarks');
+    if (controlSeven) {
+      controlSeven.setValidators(null);
+      controlSeven.updateValueAndValidity();
+    }
     this.updateData();
   }
 
@@ -888,11 +1013,13 @@ export class FdCumulativeNomineeComponent implements OnInit {
       controlFive.setValidators(null); // Set the required validator null
       controlFive.updateValueAndValidity();
     }
-    const controlSix = this.nomineeForm.get('email');
-    if (controlSix) {
-      controlSix.setValidators(null); // Set the required validator null
-      controlSix.updateValueAndValidity();
-    }
+    // const controlSix = this.nomineeForm.get('remarks');
+    // if(controlSix){
+    //   controlSix.setValidators([
+    //     Validators.required,
+    //   ]);
+    // controlSix.updateValueAndValidity();
+    // }
     this.updateData();
   }
 
@@ -902,6 +1029,7 @@ export class FdCumulativeNomineeComponent implements OnInit {
    */
   fileRemoeEvent(fileName: any) {
     if (fileName == "Nominee") {
+      this.isFileUploadedNominee = applicationConstants.FALSE;
       if (this.fdCumulativeNomineeModel.filesDTOList != null && this.fdCumulativeNomineeModel.filesDTOList != undefined && this.fdCumulativeNomineeModel.filesDTOList.length > 0) {
         let removeFileIndex = this.fdCumulativeNomineeModel.filesDTOList.findIndex((obj: any) => obj && obj.fileName === this.fdCumulativeNomineeModel.nomineeFilePath);
         this.fdCumulativeNomineeModel.filesDTOList[removeFileIndex] = null;
@@ -909,12 +1037,14 @@ export class FdCumulativeNomineeComponent implements OnInit {
       }
     }
     if (fileName == "Guardain") {
+      this.isFileUploadedGuardian = applicationConstants.FALSE;
       if (this.memberGuardianDetailsModelDetails.filesDTOList != null && this.memberGuardianDetailsModelDetails.filesDTOList != undefined && this.memberGuardianDetailsModelDetails.filesDTOList.length > 0) {
         let removeFileIndex = this.memberGuardianDetailsModelDetails.filesDTOList.findIndex((obj: any) => obj && obj.fileName === this.memberGuardianDetailsModelDetails.uploadFilePath);
         this.memberGuardianDetailsModelDetails.filesDTOList[removeFileIndex] = null;
         this.memberGuardianDetailsModelDetails.uploadFilePath = null;
       }
     }
+    this.updateData();//validation update for save and next button
   }
   /**
    * @implements onChange new Nominee
@@ -974,13 +1104,13 @@ export class FdCumulativeNomineeComponent implements OnInit {
     if (flag) {
       let nomineeId = null;//onchange on update
 
-      let signedCopyPath = null;
+      let nomineeFilePath = null;
       if (this.fdCumulativeNomineeModel != null && this.fdCumulativeNomineeModel != undefined) {
         if (this.fdCumulativeNomineeModel.id != null && this.fdCumulativeNomineeModel.id != undefined) {
           nomineeId = this.fdCumulativeNomineeModel.id;
         }
         if (this.fdCumulativeNomineeModel.nomineeFilePath != null && this.fdCumulativeNomineeModel.nomineeFilePath != undefined) {
-          signedCopyPath = this.fdCumulativeNomineeModel.nomineeFilePath;
+          nomineeFilePath = this.fdCumulativeNomineeModel.nomineeFilePath;
           this.fdCumulativeNomineeModel.nomineeFilePath = this.fileUploadService.getFile(this.fdCumulativeNomineeModel.nomineeFilePath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.fdCumulativeNomineeModel.nomineeFilePath);
         }
       }
@@ -989,11 +1119,21 @@ export class FdCumulativeNomineeComponent implements OnInit {
         this.fdCumulativeNomineeModel.id = nomineeId;
       }
       this.fdCumulativeNomineeModel.nomineeType = 3;
-      if (signedCopyPath != null && signedCopyPath != undefined) {
-        this.fdCumulativeNomineeModel.nomineeFilePath = signedCopyPath;
+      if (nomineeFilePath != null && nomineeFilePath != undefined) {
+        this.fdCumulativeNomineeModel.nomineeFilePath = nomineeFilePath;
       }
     }
+    const controlSix = this.nomineeForm.get('remarks');
+    if (controlSix) {
+      controlSix.setValidators([
+        Validators.required,
+      ]);
+      controlSix.updateValueAndValidity();
+    }
+
+    // this.updateData();
     this.nomineeValidatorsFormNotRequired();
+    this.updateData();
     // this.newNominee = false;
   }
 
@@ -1044,17 +1184,18 @@ export class FdCumulativeNomineeComponent implements OnInit {
     this.courtAppointedGuardain = true;
     this.sameAsMemberGuardain = false;
     this.noGuardain = true;
+    this.isFileUploadedNominee = applicationConstants.FALSE
     //onchange on update
     let guardainId = null;
     if (flag) {
-      let signedCopyPath = null;
+      let uploadFilePath = null;
       if (this.memberGuardianDetailsModelDetails != null && this.memberGuardianDetailsModelDetails != undefined) {
         if (this.memberGuardianDetailsModelDetails.id != null && this.memberGuardianDetailsModelDetails.id != undefined) {
           guardainId = this.memberGuardianDetailsModelDetails.id;
         }
 
         if (this.memberGuardianDetailsModelDetails.uploadFilePath != null && this.memberGuardianDetailsModelDetails.uploadFilePath != undefined) {
-          signedCopyPath = this.memberGuardianDetailsModelDetails.uploadFilePath;
+          uploadFilePath = this.memberGuardianDetailsModelDetails.uploadFilePath;
           this.memberGuardianDetailsModelDetails.guardainSighnedMultipartFiles = this.fileUploadService.getFile(this.memberGuardianDetailsModelDetails.uploadFilePath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.memberGuardianDetailsModelDetails.uploadFilePath);
         }
       }
@@ -1067,5 +1208,26 @@ export class FdCumulativeNomineeComponent implements OnInit {
     }
     this.memberGuardianDetailsModelDetails.guardianType = 3;
     this.guardaindisable();
+  }
+  /**
+ * @implements no guardain validation
+ * @author bhargavi
+ */
+  noGuardainValidation() {
+    if (this.age <= 18) {
+      this.nomineeForm.get('relationNameOfGuardian')?.enable();
+      this.nomineeForm.get('guardianName')?.enable();
+      this.nomineeForm.get('guardianAadhar')?.enable();
+      this.nomineeForm.get('guardianMobile')?.enable();
+      this.nomineeForm.get('guardianEmail')?.enable();
+      this.guarntorDetailsFalg = true;
+      const controlName = this.nomineeForm.get('guardianRemarks');
+      if (controlName) {
+        controlName.setValidators([
+          Validators.required,
+        ]);
+        controlName.updateValueAndValidity();
+      }
+    }
   }
 }

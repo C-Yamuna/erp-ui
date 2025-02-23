@@ -9,7 +9,7 @@
                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
 
                     <div class="form-label">
-                        <label><span class="red">*</span>{{'ERP.PRODUCT' | translate}}</label>
+                        <label><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.MEMBERSHIP_TYPE' | translate}}</label>
 
                         <p-dropdown id="bunit_txt_status" placeholder="Select" [filter]="true"
                             [options]="subProductList" formControlName="subProductId"
@@ -167,7 +167,7 @@
 
                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                     <div class="form-label">
-                        <label><span class="red">*</span>{{'ERP.COMMUNITYS' | translate}}</label>
+                        <label><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.RELIGION' | translate}}</label>
                         <p-dropdown [filter]="true" [options]="communityList" placeholder="Select"
                             formControlName="communityId" (onChange)="onChangeCommunityChange()"
                             [(ngModel)]="memberBasicDetailsModel.communityId"></p-dropdown>
@@ -229,7 +229,7 @@
                         </p-calendar>
                     </div>
                 </div>
-                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                <!-- <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                     <div class="form-label">
                         <label for="username">{{'ERP.ADMISSION_FEE' | translate}}
                         </label>
@@ -238,7 +238,7 @@
                              currency="INR" locale="en-IN">
                     </p-inputNumber>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                     <div class="form-label">
                         <label for="code">
@@ -251,6 +251,17 @@
                 </div>
             </div>
             <div class="row g-3 mt-0">
+                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                    <div class="form-label">
+                        <label for="username">
+                            <span class="red">*</span> {{'MEMBERSHIP_TRANSACTION.RESOLUTION_DATE' | translate}}
+                        </label>
+                        <p-calendar formControlName="resolutionDate" [showIcon]="true"
+                            [dateFormat]="orgnizationSetting.calendar" [(ngModel)]="memberBasicDetailsModel.resolutionDateVal"
+                            placeholder="Enter Admission Date" [maxDate]="today">
+                        </p-calendar>
+                    </div>
+                </div>
                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12" *ngIf="show">
                     <div class="form-label">
                         <label for="username">{{'MEMBERSHIP_TRANSACTION.RESOLUTION_NUMBER' | translate}}
@@ -288,7 +299,7 @@
 
                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                     <div class="form-label">
-                        <span class=""><span class="red">*</span> {{'ERP.UPLOAD_IMAGE' | translate}} </span>
+                        <span class=""><span class="red">*</span> {{'MEMBERSHIP_TRANSACTION.PHOTO_COPY' | translate}} </span>
                         <div class="uplodad-style align-items-center">
                             <!-- Upload Button Column -->
                             <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
@@ -314,7 +325,7 @@
                 </div>
                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                     <div class="form-label">
-                        <span class=""><span class="red">*</span>{{'ERP.UPLOAD_SIGNATURE' | translate}}</span>
+                        <span class=""><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.SIGNATURE_COPY' | translate}}</span>
                         <div class="uplodad-style align-items-center">
                             <!-- Upload Button Column -->
                             <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"

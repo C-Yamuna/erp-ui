@@ -276,7 +276,8 @@ export const applicationConstants = {
     SANCTION_DATE_SHOULD_BE_IN_BETWEEN_MIN_AND_MAX_DATES:'Sanction date should be in between product min and max dates',
     RELATION_TYPE_ALREADY_EXIST:'Relation Type Already Exit',
     DATE_OF_BIRTH_SHOULD_NOT_BE_GREATER_THAN_ADMISSION_DATE:'Date Of Birth Should Not Be Greater Than Admission Date',
-    AGE_SHOULD_NOT_BE_ZERO:'Age Shound Not Be Zero'
+    AGE_SHOULD_NOT_BE_ZERO:'Age Shound Not Be Zero',
+    POC_ALREADY_EXIST:'POC Already Exist'
 
 };
 

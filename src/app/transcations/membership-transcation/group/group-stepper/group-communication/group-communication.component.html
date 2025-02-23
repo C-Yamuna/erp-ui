@@ -1,6 +1,4 @@
 <div class="col-12">
-
-
     <div class="stepper-top-section-strip">
         <div class="row">
             <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
@@ -8,6 +6,12 @@
                     <span>{{'ERP.MEMBER_TYPE' | translate}}</span>
                     <p class="mb-0">{{ memberGroupBasicDetails.memberTypeName }}&nbsp;({{
                         memberGroupBasicDetails.subProductName }})</p>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+                <div class="form-group">
+                    <span>{{'ERP.ADMISSION_NUMBER' | translate}}</span>
+                    <p class="mb-0">{{memberGroupBasicDetails.admissionNumber}}</p>
                 </div>
             </div>
             <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
@@ -47,13 +51,109 @@
     <div class="col-12"></div>
 
     <form [formGroup]="groupCommunicationForm">
-        <h6 class="sub-heading">{{'ERP.COMMUNICATION' | translate}}<span class="admission-text">(Admission
-            Number : {{memberGroupBasicDetails.admissionNumber}})</span></h6>
+        <h6 class="sub-heading">{{'ERP.COMMUNICATION' | translate}}</h6>
+        <!-- <span class="admission-text">(Admission
+            Number : {{memberGroupBasicDetails.admissionNumber}})</span></h6> -->
             
         <div class="col-12 bg-label-colorfull p-0">
             <div class="row g-3">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                    <div class="d-flex justify-content-between mt-xl-0 mt-lg-0 mt-4">
+                        <h6 class="super-sub-heading">{{'ERP.PERMANENT' | translate}}</h6>
+                       
+                    </div>
+                    <div class="col-12 global-border pt-0">
+                        <div class="col-12">
+                            <div class="row  g-3  mt-n1">
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    <div class="form-label">
+                                        <label><span class="red">*</span>{{'ERP.STATES' | translate}}</label>
+                
+                                            <p-dropdown [options]="perstateList" placeholder="Select" formControlName="permanentStateId"
+                                                [(ngModel)]="groupCommunicationModel.permanentStateId"
+                                                (onChange)='getAllperDistrictsByStateId(groupCommunicationModel.permanentStateId,true)'></p-dropdown>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    <div class="form-label">
+                                        <label><span class="red">*</span>{{'ERP.DISTRICTS' | translate}}</label>
+                                            <p-dropdown [options]="perdistrictList" placeholder="Select " formControlName="permanentDistrictId"
+                                            [(ngModel)]="groupCommunicationModel.permanentDistrictId"
+                                            (onChange)='getAllPerSubDistrictsByDistrictId(groupCommunicationModel.permanentDistrictId,true)'></p-dropdown>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    <div class="form-label">
+                                        <label> <span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.MANDAL/TESHIL' | translate}}</label>
+                                            <p-dropdown [options]="persubDistrictList" placeholder="{{'ERP.SELECT' | translate}}"
+                                            formControlName="permanentSubDistrictId"[(ngModel)]="groupCommunicationModel.permanentSubDistrictId"
+                                            (onChange)='getAllPerVillagesBySubDistrictId(groupCommunicationModel.permanentSubDistrictId,true)'></p-dropdown>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    <div class="form-label">
+                                        <label><span class="red">*</span>{{'ERP.VILLAGES' | translate}} </label>
+                
+                                            <p-dropdown [options]="pervillageList" placeholder="Select " formControlName="permanentVillageId"
+                                                [(ngModel)]="groupCommunicationModel.permanentVillageId"  (onChange)='getPerVillage(groupCommunicationModel.permanentVillageId)'></p-dropdown>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                                    <div class="form-label">
+                                        <label for="username">
+                                            {{'MEMBERSHIP_TRANSACTION.DIVISION' | translate}}
+                                        </label>
+                                        <input pInputText id="bunit_txt_name" type="text" formControlName="perDivision"
+                                            [(ngModel)]="groupCommunicationModel.permanentDivisionName">
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                                    <div class="form-label">
+                                        <label for="username">
+                                            {{'MEMBERSHIP_TRANSACTION.BLOCK' | translate}}
+                                        </label>
+                                        <input pInputText id="bunit_txt_name" type="text" formControlName="perBlock"
+                                            [(ngModel)]="groupCommunicationModel.permanentBlockName">
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    <div class="form-label">
+                                        <label for="code"><span class="red">*</span>
+                                            {{'ERP.ADDRESS' | translate}}
+                                        </label>
+                                        <textarea type="text" class="form-control" pInputTextarea formControlName="permanentAddress1"  placeholder="House No., Door No., Landmark..etc"
+                                        (keyup)="RegAddressToComAddress()" [(ngModel)]="groupCommunicationModel.permanentAddress1"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    <div class="form-label">
+                                        <label for="username"><span class="red">*</span>{{'ERP.PINCODE' | translate}}
+                                        </label>
+                
+                                        <input pInputText id="bunit_txt_name" minlength="6" maxlength="6" type="text" formControlName="permanentPincode" placeholder="Enter Pincode"
+                                        (keyup)="RegAddressToComAddress()" [(ngModel)]="groupCommunicationModel.permanentPincode">
+                                            <p-message severity="error" text="Enter Valid pinCode"
+                                            *ngIf="!groupCommunicationForm.controls['permanentPincode'].valid && groupCommunicationForm.controls['permanentPincode'].dirty">
+                                        </p-message>
+                                            
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                <h6 class="super-sub-heading">Registered</h6>
+                <div class="d-flex justify-content-between mt-xl-0 mt-lg-0 mt-4">
+                    <h6 class="super-sub-heading">{{'MEMBERSHIP_TRANSACTION.COMMUNICATION_ADDRESS' | translate}}</h6>
+                    <div class="grid d-flex mr-3">
+                        <p-inputSwitch formControlName="isSameAddress"
+                        [(ngModel)]="groupCommunicationModel.isSameAddress"
+                        (click)="sameAsPerAddr(groupCommunicationModel.isSameAddress)"></p-inputSwitch>
+        
+                    <p class="pl-1 m-0">{{'MEMBERSHIP_TRANSACTION.SAME_AS_PERMANENT_ADDRESS' | translate}}</p>
+                </div>
+                </div>
+               
                 <div class="col-12 global-border pt-0">
                     <div class="col-12">
                         <div class="row  g-3  mt-n1">
@@ -89,104 +189,50 @@
                                         formControlName="villageName" (onChange)='getVillage(groupCommunicationModel.villageId)' [(ngModel)]="groupCommunicationModel.villageId"></p-dropdown>
                                 </div>
                             </div>
+                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                                <div class="form-label">
+                                    <label for="username">
+                                        {{'MEMBERSHIP_TRANSACTION.DIVISION' | translate}}
+                                    </label>
+                                    <input pInputText id="bunit_txt_name" type="text" formControlName="division"
+                                        [(ngModel)]="groupCommunicationModel.divisionName">
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                                <div class="form-label">
+                                    <label for="username">
+                                        {{'MEMBERSHIP_TRANSACTION.BLOCK' | translate}}
+                                    </label>
+                                    <input pInputText id="bunit_txt_name" type="text" formControlName="block"
+                                        [(ngModel)]="groupCommunicationModel.blockName">
+                                </div>
+                            </div>
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                 <div class="form-label">
                                     <label for="code"> <span class="red">*</span>{{'ERP.ADDRESS' | translate}} </label>
             
                                     <textarea type="text" class="form-control" pInputTextarea formControlName="address1" placeholder="House No., Door No., Landmark..etc"
-                                    (keyup)="RegAddressToComAddress()" [(ngModel)]="groupCommunicationModel.address1"></textarea>
+                                     [(ngModel)]="groupCommunicationModel.address1" [disabled]="sameAsPermanentAddress"></textarea>
                                 </div>
                             </div>
+                            
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                 <div class="form-label">
                                     <label for="username"><span class="red">*</span>{{'ERP.PINCODE' | translate}}
                                     </label>
             
                                     <input pInputText id="bunit_txt_name" minlength="6" maxlength="6" type="text" formControlName="pincode" placeholder="Enter Pincode"
-                                    (keyup)="RegAddressToComAddress()" [(ngModel)]="groupCommunicationModel.pincode">
+                                     [(ngModel)]="groupCommunicationModel.pincode">
                                     <p-message severity="error" text="Enter Valid pinCode"
                                     *ngIf="!groupCommunicationForm.controls['pincode'].valid && groupCommunicationForm.controls['pincode'].dirty">
                                 </p-message>
                                 </div>
                             </div>
-                        
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                <div class="d-flex justify-content-between mt-xl-0 mt-lg-0 mt-4">
-                    <h6 class="super-sub-heading">{{'ERP.PERMANENT' | translate}}</h6>
-                    <div class="grid d-flex mr-3">
-                            <p-inputSwitch formControlName="isSameAddress"
-                            [(ngModel)]="groupCommunicationModel.isSameAddress"
-                            (click)="sameAsPerAddr(groupCommunicationModel.isSameAddress)"></p-inputSwitch>
-            
-                        <p class="pl-1 m-0">{{'ERP.SAME_AS_REGISTERED_ADDRESS' | translate}}</p>
-                    </div>
-                </div>
-                <div class="col-12 global-border pt-0">
-                    <div class="col-12">
-                        <div class="row  g-3  mt-n1">
-                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                <div class="form-label">
-                                    <label><span class="red">*</span>{{'ERP.STATES' | translate}}</label>
-            
-                                        <p-dropdown [options]="perstateList" placeholder="Select" formControlName="permanentStateId"
-                                            [(ngModel)]="groupCommunicationModel.permanentStateId"
-                                            (onChange)='getAllperDistrictsByStateId(groupCommunicationModel.permanentStateId,true)'></p-dropdown>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                <div class="form-label">
-                                    <label><span class="red">*</span>{{'ERP.DISTRICTS' | translate}}</label>
-                                        <p-dropdown [options]="perdistrictList" placeholder="Select " formControlName="permanentDistrictId"
-                                        [(ngModel)]="groupCommunicationModel.permanentDistrictId"
-                                        (onChange)='getAllPerSubDistrictsByDistrictId(groupCommunicationModel.permanentDistrictId,true)'></p-dropdown>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                <div class="form-label">
-                                    <label> <span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.MANDAL/TESHIL' | translate}}</label>
-                                        <p-dropdown [options]="persubDistrictList" placeholder="{{'ERP.SELECT' | translate}}"
-                                        formControlName="permanentSubDistrictId"[(ngModel)]="groupCommunicationModel.permanentSubDistrictId"
-                                        (onChange)='getAllPerVillagesBySubDistrictId(groupCommunicationModel.permanentSubDistrictId,true)'></p-dropdown>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                <div class="form-label">
-                                    <label><span class="red">*</span>{{'ERP.VILLAGES' | translate}} </label>
-            
-                                        <p-dropdown [options]="pervillageList" placeholder="Select " formControlName="permanentVillageId"
-                                            [(ngModel)]="groupCommunicationModel.permanentVillageId"  (onChange)='getPerVillage(groupCommunicationModel.permanentVillageId)'></p-dropdown>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                <div class="form-label">
-                                    <label for="code"><span class="red">*</span>
-                                        {{'ERP.ADDRESS' | translate}}
-                                    </label>
-                                    <textarea type="text" class="form-control" pInputTextarea formControlName="permanentAddress1"  placeholder="House No., Door No., Landmark..etc"
-                                        [(ngModel)]="groupCommunicationModel.permanentAddress1" [disabled]="sameAsPermanentAddress"></textarea>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                <div class="form-label">
-                                    <label for="username"><span class="red">*</span>{{'ERP.PINCODE' | translate}}
-                                    </label>
-            
-                                    <input pInputText id="bunit_txt_name" minlength="6" maxlength="6" type="text" formControlName="permanentPincode" placeholder="Enter Pincode"
-                                        [(ngModel)]="groupCommunicationModel.permanentPincode">
-                                        <p-message severity="error" text="Enter Valid pinCode"
-                                        *ngIf="!groupCommunicationForm.controls['permanentPincode'].valid && groupCommunicationForm.controls['permanentPincode'].dirty">
-                                    </p-message>
-                                        
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+           
         </div>
         </div>
     </form>

@@ -1180,7 +1180,7 @@
                             <div class="form-label">
                                 <label> <span class="red">*</span> {{'ERP.STATUS' | translate}}</label>
                                 <p-dropdown [filter]="true" [options]="statusList" placeholder="Select"
-                                    (onChange)="getMemStatus()" [(ngModel)]="memberBasicDetailsModel.memStatus"></p-dropdown>
+                                    (onChange)="getMemStatus()" [(ngModel)]="memberBasicDetailsModel.status"></p-dropdown>
                             </div>
                         </div>
 
@@ -1871,7 +1871,7 @@
                             <div class="form-label">
                                 <label> <span class="red">*</span> {{'ERP.STATUS' | translate}}</label>
                                 <p-dropdown [filter]="true" [options]="statusList" placeholder="Select"
-                                    [(ngModel)]="memberGroupBasicDetails.groupStatus" (onChange)="getGroupStatus()"></p-dropdown>
+                                    [(ngModel)]="memberGroupBasicDetails.status" (onChange)="getGroupStatus()"></p-dropdown>
                             </div>
                         </div>
 
@@ -2562,7 +2562,7 @@
                             <div class="form-label">
                                 <label> <span class="red">*</span> {{'ERP.STATUS' | translate}}</label>
                                 <p-dropdown [filter]="true" [options]="statusList" placeholder="Select"
-                                    [(ngModel)]="institutionBasicDetailsModel.institutionStatus" (onChange)="getInstitutionStatus()"></p-dropdown>
+                                    [(ngModel)]="institutionBasicDetailsModel.status" (onChange)="getInstitutionStatus()"></p-dropdown>
                             </div>
                         </div>
 

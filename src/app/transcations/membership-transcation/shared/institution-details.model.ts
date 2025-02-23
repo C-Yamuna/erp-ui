@@ -29,7 +29,7 @@ export class InstitutionBasicDetailsModel{
 
       tanNumber: any;
 
-      institutionStatus: any;
+      isActive: any;
 
       pacsId: any;
 
@@ -115,6 +115,15 @@ export class InstitutionBasicDetailsModel{
 
       societyAdmissionNumber:any;
 
+      resolutionDate:any;
+
+      resolutionDateVal:any;
+
+      operatorTypeId:any;
+
+      operatorTypeName:any;
+
+    
 }
 
 export class InstituteCommunicationModel{
@@ -178,6 +187,23 @@ export class InstituteCommunicationModel{
       status:any;
      
       statusName:any;
+
+      divisionId:any;
+
+      blockId:any;
+
+      divisionName:any;
+
+      blockName:any;
+
+      permanentDivisionId:any;
+
+	permanentBlockId:any;
+
+	permanentDivisionName:any;
+
+	permanentBlockName:any;
+
 }
 
 export class InstiteKycDetailsModel{
@@ -250,6 +276,8 @@ export class InstitutePromoterDetails{
 
      endDate:any;
 
+     endDateVal:any;
+
      branchId:any;
     
       operatorTypeName:any;
@@ -279,4 +307,6 @@ export class InstitutePromoterDetails{
       admissionNumber:any;
 
       uniqueId:any;
+      
+      isPoc:any;
 }

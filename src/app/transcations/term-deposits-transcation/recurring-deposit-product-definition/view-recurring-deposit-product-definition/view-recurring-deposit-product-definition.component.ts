@@ -53,6 +53,7 @@ export class ViewRecurringDepositProductDefinitionComponent {
   isFileUploaded: any;
   multipleFilesList: any[] = [];
   uploadFileData: any;
+  tenureTypeList: any[] = [];
 
   constructor(private commonComponent: CommonComponent, private formBuilder: FormBuilder,
     private activateRoute: ActivatedRoute, private encryptService: EncryptDecryptService, private datePipe: DatePipe,
@@ -62,7 +63,8 @@ export class ViewRecurringDepositProductDefinitionComponent {
   }
 
   ngOnInit(): void {
-    this.orgnizationSetting = this.commonComponent.orgnizationSettings()
+    this.orgnizationSetting = this.commonComponent.orgnizationSettings();
+    this.tenureTypeList = this.commonComponent.tenureType();
     this.commonFunctionsService.data.subscribe((res: any) => {
       if (res) {
         this.translate.use(res);

@@ -2,8 +2,9 @@
 <div class="col-12">
     <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
         [hideTransitionOptions]="'500ms'"></p-messages>
-    <h6 class="sub-heading">{{'ERP.KYC' | translate}}<span class="admission-text">(Admission
-            Number:&nbsp;{{admissionNumber}})</span></h6>
+    <!-- <h6 class="sub-heading">{{'ERP.KYC' | translate}}<span class="admission-text">(Admission
+            Number:&nbsp;{{admissionNumber}})</span></h6> -->
+    <h6 class="sub-heading">{{'ERP.KYC' | translate}}</h6>
 
     <form [formGroup]="kycForm" id="exit_types_form">
         <div class="col-12 px-0">
@@ -113,34 +114,30 @@
                                     <span class=""> {{ 'ERP.UPLOAD_DOCUMENT' | translate }} </span>
                                     <div class="uplodad-style align-items-center">
                                         <!-- Upload Button Column -->
-
-                                        <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
-                                            chooseLabel=" " id="apply-leave_fileUp_attach" name="file"
-                                            accept=".png,.jpg,.jpeg,.pdf" [customUpload]="true"
-                                            formContralName="fileUpload" (onSelect)="imageUploader($event,fileUpload)">
-                                        </p-fileUpload>
-
+                                    
+                                            <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]" chooseLabel=" " id="apply-leave_fileUp_attach" name="file"
+                                                accept=".png,.jpg,.jpeg,.pdf" [customUpload]="true" formContralName="fileUpload" (onSelect)="imageUploader($event,fileUpload)">
+                                            </p-fileUpload>
+                                    
                                         <!-- Uploaded Files Display Column -->
-
-                                        <div class="col-12 d-flex p-1 contant-body"
-                                            *ngFor="let img of fdNonCumulativeKycModel.multipartFileList">
-                                            <span *ngIf="img.fileType=='pdf'">
-                                                <a href="{{img.imageValue}}"> <img src="assets/images/pdficon-img.png"
-                                                        width="22" height="22"></a>
-                                            </span>
-                                            <span
-                                                *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                <a href="{{img.imageValue}}">
-                                                    <img src="{{img.imageValue}}" width="22" height="22">
-                                                </a>
-                                            </span>
-
-                                            <span class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
-                                                tooltipPosition="bottom">
-                                                {{img.fileName}}
-                                            </span>
+                                    
+                                             <div class="col-12 d-flex p-1 contant-body"  *ngFor="let img of fdNonCumulativeKycModel.multipartFileList">
+                                                <span *ngIf="img.fileType=='pdf'">
+                                                    <a href="{{img.imageValue}}"> <img src="assets/images/pdficon-img.png" width="22"
+                                                            height="22"></a>
+                                                </span>
+                                                <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                    <a href="{{img.imageValue}}">
+                                                        <img src="{{img.imageValue}}" width="22"
+                                                        height="22">
+                                                    </a>
+                                                </span>
+                                               
+                                                <span class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                                    {{img.fileName}}
+                                                </span>
+                                            </div>
                                         </div>
-                                    </div>
                                 </div>
                             </div>
                             <div class="col-12">

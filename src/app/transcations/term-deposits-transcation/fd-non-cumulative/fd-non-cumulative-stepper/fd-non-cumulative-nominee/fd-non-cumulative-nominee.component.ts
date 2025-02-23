@@ -105,8 +105,8 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
       aadhaar: ['',],
       mobileNumber: ['',],
       email: ['',],
-      dateOfBirth: new FormControl('',),
       nomineeType: ['', Validators.required],
+      dateOfBirth: new FormControl('',),
       remarks: new FormControl('', ),
       //guardian form fields
       relationNameOfGuardian: ['',],
@@ -211,7 +211,6 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
     this.fdNonCumulativeApplicationService.changeData({
       formValid: !this.nomineeForm.valid ? true : false,
       data: this.fdNonCumulativeNomineeModel,
-      // isDisable: (!this.nomineeForm.valid),
       isDisable: this.isSaveAndNextEnable,
       // isDisable:false,
       stepperIndex: 5,
@@ -222,6 +221,15 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
   }
   //on change nominee type need to update validation
   onChange(event: any, flag: boolean) {
+    this.nomineeForm.get('relationName')?.reset();
+    this.nomineeForm.get('nomineeName')?.reset();
+    this.nomineeForm.get('aadhaar')?.reset();
+    this.nomineeForm.get('mobileNumber')?.reset();
+    this.nomineeForm.get('email')?.reset();
+    if(flag){
+      this.fdNonCumulativeNomineeModel.nomineeSighnedFormMultiPartList = [];
+      this.isFileUploadedNominee = false;
+    }
     if (event == 1) {//new nominee
       this.newNomineeType(flag);
     }
@@ -238,6 +246,11 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
    * @param event guardain Type
    */
   onChangeGuardain(event: any, flag: boolean) {
+    this.nomineeForm.get('relationNameOfGuardian')?.reset();
+    this.nomineeForm.get('guardianName')?.reset();
+    this.nomineeForm.get('guardianAadhar')?.reset();
+    this.nomineeForm.get('guardianMobile')?.reset();
+    this.nomineeForm.get('guardianEmail')?.reset();
     if (event == 1) {//new guardain
       this.newGuardainType(flag);
     }
@@ -248,6 +261,24 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
       this.noGuardainaType(flag);
     }
   }
+
+      /**
+     * @implements memberType Check For Guardian And Nominee typwe List
+     * @author bhargavi
+     */
+      memberTypeCheck(memberTypeName : any){
+        if(memberTypeName != "Individual"){
+          this.nomineeList = [
+            { label: 'New Nominee', value: 1 },
+            { label: 'No Nominee', value: 3 },
+          ]
+          this.guadianTypesList = [
+            { label: 'New Guardain', value: 1 },
+            { label: 'No Guardain', value: 3 },
+          ]
+          this.accountType = applicationConstants.SINGLE_ACCOUNT_TYPE;
+        }
+      }
 
   //nominee details by fd account id
 
@@ -714,6 +745,7 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
     }
     if (filePathName === "Nominee") {
       this.isFileUploadedNominee = applicationConstants.FALSE;
+      this.fdNonCumulativeNomineeModel.nomineeSighnedFormMultiPartList = [];
     }
     if (filePathName === "Guardain") {
       this.isFileUploadedGuardian = applicationConstants.FALSE;
@@ -814,37 +846,38 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
     }
   }
 
+
   /**
    * @implements getNomineeHistory
    * @param accountNumber 
    */
-  getNomineeHistoryByfdAccountNumber(accountNumber: any) {
-    this.fdNonCumulativeNomineeService.getNomineeDetailsByFdAccId(accountNumber).subscribe((response: any) => {
-      this.responseModel = response;
-      if (this.responseModel != null && this.responseModel != undefined) {
-        if (this.responseModel.status != null && this.responseModel.status != undefined && this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-          if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
-            this.nomineeHistoryList = this.responseModel.data;
-          }
-        }
-        else {
-          this.msgs = [];
-          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 2000);
-        }
-      }
-    },
-      error => {
-        this.msgs = [];
-        this.commonComponent.stopSpinner();
-        this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
-        setTimeout(() => {
-          this.msgs = [];
-        }, 2000);
-      });
-  }
+  // getNomineeHistoryByfdAccountNumber(accountNumber: any) {
+  //   this.fdNonCumulativeNomineeService.getNomineeDetailsByFdAccId(accountNumber).subscribe((response: any) => {
+  //     this.responseModel = response;
+  //     if (this.responseModel != null && this.responseModel != undefined) {
+  //       if (this.responseModel.status != null && this.responseModel.status != undefined && this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+  //         if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
+  //           this.nomineeHistoryList = this.responseModel.data;
+  //         }
+  //       }
+  //       else {
+  //         this.msgs = [];
+  //         this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+  //         setTimeout(() => {
+  //           this.msgs = [];
+  //         }, 2000);
+  //       }
+  //     }
+  //   },
+  //     error => {
+  //       this.msgs = [];
+  //       this.commonComponent.stopSpinner();
+  //       this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+  //       setTimeout(() => {
+  //         this.msgs = [];
+  //       }, 2000);
+  //     });
+  // }
 
   /**
    * @implements gurdain form validation based on guardain type
@@ -867,13 +900,43 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
     this.nomineeForm.get('aadhaar')?.disable();
     this.nomineeForm.get('mobileNumber')?.disable();
     this.nomineeForm.get('email')?.disable();
-    this.nomineeForm.get('fileUpload')?.disable();
+    const controlName = this.nomineeForm.get('relationName');
+    if (controlName) {
+      controlName.setValidators(null); // Set the required validator null
+      controlName.updateValueAndValidity();
+    }
+
+    const controlTow = this.nomineeForm.get('nomineeName');
+    if (controlTow) {
+      controlTow.setValidators(null); // Set the required validator null
+      controlTow.updateValueAndValidity();
+    }
+    const controlFour = this.nomineeForm.get('aadhaar');
+    if (controlFour) {
+      controlFour.setValidators(null); // Set the required validator null
+      controlFour.updateValueAndValidity();
+    }
+    const controlFive = this.nomineeForm.get('mobileNumber');
+    if (controlFive) {
+      controlFive.setValidators(null); // Set the required validator null
+      controlFive.updateValueAndValidity();
+    }
+    const controlSix = this.nomineeForm.get('email');
+    if (controlSix) {
+      controlSix.setValidators(null); // Set the required validator null
+      controlSix.updateValueAndValidity();
+    }
+    const controlSeven = this.nomineeForm.get('remarks');
+    if(controlSeven){
+      controlSeven.setValidators(null);
+      controlSeven.updateValueAndValidity();
+    }
     this.updateData();
   }
   /**
    * @implements nominee required valdation
-   */
-  nomineeValidatorsRequired() {
+     */
+  nomineeValidatorsRequired(){
     this.nomineeForm.get('relationName')?.enable();
     this.nomineeForm.get('nomineeName')?.enable();
     this.nomineeForm.get('aadhaar')?.enable();
@@ -887,7 +950,7 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
       ]);
       controlName.updateValueAndValidity();
     }
-
+    
     const controlTow = this.nomineeForm.get('nomineeName');
     if (controlTow) {
       controlTow.setValidators([
@@ -919,13 +982,18 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
       ]);
       controlSix.updateValueAndValidity();
     }
+    const controlSeven = this.nomineeForm.get('remarks');
+    if(controlSeven){
+      controlSeven.setValidators(null);
+      controlSeven.updateValueAndValidity();
+    }
     this.updateData();
   }
 
   /**
    * @implements nominee not required validation 
    */
-  nomineeValidatorsFormNotRequired() {
+  nomineeValidatorsFormNotRequired(){
     const controlName = this.nomineeForm.get('relationName');
     if (controlName) {
       controlName.setValidators(null); // Set the required validator null
@@ -947,11 +1015,13 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
       controlFive.setValidators(null); // Set the required validator null
       controlFive.updateValueAndValidity();
     }
-    const controlSix = this.nomineeForm.get('email');
-    if (controlSix) {
-      controlSix.setValidators(null); // Set the required validator null
-      controlSix.updateValueAndValidity();
-    }
+    // const controlSix = this.nomineeForm.get('remarks');
+    // if(controlSix){
+    //   controlSix.setValidators([
+    //     Validators.required,
+    //   ]);
+    // controlSix.updateValueAndValidity();
+    // }
     this.updateData();
   }
 
@@ -976,6 +1046,7 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
         this.memberGuardianDetailsModelDetails.uploadFilePath = null;
       }
     }
+    this.updateData();//validation update for save and next button
   }
   /**
    * @implements onChange new Nominee
@@ -1054,7 +1125,17 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
         this.fdNonCumulativeNomineeModel.nomineeFilePath = nomineeFilePath;
       }
     }
+    const controlSix = this.nomineeForm.get('remarks');
+    if(controlSix){
+      controlSix.setValidators([
+        Validators.required,
+      ]);
+    controlSix.updateValueAndValidity();
+    }
+   
+    // this.updateData();
     this.nomineeValidatorsFormNotRequired();
+    this.updateData();
     // this.newNominee = false;
   }
 
@@ -1105,6 +1186,7 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
     this.courtAppointedGuardain = true;
     this.sameAsMemberGuardain = false;
     this.noGuardain = true;
+    this.isFileUploadedNominee = applicationConstants.FALSE
     //onchange on update
     let guardainId = null;
     if (flag) {
@@ -1129,4 +1211,26 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
     this.memberGuardianDetailsModelDetails.gaurdianType = 3;
     this.guardaindisable();
   }
+      /**
+     * @implements no guardain validation
+     * @author bhargavi
+     */
+      noGuardainValidation(){
+        if (this.age <= 18) {
+          this.nomineeForm.get('relationNameOfGuardian')?.enable();
+        this.nomineeForm.get('guardianName')?.enable();
+        this.nomineeForm.get('guardianAadhar')?.enable();
+        this.nomineeForm.get('guardianMobile')?.enable();
+        this.nomineeForm.get('guardianEmail')?.enable();
+        this.guarntorDetailsFalg = true;
+        const controlName = this.nomineeForm.get('guardianRemarks');
+        if (controlName) {
+          controlName.setValidators([
+            Validators.required,
+          ]);
+          controlName.updateValueAndValidity();
+        }
+    
+        }
+      }
 }

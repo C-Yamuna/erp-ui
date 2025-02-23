@@ -4,25 +4,25 @@
             Number:&nbsp;{{admissionNumber}})</span></h6>
     <div class="stepper-top-section-strip">
         <div class="row">
-            <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 stepper-top-product-name-background">
                 <div class="form-group">
                     <span>{{'TERMDEPOSITSTRANSACTION.PRODUCT_NAME' | translate}}</span>
                     <p class="mb-0">{{rdAccountsModel.productName}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
-                <div class="form-group">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="form-group ml-2">
                     <span>{{'TERMDEPOSITSTRANSACTION.ACCOUNT_TYPE' | translate}}</span>
                     <p class="mb-0">{{rdAccountsModel.accountTypeName}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="form-group">
                     <span>{{'ERP.DEPOSIT_AMOUNT' | translate}}</span>
                     <p class="mb-0">{{depositAmount}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="form-group">
                     <span>{{'TERMDEPOSITSTRANSACTION.DEPOSIT_DATE' | translate}}</span>
                     <p class="mb-0">{{depositDate}}</p>
@@ -167,7 +167,7 @@
                                     <div class="row">
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
-                                                <span class=""> {{ 'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate
+                                                <span class=""> <span class="red">*</span>{{ 'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate
                                                     }}
                                                 </span>
                                                 <div class="uplodad-style align-items-center">
@@ -191,7 +191,7 @@
 
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
-                                                <label>{{'TERMDEPOSITSTRANSACTION.REMARKS' | translate}}</label>
+                                                <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.REMARKS' | translate}}</label>
                                                 <textarea type="text" class="form-control" formControlName="remarks"
                                                     pInputTextarea placeholder="Enter Remarks Here"
                                                     [(ngModel)]="rdAccountNomineeModel.remarks"></textarea>
@@ -239,8 +239,7 @@
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
-                                                <label><span
-                                                        class="red">*</span>{{'TERMDEPOSITSTRANSACTION.GUARDAIN_NAME' |
+                                                <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.GUARDAIN_NAME' |
                                                     translate}}</label>
                                                 <input type="text" formControlName="guardianName" pInputText
                                                     placeholder="Enter Name"
@@ -288,13 +287,9 @@
                                                 </p-message>
                                             </div>
                                         </div>
-
-
-
-
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
-                                                <span>{{ 'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate }}</span>
+                                                <span><span class="red">*</span>{{ 'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate }}</span>
                                                 <div class="uplodad-style align-items-center">
                                                     <!-- Upload Button Column -->
                                                     <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold"
@@ -335,7 +330,7 @@
                                     <div class="row">
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
-                                                <span>{{ 'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate }}</span>
+                                                <span><span class="red">*</span>{{ 'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate }}</span>
                                                 <div class="uplodad-style align-items-center">
                                                     <!-- Upload Button Column -->
                                                     <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold"
@@ -357,7 +352,7 @@
 
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
-                                                <label>{{'TERMDEPOSITSTRANSACTION.REMARKS' | translate}}</label>
+                                                <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.REMARKS' | translate}}</label>
                                                 <textarea type="text" class="form-control" pInputTextarea
                                                     formControlName="guardianRemarks" placeholder="Enter Remarks Here"
                                                     [(ngModel)]="rdAccountGuardianModel.remarks"></textarea>
@@ -376,7 +371,7 @@
 
 
     <!-- History table in Edit  -->
-    <div class="mt-4" *ngIf="historyFLag">
+    <!-- <div class="mt-4" *ngIf="historyFLag">
         <h6 class="sub-heading">Nominee History Details</h6>
         <div class="globel-border-top-color"></div>
         <p-table [columns]="nomineeFields" [value]="nomineeHistoryList" dataKey="id" selectionMode="single"
@@ -397,7 +392,7 @@
                 </tr>
             </ng-template>
         </p-table>
-    </div>
+    </div> -->
 
     <!-- </div> -->
 </div>

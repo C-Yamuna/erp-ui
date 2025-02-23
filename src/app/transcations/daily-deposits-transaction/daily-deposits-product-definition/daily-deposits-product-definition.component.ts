@@ -25,6 +25,10 @@ export class DailyDepositsProductDefinitionComponent {
   msgs: any[] = [];
   showForm: boolean = applicationConstants.FALSE;
   editViewButton: boolean = applicationConstants.FALSE;
+  activeStatusCount: any;
+  inactiveStatusCount: any;
+  gridListLength: Number | undefined;
+  tempGridListData: any[] = [];
 
   constructor(private router: Router,
     private translate: TranslateService,
@@ -48,7 +52,7 @@ export class DailyDepositsProductDefinitionComponent {
     });
     this.dailyDepositProductDefinition = [
       { field: 'name', header: 'DAILY_DEPOSIT_TRANSACTION.PRODUCT_NAME' },
-      { field: '', header: 'DAILY_DEPOSIT_TRANSACTION.RATE_OF_INTEREST' },
+      // { field: '', header: 'DAILY_DEPOSIT_TRANSACTION.RATE_OF_INTEREST' },
       { field: 'minDepositAmount', header: 'DAILY_DEPOSIT_TRANSACTION.MINIMUM_AMOUNT' },
       { field: 'maxDepositAmount', header: 'DAILY_DEPOSIT_TRANSACTION.MAXIMUM_AMOUNT' },
       { field: 'effectiveStartDate', header: 'DAILY_DEPOSIT_TRANSACTION.EFFECTIVE_START_DATE' },
@@ -94,16 +98,44 @@ export class DailyDepositsProductDefinitionComponent {
             this.gridListData = this.gridListData.filter((data: any) => null != data.effectiveStartDate && null != data.effectiveEndDate).map(DailyDeposit => {
               DailyDeposit.effectiveStartDate = this.datePipe.transform(DailyDeposit.effectiveStartDate, this.orgnizationSetting.datePipe) || '';
               DailyDeposit.effectiveEndDate = this.datePipe.transform(DailyDeposit.effectiveEndDate, this.orgnizationSetting.datePipe) || '';
-              if (DailyDeposit.statusName === CommonStatusData.IN_PROGRESS || DailyDeposit.statusName === CommonStatusData.REQUEST_FOR_RESUBMISSION) {
+              // if (DailyDeposit.statusName === CommonStatusData.IN_PROGRESS || DailyDeposit.statusName === CommonStatusData.REQUEST_FOR_RESUBMISSION) {
+              //   DailyDeposit.showEdit = true;
+              // } else if (DailyDeposit.statusName === CommonStatusData.SUBMISSION_FOR_APPROVAL || DailyDeposit.statusName === CommonStatusData.REJECTED ||
+              //   DailyDeposit.statusName === CommonStatusData.CLOSED || DailyDeposit.statusName === CommonStatusData.APPROVED) {
+              //   DailyDeposit.showEdit = false;
+              // }
+              DailyDeposit.inProgress = false;
+              DailyDeposit.isSubmissionForApproval = false;
+              DailyDeposit.isApproved = false;
+              DailyDeposit.isRejected = false;
+              DailyDeposit.isRequestForResubmission = false;
+              DailyDeposit.viewButton = false;
+              DailyDeposit.showEdit = false;
+
+              if (DailyDeposit.statusName === CommonStatusData.IN_PROGRESS) {
+                DailyDeposit.inProgress = true;
                 DailyDeposit.showEdit = true;
-              } else if (DailyDeposit.statusName === CommonStatusData.SUBMISSION_FOR_APPROVAL || DailyDeposit.statusName === CommonStatusData.REJECTED ||
-                DailyDeposit.statusName === CommonStatusData.CLOSED || DailyDeposit.statusName === CommonStatusData.APPROVED) {
-                DailyDeposit.showEdit = false;
+              }else if (DailyDeposit.statusName === CommonStatusData.REQUEST_FOR_RESUBMISSION) {
+                DailyDeposit.isRequestForResubmission = true;
+                DailyDeposit.showEdit = true;
+              }else if (DailyDeposit.statusName === CommonStatusData.APPROVED) {
+                DailyDeposit.isApproved = true;
+                DailyDeposit.showEdit = true;
+              } else if (DailyDeposit.statusName === CommonStatusData.REJECTED) {
+                DailyDeposit.isRejected = true;
+                DailyDeposit.showEdit = true;
+              }else if (DailyDeposit.statusName === CommonStatusData.SUBMISSION_FOR_APPROVAL) {
+                DailyDeposit.isSubmissionForApproval = true;
+                DailyDeposit.showEdit = true;
               }
               return DailyDeposit
             });
           }
         }
+        this.activeStatusCount = this.gridListData.filter(fdAccountApplication => fdAccountApplication.status != null && fdAccountApplication.status != undefined && fdAccountApplication.status === applicationConstants.ACTIVE).length;
+        this.inactiveStatusCount = this.gridListData.filter(fdAccountApplication => fdAccountApplication.status != null && fdAccountApplication.status != undefined && fdAccountApplication.status === applicationConstants.IN_ACTIVE).length;
+        this.gridListLength = this.gridListData.length;
+        this.tempGridListData = this.gridListData;
         this.commonComponent.stopSpinner();
       } else {
         this.commonComponent.stopSpinner();

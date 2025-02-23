@@ -159,7 +159,7 @@ export class LandComponent {
       'southBoundary': new FormControl(''),
       'acerValue': new FormControl('', Validators.required),
       'khataNumber': new FormControl('', [Validators.required, Validators.pattern(/^[^\s]+(\s.*)?$/)]),
-      'waterSourceId': new FormControl('', Validators.required),
+      // 'waterSourceId': new FormControl('', Validators.required),
     })
 
     this.columns = [
@@ -171,7 +171,7 @@ export class LandComponent {
       { field: 'totalLandInSubUnits', header: 'MEMBERSHIP_TRANSACTION.LAND_IN_ACRES' },
       { field: 'landTypeName', header: 'MEMBERSHIP_TRANSACTION.LAND_TYPE' },
       { field: 'landOwnershipName', header: 'MEMBERSHIP_TRANSACTION.LAND_OWNERSHIP' },
-      { field: 'waterSourceName', header: 'MEMBERSHIP_TRANSACTION.SOURCE' },
+      // { field: 'waterSourceName', header: 'MEMBERSHIP_TRANSACTION.SOURCE' },
     ];
     this.getMeasuringUnit();
   }

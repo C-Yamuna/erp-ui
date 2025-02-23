@@ -151,8 +151,10 @@ export class SavingsBankCommunicationComponent implements OnInit {
   sameAsPerAddr(flag :any) {
     if (this.savingsBankCommunicationModel.isSameAddress) {
 
-      this.communicationForm.get('permenentAddressOne')?.reset();
-      this.communicationForm.get('permenentPinCode')?.reset();
+      if(flag){
+        this.communicationForm.get('permenentAddressOne')?.reset();
+        this.communicationForm.get('permenentPinCode')?.reset();
+      }
 
       this.communicationForm.get('permenentState')?.disable();
       this.communicationForm.get('permenentDistricts')?.disable();
@@ -195,10 +197,9 @@ export class SavingsBankCommunicationComponent implements OnInit {
       this.communicationForm.get('permenentAddressTwo')?.enable();
       this.communicationForm.get('permenentPinCode')?.enable();
 
-      this.communicationForm.get('permenentAddressOne')?.reset();
-      this.communicationForm.get('permenentPinCode')?.reset();
-
       if(flag){
+        this.communicationForm.get('permenentAddressOne')?.reset();
+        this.communicationForm.get('permenentPinCode')?.reset();
         this.savingsBankCommunicationModel.permntStateId = null;
         this.savingsBankCommunicationModel.permntDistrictId = null;
         this.savingsBankCommunicationModel.permntSubDistrictId = null;
@@ -675,8 +676,11 @@ export class SavingsBankCommunicationComponent implements OnInit {
       }, 3000);
     });
   }
-  //on change state  load district details
-  // @jyothi.naidana
+  /**
+   * @implements onChange states
+   * @param stateId 
+   * @author jyothi.naidana
+   */
   onChangeStates(stateId: any) {
     if(this.savingsBankCommunicationModel.stateId != null && this.savingsBankCommunicationModel.stateId != undefined && this.statesList != null && this.statesList != undefined && this.statesList.length > 0){
       let relationshiptype = this.statesList.find((data: any) => null != data && this.savingsBankCommunicationModel.stateId != null && data.value == this.savingsBankCommunicationModel.stateId);
@@ -711,6 +715,11 @@ export class SavingsBankCommunicationComponent implements OnInit {
     
   }
 
+  /**
+   * @implements onChange District
+   * @param districtId 
+   * @author jyothi.naidana
+   */
   onChangeDistricts(districtId: any) {
     if(this.savingsBankCommunicationModel.districtId != null && this.savingsBankCommunicationModel.districtId != undefined && this.districtsList != null && this.districtsList != undefined && this.districtsList.length > 0){
       let relationshiptype = this.districtsList.find((data: any) => null != data && this.savingsBankCommunicationModel.districtId != null && data.value == this.savingsBankCommunicationModel.districtId);
@@ -754,6 +763,11 @@ export class SavingsBankCommunicationComponent implements OnInit {
     this.villageList = [];
   }
 
+  /**
+   * @implements onChange permenent District
+   * @param stateId
+   * @author jyothi.naidana
+   */
   onChangePermenentDistricts(stateId : any){
     this.savingsBankCommunicationModel.permntDistrictId = null;
     this.savingsBankCommunicationModel.permenentDistrictName = null;
@@ -770,6 +784,11 @@ export class SavingsBankCommunicationComponent implements OnInit {
 
   }
 
+  /**
+   * @implements onChange Permenent Mandal
+   * @param districtId 
+   * @author jyothi.naidana
+   */
   onChangePermenentMandals(districtId : any){
     this.savingsBankCommunicationModel.permntSubDistrictId = null;
     
@@ -783,6 +802,11 @@ export class SavingsBankCommunicationComponent implements OnInit {
     
   }
 
+  /**
+   * @implements onChange permenent Village 
+   * @param mandalId 
+   * @author jyothi.naidana
+   */
   onChangePermenentVillagesByPermenentMandals(mandalId : any){
     this.savingsBankCommunicationModel.permntPincode = null;
     this.savingsBankCommunicationModel.permntAddress1 = null;
@@ -790,6 +814,11 @@ export class SavingsBankCommunicationComponent implements OnInit {
     this.getPermenentVilagesByPermenetMandalId(mandalId);
   }
   
+  /**
+   * @implements loan master address data
+   * @param obj 
+   * @author jyothi.naidana
+   */
   loadMasterAddressDetails(obj: any) {
     this.getDistrictByStateId(obj.stateId);
     this.getMandalsByByDistrctId(obj.districtId);
@@ -844,6 +873,10 @@ export class SavingsBankCommunicationComponent implements OnInit {
     }
   }
 
+  /**
+   * @implements append pincode
+   * @author jyothi.naidana
+   */
   appendPinCodeToPermenent() {
     if (this.savingsBankCommunicationModel != null && this.savingsBankCommunicationModel != undefined && this.savingsBankCommunicationModel.isSameAddress != null && this.savingsBankCommunicationModel.isSameAddress != undefined && this.savingsBankCommunicationModel.isSameAddress) {
       if(this.savingsBankCommunicationModel.pincode != null && this.savingsBankCommunicationModel.pincode != undefined){
@@ -871,5 +904,14 @@ export class SavingsBankCommunicationComponent implements OnInit {
         this.getPermenentVilagesByPermenetMandalId(this.savingsBankCommunicationModel.permntSubDistrictId);
       }
     }
+  }
+
+  /**
+   * @implements onChange permenent Village
+   * @author jyothi.naidana
+   */
+  onChangePermenentVillage(){
+    this.communicationForm.get('permenentAddressOne')?.reset();
+        this.communicationForm.get('permenentPinCode')?.reset();
   }
 }

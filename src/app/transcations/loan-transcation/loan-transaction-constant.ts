@@ -97,6 +97,8 @@ export const Loantransactionconstant = {
     SAO_PRODUCT_CHARGES_CONFIG:"/menu/loan_transaction/sao_loan_product_definition_stepper/sao_product_charges_config",
     SAO_PROD_PURPOSE_CONFIG:"/menu/loan_transaction/sao_loan_product_definition_stepper/sao_prod_purpose_config",
     SAO_REQUIRED_DOCUMENT_CONFIG:"/menu/loan_transaction/sao_loan_product_definition_stepper/sao_required_documents_config",
+    SAO_FIELD_VISIT_CONFIG:"/menu/loan_transaction/sao_loan_product_definition_stepper/sao_field_visit_config",
+    SAO_DISBURSMENT_CONFIG:"/menu/loan_transaction/sao_loan_product_definition_stepper/sao_disbursment_config",
     VIEW_SAO_PRODUCT_DEFINITION:"/menu/loan_transaction/view_sao_loan_product_definition",
 
     VIEW_SIMPLE_INTEREST_LOAN:"/menu/loan_transaction/view_simple_interest_loan",
@@ -140,5 +142,7 @@ export const Loantransactionconstant = {
     TERM_LOAN_PROD_PURPOSE_CONFIG:"/menu/loan_transaction/term_loan_product_definition_stepper/term_loan_prod_purpose_config",
     TERM_LOAN_REQUIRED_DOCUMENT_CONFIG:"/menu/loan_transaction/term_loan_product_definition_stepper/term_loan_required_documents_config",
     VIEW_TERM_LOAN_PRODUCT_DEFINITION:"/menu/loan_transaction/view_term_loan_product_definition",
+    TERM_LOAN_FIELD_VISIT_CONFIG:"/menu/loan_transaction/term_loan_product_definition_stepper/term_loan_field_visit_config",
+    TERM_LOAN_DISBURSEMENT_CONFIG:"/menu/loan_transaction/term_loan_product_definition_stepper/term_loan_disbursement_config",
 }
 

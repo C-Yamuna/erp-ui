@@ -134,12 +134,11 @@
             <tr>
                 <td *ngFor="let col of loans">
                     <div *ngIf="col.field =='memberName'">
-                        <div class="d-block"
+                        <!-- <div class="d-block"
                             *ngIf="rowData.multipartFileListForPhotoCopy != null && rowData.multipartFileListForPhotoCopy != undefined && rowData.multipartFileListForPhotoCopy.length > 0">
                             <span *ngFor="let img of rowData.multipartFileListForPhotoCopy">
                                 <span class="{{img.imageValue}}" (click)="onClickMemberPhotoCopy(rowData)"
                                     *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                    <!-- <a href="{{img.imageValue}}" ></a> -->
                                     <img class="table-circle-image" src="{{img.imageValue}}">
                                 </span>
                             </span>
@@ -151,27 +150,90 @@
                             <span (click)="onClickMemberPhotoCopy(rowData)">
                                 <img class="table-circle-image" src="assets/images/no-image.jpg">
                             </span>
-                            <!-- <span class="account-number-style" *ngIf ="rowData.actionButton" (click)="edit(rowData)">{{ rowData[col.field] }}</span> -->
                             <span>{{ rowData[col.field] }}</span>
+                        </div> -->
+                        <div class="d-flex">
+                            <div *ngIf="!rowData.photoCopy" (click)="onClickMemberPhotoCopy(rowData)">
+                                <img src="assets/images/no-image.jpg" class="table-circle-image member cursor-pointer">
+                            </div>
+                            <div *ngIf="rowData.photoCopy">
+                                <div *ngFor="let img of rowData.multipartFileListForPhotoCopy"
+                                    (click)="onClickMemberPhotoCopy(rowData)">
+                                    <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                                        <!-- <a href="{{img.imageValue}}"> -->
+                                        <img src="{{img.imageValue}}" class="table-circle-image member cursor-pointer">
+                                        <!-- </a> -->
+                                    </div>
+                                    <div *ngIf=" img.fileType =='pdf'">
+                                        <!-- <a href="{{img.imageValue}}"> -->
+                                        <img src="assets\images\pdf.png"
+                                            class="table-circle-image member cursor-pointer">
+                                        <!-- </a> -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="!rowData.signatureCopy" class="mr-3" (click)="onClickMemberPhotoCopy(rowData)">
+                                <img src="assets/images/no-image.jpg" class="table-circle-image cursor-pointer">
+                            </div>
+                            <div *ngIf="rowData.signatureCopy">
+                                <div *ngFor="let img of rowData.multipartFileListForSignatureCopy" class="mr-3"
+                                    (click)="onClickMemberPhotoCopy(rowData)">
+                                    <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                                        <!-- <a href="{{img.imageValue}}"> -->
+                                        <img src="{{img.imageValue}}" class="table-circle-image cursor-pointer">
+                                        <!-- </a> -->
+                                    </div>
+                                    <div *ngIf=" img.fileType =='pdf'">
+                                        <!-- <a href="{{img.imageValue}}"> -->
+                                        <img src="assets\images\pdf.png" class="table-circle-image cursor-pointer">
+                                        <!-- </a> -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="admissionno-pad">
+                                <span>{{ rowData[col.field] }}</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="account-number-style cursor-pointer" *ngIf="(col.field =='accountNumber')" (click)="edit(rowData)">{{ rowData[col.field] }}</div>
+                    <!-- <div class="account-number-style cursor-pointer" *ngIf="(col.field =='accountNumber')" (click)="edit(rowData)">{{ rowData[col.field] }}</div>
                     <div class="status-style statusactive" *ngIf="(col.field =='accountStatusName') && rowData.approved"> {{rowData[col.field]}}</div>
                     <div class="status-style statusreject" *ngIf="(col.field =='accountStatusName') && rowData.rejected"> {{rowData[col.field]}}</div>
                     <div class="status-style statussubmissionforapproval" *ngIf="(col.field =='accountStatusName') && rowData.submissionForApproval"> {{rowData[col.field]}}</div>
                     <div class="status-style statuspending" *ngIf="(col.field =='accountStatusName') && rowData.created"> {{rowData[col.field]}}</div>
-                    <div *ngIf="col.field !='accountStatusName' && col.field !='accountNumber'&& col.field !='memberName'"> {{rowData[col.field]}}</div>
+                    <div *ngIf="col.field !='accountStatusName' && col.field !='accountNumber'&& col.field !='memberName'"> {{rowData[col.field]}}</div> -->
+                    <div class="account-number-style cursor-pointer"
+                        *ngIf="(col.field =='accountNumber')&& !rowData.approved && !rowData.rejected && !rowData.submissionForApproval"
+                        (click)="edit(rowData)">{{ rowData[col.field] }}</div>
+                    <div
+                        *ngIf="(col.field =='accountNumber')&& (rowData.approved || rowData.rejected || rowData.submissionForApproval)">
+                        {{ rowData[col.field] }}</div>
 
+                    <div class="status-style statusactive"
+                        *ngIf="(col.field =='accountStatusName') && rowData.approved"> {{rowData[col.field]}}</div>
+                    <div class="status-style statusreject"
+                        *ngIf="(col.field =='accountStatusName') && rowData.rejected"> {{rowData[col.field]}}</div>
+                    <div class="status-style statussubmissionforapproval"
+                        *ngIf="(col.field =='accountStatusName') && rowData.submissionForApproval">
+                        {{rowData[col.field]}}</div>
+                    <div class="status-style statuspending"
+                        *ngIf="(col.field =='accountStatusName') && rowData.created"> {{rowData[col.field]}}</div>
+                    <div class="status-style statuspending"
+                        *ngIf="(col.field =='accountStatusName') && rowData.requestForResubmmission">
+                        {{rowData[col.field]}}</div>
+
+                    <div
+                        *ngIf="col.field !='accountStatusName' && col.field !='accountNumber' && col.field !='memberName'">
+                        {{rowData[col.field]}}</div>
                 </td>
                 <td>
-                <div class="global-action-btn flex align-items-center justify-content-start">
-                    <p-button label="view" class="action-view" (click)="view(rowData)"></p-button>
-                    <p-dropdown id="bunit_txt_status" class="action-operation" placeholder="operations" [filter]="true"
-                        [options]="operationslist" [(ngModel)]="operations"
-                        (onChange)="navigateToOperations($event,rowData)" [appendTo]="'body'"></p-dropdown>
+                    <div class="global-action-btn flex align-items-center justify-content-start">
+                        <p-button label="view" class="action-view" (click)="view(rowData)"></p-button>
+                        <p-dropdown id="bunit_txt_status" class="action-operation" placeholder="operations"
+                            [filter]="true" [options]="operationslist" [(ngModel)]="operations"
+                            (onChange)="navigateToOperations($event,rowData)" [appendTo]="'body'"></p-dropdown>
 
-                </div>
-            </td>
+                    </div>
+                </td>
             </tr>
         </ng-template>
     </p-table>
@@ -187,3 +249,45 @@
 
     </div>
 </div>
+<!-- photo Copy dialog -->
+<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="memberPhotoCopyZoom" styleClass="photo-dialog">
+    <div class="col-12 px-0">
+        <div class="row">
+            <div class="col-6">
+                <div>
+                    <div 
+                        *ngFor="let img of memberphotCopyMultipartFileList">
+                        <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                            <a href="{{img.imageValue}}">
+                                <img src="{{img.imageValue}}" class="popup-images">
+                            </a>
+                        </div>
+                    </div>
+                    <div *ngIf="memberphotCopyMultipartFileList == null || memberphotCopyMultipartFileList == undefined">
+                        <img src="assets/images/no-image.jpg"  class="popup-images">
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div>
+                    <div 
+                        *ngFor="let img of memberSignatureCopyMultipartFileList">
+                        <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                            <a href="{{img.imageValue}}">
+                                <img src="{{img.imageValue}}" class="popup-images">
+                            </a>
+                        </div>
+                    </div>
+                    <div *ngIf="memberSignatureCopyMultipartFileList == null || memberSignatureCopyMultipartFileList == undefined">
+                        <img src="assets/images/no-file.jpg" class="popup-images">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="col-12">
+                    <div class="d-flex justify-content-end">
+         <p-button class="action-edit" label="{{'ERP.CLOSE' | translate}}" (click)="closePhoto()"></p-button> 
+        </div>
+    </div> -->
+</p-dialog>

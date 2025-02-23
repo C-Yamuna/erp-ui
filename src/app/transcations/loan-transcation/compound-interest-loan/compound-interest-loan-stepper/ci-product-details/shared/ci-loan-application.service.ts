@@ -174,6 +174,14 @@ export class CiLoanApplicationService {
   addCiLoanDisbursementSchedule(loansModel: any) {
     return this.commonHttpService.post(loansModel,Headers, ERP_TRANSACTION_CONSTANTS.LOANS+ ERP_TRANSACTION_CONSTANTS.CI_LOAN_DISBURSEMENT_SCHEDULES + ERP_TRANSACTION_CONSTANTS.ADD)
   }
+
+  updateCiDisbursements(loansModel: any) {
+    return this.commonHttpService.put(loansModel,Headers, ERP_TRANSACTION_CONSTANTS.LOANS+ ERP_TRANSACTION_CONSTANTS.CI_DISBURSEMENTS + ERP_TRANSACTION_CONSTANTS.UPDATE)
+  }
+  addCiDisbursements(loansModel: any) {
+    return this.commonHttpService.post(loansModel,Headers, ERP_TRANSACTION_CONSTANTS.LOANS+ ERP_TRANSACTION_CONSTANTS.CI_DISBURSEMENTS + ERP_TRANSACTION_CONSTANTS.ADD)
+  }
+
   getCiLoanDisbursementScheduleById(id: string) {
     let headers = new HttpHeaders({ 'id': id + '' })
     return this.commonHttpService.getById(headers,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.CI_LOAN_DISBURSEMENT_SCHEDULES + ERP_TRANSACTION_CONSTANTS.GET);

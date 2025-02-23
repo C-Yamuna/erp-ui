@@ -274,7 +274,8 @@ export class DailyDepositsAccountsService {
     let headers = new HttpHeaders({ 'id': id + '' })
     return this.commonHttpService.getById(headers,ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.PRODUCT_DEFINITION + ERP_TRANSACTION_CONSTANTS.GET_PRODUCT_OVERVIEW_BY_ID);
   }
-  getAllRequiredDocuments(){
-    return this.commonHttpService.getAll(ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.REQUIRED_DOCUMENTS_CONFIG + ERP_TRANSACTION_CONSTANTS.GET_ALL);
+  getAllRequiredDocuments(id:any){
+    let headers = new HttpHeaders({ 'productId': id + '' })
+    return this.commonHttpService.getById(headers,ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.REQUIRED_DOCUMENTS_CONFIG + ERP_TRANSACTION_CONSTANTS.GER_REQUIRED_DOCUMENTS_CONFIG_BY_PRODUCT_ID);
   }
 }

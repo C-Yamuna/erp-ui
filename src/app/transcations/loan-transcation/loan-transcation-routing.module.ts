@@ -117,8 +117,12 @@ import { CiLoanCollectionComponent } from './compound-interest-loan/ci-loan-oper
 import { CiLoanClosureComponent } from './compound-interest-loan/ci-loan-operations/ci-loan-closure/ci-loan-closure.component';
 import { TermLoanDisbursementComponent } from './term-loan/term-loan-operations/term-loan-disbursement/term-loan-disbursement.component';
 import { TermLoanCollectionComponent } from './term-loan/term-loan-operations/term-loan-collection/term-loan-collection.component';
+import { SaoFieldVisitConfigComponent } from './sao/sao-product-definition/sao-product-definition-stepper/sao-field-visit-config/sao-field-visit-config.component';
+import { SaoDisbursmentConfigComponent } from './sao/sao-product-definition/sao-product-definition-stepper/sao-disbursment-config/sao-disbursment-config.component';
 import { SiLoanApprovalComponent } from '../approval-transcations/loans-approvals/si-loan-approval-details/si-loan-approval/si-loan-approval.component';
 import { SiLoanApprovalDetailsComponent } from '../approval-transcations/loans-approvals/si-loan-approval-details/si-loan-approval-details.component';
+import { TermLoanFieldVisitConfigComponent } from './term-loan/term-loan-product-definition/term-loan-product-definition-stepper/term-loan-field-visit-config/term-loan-field-visit-config.component';
+import { TermLoanDisbursementScheduleComponent } from './term-loan/term-loan-product-definition/term-loan-product-definition-stepper/term-loan-disbursement-schedule/term-loan-disbursement-schedule.component';
 
   
 
@@ -146,6 +150,8 @@ const routes: Routes = [
           { path: 'sao_product_charges_config', component: SaoProductChargesConfigComponent},
           { path: 'sao_prod_purpose_config', component: SaoProdPurposeConfigComponent},
           { path: 'sao_required_documents_config', component: SaoRequiredDocumentsConfigComponent},
+          { path: 'sao_field_visit_config', component: SaoFieldVisitConfigComponent},
+          { path: 'sao_disbursment_config', component: SaoDisbursmentConfigComponent},
         ]
       },
       
@@ -288,6 +294,8 @@ const routes: Routes = [
           { path: 'term_loan_product_charges_config', component: TermLoanChargesComponent},
           { path: 'term_loan_prod_purpose_config', component: TermLoanPurposeComponent},
           { path: 'term_loan_required_documents_config', component: TermLoanRequiredDocumentsComponent},
+          { path: 'term_loan_field_visit_config', component: TermLoanFieldVisitConfigComponent},
+          { path: 'term_loan_disbursement_config', component: TermLoanDisbursementScheduleComponent},
         ]
       }, 
     ]

@@ -318,6 +318,10 @@ export class TermLoanProductDefinition {
     termInterestPolicyConfigDTOList?: any;
     
     interestPostingFrequencyName?: any;
+
+    termLoanFieldVisitConfigDTOList: any;
+
+    termLoanDisbursementScheduleDTOList: any;
 }
 export class TermLoanInterestPolicy {
     id?: any;

@@ -117,6 +117,8 @@ export class FdNonCumulativeNominee {
 
     memberTypeName:any;
 
+    multipartFileList:any;
+
 }
 
 export class MemberGuardianDetailsModelDetails{
@@ -252,4 +254,6 @@ export class MemberGuardianDetailsModelDetails{
    villageId ?: any;
 
    guardainSighnedMultipartFiles?: any;
+
+   multipartsFileList:any;
 }

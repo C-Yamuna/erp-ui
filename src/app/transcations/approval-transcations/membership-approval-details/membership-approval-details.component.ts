@@ -161,8 +161,8 @@ export class MembershipApprovalDetailsComponent {
           }
           return membership
         });
-          this.activeStatusCount = this.gridListData.filter(membership => membership.memStatus === applicationConstants.ACTIVE).length;
-          this.inactiveStatusCount = this.gridListData.filter(membership => membership.memStatus === applicationConstants.IN_ACTIVE).length;
+          this.activeStatusCount = this.gridListData.filter(membership => membership.status === applicationConstants.ACTIVE).length;
+          this.inactiveStatusCount = this.gridListData.filter(membership => membership.status === applicationConstants.IN_ACTIVE).length;
       }
        this.commonComponent.stopSpinner();
     }, error => {

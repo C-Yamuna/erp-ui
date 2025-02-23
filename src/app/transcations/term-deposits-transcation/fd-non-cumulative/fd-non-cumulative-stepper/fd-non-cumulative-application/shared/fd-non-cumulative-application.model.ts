@@ -176,8 +176,6 @@ export class FdNonCumulativeApplication {
 
      isRenewal:any;
 
-     foreClosureDate :  any;
-
      multipartFileList: any;
      
      transactionMode: any;
@@ -185,6 +183,18 @@ export class FdNonCumulativeApplication {
      transactionDate:any;
 
      interestPaymentFrequencyName:any;
+
+     interestPayoutType: any;
+
+     foreClosureDate: any;
+
+     interestPayoutAmount: any;
+
+     totalInterestAmount: any;
+
+     tenureType: any;
+
+     interestPayoutTransferAccount: any;
 
 }
 
@@ -235,5 +245,9 @@ export class FdNonCummProductDefinitionModel {
 	resolutionNumber: any;
 
   effectiveStartDateVal: any;
+
+  tenureType?: any;
+
+  tenureTypeName? : any;
   
   }

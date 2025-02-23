@@ -39,7 +39,7 @@
                             <!-- Admission No & Image-part -->
                             <div class="col-xl-12 col-lg-12 col-md-3 col-sm-4 col-xs-4">
                                 <div class="col-12 pic-sig-status">
-                                    <div class="d-flex justify-content-center mb-3" *ngIf="photoCopyFlag">
+                                    <div class="d-flex justify-content-center mb-1" *ngIf="photoCopyFlag">
                                         <div
                                             *ngFor="let img of membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy">
                                             <span class="{{img.imageValue}}" (click)="onClickMemberPhotoCopy()"
@@ -66,23 +66,26 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="text-center min-h-50px">
-                                    <span class="text-fontwt">{{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' |
-                                        translate}}</span>
-                                    <p class="font-semibold text-break">
-                                        {{membershipBasicRequiredDetailsModel.tempAdmissionNumber}}</p>
-                                </div>
 
                                 <div class="text-center min-h-50px">
-                                    <span class="text-fontwt">{{'TERMDEPOSITSTRANSACTION.NAME' | translate}}</span>
-                                    <p class="font-semibold text-break"><span
-                                            class="border-bottom">{{membershipBasicRequiredDetailsModel.name}}</span>
-                                    </p>
+                                    <p class="text-break view-member-name">{{membershipBasicRequiredDetailsModel.name}}</p>
+                                    <div class="d-flex justify-content-center">
+                                        <div class="member-name-border"></div>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
                                 <div class="row">
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                        <span class="basicdata-icons icon-size"><i class="fa fa-address-book"></i></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' |
+                                                translate}}</p>
+                                            <p class="label-input-text">
+                                                {{membershipBasicRequiredDetailsModel.tempAdmissionNumber}}</p>
+                                        </div>
+                                    </div>
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
                                         <span class="basicdata-icons icon-size"><i class="fa fa-id-card-o"></i></span>
                                         <div>
@@ -150,9 +153,11 @@
                                                 {{membershipBasicRequiredDetailsModel.panNumber}}</p>
                                         </div>
                                     </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card" *ngIf="membershipBasicRequiredDetailsModel.isKycApproved">
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card"
+                                        *ngIf="membershipBasicRequiredDetailsModel.isKycApproved">
                                         <div class="col-10 d-flex p-0">
-                                            <span class="basicdata-icons icon-size"><i class="fa fa-check-circle-o"></i></span>
+                                            <span class="basicdata-icons icon-size"><i
+                                                    class="fa fa-check-circle-o"></i></span>
                                             <div>
                                                 <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                                 <p class="label-input-text">{{isKycApproved}}</p>
@@ -161,16 +166,18 @@
                                         <div class="col-2 kyc-done icon-size text-right"><i class="fa fa-check-circle"
                                                 aria-hidden="true"></i></div>
                                     </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card" *ngIf="!membershipBasicRequiredDetailsModel.isKycApproved">
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card"
+                                        *ngIf="!membershipBasicRequiredDetailsModel.isKycApproved">
                                         <div class="col-10 d-flex p-0">
-                                            <span class="basicdata-icons icon-size"><i class="fa fa-check-circle-o"></i></span>
+                                            <span class="basicdata-icons icon-size"><i
+                                                    class="fa fa-check-circle-o"></i></span>
                                             <div>
                                                 <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                                 <p class="label-input-text">{{isKycApproved}}</p>
                                             </div>
                                         </div>
-                                        <div class="col-2 kyc-done icon-size text-right"><i class="fa fa-check-circle text-white"
-                                                aria-hidden="true"></i></div>
+                                        <div class="col-2 kyc-done icon-size text-right"><i
+                                                class="fa fa-check-circle text-white" aria-hidden="true"></i></div>
                                     </div>
                                     <div class="col-12 color-light justify-content-end text-right">
                                         <a class="fst-italic text-light cursor-pointer"
@@ -202,45 +209,56 @@
                             <!-- Admission No & Image-part -->
                             <div class="col-xl-12 col-lg-12 col-md-3 col-sm-4 col-xs-4">
                                 <div class="col-12 pic-sig-status">
-                                    <div class="d-flex justify-content-center mb-3">
+                                    <div class="d-flex justify-content-center mb-1">
                                         <img src="assets/images/avatar-table.png" class="image-user">
                                         <p class="active-status"></p>
                                         <img src="assets/images/sign.png" class="image-sign">
                                     </div>
                                 </div>
                                 <div class="text-center min-h-50px">
-                                    <span class="text-fontwt">{{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' | translate}}</span>
+                                    <span class="text-fontwt">{{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' |
+                                        translate}}</span>
                                     <p class="font-semibold text-break"> {{memberGroupDetailsModel.admissionNumber}}</p>
                                 </div>
 
                                 <div class="text-center min-h-50px">
-                                    <span class="text-fontwt">{{'TERMDEPOSITSTRANSACTION.NAME' | translate}}</span>
-                                    <p class="font-semibold text-break"><span
-                                            class="border-bottom">{{memberGroupDetailsModel.name}}</span>
-                                    </p>
+                                    <p class="text-break view-member-name">{{memberGroupDetailsModel.name}}</p>
+                                    <div class="d-flex justify-content-center">
+                                        <div class="member-name-border"></div>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
                                 <div class="row">
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                        <span class="basicdata-icons icon-size"><i class="fa fa-address-book"></i></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' | translate}}</p>
+                                            <p class="label-input-text">{{memberGroupDetailsModel.admissionNumber}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
                                         <span class="basicdata-icons icon-size"><i class="fa fa-id-card-o"></i></span>
                                         <div>
-                                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.MEMBER_TYPE' | translate}}</p>
+                                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.MEMBER_TYPE' |
+                                                translate}}</p>
                                             <p class="label-input-text">{{memberGroupDetailsModel.memberTypeName}}</p>
                                         </div>
                                     </div>
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
                                         <span class="basicdata-icons icon-size"><i class="fa fa-calendar"></i></span>
                                         <div>
-                                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.ADMISSION_DATE' | translate}}</p>
+                                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.ADMISSION_DATE'
+                                                | translate}}</p>
                                             <p class="label-input-text">{{memberGroupDetailsModel.admissionDateVal}}</p>
                                         </div>
                                     </div>
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
                                         <span class="basicdata-icons icon-size"><i class="fa fa-calendar"></i></span>
                                         <div>
-                                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.REGISTERED_DATE' | translate}} </p>
+                                            <p class="label-view text-fontwt">
+                                                {{'TERMDEPOSITSTRANSACTION.REGISTERED_DATE' | translate}} </p>
                                             <p class="label-input-text">{{memberGroupDetailsModel.registrationDateVal}}
                                             </p>
                                         </div>
@@ -249,7 +267,8 @@
                                         <span class="basicdata-icons icon-size"><i
                                                 class="fa fa-phone-square"></i></span>
                                         <div>
-                                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.POC_NAME' | translate}}</p>
+                                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.POC_NAME' |
+                                                translate}}</p>
                                             <p class="label-input-text">{{memberGroupDetailsModel.pocName}}</p>
                                         </div>
                                     </div>
@@ -257,7 +276,8 @@
                                         <span class="basicdata-icons icon-size"><i
                                                 class="fa fa-phone-square"></i></span>
                                         <div>
-                                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.POC_MOBILE_NO' | translate}}</p>
+                                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.POC_MOBILE_NO'
+                                                | translate}}</p>
                                             <p class="label-input-text">{{memberGroupDetailsModel.pocNumber}}</p>
                                         </div>
                                     </div>
@@ -265,7 +285,8 @@
                                         <span class="basicdata-icons icon-size"><i
                                                 class="fa fa-address-card-o"></i></span>
                                         <div>
-                                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.PAN' | translate}}</p>
+                                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.PAN' |
+                                                translate}}</p>
                                             <p class="label-input-text">{{memberGroupDetailsModel.panNumber}}</p>
                                         </div>
                                     </div>
@@ -273,13 +294,16 @@
                                         <span class="basicdata-icons icon-size"><i
                                                 class="fa fa-address-card-o"></i></span>
                                         <div>
-                                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.TAN' | translate}}</p>
+                                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.TAN' |
+                                                translate}}</p>
                                             <p class="label-input-text">{{memberGroupDetailsModel.tanNumber}}</p>
                                         </div>
                                     </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card" *ngIf="memberGroupDetailsModel.isKycApproved">
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card"
+                                        *ngIf="memberGroupDetailsModel.isKycApproved">
                                         <div class="col-10 d-flex p-0">
-                                            <span class="basicdata-icons icon-size"><i class="fa fa-check-circle-o"></i></span>
+                                            <span class="basicdata-icons icon-size"><i
+                                                    class="fa fa-check-circle-o"></i></span>
                                             <div>
                                                 <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                                 <p class="label-input-text">{{isKycApproved}}</p>
@@ -288,16 +312,18 @@
                                         <div class="col-2 kyc-done icon-size text-right"><i class="fa fa-check-circle"
                                                 aria-hidden="true"></i></div>
                                     </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card" *ngIf="!memberGroupDetailsModel.isKycApproved">
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card"
+                                        *ngIf="!memberGroupDetailsModel.isKycApproved">
                                         <div class="col-10 d-flex p-0">
-                                            <span class="basicdata-icons icon-size"><i class="fa fa-check-circle-o"></i></span>
+                                            <span class="basicdata-icons icon-size"><i
+                                                    class="fa fa-check-circle-o"></i></span>
                                             <div>
                                                 <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                                 <p class="label-input-text">{{isKycApproved}}</p>
                                             </div>
                                         </div>
-                                        <div class="col-2 kyc-done icon-size text-right"><i class="fa fa-check-circle text-white"
-                                                aria-hidden="true"></i></div>
+                                        <div class="col-2 kyc-done icon-size text-right"><i
+                                                class="fa fa-check-circle text-white" aria-hidden="true"></i></div>
                                     </div>
                                     <div class="col-12 color-light justify-content-end text-right">
                                         <a class="fst-italic text-light cursor-pointer"
@@ -318,7 +344,7 @@
                                     <h6 class="side-card-header">{{'TERMDEPOSITSTRANSACTION.INSTITUTION_DETAILS' |
                                         translate}}</h6>
                                 </div>
-                                <div class="col-2 py-0"> 
+                                <div class="col-2 py-0">
                                     <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
                                         *ngIf="isNewMember && preveiwFalg"
                                         (click)="editMembership(fdNonCumulativeApplicationModel)"></p-button>
@@ -329,29 +355,32 @@
                             <!-- Admission No & Image-part -->
                             <div class="col-xl-12 col-lg-12 col-md-3 col-sm-4 colxs-4">
                                 <div class="col-12 pic-sig-status">
-                                    <div class="d-flex justify-content-center mb-3">
+                                    <div class="d-flex justify-content-center mb-1">
                                         <img src="assets/images/avatar-table.png" class="image-user">
                                         <p class="active-status"></p>
                                         <img src="assets/images/sign.png" class="image-sign">
                                     </div>
                                 </div>
-                                <div class="text-center min-h-50px">
-                                    <span class="text-fontwt">{{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' |
-                                        translate}}</span>
-                                    <p class="font-semibold text-brek">
-                                        {{membershipInstitutionDetailsModel.tempAdmissionNumber}}</p>
-                                </div>
 
                                 <div class="text-center min-h-50px">
-                                    <span class="text-fontwt">{{'TERMDEPOSITSTRANSACTION.NAME' | translate}}</span>
-                                    <p class="font-semibold text-break"><span
-                                            class="border-bottom">{{membershipInstitutionDetailsModel.name}}</span>
-                                    </p>
+                                    <p class="text-break view-member-name">{{membershipInstitutionDetailsModel.name}}</p>
+                                    <div class="d-flex justify-content-center">
+                                        <div class="member-name-border"></div>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
                                 <div class="row">
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                        <span class="basicdata-icons icon-size"><i class="fa fa-address-book"></i></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' |
+                                                translate}}</p>
+                                            <p class="label-input-text">
+                                                {{membershipInstitutionDetailsModel.tempAdmissionNumber}}</p>
+                                        </div>
+                                    </div>
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
                                         <span class="basicdata-icons icon-size"><i class="fa fa-id-card-o"></i></span>
                                         <div>
@@ -387,7 +416,8 @@
                                         <div>
                                             <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.POC_NAME' |
                                                 translate}}</p>
-                                            <p class="label-input-text">{{membershipInstitutionDetailsModel.pocName}}</p>
+                                            <p class="label-input-text">{{membershipInstitutionDetailsModel.pocName}}
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
@@ -419,9 +449,11 @@
                                             </p>
                                         </div>
                                     </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card" *ngIf="membershipInstitutionDetailsModel.isKycApproved">
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card"
+                                        *ngIf="membershipInstitutionDetailsModel.isKycApproved">
                                         <div class="col-10 d-flex p-0">
-                                            <span class="basicdata-icons icon-size"><i class="fa fa-check-circle-o"></i></span>
+                                            <span class="basicdata-icons icon-size"><i
+                                                    class="fa fa-check-circle-o"></i></span>
                                             <div>
                                                 <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                                 <p class="label-input-text">{{isKycApproved}}</p>
@@ -430,16 +462,18 @@
                                         <div class="col-2 kyc-done icon-size text-right"><i class="fa fa-check-circle"
                                                 aria-hidden="true"></i></div>
                                     </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card" *ngIf="!membershipInstitutionDetailsModel.isKycApproved">
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card"
+                                        *ngIf="!membershipInstitutionDetailsModel.isKycApproved">
                                         <div class="col-10 d-flex p-0">
-                                            <span class="basicdata-icons icon-size"><i class="fa fa-check-circle-o"></i></span>
+                                            <span class="basicdata-icons icon-size"><i
+                                                    class="fa fa-check-circle-o"></i></span>
                                             <div>
                                                 <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                                 <p class="label-input-text">{{isKycApproved}}</p>
                                             </div>
                                         </div>
-                                        <div class="col-2 kyc-done icon-size text-right"><i class="fa fa-check-circle text-white"
-                                                aria-hidden="true"></i></div>
+                                        <div class="col-2 kyc-done icon-size text-right"><i
+                                                class="fa fa-check-circle text-white" aria-hidden="true"></i></div>
                                     </div>
                                     <div class="col-12 color-light justify-content-end text-right">
                                         <a class="fst-italic text-light cursor-pointer"
@@ -477,14 +511,12 @@
 
                                         <div class="col-12 p-0" *ngIf="!isKycEmpty">
                                             <div class="row g-3">
-
                                                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12"
                                                     *ngFor="let document of kycGridList ; let i = index">
                                                     <div class="stepper-kyc-card p-3 pb-1 mb-2">
                                                         <!-- view card -->
                                                         <div class="row">
-                                                            <div
-                                                                class="col-lg-7 col-md-7 col-sm-7 col-xs-6 d-flex align-items-center">
+                                                            <div class="col-lg-7 col-md-7 col-sm-7 col-xs-6 d-flex align-items-center">
                                                                 <div class="card-leftbody">
                                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 "
                                                                         *ngIf="!individualFlag">
@@ -520,8 +552,24 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div
-                                                                class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end">
+                                                            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end d-flex right-actions">
+                                                                <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClickKycPhotoCopy(document)"><i
+                                                                        class="fa fa-eye m-0" aria-hidden="true"></i>
+                                                                </div>
+                                                                <div *ngIf="!preveiwFalg">
+                                                                    <div class="carddownload-icon icon-size text-right" *ngFor="let img of document.multipartFileList">
+                                                                        <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                                            <a href="{{img.imageValue}}">
+                                                                                <i class="fa fa-download ml-3 mr-0" aria-hidden="true">
+                                                                                    <!-- <img src="{{img.imageValue}}"> -->
+                                                                                </i>
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div><img src="assets/images/verify.png" alt="" class="verifykyc ml-3"></div>
+                                                            </div>
+                                                            <!-- <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end">
                                                                 <div class="kycview-done icon-size text-right"><i
                                                                         class="fa fa-check-circle mr-0"
                                                                         aria-hidden="true"></i></div>
@@ -548,7 +596,7 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
+                                                            </div> -->
                                                         </div>
                                                     </div>
                                                 </div>
@@ -759,7 +807,7 @@
 
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
-                                <div class=" global-card-bg-color view-carddata icon-size">
+                                <div class=" global-card-bg-color view-carddata icon-size pb-1">
                                     <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
@@ -825,11 +873,13 @@
                                                         {{fdNonCumulativeApplicationModel.tenureInYears}}</p>
                                                 </div>
                                                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
-                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.INTEREST_PAYEMNET_FREQUENCY' |
+                                                    <h6 class="label-view">
+                                                        {{'TERMDEPOSITSTRANSACTION.INTEREST_PAYEMNET_FREQUENCY' |
                                                         translate}}
                                                     </h6>
                                                     <p class="label-input-text">
-                                                        {{fdNonCumulativeApplicationModel.interestPaymentFrequencyName}}</p>
+                                                        {{fdNonCumulativeApplicationModel.interestPaymentFrequencyName}}
+                                                    </p>
                                                 </div>
                                                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.MATURITY_AMOUNT' |
@@ -850,7 +900,8 @@
                                                         translate}}
                                                     </h6>
                                                     <p class="label-input-text">
-                                                        {{fdNonCumulativeApplicationModel.isAutoRenewal? 'Yes':'No'}}</p>
+                                                        {{fdNonCumulativeApplicationModel.isAutoRenewal? 'Yes':'No'}}
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
@@ -968,7 +1019,7 @@
                         <div class="col-lg-12 col-md-12 col-sm-12" *ngIf="memberGroupFlag">
                             <div class="col-12 p-0">
                                 <div class=" global-card-bg-color view-carddata icon-size">
-                                    <div class="col-12">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -1010,7 +1061,7 @@
                         <div class="col-lg-12 col-md-12 col-sm-12" *ngIf="memberIntitutionFlag">
                             <div class="col-12 p-0">
                                 <div class=" global-card-bg-color view-carddata icon-size">
-                                    <div class="col-12">
+                                    <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="d-flex">
@@ -1078,16 +1129,12 @@
                                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <div class="stepper-nominee-card p-3 pb-1 mb-2">
                                                         <div class="row">
-                                                            <h6 class="super-sub-heading mt-1">
-                                                                {{'TERMDEPOSITSTRANSACTION.NOMINEE' | translate}}</h6>
                                                             <div class="col-12">
                                                                 <div class="row">
-                                                                    <div
-                                                                        class="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center">
+                                                                    <div class="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center">
                                                                         <div class="card-leftbody">
                                                                             <div class="row">
-                                                                                <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                     <h6 class="label-view">
                                                                                         {{'TERMDEPOSITSTRANSACTION.NOMINEE_TYPE'
                                                                                         | translate}}</h6>
@@ -1095,8 +1142,8 @@
                                                                                         {{nomineeDetailsModel.nomineeTypeName}}
                                                                                     </p>
                                                                                 </div>
-                                                                                <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
+                                                                                *ngIf="nomineeDetailsModel.nomineeType != 3">
                                                                                     <h6 class="label-view">
                                                                                         {{'TERMDEPOSITSTRANSACTION.RELATIONSHIP_WITH_MEMBER'
                                                                                         | translate}}</h6>
@@ -1104,8 +1151,8 @@
                                                                                         {{nomineeDetailsModel.relationTypeName}}
                                                                                     </p>
                                                                                 </div>
-                                                                                <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
+                                                                                *ngIf="nomineeDetailsModel.nomineeType != 3">
                                                                                     <h6 class="label-view">
                                                                                         {{'TERMDEPOSITSTRANSACTION.NAME'
                                                                                         | translate}}</h6>
@@ -1113,11 +1160,9 @@
                                                                                         {{nomineeDetailsModel.nomineeName}}
                                                                                     </p>
                                                                                 </div>
-                                                                                <!-- </div>
-                                                        <div class="row "> -->
 
-                                                                                <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
+                                                                                *ngIf="nomineeDetailsModel.nomineeType != 3">
                                                                                     <h6 class="label-view">
                                                                                         {{'TERMDEPOSITSTRANSACTION.AADHAR'
                                                                                         | translate}}</h6>
@@ -1125,8 +1170,8 @@
                                                                                         {{nomineeDetailsModel.nomineeAadharNumber}}
                                                                                     </p>
                                                                                 </div>
-                                                                                <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
+                                                                                *ngIf="nomineeDetailsModel.nomineeType != 3">
                                                                                     <h6 class="label-view">
                                                                                         {{'TERMDEPOSITSTRANSACTION.CONTACT'
                                                                                         | translate}}</h6>
@@ -1134,8 +1179,8 @@
                                                                                         {{nomineeDetailsModel.nomineeMobileNumber}}
                                                                                     </p>
                                                                                 </div>
-                                                                                <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
+                                                                                *ngIf="nomineeDetailsModel.nomineeType != 3">
                                                                                     <h6 class="label-view">
                                                                                         {{'TERMDEPOSITSTRANSACTION.EMAIL'
                                                                                         | translate}}</h6>
@@ -1143,11 +1188,45 @@
                                                                                         {{nomineeDetailsModel.nomineeEmailId}}
                                                                                     </p>
                                                                                 </div>
+                                                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
+                                                                                *ngIf="nomineeDetailsModel.nomineeType == 3">
+                                                                                <h6 class="label-view">{{'ERP.REMARKS' | translate}}</h6>
+                                                                                <p class="label-input-text">{{nomineeDetailsModel.remarks}}</p>
+                                                                            </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <div
-                                                                        class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-xs-12 justify-content-end">
+                                                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4 justify-content-end d-flex">
+                                                                    <div class="cardview-icon icon-size text-right cursor-pointer"
+                                                                        (click)="onClickNomineePhotoCopy()"><i
+                                                                            class="fa fa-eye m-0"
+                                                                            aria-hidden="true"></i></div>
+                                                                    <div *ngIf="!preveiwFalg">
+                                                                        <div class="carddownload-icon icon-size text-right"
+                                                                            *ngFor="let img of nomineeDetailsModel.multipartFileList">
+                                                                            <!-- Image -->
+                                                                            <div
+                                                                                *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                                                                                <a href="{{img.imageValue}}">
+                                                                                    <i class="fa fa-download ml-3 mr-0"
+                                                                                        aria-hidden="true">
+                                                                                        <!-- <img src="{{img.imageValue}}"> -->
+                                                                                    </i>
+                                                                                </a>
+                                                                            </div>
+                                                                            <!-- PDF -->
+                                                                            <div *ngIf=" img.fileType =='pdf'">
+                                                                                <a href="{{img.imageValue}}">
+                                                                                    <i class="fa fa-download ml-3 mr-0"
+                                                                                        aria-hidden="true">
+                                                                                        <!-- <img src="{{img.imageValue}}"> -->
+                                                                                    </i>
+                                                                                </a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                    <!-- <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-xs-12 justify-content-end">
                                                                         <div class="col-12 px-0">
                                                                             <div class="px-0"
                                                                                 *ngFor="let img of nomineeDetailsModel.nomineeSighnedFormMultiPartList">
@@ -1171,7 +1250,7 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> -->
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1205,7 +1284,8 @@
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
+                                                                                    *ngIf="memberGuardianDetailsModel.guardianType != 3">
                                                                                     <h6 class="label-view">
                                                                                         {{'TERMDEPOSITSTRANSACTION.RELATIONSHIP_WITH_MEMBER'
                                                                                         | translate}}</h6>
@@ -1214,7 +1294,8 @@
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
+                                                                                    *ngIf="memberGuardianDetailsModel.guardianType != 3" >
                                                                                     <h6 class="label-view">
                                                                                         {{'TERMDEPOSITSTRANSACTION.NAME'
                                                                                         | translate}}</h6>
@@ -1227,7 +1308,8 @@
                                                                                 <!-- </div>
                                                             <div class="row "> -->
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
+                                                                                    *ngIf="memberGuardianDetailsModel.guardianType != 3">
                                                                                     <h6 class="label-view">
                                                                                         {{'TERMDEPOSITSTRANSACTION.AADHAR'
                                                                                         | translate}}</h6>
@@ -1236,7 +1318,8 @@
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
+                                                                                    *ngIf="memberGuardianDetailsModel.guardianType != 3">
                                                                                     <h6 class="label-view">
                                                                                         {{'TERMDEPOSITSTRANSACTION.CONTACT'
                                                                                         | translate}}</h6>
@@ -1245,7 +1328,8 @@
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
-                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                    class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
+                                                                                    *ngIf="memberGuardianDetailsModel.guardianType != 3">
                                                                                     <h6 class="label-view">
                                                                                         {{'TERMDEPOSITSTRANSACTION.EMAIL'
                                                                                         | translate}}</h6>
@@ -1253,10 +1337,45 @@
                                                                                         {{memberGuardianDetailsModel.guardianEmailId}}
                                                                                     </p>
                                                                                 </div>
+                                                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
+                                                                                *ngIf="memberGuardianDetailsModel.guardianType == 3">
+                                                                                <h6 class="label-view">{{'ERP.REMARKS' | translate}}</h6>
+                                                                                <p class="label-input-text">{{memberGuardianDetailsModel.remarks}}</p>
+                                                                            </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <div
+                                                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4 justify-content-end d-flex">
+                                                                        <div class="cardview-icon icon-size text-right cursor-pointer"
+                                                                            (click)="onClickGuardianPhotoCopy()"><i
+                                                                                class="fa fa-eye m-0"
+                                                                                aria-hidden="true"></i></div>
+                                                                        <div *ngIf="!preveiwFalg">
+                                                                            <div class="carddownload-icon icon-size text-right"
+                                                                                *ngFor="let img of memberGuardianDetailsModel.multipartsFileList">
+                                                                                <!-- Image -->
+                                                                                <div
+                                                                                    *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                                                                                    <a href="{{img.imageValue}}">
+                                                                                        <i class="fa fa-download ml-3 mr-0"
+                                                                                            aria-hidden="true">
+                                                                                            <!-- <img src="{{img.imageValue}}"> -->
+                                                                                        </i>
+                                                                                    </a>
+                                                                                </div>
+                                                                                <!-- PDF -->
+                                                                                <div *ngIf="img.fileType =='pdf'">
+                                                                                    <a href="{{img.imageValue}}">
+                                                                                        <i class="fa fa-download ml-3 mr-0"
+                                                                                            aria-hidden="true">
+                                                                                            <!-- <img src="{{img.imageValue}}"> -->
+                                                                                        </i>
+                                                                                    </a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- <div
                                                                         class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-xs-12 justify-content-end">
                                                                         <div class="col-12 px-0">
                                                                             <div class="px-0"
@@ -1281,7 +1400,7 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> -->
 
                                                                 </div>
                                                             </div>
@@ -1297,7 +1416,7 @@
                         <div class="col-12 p-1"></div>
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
-                                <div class="global-card-bg-color view-carddata icon-size">
+                                <div class="global-card-bg-color view-carddata icon-size pb-2">
                                     <div class="col-12 p-0">
                                         <div class="row">
                                             <div class="col-6">
@@ -1349,7 +1468,28 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-lg-5 col-md-5 col-sm-5 justify-content-end">
+                                                            <div
+                                                            class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2 justify-content-end d-flex right-actions">
+                                                            <div class="cardview-icon icon-size text-right cursor-pointer"
+                                                                (click)="onClickDocPhotoCopy(document)"><i
+                                                                    class="fa fa-eye m-0" aria-hidden="true"></i>
+                                                            </div>
+                                                            <div *ngIf="!preveiwFalg">
+                                                                <div class="carddownload-icon icon-size text-right"
+                                                                    *ngFor="let img of document.multipartFileList">
+                                                                    <div
+                                                                        *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                                        <a href="{{img.imageValue}}">
+                                                                            <i class="fa fa-download ml-3 mr-0"
+                                                                                aria-hidden="true">
+                                                                                <!-- <img src="{{img.imageValue}}"> -->
+                                                                            </i>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                            <!-- <div class="col-lg-5 col-md-5 col-sm-5 justify-content-end">
                                                                 <div class="col-12 px-0 mt-4">
                                                                     <div class="col-12 px-0"
                                                                         *ngFor="let img of document.multipartFileList">
@@ -1373,7 +1513,7 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
+                                                            </div> -->
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1390,64 +1530,73 @@
                 <div class="col-12 viewbottom-footer icon-size">
                     <div class="row">
                         <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4" *ngIf="isShowSubmit">
-                            <p-button icon="fa fa-download" iconPos="left" pTooltip="Filename.pdf" tooltipPosition="top" (click)="pdfDownload()"></p-button>
+                            <p-button icon="fa fa-download" iconPos="left" pTooltip="Filename.pdf" tooltipPosition="top"
+                                (click)="pdfDownload()"></p-button>
                             <!-- <p-button  icon="fa fa-print" iconPos="left" pTooltip="Print" tooltipPosition="top"></p-button> -->
                         </div>
                         <div class="col-3 p-3 bottom-padding"></div>
-                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-4" *ngIf="isShowSubmit"> 
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-4" *ngIf="isShowSubmit">
                             <div class="form-label">
                                 <span class=""> {{ 'TERMDEPOSITSTRANSACTION.UPLOAD_DOCUMENT' | translate }} </span>
                                 <div class="uplodad-style align-items-center">
                                     <!-- Upload Button Column -->
                                     <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
-                                        id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".pdf" 
+                                        id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".pdf"
                                         (onRemove)="fileRemoveEvent()" (onSelect)="fileUploader($event, fileUpload)">
                                     </p-fileUpload>
-                                    <div class="col-12  d-flex p-1 contant-body" *ngFor="let img of fdNonCumulativeApplicationModel.multipartFileListsignedCopyPath">
+                                    <div class="col-12  d-flex p-1 contant-body"
+                                        *ngFor="let img of fdNonCumulativeApplicationModel.multipartFileListsignedCopyPath">
                                         <div *ngIf="img.fileType=='pdf'">
-                                            <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22" height="22"></a>
+                                            <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22"
+                                                    height="22"></a>
                                         </div>
-                                        <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                        <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
+                                            tooltipPosition="bottom">
                                             {{img.fileName}}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="col-xl-7 col-lg-5 col-md-4 col-sm-4 mt-4" *ngIf="isShowSubmit">
                             <div class="d-flex justify-content-end">
-                            <p-button (click)="backbutton()" label="BACK"></p-button>
-                            <p-button *ngIf="isShowSubmit" label="{{'TERMDEPOSITSTRANSACTION.SUBMIT' | translate}}" (click)="submit()" [disabled]="isDisableSubmit" ></p-button>
+                                <p-button (click)="backbutton()" label="BACK"></p-button>
+                                <p-button *ngIf="isShowSubmit" label="{{'TERMDEPOSITSTRANSACTION.SUBMIT' | translate}}"
+                                    (click)="submit()" [disabled]="isDisableSubmit"></p-button>
+                            </div>
                         </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4" *ngIf="viewButton"> 
+                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4" *ngIf="viewButton">
                             <div class="form-label">
-                                <h6 class="label-view"> {{ 'ERP.SCANNED COPY' | translate }} </h6>                                  
-                                    <div class="d-flex mt-2" *ngFor="let img of fdNonCumulativeApplicationModel.multipartFileListsignedCopyPath">
-                                        <div *ngIf="img.fileType=='pdf'">
-                                            <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22" height="22"></a>
-                                        </div>
-                                        <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                            {{img.fileName}}
-                                        </div>
+                                <h6 class="label-view"> {{ 'ERP.SCANNED COPY' | translate }} </h6>
+                                <div class="d-flex mt-2"
+                                    *ngFor="let img of fdNonCumulativeApplicationModel.multipartFileListsignedCopyPath">
+                                    <div *ngIf="img.fileType=='pdf'">
+                                        <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22"
+                                                height="22"></a>
                                     </div>
+                                    <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
+                                        tooltipPosition="bottom">
+                                        {{img.fileName}}
+                                    </div>
+                                </div>
                                 <!-- </div> -->
                             </div>
                         </div>
                         <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4" *ngIf="editFlag || viewButton">
-                             <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.STATUS' | translate}}</p>
+                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.STATUS' | translate}}</p>
                             <p class="label-input-text">{{fdNonCumulativeApplicationModel.accountStatusName}}</p>
                         </div>
-                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4"*ngIf="editFlag || viewButton">
+                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4" *ngIf="editFlag || viewButton">
                             <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.REMARKS' | translate}}</p>
-                           <p class="label-input-text">{{fdNonCumulativeApplicationModel.remarks}}</p>
-                       </div>
+                            <p class="label-input-text">{{fdNonCumulativeApplicationModel.remarks}}</p>
+                        </div>
                         <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4" *ngIf="editFlag || viewButton">
                             <div class="d-flex justify-content-end">
-                            <p-button (click)="backbutton()" label="BACK"></p-button>
-                            <p-button *ngIf="isShowSubmit" label="{{'TERMDEPOSITSTRANSACTION.SUBMIT' | translate}}" (click)="submit()" [disabled]="isDisableSubmit" ></p-button>
-                        </div>
+                                <p-button (click)="backbutton()" label="BACK"></p-button>
+                                <p-button *ngIf="isShowSubmit" label="{{'TERMDEPOSITSTRANSACTION.SUBMIT' | translate}}"
+                                    (click)="submit()" [disabled]="isDisableSubmit"></p-button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1800,6 +1949,81 @@
         <div class="d-flex justify-content-end">
             <p-button class="action-edit" label="{{'TERMDEPOSITSTRANSACTION.CLOSE' | translate}}"
                 (click)="closePhoto()"></p-button>
+        </div>
+    </div>
+</p-dialog>
+
+<!-- KYC Photo Copy -->
+<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="kycPhotoCopyZoom" [modal]="true" [maximizable]="true"
+    styleClass="doc-photo-dialog">
+    <div class="col-12">
+        <div *ngFor="let img of multipleFilesList">
+            <div class="mb-3 imgcustom-class"
+                *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                <!-- <a href="{{img.imageValue}}"> -->
+                <img src="{{img.imageValue}}" class="doc-photocopy">
+                <!-- </a> -->
+            </div>
+        </div>
+
+    </div>
+</p-dialog>
+
+<!-- DOC Photo Copy -->
+<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="docPhotoCopyZoom" [modal]="true" [maximizable]="true"
+    styleClass="doc-photo-dialog">
+    <div class="col-12">
+        <div *ngFor="let img of multipleFilesList">
+            <div class="mb-3 imgcustom-class"
+                *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                <!-- <a href="{{img.imageValue}}"> -->
+                <img src="{{img.imageValue}}" class="doc-photocopy">
+                <!-- </a> -->
+            </div>
+        </div>
+    </div>
+</p-dialog>
+
+<!-- Nominee Photo Copy -->
+<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="nomineePhotoCopyZoom" [modal]="true"
+    [maximizable]="true" styleClass="doc-photo-dialog">
+    <div class="col-12">
+        <div *ngFor="let img of nomineeDetailsModel.multipartFileList">
+            <!-- Image -->
+            <div class="mb-3 imgcustom-class"
+                *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                <!-- <a href="{{img.imageValue}}"> -->
+                <img src="{{img.imageValue}}" class="doc-photocopy">
+                <!-- </a> -->
+            </div>
+            <!-- PDF -->
+            <div class="mb-3 imgcustom-class" *ngIf=" img.fileType =='pdf'">
+                <!-- <a href="{{img.imageValue}}"> -->
+                <img src="{{img.imageValue}}" class="doc-photocopy">
+                <!-- </a> -->
+            </div>
+        </div>
+    </div>
+</p-dialog>
+
+<!-- Guardian Photo Copy -->
+<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="guardianPhotoCopyZoom" [modal]="true"
+    [maximizable]="true" styleClass="doc-photo-dialog">
+    <div class="col-12">
+        <div *ngFor="let img of memberGuardianDetailsModel.multipartsFileList">
+            <!-- Image -->
+            <div class="mb-3 imgcustom-class"
+                *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                <!-- <a href="{{img.imageValue}}"> -->
+                <img src="{{img.imageValue}}" class="doc-photocopy">
+                <!-- </a> -->
+            </div>
+            <!-- PDF -->
+            <div class="mb-3 imgcustom-class" *ngIf="img.fileType =='pdf'">
+                <!-- <a href="{{img.imageValue}}"> -->
+                <img src="{{img.imageValue}}" class="doc-photocopy">
+                <!-- </a> -->
+            </div>
         </div>
     </div>
 </p-dialog>

@@ -59,6 +59,7 @@ export const Configuration = {
     TD_FORM_TYPES:'/td_form_types',
     LAND_TYPES:'/land_type',
     LAND_OWNERSHIP_TYPE:'/land_ownership',
+    GOLD_RATES:'/gold_rates',
    
 
     // SB Config

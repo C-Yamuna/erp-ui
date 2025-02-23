@@ -2,25 +2,25 @@
     <h6 class="sub-heading">{{'ERP.ADD_JOINT_HOLDERS_SECONDARY' | translate}}</h6>
     <div class="stepper-top-section-strip">
         <div class="row">
-            <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 stepper-top-product-name-background">
                 <div class="form-group">
                     <span>{{'ERP.PRODUCT_NAME' | translate}}</span>
                     <p class="mb-0">{{productName}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
-                <div class="form-group">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="form-group ml-2">
                     <span>{{'ERP.ACCOUNT_TYPE' | translate}}</span>
                     <p class="mb-0">{{accountType}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="form-group">
                     <span>{{'ERP.DEPOSIT_AMOUNT' | translate}}</span>
                     <p class="mb-0">{{depositAmount}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="form-group">
                     <span>{{'ERP.DEPOSIT_DATE' | translate}}</span>
                     <p class="mb-0">{{depositDateVal}}</p>
@@ -54,7 +54,7 @@
         <h6 class="sub-heading">{{'ERP.SECONDARY_ACCOUNT_HOLDER_DETAILS' | translate}} </h6>
 
         <div class="col-12 p-3 mem-details-stripbox">
-            <div class="col-auto rounded bg-white mb-2" *ngFor="let jointHolderDetails of jointHolderDetailsList">
+            <div class="col-auto rounded bg-white" *ngFor="let jointHolderDetails of jointHolderDetailsList">
                 <div class="d-flex">
                     <div class="col">
                         <img class="mem-details-stripimage" src="assets/images/avata2r-table.png"
@@ -63,19 +63,19 @@
                     <div class="col"></div>
                     <div class="w-100 mt-1 mb-2 h-90p">
                         <div class="row">
-                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                 <div class="col">
                                     <span class="label-view">{{'ERP.ADMISSION_NO' | translate}}</span>
                                     <p class="label-input-text text-break m-0">{{jointHolderDetails.admissionNumber}}</p>
                                 </div>
                             </div>
-                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                 <div class="col">
                                     <span class="label-view">{{'ERP.NAME' | translate}}</span>
                                     <p class="label-input-text text-break m-0">{{jointHolderDetails.name}}</p>
                                 </div>
                             </div>
-                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                 <div class="col">
                                     <span class="label-view">{{'ERP.MEMBER_TYPE' | translate}}</span>
                                     <p class="label-input-text text-break m-0">{{jointHolderDetails.memberTypeName}}</p>
@@ -87,31 +87,37 @@
                                     <p class="label-input-text text-break m-0">{{jointHolderDetails.memberClass}}</p>
                                 </div>
                             </div>  
-                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                 <div class="col">
                                     <span class="label-view">{{'ERP.ADMISSION_DATE' | translate}}</span>
                                     <p class="label-input-text text-break m-0">{{jointHolderDetails.admissionDateVal}}</p>
                                 </div>
                             </div>
-                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                 <div class="col">
                                     <span class="label-view">{{'ERP.AADHAR_NO' | translate}}</span>
                                     <p class="label-input-text text-break m-0">{{jointHolderDetails.aadharNumber}}</p>
                                 </div>
                             </div>
-                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                 <div class="col">
                                     <span class="label-view">{{'ERP.PAN_NUMBER' | translate}}</span>
                                     <p class="label-input-text text-break m-0">{{jointHolderDetails.panNumber}}</p>
                                 </div>
                             </div>
-                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                 <div class="col">
                                     <span class="label-view">{{'ERP.MOBILE_NUMBER' | translate}}</span>
                                     <p class="label-input-text text-break m-0">{{jointHolderDetails.mobileNumber}}</p>
                                 </div>
                             </div>
-                            <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 min-h-50px">
+                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+                                <div class="col">
+                                    <span class="label-view">{{'ERP.KYC' | translate}}</span>
+                                    <p class="label-input-text text-break m-0">{{jointHolderDetails.isKycApproved}}</p>
+                                </div>
+                            </div>
+                            <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                 <div class="col">
                                     <span class="label-view">{{'ERP.EMAIL' | translate}}</span>
                                     <p class="label-input-text text-break m-0">{{jointHolderDetails.emailId}}</p>

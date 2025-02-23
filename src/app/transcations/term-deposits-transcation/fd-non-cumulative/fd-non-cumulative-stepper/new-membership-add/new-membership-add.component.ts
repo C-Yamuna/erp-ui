@@ -123,6 +123,7 @@ export class NewMembershipAddComponent {
     groupedQualificationSubQualification : any[] =[];
     subCasteList: any[] = [];
     subQualificationList:any[]=[];
+  groupId: any;
 
 
 
@@ -693,6 +694,7 @@ export class NewMembershipAddComponent {
               this.updateData();
               this.disableMemberType = true;
             }
+            this.promoterDuplicate(GroupPromoterDetailsModel);
           }
           else {
             this.commonComponent.stopSpinner();
@@ -1571,6 +1573,7 @@ export class NewMembershipAddComponent {
          this.promoterDetailsModel.operatorTypeId  = this.membershipBasicRequiredDetails.occupationId;
          
         }
+        this.promoterDuplicate(this.promoterDetailsModel);
       }
       else {
         this.commonComponent.stopSpinner();
@@ -2026,6 +2029,23 @@ export class NewMembershipAddComponent {
       }
     }
   }
-    
-
+  
+  promoterDuplicate(rowData: any) {
+    if (rowData != null && rowData != undefined) {
+      if (this.promoterDetails != null && this.promoterDetails != undefined && this.promoterDetails.length > 0) {
+        for (let item of this.promoterDetails) {
+          if (item != null && item != undefined && item.admissionNumber != null && item.admissionNumber === rowData.admissionNumber &&
+            item.groupId != null && item.groupId === this.groupId) {
+            // this.promoterDetailsModel = new promoterDetailsModel();
+            this.promoterDetailsForm.reset();
+            this.msgs = [];
+            this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "promoter details already exists" }];
+            setTimeout(() => {
+              this.msgs = [];
+            }, 1500);
+          }
+        }
+      }
+    }
+  }
 }

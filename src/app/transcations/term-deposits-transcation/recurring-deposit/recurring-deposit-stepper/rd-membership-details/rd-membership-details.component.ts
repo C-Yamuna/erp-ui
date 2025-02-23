@@ -684,6 +684,7 @@ export class RdMembershipDetailsComponent {
     // this.kycModelList[existingIndex].push(row);
     this.addKycButton = false;
     this.buttonDisabled = false;
+    this.updateData();
   }
 
   /**

@@ -181,6 +181,14 @@ export class FdCumulativeApplication {
     transactionMode:any;
     
     transactionDate:any;
+    
+    tenureType?: any;
+
+    tenureTypeName? : any;
+
+    // interestPayoutType? : any;
+
+    interestPayoutTransferAccount? : any;
 }
 
 export class FdCummProductDefinitionModel {
@@ -232,5 +240,7 @@ export class FdCummProductDefinitionModel {
     resolutionNumber: any;
 
     effectiveStartDateVal: any;
+
+    tenureTypeName? : any;
 
 }

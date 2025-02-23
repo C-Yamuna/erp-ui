@@ -1,17 +1,18 @@
 <div class="col-12">
     <form [formGroup]="communicationForm">
-        <h6 class="sub-heading">{{'ERP.COMMUNICATION' | translate}}<span class="admission-text">(Admission
-                number:&nbsp;{{admissionNumber}})</span></h6>
+        <h6 class="sub-heading">{{'TERMDEPOSITSTRANSACTION.COMMUNICATION' | translate}}</h6>
+        <!-- <h6 class="sub-heading">{{'TERMDEPOSITSTRANSACTION.COMMUNICATION' | translate}}<span class="admission-text">(Admission
+                number:&nbsp;{{admissionNumber}})</span></h6> -->
         <div class="col-12 bg-label-colorfull p-0">
             <div class="row g-3">
                 <div class="col-lg-6 col-md-12 col-sm-12">
-                    <h6 class="super-sub-heading">Registered</h6>
+                    <h6 class="super-sub-heading">{{'TERMDEPOSITSTRANSACTION.COMMUNICATION_ADDRESS' | translate}}</h6>
                     <div class="col-12 global-border">
                         <div class="col-12">
                             <div class="row g-3 mt-n1">
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label><span class="red">*</span>{{'ERP.STATES' | translate}}</label>
+                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.STATE' | translate}}</label>
 
                                         <p-dropdown [filter]="true" [options]="statesList" placeholder="Select"
                                             formControlName="stateName"
@@ -22,7 +23,7 @@
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label><span class="red">*</span>{{'ERP.DISTRICTS' | translate}}</label>
+                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.DISTRICT' | translate}}</label>
 
                                         <p-dropdown [filter]="true" [options]="districtsList" placeholder="Select"
                                             formControlName="districtId"
@@ -33,7 +34,7 @@
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label><span class="red">*</span>{{'ERP.MANDAL/TESHIL' | translate}} </label>
+                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.MANDAL/TESHIL' | translate}} </label>
 
                                         <p-dropdown [filter]="true" [options]="mandalsList" placeholder="Select"
                                             formControlName="subDistrictId"
@@ -43,7 +44,7 @@
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label><span class="red">*</span>{{'ERP.VILLAGES' | translate}} </label>
+                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.VILLAGE' | translate}} </label>
 
                                         <p-dropdown [filter]="true" [options]="villageList" placeholder="Select"
                                             formControlName="villageId"
@@ -53,7 +54,7 @@
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label><span class="red">*</span>{{'ERP.ADDRESS' | translate}}</label>
+                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.ADDRESS' | translate}}</label>
                                         <textarea type="text" class="form-control" pInputTextarea placeholder="House No., Door No., Landmark..etc"
                                             formControlName="address1" (keyup)="RegAddressToComAddress()"
                                             [(ngModel)]="fdNonCumulativeCommunicationModel.address1"></textarea>
@@ -62,7 +63,7 @@
 
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label for="username"><span class="red">*</span>{{'ERP.PINCODE' | translate}}
+                                        <label for="username"><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.PINCODE' | translate}}
                                         </label>
 
                                         <input pInputText id="bunit_txt_name" maxlength="40" type="text"
@@ -81,12 +82,12 @@
                 <div class="col-lg-6 col-md-12 col-sm-12">
                     <!-- <div class="col-12"> -->
                     <div class="d-flex justify-content-between mt-xl-0 mt-lg-0 mt-4">
-                        <h6 class="super-sub-heading">{{'ERP.PERMANENT' | translate}}</h6>
+                        <h6 class="super-sub-heading">{{'TERMDEPOSITSTRANSACTION.PERMANENT' | translate}}</h6>
                         <div class="grid mr-3 d-flex">
                             <p-inputSwitch formControlName="isSameAddress"
                                 [(ngModel)]="fdNonCumulativeCommunicationModel.isSameAddress"
                                 (click)="sameAsPerAddr(fdNonCumulativeCommunicationModel.isSameAddress)"></p-inputSwitch>
-                            <p class="pl-1 m-0">{{'ERP.SAME_AS_REGISTERED_ADDRESS' | translate}}</p>
+                            <p class="pl-1 m-0">{{'TERMDEPOSITSTRANSACTION.SAME_AS_REGISTERED_ADDRESS' | translate}}</p>
 
                         </div>
                     </div>
@@ -95,7 +96,7 @@
                             <div class="row g-3 mt-n1">
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label><span class="red">*</span>{{'ERP.STATES' | translate}}</label>
+                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.STATE' | translate}}</label>
 
                                         <p-dropdown [options]="permanentStatesList" placeholder="Select"
                                             formControlName="permanentStateId"
@@ -105,7 +106,7 @@
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label><span class="red">*</span>{{'ERP.DISTRICTS' | translate}}</label>
+                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.DISTRICT' | translate}}</label>
 
                                         <p-dropdown [options]="permenentDistrictList" placeholder="Select "
                                             formControlName="permanentDistrictId"
@@ -115,10 +116,10 @@
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label><span class="red">*</span> {{'ERP.MANDAL/TESHIL' | translate}}</label>
+                                        <label><span class="red">*</span> {{'TERMDEPOSITSTRANSACTION.MANDAL/TESHIL' | translate}}</label>
 
                                         <p-dropdown [options]="permenentSubDistrictList"
-                                            placeholder="{{'ERP.SELECT' | translate}}"
+                                            placeholder="{{'TERMDEPOSITSTRANSACTION.SELECT' | translate}}"
                                             formControlName="permanentSubDistrictId"
                                             [(ngModel)]="fdNonCumulativeCommunicationModel.permanentSubDistrictId"
                                             (onChange)='getAllPermanentVillagesByMandalId(fdNonCumulativeCommunicationModel.permanentSubDistrictId,true)'></p-dropdown>
@@ -127,7 +128,7 @@
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label><span class="red">*</span>{{'ERP.VILLAGES' | translate}} </label>
+                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.VILLAGE' | translate}} </label>
 
                                         <p-dropdown [options]="permenentVillageList" placeholder="Select "
                                             formControlName="permanentVillageId"
@@ -138,7 +139,7 @@
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
                                         <label for="code"><span class="red">*</span>
-                                            {{'ERP.ADDRESS' | translate}}
+                                            {{'TERMDEPOSITSTRANSACTION.ADDRESS' | translate}}
                                         </label>
 
                                         <textarea type="text" class="form-control" pInputTextarea
@@ -150,7 +151,7 @@
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label for="username"><span class="red">*</span>{{'ERP.PINCODE' | translate}}
+                                        <label for="username"><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.PINCODE' | translate}}
                                         </label>
 
                                         <input pInputText id="bunit_txt_name" maxlength="40" type="text"

@@ -154,6 +154,9 @@ export class SavingsBankJointAccountComponent implements OnInit {
           if (this.savingBankApplicationModel.accountNumber != null && this.savingBankApplicationModel.accountNumber != undefined) {
               this.accountNumber = this.savingBankApplicationModel.accountNumber;
           }
+          if (this.savingBankApplicationModel.admissionNumber != null && this.savingBankApplicationModel.admissionNumber != undefined) {
+              this.admissionNumber = this.savingBankApplicationModel.admissionNumber;
+          }
           if (this.savingBankApplicationModel.memberTypeName != null && this.savingBankApplicationModel.memberTypeName != undefined) {
             this.memberTypeName = this.savingBankApplicationModel.memberTypeName;
         }
@@ -178,6 +181,11 @@ export class SavingsBankJointAccountComponent implements OnInit {
     });
   }
 
+  /**
+   * @implements get joint account member details
+   * @param id 
+   * @author jyothi.naidana
+   */
   getJointAccontMemberDetails(id: any) {
     this.savingsBankJointAccountService.getAllSbJointAccountDetailsBySbId(id).subscribe((response: any) => {
       this.responseModel = response;
@@ -186,7 +194,7 @@ export class SavingsBankJointAccountComponent implements OnInit {
           this.jointHolderDetailsList = this.responseModel.data;
           if (this.jointHolderDetailsList != null && this.jointHolderDetailsList != undefined && this.jointHolderDetailsList.length > 0) {
             this.numberOfJointHolders = this.jointHolderDetailsList.length;
-            this.selectedAdmissionNumberList = this.jointHolderDetailsList.filter((obj: any) => obj != null).map((obj: { id: any; name: any; admissionNumber: any }) => {
+            this.selectedAdmissionNumberList = this.jointHolderDetailsList.filter((obj: any) => obj != null && obj.admissionNumber != this.admissionNumber).map((obj: { id: any; name: any; admissionNumber: any }) => {
               return {
                 label: obj.admissionNumber
               };
@@ -216,6 +224,11 @@ export class SavingsBankJointAccountComponent implements OnInit {
       });
   }
 
+  /**
+   * @implements onSelection Change
+   * @param event 
+   * @author jyothi.naidana
+   */
   onSelectionChange(event: any) {
     this.tempJointHolderList = [];
     this.numberOfJointHolders = 0;
@@ -255,6 +268,11 @@ export class SavingsBankJointAccountComponent implements OnInit {
     }
   }
 
+  /**
+   * @implements on Clear
+   * @param admissionNumber
+   * @author jyothi.naidana 
+   */
   onClear(admissionNumber: any) {
     // const index = this.admissionNumberList.indexOf(admissionNumber);
     // if (index >= 0) {
@@ -268,6 +286,12 @@ export class SavingsBankJointAccountComponent implements OnInit {
     // }
   }
 
+  /**
+   * @implements get all type of membership details
+   * @param pacsId 
+   * @param branchId 
+   * @author jyothi.naidana
+   */
   getAllTypeOfMembershipDetails(pacsId: any, branchId: any) {
     this.membershipServiceService.getAllTypeOfMemberDetailsListFromMemberModule(this.pacsId, this.branchId).subscribe((response: any) => {
       this.responseModel = response;
@@ -302,6 +326,11 @@ export class SavingsBankJointAccountComponent implements OnInit {
 
   }
 
+  /**
+   * @implements get membership details
+   * @param admisionNumber 
+   * @author jyothi.naidana
+   */
   getMembershipDetails(admisionNumber: any) {
     this.jointHolderDetailsList = [];
     this.membershipServiceService.getMembershipBasicDetailsByAdmissionNumber(admisionNumber).subscribe((response: any) => {

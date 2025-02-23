@@ -40,7 +40,7 @@ export class RecurringDepositProductDefinition {
     remarks?: any;
 
     ledgerFolioNumber?: any;
-    
+
     resolutionNumber?: any;
 
     isSpecialScheme?: any;
@@ -52,4 +52,8 @@ export class RecurringDepositProductDefinition {
     signedCopyPath?: any;
 
     multipartFileListsignedCopyPath?: any;
+
+    tenureType?: any;
+
+    tenureTypeName?: any;
 }

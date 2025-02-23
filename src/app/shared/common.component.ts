@@ -388,5 +388,19 @@ newDateValidation(incomingDate:any) {
   }
 }
 
+public goldQualityList() {
+  let goldQualityList = [
+    { label: "22 Karat", value: true },
+    { label: "24 Karat", value: false }
+  ]
+  return goldQualityList;
+}
 
+public quality() {
+  let goldQualityList = [
+    { label: "22 Karat", value: 22 },
+    { label: "24 Karat", value: 24 }
+  ]
+  return goldQualityList;
+}
 }

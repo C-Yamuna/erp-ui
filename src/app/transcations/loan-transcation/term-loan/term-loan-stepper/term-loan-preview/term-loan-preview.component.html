@@ -8,7 +8,7 @@
                     <div class="main-heading mt-1 justify-content-start" *ngIf="editbtn">{{'LOANS.TERM_LOANS' | translate}} <i
                         class="fa fa-angle-right font-bold mr-3 ml-3"></i>{{'LOANS.EDIT' | translate}}</div>
         </div>
-
+    </div>
         <div class="col-12 p-0">
             <div class="row">
                 <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 left-sidecard">
@@ -30,7 +30,8 @@
                             <div class="row">
                                 <!-- Admission No & Image-part -->
                                 <div class="col-xl-12 col-lg-12 col-md-3 col-sm-4 col-xs-4">
-                                    <div class="d-flex justify-content-center mb-4">
+                                    <div class="col-12">
+                                    <div class="d-flex justify-content-center mb-1">
                                         <div *ngIf="!membershipBasicRequiredDetailsModel.photoCopyPath">
                                             <img src="assets/images/no-image.jpg" class="image-user">
                                         </div>
@@ -67,21 +68,27 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="text-center min-h-50px">
-                                        <span class="text-fontwt">{{'LOAN_TRANSACTION.ADMISSION_NUMBER' | translate}}</span>
-                                        <p class="font-semibold text-break">{{membershipBasicRequiredDetailsModel.tempAdmissionNumber}}
-                                        </p>
                                     </div>
                                     <div class="text-center min-h-50px">
-                                        <span class="text-fontwt">{{'LOAN_TRANSACTION.NAME' | translate}}</span>
-                                        <p class="font-semibold text-break"><span
-                                                class="border-bottom">{{membershipBasicRequiredDetailsModel.name}}</span></p>
+                                        <p class="view-member-name text-break">{{membershipBasicRequiredDetailsModel.name}}</p>
+                                                <div class="d-flex justify-content-center">
+                                                    <div class="member-name-border"></div>
+                                                </div>
                                     </div>
                                 </div>
 
                                 <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
                                     <div class="row">
+                                        <div
+                                            class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                            <span class="basicdata-icons icon-size"><i
+                                                    class="fa fa-address-book"></i></span>
+                                            <div>
+                                                <p class="label-view text-fontwt">{{'LOAN_TRANSACTION.ADMISSION_NUMBER' | translate}}</p>
+                                                <p class="label-input-text">
+                                                    {{membershipBasicRequiredDetailsModel.tempAdmissionNumber}}</p>
+                                            </div>
+                                        </div>
                                         <div
                                             class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
                                             <span class="basicdata-icons icon-size"><i
@@ -217,7 +224,7 @@
                                 <!-- Admission No & Image-part -->
                                 <div class="col-xl-12 col-lg-12 col-md-3 col-sm-4 col-xs-4">
                                     <div class="col-12 pic-sig-status">
-                                        <div class="d-flex justify-content-center mb-3">
+                                        <div class="d-flex justify-content-center mb-1">
                                             <img src="assets/images/avatar-table.png" class="image-user">
                                             <p class="active-status"></p>
                                             <img src="assets/images/sign.png" class="image-sign">
@@ -225,22 +232,25 @@
                                     </div>
 
                                     <div class="text-center min-h-50px">
-                                        <span class="text-fontwt">{{'LOAN_TRANSACTION.ADMISSION_NUMBER' | translate}}</span>
-                                        <p class="font-semibold text-break">
-                                            {{memberGroupDetailsModel.tempAdmissionNumber}}</p>
-                                    </div>
-
-                                    <div class="text-center min-h-50px">
-                                        <span class="text-fontwt">{{'LOAN_TRANSACTION.NAME' | translate}}</span>
-                                        <p class="font-semibold text-break"><span
-                                                class="border-bottom">{{memberGroupDetailsModel.name}}</span>
-                                        </p>
-
+                                        <p class="view-member-name text-break">{{memberGroupDetailsModel.name}}</p>
+                                        <div class="d-flex justify-content-center">
+                                            <div class="member-name-border"></div>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
                                     <div class="row">
+                                        <div
+                                            class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                            <span class="basicdata-icons icon-size"><i
+                                                    class="fa fa-address-book"></i></span>
+                                            <div>
+                                                <p class="label-view text-fontwt">{{'LOAN_TRANSACTION.ADMISSION_NUMBER' | translate}}</p>
+                                                <p class="label-input-text">
+                                                    {{memberGroupDetailsModel.tempAdmissionNumber}}</p>
+                                            </div>
+                                        </div>
                                         <div
                                             class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
                                             <span class="basicdata-icons icon-size"><i
@@ -366,27 +376,32 @@
                                 <!-- Admission No & Image-part -->
                                 <div class="col-xl-12 col-lg-12 col-md-3 col-sm-4 col-xs-4">
                                     <div class="col-12 pic-sig-status">
-                                        <div class="d-flex justify-content-center mb-3">
+                                        <div class="d-flex justify-content-center mb-1">
                                             <img src="assets/images/avatar-table.png" class="image-user">
                                             <p class="active-status"></p>
                                             <img src="assets/images/sign.png" class="image-sign">
                                         </div>
                                     </div>
-                                    <div class="text-center min-h-50px">
-                                        <span class="text-fontwt">{{'LOAN_TRANSACTION.ADMISSION_NUMBER' | translate}}</span>
-                                        <p class="font-semibold text-brek">
-                                            {{membershipInstitutionDetailsModel.tempAdmissionNumber}}</p>
-                                    </div>
 
                                     <div class="text-center min-h-50px">
-                                        <span class="text-fontwt">{{'LOAN_TRANSACTION.NAME' | translate}}</span>
-                                        <p class="font-semibold text-brek"><span
-                                                class="border-bottom">{{membershipBasicRequiredDetailsModel.name}}</span>
-                                        </p>
+                                        <p class="view-member-name text-break">{{membershipBasicRequiredDetailsModel.name}}</p>
+                                        <div class="d-flex justify-content-center">
+                                            <div class="member-name-border"></div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
                                     <div class="row">
+                                        <div
+                                            class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                            <span class="basicdata-icons icon-size"><i
+                                                    class="fa fa-address-book"></i></span>
+                                            <div>
+                                                <p class="label-view text-fontwt">{{'LOAN_TRANSACTION.ADMISSION_NUMBER' | translate}}</p>
+                                                <p class="label-input-text">
+                                                    {{membershipInstitutionDetailsModel.tempAdmissionNumber}}</p>
+                                            </div>
+                                        </div>
                                         <div
                                             class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
                                             <span class="basicdata-icons icon-size"><i
@@ -1624,7 +1639,7 @@
 
             </div>
         </div>
-    </div>
+</div>
 
     <!-- Individual details dialog -->
     <p-dialog header="More Basic Details" [(visible)]="membreIndividualFlag" styleClass="moredetails-style">

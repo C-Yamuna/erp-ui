@@ -946,7 +946,7 @@ if (this.institutionBasicDetailsModel.filesDTOList != null && this.institutionBa
     this.msgs = [];
     if(this.memberBasicDetailsModel.memClosingDateVal != undefined && this.memberBasicDetailsModel.memClosingDateVal != null)
       this.memberBasicDetailsModel.memClosingDate = this.commonFunctionsService.getUTCEpoch(new Date(this.memberBasicDetailsModel.memClosingDateVal));
-       this.memberBasicDetailsModel.memStatus = 7;
+       this.memberBasicDetailsModel.status = 7;
        this.membershipBasicDetailsService.submitForApproval(this.memberBasicDetailsModel).subscribe(response => {
       this.responseModel = response;
       this.msgs = [];
@@ -972,7 +972,7 @@ if (this.institutionBasicDetailsModel.filesDTOList != null && this.institutionBa
     this.msgs = [];
     if(this.memberGroupBasicDetails.closureDateVal != undefined && this.memberGroupBasicDetails.closureDateVal != null)
       this.memberGroupBasicDetails.closureDate = this.commonFunctionsService.getUTCEpoch(new Date(this.memberGroupBasicDetails.closureDateVal));
-    this.memberGroupBasicDetails.groupStatus = 7;
+    this.memberGroupBasicDetails.status = 7;
     this.memberShipGroupDetailsService.submitForApproval(this.memberGroupBasicDetails).subscribe(response => {
       this.responseModel = response;
       this.msgs = [];
@@ -998,7 +998,7 @@ if (this.institutionBasicDetailsModel.filesDTOList != null && this.institutionBa
     this.msgs = [];
     if(this.institutionBasicDetailsModel.closureDateVal != undefined && this.institutionBasicDetailsModel.closureDateVal != null)
       this.institutionBasicDetailsModel.closureDate = this.commonFunctionsService.getUTCEpoch(new Date(this.institutionBasicDetailsModel.closureDateVal));
-    this.institutionBasicDetailsModel.institutionStatus = 7;
+    this.institutionBasicDetailsModel.status = 7;
     this.memInistitutionsService.submitForApproval(this.institutionBasicDetailsModel).subscribe(response => {
       this.responseModel = response;
       this.msgs = [];

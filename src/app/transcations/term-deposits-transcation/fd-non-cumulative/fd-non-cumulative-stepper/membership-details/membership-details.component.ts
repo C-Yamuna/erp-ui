@@ -558,10 +558,12 @@ ngOnInit(): void {
     this.isFileUploaded = applicationConstants.FALSE;
     this.multipleFilesList = [];
     this.fdNonCumulativeKycModel.filesDTOList = [];
-    this.fdNonCumulativeKycModel.multipartFileList = [];
+    this.fdNonCumulativeKycModel.multipartFileList =[];
     this.fdNonCumulativeKycModel.kycFilePath = null;
     let files: FileUploadModel = new FileUploadModel();
-    for (let file of event.files) {
+    let selectedFiles = [...event.files];
+    fileUpload.clear();
+    for (let file of selectedFiles) {
       let reader = new FileReader();
       reader.onloadend = (e) => {
         let files = new FileUploadModel();
@@ -575,10 +577,11 @@ ngOnInit(): void {
         if (index === -1) {
           this.multipleFilesList.push(files);
           this.fdNonCumulativeKycModel.filesDTOList.push(files); // Add to filesDTOList array
+          this.fdNonCumulativeKycModel.multipartFileList.push(files);
         }
         let timeStamp = this.commonComponent.getTimeStamp();
-        this.fdNonCumulativeKycModel.filesDTOList[0].fileName = "RD_KYC_" + this.fdNonCummulativeAccId + "_" + timeStamp + "_" + file.name;
-        this.fdNonCumulativeKycModel.kycFilePath = "RD_KYC_" + this.fdNonCummulativeAccId + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
+        this.fdNonCumulativeKycModel.filesDTOList[0].fileName = "FD_NON_CUM_KYC_" + this.fdNonCummulativeAccId + "_" +timeStamp+ "_"+ file.name ;
+        this.fdNonCumulativeKycModel.kycFilePath = "FD_NON_CUM_KYC_" + this.fdNonCummulativeAccId + "_" +timeStamp+"_"+ file.name; // This will set the last file's name as docPath
         this.fdNonCumulativeKycModel.multipartFileList = this.fdNonCumulativeKycModel.filesDTOList;
         let index1 = event.files.findIndex((x: any) => x === file);
         // this.addOrEditKycTempList(this.fdNonCumulativeKycModel);
@@ -588,7 +591,6 @@ ngOnInit(): void {
       reader.readAsDataURL(file);
     }
   }
-
   /**
    * @implements delete kyc
    * @param rowData 

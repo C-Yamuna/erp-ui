@@ -109,6 +109,7 @@ export class BasicDetailsComponent {
       'admissionFee': new FormControl(''),
       'isStaff':new FormControl('', Validators.required),
       'societyAdmissionNo': new FormControl('', Validators.required),
+      'resolutionDate': new FormControl('',Validators.required),
 
     })
   }
@@ -149,6 +150,8 @@ export class BasicDetailsComponent {
               if (this.memberBasicDetailsModel.mcrDocumentCopy != null && this.memberBasicDetailsModel.mcrDocumentCopy != undefined) {
                 this.memberBasicDetailsModel.multipartFileListForMCRCopyPath = this.fileUploadService.getFile(this.memberBasicDetailsModel.mcrDocumentCopy ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.memberBasicDetailsModel.mcrDocumentCopy);
               }
+              if(this.memberBasicDetailsModel.resolutionDate != null && this.memberBasicDetailsModel.resolutionDate != undefined)
+              this.memberBasicDetailsModel.resolutionDateVal = this.datePipe.transform(this.memberBasicDetailsModel.resolutionDate, this.orgnizationSetting.datePipe);
             }
             // this.updateData();
           });
@@ -157,7 +160,7 @@ export class BasicDetailsComponent {
         this.isEdit = false;
         // this.getMemberPreviewsDetails();
         this.generateNewAdmissionNumber();
-        this.memberBasicDetailsModel.memStatus = this.statusList[0].value;
+        this.memberBasicDetailsModel.status = this.statusList[0].value;
       }
     })
     this.getAllRelationshipType();

@@ -184,7 +184,7 @@
                     </div>
 
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                <!-- <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label>
                             <span class="red">*</span>{{'ERP.SANCTION_AMOUNT' | translate}}
@@ -192,15 +192,35 @@
 
                         <p-inputNumber id="bunit_txt_name" formControlName="sanctionAmount"
                             [(ngModel)]="saoLoanApplicatonModel.sanctionAmount" mode="currency" inputId="currency-india"
-                            currency="INR" locale="en-IN" placeholder="Enter Amount"> </p-inputNumber>
+                            currency="INR" locale="en-IN" placeholder="Enter Amount"
+                            (keyup)="onSelectSanctionAmountCailculation(saoLoanApplicatonModel.sanctionAmount)"> </p-inputNumber>
                         <p-message severity="error" text="Enter Valid Amount"
                             *ngIf="!apllicationdetailsform.controls['sanctionAmount'].valid && apllicationdetailsform.controls['sanctionAmount'].dirty">
                         </p-message>
                     </div>
 
 
+                </div> -->
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label>
+                            <span class="red">*</span>{{'ERP.SANCTION_AMOUNT' | translate}}
+                        </label>
+                
+                        <p-inputNumber id="bunit_txt_name" formControlName="sanctionAmount"
+                            [(ngModel)]="saoLoanApplicatonModel.sanctionAmount" mode="currency" inputId="currency-india"
+                            currency="INR" locale="en-IN" placeholder="Enter Amount"
+                            (onSelect)="onSelectSanctionAmountCaliculation()"> 
+                        </p-inputNumber>
+                        
+                        <!-- Display error message only if the field is touched and invalid -->
+                        <p-message severity="error" text="Enter Valid Amount"
+                            *ngIf="!apllicationdetailsform.controls['sanctionAmount'].valid && apllicationdetailsform.controls['sanctionAmount'].touched">
+                        </p-message>
+                    </div>
                 </div>
-
+                
+                
                 <!-- <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label>
@@ -230,10 +250,13 @@
 
                         <p-calendar [showIcon]="true" formControlName="loanDueDate" [showIcon]="true"
                             dateFormat="{{orgnizationSetting.calendar}}"
-                            [(ngModel)]="saoLoanApplicatonModel.loanDueDateVal" placeholder="DD/MM/YYYY"></p-calendar>
+                            [(ngModel)]="saoLoanApplicatonModel.loanDueDateVal" placeholder="DD/MM/YYYY"
+                            (onSelect)="onSelectLoanDueDate()"></p-calendar>
                     </div>
 
                 </div>
+               
+                  
                 <!-- <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label for="Email">{{'ERP.TOTAL_DISBURSEMENTS_UNITS' | translate}}
@@ -392,7 +415,7 @@
         <form [formGroup]="schedulerForm" id="exit_types_form">
             <div class="flex justify-content-between py-2">
                 <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                    <h6 class="sub-heading">{{'ERP.DISBURSEMENT_SCHEDULE' | translate}}</h6>
+                    <h6 class="sub-heading">{{'ERP.DISBURSEMENT' | translate}}</h6>
                 </div>
                 <div class="col-xl-7 col-lg-7 col-md-7 col-sm-7 col-xs-7">
                     <div class="col-12 p-0">

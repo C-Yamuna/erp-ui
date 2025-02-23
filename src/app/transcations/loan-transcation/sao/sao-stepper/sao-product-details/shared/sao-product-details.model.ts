@@ -168,4 +168,16 @@ export class SaoLoanDisbursementScheduleModel{
     amount: any;
   
     typeName: any;
+
+    visitNumber: any;
+    
+    isRequired: any;
+    
+    disbursementPercentage: any;
+    
+    tenure: any;
+    
+    tenureType: any;
+    
+    tenureTypeName: any;
 }

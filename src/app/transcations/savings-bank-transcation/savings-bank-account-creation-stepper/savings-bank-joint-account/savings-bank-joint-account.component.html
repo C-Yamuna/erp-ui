@@ -3,14 +3,14 @@
         <h6 class="sub-heading">{{'ERP.ADD_JOINT_HOLDERS_SECONDARY' | translate}}</h6>
         <div class="stepper-top-section-strip">
             <div class="row">
-                <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="col-lg-3 col-md-3 col-sm-12 stepper-top-product-name-background">
                     <div class="form-group">
                         <span>{{'ERP.PRODUCT_NAME' | translate}}</span>
                         <p class="mb-0">{{productName}}</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-12">
-                    <div class="form-group">
+                    <div class="form-group ml-2">
                         <span>{{'ERP.ACCOUNT_TYPE' | translate}}</span>
                         <p class="mb-0">{{accountType}}</p>
                     </div>
@@ -34,7 +34,7 @@
                     <div class="mt-n1 bg-label-colorfull">
                         <div class="row g-3">
                             <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                                <label>{{'ERP.JOINT_HOLDER_ADMISSION_NUMBER' | translate}}</label>
+                                <label><span class="red">*</span>{{'ERP.JOINT_HOLDER_ADMISSION_NUMBER' | translate}}</label>
                 
                                 <!-- <p-multiSelect [options]="admissionNumberList" [(ngModel)]="selectedAdmissionNumberList"
                                     placeholder="Select Admission Number" optionLabel="label" formControlName="admissionNumber" [showClear]="true"

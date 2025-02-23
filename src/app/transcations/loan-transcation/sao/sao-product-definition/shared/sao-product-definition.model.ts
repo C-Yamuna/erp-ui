@@ -73,6 +73,10 @@ export class SaoProductDefinition {
 
   saoProdPurPoseConfgList: any[] = [];
 
+  saoLoanFieldVisitConfigDTOList: any[] = [];
+
+  saoLoanDisbursementScheduleDTOList: any[] = [];
+
   interestPostingFrequency: any;
 
   saoGLHeadMappingDTOList: any[] = [];

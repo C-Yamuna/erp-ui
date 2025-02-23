@@ -1,29 +1,30 @@
 <div class="col-12">
-    <h6 class="sub-heading">{{'ERP.NOMINEE_DETAILS' | translate}}<span class="admission-text">(Admission
+    <h6 class="sub-heading">{{'LOAN_TRANSACTION.NOMINEE_DETAILS' | translate}}<span
+            class="admission-text">(Admission
             Number:&nbsp;{{admissionNumber}})</span></h6>
     <div class="stepper-top-section-strip">
         <div class="row">
-            <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 stepper-top-product-name-background">
                 <div class="form-group">
-                    <span>{{'ERP.PRODUCT' | translate}}</span>
+                    <span>{{'LOAN_TRANSACTION.PRODUCT_NAME' | translate}}</span>
                     <p class="mb-0">{{termLoanApplicationModel.termProductName}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
-                <div class="form-group">
-                    <span>{{'ERP.OPERATION_TYPE' | translate}}</span>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="form-group ml-2">
+                    <span>{{'LOAN_TRANSACTION.ACCOUNT_TYPE' | translate}}</span>
                     <p class="mb-0">{{termLoanApplicationModel.operationTypeName}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="form-group">
-                    <span>{{'ERP.LOAN_ACCOUNT_NO' | translate}}</span>
+                    <span>{{'LOAN_TRANSACTION.ACCOUNT_NUMBER' | translate}}</span>
                     <p class="mb-0">{{termLoanApplicationModel.accountNumber}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="form-group">
-                    <span>{{'ERP.REQUEST_AMOUNT' | translate}}</span>
+                    <span>{{'LOAN_TRANSACTION.REQUEST_AMOUNT' | translate}}</span>
                     <p class="mb-0">{{termLoanApplicationModel.requestedAmount}}</p>
                 </div>
             </div>
@@ -39,40 +40,41 @@
                     <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-12">
-                                <label><span class="red">*</span>{{'ERP.TYPE_OF_NOMINEE' | translate}}</label>
+                                <label><span class="red">*</span>{{'LOAN_TRANSACTION.TYPE_OF_NOMINEE' |
+                                    translate}}</label>
                                 <!-- [disabled]="nomineeTypeDisable" -->
-                                <p-dropdown placeholder="{{'ERP.SELECT' | translate}}" [options]="nomineeList"
-                                    [(ngModel)]="  termLoanNomineeModel.nomineeType" formControlName="nomineeType"
+                                <p-dropdown placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}"
+                                    [options]="nomineeList" [(ngModel)]="termLoanNomineeModel.nomineeType"
+                                    formControlName="nomineeType"
                                     (onChange)="onChange($event.value , true)"></p-dropdown>
                             </div>
                         </div>
                         <!-- Add new Nominee -->
                         <div class="row" *ngIf="newNominee">
                             <div class="col-12 mt-4 py-0">
-                                <h6 class="sub-heading">{{'ERP.REQUIRED_DETAILS' | translate}}</h6>
+                                <h6 class="sub-heading">{{'LOAN_TRANSACTION.REQUIRED_DETAILS' | translate}}</h6>
                             </div>
                             <div class="col-12">
                                 <div class="col-12 global-border p-3">
                                     <div class="row g-3 mt-n1">
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
-                                                <label><span class="red">*</span>{{'ERP.RELATIONSHIP_TYPE' |
-                                                    translate}}</label>
+                                                <label><span class="red">*</span>{{'LOAN_TRANSACTION.RELATIONSHIP_TYPE'|translate}}</label>
                                                 <p-dropdown [options]="relationTypesList"
-                                                    placeholder="{{'ERP.SELECT' | translate}}"
+                                                    placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}"
                                                     formControlName="relationName"
-                                                    [(ngModel)]="  termLoanNomineeModel.relationTypeId">
+                                                    [(ngModel)]="termLoanNomineeModel.relationTypeId">
                                                 </p-dropdown>
 
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
-                                                <label><span class="red">*</span>{{'ERP.NOMINEE_NAME' |
+                                                <label><span
+                                                        class="red">*</span>{{'LOAN_TRANSACTION.NOMINEE_NAME' |
                                                     translate}}</label>
                                                 <input type="text" formControlName="nomineeName" pInputText
-                                                    placeholder="Enter Name"
-                                                    [(ngModel)]="  termLoanNomineeModel.nomineeName" />
+                                                    placeholder="Enter Name" [(ngModel)]="termLoanNomineeModel.nomineeName" />
                                                 <p-message severity="error" text="Enter Valid nomineeName"
                                                     *ngIf="!nomineeForm.controls['nomineeName'].valid && nomineeForm.controls['nomineeName'].dirty">
                                                 </p-message>
@@ -80,11 +82,12 @@
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
-                                                <label><span class="red">*</span>{{'ERP.AADHAR_NUMBER' |
+                                                <label><span
+                                                        class="red">*</span>{{'LOAN_TRANSACTION.AADHAR_NUMBER' |
                                                     translate}}</label>
                                                 <input type="text" formControlName="aadhaar" pInputText
                                                     placeholder="Enter Aadhar Number"
-                                                    [(ngModel)]="  termLoanNomineeModel.nomineeAadharNumber" />
+                                                    [(ngModel)]="termLoanNomineeModel.nomineeAadharNumber" />
                                                 <p-message severity="error" text="Enter Valid aadhaar"
                                                     *ngIf="!nomineeForm.controls['aadhaar'].valid && nomineeForm.controls['aadhaar'].dirty">
                                                 </p-message>
@@ -92,22 +95,23 @@
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
-                                                <label><span class="red">*</span>{{'ERP.MOBILE_NUMBER' |
+                                                <label><span
+                                                        class="red">*</span>{{'LOAN_TRANSACTION.MOBILE_NUMBER' |
                                                     translate}}</label>
                                                 <input type="text" formControlName="mobileNumber" pInputText
                                                     placeholder="Enter Mobile Number"
-                                                    [(ngModel)]="  termLoanNomineeModel.nomineeMobileNumber" />
-                                                <p-message severity="error" text="Enter Valid mobile Number"
+                                                    [(ngModel)]="termLoanNomineeModel.nomineeMobileNumber" />
+                                                <p-message severity="error" text="Enter Valid mobileNumber"
                                                     *ngIf="!nomineeForm.controls['mobileNumber'].valid && nomineeForm.controls['mobileNumber'].dirty">
                                                 </p-message>
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
-                                                <label>{{'ERP.EMAIL' | translate}}</label>
+                                                <label>{{'LOAN_TRANSACTION.EMAIL' | translate}}</label>
                                                 <input type="text" formControlName="email" pInputText
                                                     placeholder="Enter Email"
-                                                    [(ngModel)]="  termLoanNomineeModel.nomineeEmailId" />
+                                                    [(ngModel)]="termLoanNomineeModel.nomineeEmailId" />
                                                 <p-message severity="error" text="Enter Valid email"
                                                     *ngIf="!nomineeForm.controls['email'].valid && nomineeForm.controls['email'].dirty">
                                                 </p-message>
@@ -148,7 +152,7 @@
                         <!-- No nominee details -->
                         <div class="row" *ngIf="noNominee">
                             <div class="col-12 mt-4 py-0">
-                                <h6 class="sub-heading">{{'ERP.REQUIRED_DETAILS' | translate}}</h6>
+                                <h6 class="sub-heading">{{'LOAN_TRANSACTION.REQUIRED_DETAILS' | translate}}</h6>
                             </div>
                             <div class="col-12">
                                 <div class="col-12 global-border p-3">
@@ -189,13 +193,12 @@
 
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
-                                                <label>{{'ERP.REMARKS' | translate}}</label>
+                                                <label>{{'LOAN_TRANSACTION.REMARKS' | translate}}</label>
                                                 <textarea type="text" class="form-control" formControlName="remarks"
                                                     pInputTextarea placeholder="Enter Remarks Here"
-                                                    [(ngModel)]="  termLoanNomineeModel.remarks"></textarea>
+                                                    [(ngModel)]="termLoanNomineeModel.remarks"></textarea>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -206,39 +209,44 @@
                     <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12" *ngIf='guarntorDetailsFalg'>
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-12">
-                                <label><span class="red">*</span>{{'ERP.TYPE_OF_GUARDAIN' | translate}}</label>
+                                <label><span class="red">*</span>{{'LOAN_TRANSACTION.TYPE_OF_GUARDIAN' |
+                                    translate}}</label>
                                 <!-- [disabled]="guardainTypeDisable" -->
-                                <p-dropdown placeholder="{{'ERP.SELECT' | translate}}" [options]="guadianTypesList"
-                                    formControlName="guardainType"
-                                    [(ngModel)]="  termLoanGuardianDetailsModel.guardianType"
+                                <p-dropdown placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}"
+                                    [options]="guadianTypesList" formControlName="guardainType"
+                                    [(ngModel)]="termLoanGuardianDetailsModel.guardianType"
                                     (onChange)="onChangeGuardain(termLoanGuardianDetailsModel.guardianType , true)"></p-dropdown>
                             </div>
                         </div>
                         <!-- same as membership guardian details -->
                         <div class="row" *ngIf="sameAsMemberGuardain">
                             <div class="col-12 mt-4 py-0">
-                                <h6 class="sub-heading">{{'ERP.REQUIRED_DETAILS' | translate}}</h6>
+                                <h6 class="sub-heading">{{'LOAN_TRANSACTION.REQUIRED_DETAILS' | translate}}</h6>
                             </div>
                             <div class="col-12">
                                 <div class="col-12 global-border p-3">
                                     <div class="row g-3 mt-n1">
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
-                                                <label><span class="red">*</span>{{'ERP.RELATIONSHIP_TYPE' |
+                                                <label><span
+                                                        class="red">*</span>{{'LOAN_TRANSACTION.RELATIONSHIP_TYPE'
+                                                    |
                                                     translate}}</label>
-                                                <p-dropdown placeholder="{{'ERP.SELECT' | translate}}"
+                                                <p-dropdown
+                                                    placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}"
                                                     [options]="relationTypesList"
                                                     formControlName="relationNameOfGuardian" id="id"
-                                                    [(ngModel)]="  termLoanGuardianDetailsModel.relationshipTypeId"></p-dropdown>
+                                                    [(ngModel)]="termLoanGuardianDetailsModel.relationshipTypeId"></p-dropdown>
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
-                                                <label><span class="red">*</span>{{'DEMANDDEPOSITS.GUARDAIN_NAME' |
+                                                <label><span
+                                                        class="red">*</span>{{'LOAN_TRANSACTION.GUARDAIN_NAME' |
                                                     translate}}</label>
                                                 <input type="text" formControlName="guardianName" pInputText
                                                     placeholder="Enter Name"
-                                                    [(ngModel)]="  termLoanGuardianDetailsModel.guardianName" />
+                                                    [(ngModel)]="termLoanGuardianDetailsModel.guardianName" />
                                                 <p-message severity="error" text="Enter Valid Name"
                                                     *ngIf="!nomineeForm.controls['guardianName'].valid && nomineeForm.controls['guardianName'].dirty">
                                                 </p-message>
@@ -247,11 +255,12 @@
 
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
-                                                <label><span class="red">*</span>{{'ERP.AADHAR_NUMBER' |
+                                                <label><span
+                                                        class="red">*</span>{{'LOAN_TRANSACTION.AADHAR_NUMBER' |
                                                     translate}}</label>
                                                 <input type="text" formControlName="guardianAadhar" pInputText
                                                     placeholder="Enter Aadhar Number"
-                                                    [(ngModel)]="  termLoanGuardianDetailsModel.guardianAadharNumber" />
+                                                    [(ngModel)]="termLoanGuardianDetailsModel.guardianAadharNumber" />
                                                 <p-message severity="error" text="Enter Valid aadhaar"
                                                     *ngIf="!nomineeForm.controls['guardianAadhar'].valid && nomineeForm.controls['guardianAadhar'].dirty">
                                                 </p-message>
@@ -259,22 +268,23 @@
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
-                                                <label><span class="red">*</span>{{'ERP.MOBILE_NUMBER' |
+                                                <label><span
+                                                        class="red">*</span>{{'LOAN_TRANSACTION.MOBILE_NUMBER' |
                                                     translate}}</label>
                                                 <input type="text" formControlName="guardianMobile" pInputText
                                                     placeholder="Enter Mobile Number"
-                                                    [(ngModel)]="  termLoanGuardianDetailsModel.guardianMobileNumber" />
-                                                <p-message severity="error" text="Enter Valid Mobile Number"
+                                                    [(ngModel)]="termLoanGuardianDetailsModel.guardianMobileNumber" />
+                                                <p-message severity="error" text="Enter Valid Phone Number"
                                                     *ngIf="!nomineeForm.controls['guardianMobile'].valid && nomineeForm.controls['guardianMobile'].dirty">
                                                 </p-message>
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
-                                                <label>{{'ERP.EMAIL' | translate}}</label>
+                                                <label>{{'LOAN_TRANSACTION.EMAIL' | translate}}</label>
                                                 <input type="text" formControlName="guardianEmail" pInputText
                                                     placeholder="Enter Email"
-                                                    [(ngModel)]="  termLoanGuardianDetailsModel.guardianEmailId" />
+                                                    [(ngModel)]="termLoanGuardianDetailsModel.guardianEmailId" />
                                                 <p-message severity="error" text="Enter Valid Email"
                                                     *ngIf="!nomineeForm.controls['guardianEmail'].valid && nomineeForm.controls['guardianEmail'].dirty">
                                                 </p-message>
@@ -310,7 +320,7 @@
                         <!-- No guardian/Court Appointmemnt details -->
                         <div class="row" *ngIf="courtAppointedGuardain">
                             <div class="col-12 mt-4 py-0">
-                                <h6 class="sub-heading">{{'ERP.REQUIRED_DETAILS' | translate}}</h6>
+                                <h6 class="sub-heading">{{'LOAN_TRANSACTION.REQUIRED_DETAILS' | translate}}</h6>
                             </div>
                             <div class="col-12">
                                 <div class="col-12 global-border p-3">
@@ -345,20 +355,13 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- <div class="col-3 ">
-                                                                                                    <label>{{'ERP.UPLOAD_SIGNED_COPY' | translate}}</label>
-                                                                                                    <div class="d-flex">
-                                                                                                        <div >
-                                                                                                            <input type="file" (change)="onImageSelected($event)" accept="image/*" />
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                </div> -->
+
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
-                                                <label>{{'ERP.REMARKS' | translate}}</label>
+                                                <label>{{'LOAN_TRANSACTION.REMARKS' | translate}}</label>
                                                 <textarea type="text" class="form-control" pInputTextarea
                                                     formControlName="guardianRemarks" placeholder="Enter Remarks Here"
-                                                    [(ngModel)]="  termLoanGuardianDetailsModel.remarks"></textarea>
+                                                    [(ngModel)]="termLoanGuardianDetailsModel.remarks"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -372,8 +375,9 @@
     </form>
 
 
+
     <!-- History table in Edit  -->
-    <div class="mt-4" *ngIf="historyFLag">
+    <!-- <div class="mt-4" *ngIf="historyFLag">
         <h6 class="sub-heading">Nominee History Details</h6>
         <div class="globel-border-top-color"></div>
         <p-table [columns]="nomineeFields" [value]="nomineeHistoryList" dataKey="id" selectionMode="single"
@@ -394,7 +398,7 @@
                 </tr>
             </ng-template>
         </p-table>
-    </div>
+    </div> -->
 
     <!-- </div> -->
 </div>

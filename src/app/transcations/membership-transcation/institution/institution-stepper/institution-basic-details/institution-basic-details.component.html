@@ -1,12 +1,12 @@
 <div class="col-12">
     <p-messages label="Info" life="4000" [(value)]="msgs"></p-messages>
-    <h6 class="sub-heading">{{'ERP.INSTITUTION' | translate}}</h6>
+    <h6 class="sub-heading">{{'MEMBERSHIP_TRANSACTION.INSTITUTION' | translate}}</h6>
         <form [formGroup]="instituteBasicDetailsForm">
             <div class="mt-n1  bg-label-colorfull">
                 <div class="row g-3 mt-0">
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-label">
-                            <label><span class="red">*</span>{{'ERP.PRODUCT_TYPE' | translate}}</label>
+                            <label><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.MEMBERSHIP_TYPE' | translate}}</label>
                                 <p-dropdown id="bunit_txt_status"  [filter]="true" [options]="subProductList"
                                     [(ngModel)]="ginstitutionBasicDetailsModel.subProductId" formControlName="subProductId" placeholder="Select"></p-dropdown>
                         </div>
@@ -39,7 +39,7 @@
                     </div>
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-label">
-                        <label><span class="red">*</span>{{'ERP.REGISTERED_NO' | translate}}</label>
+                        <label><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.REGISTRATION_NUMBER' | translate}}</label>
                             <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="registrationNumber"
                                 [(ngModel)]="ginstitutionBasicDetailsModel.registrationNumber"  placeholder="Enter Registered Number">
                                 <p-message severity="error" text="Enter Valid Registered Number "
@@ -50,7 +50,7 @@
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-label">
                             <label for="username">
-                                <span class="red">*</span> {{'ERP.REGISTERED_DATE' | translate}} 
+                                <span class="red">*</span> {{'MEMBERSHIP_TRANSACTION.REGISTRATION_DATE' | translate}} 
                             </label>
                             <p-calendar formControlName="registrationDate" 
                                 [showIcon]="true" 
@@ -61,22 +61,9 @@
                             </p-calendar>
                         </div>
                     </div>
-                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                        <div class="form-label">
-                            <label for="username">
-                                <span class="red">*</span> {{'ERP.ADMISSION_DATE' | translate}} 
-                            </label>
-                            <p-calendar formControlName="admissionDate" 
-                                [showIcon]="true" 
-                                [dateFormat]="orgnizationSetting.calendar"
-                                [(ngModel)]="ginstitutionBasicDetailsModel.admissionDateVal" 
-                                placeholder="DD/MM/YYYY"
-                                [maxDate]="today" (onSelect)="admissionDateOnSelect()">
-                            </p-calendar>
-                        </div>
-                    </div>
+                   
                     
-                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                    <!-- <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-label">
                         <label> <span class="red">*</span>{{'ERP.POC_NAME' | translate}}</label>
                             <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="pocName"
@@ -95,9 +82,31 @@
                                 *ngIf="!instituteBasicDetailsForm.controls['pocNumber'].valid && instituteBasicDetailsForm.controls['pocNumber'].dirty">
                             </p-message>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="row g-3 mt-0">
+                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-label">
+                            <label><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.TYPE_OF_OPERATION' | translate}}</label>
+                            <p-dropdown [options]="operatorTypeList" placeholder="Select" formControlName="operatorTypeId"
+                                [(ngModel)]="ginstitutionBasicDetailsModel.operatorTypeId" [appendTo]="'body'">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-label">
+                            <label for="username">
+                                <span class="red">*</span> {{'ERP.ADMISSION_DATE' | translate}} 
+                            </label>
+                            <p-calendar formControlName="admissionDate" 
+                                [showIcon]="true" 
+                                [dateFormat]="orgnizationSetting.calendar"
+                                [(ngModel)]="ginstitutionBasicDetailsModel.admissionDateVal" 
+                                placeholder="DD/MM/YYYY"
+                                [maxDate]="today" (onSelect)="admissionDateOnSelect()">
+                            </p-calendar>
+                        </div>
+                    </div>
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-label">
                         <label> <span class="red">*</span>{{'ERP.PAN_NUMBER' | translate}}</label>
@@ -114,7 +123,7 @@
                             <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="tanNumber"
                                 [(ngModel)]="ginstitutionBasicDetailsModel.tanNumber" placeholder="Enter TAN Number">
                                 <p-message severity="error" text="Enter Valid  PAN Number "
-                                *ngIf="!instituteBasicDetailsForm.controls['panNumber'].valid && instituteBasicDetailsForm.controls['panNumber'].dirty">
+                                *ngIf="!instituteBasicDetailsForm.controls['tanNumber'].valid && instituteBasicDetailsForm.controls['tanNumber'].dirty">
                             </p-message>
                         </div>
                     </div>
@@ -128,69 +137,81 @@
                             </p-message>
                         </div>
                     </div>
+                    <div class="row g-3 mt-0">
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="form-label">
+                                <label for="username">
+                                     {{'MEMBERSHIP_TRANSACTION.RESOLUTION_DATE' | translate}}
+                                </label>
+                                <p-calendar formControlName="resolutionDate" [showIcon]="true" [dateFormat]="orgnizationSetting.calendar"
+                                    [(ngModel)]="ginstitutionBasicDetailsModel.resolutionDateVal" placeholder="DD/MM/YYYY"
+                                    [maxDate]="today">
+                                </p-calendar>
+                            </div>
+                        </div>
+                        <!-- <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                                            <div class="form-label">
+                                            <label>{{'MEMBERSHIP_TRANSACTION.RESOLUTION NO' | translate}}</label>
+                                                <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="resolutionNumber"
+                                                    [(ngModel)]="ginstitutionBasicDetailsModel.resolutionNumber" placeholder="Enter Resolution Number">
+                                                    <p-message severity="error" text="Enter Valid resolutionNumber "
+                                                *ngIf="!instituteBasicDetailsForm.controls['resolutionNumber'].valid && instituteBasicDetailsForm.controls['resolutionNumber'].dirty">
+                                            </p-message>
+                                            </div>
+                                        </div> -->
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="form-label">
+                                <span class="">{{ 'MEMBERSHIP_TRANSACTION.RESOLUTION_COPY_PATH' | translate }}
+                                </span>
+                                <div class="uplodad-style align-items-center">
+                                    <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                                        id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".png,.jpg,.jpeg"
+                                        (onRemove)="fileRemoveEvent('resolutionCopyPath',ginstitutionBasicDetailsModel)"
+                                        (onSelect)="fileUploader($event,fileUpload,'resolutionCopyPath')">
+                                    </p-fileUpload>
+                                    <div class="col-12  d-flex p-1 contant-body"
+                                        *ngFor="let img of ginstitutionBasicDetailsModel.multipartFileListForPhotoCopy">
+                                        <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                            <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22" height="22"></a>
+                                        </div>
+                                        <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                            {{img.fileName}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                    
+                        </div>
+                        <!-- <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12" >
+                                            <div class="form-label">
+                                            <span class=""> <span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.APPLICATION_COPY_PATH' | translate }} </span>
+                                            <div class="uplodad-style align-items-center">
+                                                <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                                                    id="apply-leave_fileUp_attach" chooseLabel=" " name="file"
+                                                    accept=".png,.jpg,.jpeg" (onRemove)="fileRemoveEvent('applicationCopyPath',ginstitutionBasicDetailsModel)" 
+                                                    (onSelect)="fileUploader($event,fileUpload,'applicationCopyPath')" >
+                                                </p-fileUpload>
+                                                <div  class="col-12  d-flex p-1 contant-body" *ngFor="let img of ginstitutionBasicDetailsModel.applicationCopyList">
+                                                    <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                        <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22"
+                                                                height="22"></a>
+                                                    </div>  
+                                                    <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                                        {{img.fileName}}</div>
+                                                </div>
+                                            </div>
+                                             </div>
+                                       
+                                        </div> -->
+                    
+                    </div>
                     </div>
                     <div class="col-12 px-0">
                         <div class="col-12 d-flex justify-content-end p-0 pt-3 search-input-style">
-                        <p-button label="{{'ERP.SUBMIT' | translate}}"
-                                    [disabled]="!instituteBasicDetailsForm.valid"
-                                    (click)="addOrUpdate(ginstitutionBasicDetailsModel)"> </p-button>
-                    </div>
-                    </div>
-                   <!-- <div class="row g-3 mt-0">
-                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                        <div class="form-label">
-                        <label>{{'MEMBERSHIP_TRANSACTION.RESOLUTION NO' | translate}}</label>
-                            <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="resolutionNumber"
-                                [(ngModel)]="ginstitutionBasicDetailsModel.resolutionNumber" placeholder="Enter Resolution Number">
-                                <p-message severity="error" text="Enter Valid resolutionNumber "
-                            *ngIf="!instituteBasicDetailsForm.controls['resolutionNumber'].valid && instituteBasicDetailsForm.controls['resolutionNumber'].dirty">
-                        </p-message>
+                            <p-button label="{{'ERP.SUBMIT' | translate}}" [disabled]="!instituteBasicDetailsForm.valid || addButton"
+                                (click)="addOrUpdate(ginstitutionBasicDetailsModel)"> </p-button>
                         </div>
                     </div>
-                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12" >
-                        <div class="form-label">
-                        <span class=""> <span class="red">*</span>{{ 'MEMBERSHIP_TRANSACTION.RESOLUTION_COPY_PATH' | translate }} </span>
-                        <div class="uplodad-style align-items-center">
-                            <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
-                                id="apply-leave_fileUp_attach" chooseLabel=" " name="file"
-                                accept=".png,.jpg,.jpeg" (onRemove)="fileRemoveEvent('resolutionCopyPath',ginstitutionBasicDetailsModel)" 
-                                (onSelect)="fileUploader($event,fileUpload,'resolutionCopyPath')" >
-                            </p-fileUpload>
-                            <div  class="col-12  d-flex p-1 contant-body" *ngFor="let img of ginstitutionBasicDetailsModel.multipartFileListForPhotoCopy">
-                                <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                    <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22"
-                                            height="22"></a>
-                                </div>  
-                                <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                    {{img.fileName}}</div>
-                            </div>
-                        </div>
-                         </div>
                    
-                    </div>
-                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12" >
-                        <div class="form-label">
-                        <span class=""> <span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.APPLICATION_COPY_PATH' | translate }} </span>
-                        <div class="uplodad-style align-items-center">
-                            <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
-                                id="apply-leave_fileUp_attach" chooseLabel=" " name="file"
-                                accept=".png,.jpg,.jpeg" (onRemove)="fileRemoveEvent('applicationCopyPath',ginstitutionBasicDetailsModel)" 
-                                (onSelect)="fileUploader($event,fileUpload,'applicationCopyPath')" >
-                            </p-fileUpload>
-                            <div  class="col-12  d-flex p-1 contant-body" *ngFor="let img of ginstitutionBasicDetailsModel.applicationCopyList">
-                                <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                    <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22"
-                                            height="22"></a>
-                                </div>  
-                                <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                    {{img.fileName}}</div>
-                            </div>
-                        </div>
-                         </div>
-                   
-                    </div>
-            
-                </div> -->
             </div>
         </form>
         <div class="col-12 p-0 my-2 border-bottom"></div>
@@ -237,20 +258,28 @@
             [globalFilterFields]="['surname', 'name', 'operatorTypeName', 'dob', 'age', 'genderTypeName', 'maritalStatusName', 'mobileNumber', 'aadharNumber', 'emailId', 'startDateVal']">
             <ng-template pTemplate="header">
                 <tr>
+                    <th>{{'MEMBERSHIP_TRANSACTION.IS_POC' | translate}}</th>
                     <th>{{'ERP.SURNAME' | translate}}</th>
                     <th>{{'ERP.NAME' | translate}}</th>
-                    <th>{{'ERP.TYPE_OF_OPERATOR' | translate}}</th>
+                    <!-- <th>{{'ERP.TYPE_OF_OPERATOR' | translate}}</th> -->
                     <th>{{'MEMBERSHIP_TRANSACTION.AUTHORIZED_SIGNATORY' | translate}}</th>
                     <th>{{'ERP.DATE_OF_BIRTH' | translate}}</th>
                     <th>{{'ERP.AGE' | translate}}</th>
                     <th>{{'ERP.AADHAR_NUMBER' | translate}}</th>
                     <th> {{'MEMBERSHIP_TRANSACTION.JOINING_DATE' | translate}}</th>
+                    <th> {{'MEMBERSHIP_TRANSACTION.EXIT_DATE' | translate}}</th>
+
 
                     <th class="width-15em">{{'ERP.ACTION' | translate}}</th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-row let-ri="rowIndex">
                 <tr [pEditableRow]="row">
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="output">{{row.isPocName}}</ng-template>
+                        </p-cellEditor>
+                    </td>
                     <td>
                         <p-cellEditor>
                             <ng-template pTemplate="output">{{row.surname}}</ng-template>
@@ -261,13 +290,13 @@
                             <ng-template pTemplate="output">{{row.name}}</ng-template>
                         </p-cellEditor>
                     </td>
-                    <td>
+                    <!-- <td>
                         <p-cellEditor>
                             <ng-template pTemplate="output">
                                 {{row.operatorTypeName}}
                             </ng-template>
                         </p-cellEditor>
-                    </td>
+                    </td> -->
                     <td>
                         <p-cellEditor>
                             <ng-template pTemplate="output">
@@ -318,6 +347,11 @@
                         </p-cellEditor>
                     </td>
                     <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="output">{{row.endDateVal}}</ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td>
                         <div class="global-action-btn flex align-items-center justify-content-start">
                             <p-button label="{{'ERP.EDIT' | translate}}" id="prj_stakehlder_bt_edit" class="action-view"
                                 [disabled]="EditDeleteDisable" (click)="editPromoter(row)"></p-button>
@@ -359,6 +393,14 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
+                        <label>{{'MEMBERSHIP_TRANSACTION.IS_POC' | translate}}</label>
+                        <p-dropdown [filter]="true" [options]="requiredlist" placeholder="Select"
+                            [(ngModel)]="institutePromoterDetails.isPoc"  formControlName="isPoc"
+                            [appendTo]="'body'" (onChange)="isPosCheck(institutePromoterDetails.isPoc)"></p-dropdown>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
                         <label><span class="red">*</span>{{'ERP.SURNAME' | translate}}</label>
                         <input pInputText type="text" [(ngModel)]="institutePromoterDetails.surname" formControlName="surName">
                         <p-message severity="error" text="Enter Valid Name"
@@ -375,16 +417,14 @@
                         </p-message>
                     </div>
                 </div>
-
-
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
-                        <label><span class="red">*</span>{{'ERP.TYPE_OF_OPERATOR' | translate}}</label>
+                        <label><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.TYPE_OF_OPERATION' | translate}}</label>
                         <p-dropdown [options]="operatorTypeList" placeholder="Select" formControlName="operatorTypeId"
                             [(ngModel)]="institutePromoterDetails.operatorTypeId" [appendTo]="'body'">
                         </p-dropdown>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
                         <label><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.AUTHORIZED_SIGNATORY' | translate}}</label>
@@ -482,7 +522,22 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
-                        <span><span class="red">*</span>{{'ERP.UPLOAD_IMAGE' | translate}}</span>
+                        <label for="username">
+                           {{'MEMBERSHIP_TRANSACTION.EXIT_DATE' | translate}} 
+                        </label>
+                        <p-calendar formControlName="endDate" 
+                            [showIcon]="true" 
+                            [dateFormat]="orgnizationSetting.calendar"
+                            [(ngModel)]="institutePromoterDetails.endDateVal" 
+                            [appendTo]="'body'"
+                            placeholder="DD/MM/YYYY"
+                            [maxDate]="today">
+                        </p-calendar>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <span><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.PHOTO_COPY' | translate}}</span>
                         <div class="uplodad-style align-items-center">
                             <p-fileUpload #fileUploadIndividualPhoto class="qua-upld file-attach semi-bold" name="myfile[]"
                             id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".png,.jpg,.jpeg"
@@ -505,7 +560,7 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
-                        <span><span class="red">*</span>{{'ERP.UPLOAD_SIGNATURE' | translate}}</span>
+                        <span><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.SIGNATURE_COPY' | translate}}</span>
                         <div class="uplodad-style align-items-center">
                             <p-fileUpload #fileUploadIndividualSign class="qua-upld file-attach semi-bold" name="myfile[]"
                                 id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".png,.jpg,.jpeg"

@@ -34,4 +34,10 @@ export class CiDisbursementsService {
     let headers = new HttpHeaders({ 'id': id + '' })
     return this.commonHttpService.getById(headers,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.CI_DISBURSEMENTS + ERP_TRANSACTION_CONSTANTS.GET_CI_DISBURSEMENT_BY_CI_APPLICATION_ID);
   }
+
+  getCILoanDisbursementScheduleByCIApplicationId(id:any){
+    let headers = new HttpHeaders({ 'id': id + '' })
+    return this.commonHttpService.getById(headers,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.CI_LOAN_DISBURSEMENT_SCHEDULES + ERP_TRANSACTION_CONSTANTS.GET_CI_LOAN_DISBURSEMENT_SCHEDULE_BY_LOAN_APPLICATION_ID);
+  }
+
 }

@@ -47,7 +47,7 @@ export class MembershipBasicDetails {
   
     admissionFee: any;
   
-    memStatus: any;
+    isActive: any;
   
     memStartDate: any;
   

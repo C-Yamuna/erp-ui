@@ -811,7 +811,6 @@ export class TermLoanStepperComponent {
   }
 
   prevStep(activeIndex: number) {
-    debugger
     this.activeIndex = activeIndex - 1;
     if (activeIndex == 0) {
       this.navigateTo(this.activeIndex, this.termLoanApplicationId);

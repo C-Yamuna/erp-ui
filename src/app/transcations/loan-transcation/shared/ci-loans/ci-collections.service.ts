@@ -33,4 +33,9 @@ export class CiCollectionsService {
   approvalCiCollectionDetails(loansModel: any) {
     return this.commonHttpService.post(loansModel,Headers, ERP_TRANSACTION_CONSTANTS.LOANS+ ERP_TRANSACTION_CONSTANTS.CI_COLLECTIONS + ERP_TRANSACTION_CONSTANTS.APPROVAL_CI_COLLECTION_DETAILS)
   }
+
+  getCollectionByApplicationId(id:any){
+    let headers = new HttpHeaders({ 'id': id + '' })
+    return this.commonHttpService.getById(headers,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.CI_COLLECTIONS + ERP_TRANSACTION_CONSTANTS.GET_BY_APPLICATION_ID);
+  }
 }

@@ -153,7 +153,7 @@
                                 <div class="form-label">
                                 <label><span class="red">*</span>{{'ERP.VILLAGES' | translate}}</label>
                                     <p-dropdown placeholder="{{'ERP.SELECT' | translate}}" formControlName="permenentVillage" [options]="permenentVillagesList"
-                                        [(ngModel)]="savingsBankCommunicationModel.permntVillageId"></p-dropdown>
+                                        [(ngModel)]="savingsBankCommunicationModel.permntVillageId" (onChange)='onChangePermenentVillage()'></p-dropdown>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">

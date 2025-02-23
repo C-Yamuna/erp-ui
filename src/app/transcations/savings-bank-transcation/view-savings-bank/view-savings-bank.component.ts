@@ -77,6 +77,8 @@ export class ViewSavingsBankComponent {
   photoCopyFlag: boolean = true;
   signatureCopyFlag: boolean = true;
   memberPhotoCopyZoom: boolean = false;
+  groupPhotoCopyZoom: boolean = false;
+  institutionPhotoCopyZoom: boolean = false;
   membreIndividualFlag: boolean = false;
   isKycApproved : any;
   guardainFormEnable: boolean = false;
@@ -472,6 +474,12 @@ export class ViewSavingsBankComponent {
   closePhotoCopy() {
     this.memberPhotoCopyZoom = false;
   }
+  groupclosePhotoCopy() {
+    this.groupPhotoCopyZoom = false;
+  }
+  institutionclosePhotoCopy() {
+    this.institutionPhotoCopyZoom = false;
+  }
 
   /**
    * @implement Image Zoom POp up
@@ -479,6 +487,12 @@ export class ViewSavingsBankComponent {
    */
   onClickMemberPhotoCopy(){
     this.memberPhotoCopyZoom = true;
+  }
+  onClickGroupPhotoCopy(){
+    this.groupPhotoCopyZoom = true;
+  }
+  onClickInstitutionPhotoCopy(){
+    this.institutionPhotoCopyZoom = true;
   }
 
   /**

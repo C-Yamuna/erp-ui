@@ -100,7 +100,11 @@ export class FdNonCummulativeApprovalComponent {
   statusList: any[] = [];
   isKycEmpty: boolean = false;
   genderList: any[] = [];
-
+  kycPhotoCopyZoom: boolean = false;
+  docPhotoCopyZoom: boolean = false;
+  nomineePhotoCopyZoom: boolean = false;
+  guardianPhotoCopyZoom: boolean = false;
+  
   constructor(private router: Router,
     private fdNonCumulativeApplicationService: FdNonCumulativeApplicationService,
     private commonComponent: CommonComponent,
@@ -633,5 +637,21 @@ export class FdNonCummulativeApprovalComponent {
         this.msgs.push({ severity: "error", detail: 'Unable to download filled FHR' });
       })
   
+    }
+    onClickKycPhotoCopy(rowData :any){
+      this.multipleFilesList = [];
+      this.kycPhotoCopyZoom = true;
+      this.multipleFilesList = rowData.multipartFileList;
+    }
+    onClickDocPhotoCopy(rowData :any){
+      this.multipleFilesList = [];
+      this.docPhotoCopyZoom = true;
+      this.multipleFilesList = rowData.multipartFileList;
+    }
+    onClickNomineePhotoCopy(){
+      this.nomineePhotoCopyZoom = true;
+    }
+    onClickGuardianPhotoCopy(){
+      this.guardianPhotoCopyZoom = true;
     }
 }

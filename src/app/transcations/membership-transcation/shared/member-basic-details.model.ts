@@ -50,7 +50,7 @@ export class MemberBasicDetails {
 
   admissionFee: any;
 
-  memStatus: any;
+  status: any;
 
   memStartDate: any;
 
@@ -178,6 +178,11 @@ export class MemberBasicDetails {
 
    societyAdmissionNumber:any;
 
+   resolutionDate:any;
+
+   resolutionDateVal:any;
+
+  
 }
 
 export class MemberNomineeDetails {
@@ -514,6 +519,23 @@ export class MemberCommunicationDeatilsModel {
      permanentSubDistrictName: any;
     
     permanentVillageName: any;
+
+    divisionId:any;
+
+    blockId:any;
+ 
+    divisionName:any;
+ 
+    blockName:any;
+
+    permanentDivisionId:any;
+
+	  permanentBlockId:any;
+
+	  permanentDivisionName:any;
+
+	  permanentBlockName:any;
+ 
 }
 export class MemberKycDetailsModel {
   id: any;

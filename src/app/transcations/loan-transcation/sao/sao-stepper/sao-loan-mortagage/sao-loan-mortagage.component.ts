@@ -33,12 +33,12 @@ export class SaoLoanMortagageComponent {
   selectcollateraltype: any;
   showgoldform: boolean = false;
   showlandform: boolean = false;
-  showbondform:boolean = false;
-  showstorageform:boolean = false;
-  showothersform:boolean = false;
+  showbondform: boolean = false;
+  showstorageform: boolean = false;
+  showothersform: boolean = false;
   buttonDisabled: boolean = false;
   carrats: any[] | undefined;
-  admissionnumber:any;
+  admissionnumber: any;
   landTypeList: any[] = [];
   gridList: any[] = [];
   msgs: any[] = [];
@@ -48,43 +48,42 @@ export class SaoLoanMortagageComponent {
   displayDialog: boolean = false;
   responseModel!: Responsemodel;
   loanId: any;
-  isEdit:boolean = false;
+  isEdit: boolean = false;
   orgnizationSetting: any;
   multipleFilesList: any[] = [];
   uploadFileData: any;
   saoLoanApplicatonModel: SaoLoanApplication = new SaoLoanApplication();
-  saoLoanLandMortageDetailsModel : SaoLoanLandMortageDetailsModel = new SaoLoanLandMortageDetailsModel();
+  saoLoanLandMortageDetailsModel: SaoLoanLandMortageDetailsModel = new SaoLoanLandMortageDetailsModel();
   statusList: any[] = [];
   deleteId: any;
-  landMortgagePopUp:boolean = false;
-  villagesList:any[]=[];
-  landOwnershipTypesList:any[]=[];
- 
-  constructor(private router: Router, private formBuilder: FormBuilder,private saoLoanLandMortageDetailsService: SaoLoanLandMortageDetailsService,
-    private commonComponent: CommonComponent,private saoLoanApplicationService : SaoLoanApplicationService,private activateRoute: ActivatedRoute,
-    private encryptDecryptService: EncryptDecryptService,private membershipBasicDetailsService: MembershipBasicDetailsService,private datePipe: DatePipe,
-    private fileUploadService :FileUploadService,private commonFunctionsService: CommonFunctionsService
-  )
-  { 
+  landMortgagePopUp: boolean = false;
+  villagesList: any[] = [];
+  landOwnershipTypesList: any[] = [];
+
+  constructor(private router: Router, private formBuilder: FormBuilder, private saoLoanLandMortageDetailsService: SaoLoanLandMortageDetailsService,
+    private commonComponent: CommonComponent, private saoLoanApplicationService: SaoLoanApplicationService, private activateRoute: ActivatedRoute,
+    private encryptDecryptService: EncryptDecryptService, private membershipBasicDetailsService: MembershipBasicDetailsService, private datePipe: DatePipe,
+    private fileUploadService: FileUploadService, private commonFunctionsService: CommonFunctionsService
+  ) {
     this.Collateralform = this.formBuilder.group({
-     'passbookNumber': new FormControl('', [Validators.required]),
-      'khataNumber': new FormControl('', [Validators.required,Validators.pattern(applicationConstants.ALPHANUMERIC)]),
-      'surveyNumber': new FormControl('', [Validators.required,Validators.pattern(applicationConstants.ALPHANUMERIC)]),
-      'totalLandInUnits':new FormControl('',[Validators.required, Validators.maxLength(5) ]),
-      'totalLandInSubUnits': new FormControl('',[Validators.required, Validators.maxLength(5)]),
-      'landValuePerUnit': new FormControl('',[Validators.required, Validators.minLength(1), Validators.maxLength(5)]),
-      'totalLandValue': new FormControl('',[Validators.required, Validators.minLength(1), Validators.maxLength(5)]),
-      'mortgageLandInUnits': new FormControl('',[Validators.required, Validators.maxLength(5) ]),
-      'mortgageLandInSubUnits': new FormControl('',[Validators.required, Validators.maxLength(5) ]),
-      'mortgageLandValuePerUnit': new FormControl('', [Validators.required,Validators.pattern(applicationConstants.ALLOW_DECIMALS_UPTO_TWO_PLACES),  Validators.minLength(1), Validators.maxLength(13)]),
-      'totalMortgageLandValue': new FormControl('', [Validators.required,Validators.pattern(applicationConstants.ALLOW_DECIMALS_UPTO_TWO_PLACES),  Validators.minLength(1), Validators.maxLength(13)]),
-      'mortgageDeedNumber':new FormControl('', [Validators.required,Validators.pattern(applicationConstants.ALPHANUMERIC)]),
+      'passbookNumber': new FormControl('', [Validators.required]),
+      'khataNumber': new FormControl('', [Validators.required, Validators.pattern(applicationConstants.ALPHANUMERIC)]),
+      'surveyNumber': new FormControl('', [Validators.required, Validators.pattern(applicationConstants.ALPHANUMERIC)]),
+      'totalLandInUnits': new FormControl('', [Validators.required, Validators.maxLength(5)]),
+      'totalLandInSubUnits': new FormControl('', [Validators.required, Validators.maxLength(5)]),
+      'landValuePerUnit': new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(5)]),
+      'totalLandValue': new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(5)]),
+      'mortgageLandInUnits': new FormControl('', [Validators.required, Validators.maxLength(5)]),
+      'mortgageLandInSubUnits': new FormControl('', [Validators.required, Validators.maxLength(5)]),
+      'mortgageLandValuePerUnit': new FormControl('', [Validators.required, Validators.pattern(applicationConstants.ALLOW_DECIMALS_UPTO_TWO_PLACES), Validators.minLength(1), Validators.maxLength(13)]),
+      'totalMortgageLandValue': new FormControl('', [Validators.required, Validators.pattern(applicationConstants.ALLOW_DECIMALS_UPTO_TWO_PLACES), Validators.minLength(1), Validators.maxLength(13)]),
+      'mortgageDeedNumber': new FormControl('', [Validators.required, Validators.pattern(applicationConstants.ALPHANUMERIC)]),
       'mortgageDeedDate': new FormControl('', [Validators.required]),
       'ownershipType': new FormControl('', [Validators.required]),
       'villageName': new FormControl('', [Validators.required])
     })
-   
-   
+
+
   }
   ngOnInit() {
     this.getAllVaillages();
@@ -92,12 +91,12 @@ export class SaoLoanMortagageComponent {
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
     this.statusList = this.commonComponent.status();
     this.landTypeList = [
-        { label: 'Dry Land', value: 1 },
-        { label: 'Wet Land', value: 2 },
+      { label: 'Dry Land', value: 1 },
+      { label: 'Wet Land', value: 2 },
     ];
-    this.landOwnershipTypesList= [
+    this.landOwnershipTypesList = [
       { label: 'Land Ownership', value: 1 },
-     
+
     ];
     this.activateRoute.queryParams.subscribe(params => {
       if (params['id'] != undefined) {
@@ -108,118 +107,124 @@ export class SaoLoanMortagageComponent {
       } else {
         this.isEdit = false;
       }
-    }) 
-    this.updateData();
-   this.getSaoLoanApplicationDetailsById(this.loanId);
-}
-
-updateData() {
-  this.saveAndNextDisable = !this.Collateralform.valid;
-  if(this.editDeleteDisable != null){
-    this.saveAndNextDisable = this.editDeleteDisable;
-  }
-  this.saoLoanApplicationService.changeData({
-    formValid: !this.Collateralform.valid ? true : false,
-    data: this.saoLoanLandMortageDetailsModel,
-    isDisable: this.saveAndNextDisable,
-    // isDisable: (!this.Collateralform.valid),
-    stepperIndex: 7,
-  });
-}
-save() {
-  this.updateData();
-}
-getSaoLoanApplicationDetailsById(id: any) {
-  this.saoLoanApplicationService.getSaoLoanApplicationDetailsById(id).subscribe((response: any) => {
-    this.responseModel = response;
-    if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-      this.saoLoanApplicatonModel = this.responseModel.data[0];
-    }
-    else {
-      this.msgs = [];
-      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-      setTimeout(() => {
-        this.msgs = [];
-      }, 2000);
-    }
-  });
-}
-getAllVaillages(){
-  this.saoLoanLandMortageDetailsService.getAllVillages().subscribe((data: any) => {
-    this.responseModel = data;
-    if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-      this.villagesList = this.responseModel.data.filter((obj:any) => obj.status == applicationConstants.ACTIVE).map((obj: any) => {
-        return { label: obj.name, value: obj.id };
-      });
-    } else {
-      this.msgs = [];
-      this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
-    }
-  });
-}
-getAllLandOwnerShipTypes() {
-  this.commonComponent.startSpinner();
-  this.saoLoanLandMortageDetailsService.getAllLandownershipTypes().subscribe(response => {
-    this.responseModel = response;
-    if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-      this.commonComponent.stopSpinner();
-      this.landOwnershipTypesList = this.responseModel.data.filter((landType: { status: number; }) => landType.status == 1).map((landType: any) => {
-        return { label: landType.name, value: landType.id };
-      });
-    }
-  },
-    error => {
-      this.msgs = [];
-      this.commonComponent.stopSpinner();
-      this.msgs.push({ severity: 'error', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST });
     })
-}
-getSaoLoanLandDetailsByApplicationId(loanId: any){
-  this.editDeleteDisable = true;
-  this.saoLoanLandMortageDetailsService.getLandDetailsBySaoLoanApplicationId(loanId).subscribe(res => {
-    this.responseModel = res;
-    this.commonComponent.stopSpinner();
-    if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
-      this.gridList = this.responseModel.data;
-      if(this.gridList != null && this.gridList.length >0){
-        this.editDeleteDisable = false;
-        this.gridList = this.responseModel.data.map((land: any) => {
-          
-          let village = this.villagesList.find((data: any) => null != data && land.villageId != null && data.value == land.villageId);
-          if (village != null && undefined != village && village.label != null && village.label != undefined) {
-            land.villageName = village.label;
-          }
-          if (land != null && land != undefined && land.documentPath != null && land.documentPath != undefined) {
-            land.requestedDocPathMultipartFileList = this.fileUploadService.getFile(land.documentPath , ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + land.documentPath);
-          }
-          return land
-        });
-        this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+    this.updateData();
+    this.getSaoLoanApplicationDetailsById(this.loanId);
+  }
+
+  updateData() {
+    this.saveAndNextDisable = !this.Collateralform.valid;
+    if (this.editDeleteDisable != null) {
+      this.saveAndNextDisable = this.editDeleteDisable;
+    }
+    let village = this.villagesList.find((data: any) => null != data && this.saoLoanLandMortageDetailsModel.villageId != null && data.value == this.saoLoanLandMortageDetailsModel.villageId);
+    if (village != null && undefined != village && village.label != null && village.label != undefined) {
+      this.saoLoanLandMortageDetailsModel.villageName = village.label;
+    }
+    this.saoLoanApplicationService.changeData({
+      formValid: !this.Collateralform.valid ? true : false,
+      data: this.saoLoanLandMortageDetailsModel,
+      isDisable: this.saveAndNextDisable,
+      // isDisable: (!this.Collateralform.valid),
+      stepperIndex: 7,
+    });
+  }
+  save() {
+    this.updateData();
+  }
+  getSaoLoanApplicationDetailsById(id: any) {
+    this.saoLoanApplicationService.getSaoLoanApplicationDetailsById(id).subscribe((response: any) => {
+      this.responseModel = response;
+      if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+        this.saoLoanApplicatonModel = this.responseModel.data[0];
+      }
+      else {
+        this.msgs = [];
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
         setTimeout(() => {
           this.msgs = [];
         }, 2000);
       }
-      this.updateData();
-    } else {
-      this.commonComponent.stopSpinner();
-      this.buttonDisabled = applicationConstants.FALSE;
-      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-      setTimeout(() => {
+    });
+  }
+  getAllVaillages() {
+    this.saoLoanLandMortageDetailsService.getAllVillages().subscribe((data: any) => {
+      this.responseModel = data;
+      if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+        this.villagesList = this.responseModel.data.filter((obj: any) => obj.status == applicationConstants.ACTIVE).map((obj: any) => {
+          return { label: obj.name, value: obj.id };
+        });
+      } else {
         this.msgs = [];
-      }, 2000);
-    }
-    
-  });
-}
+        this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
+      }
+    });
+  }
+  getAllLandOwnerShipTypes() {
+    this.commonComponent.startSpinner();
+    this.saoLoanLandMortageDetailsService.getAllLandownershipTypes().subscribe(response => {
+      this.responseModel = response;
+      if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+        this.commonComponent.stopSpinner();
+        this.landOwnershipTypesList = this.responseModel.data.filter((landType: { status: number; }) => landType.status == 1).map((landType: any) => {
+          return { label: landType.name, value: landType.id };
+        });
+      }
+    },
+      error => {
+        this.msgs = [];
+        this.commonComponent.stopSpinner();
+        this.msgs.push({ severity: 'error', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST });
+      })
+  }
+  getSaoLoanLandDetailsByApplicationId(loanId: any) {
+    this.editDeleteDisable = true;
+    this.saoLoanLandMortageDetailsService.getLandDetailsBySaoLoanApplicationId(loanId).subscribe(res => {
+      this.responseModel = res;
+      this.commonComponent.stopSpinner();
+      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+        this.gridList = this.responseModel.data;
+        if (this.gridList != null && this.gridList.length > 0) {
+          this.editDeleteDisable = false;
+          this.gridList = this.responseModel.data.map((land: any) => {
 
-  addOrUpdateLandDetails(rowData:any) {
+            let village = this.villagesList.find((data: any) => null != data && land.villageId != null && data.value == land.villageId);
+            if (village != null && undefined != village && village.label != null && village.label != undefined) {
+              land.villageName = village.label;
+              this.saoLoanLandMortageDetailsModel.villageName = land.villageName;
+            }
+            if (land != null && land != undefined && land.documentPath != null && land.documentPath != undefined) {
+              land.requestedDocPathMultipartFileList = this.fileUploadService.getFile(land.documentPath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + land.documentPath);
+            }
+            return land
+          });
+          this.updateData();
+          this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        }
+
+      } else {
+        this.commonComponent.stopSpinner();
+        this.buttonDisabled = applicationConstants.FALSE;
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
+
+    });
+  }
+
+  addOrUpdateLandDetails(rowData: any) {
     this.landMortgagePopUp = false;
     this.addButton = false;
     this.editDeleteDisable = false;
     rowData.saoLoanApplicationId = this.loanId;
     rowData.filesDTOList = this.saoLoanLandMortageDetailsModel.filesDTOList;
     rowData.documentPath = this.saoLoanLandMortageDetailsModel.documentPath;
-   
+
     this.saoLoanLandMortageDetailsModel = rowData;
     this.saoLoanLandMortageDetailsModel.admissionNo = this.saoLoanApplicatonModel.admissionNo;
     this.saoLoanLandMortageDetailsModel.mortgageDeedDate = this.commonFunctionsService.getUTCEpoch(new Date(this.saoLoanLandMortageDetailsModel.mortgageDeedDateVal));
@@ -286,40 +291,40 @@ getSaoLoanLandDetailsByApplicationId(loanId: any){
     this.addButton = true;
     this.editDeleteDisable = true;
     this.updateData();
-    
+
   }
-  getLandDetailsBySaoLoanApplicationId(loanId:any) {
-    this.saoLoanLandMortageDetailsService.getLandDetailsBySaoLoanApplicationId(loanId).subscribe(res => {
-      this.responseModel = res;
-      this.commonComponent.stopSpinner();
-      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
-        this.gridList = this.responseModel.data;
-        this.gridList = this.responseModel.data.map((land: any) => {
-          if(land.villageId != null && land.villageId != undefined){
-            let villageName  = this.villagesList.filter((village:any) => village.value == land.villageId);
-            land.villageName = villageName[0].label;
-          }
-          if (land != null && land != undefined && land.documentPath != null && land.documentPath != undefined) {
-            land.requestedDocPathMultipartFileList = this.fileUploadService.getFile(land.documentPath , ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + land.documentPath);
-          }
-          return land
-        });
-        this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
-        setTimeout(() => {
-          this.msgs = [];
-        }, 2000);
-      } else {
-        this.commonComponent.stopSpinner();
-        this.buttonDisabled = applicationConstants.FALSE;
-        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-        setTimeout(() => {
-          this.msgs = [];
-        }, 2000);
-      }
-    });
-    this.updateData();
-  }
-  
+  // getLandDetailsBySaoLoanApplicationId(loanId:any) {
+  //   this.saoLoanLandMortageDetailsService.getLandDetailsBySaoLoanApplicationId(loanId).subscribe(res => {
+  //     this.responseModel = res;
+  //     this.commonComponent.stopSpinner();
+  //     if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+  //       this.gridList = this.responseModel.data;
+  //       this.gridList = this.responseModel.data.map((land: any) => {
+  //         if(land.villageId != null && land.villageId != undefined){
+  //           let villageName  = this.villagesList.filter((village:any) => village.value == land.villageId);
+  //           land.villageName = villageName[0].label;
+  //         }
+  //         if (land != null && land != undefined && land.documentPath != null && land.documentPath != undefined) {
+  //           land.requestedDocPathMultipartFileList = this.fileUploadService.getFile(land.documentPath , ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + land.documentPath);
+  //         }
+  //         return land
+  //       });
+  //       this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+  //       setTimeout(() => {
+  //         this.msgs = [];
+  //       }, 2000);
+  //     } else {
+  //       this.commonComponent.stopSpinner();
+  //       this.buttonDisabled = applicationConstants.FALSE;
+  //       this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+  //       setTimeout(() => {
+  //         this.msgs = [];
+  //       }, 2000);
+  //     }
+  //   });
+  //   this.updateData();
+  // }
+
   editLandLoanMortgage(rowData: any) {
     this.landMortgagePopUp = true;
     this.addButton = true;
@@ -357,46 +362,46 @@ getSaoLoanLandDetailsByApplicationId(loanId: any){
     this.editDeleteDisable = false;
     this.getSaoLoanLandDetailsByApplicationId(this.loanId);
   }
-  
-  deletDilogBox(rowData:any){
+
+  deletDilogBox(rowData: any) {
     this.displayDialog = true;
     this.deleteId = rowData.id;
   }
-  submitDelete(){
+  submitDelete() {
     this.displayDialog = false;
-    this.saoLoanLandMortageDetailsService.deleteSaoLoanLandMortageDetails(this.deleteId).subscribe((response : any ) => {
+    this.saoLoanLandMortageDetailsService.deleteSaoLoanLandMortageDetails(this.deleteId).subscribe((response: any) => {
       this.responseModel = response;
-      if(this.responseModel.status == applicationConstants.STATUS_SUCCESS){
-        if(this.loanId != null && this.loanId != undefined){
+      if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+        if (this.loanId != null && this.loanId != undefined) {
           this.getSaoLoanLandDetailsByApplicationId(this.loanId);
-        }  
-       
-      }
-        else {
-          this.msgs = [];
-          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 2000);
         }
-      }, error => {
-        this.commonComponent.stopSpinner();
-        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
+
+      }
+      else {
+        this.msgs = [];
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
         setTimeout(() => {
           this.msgs = [];
-        }, 3000);
-      });
+        }, 2000);
+      }
+    }, error => {
+      this.commonComponent.stopSpinner();
+      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    });
   }
   cancelForDialogBox() {
     this.displayDialog = false;
   }
-   /**
-   * @implements file upload service
-   * @param event
-   * @param fileUpload
-   * @author akhila.m
-   */
-   fileUploader(event:any ,fileUpload: FileUpload ){
+  /**
+  * @implements file upload service
+  * @param event
+  * @param fileUpload
+  * @author akhila.m
+  */
+  fileUploader(event: any, fileUpload: FileUpload) {
     this.multipleFilesList = [];
     this.saoLoanLandMortageDetailsModel.filesDTOList = [];
     this.saoLoanLandMortageDetailsModel.documentPath = null;
@@ -416,8 +421,8 @@ getSaoLoanLandDetailsByApplicationId(loanId: any){
           this.saoLoanLandMortageDetailsModel.filesDTOList.push(files); // Add to filesDTOList array
         }
         let timeStamp = this.commonComponent.getTimeStamp();
-        this.saoLoanLandMortageDetailsModel.filesDTOList[0].fileName = "LAND_MORTGAGE" + this.loanId + "_" +timeStamp+ "_"+ file.name ;
-        this.saoLoanLandMortageDetailsModel.documentPath = "LAND_MORTGAGE" + this.loanId + "_" +timeStamp+"_"+ file.name; // This will set the last file's name as docPath
+        this.saoLoanLandMortageDetailsModel.filesDTOList[0].fileName = "LAND_MORTGAGE" + this.loanId + "_" + timeStamp + "_" + file.name;
+        this.saoLoanLandMortageDetailsModel.documentPath = "LAND_MORTGAGE" + this.loanId + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
       }
       reader.readAsDataURL(file);
     }
@@ -434,5 +439,5 @@ getSaoLoanLandDetailsByApplicationId(loanId: any){
       this.saoLoanLandMortageDetailsModel.documentPath = null;
     }
   }
- 
+
 }

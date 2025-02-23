@@ -70,11 +70,12 @@
                                                     <p class="label-input-text">{{ generalConfigModel.maxTenure}}</p>
                                                 </div>
                                                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">
-                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.IS_AUTO_RENEWAL'
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.TENURE_TYPE'
                                                         |translate}}</h6>
-                                                    <p class="label-input-text">{{ generalConfigModel.isAutoRenewal ? 'Yes' : 'No'}}
-                                                    </p>
+                                                    <p class="label-input-text"> {{
+                                                        generalConfigModel.tenureTypeName }}</p>
                                                 </div>
+
                                             </div>
                                             <div class="row">
                                                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">

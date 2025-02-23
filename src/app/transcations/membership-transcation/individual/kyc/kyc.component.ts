@@ -186,7 +186,7 @@ export class KYCComponent  implements OnInit {
               this.docTypeList = this.responseModel.data.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((state: any) => {
                 return { label: state.name, value: state.id };
               });
-              this.requiredDocumentList = this.responseModel.data.filter((obj: any) => obj != null && obj.isMandatory == applicationConstants.TRUE);
+              this.requiredDocumentList = this.responseModel.data.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE && obj.isMandatory == applicationConstants.TRUE);
 
             }
             else {
@@ -216,9 +216,9 @@ export class KYCComponent  implements OnInit {
           this.kycModelList?.some(kyc => kyc.kycDocumentTypeId === doc.id)
       );
       if (mandatoryDocuments.length > 0) {
-          this.requiredDocumentsNames = "Please Upload Mandatory KYC Documents (";
-          this.requiredDocumentsNames += mandatoryDocuments.map(doc => `'${doc.name}'`).join(", ");
-          this.requiredDocumentsNames += ")";
+          this.requiredDocumentsNames = "Please Upload Mandatory KYC Documents ";
+          this.requiredDocumentsNames += mandatoryDocuments.map(doc => `${doc.name}`).join(", ");
+          // this.requiredDocumentsNames += "";
           this.mandatoryDoxsTextShow = true;
       } else {
           this.mandatoryDoxsTextShow = false;

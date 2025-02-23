@@ -32,6 +32,16 @@
                         <p-dropdown [options]="allTypesOfmembershipList" [filter]="true" placeholder="Please Enter Admission Number"
                             [(ngModel)]="admissionNumber" [disabled] ="admissionNumberDropDownDisable " 
                             (onChange)="OnChangeAdmissionNumber(admissionNumber)"></p-dropdown>
+
+                            <!-- <p-dropdown [options]="allTypesOfmembershipList" [(ngModel)]="admissionNumber" [filter]="true" (onChange)="OnChangeAdmissionNumber(admissionNumber)" [disabled] ="admissionNumberDropDownDisable" >
+                                <ng-template let-member pTemplate="item">
+                                  <div>
+                                    <strong>Name:</strong> {{ member?.name }} <br />
+                                    <strong>Admission Number:</strong> {{ member?.admissionNumber }} <br />
+                                    <strong>Member Type:</strong> {{ member?.memberTypeName }}
+                                  </div>
+                                </ng-template>
+                              </p-dropdown> -->
                     </div>
                     <!-- Individual Form -->
                     <div class="col-12 individual-basic" *ngIf="individualFlag">
@@ -129,7 +139,7 @@
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card" *ngIf="membershipBasicRequiredDetails.isKycApproved">
                                         <div class="col-10 d-flex p-0">
                                         <div>
-                                        <p class="label-view text-fontwt">{{'ERP.ISKYC' | translate}}</p>
+                                        <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                         <p class="label-input-text">{{isKycApproved}}</p>
                                     </div>
                                         </div>
@@ -139,7 +149,7 @@
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card" *ngIf="!membershipBasicRequiredDetails.isKycApproved">
                                         <div class="col-12 d-flex p-0">
                                         <div>
-                                        <p class="label-view text-fontwt">{{'ERP.ISKYC' | translate}}</p>
+                                        <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                         <p class="label-input-text">{{isKycApproved}}</p>
                                     </div>
                                         </div>
@@ -568,7 +578,7 @@
 
 <!-- institution Promoter details dialog -->
 <div class="view-moredetails-popup">
-    <p-dialog header="More Basic Details" [(visible)]="institutionPromoterFlag" styleClass="moredetails-style">
+    <p-dialog header="Basic Details" [modal]="true" [(visible)]="institutionPromoterFlag" styleClass="moredetails-style">
         <div class="col-12 view-morepopup">
             <div class="d-flex justify-content-center px-3 py-0 mb-2">
                 <img src="assets/images/no-image.jpg" class="image-user">
@@ -682,7 +692,7 @@
 
 <!-- group prmoter details dialog -->
 <div class="view-moredetails-popup">
-    <p-dialog header="More Basic Details" [(visible)]="groupPromotersPopUpFlag" styleClass="moredetails-style">
+    <p-dialog header="Basic Details" [modal]="true" [(visible)]="groupPromotersPopUpFlag" styleClass="moredetails-style">
         <div class="col-12 view-morepopup">
             <div class="d-flex justify-content-center px-3 py-0 mb-2">
                 <img src="assets/images/no-image.jpg" class="image-user">
@@ -794,7 +804,7 @@
 </div>
 
 <!--photo Copy dialog -->
-<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="memberPhotoCopyZoom" styleClass="photo-dialog">
+<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [modal]="true" [(visible)]="memberPhotoCopyZoom" styleClass="photo-dialog">
     <div class="col-12 px-0">
         <div class="row">
             <div class="col-6">

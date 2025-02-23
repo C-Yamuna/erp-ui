@@ -2,11 +2,17 @@
 
     <div class="stepper-top-section-strip">
         <div class="row">
-            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12 stepper-top-product-name-background">
                 <div class="form-group">
                     <span>{{'ERP.MEMBER_TYPE' | translate}}</span>
                     <p class="mb-0">{{ memberBasicDetailsModel.memberTypeName }}&nbsp;({{
                         memberBasicDetailsModel.subProductName }})</p>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+                <div class="form-group ml-2">
+                    <span>{{'ERP.ADMISSION_NUMBER' | translate}}</span>
+                    <p class="mb-0">{{memberBasicDetailsModel.admissionNumber}}</p>
                 </div>
             </div>
             <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
@@ -21,12 +27,12 @@
                     <p class="mb-0">{{memberBasicDetailsModel.genderName}}</p>
                 </div>
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+            <!-- <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
                 <div class="form-group">
                     <span>{{'ERP.QUALIFICATON' | translate}}</span>
                     <p class="mb-0">{{memberBasicDetailsModel.qualificationName}}</p>
                 </div>
-            </div>
+            </div> -->
             <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
                 <div class="form-group">
                     <span>{{'ERP.MOBILE_NUMBER' | translate}}</span>
@@ -42,8 +48,9 @@
         </div>
     </div>
     <div class="col-12"></div>
-    <h6 class="sub-heading">{{'ERP.NOMINEE_DETAILS' | translate}}<span class="admission-text">(Admission
-            Number : {{memberBasicDetailsModel.admissionNumber}})</span></h6>
+    <h6 class="sub-heading">{{'ERP.NOMINEE_DETAILS' | translate}}</h6>
+    <!-- <span class="admission-text">(Admission
+            Number : {{memberBasicDetailsModel.admissionNumber}})</span> -->
 
     <form [formGroup]="nomineeForm" id="exit_types_form">
         <div class="col-12 p-0">
@@ -166,7 +173,7 @@
                                     <div class="row g-3 mt-n1 mb-3">
                                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
-                                                <p-button icon="fa fa-download p-2" label="unsigned letter format"
+                                                <p-button icon="fa fa-download p-2" label="download letter format"
                                                     class="kyc-btnm-0"></p-button>
 
                                             </div>

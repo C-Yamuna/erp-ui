@@ -1,9 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Responsemodel } from 'src/app/shared/responsemodel';
 import { MembershipBasicDetails, MembershipGroupDetails, MemInstitutionDetails } from '../ci-membership-details/shared/membership-details.model';
-import { CiLoanApplication, CiLoanDisbursementScheduleModel, CiLoanInsuranceDetails } from './shared/ci-loan-application.model';
+import { CiLoanApplication, CiLoanDisbursementModel, CiLoanDisbursementScheduleModel, CiLoanInsuranceDetails } from './shared/ci-loan-application.model';
 import { CompoundInterestProductDefinition } from '../../compound-interest-product-definition/shared/compound-interest-product-definition.model';
 import { TranslateService } from '@ngx-translate/core';
 import { CommonFunctionsService } from 'src/app/shared/commonfunction.service';
@@ -15,7 +15,8 @@ import { CiLoanApplicationService } from './shared/ci-loan-application.service';
 import { CompoundInterestProductDefinitionService } from '../../compound-interest-product-definition/shared/compound-interest-product-definition.service';
 import { applicationConstants } from 'src/app/shared/applicationConstants';
 import { Table } from 'primeng/table';
-import { AccountTypes } from 'src/app/transcations/common-status-data.json';
+import { AccountTypes, CommonStatusData } from 'src/app/transcations/common-status-data.json';
+import { CiLoanDisbursement } from '../../ci-loan-operations/shared/ci-loan-disbursement.model';
 
 @Component({
   selector: 'app-ci-product-details',
@@ -59,7 +60,7 @@ export class CiProductDetailsComponent {
   ciProductDefinitionModel: CompoundInterestProductDefinition = new CompoundInterestProductDefinition();
   ciLoanInsuranceDetailsModel: CiLoanInsuranceDetails = new CiLoanInsuranceDetails();
   ciLoanInterestPolicyModel: CiInterestPolicy = new CiInterestPolicy();
-  ciLoanDisbursementScheduleModel:CiLoanDisbursementScheduleModel = new CiLoanDisbursementScheduleModel()
+  ciLoanDisbursementModel:CiLoanDisbursement = new CiLoanDisbursement()
   addButton: boolean = true;
   displayDialog: boolean = false;
   interestConfigList: any[]=[];
@@ -107,7 +108,7 @@ export class CiProductDetailsComponent {
       requestedAmount:  ['', [Validators.pattern(applicationConstants.NEW_AMOUNT_PATTERN), Validators.compose([Validators.required])]],
       sanctionAmount:  ['', [Validators.pattern(applicationConstants.NEW_AMOUNT_PATTERN), Validators.compose([Validators.required])]],
       sanctionDate:['', [Validators.required]],
-      plannedDisbursements: ['', [Validators.required]],
+      // plannedDisbursements: ['', [Validators.required]],
       loanPeriod:  ['', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.compose([Validators.required])]],
       loanDueDate: ['', [Validators.required]],
     })
@@ -120,13 +121,10 @@ export class CiProductDetailsComponent {
       premium: ['', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.compose([Validators.required])]],
     })
     this.schedulerForm = this.formBuilder.group({
-      'disbursementNumber': ['', Validators.required],
-      'typeName': ['',],
-      'disbursementLimit': ['',],
-      'minDaysForDisbursement': ['',],
-      'remarks': ['',],
-      'disbursementOrder': ['',],
-      'statusName': ['',],
+      'disbursementNumber': new FormControl('', Validators.required),
+      'disbursementDate': new FormControl('', Validators.required),
+      'disbursementAmount': new FormControl('', Validators.required),
+      'transactionDate': new FormControl('', Validators.required),
     })
     this.today = new Date();//for future date set to disable
   }
@@ -171,10 +169,14 @@ export class CiProductDetailsComponent {
 
   updateData() {
     if(this.insuranceDetailsFlag){
-      this.saveAndNextEnableDisable = (!((this.ciLoanApplicationForm.valid) && (this.insuranceForm.valid) && this.isDisbursementsNotMatchedCheck))||this.editDeleteDisable;
+      // this.saveAndNextEnableDisable = (!((this.ciLoanApplicationForm.valid) && (this.insuranceForm.valid) && this.isDisbursementsNotMatchedCheck))||this.editDeleteDisable;
+      this.saveAndNextEnableDisable = (!((this.ciLoanApplicationForm.valid) && (this.insuranceForm.valid)))||this.editDeleteDisable;
+
     }
     else {
-      this.saveAndNextEnableDisable = (!(this.ciLoanApplicationForm.valid && this.isDisbursementsNotMatchedCheck))||this.editDeleteDisable;
+      // this.saveAndNextEnableDisable = (!(this.ciLoanApplicationForm.valid && this.isDisbursementsNotMatchedCheck))||this.editDeleteDisable;
+      this.saveAndNextEnableDisable = (!(this.ciLoanApplicationForm.valid))||this.editDeleteDisable;
+
     }
     // if(this.isDisbursementsNotMatchedCheck){
     //   this.saveAndNextEnableDisable = 
@@ -338,6 +340,10 @@ export class CiProductDetailsComponent {
       })
   }
 
+  /**
+   * @implements get all purpose Types
+   * @author jyothi.naidana
+   */
   getAllLoanPurpose() {
     this.ciLoanApplicationService.getAllLoanPurpose().subscribe(response => {
       this.responseModel = response;
@@ -354,6 +360,10 @@ export class CiProductDetailsComponent {
       })
   }
 
+  /**
+   * @implements get account Types 
+   * @author jyothi.naidana
+   */
   getAllAccountTypes() {
     this.ciLoanApplicationService.getAllAccountTypes().subscribe((res: any) => {
       this.responseModel = res;
@@ -501,8 +511,12 @@ export class CiProductDetailsComponent {
                   this.ciLoanInsuranceDetailsModel = this.ciLoanApplicationModel.ciLoanInsuranceDetailsDTO;
                 }
                 this.getProductDefinitionByProductId(this.ciLoanApplicationModel.ciProductId);
-                if (this.ciLoanApplicationModel.ciLoanDisbursementScheduleDTOList != null) {
-                  this.disbursmentScheduleList = this.ciLoanApplicationModel.ciLoanDisbursementScheduleDTOList;
+                if (this.ciLoanApplicationModel.ciDisbursementDTOList != null) {
+                  this.disbursmentScheduleList = this.ciLoanApplicationModel.ciDisbursementDTOList.map((count:any) => {
+                    count.disbursementDateVal = this.datePipe.transform(count.disbursementDate, this.orgnizationSetting.datePipe);
+                    count.transactionDateVal = this.datePipe.transform(count.transactionDate, this.orgnizationSetting.datePipe);
+                    return count;
+                  });
                 }
                 this.onChangePlannedDisbursements(this.ciLoanApplicationModel.plannedDisbursements);
                 if(this.ciLoanApplicationForm.valid && this.insuranceForm.valid){
@@ -596,17 +610,27 @@ export class CiProductDetailsComponent {
   addOrUpdateSchedulerDetails(rowData: any) {
     this.disbursmentScheduleList = [];
     rowData.ciLoanApplicationId = this.ciLoanApplicationId;
-    this.ciLoanDisbursementScheduleModel = rowData;
+    
+    this.ciLoanDisbursementModel = rowData;
+    this.ciLoanDisbursementModel.accountNumber = this.ciLoanApplicationModel.accountNumber;
+    if (this.ciLoanDisbursementModel.disbursementDateVal != null && this.ciLoanDisbursementModel.disbursementDateVal != undefined) {
+      this.ciLoanDisbursementModel.disbursementDate = this.commonFunctionsService.getUTCEpoch(new Date(this.ciLoanDisbursementModel.disbursementDateVal));
+    }
+    if (this.ciLoanDisbursementModel.transactionDateVal != null && this.ciLoanDisbursementModel.transactionDateVal != undefined) {
+      this.ciLoanDisbursementModel.transactionDate = this.commonFunctionsService.getUTCEpoch(new Date(this.ciLoanDisbursementModel.transactionDateVal));
+    }
     if (rowData.id != undefined) {
-      this.ciLoanApplicationService.updateCiLoanDisbursementSchedule(this.ciLoanDisbursementScheduleModel).subscribe((res: any) => {
+      this.ciLoanApplicationService.updateCiDisbursements(this.ciLoanDisbursementModel).subscribe((res: any) => {
         this.responseModel = res;
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+          this.getCiLoanApplicationById(this.ciLoanApplicationModel.id);
           this.msgs = [{ severity: 'success', detail: this.responseModel.statusMsg }];
           setTimeout(() => {
-            this.getCiLoanApplicationById(this.ciLoanApplicationModel.id);
+            
             this.msgs = [];
           }, 2000);
         } else {
+          this.getCiLoanApplicationById(this.ciLoanApplicationModel.id);
           this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
           setTimeout(() => {
             this.msgs = [];
@@ -618,9 +642,11 @@ export class CiProductDetailsComponent {
         this.msgs = [{ severity: 'error', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST }];
       })
     } else {
-      this.ciLoanApplicationService.addCiLoanDisbursementSchedule(this.ciLoanDisbursementScheduleModel).subscribe((res: any) => {
+      rowData.statusName = CommonStatusData.SCHEDULED;
+      this.ciLoanApplicationService.addCiDisbursements(this.ciLoanDisbursementModel).subscribe((res: any) => {
         this.responseModel = res;
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+          this.getCiLoanApplicationById(this.ciLoanApplicationModel.id);
           this.msgs = [{ severity: 'success', detail: this.responseModel.statusMsg }];
           setTimeout(() => {
             this.msgs = [];
@@ -660,12 +686,12 @@ export class CiProductDetailsComponent {
     this.applicationSubmitEnable = true;
     this.addButton = true;
     this.editDeleteDisable = true;
-    this.ciLoanDisbursementScheduleModel = row;
-    this.ciLoanDisbursementScheduleModel.ciLoanApplicationId = this.ciLoanApplicationId;
-    this.ciLoanApplicationService.getCiLoanDisbursementScheduleById(this.ciLoanDisbursementScheduleModel.id).subscribe((response: any) => {
+    this.ciLoanDisbursementModel = row;
+    this.ciLoanDisbursementModel.ciLoanApplicationId = this.ciLoanApplicationId;
+    this.ciLoanApplicationService.getCiLoanDisbursementScheduleById(this.ciLoanDisbursementModel.id).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-        this.ciLoanDisbursementScheduleModel = this.responseModel.data;
+        this.ciLoanDisbursementModel = this.responseModel.data;
       }
     });
     this.updateData();

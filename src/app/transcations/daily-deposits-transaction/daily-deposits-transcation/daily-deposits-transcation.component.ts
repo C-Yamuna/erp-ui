@@ -71,7 +71,7 @@ export class DailyDepositsTranscationComponent {
   transactionDateVal: any;
   photoCopyFlag: boolean = true;
   signatureCopyFlag: boolean = true;
-  isKycApproved: any;
+  isKycApproved: any; 
   institionPromotersList: any[] = [];
   membreIndividualFlag: boolean = false;
   groupPromotersPopUpFlag: boolean = false;
@@ -129,11 +129,11 @@ export class DailyDepositsTranscationComponent {
 
     this.paymentMethodOptionsForDepositType = [
       { label: 'Cash', value: 1 },
-      { label: 'Cheque', value: 2 }
+      // { label: 'Cheque', value: 2 },
     ];
     this.paymentMethodOptionsForWithDrawalType = [
       { label: 'Cash', value: 1 },
-      { label: 'Cheque', value: 2 },
+      // { label: 'Cheque', value: 2 },
       { label: 'transafer', value: 3 }
     ];
 
@@ -191,7 +191,8 @@ export class DailyDepositsTranscationComponent {
       this.withDrawalFlag = false;
       this.paymentMethodOptions = [
         { label: 'Cash', value: 1 },
-        { label: 'Cheque', value: 2 }
+        // { label: 'Cheque', value: 2 }
+        { label: 'transafer', value: 3 }
       ];
       this.transactionModel.transactionTypeName = 'Credit';
     } else if (event == 2) {
@@ -199,7 +200,7 @@ export class DailyDepositsTranscationComponent {
       this.withDrawalFlag = true;
       this.paymentMethodOptions = [
         { label: 'Cash', value: 1 },
-        { label: 'Cheque', value: 2 },
+        // { label: 'Cheque', value: 2 },
         { label: 'transafer', value: 3 }
       ];
       this.transactionModel.transactionTypeName = 'Debit';
@@ -620,5 +621,19 @@ export class DailyDepositsTranscationComponent {
   showBasicDetailsDialog(position: string) {
     this.position = position;
     this.isBasicDetails = true;
+  }
+
+  onAmountChange() {
+    if (this.transactionModel.transactionAmount !== null && this.transactionModel.transactionAmount >= 0 && this.transactionModel.transactionAmount != "") {
+      this.transactionModel.transactionAmountInWords = this.commonFunctionsService.convertToWords(this.transactionModel.transactionAmount);
+    } else {
+      this.transactionModel.transactionAmountInWords = '';
+    }
+
+    if (this.transferTransactionDetails.transactionAmount !== null && this.transferTransactionDetails.transactionAmount >= 0 && this.transferTransactionDetails.transactionAmount != "") {
+      this.transferTransactionDetails.amountInWords = this.commonFunctionsService.convertToWords(this.transferTransactionDetails.transactionAmount);
+    } else {
+      this.transferTransactionDetails.amountInWords = '';
+    }
   }
 }

@@ -163,11 +163,10 @@ export class SiLoanApplicationService {
     return this.commonHttpService.getById(headers, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.SI_LOAN_APPLICATION + ERP_TRANSACTION_CONSTANTS.GET_LOAN_APPLICATION_DETAILS_BY_LOAN_APPLICATION_ID);
   }
 
-  downloadPreviewPDf(id: any) {
+  downloadPreviewPDf(id:any){
     let status = this.commonFunctionService.getStorageValue('language');
-    let url = ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.SI_LOAN_APPLICATION + ERP_TRANSACTION_CONSTANTS.SI_LOAN_APPLICATION_PREVIEW_DOWNLOAD + "/" + id + "/" + status;
-    const headers = new HttpHeaders({});
-    return this.commonHttpService.generateAssetSheet(headers, url);
-  }
-
+    let url = ERP_TRANSACTION_CONSTANTS.LOANS+ERP_TRANSACTION_CONSTANTS.SI_LOAN_APPLICATION+ERP_TRANSACTION_CONSTANTS.SI_LOAN_APPLICATION_PREVIEW_DOWNLOAD;
+    let headers = new HttpHeaders({ 'id': id + '', 'status': status + ''})
+     return this.commonHttpService.generateAssetSheet(headers,url);
+   }
 }

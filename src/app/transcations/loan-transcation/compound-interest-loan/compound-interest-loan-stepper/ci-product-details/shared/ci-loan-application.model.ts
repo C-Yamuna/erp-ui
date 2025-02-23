@@ -175,6 +175,9 @@ export class CiLoanApplication {
   	multipartFileList: any;
 	collateralTypeName:any;
   	repaymentFrequencyName: any;
+	loanDueAmount : any;
+  	ciDisbursementDTOList: any ;
+  	loanApprovedDateVal: any;	
 	
 	
 }
@@ -234,4 +237,47 @@ export class CiLoanDisbursementScheduleModel{
 
 	amount: any;
 	typeName: any;
+}
+
+export class CiLoanDisbursementModel{
+	id:any;
+
+	ciProductId:any;
+
+    accountNumber:any;
+
+    ciLoanApplicationId:any;
+
+    disbursementDate:any;
+
+    membershipId:any;
+
+    transactionDate:any;
+
+    status:any;
+
+    disbursementAmount:any;
+
+    pacsId:any;
+
+    pacsCode:any;
+
+    branchId:any;
+
+    approvedBy:any;
+    
+    ciProductName:any;
+    
+    statusName:any;
+
+   remarks:any;
+    
+   ciTransactionId:any;
+    
+    isPhotoSignVerfied:any;
+
+	dueDisbursmentDate : any;
+
+
+	dueDisbursmentDateVal : any;
 }

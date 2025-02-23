@@ -28,4 +28,6 @@ export const LoanConfigConstants = {
     ADD_DOCUMENT_TYPE: "/menu/configurations/loan_config/add_document_type",
     SERVICE_TYPES: "/menu/configurations/loan_config/service_types",
     ADD_SERVICE_TYPE: "/menu/configurations/loan_config/add_service_type",
+    GOLD_RATES:"/menu/configurations/loan_config/gold_rates",
+    ADD_GOLD_RATES:"/menu/configurations/loan_config/add_gold_rates",
 }

@@ -117,18 +117,21 @@ export class GroupBasicDetailsComponent implements OnInit{
       // 'mobileNumber':new FormControl('',Validators.required),
       'gstNumber':new FormControl('',[Validators.pattern(applicationConstants.GST_NUMBER_PATTERN) ]),
       'admissionDate': new FormControl('',Validators.required),
-      'pocName': new FormControl('', [Validators.required,Validators.pattern(applicationConstants.NEW_NAME_PATTERN), Validators.maxLength(40), Validators.pattern(/^[^\s]+(\s.*)?$/)]),
-      'pocNumber': new FormControl('',[Validators.required,Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.maxLength(10)]),
+      // 'pocName': new FormControl('', [Validators.required,Validators.pattern(applicationConstants.NEW_NAME_PATTERN), Validators.maxLength(40), Validators.pattern(/^[^\s]+(\s.*)?$/)]),
+      // 'pocNumber': new FormControl('',[Validators.required,Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.maxLength(10)]),
       'panNumber': new FormControl('',[Validators.required,Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN),]),
-      'tanNumber': new FormControl('',[Validators.pattern(applicationConstants.TAN_NUMBER)]),
+      // 'tanNumber': new FormControl('',[Validators.pattern(applicationConstants.TAN_NUMBER)]),
       'resolutionNumber': new FormControl(''),
       'groupTypeId':new FormControl('',Validators.required),
       'societyAdmissionNo': new FormControl('',Validators.required),
+      'resolutionDate': new FormControl(''),
+      'operatorTypeId': new FormControl('',Validators.required),
+
     })
     this.promoterDetailsForm = this.formBuilder.group({
       'surName':new FormControl('',[Validators.required,Validators.pattern(applicationConstants.NEW_NAME_PATTERN), Validators.maxLength(40), Validators.pattern(/^[^\s]+(\s.*)?$/)]),
       'name':new FormControl('',[Validators.required,Validators.pattern(applicationConstants.NEW_NAME_PATTERN), Validators.maxLength(40), Validators.pattern(/^[^\s]+(\s.*)?$/)]),
-      'operatorTypeId': new FormControl('',Validators.required),
+      // 'operatorTypeId': new FormControl('',Validators.required),
       'dob': new FormControl('',Validators.required),
       'age': new FormControl('',Validators.required),
       'genderId': new FormControl(''),
@@ -137,9 +140,11 @@ export class GroupBasicDetailsComponent implements OnInit{
       'aadharNumber': new FormControl('',[Validators.required,Validators.pattern(applicationConstants.AADHAR_PATTERN), Validators.maxLength(12)]),
       'emailId': new FormControl('', [ Validators.pattern(applicationConstants.EMAIL_PATTERN)]),
       'startDate': new FormControl('',Validators.required),
+      'endDate': new FormControl(''),
       'authorizedSignatory':new FormControl('',Validators.required),
       'isExistingMember':new FormControl(''),
-      'admissionNumber':new FormControl('',)
+      'admissionNumber':new FormControl(''),
+      "isPoc":new FormControl('',Validators.required),
     })
   }
   ngOnInit(): void {
@@ -174,7 +179,7 @@ export class GroupBasicDetailsComponent implements OnInit{
         this.isEdit = false;
         // this.getMemberPreviewsDetails();
         this.generateNewAdmissionNumber();
-        this.memberGroupBasicDetails.groupStatus = this.statusList[0].value;
+        this.memberGroupBasicDetails.status = this.statusList[0].value;
       }
     });
   
@@ -185,22 +190,26 @@ export class GroupBasicDetailsComponent implements OnInit{
       }
     });
     this.getAllSubProducts();
+    this.getAllOperatorType();
   }
- 
+
   updateData() {
-    if (this.promoterDetails != null && this.promoterDetails != undefined &&
-      this.promoterDetails.length >= 2 && this.buttonsFlag ) {
+    if (this.promoterDetails && this.promoterDetails.length >= 2 &&
+      (this.buttonsFlag && this.groupBasicDetailsForm.valid)) {
       this.landFlag = true;
+    } else {
+      this.landFlag = false;
     }
     this.promoterDetailsModel.groupId =this.memberGroupBasicDetails.id
     this.memberBasicDetailsStepperService.changeData({
-      formValid: this.promoterDetailsForm.valid ,
+      formValid: this.promoterDetailsForm.valid,
       data: this.promoterDetailsModel,
-      savedId:this.groupId,
+      savedId: this.groupId,
       stepperIndex: 0,
-      isDisable: !this.landFlag ? true : false,
+      isDisable: !this.landFlag,
     });
   }
+ 
  
   getMembershipGroupDetailsById(id: any): void {
     this.membershipGroupDetailsService.getMembershipGroupDetailsById(id).subscribe(res => {
@@ -213,6 +222,9 @@ export class GroupBasicDetailsComponent implements OnInit{
         }
         if (this.memberGroupBasicDetails.registrationDate != null && this.memberGroupBasicDetails.registrationDate != undefined) {
           this.memberGroupBasicDetails.registrationDateVal = this.datePipe.transform(this.memberGroupBasicDetails.registrationDate, this.orgnizationSetting.datePipe);
+        }
+        if (this.memberGroupBasicDetails.resolutionDate != null && this.memberGroupBasicDetails.resolutionDate != undefined) {
+          this.memberGroupBasicDetails.resolutionDateVal = this.datePipe.transform(this.memberGroupBasicDetails.resolutionDate, this.orgnizationSetting.datePipe);
         }
         if (this.memberGroupBasicDetails.resolutionCopyPath != null && this.memberGroupBasicDetails.resolutionCopyPath != undefined) {
           this.memberGroupBasicDetails.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.memberGroupBasicDetails.resolutionCopyPath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.memberGroupBasicDetails.resolutionCopyPath  );
@@ -230,6 +242,9 @@ export class GroupBasicDetailsComponent implements OnInit{
             // member.uniqueId = i;
             member.memDobVal = this.datePipe.transform(member.dob, this.orgnizationSetting.datePipe);
             member.startDateVal = this.datePipe.transform(member.startDate, this.orgnizationSetting.datePipe);
+
+            if(member.endDate != null && member.endDate != undefined)
+            member.endDateVal = this.datePipe.transform(member.endDate, this.orgnizationSetting.datePipe);
             
             if (member.uploadImage != null && member.uploadImage != undefined) {
               member.multipartFileListForPhotoCopy = this.fileUploadService.getFile(member.uploadImage ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + member.uploadImage );
@@ -244,7 +259,7 @@ export class GroupBasicDetailsComponent implements OnInit{
              return member;
           });
           this.buttonsFlag  = true;
-          // this.landFlag = true;
+          this.landFlag = true;
         }
         else{
           this.buttonsFlag  = false;
@@ -266,6 +281,8 @@ export class GroupBasicDetailsComponent implements OnInit{
           // member.uniqueId = i;
           member.memDobVal = this.datePipe.transform(member.dob, this.orgnizationSetting.datePipe);
           member.startDateVal = this.datePipe.transform(member.startDate, this.orgnizationSetting.datePipe);
+          if(member.endDate != null && member.endDate != undefined)
+            member.endDateVal = this.datePipe.transform(member.endDate, this.orgnizationSetting.datePipe);
           
           if (member.uploadImage != null && member.uploadImage != undefined) {
             member.multipartFileListForPhotoCopy = this.fileUploadService.getFile(member.uploadImage ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + member.uploadImage );
@@ -333,7 +350,7 @@ export class GroupBasicDetailsComponent implements OnInit{
   // Centralize the logic for enabling/disabling form fields
 private toggleFormFields(isExistingMember: boolean): void {
   const fields = [
-    'surName', 'name', 'operatorTypeId', 'dob', 'age', 'genderId', 
+    'surName', 'name',  'dob', 'age', 'genderId', 
     'martialId', 'mobileNumber', 'aadharNumber', 'emailId', 'startDate'
   ];
 
@@ -360,6 +377,10 @@ editPromoter(rowData: any) {
       this.promoterDetailsModel = this.responseModel.data[0];
       this.promoterDetailsModel.memDobVal = this.datePipe.transform(this.promoterDetailsModel.dob, this.orgnizationSetting.datePipe);
       this.promoterDetailsModel.startDateVal = this.datePipe.transform(this.promoterDetailsModel.startDate, this.orgnizationSetting.datePipe);
+
+      if( this.promoterDetailsModel.endDate != null &&  this.promoterDetailsModel.endDate != undefined)
+        this.promoterDetailsModel.endDateVal = this.datePipe.transform( this.promoterDetailsModel.endDate, this.orgnizationSetting.datePipe);
+
       if (this.promoterDetailsModel.uploadImage != null && this.promoterDetailsModel.uploadImage != undefined) {
         this.promoterDetailsModel.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.promoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadImage );
         this.submitDisableForImage = true;
@@ -414,8 +435,6 @@ onRowEditSave() {
   this.cancleButtonFlag = false;
   this.submitDisableForImage= false;
   this.submitDisableForSignature= false;
-  // this.promoterDetailsModel.multipartFileListForPhotoCopy =[];
-  // this.promoterDetailsModel.multipartFileListForsignatureCopyPath =[];
   this.promoterDetailsModel = new promoterDetailsModel();
   this.promoterDetailsForm.reset();
   this.onChangeExistedPrmoter(false);
@@ -470,6 +489,9 @@ onRowEditSave() {
 
     if (rowData.startDateVal != undefined && rowData.memDobVal != null)
       rowData.startDate = this.commonFunctionsService.getUTCEpoch(new Date(rowData.startDateVal));
+
+    if (rowData.endDateVal != undefined && rowData.endDateVal != null)
+      rowData.endDate = this.commonFunctionsService.getUTCEpoch(new Date(rowData.endDateVal));
 
 
     this.operatorTypeList.filter(data => data != null && data.value == rowData.operatorTypeId).map(count => {
@@ -672,6 +694,7 @@ onRowEditSave() {
       rowData.filesDTOList.splice(removeFileIndex, 1);
       rowData.applicationCopyPath = null;
     }
+    this.updateData();
   }
 fileRemoveEventForPromoter(fileName: any,rowData:any) {
     if (fileName == "photoCopyPath") {
@@ -752,7 +775,7 @@ admissionDateOnSelect(){
     resetFields(){
       this.promoterDetailsForm.get('surName').reset();
       this.promoterDetailsForm.get('name').reset();
-      this.promoterDetailsForm.get('operatorTypeId').reset();
+      // this.promoterDetailsForm.get('operatorTypeId').reset();
       this.promoterDetailsForm.get('dob').reset();
       this.promoterDetailsForm.get('age').reset();
       this.promoterDetailsForm.get('genderId').reset();
@@ -906,7 +929,7 @@ calculateDobFromAge(age: number): Date {
     //saveorupdate code here
     rowData.branchId = this.branchId;
     rowData.pacsId = this.pacsId;
-    rowData.groupStatus = 2;
+    rowData.status = 2;
     rowData.memberTypeId = 2; 
     rowData.memberTypeName = MemberShipTypesData.GROUP;
     rowData.name = rowData.name.trim();
@@ -915,6 +938,13 @@ calculateDobFromAge(age: number): Date {
 
     if(rowData.admissionDateVal != undefined &&rowData.admissionDateVal != null)
     rowData.admissionDate = this.commonFunctionsService.getUTCEpoch(new Date(rowData.admissionDateVal));
+
+    if (rowData.resolutionDateVal != null && rowData.resolutionDateVal != undefined) {
+      rowData.resolutionDate =  this.commonFunctionsService.getUTCEpoch(new Date(rowData.resolutionDateVal));
+    }
+    this.operatorTypeList.filter(data => data != null && data.value == rowData.operatorTypeId).map(count => {
+      rowData.operatorTypeName = count.label;
+    })
 
     if (rowData.id != null) {
    
@@ -985,5 +1015,21 @@ calculateDobFromAge(age: number): Date {
       });
   }
 }
- 
+ //is poc Name check
+isPosCheck(isPoc: any) {
+  if (this.promoterDetails && this.promoterDetails.length > 0) {
+    let duplicate = this.promoterDetails.find(
+      (obj: any) =>
+        obj && obj.status === applicationConstants.ACTIVE && obj.isPoc === applicationConstants.TRUE
+    );
+    if (isPoc === applicationConstants.TRUE && duplicate) {
+      this.promoterDetailsForm.reset();
+      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.POC_ALREADY_EXIST }];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+      return;
+    }
+  }
+}
 }

@@ -73,6 +73,11 @@ export class FdCumulativeApplicationComponent {
   requireddocumentlist: any[] = [];
   renewalList: any[] = [];
   accountTypeDropDownHide: boolean = false;
+  interestPaymentFrequencyList: any[] = [];
+  tenureTypeList: any[] = [];
+  renewalTypeList: any[] = [];
+  paymentTypeList: any[] = [];
+
   constructor(
     private formBuilder: FormBuilder,
     private fdCumulativeApplicationService: FdCumulativeApplicationService,
@@ -92,11 +97,15 @@ export class FdCumulativeApplicationComponent {
       'tenureInDays': ['',],
       'tenureInMonths': ['',],
       'tenureInYears': ['',],
-      'depositAmount': ['',],
+      'depositAmount': ['', [Validators.required]],
       'accountType': ['', [Validators.required]],
-      'isRenewal': [{ value: '', disabled: true }],
+      'isRenewal': ['',],
+      'renewalType':['',],
       'maturityDate': [{ value: '', disabled: true }],
-      'maturityAmount': [{ value: '', disabled: true }]
+      'maturityAmount': [{ value: '', disabled: true }],
+      'tenureType': [{ value: '', disabled: true }],
+      // 'interestPayoutType': ['',],
+      // 'interestPayoutTransferAccount': ['',],
     })
   }
 
@@ -107,7 +116,17 @@ export class FdCumulativeApplicationComponent {
     this.pacsId = this.commonFunctionsService.getStorageValue(applicationConstants.PACS_ID);
     this.branchId = this.commonFunctionsService.getStorageValue(applicationConstants.BRANCH_ID);
     this.renewalList = this.commonComponent.requiredlist();
+    this.interestPaymentFrequencyList = this.commonComponent.interestPaymentFrequency();
+    this.tenureTypeList = this.commonComponent.tenureType();
+    this.renewalTypeList =  [
+      { label: "Deposit", value: 1 },
+      { label: "Maturity Amount", value: 2 },
+    ]
 
+    this.paymentTypeList = [
+      { label: "Cash", value: 1 },
+      { label: "Standing Instructions", value: 2 }
+    ]
     this.getAllAccountTypes();
 
 
@@ -346,8 +365,8 @@ export class FdCumulativeApplicationComponent {
             this.requireddocumentlist = this.productDefinitionModel.requiredDocumentsConfigList;
 
           }
-          if (this.productDefinitionModel.isAutoRenewal != null && this.productDefinitionModel.isAutoRenewal != undefined) {
-            this.fdCumulativeApplicationModel.isAutoRenewal = this.productDefinitionModel.isAutoRenewal;
+          if (this.productDefinitionModel.tenureType != null && this.productDefinitionModel.tenureType != undefined) {
+            this.fdCumulativeApplicationModel.tenureType = this.productDefinitionModel.tenureType;
           }
 
         }
@@ -373,7 +392,7 @@ export class FdCumulativeApplicationComponent {
     this.productDefinitionFlag = false;
   }
 
-  calculateMaturity() {
+  maturityDateAndInterestAmountCalculation() {
     let depositAmount = parseFloat(this.applicationForm.get('depositAmount')?.value) || 0;
     let roi = parseFloat(this.applicationForm.get('roi')?.value) || 0;
     let tenureInDays = parseInt(this.applicationForm.get('tenureInDays')?.value) || 0;
@@ -383,22 +402,18 @@ export class FdCumulativeApplicationComponent {
     if (!depositAmount || !roi || (tenureInDays === 0 && tenureInMonths === 0 && tenureInYears === 0)) {
       return;
     }
-    let tenureInYearsTotal = tenureInYears + (tenureInMonths / 12) + (tenureInDays / 365);
-    let maturityAmount = depositAmount * Math.pow((1 + roi / 100), tenureInYearsTotal);
+    let totalTenureInDays = tenureInYears * 365 + tenureInMonths * 30 + tenureInDays;
+    let totalInterestAmount = (depositAmount * roi * totalTenureInDays) / (365 * 100);
+    let maturityAmount = depositAmount + totalInterestAmount;
+
     this.applicationForm.get('maturityAmount')?.setValue(maturityAmount.toFixed(2));
     if (depositDate) {
       let maturityDate = new Date(depositDate);
-      if (isNaN(maturityDate.getTime())) {
-        return;
+      if (!isNaN(maturityDate.getTime())) {
+        maturityDate.setDate(maturityDate.getDate() + totalTenureInDays);
+        const maturityDateFormatted = this.datePipe.transform(maturityDate, this.orgnizationSetting.datePipe);
+        this.applicationForm.get('maturityDate')?.setValue(maturityDateFormatted);
       }
-      maturityDate.setFullYear(maturityDate.getFullYear() + tenureInYears);
-      maturityDate.setMonth(maturityDate.getMonth() + tenureInMonths);
-      maturityDate.setDate(maturityDate.getDate() + tenureInDays);
-      const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'short', year: 'numeric' };
-      const maturityDateFormatted = maturityDate.toLocaleDateString('en-GB', options).replace(',', '/');
-      this.applicationForm.get('maturityDate')?.setValue(maturityDateFormatted);
     }
   }
-  
-
 }

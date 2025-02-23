@@ -39,6 +39,8 @@ import { AddApportionTypesComponent } from './apportion-types/add-apportion-type
 import { DocumentTypesComponent } from './document-types/document-types.component';
 import { AddDocumentTypesComponent } from './document-types/add-document-types/add-document-types.component';
 import { MessageModule } from 'primeng/message';
+import { GoldRatesComponent } from './gold-rates/gold-rates.component';
+import { AddGoldRatesComponent } from './gold-rates/add-gold-rates/add-gold-rates.component';
 export function httpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(httpClient, './assets/i18n/', '.json');
 }
@@ -74,6 +76,8 @@ export function httpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
     AddServiceTypesComponent,
     ApportionTypesComponent,
     AddApportionTypesComponent,
+    GoldRatesComponent,
+    AddGoldRatesComponent,
   ],
   imports: [
     CommonModule,

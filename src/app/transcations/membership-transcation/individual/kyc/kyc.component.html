@@ -3,10 +3,16 @@
         [hideTransitionOptions]="'500ms'"></p-messages>
     <div class="stepper-top-section-strip">
         <div class="row">
-            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12 stepper-top-product-name-background">
                 <div class="form-group">
                     <span>{{'ERP.MEMBER_TYPE' | translate}}</span>
                     <p class="mb-0">{{ memberModel.memberTypeName }}&nbsp;({{ memberModel.subProductName }})</p>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+                <div class="form-group ml-2">
+                    <span>{{'ERP.ADMISSION_NUMBER' | translate}}</span>
+                    <p class="mb-0">{{memberModel.admissionNumber}}</p>
                 </div>
             </div>
             <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
@@ -21,12 +27,12 @@
                     <p class="mb-0">{{memberModel.genderName}}</p>
                 </div>
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+            <!-- <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
                 <div class="form-group">
                     <span>{{'ERP.QUALIFICATON' | translate}}</span>
                     <p class="mb-0">{{memberModel.qualificationName}}</p>
                 </div>
-            </div>
+            </div> -->
             <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
                 <div class="form-group">
                     <span>{{'ERP.MOBILE_NUMBER' | translate}}</span>
@@ -42,8 +48,9 @@
         </div>
     </div>
     <div class="col-12"></div>
-    <h6 class="sub-heading">{{'ERP.KYC' | translate}}<span class="admission-text">(Admission
-            Number : {{memberModel.admissionNumber}})</span></h6>
+    <h6 class="sub-heading">{{'ERP.KYC' | translate}}</h6>
+        <!-- <span class="admission-text">(Admission
+            Number : {{memberModel.admissionNumber}})</span> -->
 
     <div class="col-12 px-0">
        <form [formGroup]="kycForm" id="exit_types_form">
@@ -147,23 +154,26 @@
         
                                                 <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
                                                     chooseLabel=" " id="apply-leave_fileUp_attach" name="file"
-                                                    accept=".png,.jpg,.jpeg,.pdf" [customUpload]="true" (onRemove)="fileRemoveEvent()"
+                                                    accept=".pdf" [customUpload]="true" (onRemove)="fileRemoveEvent()"
                                                     (onSelect)="imageUploader($event,fileUpload)"
                                                    >
                                                 </p-fileUpload>
+                                               
                                                 <div class="col-12  d-flex p-1 contant-body" *ngFor="let img of kycModel.multipleFilesList">
-                                                    <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                        <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22" height="22"></a>
+                                                    <div *ngIf="img.fileType=='pdf'">
+                                                        <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22"
+                                                                height="22"></a>
                                                     </div>
-                                                    <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                                        {{img.fileName}}</div>
+                                                    <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
+                                                        tooltipPosition="bottom">
+                                                        {{img.fileName}}
+                                                    </div>
                                                     
                                                 </div>
                                             </div>
                                             </div>
         
                                         </div>
-                                        
                                         <div class="col-12">
                                             <div class="justify-content-end d-flex">
                                                 <p-button label="{{'cancel' | translate}}" (onClick)="editCancle()"></p-button>
@@ -212,7 +222,7 @@
                                     <div class="uplodad-style align-items-center">
     
                                         <p-fileUpload #fileUpload name="myfile[]" id="apply-leave_fileUp_attach"
-                                            chooseLabel=" " name="file" accept=".png,.jpg,.jpeg,.pdf" [customUpload]="true"
+                                            chooseLabel=" " name="file" accept=".pdf" [customUpload]="true"
                                             (onRemove)="fileRemoveEvent()" (onSelect)="imageUploader($event,fileUpload)" formContralName="fileUpload">
                                         </p-fileUpload>
                                     </div>

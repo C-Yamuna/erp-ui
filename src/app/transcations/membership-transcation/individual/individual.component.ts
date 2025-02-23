@@ -115,28 +115,28 @@ export class IndividualComponent {
         } else {
           this.translate.use(this.commonFunctionService.getStorageValue('language'));
         }
-        this.translate.get('ERP.BASIC_DETAILS').subscribe((text: string) => {
+        this.translate.get('MEMBERSHIP_TRANSACTION.BASIC_DETAILS').subscribe((text: string) => {
           this.basicDetails = text;
         });
-        this.translate.get('ERP.KYC').subscribe((text: string) => {
+        this.translate.get('MEMBERSHIP_TRANSACTION.KYC_DETAILS').subscribe((text: string) => {
           this.kyc = text;
         });
-        this.translate.get('ERP.COMMUNICATION').subscribe((text: string) => {
+        this.translate.get('MEMBERSHIP_TRANSACTION.COMMUNICATION_DETAILS').subscribe((text: string) => {
           this.communication = text;
         });
-        this.translate.get('ERP.LAND_DETAILS').subscribe((text: string) => {
+        this.translate.get('MEMBERSHIP_TRANSACTION.LAND_DETAILS').subscribe((text: string) => {
           this.land = text;
         });
-        this.translate.get('MEMBERSHIP_TRANSACTION.DOCUMENT_DEATAILS').subscribe((text: string) => {
+        this.translate.get('MEMBERSHIP_TRANSACTION.REQUIRED_DOCUMENTS').subscribe((text: string) => {
           this.document = text;
         });
-        this.translate.get('ERP.NOMINEE_DETAIL').subscribe((text: string) => {
+        this.translate.get('MEMBERSHIP_TRANSACTION.NOMINEE').subscribe((text: string) => {
           this.nominee = text;
         });
-        this.translate.get('ERP.FAMILY_DETAILS').subscribe((text: string) => {
+        this.translate.get('MEMBERSHIP_TRANSACTION.FAMILY').subscribe((text: string) => {
           this.familydetails = text;
         });
-        this.translate.get('ERP.ASSET_DETAILS').subscribe((text: string) => {
+        this.translate.get('MEMBERSHIP_TRANSACTION.ASSET').subscribe((text: string) => {
           this.asset = text;
           this.items = [
             {
@@ -252,28 +252,28 @@ export class IndividualComponent {
         } else {
           this.translate.use(this.commonFunctionService.getStorageValue('language'));
         }
-        this.translate.get('ERP.BASIC_DETAILS').subscribe((text: string) => {
+        this.translate.get('MEMBERSHIP_TRANSACTION.BASIC_DETAILS').subscribe((text: string) => {
           this.basicDetails = text;
         });
-        this.translate.get('ERP.KYC').subscribe((text: string) => {
+        this.translate.get('MEMBERSHIP_TRANSACTION.KYC_DETAILS').subscribe((text: string) => {
           this.kyc = text;
         });
-        this.translate.get('ERP.COMMUNICATION').subscribe((text: string) => {
+        this.translate.get('MEMBERSHIP_TRANSACTION.COMMUNICATION_DETAILS').subscribe((text: string) => {
           this.communication = text;
         });
-        this.translate.get('ERP.LAND_DETAILS').subscribe((text: string) => {
+        this.translate.get('MEMBERSHIP_TRANSACTION.LAND_DETAILS').subscribe((text: string) => {
           this.land = text;
         });
-        this.translate.get('MEMBERSHIP_TRANSACTION.DOCUMENT_DEATAILS').subscribe((text: string) => {
+        this.translate.get('MEMBERSHIP_TRANSACTION.REQUIRED_DOCUMENTS').subscribe((text: string) => {
           this.document = text;
         });
-        this.translate.get('ERP.NOMINEE_DETAIL').subscribe((text: string) => {
+        this.translate.get('MEMBERSHIP_TRANSACTION.NOMINEE').subscribe((text: string) => {
           this.nominee = text;
         });
-        this.translate.get('ERP.FAMILY_DETAILS').subscribe((text: string) => {
+        this.translate.get('MEMBERSHIP_TRANSACTION.FAMILY').subscribe((text: string) => {
           this.familydetails = text;
         });
-        this.translate.get('ERP.ASSET_DETAILS').subscribe((text: string) => {
+        this.translate.get('MEMBERSHIP_TRANSACTION.ASSET').subscribe((text: string) => {
           this.asset = text;
           this.items = [
             {
@@ -557,7 +557,7 @@ export class IndividualComponent {
       //saveorupdate code here
       this.memberBasicDetailsModel.branchId = this.branchId;
       this.memberBasicDetailsModel.pacsId = this.pacsId;
-      this.memberBasicDetailsModel.memStatus = 2;
+      this.memberBasicDetailsModel.status = 2;
       this.memberBasicDetailsModel.memberTypeId = 1;
       this.memberBasicDetailsModel.memberTypeName = MemberShipTypesData.INDIVIDUAL;
       // this.memberBasicDetailsModel.name = this.memberBasicDetailsModel.name.trim();
@@ -565,6 +565,9 @@ export class IndividualComponent {
       this.memberBasicDetailsModel.admissionDate = this.commonFunctionsService.getUTCEpoch(new Date(this.memberBasicDetailsModel.temAdmDate));
       if(this.memberBasicDetailsModel.memDobVal != undefined && this.memberBasicDetailsModel.memDobVal != null)
       this.memberBasicDetailsModel.dob = this.commonFunctionsService.getUTCEpoch(new Date(this.memberBasicDetailsModel.memDobVal));
+
+      if(this.memberBasicDetailsModel.resolutionDateVal != undefined && this.memberBasicDetailsModel.resolutionDateVal != null)
+        this.memberBasicDetailsModel.resolutionDate = this.commonFunctionsService.getUTCEpoch(new Date(this.memberBasicDetailsModel.resolutionDateVal));
 
       // let memTYpe = this.productTypeList.find((data:any) =>null != data.value  && this.memberBasicDetailsModel.memberClassType == data.value);
       // if(memTYpe != null && memTYpe != undefined)     

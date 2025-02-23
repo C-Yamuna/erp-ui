@@ -40,6 +40,8 @@ export class GeneralConfig {
 
     tenureType?: any;
 
+    tenureTypeName? : any;
+
     remarks?: any;
 
     ledgerFolioNumber?: any;

@@ -12,6 +12,12 @@
             </div>
             <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
                 <div class="form-group">
+                    <span>{{'ERP.ADMISSION_NUMBER' | translate}}</span>
+                    <p class="mb-0">{{institutionModel.admissionNumber}}</p>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+                <div class="form-group">
                     <span>{{'ERP.NAME' | translate}}</span>
                     <p class="mb-0">{{institutionModel.name}}</p>
                 </div>
@@ -46,8 +52,9 @@
 
     <div class="col-12"></div>
 
-    <h6 class="sub-heading">{{'MEMBERSHIP_TRANSACTION.DOCUMENT_DEATAILS' | translate}}<span class="admission-text">(Admission
-        Number : {{institutionModel.admissionNumber}})</span></h6>
+    <h6 class="sub-heading">{{'MEMBERSHIP_TRANSACTION.DOCUMENT_DEATAILS' | translate}}</h6>
+        <!-- <span class="admission-text">(Admission
+        Number : {{institutionModel.admissionNumber}})</span> -->
         <div class="col-12 px-0">
             <form [formGroup]="documentForm" id="exit_types_form">
                 <p-button icon="fa fa-plus" label="{{'ADD ANOTHER DOCUMENT' | translate}}" (click)="addRequired($event)"
@@ -142,19 +149,19 @@
     
                                                 <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold"
                                                     name="myfile[]" chooseLabel=" " id="apply-leave_fileUp_attach"
-                                                    name="file" accept=".png,.jpg,.jpeg,.pdf" [customUpload]="true"
+                                                    name="file" accept=".pdf" [customUpload]="true"
                                                     (onRemove)="RemoveEvent()" (onSelect)="fileUploader($event,fileUpload)">
                                                 </p-fileUpload>
                                                 <div class="col-12  d-flex p-1 contant-body"
                                                     *ngFor="let img of requiredDocumentModel.multipleFilesList">
-                                                    <div
-                                                        *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                        <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}"
-                                                                width="22" height="22"></a>
+                                                    <div *ngIf="img.fileType=='pdf'">
+                                                        <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22"
+                                                                height="22"></a>
                                                     </div>
                                                     <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
                                                         tooltipPosition="bottom">
-                                                        {{img.fileName}}</div>
+                                                        {{img.fileName}}
+                                                    </div>
     
                                                 </div>
                                             </div>
@@ -205,7 +212,7 @@
                                             <div class="uplodad-style align-items-center">
     
                                                 <p-fileUpload #fileUpload name="myfile[]" id="apply-leave_fileUp_attach"
-                                                    chooseLabel=" " name="file" accept=".png,.jpg,.jpeg,.pdf"
+                                                    chooseLabel=" " name="file" accept=".pdf"
                                                     [customUpload]="true" (onSelect)="fileUploader($event,fileUpload)"
                                                     formContralName="fileUpload">
                                                 </p-fileUpload>

@@ -38,7 +38,7 @@
                             <!-- Admission No & Image-part -->
                             <div class="col-xl-12 col-lg-12 col-md-3 col-sm-4 col-xs-4">
                                 <div class="col-12 pic-sig-status">
-                                    <div class="d-flex justify-content-center mb-3" *ngIf="photoCopyFlag">
+                                    <div class="d-flex justify-content-center mb-1" *ngIf="photoCopyFlag">
                                         <div
                                             *ngFor="let img of individualMemberDetailsModel.multipartFileListForPhotoCopy">
                                             <span class="{{img.imageValue}}" (click)="onClickMemberPhotoCopy()"
@@ -67,22 +67,25 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="text-center min-h-50px">
-                                    <span class="text-fontwt">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
-                                    <p class="font-semibold text-break">{{individualMemberDetailsModel.admissionNumber}}
-                                    </p>
-                                </div>
 
                                 <div class="text-center min-h-50px">
-                                    <span class="text-fontwt">{{'ERP.NAME' | translate}}</span>
-                                    <p class="font-semibold text-break"><span
-                                            class="border-bottom">{{individualMemberDetailsModel.name}}</span>
-                                    </p>
+                                    <p class="text-break view-member-name">{{individualMemberDetailsModel.name}}</p>
+                                    <div class="d-flex justify-content-center">
+                                        <div class="member-name-border"></div>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
                                 <div class="row">
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                        <span class="basicdata-icons icon-size"><i class="fa fa-address-book"></i></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">{{'ERP.ADMISSION_NUMBER' | translate}}</p>
+                                            <p class="label-input-text">{{individualMemberDetailsModel.admissionNumber}}
+                                            </p>
+                                        </div>
+                                    </div>
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
                                         <span class="basicdata-icons icon-size"><i class="fa fa-id-card-o"></i></span>
                                         <div>
@@ -182,27 +185,29 @@
                             <!-- Admission No & Image-part -->
                             <div class="col-xl-12 col-lg-12 col-md-3 col-sm-4 col-xs-4">
                                 <div class="col-12 pic-sig-status">
-                                    <div class="d-flex justify-content-center mb-3">
+                                    <div class="d-flex justify-content-center mb-1">
                                         <img src="assets/images/no-image.jpg" class="image-user">
                                         <p class="active-status"></p>
                                         <img src="assets/images/no-image.jpg" class="image-sign">
                                     </div>
                                 </div>
                                 <div class="text-center min-h-50px">
-                                    <span class="text-fontwt">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
-                                    <p class="font-semibold text-break">
-                                        {{memberShipGroupDetailsModel.tempAdmissionNumber}}</p>
-                                </div>
-                                <div class="text-center min-h-50px">
-                                    <span class="text-fontwt">{{'ERP.NAME' | translate}}</span>
-                                    <p class="font-semibold text-break"><span
-                                            class="border-bottom">{{memberShipGroupDetailsModel.name}}</span>
-                                    </p>
+                                    <p class="view-member-name text-break">{{memberShipGroupDetailsModel.name}}</p>
+                                    <div class="d-flex justify-content-center">
+                                        <div class="member-name-border"></div>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
                                 <div class="row">
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                        <span class="basicdata-icons icon-size"><i class="fa fa-address-book"></i></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">{{'ERP.ADMISSION_NUMBER' | translate}}</p>
+                                            <p class="label-input-text">{{memberShipGroupDetailsModel.tempAdmissionNumber}}</p>
+                                        </div>
+                                    </div>
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
                                         <span class="basicdata-icons icon-size"><i class="fa fa-id-card-o"></i></span>
                                         <div>
@@ -298,25 +303,28 @@
                             <!-- Admission No & Image-part -->
                             <div class="col-xl-12 col-lg-12 col-md-3 col-sm-4 col-xs-4">
                                 <div class="col-12 pic-sig-status">
-                                    <div class="d-flex justify-content-center mb-3">
+                                    <div class="d-flex justify-content-center mb-1">
                                         <img src="assets/images/no-image.jpg" class="image-user">
                                         <p class="active-status"></p>
                                         <img src="assets/images/no-image.jpg" class="image-sign">
                                     </div>
                                 </div>
                                 <div class="text-center min-h-50px">
-                                    <span class="text-fontwt">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
-                                    <p class="font-semibold text-brek">{{memInstitutionModel.tempAdmissionNumber}}</p>
-                                </div>
-                                <div class="text-center min-h-50px">
-                                    <span class="text-fontwt">{{'ERP.NAME' | translate}}</span>
-                                    <p class="font-semibold text-break"><span
-                                            class="border-bottom">{{memInstitutionModel.name}}</span>
-                                    </p>
+                                    <p class="view-member-name text-break">{{memInstitutionModel.name}}</p>
+                                    <div class="d-flex justify-content-center">
+                                        <div class="member-name-border"></div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
                                 <div class="row">
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                        <span class="basicdata-icons icon-size"><i class="fa fa-address-book"></i></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">{{'ERP.ADMISSION_NUMBER' | translate}}</p>
+                                            <p class="label-input-text">{{memInstitutionModel.tempAdmissionNumber}}</p>
+                                        </div>
+                                    </div>
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
                                         <span class="basicdata-icons icon-size"><i class="fa fa-id-card-o"></i></span>
                                         <div>

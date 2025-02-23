@@ -583,7 +583,7 @@ width: auto !important;
     box-shadow: inset 0px 0px 2px 0px #0c457c;
     border-radius: 5px;
     background-color: #eceff9;
-    padding: 5px 15px 0px 15px;
+    padding: 6px 15px 1px 15px;
     min-height: 4em;
 }
 .stepper-top-section-strip span, .stepper-kyc-card span {
@@ -598,6 +598,14 @@ width: auto !important;
     font-weight: 600;
 }
 .stepper-top-section-strip .ht-2rem{height: 2.7rem;}
+.stepper-top-product-name-background{
+    border-radius: 5px 0px 0px 5px;
+    background-color: #e6e5e5;
+    padding: 5px 15px 0px 15px;
+    margin-top: -5px;
+    margin-left: -2px;
+    min-height: 4em;
+}
 .card-nodata {
     font-size: 14px;
     color: #dc3545;
@@ -1169,7 +1177,8 @@ body .p-inline-message.p-inline-message-error {
 .p-datatable-striped .p-dropdown, .p-datatable-striped .p-calendar{z-index: 1001;}
 .stepper-app-scroll{height: 75vh; overflow-y: auto;}
 
-.view-member-name{font-size: 14px; font-weight: 700 !important;}
+.view-member-name{font-size: 14px; font-weight: 600 !important;}
+.member-name-border{ border-bottom: 1px solid #fff; width:80px; position: relative; top: -10px;}
 
 @media screen and (max-width: 450px) {
     .search-input-style input{

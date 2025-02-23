@@ -207,10 +207,10 @@
                     <div class="global-action-btn flex align-items-center justify-content-center">
                         <p-button label="{{'TERMDEPOSITSTRANSACTION.VIEW' | translate}}" (click)="viewDepositDetails(rowData)"
                             class="action-view"></p-button>
-                        <p-dropdown id="bunit_txt_status" class="action-operation"  *ngIf ="rowData.statusName == 'Approved'"  placeholder="operations" [filter]="true"
+                        <p-dropdown id="bunit_txt_status" class="action-operation"  [disabled]="rowData.statusName != 'Approved'"  placeholder="operations" [filter]="true"
                             [options]="operationslist" [(ngModel)]="operations" (onChange)="navigateToOperations($event,rowData.id)"
                             [appendTo]="'body'"></p-dropdown>
-                        <p-button label="Transaction" class="action-view" *ngIf ="rowData.statusName == 'Approved'"  icon="fa fa-exchange" iconPos="left"
+                        <p-button label="Transaction" class="action-view" [disabled]="rowData.statusName != 'Approved'"  icon="fa fa-exchange" iconPos="left"
                             (click)="transaction(rowData)"></p-button>
                     </div>
                 </td>

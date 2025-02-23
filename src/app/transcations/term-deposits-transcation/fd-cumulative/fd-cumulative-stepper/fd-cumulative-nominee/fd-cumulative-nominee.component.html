@@ -2,7 +2,34 @@
     <h6 class="sub-heading">{{'TERMDEPOSITSTRANSACTION.NOMINEE_DETAILS' | translate}}<span
             class="admission-text">(Admission
             Number:&nbsp;{{admissionNumber}})</span></h6>
-
+            <div class="stepper-top-section-strip">
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 stepper-top-product-name-background">
+                        <div class="form-group">
+                            <span>{{'ERP.PRODUCT_NAME' | translate}}</span>
+                            <p class="mb-0">{{productName}}</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="form-group ml-2">
+                            <span>{{'ERP.ACCOUNT_TYPE' | translate}}</span>
+                            <p class="mb-0">{{accountType}}</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <span>{{'ERP.DEPOSIT_AMOUNT' | translate}}</span>
+                            <p class="mb-0">{{depositAmount}}</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <span>{{'ERP.DEPOSIT_DATE' | translate}}</span>
+                            <p class="mb-0">{{depositDateVal}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
     <form [formGroup]="nomineeForm" id="exit_types_form">
         <div class="col-12 p-0">
             <div class="col-12 p-0 bg-label-colorfull">
@@ -148,8 +175,8 @@
                                                     <!-- Upload Button Column -->
 
                                                     <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold"
-                                                        name="myfile[]" chooseLabel=" " id="apply-leave_fileUp_attach"
-                                                        name="file" accept=".png,.jpg,.jpeg,.pdf"
+                                                        name="myfile[]" id="apply-leave_fileUp_attach" chooseLabel=" "
+                                                        name="file" accept=".png,.jpg,.jpeg"
                                                         (onRemove)="fileRemoeEvent('Nominee')"
                                                         (onSelect)="fileUploader($event,fileUpload,'Nominee')">
                                                     </p-fileUpload>
@@ -174,7 +201,8 @@
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
                                                 <label><span class="red">*</span>{{'ERP.REMARKS' | translate}}</label>
-                                                <textarea type="text" class="form-control" formControlName="remarks" [(ngModel)]="fdCumulativeNomineeModel.remarks"
+                                                <textarea type="text" class="form-control" formControlName="remarks" 
+                                                [(ngModel)]="fdCumulativeNomineeModel.remarks"
                                                 pInputTextarea placeholder="Enter Remarks Here"></textarea>
                                             </div>
                                         </div>
@@ -346,7 +374,7 @@
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
                                                 <label><span class="red">*</span>{{'ERP.REMARKS' | translate}}</label>
-                                                <textarea type="text" class="form-control" pInputTextarea formControlName="guardianRemarks" placeholder="Enter Remarks Here"
+                                                <textarea type="text" class="form-control" pInputTextarea  formControlName="guardianRemarks"  placeholder="Enter Remarks Here"
                                                 [(ngModel)]="memberGuardianDetailsModelDetails.remarks"></textarea>
                                             </div>
                                         </div>
@@ -362,7 +390,7 @@
 
 
     <!-- History table in Edit  -->
-    <div class="mt-4" *ngIf="historyFLag">
+    <!-- <div class="mt-4" *ngIf="historyFLag">
         <h6 class="sub-heading">Nominee History Details</h6>
         <div class="globel-border-top-color"></div>
         <p-table [columns]="nomineeFields" [value]="nomineeHistoryList" dataKey="id" selectionMode="single"
@@ -385,7 +413,7 @@
                 </tr>
             </ng-template>
         </p-table>
-    </div>
+    </div> -->
 
     <!-- </div> -->
 </div>

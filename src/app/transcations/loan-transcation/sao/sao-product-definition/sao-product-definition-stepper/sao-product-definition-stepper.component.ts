@@ -17,6 +17,8 @@ import { DatePipe } from '@angular/common';
 import { CommonFunctionsService } from 'src/app/shared/commonfunction.service';
 import { TranslateService } from '@ngx-translate/core';
 import { CommonStatusData } from 'src/app/transcations/common-status-data.json';
+import { SaoFieldVisit } from './sao-field-visit-config/shared/sao-field-visit.model';
+import { SaoDisbursmentSchedule } from './sao-disbursment-config/shared/sao-disbursment-schedule.model';
 
 @Component({
   selector: 'app-sao-product-definition-stepper',
@@ -24,19 +26,21 @@ import { CommonStatusData } from 'src/app/transcations/common-status-data.json';
   styleUrls: ['./sao-product-definition-stepper.component.css']
 })
 export class SaoProductDefinitionStepperComponent {
-  saoProductDefinitionModel :SaoProductDefinition = new SaoProductDefinition();
-  saoInterestPolicyConfigModel :SaoInterestPolicyConfig = new SaoInterestPolicyConfig();
-  saoLoanLinkedShareCapitalModel :SaoLoanLinkedShareCapital = new SaoLoanLinkedShareCapital();
-  saoProductChargesModel : SaoProductCharges = new SaoProductCharges();
-  saoProdPurposesModel : SaoProdPurpose = new SaoProdPurpose();
-  saoRequiredDocumentsModel : SaoRequiredDocuments = new SaoRequiredDocuments();
+  saoProductDefinitionModel: SaoProductDefinition = new SaoProductDefinition();
+  saoInterestPolicyConfigModel: SaoInterestPolicyConfig = new SaoInterestPolicyConfig();
+  saoLoanLinkedShareCapitalModel: SaoLoanLinkedShareCapital = new SaoLoanLinkedShareCapital();
+  saoProductChargesModel: SaoProductCharges = new SaoProductCharges();
+  saoProdPurposesModel: SaoProdPurpose = new SaoProdPurpose();
+  saoRequiredDocumentsModel: SaoRequiredDocuments = new SaoRequiredDocuments();
+  saoFieldVisitModel: SaoFieldVisit = new SaoFieldVisit();
+  saoDisbursmentScheduleModel:SaoDisbursmentSchedule = new SaoDisbursmentSchedule();
   responseModel!: Responsemodel;
   activeIndex: number = 0;
   msgs: any[] = [];
   buttonDisbled: boolean = applicationConstants.FALSE;
   activeItem!: MenuItem;
   items: MenuItem[] = [];
-  menuDisabled:  boolean = applicationConstants.TRUE;
+  menuDisabled: boolean = applicationConstants.TRUE;
   nextDisable: boolean = applicationConstants.FALSE;
   serviceUrl: any;
   productDefinition: any;
@@ -45,6 +49,8 @@ export class SaoProductDefinitionStepperComponent {
   charges: any;
   purpose: any;
   reqiredDocumentsDetails: any;
+  fieldVisitConfig: any;
+  disbursmentConfig: any;
   penalityConfig: any;
   savedID: any;
   isEdit: any;
@@ -55,77 +61,89 @@ export class SaoProductDefinitionStepperComponent {
   constructor(public messageService: MessageService, private router: Router,
     private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService,
     private commonComponent: CommonComponent, private commonFunctionService: CommonFunctionsService, private translate: TranslateService,
-   private ref: ChangeDetectorRef,private saoProductDefinitionsService : SaoProductDefinitionsService,
-   private datePipe: DatePipe) {
-    
-   }
-/**
-    @author Vinitha
-    @implements Sao Loans Stepper Configuration details 
-    @argument ProductId
-   */
-ngOnInit() {
-  this.activateRoute.queryParams.subscribe(params => {
-    if (params['id'] != undefined) {
-      let queryParams = this.encryptDecryptService.decrypt(params['id']);
-      let qParams = queryParams;
-      this.savedID = qParams;
-        this.isEdit = applicationConstants.TRUE; 
-    } else {
-      this.isEdit = applicationConstants.FALSE;
-    }
-  });
+    private ref: ChangeDetectorRef, private saoProductDefinitionsService: SaoProductDefinitionsService,
+    private datePipe: DatePipe) {
 
-  this.orgnizationSetting = this.commonComponent.orgnizationSettings();
-  this.commonFunctionService.data.subscribe((res: any) => {
-    if (res) {
-      this.translate.use(res);
-    } else {
-      this.translate.use(this.commonFunctionService.getStorageValue('language'));
-    }
-    this.items = [
-      {
-        label: 'Product Definition',icon: 'fa fa-product-hunt', routerLink: Loantransactionconstant.SAO_PRODUCT_CONFIGURATION,
-        command: (event: any) => {
-          this.activeIndex = 0;   
-        }
-      },
-      {
-        label: 'Interest Policy',icon: 'fa fa-newspaper-o', routerLink: Loantransactionconstant.SAO_INTEREST_POLICY_CONFIG,
-        command: (event: any) => {
-          this.activeIndex = 1;
-        }
-      },
-      {
-        label: 'Linked Share Capital',icon: 'fa fa-link', routerLink: Loantransactionconstant.SAO_LOAN_LINKED_SHARE_CAPITAL,
-        command: (event: any) => {
-          this.activeIndex = 2;
-        }
-      },
-      {
-        label: 'Charges',icon: 'fa fa-list-alt', routerLink: Loantransactionconstant.SAO_PRODUCT_CHARGES_CONFIG,
-        command: (event: any) => {
-          this.activeIndex = 3;
-        }
-      },
-      {
-        label: 'Purpose',icon: 'fa fa-bandcamp', routerLink: Loantransactionconstant.SAO_PROD_PURPOSE_CONFIG,
-        command: (event: any) => {
-          this.activeIndex = 4;
-        }
-      },
-      {
-        label: 'Required Documents',icon: 'fa fa-file-text', routerLink: Loantransactionconstant.SAO_REQUIRED_DOCUMENT_CONFIG,
-        command: (event: any) => {
-          this.activeIndex = 5;
-        }
+  }
+  /**
+      @author Vinitha
+      @implements Sao Loans Stepper Configuration details 
+      @argument ProductId
+     */
+  ngOnInit() {
+    this.activateRoute.queryParams.subscribe(params => {
+      if (params['id'] != undefined) {
+        let queryParams = this.encryptDecryptService.decrypt(params['id']);
+        let qParams = queryParams;
+        this.savedID = qParams;
+        this.isEdit = applicationConstants.TRUE;
+      } else {
+        this.isEdit = applicationConstants.FALSE;
       }
-    ];
-  });
+    });
+
+    this.orgnizationSetting = this.commonComponent.orgnizationSettings();
+    this.commonFunctionService.data.subscribe((res: any) => {
+      if (res) {
+        this.translate.use(res);
+      } else {
+        this.translate.use(this.commonFunctionService.getStorageValue('language'));
+      }
+      this.items = [
+        {
+          label: 'Product Definition', icon: 'fa fa-product-hunt', routerLink: Loantransactionconstant.SAO_PRODUCT_CONFIGURATION,
+          command: (event: any) => {
+            this.activeIndex = 0;
+          }
+        },
+        {
+          label: 'Interest Policy', icon: 'fa fa-newspaper-o', routerLink: Loantransactionconstant.SAO_INTEREST_POLICY_CONFIG,
+          command: (event: any) => {
+            this.activeIndex = 1;
+          }
+        },
+        {
+          label: 'Linked Share Capital', icon: 'fa fa-link', routerLink: Loantransactionconstant.SAO_LOAN_LINKED_SHARE_CAPITAL,
+          command: (event: any) => {
+            this.activeIndex = 2;
+          }
+        },
+        {
+          label: 'Charges', icon: 'fa fa-list-alt', routerLink: Loantransactionconstant.SAO_PRODUCT_CHARGES_CONFIG,
+          command: (event: any) => {
+            this.activeIndex = 3;
+          }
+        },
+        {
+          label: 'Purpose', icon: 'fa fa-bandcamp', routerLink: Loantransactionconstant.SAO_PROD_PURPOSE_CONFIG,
+          command: (event: any) => {
+            this.activeIndex = 4;
+          }
+        },
+        {
+          label: 'Required Documents', icon: 'fa fa-file-text', routerLink: Loantransactionconstant.SAO_REQUIRED_DOCUMENT_CONFIG,
+          command: (event: any) => {
+            this.activeIndex = 5;
+          }
+        },
+        {
+          label: 'Field Visit Config', icon: 'fa fa-file-text', routerLink: Loantransactionconstant.SAO_FIELD_VISIT_CONFIG,
+          command: (event: any) => {
+            this.activeIndex = 6;
+          }
+        },
+        {
+          label: 'Disbursment', icon: 'fa fa-file-text', routerLink: Loantransactionconstant.SAO_DISBURSMENT_CONFIG,
+          command: (event: any) => {
+            this.activeIndex = 7;
+          }
+        }
+      ];
+    });
 
 
-this.currentStepper();
-}
+    this.currentStepper();
+  }
   currentStepper() {
     this.saoProductDefinitionsService.currentStep.subscribe((data: any) => {
       if (data != undefined || null) {
@@ -146,127 +164,145 @@ this.currentStepper();
             this.saoProdPurposesModel = data.data;
           } else if (this.activeIndex == 5) {
             this.saoRequiredDocumentsModel = data.data;
+          }  else if (this.activeIndex == 6) {
+            this.saoFieldVisitModel = data.data;
+          }  else if (this.activeIndex == 7) {
+            this.saoDisbursmentScheduleModel = data.data;
           }
         }
       }
     });
   }
 
-/**
-    @author Vinitha
-    @implements Sao Loans details Stepper navigation details 
-    @argument ProductId
-   */
-navigateTo(activeIndex: any,saveId:any) {
-  switch (activeIndex) {
-    case 0:
-      this.router.navigate([Loantransactionconstant.SAO_PRODUCT_CONFIGURATION], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
-      break;
-    case 1:
-      this.router.navigate([Loantransactionconstant.SAO_INTEREST_POLICY_CONFIG], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
-      break;
-    case 2:
-      this.router.navigate([Loantransactionconstant.SAO_LOAN_LINKED_SHARE_CAPITAL], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
-      break;
+  /**
+      @author Vinitha
+      @implements Sao Loans details Stepper navigation details 
+      @argument ProductId
+     */
+  navigateTo(activeIndex: any, saveId: any) {
+    switch (activeIndex) {
+      case 0:
+        this.router.navigate([Loantransactionconstant.SAO_PRODUCT_CONFIGURATION], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
+        break;
+      case 1:
+        this.router.navigate([Loantransactionconstant.SAO_INTEREST_POLICY_CONFIG], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
+        break;
+      case 2:
+        this.router.navigate([Loantransactionconstant.SAO_LOAN_LINKED_SHARE_CAPITAL], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
+        break;
       case 3:
         this.router.navigate([Loantransactionconstant.SAO_PRODUCT_CHARGES_CONFIG], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
         break;
-        case 4:
-      this.router.navigate([Loantransactionconstant.SAO_PROD_PURPOSE_CONFIG], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
-      break;
+      case 4:
+        this.router.navigate([Loantransactionconstant.SAO_PROD_PURPOSE_CONFIG], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
+        break;
       case 5:
         this.router.navigate([Loantransactionconstant.SAO_REQUIRED_DOCUMENT_CONFIG], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
         break;
-  }
-}
-
-ngAfterContentChecked(): void {
-  this.ref.detectChanges();
-}
-
-/**
-    @author vinitha
-    @implements Previous Step button navigation realated function
-    @argument activeIndex
-   */
-prevStep(activeIndex: any) {
-  this.activeIndex = activeIndex - 1;
-  this.navigateTo(this.activeIndex,this.savedID);
-
-}
-
-/**
-    @author Vinitha
-    @implements Save data and next navigation realated function
-    @argument activeIndex
-   */
-
-saveAndNext(activeIndex: number) {
-  if (activeIndex == 0) {
-    this.addOrUpdateSaoProductDefination(activeIndex, "next");
-  } else if (activeIndex == 1) {
-    this.activeIndex = activeIndex + 1;
-    this.navigateTo(this.activeIndex,this.savedID);
-   } else if (activeIndex == 2) {
-      this.activeIndex = activeIndex + 1;
-      this.navigateTo(this.activeIndex,this.savedID);
-  } else if (activeIndex == 3) {
-    this.activeIndex = activeIndex + 1;
-    this.navigateTo(this.activeIndex,this.savedID);
-  }
-  else if (activeIndex == 4) {
-    this.activeIndex = activeIndex + 1;
-    this.navigateTo(this.activeIndex,this.savedID);
-  }
-  else if (activeIndex == 5) {
-    this.activeIndex = activeIndex + 1;
-    this.navigateTo(this.activeIndex,this.savedID);
-  }
-}
-
-/**
-    @author vinitha
-    @implements Saves the data
-    @argument activeIndex
-   */
-saveContinue(activeIndex:any) {
-  this.activeIndex = 0;
-  this.router.navigate([Loantransactionconstant.SAO_PRODUCT_DEFINITION]);
-  this.stepperCreation();
-}
-
-/**
-    @author vinitha
-    @implements It recieves the data from stepper
-    @argument activeIndex
-   */
-getProductDetailsObservable() {
-  this.saoProductDefinitionsService.currentStep.subscribe((data: any) => {
-    if (data != undefined) {
-      this.changeStepperSelector(this.activeIndex);
-      if (data.isDisable != null) {
-        this.nextDisable = data.isDisable;
-        this.buttonDisbled = (data.formValid == applicationConstants.FALSE) ? applicationConstants.TRUE : applicationConstants.FALSE;
-
-      }
-      this.serviceUrl = data.serviceUrl;
+      case 6:
+        this.router.navigate([Loantransactionconstant.SAO_FIELD_VISIT_CONFIG], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
+        break;
+      case 7:
+        this.router.navigate([Loantransactionconstant.SAO_DISBURSMENT_CONFIG], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
+        break;
     }
-  });
-}
+  }
 
-cancel(activeIndex: any){
-  this.router.navigate([Loantransactionconstant.SAO_PRODUCT_DEFINITION]);
+  ngAfterContentChecked(): void {
+    this.ref.detectChanges();
   }
-  
-  submit(){
-  this.buttonDisbled = applicationConstants.TRUE;
-  this.router.navigate([Loantransactionconstant.VIEW_SAO_PRODUCT_DEFINITION], { queryParams: { id: this.encryptDecryptService.encrypt(this.savedID),isGridPage:this.encryptDecryptService.encrypt(applicationConstants.ACTIVE)} });
+
+  /**
+      @author vinitha
+      @implements Previous Step button navigation realated function
+      @argument activeIndex
+     */
+  prevStep(activeIndex: any) {
+    this.activeIndex = activeIndex - 1;
+    this.navigateTo(this.activeIndex, this.savedID);
+
   }
-  
-  
+
+  /**
+      @author Vinitha
+      @implements Save data and next navigation realated function
+      @argument activeIndex
+     */
+
+  saveAndNext(activeIndex: number) {
+    if (activeIndex == 0) {
+      this.addOrUpdateSaoProductDefination(activeIndex, "next");
+    } else if (activeIndex == 1) {
+      this.activeIndex = activeIndex + 1;
+      this.navigateTo(this.activeIndex, this.savedID);
+    } else if (activeIndex == 2) {
+      this.activeIndex = activeIndex + 1;
+      this.navigateTo(this.activeIndex, this.savedID);
+    } else if (activeIndex == 3) {
+      this.activeIndex = activeIndex + 1;
+      this.navigateTo(this.activeIndex, this.savedID);
+    }
+    else if (activeIndex == 4) {
+      this.activeIndex = activeIndex + 1;
+      this.navigateTo(this.activeIndex, this.savedID);
+    }
+    else if (activeIndex == 5) {
+      this.activeIndex = activeIndex + 1;
+      this.navigateTo(this.activeIndex, this.savedID);
+    }
+    else if (activeIndex == 6) {
+      this.activeIndex = activeIndex + 1;
+      this.navigateTo(this.activeIndex, this.savedID);
+    }
+    else if (activeIndex == 7) {
+      this.activeIndex = activeIndex + 1;
+      this.navigateTo(this.activeIndex, this.savedID);
+    }
+  }
+
+  /**
+      @author vinitha
+      @implements Saves the data
+      @argument activeIndex
+     */
+  saveContinue(activeIndex: any) {
+    this.activeIndex = 0;
+    this.router.navigate([Loantransactionconstant.SAO_PRODUCT_DEFINITION]);
+    this.stepperCreation();
+  }
+
+  /**
+      @author vinitha
+      @implements It recieves the data from stepper
+      @argument activeIndex
+     */
+  getProductDetailsObservable() {
+    this.saoProductDefinitionsService.currentStep.subscribe((data: any) => {
+      if (data != undefined) {
+        this.changeStepperSelector(this.activeIndex);
+        if (data.isDisable != null) {
+          this.nextDisable = data.isDisable;
+          this.buttonDisbled = (data.formValid == applicationConstants.FALSE) ? applicationConstants.TRUE : applicationConstants.FALSE;
+
+        }
+        this.serviceUrl = data.serviceUrl;
+      }
+    });
+  }
+
+  cancel(activeIndex: any) {
+    this.router.navigate([Loantransactionconstant.SAO_PRODUCT_DEFINITION]);
+  }
+
+  submit() {
+    this.buttonDisbled = applicationConstants.TRUE;
+    this.router.navigate([Loantransactionconstant.VIEW_SAO_PRODUCT_DEFINITION], { queryParams: { id: this.encryptDecryptService.encrypt(this.savedID), isGridPage: this.encryptDecryptService.encrypt(applicationConstants.ACTIVE) } });
+  }
+
+
   save() {
-  this.buttonDisbled = applicationConstants.TRUE;
-  this.router.navigate([Loantransactionconstant.SAO_PRODUCT_DEFINITION]);
+    this.buttonDisbled = applicationConstants.TRUE;
+    this.router.navigate([Loantransactionconstant.SAO_PRODUCT_DEFINITION]);
   }
   /**
     @author vinitha
@@ -318,6 +354,12 @@ cancel(activeIndex: any){
       });
       this.translate.get('Loantransactionconstant.REQUIRED_DOCUMENTS').subscribe((text: string) => {
         this.reqiredDocumentsDetails = text;
+      });
+      this.translate.get('Loantransactionconstant.FIELD_VISIT_CONFIG').subscribe((text: string) => {
+        this.fieldVisitConfig = text;
+      });
+      this.translate.get('Loantransactionconstant.DISBURSMENT_CONFIG').subscribe((text: string) => {
+        this.disbursmentConfig = text;
         this.items = [
           {
             label: this.productDefinition
@@ -336,9 +378,15 @@ cancel(activeIndex: any){
           },
           {
             label: this.reqiredDocumentsDetails
-          }
+          },
+          {
+            label: this.fieldVisitConfig
+          },
+          {
+            label: this.disbursmentConfig
+          },
         ];
-        
+
       });
     });
   }
@@ -348,102 +396,102 @@ cancel(activeIndex: any){
     @implements It Saves the Sao Loans data 
     @argument generalConfigModel,activeIndex,buttonName
    */
-  addOrUpdateSaoProductDefination(activeIndex:any, buttonName:any) {
+  addOrUpdateSaoProductDefination(activeIndex: any, buttonName: any) {
 
-  this.saoProductDefinitionModel.pacsId = this.commonFunctionService.getStorageValue(applicationConstants.PACS_ID);
+    this.saoProductDefinitionModel.pacsId = this.commonFunctionService.getStorageValue(applicationConstants.PACS_ID);
 
-  if(this.saoProductDefinitionModel.effectiveStartDate != undefined && this.saoProductDefinitionModel.effectiveStartDate != null)
-    this.saoProductDefinitionModel.effectiveStartDate = this.commonFunctionService.getUTCEpoch(new Date(this.saoProductDefinitionModel.effectiveStartDate));
- 
-  if(this.saoProductDefinitionModel.endDate != undefined && this.saoProductDefinitionModel.endDate != null)
-    this.saoProductDefinitionModel.endDate = this.commonFunctionService.getUTCEpoch(new Date(this.saoProductDefinitionModel.endDate));
-  if (this.saoProductDefinitionModel.id != null) {
-  
-  this.saoProductDefinitionsService.updateSaoProductDefinitions(this.saoProductDefinitionModel).subscribe((response: any) => {
-    this.responseModel = response;
-    if (this.responseModel.status === applicationConstants.STATUS_SUCCESS && this.responseModel.data[0] !=null) {
-      if (this.responseModel != null&& this.responseModel.data!= undefined) {
-        this.saoProdCollateralsConfigList = this.responseModel.data; 
-      if(null != this.saoProductDefinitionModel.effectiveStartDate && undefined != this.saoProductDefinitionModel.effectiveStartDate)
-        this.saoProductDefinitionModel.effectiveStartDate=this.datePipe.transform(this.saoProductDefinitionModel.effectiveStartDate, this.orgnizationSetting.datePipe);
-     
-      if(null != this.saoProductDefinitionModel.endDate && undefined != this.saoProductDefinitionModel.endDate)
-        this.saoProductDefinitionModel.endDate=this.datePipe.transform(this.saoProductDefinitionModel.endDate, this.orgnizationSetting.datePipe);
-      this.commonComponent.stopSpinner();
-      this.msgs = [];
-      this.msgs =[{ severity: 'success',summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
-  
-      setTimeout(() => {
-        this.msgs = [];
-      }, 2000);
-      if (buttonName == "next") {
-        this.activeIndex = activeIndex + 1;
-        this.savedID = this.responseModel.data[0].id;
-        this.navigateTo(this.activeIndex,this.savedID);
-      } 
-      }
+    if (this.saoProductDefinitionModel.effectiveStartDate != undefined && this.saoProductDefinitionModel.effectiveStartDate != null)
+      this.saoProductDefinitionModel.effectiveStartDate = this.commonFunctionService.getUTCEpoch(new Date(this.saoProductDefinitionModel.effectiveStartDate));
+
+    if (this.saoProductDefinitionModel.endDate != undefined && this.saoProductDefinitionModel.endDate != null)
+      this.saoProductDefinitionModel.endDate = this.commonFunctionService.getUTCEpoch(new Date(this.saoProductDefinitionModel.endDate));
+    if (this.saoProductDefinitionModel.id != null) {
+
+      this.saoProductDefinitionsService.updateSaoProductDefinitions(this.saoProductDefinitionModel).subscribe((response: any) => {
+        this.responseModel = response;
+        if (this.responseModel.status === applicationConstants.STATUS_SUCCESS && this.responseModel.data[0] != null) {
+          if (this.responseModel != null && this.responseModel.data != undefined) {
+            this.saoProdCollateralsConfigList = this.responseModel.data;
+            if (null != this.saoProductDefinitionModel.effectiveStartDate && undefined != this.saoProductDefinitionModel.effectiveStartDate)
+              this.saoProductDefinitionModel.effectiveStartDate = this.datePipe.transform(this.saoProductDefinitionModel.effectiveStartDate, this.orgnizationSetting.datePipe);
+
+            if (null != this.saoProductDefinitionModel.endDate && undefined != this.saoProductDefinitionModel.endDate)
+              this.saoProductDefinitionModel.endDate = this.datePipe.transform(this.saoProductDefinitionModel.endDate, this.orgnizationSetting.datePipe);
+            this.commonComponent.stopSpinner();
+            this.msgs = [];
+            this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
+
+            setTimeout(() => {
+              this.msgs = [];
+            }, 2000);
+            if (buttonName == "next") {
+              this.activeIndex = activeIndex + 1;
+              this.savedID = this.responseModel.data[0].id;
+              this.navigateTo(this.activeIndex, this.savedID);
+            }
+          }
+        } else {
+          this.commonComponent.stopSpinner();
+          this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        }
+      },
+        error => {
+          this.commonComponent.stopSpinner();
+          this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        });
     } else {
-      this.commonComponent.stopSpinner();
-      this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
-      setTimeout(() => {
-        this.msgs = [];
-      }, 2000);
-    }
-  },
-    error => {
-      this.commonComponent.stopSpinner();
-      this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
-      setTimeout(() => {
-        this.msgs = [];
-      }, 2000);
-    });
-  } else {
-    this.saoProductDefinitionModel.statusName = CommonStatusData.IN_PROGRESS;
-  this.saoProductDefinitionsService.addSaoProductDefinitions(this.saoProductDefinitionModel).subscribe((response: any) => {
-    this.responseModel = response;
-    if (this.responseModel.status === applicationConstants.STATUS_SUCCESS && this.responseModel.data[0] !=null) {
-      if (this.responseModel != null&& this.responseModel.data!= undefined) {
-        this.saoProdCollateralsConfigList = this.responseModel.data; 
-      if(null != this.saoProductDefinitionModel.effectiveStartDate && undefined != this.saoProductDefinitionModel.effectiveStartDate)
-        this.saoProductDefinitionModel.effectiveStartDate=this.datePipe.transform(this.saoProductDefinitionModel.effectiveStartDate, this.orgnizationSetting.datePipe);
+      this.saoProductDefinitionModel.statusName = CommonStatusData.IN_PROGRESS;
+      this.saoProductDefinitionsService.addSaoProductDefinitions(this.saoProductDefinitionModel).subscribe((response: any) => {
+        this.responseModel = response;
+        if (this.responseModel.status === applicationConstants.STATUS_SUCCESS && this.responseModel.data[0] != null) {
+          if (this.responseModel != null && this.responseModel.data != undefined) {
+            this.saoProdCollateralsConfigList = this.responseModel.data;
+            if (null != this.saoProductDefinitionModel.effectiveStartDate && undefined != this.saoProductDefinitionModel.effectiveStartDate)
+              this.saoProductDefinitionModel.effectiveStartDate = this.datePipe.transform(this.saoProductDefinitionModel.effectiveStartDate, this.orgnizationSetting.datePipe);
 
-      if(null != this.saoProductDefinitionModel.endDate && undefined != this.saoProductDefinitionModel.endDate)
-        this.saoProductDefinitionModel.endDate=this.datePipe.transform(this.saoProductDefinitionModel.endDate, this.orgnizationSetting.datePipe);
-      this.commonComponent.stopSpinner();
-      this.msgs = [];
-      this.msgs = [{ severity: 'success', detail: this.responseModel.statusMsg }];
-      setTimeout(() => {
-        this.msgs = [];
-      }, 2000);
-      if (buttonName == "next") {
-        this.activeIndex = activeIndex + 1;
-        this.savedID = this.responseModel.data[0].id;
-        this.navigateTo(this.activeIndex,this.savedID);
-      } else if (buttonName == "saveAndContinue") {
-        this.activeIndex = 0;
-        this.router.navigate([]);
-        this.stepperCreation();
-      } else {
-        this.router.navigate([]);
-      }
+            if (null != this.saoProductDefinitionModel.endDate && undefined != this.saoProductDefinitionModel.endDate)
+              this.saoProductDefinitionModel.endDate = this.datePipe.transform(this.saoProductDefinitionModel.endDate, this.orgnizationSetting.datePipe);
+            this.commonComponent.stopSpinner();
+            this.msgs = [];
+            this.msgs = [{ severity: 'success', detail: this.responseModel.statusMsg }];
+            setTimeout(() => {
+              this.msgs = [];
+            }, 2000);
+            if (buttonName == "next") {
+              this.activeIndex = activeIndex + 1;
+              this.savedID = this.responseModel.data[0].id;
+              this.navigateTo(this.activeIndex, this.savedID);
+            } else if (buttonName == "saveAndContinue") {
+              this.activeIndex = 0;
+              this.router.navigate([]);
+              this.stepperCreation();
+            } else {
+              this.router.navigate([]);
+            }
+          }
+        } else {
+          this.commonComponent.stopSpinner();
+          this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        }
+      },
+        error => {
+          this.commonComponent.stopSpinner();
+          this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        });
     }
-    } else {
-      this.commonComponent.stopSpinner();
-      this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
-      setTimeout(() => {
-        this.msgs = [];
-      }, 2000);
-    }
-  },
-    error => {
-      this.commonComponent.stopSpinner();
-      this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
-      setTimeout(() => {
-        this.msgs = [];
-      }, 2000);
-    });
-  }
-  
+
   }
 
 }

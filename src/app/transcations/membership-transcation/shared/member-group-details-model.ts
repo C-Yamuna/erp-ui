@@ -32,7 +32,7 @@ export class MemberGroupBasicDetails {
 
   tanNumber: any;
 
-  groupStatus: any;
+  isActive: any;
 
   isGroupClosed: any;
 
@@ -114,7 +114,15 @@ export class MemberGroupBasicDetails {
 
   societyAdmissionNumber:any;
 
-	
+  resolutionDate:any;
+
+  resolutionDateVal:any;
+
+  operatorTypeId:any;
+
+  operatorTypeName:any;
+
+ 
 }
 export class GroupCommunicationModel {
   id: any;
@@ -173,6 +181,23 @@ export class GroupCommunicationModel {
   
    permanentVillageName: any;
 
+   divisionId:any;
+
+   blockId:any;
+ 
+   divisionName:any;
+ 
+   blockName:any;
+
+   permanentDivisionId:any;
+
+	  permanentBlockId:any;
+
+	  permanentDivisionName:any;
+
+	  permanentBlockName:any;
+ 
+   
 }
 export class GroupKycDeatilsModel {
   id: any;
@@ -251,6 +276,8 @@ export class promoterDetailsModel {
 
   endDate: any;
 
+  endDateVal: any;
+
   branchId: any;
 
   isGroupLeader: any;
@@ -284,5 +311,7 @@ export class promoterDetailsModel {
   uniqueId:any;
 
   multipartFileListForPhotoCopyPath:any;
+
+  isPoc:any;
 }
 

@@ -1,28 +1,28 @@
 <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
     [hideTransitionOptions]="'500ms'"></p-messages>
 <div class="col-12">
-
+    <h6 class="sub-heading">Loan Documents</h6>
     <div class="stepper-top-section-strip">
         <div class="row">
-            <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 stepper-top-product-name-background">
                 <div class="form-group">
                     <span>{{'ERP.PRODUCT' | translate}}</span>
                     <p class="mb-0">{{saoLoanApplicationModel.saoProductName}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
-                <div class="form-group">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="form-group ml-2">
                     <span>{{'ERP.OPERATION_TYPE' | translate}}</span>
                     <p class="mb-0">{{saoLoanApplicationModel.operationTypeName}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="form-group">
                     <span>{{'ERP.LOAN_ACCOUNT_NO' | translate}}</span>
                     <p class="mb-0">{{saoLoanApplicationModel.accountNumber}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="form-group">
                     <span>{{'ERP.REQUEST_AMOUNT' | translate}}</span>
                     <p class="mb-0">{{saoLoanApplicationModel.requestedAmount}}</p>
@@ -31,8 +31,6 @@
         </div>
     </div>
     <div class="col-12"></div>
-
-    <h6 class="sub-heading">Loan Documents</h6>
 
     <form [formGroup]="documentForm" id="exit_types_form">
         <p-button icon="fa fa-plus" label="{{'ADD ANOTHER DOCUMENT' | translate}}" (click)="addDocument($event)"

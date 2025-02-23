@@ -488,14 +488,14 @@
                                             formControlName="accountNumber" [(ngModel)]="transactionModel.accountNumber">
                                     </div>
                                 </div>
-                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
+                                <!-- <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
                                     <div class="form-label">
                                         <label>{{'ERP.ACCOUNT_HOLDER_NAME' | translate}}</label>
                                         <input type="text" class="form-control" id="accountHolderName"
                                             formControlName="accountHolderName" placeholder="Enter Account Holder Name"
                                             [(ngModel)]="transactionModel.particulars">
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
                                     <div class="form-label">
                                         <label>{{'ERP.AMOUNT' | translate}}</label>
@@ -509,13 +509,15 @@
                                         <label>{{'ERP.AMOUNT_IN_WORDS' | translate}}</label>
                                         <input type="text" class="form-control" id="amountInWords"
                                             formControlName="amountInWords" placeholder="Enter Amount in Words"
-                                            [(ngModel)]="transactionModel.transactionAmountInWords">
+                                            [(ngModel)]="transactionModel.transactionAmountInWords"
+                                            (keyup)="onAmountChange()">
                                     </div>
                                 </div>
                                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
                                     <div class="form-label">
                                         <label>{{'ERP.NARRATION' | translate}}</label>
-                                        <textarea class="form-control" type="text" pInputTextarea id="narration" name="narration" placeholder="Enter Narration Here"></textarea>
+                                        <textarea class="form-control" type="text" pInputTextarea id="narration" name="narration"
+                                            placeholder="Enter Narration Here" [(ngModel)]="transactionModel.remarks"></textarea>
                                     </div>
                                 </div>
                                 <!-- <div class="col-md-4">

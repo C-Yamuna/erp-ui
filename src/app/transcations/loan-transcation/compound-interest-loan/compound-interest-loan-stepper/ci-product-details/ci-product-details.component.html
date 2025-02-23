@@ -148,7 +148,7 @@
                         </p-calendar>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                <!-- <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label for="username"><span class="red">*</span>{{'LOAN_TRANSACTION.NO_OF_PLANNED_DISBURSEMENTS' | translate}}
                         </label>
@@ -159,7 +159,7 @@
                             *ngIf="!ciLoanApplicationForm.controls['plannedDisbursements'].valid && ciLoanApplicationForm.controls['plannedDisbursements'].dirty">
                         </p-message>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label for="username"><span class="red">*</span>{{'LOAN_TRANSACTION.LOAN_PERIOD_IN_MONTHS' | translate}}
@@ -252,7 +252,7 @@
     
 </div>
 <div>
-       
+<!--        
     <form [formGroup]="schedulerForm" id="exit_types_form">
         <div class="flex justify-content-between py-2">
             <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-xs-5">
@@ -283,22 +283,18 @@
         </div>
 
         <div class="globel-border-top-color"></div>
-        <!-- disbursements schedule table starts -->
-        <p-table #dt [value]="disbursmentScheduleList" dataKey="id" editMode="row" styleClass="p-datatable-striped"
-            [rows]="5" [paginator]="true" [showJumpToPageDropdown]="true" [showPageLinks]="false" [pageLinks]="1"
-            [responsive]="true" rowExpandMode="single" [globalFilterFields]="['disbursementNumber', 'typeName', 'disbursementLimit', 'minDaysForDisbursement','remarks',
-                                'disbursementOrder','statusName']">
+        <p-table #dt [value]="disbursmentScheduleList" dataKey="id" editMode="row" styleClass="p-datatable-striped" [rows]="5"
+            [paginator]="true" [showJumpToPageDropdown]="true" [showPageLinks]="false" [pageLinks]="1" [responsive]="true"
+            rowExpandMode="single" [globalFilterFields]="['disbursementNumber', 'typeName', 'disbursementLimit', 'minDaysForDisbursement','remarks',
+                                        'disbursementOrder','statusName']">
             <ng-template pTemplate="header">
                 <tr>
-                    <th><span class="red">*</span>{{'ERP.DISBURSEMENT_NUMBER' | translate}}</th>
-                    <th>{{'LOANS.COLLECTION_TYPE' | translate}}</th>
-                    <th>{{'ERP.DISBURSEMENT_LIMIT' | translate}}</th>
-                    <th>{{'ERP.MINIMUM_DAYS_FOR_DISBURSMENT' | translate}}</th>
-                    <th>{{'ERP.REMARKS' | translate}}</th>
                     <th>{{'ERP.DISBURSEMENT_ORDER' | translate}}</th>
-                    <th>{{'ERP.STATUS' | translate}}</th>
+                    <th>{{'LOANS.DISBURSEMENT_AMOUNT' | translate}}</th>
+                    <th>{{'LOANS.DISBURSEMENT_DATE' | translate}}</th>
+                    <th>{{'LOANS.TRANSACTION_DATE' | translate}}</th>
                     <th class="width-15em">{{'ERP.ACTION' | translate}}</th>
-
+        
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
@@ -307,100 +303,66 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" formControlName="disbursementNumber"
-                                    [(ngModel)]="rowData.disbursementNumber">
-                            </ng-template>
-                            <ng-template pTemplate="output">{{rowData.disbursementNumber}}</ng-template>
-                        </p-cellEditor>
-                    </td>
-
-                    <td>
-                        <p-cellEditor>
-                            <ng-template pTemplate="input">
-                                <p-dropdown [options]="collectionTypeList" formControlName="typeName"
-                                    [(ngModel)]="rowData.type" placeholder="select"
-                                    [appendTo]="'body'"></p-dropdown>
-                            </ng-template>
-                            <ng-template pTemplate="output">{{rowData.typeName}}</ng-template>
-                        </p-cellEditor>
-                    </td>
-                    <td>
-                        <p-cellEditor>
-                            <ng-template pTemplate="input">
-                                <input pInputText type="text" formControlName="disbursementLimit"
-                                    [(ngModel)]="rowData.disbursementLimit">
-                            </ng-template>
-                            <ng-template pTemplate="output">{{rowData.disbursementLimit}}</ng-template>
-                        </p-cellEditor>
-                    </td>
-                    <td>
-                        <p-cellEditor>
-                            <ng-template pTemplate="input">
-                                <input pInputText type="text" formControlName="minDaysForDisbursement"
-                                    [(ngModel)]="rowData.minDaysForDisbursement">
-                            </ng-template>
-                            <ng-template pTemplate="output">{{rowData.minDaysForDisbursement}}</ng-template>
-                        </p-cellEditor>
-                    </td>
-                    <td>
-                        <p-cellEditor>
-                            <ng-template pTemplate="input">
-                                <input pInputText type="text" formControlName="remarks"
-                                    [(ngModel)]="rowData.remarks">
-                            </ng-template>
-                            <ng-template pTemplate="output">{{rowData.remarks}}</ng-template>
-                        </p-cellEditor>
-                    </td>
-
-                    <td>
-                        <p-cellEditor>
-                            <ng-template pTemplate="input">
-                                <input pInputText type="text" formControlName="disbursementOrder"
                                     [(ngModel)]="rowData.disbursementOrder">
                             </ng-template>
                             <ng-template pTemplate="output">{{rowData.disbursementOrder}}</ng-template>
                         </p-cellEditor>
                     </td>
+        
                     <td>
                         <p-cellEditor>
                             <ng-template pTemplate="input">
-                                <p-dropdown [options]="statusList" formControlName="statusName"
-                                    [(ngModel)]="rowData.status" placeholder="select"
-                                    [appendTo]="'body'"></p-dropdown>
+                                <input pInputText type="text" formControlName="disbursementAmount"
+                                    [(ngModel)]="rowData.disbursementAmount">
                             </ng-template>
-                            <ng-template pTemplate="output">{{rowData.statusName}}</ng-template>
+                            <ng-template pTemplate="output">{{rowData.disbursementAmount}}</ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <p-calendar [showIcon]="true" [dateFormat]="orgnizationSetting.calendar" id="calendar"
+                                    name="calendar" formControlName="disbursementDate"
+                                    [(ngModel)]="rowData.disbursementDateVal" placeholder="DD/MM/YYYY" [appendTo]="'body'"></p-calendar>
+                            </ng-template>
+                            <ng-template pTemplate="output">{{rowData.disbursementDateVal}}</ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <p-calendar [showIcon]="true" [dateFormat]="orgnizationSetting.calendar" id="calendar"
+                                    name="calendar" formControlName="transactionDate"
+                                    [(ngModel)]="rowData.transactionDateVal" placeholder="DD/MM/YYYY" [appendTo]="'body'"></p-calendar>
+                            </ng-template>
+                            <ng-template pTemplate="output">{{rowData.transactionDateVal}}</ng-template>
                         </p-cellEditor>
                     </td>
                     <td>
                         <div class="global-action-btn flex align-items-center justify-content-center">
-                            <p-button label="{{ 'SAVE' | translate }}" *ngIf="editing"
-                                [disabled]="!schedulerForm.valid" (click)="addOrUpdateSchedulerDetails(rowData)"
-                                pSaveEditableRow id="prj_stakehlder_bt_cancel" class="action-save">
+                            <p-button label="{{ 'SAVE' | translate }}" *ngIf="editing" [disabled]="!schedulerForm.valid"
+                                (click)="addOrUpdateSchedulerDetails(rowData)" pSaveEditableRow id="prj_stakehlder_bt_cancel"
+                                class="action-save">
                             </p-button>
                             <p-button label="{{ 'CANCEL' | translate }}" *ngIf="editing" pCancelEditableRow
-                                id="prj_stakehlder_bt_cancel" class="action-cancel"
-                                (click)="cancelSchedulerDetails()">
+                                id="prj_stakehlder_bt_cancel" class="action-cancel" (click)="cancelSchedulerDetails()">
                             </p-button>
-                            <p-button label="{{ 'EDIT' | translate }}" *ngIf="!editing"
-                                [disabled]="editDeleteDisable" pInitEditableRow
-                                (click)="editSchedulerDetailsRow(rowData)" id="prj_stakehlder_bt_edit"
+                            <p-button label="{{ 'EDIT' | translate }}" *ngIf="!editing" [disabled]="editDeleteDisable"
+                                pInitEditableRow (click)="editSchedulerDetailsRow(rowData)" id="prj_stakehlder_bt_edit"
                                 class="action-edit">
                             </p-button>
-                            <!-- <p-button label="{{ 'DELETE' | translate }}" *ngIf="!editing"
-                                (click)="deletDilogBox(rowData)" [disabled]="editDeleteDisable"
-                                id="prj_stakehlder_bt_edit" class="action-delete">
-                            </p-button> -->
+                            
                         </div>
                     </td>
                 </tr>
             </ng-template>
         </p-table>
-        <!-- disbursements schedule table end -->
         <span class="float-left text-left pull-left text-danger fw-bold note-text">
             {{'ERP.PLEASE_ENTER'|translate}} {{ciLoanApplicationModel.plannedDisbursements}}
             {{'ERP.VALID_SCHEDULE_RECORDS'|translate}}</span>
         <div class="col-12 margtop-3rem"></div>
 
-    </form>
+    </form> -->
 </div>
 
 

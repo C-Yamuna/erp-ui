@@ -36,7 +36,7 @@
                                     </div>
                                     </div> -->
                                     <div class="col-12 pic-sig-status">
-                                    <div class="d-flex justify-content-center mb-3">
+                                    <div class="d-flex justify-content-center mb-1">
                                         <div *ngIf ="!this.memberBasicDetailsModel.photoCopyPath" (click)="onClickMemberPhotoCopy()">
                                             <img src="assets/images/no-image.jpg" class="image-user cursor-pointer">
                                         </div>
@@ -70,15 +70,18 @@
                                             </div>
                                     </div>
                                 </div>
-                                
-                                <div class="text-center min-h-50px">
-                                    <p class="font-semibold text-break view-member-name"><span class="border-bottom">{{memberBasicDetailsModel.name}}</span></p>
+                                <div class="min-h-50px text-center">
+                                    <p class="text-break view-member-name">{{memberBasicDetailsModel.name}}</p>
+                                    <div class="d-flex justify-content-center">
+                                        <div class="member-name-border"></div>
+                                    </div>
                                 </div>
                             </div>
+                            
                             <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
                                 <div class="row">
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                        <span class="basicdata-icons icon-size"><i class="fa fa-id-card-o"></i></span>
+                                        <span class="basicdata-icons icon-size"><i class="fa fa-address-book"></i></span>
                                         <div>
                                         <p class="label-view text-fontwt">{{'ERP.ADMISSION_NUMBER' | translate}}</p>
                                         <p class="label-input-text">{{memberBasicDetailsModel.admissionNumber}}</p>
@@ -269,7 +272,8 @@
                                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-2">
                                                     <div class="nominee-card p-3 pb-1 mb-2">
                                                     <div class="row">
-                                                        <h6 class="super-sub-heading">{{'ERP.REGISTERED' | translate}}</h6>
+                                                        <h6 class="super-sub-heading">{{'MEMBERSHIP_TRANSACTION.COMMUNICATION_ADDRESS' | translate}}</h6>
+
                                                         <div class="col-12 pb-0">
                                                             <div class="row">
 
@@ -1062,24 +1066,28 @@
                             <!-- Admission No & Image-part -->
                             <div class="col-xl-12 col-lg-12 col-md-3 col-sm-4 col-xs-4">
                                 <div class="col-12 pic-sig-status">
-                                    <div class="d-flex justify-content-center mb-3" (click)="onClickGroupPhotoCopy()">
+                                    <div class="d-flex justify-content-center mb-1" (click)="onClickGroupPhotoCopy()">
                                         <img src="assets/images/no-image.jpg" class="image-user cursor-pointer">
                                         <!-- <p class="active-status"></p> -->
                                         <img src="assets/images/no-image.jpg" class="image-sign cursor-pointer">
                                     </div>
                                 </div>
                                 <div class="text-center min-h-50px">
-                                    <span class="text-fontwt">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
-                                    <p class="font-semibold text-break">{{memberGroupBasicDetails.admissionNumber}}</p>
-                                </div>
-                                <div class="text-center min-h-50px">
-                                    <span class="text-fontwt">{{'ERP.NAME' | translate}}</span>
-                                    <p class="font-semibold text-break"><span class="border-bottom">{{memberGroupBasicDetails.name}}</span>
-                                    </p>
+                                    <p class="text-break view-member-name">{{memberGroupBasicDetails.name}}</p>
+                                    <div class="d-flex justify-content-center">
+                                        <div class="member-name-border"></div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
                                 <div class="row">
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                        <span class="basicdata-icons icon-size"><i class="fa fa-address-book"></i></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">{{'ERP.ADMISSION_NUMBER' | translate}}</p>
+                                            <p class="label-input-text">{{memberGroupBasicDetails.admissionNumber}}</p>
+                                        </div>
+                                    </div>
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
                                         <span class="basicdata-icons icon-size"><i class="fa fa-id-card-o"></i></span>
                                         <div>
@@ -1271,9 +1279,9 @@
                                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-2">
                                                     <div class="nominee-card p-3 pb-1 mb-2">
                                                     <div class="row">
-                                                        <h6 class="super-sub-heading">{{'ERP.REGISTERED' | translate}}</h6>
+                                                        <h6 class="super-sub-heading">{{'MEMBERSHIP_TRANSACTION.COMMUNICATION_ADDRESS' | translate}}</h6>
                                                         <div class="col-12 pb-0">
-                                                            <div class="row mt-2">
+                                                            <div class="row">
 
                                                         <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                             <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.STATES' | translate}}</h6>
@@ -1379,6 +1387,8 @@
                                     <!-- <th *ngFor="let col of memberPromoterDetails">
                                         {{col.header | translate}}
                                     </th> -->
+                                    
+                                    <th>{{'MEMBERSHIP_TRANSACTION.IS_POC' | translate}}</th>
                                     <th>{{'ERP.SURNAME' | translate}}</th>
                                     <th>{{'ERP.NAME' | translate}}</th>
                                     <th>{{'ERP.TYPE_OF_OPERATOR' | translate}}</th>
@@ -1391,6 +1401,7 @@
                                     <th>{{'ERP.EMAIL' | translate}}</th>
                                     <th>{{'ERP.AADHAR_NUMBER' | translate}}</th>
                                     <th> {{'ERP.JOINING_DATE' | translate}}</th>
+                                    <th> {{'MEMBERSHIP_TRANSACTION.EXIT_DATE' | translate}}</th>
                                     <th> {{'ERP.UPLOAD_IMAGE' | translate}}</th>
                                     <th> {{'ERP.UPLOAD_SIGNATURE' | translate}}</th>
                                 </tr>
@@ -1398,6 +1409,12 @@
                             <ng-template pTemplate="body" let-promoterDetailsModel let-editing="editing"
                             let-ri="rowIndex">
                             <tr [pEditableRow]="promoterDetailsModel">
+                                
+                                <td>
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="output">{{promoterDetailsModel.isPocName}}</ng-template>
+                                    </p-cellEditor>
+                                </td>
                                 <td>
                                     <p-cellEditor>
                                         <ng-template pTemplate="output">{{promoterDetailsModel.surname}}</ng-template>
@@ -1468,6 +1485,12 @@
                                     <p-cellEditor>
                                         <ng-template
                                             pTemplate="output">{{promoterDetailsModel.startDate}}</ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td>
+                                    <p-cellEditor>
+                                        <ng-template
+                                            pTemplate="output">{{promoterDetailsModel.endDateVal}}</ng-template>
                                     </p-cellEditor>
                                 </td>
                                 <td>
@@ -1695,26 +1718,29 @@
             <!-- Admission No & Image-part -->
                             <div class="col-xl-12 col-lg-12 col-md-3 col-sm-4 col-xs-4">
                                 <div class="col-12 pic-sig-status">
-                                    <div class="d-flex justify-content-center mb-3" (click)="onClickInstitutionPhotoCopy()">
+                                    <div class="d-flex justify-content-center mb-1" (click)="onClickInstitutionPhotoCopy()">
                                         <img src="assets/images/no-image.jpg" class="image-user cursor-pointer">
                                         <!-- <p class="active-status"></p> -->
                                         <img src="assets/images/no-image.jpg" class="image-sign cursor-pointer">
                                     </div>
                                     </div>
                                 <div class="text-center min-h-50px">
-                                    <span class="text-fontwt">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
-                                    <p class="font-semibold text-break">{{institutionBasicDetailsModel.admissionNumber}}</p>
-                                </div>
-                                <div class="text-center min-h-50px">
-                                    <span class="text-fontwt">{{'ERP.NAME' | translate}}</span>
-                                    <p class="font-semibold text-break"><span
-                                            class="border-bottom">{{institutionBasicDetailsModel.name}}</span>
-                                    </p>
+                                    <p class="text-break view-member-name">{{institutionBasicDetailsModel.name}} </p>
+                                    <div class="d-flex justify-content-center">
+                                        <div class="member-name-border"></div>
+                                    </div>
                                 </div>
                             </div>
             
-                            <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-3">
+                            <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
                                 <div class="row">
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                        <span class="basicdata-icons icon-size"><i class="fa fa-address-book"></i></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">{{'ERP.ADMISSION_NUMBER' | translate}}</p>
+                                            <p class="label-input-text">{{institutionBasicDetailsModel.admissionNumber}}</p>
+                                        </div>
+                                    </div>
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
                                         <span class="basicdata-icons icon-size"><i class="fa fa-id-card-o"></i></span>
                                         <div>
@@ -1905,7 +1931,7 @@
                                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-2">
                                                     <div class="nominee-card p-3 pb-1 mb-2">
                                                     <div class="row">
-                                                        <h6 class="super-sub-heading">{{'ERP.REGISTERED' | translate}}</h6>
+                                                        <h6 class="super-sub-heading">{{'MEMBERSHIP_TRANSACTION.COMMUNICATION_ADDRESS' | translate}}</h6>
                                                         <div class="col-12 pb-0">
                                                             <div class="row">
 
@@ -2013,6 +2039,7 @@
                                             <!-- <th *ngFor="let col of memberPromoterDetails">
                                                 {{col.header | translate}}
                                             </th> -->
+                                            <th>{{'MEMBERSHIP_TRANSACTION.IS_POC' | translate}}</th>
                                             <th>{{'ERP.SURNAME' | translate}}</th>
                                             <th>{{'ERP.NAME' | translate}}</th>
                                             <th>{{'ERP.TYPE_OF_OPERATOR' | translate}}</th>
@@ -2025,6 +2052,7 @@
                                             <th>{{'ERP.EMAIL' | translate}}</th>
                                             <th>{{'ERP.AADHAR_NUMBER' | translate}}</th>
                                             <th>{{'ERP.START_DATE' | translate}}</th>
+                                            <th>{{'ERP.EXIT_DATE' | translate}}</th>
                                             <th> {{'ERP.UPLOAD_IMAGE' | translate}}</th>
                                             <th> {{'ERP.UPLOAD_SIGNATURE' | translate}}</th>
                                         </tr>
@@ -2032,6 +2060,12 @@
                                     <ng-template pTemplate="body" let-institutePromoterDetails let-editing="editing"
                                     let-ri="rowIndex">
                                     <tr [pEditableRow]="institutePromoterDetails">
+                                        <td>
+                                            <p-cellEditor>
+                                                <ng-template
+                                                    pTemplate="output">{{institutePromoterDetails.isPocName}}</ng-template>
+                                            </p-cellEditor>
+                                        </td>
                                         <td>
                                             <p-cellEditor>
                                                 <ng-template
@@ -2107,6 +2141,12 @@
                                         </td>
                                         <td>
                                             <p-cellEditor>
+                                                <ng-template
+                                                    pTemplate="output">{{institutePromoterDetails.endDateVal}}</ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                        <td>
+                                            <p-cellEditor>
                                                 <ng-template pTemplate="output">
                                                     <div class="d-flex pt-1"  *ngFor="let img of institutePromoterDetails.multipartFileListForPhotoCopy">
                                                         <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
@@ -2122,7 +2162,7 @@
                                         <td>
                                             <p-cellEditor>
                                                 <ng-template pTemplate="output">
-                                                    <div  *ngFor="let img of institutePromoterDetails.multipartFileListForsignatureCopyPath">
+                                                    <div class="d-flex pt-1"  *ngFor="let img of institutePromoterDetails.multipartFileListForsignatureCopyPath">
                                                         <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                                             <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22"
                                                                     height="22"></a>
@@ -2475,12 +2515,20 @@
                     <p class="label-input-text">{{memberBasicDetailsModel.admissionNumber}}</p>
                 </div>
             </div> -->
+            <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                <span class="basicdata-icons icon-size"><i class="fa fa-calendar"></i></span>
+                <div>
+                <p class="label-view text-fontwt">{{'MEMBERSHIP_TRANSACTION.RESOLUTION_DATE' | translate}}</p>
+                <p class="label-input-text">{{memberBasicDetailsModel.resolutionDateVal}}</p>
+            </div>
+        </div>
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12" >
                 <div class="form-group">
                     <span class="label-view">{{'MEMBERSHIP_TRANSACTION.RESOLUTION_NUMBER' | translate}}</span>
                     <p class="label-input-text">{{memberBasicDetailsModel.mcrNumber }}</p>
                 </div>
             </div>
+            
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="form-label">
                     <span class="label-view">{{'MEMBERSHIP_TRANSACTION.RESOLUTION_COPY' | translate}}</span>
@@ -2618,6 +2666,28 @@
                     <p class="label-input-text">{{ memberGroupBasicDetails.gstNumber}}</p>
                 </div>
             </div>
+            <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                <span class="basicdata-icons icon-size"><i class="fa fa-calendar"></i></span>
+                <div>
+                    <p class="label-view text-fontwt">{{'MEMBERSHIP_TRANSACTION.RESOLUTION_DATE' | translate}}</p>
+                    <p class="label-input-text">{{memberGroupBasicDetails.resolutionDateVal}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-label">
+                    <span class="label-view">{{'MEMBERSHIP_TRANSACTION.RESOLUTION_COPY' | translate}}</span>
+                    <!-- <div class="uplodad-style align-items-center"> -->
+                    <!-- <p class="label-input-text">{{memberBasicDetailsModel.mcrDocumentCopy }}</p> -->
+                    <div class="col-12 d-flex p-0" *ngFor="let img of memberGroupBasicDetails.multipartFileListForsignatureCopyPath">
+                        <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                            <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22" height="22"></a>
+                        </div>
+                        <div class="docname-texteclipse pl-2 label-input-text" pTooltip="{{img.fileName}}" tooltipPosition="bottom">{{img.fileName}}</div>
+                    </div>
+                    <!-- </div> -->
+                </div>
+                    
+            </div>
         </div>
     </div>
    
@@ -2727,6 +2797,28 @@
                     <p class="label-input-text">{{ institutionBasicDetailsModel.gstNumber}}</p>
                 </div>
             </div>
+            <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                <span class="basicdata-icons icon-size"><i class="fa fa-calendar"></i></span>
+                <div>
+                    <p class="label-view text-fontwt">{{'MEMBERSHIP_TRANSACTION.RESOLUTION_DATE' | translate}}</p>
+                    <p class="label-input-text">{{institutionBasicDetailsModel.resolutionDateVal}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-label">
+                    <span class="label-view">{{'MEMBERSHIP_TRANSACTION.RESOLUTION_COPY' | translate}}</span>
+                    <!-- <div class="uplodad-style align-items-center"> -->
+                    <!-- <p class="label-input-text">{{memberBasicDetailsModel.mcrDocumentCopy }}</p> -->
+                    <div class="col-12 d-flex p-0" *ngFor="let img of institutionBasicDetailsModel.multipartFileListForPhotoCopy">
+                        <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                            <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22" height="22"></a>
+                        </div>
+                        <div class="docname-texteclipse pl-2 label-input-text" pTooltip="{{img.fileName}}" tooltipPosition="bottom">{{img.fileName}}</div>
+                    </div>
+                    <!-- </div> -->
+                </div>
+                    
+            </div>
         </div>
     </div>
    
@@ -2734,7 +2826,7 @@
 </div>
 
 <!-- Individual Photo Copy -->
-<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="memberPhotoCopyZoom" styleClass="photo-dialog">
+<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [modal]="true" [(visible)]="memberPhotoCopyZoom" styleClass="photo-dialog">
     <div class="col-12 px-0">
         <div class="row">
             <div class="col-6">
@@ -2785,7 +2877,7 @@
     </div> -->
 </p-dialog>
 <!-- Group Photo Copy -->
-<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="groupPhotoCopyZoom" styleClass="photo-dialog">
+<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [modal]="true" [(visible)]="groupPhotoCopyZoom" styleClass="photo-dialog">
     <div class="col-12 px-0">
         <div class="row">
             <div class="col-6">
@@ -2803,7 +2895,7 @@
     </div> -->
 </p-dialog>
 <!-- Institution Photo Copy -->
-<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="institutionPhotoCopyZoom" styleClass="photo-dialog">
+<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [modal]="true" [(visible)]="institutionPhotoCopyZoom" styleClass="photo-dialog">
     <div class="col-12 px-0">
         <div class="row">
             <div class="col-6">

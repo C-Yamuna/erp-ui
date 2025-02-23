@@ -40,8 +40,9 @@ export class SAOComponent {
   orgnizationSetting: any;
   activeStatusCount: number = 0;
   inactiveStatusCount: number = 0;
-  memberphotCopyMultipartFileList: any;
-
+  memberPhotoCopyZoom: boolean = false;
+  memberphotCopyMultipartFileList: any[] = [];
+  memberSignatureCopyMultipartFileList: any[] = [];
   constructor(private router: Router, private translate: TranslateService,private commonComponent: CommonComponent, private datePipe: DatePipe,private fileUploadService: FileUploadService,
     private commonFunctionsService: CommonFunctionsService,private saoLoanApplicationService : SaoLoanApplicationService, private encryptDecryptService: EncryptDecryptService)
   { 
@@ -184,12 +185,18 @@ createaccount(){
   this.router.navigate([Loantransactionconstant.MEMBERSHIP_BASIC_DETAILS]);
 }
 onClickMemberPhotoCopy(rowData: any) {
-  //this.memberPhotoCopyZoom = true;
+  this.memberPhotoCopyZoom = true;
   this.memberphotCopyMultipartFileList = [];
+  this.memberSignatureCopyMultipartFileList = [];
+
   this.memberphotCopyMultipartFileList = rowData.multipartFileListForPhotoCopy;
+  this.memberSignatureCopyMultipartFileList = rowData.multipartFileListForSignatureCopy;
 }
 onChange(){
   this.showForm = !this.showForm;
+}
+closePhoto(){
+  this.memberPhotoCopyZoom = false;
 }
 
 }

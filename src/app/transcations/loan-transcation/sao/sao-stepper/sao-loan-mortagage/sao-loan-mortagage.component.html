@@ -1,26 +1,26 @@
 <div class="col-12">
-
+    <h6 class="sub-heading">{{'ERP.MORTAGAGE_DETAILS' | translate}}</h6>
     <div class="stepper-top-section-strip">
         <div class="row">
-            <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 stepper-top-product-name-background">
                 <div class="form-group">
                     <span>{{'ERP.PRODUCT' | translate}}</span>
                     <p class="mb-0">{{saoLoanApplicatonModel.saoProductName}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
-                <div class="form-group">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="form-group ml-2">
                     <span>{{'ERP.OPERATION_TYPE' | translate}}</span>
                     <p class="mb-0">{{saoLoanApplicatonModel.operationTypeName}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="form-group">
                     <span>{{'ERP.LOAN_ACCOUNT_NO' | translate}}</span>
                     <p class="mb-0">{{saoLoanApplicatonModel.accountNumber}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="form-group">
                     <span>{{'ERP.REQUEST_AMOUNT' | translate}}</span>
                     <p class="mb-0">{{saoLoanApplicatonModel.requestedAmount}}</p>
@@ -29,7 +29,6 @@
         </div>
     </div>
     <div class="col-12"></div>
-    <h6 class="sub-heading">{{'ERP.MORTAGAGE_DETAILS' | translate}}</h6>
 
     <form [formGroup]="Collateralform" id="exit_types_form">
         <div class="flex justify-content-between py-2">

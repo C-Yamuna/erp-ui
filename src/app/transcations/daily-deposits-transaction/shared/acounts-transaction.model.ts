@@ -52,4 +52,6 @@ export class AcountsTransaction {
 	  chequeIssueDate:any;
 
 	  particulars:any;
+	  
+  	  amountInWords: any;
 }

@@ -112,7 +112,6 @@ export class AccountRequireDocumentsComponent {
     if (this.documentsData.length >= 1) {
       this.uploadFlag = true;
     }
-    this.getAllKycTypes();
     this.activateRoute.queryParams.subscribe(params => {
       if(params['id'] != undefined ) {
         let queryParams = this.encryptDecryptService.decrypt(params['id']);
@@ -135,7 +134,7 @@ export class AccountRequireDocumentsComponent {
   }
 
   getAllKycTypes() {
-    this.dailyDepositsAccountsService.getAllRequiredDocuments().subscribe((res: any) => {
+    this.dailyDepositsAccountsService.getAllRequiredDocuments(this.accountsModel.productId).subscribe((res: any) => {
       this.responseModel = res;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         this.documentNameList = this.responseModel.data.filter((document: any) => document.status == applicationConstants.ACTIVE && document.productId == this.accountsModel.productId).map((count: any) => {
@@ -311,6 +310,7 @@ export class AccountRequireDocumentsComponent {
             if (this.responseModel.data[0].depositAmount != null && this.responseModel.data[0].depositAmount != undefined) {
               this.depositAmount = this.responseModel.data[0].depositAmount;
             }
+            this.getAllKycTypes()
             if(this.responseModel.data[0].rdRequiredDocumentDetailsDTOList != null && this.responseModel.data[0].rdRequiredDocumentDetailsDTOList != undefined){
               this.kycModelList = this.responseModel.data[0].rdRequiredDocumentDetailsDTOList;
               for (let kyc of this.kycModelList) {

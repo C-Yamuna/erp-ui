@@ -239,11 +239,15 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
         if (data.data != null && data.data != undefined) {
           if (this.activeIndex == 0) {//membership 
             this.memberTypeName = data.data.memberTypeName;
+            if(this.memberTypeName  != null && this.memberTypeName  != undefined){
+              this.admissionNumberDropDownDisable = data.isDisable;
+            }
             this.memberTypeCheck(this.memberTypeName, data.data);
             this.savingBankApplicationModel = data.data;
             if (data.data.admissionNumber != null && data.data.admissionNumber != undefined) {
               this.admissionNumber = data.data.admissionNumber;
             }
+            
           }
          else if (this.activeIndex == 2) {//communication
             if (data.data != null && data.data != undefined) {

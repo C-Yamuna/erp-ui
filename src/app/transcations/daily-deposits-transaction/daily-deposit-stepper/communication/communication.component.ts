@@ -169,11 +169,11 @@ export class CommunicationComponent {
       this.getAllVillagesBySubDistrictId(this.accountCommunicationModel.subDistrictId, false)
 
     if (this.accountCommunicationModel.stateId != null)
-      this.getAllPermanentDistrictsByStateId(this.accountCommunicationModel.stateId, false)
+      this.getAllPermanentDistrictsByStateId(this.accountCommunicationModel.permanentStateId, false)
     if (this.accountCommunicationModel.districtId != null)
-      this.getAllPermanentSubDistrictByDistrictId(this.accountCommunicationModel.districtId, false)
-    if (this.accountCommunicationModel.mandalId != null)
-      this.getAllPermanentVillagesBySubDistrictId(this.accountCommunicationModel.mandalId, false)
+      this.getAllPermanentSubDistrictByDistrictId(this.accountCommunicationModel.permanentDistrictId, false)
+    if (this.accountCommunicationModel.subDistrictId != null)
+      this.getAllPermanentVillagesBySubDistrictId(this.accountCommunicationModel.permanentSubDistrictId, false)
   }
 
   getMembershipBasicDetailsByAdmissionNumber(admissionNumber: any) {

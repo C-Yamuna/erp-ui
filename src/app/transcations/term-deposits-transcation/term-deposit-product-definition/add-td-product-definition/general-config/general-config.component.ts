@@ -27,6 +27,8 @@ export class GeneralConfigComponent {
   msgs: any[] = [];
   isSpecialSchemelist: any[] = [];
   amountAndTenureFlag: boolean = applicationConstants.TRUE;
+  tenureTypeList: any[] = [];
+  
   constructor(private formBuilder: FormBuilder,private commonComponent: CommonComponent,private activateRoute: ActivatedRoute,
     private datePipe: DatePipe,private encryptService: EncryptDecryptService,private termDepositProductDefinitionService:TermDepositProductDefinitionService
   )
@@ -38,9 +40,11 @@ export class GeneralConfigComponent {
      'maxDepositAmount': new FormControl('', [Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS),Validators.required]),
      'minTenure': new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NEW_NUMBERS),Validators.required]),
      'maxTenure': new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NEW_NUMBERS),Validators.required]),
-     'isAutoRenewal': new FormControl('', Validators.required),
+    //  'isAutoRenewal': new FormControl('', Validators.required),
      'effectiveStartDate': new FormControl('', Validators.required),
-     'effectiveEndDate': new FormControl('', Validators.required)
+     'effectiveEndDate': new FormControl('', Validators.required),
+     'tenureType': new FormControl('', Validators.required),
+
     })
   }
   /**
@@ -52,6 +56,7 @@ export class GeneralConfigComponent {
   ngOnInit() {
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
     this.isSpecialSchemelist = this.commonComponent.requiredlist();
+    this.tenureTypeList = this.commonComponent.tenureType();
     this.activateRoute.queryParams.subscribe(params => {
       if (params['id'] != undefined) {
         this.commonComponent.startSpinner();

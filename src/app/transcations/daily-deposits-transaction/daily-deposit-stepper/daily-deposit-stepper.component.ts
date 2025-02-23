@@ -1189,8 +1189,8 @@ export class DailyDepositStepperComponent {
     else {
       this.isApplicationEdit = false;
     }
-    if (this.accountsModel.depositDate != null && this.accountsModel.depositDate != undefined) {
-      this.accountsModel.depositDate = this.commonFunctionsService.getUTCEpoch(new Date(this.accountsModel.depositDate));
+    if (this.accountsModel.depositDateVal != null && this.accountsModel.depositDateVal != undefined) {
+      this.accountsModel.depositDate = this.commonFunctionsService.getUTCEpoch(new Date(this.accountsModel.depositDateVal));
     }
     if (this.isApplicationEdit) {
       this.accountsModel.statusName = applicationConstants.IS_ACTIVE;
