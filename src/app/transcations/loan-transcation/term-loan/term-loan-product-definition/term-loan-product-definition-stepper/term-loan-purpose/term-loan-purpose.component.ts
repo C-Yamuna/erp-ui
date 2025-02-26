@@ -286,7 +286,7 @@ export class TermLoanPurposeComponent {
             this.msgs = [];
           }, 2000);
         } else {
-          this.purposeTypeList = this.responseModel.data.filter((documenttype: any) => documenttype.status == applicationConstants.ACTIVE).map((count: any) => {
+          this.purposeTypeList = this.responseModel.data.filter((documenttype: any) => documenttype.status == applicationConstants.ACTIVE && documenttype.name !== applicationConstants.CROP).map((count: any) => {
             return { label: count.name, value: count.id }
           });
 

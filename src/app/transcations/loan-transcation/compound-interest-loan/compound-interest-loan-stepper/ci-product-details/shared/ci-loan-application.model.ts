@@ -178,6 +178,8 @@ export class CiLoanApplication {
 	loanDueAmount : any;
   	ciDisbursementDTOList: any ;
   	loanApprovedDateVal: any;	
+
+	  applicationNumber:any;
 	
 	
 }

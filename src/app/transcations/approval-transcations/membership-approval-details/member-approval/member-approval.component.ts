@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { FileUpload } from 'primeng/fileupload';
 import { CommonCategoryService } from 'src/app/configurations/membership-config/membership-common-category/shared/common-category.service';
+import { LandUom } from 'src/app/configurations/membership-config/membership-uom/shared/land-uom.model';
 import { FileUploadModel } from 'src/app/layout/mainmenu/shared/file-upload-model.model';
 import { applicationConstants } from 'src/app/shared/applicationConstants';
 import { CommonComponent } from 'src/app/shared/common.component';
@@ -21,6 +22,7 @@ import { MemberBasicDetails, MemberNomineeDetails, MemberGuardianDetailsModel, M
 import { MemberGroupBasicDetails, GroupCommunicationModel, GroupKycDeatilsModel, promoterDetailsModel } from 'src/app/transcations/membership-transcation/shared/member-group-details-model';
 import { MembershipBasicDetailsService } from 'src/app/transcations/membership-transcation/shared/membership-basic-details.service';
 import { MembershipGroupDetailsService } from 'src/app/transcations/membership-transcation/shared/membership-group-details.service';
+import { MembershipLandDetailsService } from 'src/app/transcations/membership-transcation/shared/membership-land-details.service';
 
 @Component({
   selector: 'app-member-approval',
@@ -106,13 +108,17 @@ export class MemberApprovalComponent {
   nomineePhotoCopyZoom:boolean = false;
   guardianPhotoCopyZoom:boolean = false;
   isMaximized: boolean = false;
-
+  columns: any[]=[];
+  measuringSubUnit: any;
+  measuringUnit: any;
+  uomModel: LandUom = new LandUom();
+  
   constructor(private commonComponent: CommonComponent, private formBuilder: FormBuilder, private membershipBasicDetailsService: MembershipBasicDetailsService,
     private activateRoute: ActivatedRoute, private encryptService: EncryptDecryptService, private datePipe: DatePipe,
     private router: Router, private commonFunctionsService: CommonFunctionsService,private fileUploadService :FileUploadService,
     private memberShipGroupDetailsService: MembershipGroupDetailsService,private encryptDecryptService: EncryptDecryptService,
     private memInistitutionsService: MemInstitutionService,private translate:TranslateService,private commonFunctionService:CommonFunctionsService,
-    private commonStatusService:CommonCategoryService) {
+    private commonStatusService:CommonCategoryService,private customerLandDetailsService: MembershipLandDetailsService,) {
       this.membershiForm = this.formBuilder.group({
         status: new FormControl(''),
         remarks: new FormControl(''),
@@ -121,15 +127,16 @@ export class MemberApprovalComponent {
 
   ngOnInit() {
     this.status = null;
-    this.memberLandDetails = [
-      { field: 'passbookNumber', header: 'ERP.PASSBOOK_NUMBER' },
-      { field: 'surveyNumber', header: 'ERP.SURVEY_NO' },
-      { field: 'landInUnits', header: 'ERP.LAND_IN_UNITS' },
-      { field: 'landInSubUnits', header: 'ERP.LAND_IN_SUB_UNITS' },
-      { field: 'soilTypeName', header: 'ERP.LAND_TYPE' },
-      { field: 'waterSourceName', header: 'ERP.WATER_SOURCE_TYPES' },
-      { field: 'uploadFilePath', header: 'MEMBERSHIP_TRANSACTION.DOCUMENT_COPY' }
-      
+    this.columns = [
+      { field: 'coveredVillagename', header: 'MEMBERSHIP_TRANSACTION.VILLAGE' },
+      { field: 'passbookNumber', header: 'MEMBERSHIP_TRANSACTION.PASSBOOK_NO' },
+      { field: 'khataNumber', header: 'MEMBERSHIP_TRANSACTION.KHATA_BOOK_NUMBER' },
+      { field: 'surveyNumber', header: 'MEMBERSHIP_TRANSACTION.SURVEY_NO' },
+      { field: 'totalLand', header: 'MEMBERSHIP_TRANSACTION.LAND_IN_ACRES' },
+      { field: 'totalLandInSubUnits', header: 'MEMBERSHIP_TRANSACTION.LAND_IN_ACRES' },
+      { field: 'landTypeName', header: 'MEMBERSHIP_TRANSACTION.LAND_TYPE' },
+      { field: 'landOwnershipName', header: 'MEMBERSHIP_TRANSACTION.LAND_OWNERSHIP' },
+      { field: 'waterSourceName', header: 'MEMBERSHIP_TRANSACTION.SOURCE' },
     ];
 
     this.memberFamilyDetails = [
@@ -264,17 +271,17 @@ export class MemberApprovalComponent {
 
         }
 
-        if (this.memberBasicDetailsModel.memberShipLandDetailsDTOList != null && this.memberBasicDetailsModel.memberShipLandDetailsDTOList.length > 0) {
-          this.memberLandDetailsList = this.memberBasicDetailsModel.memberShipLandDetailsDTOList;
-          this.memberLandDetailsList = this.memberLandDetailsList.map((member:any) =>{
-            if(member.uploadFilePath != null && member.uploadFilePath != undefined)
-              member.multipleFilesList = this.fileUploadService.getFile(member.uploadFilePath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + member.uploadFilePath);
+        this.memberLandDetails = this.memberBasicDetailsModel.memberShipLandDetailsDTO;
+        if (this.memberLandDetails != null && this.memberLandDetails != undefined) {
+
+          this.memberLandDetailsList = this.memberLandDetails.custLandSurveyDetails.map((member: any) => {
+            if (member.uploadFilePath != null && member.uploadFilePath != undefined)
+              member.multipleFilesList = this.fileUploadService.getFile(member.uploadFilePath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + member.uploadFilePath);
 
             return member;
           }
           );
         }
-
         if (this.memberBasicDetailsModel.memberShipFamilyDetailsDTOList != null && this.memberBasicDetailsModel.memberShipFamilyDetailsDTOList.length > 0) {
           this.membershipFamilyDetailsList = this.memberBasicDetailsModel.memberShipFamilyDetailsDTOList
           this.membershipFamilyDetailsList =    this.membershipFamilyDetailsList.filter((obj:any) => null != obj && obj.dob != null).map((family:any)=>{
@@ -871,25 +878,43 @@ fileRemoveEvent() {
   }
 
   // Popup Maximize photo for KYC Document and Nominee
-              @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
-              
-                onDialogResize(event: any) {
-                  this.isMaximized = event.maximized;
-              
-                  if (this.isMaximized) {
-                    // Restore original image size when maximized
-                    this.imageElement.nativeElement.style.width = 'auto';
-                    this.imageElement.nativeElement.style.height = 'auto';
-                    this.imageElement.nativeElement.style.maxWidth = '100%';
-                    this.imageElement.nativeElement.style.maxHeight = '100vh';
-                  } else {
-                    // Fit image inside the dialog without scrollbars
-                    this.imageElement.nativeElement.style.width = '100%';
-                    this.imageElement.nativeElement.style.height = '100%';
-                    this.imageElement.nativeElement.style.maxWidth = '100%';
-                    this.imageElement.nativeElement.style.maxHeight = '100%';
-                    this.imageElement.nativeElement.style.objectFit = 'contain';
-                  }
-                }
+  @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+
+  onDialogResize(event: any) {
+    this.isMaximized = event.maximized;
+
+    if (this.isMaximized) {
+      // Restore original image size when maximized
+      this.imageElement.nativeElement.style.width = 'auto';
+      this.imageElement.nativeElement.style.height = 'auto';
+      this.imageElement.nativeElement.style.maxWidth = '100%';
+      this.imageElement.nativeElement.style.maxHeight = '100vh';
+    } else {
+      // Fit image inside the dialog without scrollbars
+      this.imageElement.nativeElement.style.width = '100%';
+      this.imageElement.nativeElement.style.height = '100%';
+      this.imageElement.nativeElement.style.maxWidth = '100%';
+      this.imageElement.nativeElement.style.maxHeight = '100%';
+      this.imageElement.nativeElement.style.objectFit = 'contain';
+    }
+  }
+
+  getMeasuringUnit() {
+    this.customerLandDetailsService.getMeasuringUnit().subscribe((res: any) => {
+      this.responseModel = res;
+      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+        this.uomModel = this.responseModel.data[0];
+        this.measuringUnit = this.uomModel.measuringUnit;
+        this.measuringSubUnit = this.uomModel.measuringSubUnit;
+
+      }
+    }, error => {
+      this.msgs = [];
+      this.msgs = [{ severity: "error", summary: 'Failed', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST }];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 2000);
+    });
+  }
 }
 

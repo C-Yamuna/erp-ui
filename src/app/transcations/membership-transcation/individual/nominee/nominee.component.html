@@ -77,18 +77,6 @@
                                     <div class="row g-3 mt-n1">
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
-                                                <label><span class="red">*</span>{{'ERP.RELATIONSHIP_TYPE' |
-                                                    translate}}</label>
-                                                <p-dropdown [options]="relationTypesList"
-                                                    placeholder="{{'ERP.SELECT' | translate}}"
-                                                    formControlName="relationName"
-                                                    [(ngModel)]="memberNomineeDetailsModel.relationTypeId" (onChange)="onChangeRelationForNominee()">
-                                                </p-dropdown>
-
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-12">
-                                            <div class="form-label">
                                                 <label><span class="red">*</span>{{'ERP.NOMINEE_NAME' |
                                                     translate}}</label>
                                                 <input type="text" formControlName="nomineeName" pInputText
@@ -97,6 +85,37 @@
                                                 <p-message severity="error" text="Enter Valid nomineeName"
                                                     *ngIf="!nomineeForm.controls['nomineeName'].valid && nomineeForm.controls['nomineeName'].dirty">
                                                 </p-message>
+                                            </div>
+                                             </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="form-label">
+                                                <label for="username"> <span class="red">*</span>{{'ERP.DATE_OF_BIRTH' | translate}}
+                                                </label>
+                                                <p-calendar formControlName="nomineeDob" [showIcon]="true" [dateFormat]="orgnizationSetting.calendar"
+                                                    [(ngModel)]="memberNomineeDetailsModel.nomineeDobVal" placeholder="DD/MM/YYYY"
+                                                    (focusout)="datesValidationCheckAgeAndDob(memberNomineeDetailsModel, 2)" [maxDate]="today">
+                                                </p-calendar>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="form-label">
+                                                <label for="username"> <span class="red">*</span>{{'ERP.AGE' | translate}}
+                                                </label>
+                                                <input pInputText id="bunit_txt_name" maxlength="2" type="text" formControlName="nomineeAge" pKeyFilter="pint"
+                                                    [(ngModel)]="memberNomineeDetailsModel.nomineeAge" placeholder="Enter Age"
+                                                    (focusout)="datesValidationCheckAgeAndDob(memberNomineeDetailsModel, 1)">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="form-label">
+                                                <label><span class="red">*</span>{{'ERP.RELATIONSHIP_TYPE' |
+                                                    translate}}</label>
+                                                <p-dropdown [options]="relationTypesList"
+                                                    placeholder="{{'ERP.SELECT' | translate}}"
+                                                    formControlName="relationName"
+                                                    [(ngModel)]="memberNomineeDetailsModel.relationTypeId" (onChange)="onChangeRelationForNominee()">
+                                                </p-dropdown>
+
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-12">
@@ -241,16 +260,6 @@
                                     <div class="row g-3 mt-n1">
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
-                                                <label><span class="red">*</span>{{'ERP.RELATIONSHIP_TYPE' |
-                                                    translate}}</label>
-                                                <p-dropdown placeholder="{{'ERP.SELECT' | translate}}"
-                                                    [options]="relationTypesList"
-                                                    formControlName="relationNameOfGuardian" id="id"
-                                                    [(ngModel)]="memberGuardianDetailsModel.relationshipTypeId" (onChange)="onChangeRelationForGaurdian()"></p-dropdown>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-12">
-                                            <div class="form-label">
                                                 <label><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.GUARDAIN_NAME' |
                                                     translate}}</label>
                                                 <input type="text" formControlName="guardianName" pInputText
@@ -261,7 +270,36 @@
                                                 </p-message>
                                             </div>
                                         </div>
-
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="form-label">
+                                                <label for="username"> <span class="red">*</span>{{'ERP.DATE_OF_BIRTH' | translate}}
+                                                </label>
+                                                <p-calendar formControlName="guardianDob" [showIcon]="true" [dateFormat]="orgnizationSetting.calendar"
+                                                    [(ngModel)]="memberGuardianDetailsModel.guardianDobVal" placeholder="DD/MM/YYYY"
+                                                    (focusout)="guardianDatesValidationCheckAgeAndDob(memberGuardianDetailsModel, 2)" [maxDate]="today">
+                                                </p-calendar>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="form-label">
+                                                <label for="username"> <span class="red">*</span>{{'ERP.AGE' | translate}}
+                                                </label>
+                                                <input pInputText id="bunit_txt_name" maxlength="2" type="text" formControlName="guardianAge" pKeyFilter="pint"
+                                                    [(ngModel)]="memberGuardianDetailsModel.guardianAge" placeholder="Enter Age"
+                                                    (focusout)="guardianDatesValidationCheckAgeAndDob(memberGuardianDetailsModel, 1)">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="form-label">
+                                                <label><span class="red">*</span>{{'ERP.RELATIONSHIP_TYPE' |
+                                                    translate}}</label>
+                                                <p-dropdown placeholder="{{'ERP.SELECT' | translate}}"
+                                                    [options]="relationTypesList"
+                                                    formControlName="relationNameOfGuardian" id="id"
+                                                    [(ngModel)]="memberGuardianDetailsModel.relationshipTypeId" (onChange)="onChangeRelationForGaurdian()"></p-dropdown>
+                                            </div>
+                                        </div>
+                         
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
                                                 <label><span class="red">*</span>{{'ERP.AADHAR_NUMBER' |

@@ -51,6 +51,8 @@ export class ViewSaoProductDefinitionComponent {
   isShowSubmit: boolean =applicationConstants.FALSE;
   isFileUploaded: boolean = false;
   multipleFilesList: any[] = [];
+  fieldVisitList: any[] = [];
+  disbursmentScheduleList: any[]=[];
   uploadFileData: any;
   constructor(private commonComponent: CommonComponent, private formBuilder: FormBuilder,
     private activateRoute: ActivatedRoute, private encryptService: EncryptDecryptService, private datePipe: DatePipe,
@@ -134,13 +136,13 @@ export class ViewSaoProductDefinitionComponent {
                   return object;
                 });
               }
-              if (this.saoProductDefinitionModel.saoProdPurPoseConfgList != null && this.saoProductDefinitionModel.saoProdPurPoseConfgList != undefined && this.saoProductDefinitionModel.saoProdPurPoseConfgList.length > 0) {
-                this.purposeList = this.saoProductDefinitionModel.saoProdPurPoseConfgList;
-                this.purposeList = this.purposeList.filter((data: any) => data != null && data.effectiveStartDate != null).map((object: any) => {
-                  object.effectiveStartDate = this.datePipe.transform(object.effectiveStartDate, this.orgnizationSetting.datePipe);
-                  return object;
-                });
-              }
+              // if (this.saoProductDefinitionModel.saoProdPurPoseConfgList != null && this.saoProductDefinitionModel.saoProdPurPoseConfgList != undefined && this.saoProductDefinitionModel.saoProdPurPoseConfgList.length > 0) {
+              //   this.purposeList = this.saoProductDefinitionModel.saoProdPurPoseConfgList;
+              //   this.purposeList = this.purposeList.filter((data: any) => data != null && data.effectiveStartDate != null).map((object: any) => {
+              //     object.effectiveStartDate = this.datePipe.transform(object.effectiveStartDate, this.orgnizationSetting.datePipe);
+              //     return object;
+              //   });
+              // }
 
               if (this.saoProductDefinitionModel.saoRequiredDocumentsConfigDTOList != null && this.saoProductDefinitionModel.saoRequiredDocumentsConfigDTOList != undefined && this.saoProductDefinitionModel.saoRequiredDocumentsConfigDTOList.length > 0) {
                 this.requiredDocumentsList = this.saoProductDefinitionModel.saoRequiredDocumentsConfigDTOList;
@@ -148,6 +150,21 @@ export class ViewSaoProductDefinitionComponent {
                   object.effectiveStartDate = this.datePipe.transform(object.effectiveStartDate, this.orgnizationSetting.datePipe);
                   return object;
                 });
+              }
+              if (this.saoProductDefinitionModel.saoLoanFieldVisitConfigDTOList != null && this.saoProductDefinitionModel.saoLoanFieldVisitConfigDTOList != undefined && this.saoProductDefinitionModel.saoLoanFieldVisitConfigDTOList.length > 0) {
+                this.fieldVisitList = this.saoProductDefinitionModel.saoLoanFieldVisitConfigDTOList;
+                // this.fieldVisitList = this.fieldVisitList.filter((data: any) => data != null && data.effectiveStartDate != null).map((object: any) => {
+                //   object.effectiveStartDate = this.datePipe.transform(object.effectiveStartDate, this.orgnizationSetting.datePipe);
+                //   return object;
+                // });
+              }
+
+              if (this.saoProductDefinitionModel.saoLoanDisbursementScheduleDTOList != null && this.saoProductDefinitionModel.saoLoanDisbursementScheduleDTOList != undefined && this.saoProductDefinitionModel.saoLoanDisbursementScheduleDTOList.length > 0) {
+                this.disbursmentScheduleList = this.saoProductDefinitionModel.saoLoanDisbursementScheduleDTOList;
+                // this.disbursmentScheduleList = this.disbursmentScheduleList.filter((data: any) => data != null && data.effectiveStartDate != null).map((object: any) => {
+                //   object.effectiveStartDate = this.datePipe.transform(object.effectiveStartDate, this.orgnizationSetting.datePipe);
+                //   return object;
+                // });
               }
             }
           });
@@ -188,12 +205,12 @@ export class ViewSaoProductDefinitionComponent {
     }
 
 
-    if (this.saoProductDefinitionModel.saoProdPurPoseConfgList != null && this.saoProductDefinitionModel.saoProdPurPoseConfgList != undefined && this.saoProductDefinitionModel.saoProdPurPoseConfgList.length > 0) {
-      this.saoProductDefinitionModel.saoProdPurPoseConfgList = this.saoProductDefinitionModel.saoProdPurPoseConfgList.filter((data:any) => data !=null &&data.effectiveStartDate !=null).map((object:any) => {
-        object.effectiveStartDate = this.commonFunctionsService.getUTCEpoch(new Date(object.effectiveStartDate));
-        return object;
-      });
-    }
+    // if (this.saoProductDefinitionModel.saoProdPurPoseConfgList != null && this.saoProductDefinitionModel.saoProdPurPoseConfgList != undefined && this.saoProductDefinitionModel.saoProdPurPoseConfgList.length > 0) {
+    //   this.saoProductDefinitionModel.saoProdPurPoseConfgList = this.saoProductDefinitionModel.saoProdPurPoseConfgList.filter((data:any) => data !=null &&data.effectiveStartDate !=null).map((object:any) => {
+    //     object.effectiveStartDate = this.commonFunctionsService.getUTCEpoch(new Date(object.effectiveStartDate));
+    //     return object;
+    //   });
+    // }
     if (this.saoProductDefinitionModel.saoLoanLinkedSharecapitalConfigList != null && this.saoProductDefinitionModel.saoLoanLinkedSharecapitalConfigList != undefined && this.saoProductDefinitionModel.saoLoanLinkedSharecapitalConfigList.length > 0) {
       this.saoProductDefinitionModel.saoLoanLinkedSharecapitalConfigList = this.saoProductDefinitionModel.saoLoanLinkedSharecapitalConfigList.filter((data:any) => data !=null &&data.effectiveStartDate !=null).map((object:any) => {
         object.effectiveStartDate = this.commonFunctionsService.getUTCEpoch(new Date(object.effectiveStartDate));
@@ -205,6 +222,18 @@ export class ViewSaoProductDefinitionComponent {
 
     if (this.saoProductDefinitionModel.saoRequiredDocumentsConfigDTOList != null && this.saoProductDefinitionModel.saoRequiredDocumentsConfigDTOList != undefined && this.saoProductDefinitionModel.saoRequiredDocumentsConfigDTOList.length > 0) {
       this.saoProductDefinitionModel.saoRequiredDocumentsConfigDTOList = this.saoProductDefinitionModel.saoRequiredDocumentsConfigDTOList.filter((data:any) => data !=null &&data.effectiveStartDate !=null).map((object:any) => {
+        object.effectiveStartDate = this.commonFunctionsService.getUTCEpoch(new Date(object.effectiveStartDate));
+        return object;
+      });
+    }
+    if (this.saoProductDefinitionModel.saoLoanFieldVisitConfigDTOList != null && this.saoProductDefinitionModel.saoLoanFieldVisitConfigDTOList != undefined && this.saoProductDefinitionModel.saoLoanFieldVisitConfigDTOList.length > 0) {
+      this.saoProductDefinitionModel.saoLoanFieldVisitConfigDTOList = this.saoProductDefinitionModel.saoLoanFieldVisitConfigDTOList.filter((data:any) => data !=null &&data.effectiveStartDate !=null).map((object:any) => {
+        object.effectiveStartDate = this.commonFunctionsService.getUTCEpoch(new Date(object.effectiveStartDate));
+        return object;
+      });
+    }
+    if (this.saoProductDefinitionModel.saoLoanDisbursementScheduleDTOList != null && this.saoProductDefinitionModel.saoLoanDisbursementScheduleDTOList != undefined && this.saoProductDefinitionModel.saoLoanDisbursementScheduleDTOList.length > 0) {
+      this.saoProductDefinitionModel.saoLoanDisbursementScheduleDTOList = this.saoProductDefinitionModel.saoLoanDisbursementScheduleDTOList.filter((data:any) => data !=null &&data.effectiveStartDate !=null).map((object:any) => {
         object.effectiveStartDate = this.commonFunctionsService.getUTCEpoch(new Date(object.effectiveStartDate));
         return object;
       });
@@ -275,11 +304,17 @@ export class ViewSaoProductDefinitionComponent {
       case 3:
         this.router.navigate([Loantransactionconstant.SAO_PRODUCT_CHARGES_CONFIG], { queryParams: { id: this.encryptService.encrypt(rowData.saoProductId) } });
         break;
+      // case 4:
+      //   this.router.navigate([Loantransactionconstant.SAO_PROD_PURPOSE_CONFIG], { queryParams: { id: this.encryptService.encrypt(rowData.saoProductId) } });
+      //   break;
       case 4:
-        this.router.navigate([Loantransactionconstant.SAO_PROD_PURPOSE_CONFIG], { queryParams: { id: this.encryptService.encrypt(rowData.saoProductId) } });
+        this.router.navigate([Loantransactionconstant.SAO_REQUIRED_DOCUMENT_CONFIG], { queryParams: { id: this.encryptService.encrypt(rowData.saoProductId) } });
         break;
       case 5:
-        this.router.navigate([Loantransactionconstant.SAO_REQUIRED_DOCUMENT_CONFIG], { queryParams: { id: this.encryptService.encrypt(rowData.saoProductId) } });
+        this.router.navigate([Loantransactionconstant.SAO_FIELD_VISIT_CONFIG], { queryParams: { id: this.encryptService.encrypt(rowData.saoProductId) } });
+        break;
+      case 6:
+        this.router.navigate([Loantransactionconstant.SAO_DISBURSMENT_CONFIG], { queryParams: { id: this.encryptService.encrypt(rowData.saoProductId) } });
         break;
     }
   }

@@ -7,6 +7,8 @@ export const Membershiptransactionconstant = {
     GROUP_COMMUNICATION:"/menu/membership_transaction/group_stepper/group_communication",
     GROUP_KYC:"/menu/membership_transaction/group_stepper/group_kyc",
     GROUP_DOCUMENT:"/menu/membership_transaction/group_stepper/group_document_details",
+    GROUP_BANK_DETAILS:"/menu/membership_transaction/group_stepper/group_bank_details",
+
 
 
     INDIVIDUAL_BASIC_DETAILS:"/menu/membership_transaction/individual_stepper/basic-details",
@@ -17,6 +19,8 @@ export const Membershiptransactionconstant = {
     INDIVIDUAL_NOMINEE:"/menu/membership_transaction/individual_stepper/nominee",
     INDIVIDUAL_FAMILY_DETAILS:"/menu/membership_transaction/individual_stepper/family-details",
     INDIVIDUAL_ASSET:"/menu/membership_transaction/individual_stepper/asset",
+    INDIVIDUAL_BANK_DETAILS:"/menu/membership_transaction/individual_stepper/bank_details",
+
 
     INDIVIDUAL_B_CLASS_BASICDETAILS:"/menu/membership_transaction/b-class-stepper/B-class-basicDteails",
     INDIVIDUAL_B_CLASS_COMMUNICATIONS:"/menu/membership_transaction/b-class-stepper/B-class-Communications",
@@ -30,6 +34,8 @@ export const Membershiptransactionconstant = {
     INSTITUTION_COMMUNICATION: "/menu/membership_transaction/institution_stepper/institution_communication",
     INSTITUTION_KYC:"/menu/membership_transaction/institution_stepper/institution_kyc",
     INSTITUTION_DOCUMENT:"/menu/membership_transaction/institution_stepper/institution_document_details",
+    INSTITUTION_BANK_DETAILS:"/menu/membership_transaction/institution_stepper/institution_bank_details",
+
 
 
 

@@ -70,7 +70,7 @@ export class SavingsApplicationApprovalComponent {
       { field: 'accountTypeName', header: 'Account Type' },
       { field: 'admissionNumber',header:'Admission Number'},
       { field: 'accountOpenDate', header: 'Account Openinig Date' },
-      { field: 'accountStatusName', header: 'Status' },
+      { field: 'statusName', header: 'Status' },
       // { field: 'Action', header: 'ACTION' },
     ];
    }
@@ -139,7 +139,7 @@ getAllSbTransactionDetails() {
       this.responseModel = data;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
-          this.gridList = this.responseModel.data.filter((sb: any) => sb.accountStatusName != savingsbanktransactionconstant.CREATED && sb.accountStatusName != savingsbanktransactionconstant.IN_PROGRESS ).map((sb: any) =>  {
+          this.gridList = this.responseModel.data.filter((sb: any) => sb.statusName != savingsbanktransactionconstant.CREATED && sb.statusName != savingsbanktransactionconstant.IN_PROGRESS ).map((sb: any) =>  {
             if (sb != null && sb != undefined && sb.accountOpenDate != null && sb.accountOpenDate != undefined) {
               sb.accountOpenDate = this.datePipe.transform(sb.accountOpenDate, this.orgnizationSetting.datePipe);
             }
@@ -173,7 +173,7 @@ getAllSbTransactionDetails() {
             else{
               sb.balance = sb.balance +"/-";
             }
-            if(sb.accountStatusName === savingsbanktransactionconstant.SUBMISSION_FOR_APPROVAL){
+            if(sb.statusName === savingsbanktransactionconstant.SUBMISSION_FOR_APPROVAL){
               sb.actionButton = true;
               sb.submissionForApproval = true; 
               sb.rejected = false;
@@ -185,7 +185,7 @@ getAllSbTransactionDetails() {
               sb.actionButton = false;
               sb.viewButton = true;
             }
-            if(sb.accountStatusName == savingsbanktransactionconstant.APPROVED){
+            if(sb.statusName == savingsbanktransactionconstant.APPROVED){
               sb.approved = true;
               sb.rejected = false;
               sb.submissionForApproval = false; 
@@ -193,7 +193,7 @@ getAllSbTransactionDetails() {
               sb.viewButton = true;
               this.approvedCount = this.approvedCount + 1;
             }
-            else if(sb.accountStatusName == savingsbanktransactionconstant.REJECTED){
+            else if(sb.statusName == savingsbanktransactionconstant.REJECTED){
               sb.rejected = true;
               sb.approved = false;
               sb.submissionForApproval = false; 
@@ -201,7 +201,7 @@ getAllSbTransactionDetails() {
               sb.viewButton = true;
               this.rejectCount =this.rejectCount +1;
             }
-            if(sb.accountStatusName === savingsbanktransactionconstant.REQUEST_FOR_RESUBIMSSION){
+            if(sb.statusName === savingsbanktransactionconstant.REQUEST_FOR_RESUBIMSSION){
               sb.rejected = false;
               sb.approved = false;
               sb.submissionForApproval = false; 

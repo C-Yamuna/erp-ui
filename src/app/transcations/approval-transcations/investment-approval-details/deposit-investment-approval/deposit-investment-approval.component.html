@@ -221,12 +221,18 @@
                                                                 <div class="col-12 px-0">
                                                                     <div class="col-12 px-0"
                                                                         *ngFor="let img of document.multipartFileList">
-                                                                        <div class="col-12 p-0"
+                                                                        <!-- <div class="col-12 p-0"
                                                                             *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                                                             <a href="{{img.imageValue}}">
                                                                                 <img src="{{img.imageValue}}"
                                                                                     class="upload-img img-fluid"
                                                                                     pTooltip="{{img.fileName}}"
+                                                                                    tooltipPosition="bottom">
+                                                                            </a>
+                                                                        </div> -->
+                                                                        <div class="col-12 p-0" *ngIf="img.fileType=='pdf'">
+                                                                            <a href="{{img.imageValue}}">
+                                                                                <img src="assets\images\pdf.png" class="upload-img img-fluid" pTooltip="{{img.fileName}}"
                                                                                     tooltipPosition="bottom">
                                                                             </a>
                                                                         </div>

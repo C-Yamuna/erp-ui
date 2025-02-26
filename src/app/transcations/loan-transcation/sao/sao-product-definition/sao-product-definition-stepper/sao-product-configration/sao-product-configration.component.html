@@ -173,6 +173,18 @@
                         (onSelect)="dateValidation(2)"></p-calendar>
                     </div>
                 </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label for="code">
+                            <span class="red">*</span>  {{'ERP.LOAN_PURPOSES' | translate}}
+                        </label>
+
+                        <p-dropdown placeholder="{{'ERP.SELECT' | translate}}" [options]="loanpurposeList"
+                            formControlName="purposeId" placeholder="Select"
+                            [(ngModel)]="saoProductDefinitionModel.purposeId"></p-dropdown>
+                        
+                    </div>
+                </div>
             </div>
             </div>
         </form>

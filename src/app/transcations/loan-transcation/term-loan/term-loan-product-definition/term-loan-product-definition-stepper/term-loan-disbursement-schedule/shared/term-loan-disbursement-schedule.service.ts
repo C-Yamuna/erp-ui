@@ -29,4 +29,8 @@ export class TermLoanDisbursementScheduleService {
     let headers = new HttpHeaders({ 'id': id + '', })
     return this.commonHttpService.delete( headers, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.TERM_LOAN_DISBURSEMENT_SCHEDULE + ERP_TRANSACTION_CONSTANTS.DELETE);
   }
+  getTermLoanDisbursementScheduleByProductId(id: any){
+    let headers = new HttpHeaders({ 'id': id + '', })
+    return this.commonHttpService.getById( headers, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.TERM_LOAN_DISBURSEMENT_SCHEDULE + ERP_TRANSACTION_CONSTANTS.GET_TERM_LOAN_DISBURSEMENT_SCHEDULE_LIST_BY_PRODUCT_ID);
+  }
 }

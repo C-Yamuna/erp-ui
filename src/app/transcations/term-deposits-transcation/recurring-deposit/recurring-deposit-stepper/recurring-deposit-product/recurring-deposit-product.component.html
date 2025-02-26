@@ -18,7 +18,7 @@
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label for="code"><span class="red">*</span>
-                            {{'TERMDEPOSITSTRANSACTION.PRODUCT_TYPE' | translate}}
+                            {{'TERMDEPOSITSTRANSACTION.PRODUCT' | translate}}
                         </label>
                         <p-dropdown [options]="productsList" placeholder="{{'ERP.SELECT' | translate}}" formControlName="rdProductId"
                         [(ngModel)]="rdAccountModel.rdProductId" (onChange)="onChangeProduct($event)"  [disabled]="isProductDisable">
@@ -34,6 +34,15 @@
                             [(ngModel)]="rdAccountModel.accountNumber" placeholder="Enter Loan Account Number">
                     </div>
                 </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="!accountTypeDropDownHide">
+                    <div class="form-label">
+                    <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.OPERATION_TYPE' | translate}}</label>
+                        <p-dropdown [options]="accountList" placeholder="{{'ERP.SELECT' | translate}}"
+                            formControlName="accountType" [disabled]="applicationType" (onChange)="onChangeAccountType($event)"
+                            [(ngModel)]="rdAccountModel.accountType">
+                        </p-dropdown>
+                    </div>
+                </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label for="code">
@@ -45,39 +54,30 @@
                     </p-calendar>
                     </div>
                 </div>
-
-
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="!accountTypeDropDownHide">
-                    <div class="form-label">
-                    <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.ACCOUNT_TYPE' | translate}}</label>
-                        <p-dropdown [options]="accountList" placeholder="{{'ERP.SELECT' | translate}}"
-                            formControlName="accountType" [disabled]="applicationType" (onChange)="onChangeAccountType($event)"
-                            [(ngModel)]="rdAccountModel.accountType">
-                        </p-dropdown>
-                    </div>
-                </div>
-
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                    <div class="form-label">
-                        <label for="username"><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.ROI' | translate}}
-                        </label>
-                        <input pInputText id="bunit_txt_name" type="text" formControlName="roi"
-                        [(ngModel)]="rdAccountModel.roi" placeholder="Enter ROI">
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                    <div class="form-label">
-                        <label for="username">{{'TERMDEPOSITSTRANSACTION.FORECLOSURE_ROI' | translate}}
-                        </label>
-                        <input pInputText id="bunit_txt_name" type="text" formControlName="penalRoi"
-                        [(ngModel)]="rdAccountModel.penalRoi" placeholder="Enter Penal ROI">
-                    </div>
-                </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.INSTALLMENT_AMOUNT' | translate}}</label>
                             <input pInputText id="state_txt_name" type="text" formControlName="installmentAmount"
                                 [(ngModel)]=" rdAccountModel.installmentAmount" placeholder="Enter Amount"
+                                (focusout)="calculateMaturity()">
+                    </div>
+                </div>                
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label for="code">
+                            {{'TERMDEPOSITSTRANSACTION.INSTALLMENT_DATE' | translate}}
+                        </label>
+                        <p-calendar formControlName="installmentDate" [showIcon]="true"
+                        [dateFormat]="orgnizationSetting.calendar" placeholder="DD/MM/YYYY"
+                        [(ngModel)]="rdAccountModel.installmentDate">
+                    </p-calendar>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label>{{'TERMDEPOSITSTRANSACTION.TOTAL_DEPOSIT_AMOUNT' | translate}}</label>
+                            <input pInputText id="state_txt_name" type="text" formControlName="depositAmount"
+                                [(ngModel)]=" rdAccountModel.depositAmount" placeholder="Enter Amount"
                                 (focusout)="calculateMaturity()">
                     </div>
                 </div>
@@ -89,8 +89,6 @@
                         [(ngModel)]="rdAccountModel.tenureType"> </p-dropdown>
                     </div>
                 </div>
-
-
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="rdAccountModel.tenureType == 2 || 
                 rdAccountModel.tenureType == 5 || rdAccountModel.tenureType == 6 ||
                 rdAccountModel.tenureType == 7"> 
@@ -111,13 +109,36 @@
                                 (focusout)="calculateMaturity()">
                     </div>
                 </div>
-
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
-                        <label>{{'TERMDEPOSITSTRANSACTION.TOTAL_DEPOSIT_AMOUNT' | translate}}</label>
-                            <input pInputText id="state_txt_name" type="text" formControlName="depositAmount"
-                                [(ngModel)]=" rdAccountModel.depositAmount" placeholder="Enter Amount"
-                                (focusout)="calculateMaturity()">
+                        <label for="username"><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.ROI' | translate}}
+                        </label>
+                        <input pInputText id="bunit_txt_name" type="text" formControlName="roi"
+                        [(ngModel)]="rdAccountModel.roi" placeholder="Enter ROI">
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label for="username">{{'TERMDEPOSITSTRANSACTION.STAFF_ROI' | translate}}
+                        </label>
+                        <input pInputText id="bunit_txt_name" type="text" formControlName="staffRoi"
+                            [(ngModel)]="rdAccountModel.staffRoi" placeholder="Enter STAFF ROI">
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label for="username">{{'TERMDEPOSITSTRANSACTION.SENIOR_CITIZEN_ROI' | translate}}
+                        </label>
+                        <input pInputText id="bunit_txt_name" type="text" formControlName="seniorCitizenRoi"
+                            [(ngModel)]="rdAccountModel.seniorCitizenRoi" placeholder="Enter SENIOR CITIZEN ROI">
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label for="username">{{'TERMDEPOSITSTRANSACTION.FORECLOSURE_ROI' | translate}}
+                        </label>
+                        <input pInputText id="bunit_txt_name" type="text" formControlName="penalRoi"
+                        [(ngModel)]="rdAccountModel.penalRoi" placeholder="Enter Penal ROI">
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
@@ -145,22 +166,29 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
-                        <label>{{'TERMDEPOSITSTRANSACTION.IS_RENEWAL' | translate}}</label>
+                        <label>{{'TERMDEPOSITSTRANSACTION.PAYMENT_TYPE' | translate}}</label>
+                            <p-dropdown [options]="paymentTypeList" placeholder="{{'ERP.SELECT' | translate}}"
+                                formControlName="interestPayoutType"
+                                [(ngModel)]="rdAccountModel.interestPayoutType" (focusout)="calculateMaturity()">
+                            </p-dropdown>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="rdAccountModel.interestPayoutType == 2">
+                    <div class="form-label">
+                        <label>{{'TERMDEPOSITSTRANSACTION.INTEREST_TRANSFER_ACCOUNT' | translate}}</label>
+                            <input pInputText id="state_txt_name" type="text" formControlName="interestPayoutTransferAccount"
+                                [(ngModel)]=" rdAccountModel.interestPayoutTransferAccount">
+                    </div>
+                </div>
+                <!-- <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label>{{'TERMDEPOSITSTRANSACTION.IS_AUTO_RENEWAL' | translate}}</label>
                         <p-dropdown [options]="renewalList" placeholder="{{'ERP.SELECT' | translate}}"
                         formControlName="isRenewal"
                         [(ngModel)]="rdAccountModel.isRenewal">
                     </p-dropdown>
                     </div>
-                </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="rdAccountModel.isRenewal == true">
-                    <div class="form-label">
-                        <label>{{'TERMDEPOSITSTRANSACTION.RENEWAL_TYPE' | translate}}</label>
-                        <p-dropdown [options]="renewalTypeList" placeholder="{{'ERP.SELECT' | translate}}"
-                        formControlName="renewalType"
-                        [(ngModel)]="rdAccountModel.renewalType">
-                    </p-dropdown>
-                    </div>
-                </div>
+                </div> -->
               
             </div>
         </div>

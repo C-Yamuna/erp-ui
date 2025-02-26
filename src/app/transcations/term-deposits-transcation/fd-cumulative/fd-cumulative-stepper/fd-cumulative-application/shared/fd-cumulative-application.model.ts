@@ -170,10 +170,6 @@ export class FdCumulativeApplication {
 
     fdCummulativeRequiredDocumentDetailsDTOList : any;
 
-    accountStatus:any;
-
-    accountStatusName: any;
-
     interestPaymentsList: any;
 
     foreClosureDate:any;
@@ -186,9 +182,13 @@ export class FdCumulativeApplication {
 
     tenureTypeName? : any;
 
-    // interestPayoutType? : any;
+    interestPayoutType? : any;
 
     interestPayoutTransferAccount? : any;
+
+    staffRoi? : any;
+
+    seniorCitizenRoi? : any;
 }
 
 export class FdCummProductDefinitionModel {

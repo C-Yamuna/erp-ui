@@ -994,7 +994,7 @@
                                                                         </div>
                                                                         <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4 justify-content-end d-flex">
                                                                             <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClicknomineePhotoCopy()"><i class="fa fa-eye m-0" aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}" tooltipPosition="top"></i></div>
-                                                                            <div class="carddownload-icon icon-size text-right" *ngFor="let img of memberNomineeDetailsModel.multipartFileList" pTooltip="{{'ERP.DOC_DOWNLOAD' | translate}}" tooltipPosition="top">
+                                                                            <div class="carddownload-icon icon-size text-right" *ngFor="let img of nomineeDetailsModel.nomineeSighnedFormMultiPartList" pTooltip="{{'ERP.DOC_DOWNLOAD' | translate}}" tooltipPosition="top">
                                                                                 <!-- Image -->
                                                                                 <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
                                                                                     <a href="{{img.imageValue}}">
@@ -1103,7 +1103,7 @@
                                                                                             class="fa fa-eye m-0" aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}"
                                                                                             tooltipPosition="top"></i></div>
                                                                                     <div class="carddownload-icon icon-size text-right"
-                                                                                        *ngFor="let img of memberGuardianDetailsDetailsModel.multipartsFileList"
+                                                                                        *ngFor="let img of memberGuardianDetailsModelDetails.guardainSighnedMultipartFiles"
                                                                                         pTooltip="{{'ERP.DOC_DOWNLOAD' | translate}}" tooltipPosition="top">
                                                                                         <!-- Image -->
                                                                                         <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
@@ -1261,7 +1261,7 @@
                 <div class="row">
                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4" *ngIf="isShowSubmit">
                         <div class="view-dow-upload">
-                        <p-button icon="fa fa-download" iconPos="left"  (click)="pdfDownload()" pTooltip="Filename.pdf" tooltipPosition="top"></p-button>
+                        <p-button icon="fa fa-download" iconPos="left"  (click)="pdfDownload()" pTooltip="{{'ERP.DOWNLOAD_FILLED_APP' | translate}}" tooltipPosition="top"></p-button>
                         <!-- <p-button icon="fa fa-print" iconPos="left" pTooltip="Print" tooltipPosition="top"></p-button> -->
                        
                             <div class="form-label -mt-5 pt-1 ml-2">
@@ -1851,7 +1851,7 @@
 <!-- Nominee Photo Copy -->
 <p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="nomineePhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
     <div class="col-12">
-    <div *ngFor="let img of memberNomineeDetailsModel.multipartFileList">
+    <div *ngFor="let img of  nomineeDetailsModel.nomineeSighnedFormMultiPartList">
         <!-- Image -->
         <div class="mb-3 imgcustom-class" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
             <!-- <a href="{{img.imageValue}}"> -->
@@ -1871,7 +1871,7 @@
 <!-- Guardian Photo Copy -->
     <p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="guardianPhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
         <div class="col-12">
-        <div *ngFor="let img of memberGuardianDetailsDetailsModel.multipartsFileList">
+        <div *ngFor="let img of memberGuardianDetailsModelDetails.guardainSighnedMultipartFiles">
             <!-- Image -->
             <div class="mb-3 imgcustom-class" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
                 <!-- <a href="{{img.imageValue}}"> -->

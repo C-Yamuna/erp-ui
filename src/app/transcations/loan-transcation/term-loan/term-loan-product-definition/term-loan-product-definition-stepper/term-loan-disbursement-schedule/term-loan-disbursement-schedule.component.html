@@ -2,14 +2,14 @@
     <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"></p-messages>
     <div class="stepper-top-section-strip">
         <div class="row ">
-            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-xs-12 stepper-top-product-name-background">
                 <div class="form-group">
                 <span>{{'LOANS.PRODUCT_NAME' | translate}} </span>
                 <p class="m-0 font-semibold text-break">{{termLoanProductDefinitionModel.name}}</p>
             </div>
         </div>
             <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-xs-12 viewcustom-input-number inputnumberht-5px">
-                <div class="form-group">
+                <div class="form-group ml-2">
                 <span>{{'LOANS.MIN_DEPOSIT_AMOUNT' | translate}}</span>
                 <p-inputNumber id="bunit_txt_name" [(ngModel)]="termLoanProductDefinitionModel.eligibleMInAmount" mode="currency"
                     inputId="currency-india" currency="INR" locale="en-IN" [disabled]="true" styleClass="label-input-text"> </p-inputNumber>
@@ -61,40 +61,52 @@
                 <p-table #dt [value]="disbursmentScheduleList"  dataKey="id" editMode="row"
                 styleClass="p-datatable-striped" [rows]="5" [paginator]="true" [showJumpToPageDropdown]="true"
                 [showPageLinks]="false" [pageLinks]="1" [responsive]="true" rowExpandMode="single"
-                 [globalFilterFields]="['isMandatory','visitNumber','disbursementPercentage','tenureTypeName','tenure']">
+                 [globalFilterFields]="['visitNumber','disbursementPercentage','tenureTypeName','tenure']">
                 <ng-template pTemplate="header">
                         <tr>
-                            <th><span class="red">*</span> {{'LOANS.IS_MANDATORY' | translate}}</th>
                             <th><span class="red">*</span> {{'LOANS.VISIT_NUMBER' | translate}}</th>
-                            <th><span class="red">*</span> {{'LOANS.DISBURSMENT_PERCENTAGE' | translate}}</th>
+                            <th><span class="red">*</span> {{'ERP.TENURE_TYPE' | translate}}</th>
                             <th><span class="red">*</span> {{'ERP.TENURE' | translate}}</th>
+                            <th><span class="red">*</span> {{'LOANS.DISBURSMENT_PERCENTAGE' | translate}}</th>
                             <th class="width-15em">{{'LOANS.ACTION' | translate}}</th>
                         </tr>
                         
                     </ng-template>
                     <ng-template pTemplate="body" let-termLoanDisbursementScheduleModel let-editing="editing" let-ri="rowIndex">
                         <tr [pEditableRow]="termLoanDisbursementScheduleModel">
-                            <td>
-                                <p-cellEditor>
-                                  <ng-template pTemplate="input">
-                                    <p-dropdown [options]="requiredlist" formControlName="isMandatory" 
-                                                [(ngModel)]="termLoanDisbursementScheduleModel.isMandatory" [appendTo]="'body'" 
-                                                placeholder="select"></p-dropdown>
-                                  </ng-template>
-                                  <ng-template pTemplate="output">
-                                    {{ termLoanDisbursementScheduleModel.isMandatory ? 'Yes' : 'No' }}
-                                  </ng-template>
-                                </p-cellEditor>
-                            </td>  
+                           
                             <td>
                                 <p-cellEditor>
                                     <ng-template pTemplate="input">
-                                        <input pInputText type="text" [(ngModel)]="termLoanDisbursementScheduleModel.visitNumber"
-                                            formControlName="visitNumber">
+
+                                        <p-dropdown placeholder="{{'ERP.SELECT'| translate}}" formControlName="visitNumber"
+                                                [options]="visitNumberList" [(ngModel)]="termLoanDisbursementScheduleModel.visitNumber"
+                                                [appendTo]="'body'">
+                                            </p-dropdown>
                                     </ng-template>
                                     <ng-template pTemplate="output">{{termLoanDisbursementScheduleModel.visitNumber}}</ng-template>
                                 </p-cellEditor>
                             </td>
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <p-dropdown placeholder="{{'ERP.SELECT'| translate}}" formControlName="tenureTypeName"
+                                                [options]="tenureTypeList" [(ngModel)]="termLoanDisbursementScheduleModel.tenureType"
+                                                [appendTo]="'body'" >
+                                            </p-dropdown>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">{{termLoanDisbursementScheduleModel.tenureTypeName}}</ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <input pInputText type="text" [(ngModel)]="termLoanDisbursementScheduleModel.visitTenure"
+                                            formControlName="visitTenure">
+                                    </ng-template>
+                                    <ng-template pTemplate="output">{{termLoanDisbursementScheduleModel.visitTenure}}</ng-template>
+                                </p-cellEditor>
+                            </td>  
                             <td>
                                 <p-cellEditor>
                                     <ng-template pTemplate="input">
@@ -104,15 +116,7 @@
                                     <ng-template pTemplate="output">{{termLoanDisbursementScheduleModel.disbursementPercentage}}</ng-template>
                                 </p-cellEditor>
                             </td>              
-                            <td>
-                                <p-cellEditor>
-                                    <ng-template pTemplate="input">
-                                        <input pInputText type="text" [(ngModel)]="termLoanDisbursementScheduleModel.tenure"
-                                            formControlName="tenure">
-                                    </ng-template>
-                                    <ng-template pTemplate="output">{{termLoanDisbursementScheduleModel.tenure}}</ng-template>
-                                </p-cellEditor>
-                            </td>        
+                                 
                             <td>
                                 <div class="global-action-btn flex align-items-center justify-content-center">
                                 <p-button *ngIf="editing"   [disabled]="!schedulerForm.valid" (click)="saveInlineRow(termLoanDisbursementScheduleModel)" pSaveEditableRow id="prj_stakehlder_bt_cancel"  label="{{'TERMDEPOSITSTRANSACTION.SAVE'|translate }}" class="action-save">

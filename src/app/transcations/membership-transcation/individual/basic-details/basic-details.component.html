@@ -13,7 +13,7 @@
 
                         <p-dropdown id="bunit_txt_status" placeholder="Select" [filter]="true"
                             [options]="subProductList" formControlName="subProductId"
-                            [(ngModel)]="memberBasicDetailsModel.subProductId" (onChange)="onChangeProduct()" (onClick) = "formResetOnChangeProduct()">
+                            [(ngModel)]="memberBasicDetailsModel.subProductId" (onChange)="onChangeProduct()" (onChange) = "formResetOnChangeProduct()">
                         </p-dropdown>
 
                     </div>
@@ -46,8 +46,11 @@
                     <div class="form-label">
                         <label for="username"> <span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.SOCIETY_ADMISSION_NUMBER' | translate}}
                         </label>
-                        <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="societyAdmissionNo" placeholder="Enter Admission Number"
+                        <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="societyAdmissionNo" placeholder="Enter Society Admission Number"
                             [(ngModel)]="memberBasicDetailsModel.societyAdmissionNumber">
+                            <p-message severity="error" text="Enter Valid Name"
+                            *ngIf="!memberBasicDetailsForm.controls['societyAdmissionNo'].valid && memberBasicDetailsForm.controls['societyAdmissionNo'].dirty">
+                        </p-message>
                     </div>
                 </div>
                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-6">
@@ -242,7 +245,7 @@
                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                     <div class="form-label">
                         <label for="code">
-                            <span class="red">*</span>{{'ERP.IS_STAFF' | translate}}
+                            <span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.STAFF' | translate}}
                         </label>
     
                         <p-dropdown [options]="requiredlist" formControlName="isStaff"
@@ -251,7 +254,7 @@
                 </div>
             </div>
             <div class="row g-3 mt-0">
-                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12" *ngIf="show">
                     <div class="form-label">
                         <label for="username">
                             <span class="red">*</span> {{'MEMBERSHIP_TRANSACTION.RESOLUTION_DATE' | translate}}

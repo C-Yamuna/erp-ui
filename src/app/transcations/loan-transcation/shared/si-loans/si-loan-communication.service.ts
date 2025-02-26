@@ -83,4 +83,12 @@ export class SiLoanCommunicationService {
     return this.commonHttpService.getById(headers, Configuration.LOANS + Configuration.SI_LOAN_COMMUNICATION_DETAILS + Configuration.GET_COMMUNICATE_BY_ADMISSION_NUMBER);
   }
 
+  getAllBlock(){
+    return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.BLOCKS + Configuration.GET_ALL);
+  }
+
+  getAllDivision(){
+    return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.DIVISION + Configuration.GET_ALL);
+  }
+
 }

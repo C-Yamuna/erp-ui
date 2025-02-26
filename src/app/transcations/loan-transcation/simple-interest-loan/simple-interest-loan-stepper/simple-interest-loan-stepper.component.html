@@ -534,20 +534,26 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.COMMUNITYS' | translate}}</span>
+                        <span class="fw-light">{{'MEMBERSHIP_TRANSACTION.RELIGION' | translate}}</span>
                         <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.communityName }}</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
                         <span class="fw-light">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
-                        <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.admissionNumber}}</p>
+                        <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.tempAdmissionNumber}}</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
                         <span class="fw-light">{{'MEMBERSHIP_TRANSACTION.RESOLUTION_NUMBER' | translate}}</span>
                         <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.mcrNumber }}</p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <span class="fw-light">{{'MEMBERSHIP_TRANSACTION.RESOLUTION_DATE' | translate}}</span>
+                        <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.resolutionDateVal }}</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
@@ -570,12 +576,12 @@
                         <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.admissionDateVal}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
                         <span class="fw-light">{{'ERP.ADMISSION_FEE' | translate}}</span>
                         <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.admissionFee}}</p>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </p-dialog>

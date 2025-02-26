@@ -277,7 +277,10 @@ export const applicationConstants = {
     RELATION_TYPE_ALREADY_EXIST:'Relation Type Already Exit',
     DATE_OF_BIRTH_SHOULD_NOT_BE_GREATER_THAN_ADMISSION_DATE:'Date Of Birth Should Not Be Greater Than Admission Date',
     AGE_SHOULD_NOT_BE_ZERO:'Age Shound Not Be Zero',
-    POC_ALREADY_EXIST:'POC Already Exist'
+    POC_ALREADY_EXIST:'POC Already Exist',
+    VISIT_TENURE_CANNOT_EXCEED_30_DAYS:'Visit tenure cannot exceed 30 days',
+    VISIT_NUMBER_ALREADY_EXIST:'Visit Number Already Exist',
+    CROP:'Crop'
 
 };
 

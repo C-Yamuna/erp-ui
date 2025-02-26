@@ -103,6 +103,9 @@ export class FdCumulativePreviewComponent {
   isStaff: boolean = false;
   isKycEmpty: boolean = false;
   genderList: any[] = [];
+  renewalList:any[] = [];
+  interestPaymentFrequencyList: any[] = [];
+  tenureTypeList: any[]=[];
 
 
   constructor(private router: Router,
@@ -160,6 +163,9 @@ export class FdCumulativePreviewComponent {
     ]
     this.roleName = this.commonFunctionsService.getStorageValue(applicationConstants.roleName);
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
+    this.renewalList = this.commonComponent.requiredlist();
+    this.interestPaymentFrequencyList = this.commonComponent.interestPaymentFrequency();
+    this.tenureTypeList = this.commonComponent.tenureType();
     this.translate.use(this.commonFunctionsService.getStorageValue('language'));
     this.activateRoute.queryParams.subscribe(params => {
       if (params['id'] != undefined && params['editbutton'] != undefined) {
@@ -202,8 +208,11 @@ export class FdCumulativePreviewComponent {
     if (this.fdCumulativeApplicationModel.depositDate != null && this.fdCumulativeApplicationModel.depositDate != undefined) {
       this.fdCumulativeApplicationModel.depositDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdCumulativeApplicationModel.depositDate));
     }
-    this.fdCumulativeApplicationModel.accountStatus = 5;
-    this.fdCumulativeApplicationModel.accountStatusName = CommonStatusData.SUBMISSION_FOR_APPROVAL;
+    if (this.fdCumulativeApplicationModel.maturityDate != null && this.fdCumulativeApplicationModel.maturityDate != undefined) {
+      this.fdCumulativeApplicationModel.maturityDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdCumulativeApplicationModel.maturityDate));
+    }
+    this.fdCumulativeApplicationModel.status = 5;
+    this.fdCumulativeApplicationModel.statusName = CommonStatusData.SUBMISSION_FOR_APPROVAL;
     this.fdCumulativeApplicationService.updateFdCummApplication(this.fdCumulativeApplicationModel).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
@@ -249,6 +258,9 @@ export class FdCumulativePreviewComponent {
           this.fdCumulativeApplicationModel = this.responseModel.data[0];
           if (this.fdCumulativeApplicationModel.depositDate != null && this.fdCumulativeApplicationModel.depositDate != undefined) {
             this.fdCumulativeApplicationModel.depositDate = this.datePipe.transform(this.fdCumulativeApplicationModel.depositDate, this.orgnizationSetting.datePipe);
+          }
+          if (this.fdCumulativeApplicationModel.maturityDate != null && this.fdCumulativeApplicationModel.maturityDate != undefined) {
+            this.fdCumulativeApplicationModel.maturityDate = this.datePipe.transform(this.fdCumulativeApplicationModel.maturityDate, this.orgnizationSetting.datePipe);
           }
 
           if (this.fdCumulativeApplicationModel.memberTypeName != null && this.fdCumulativeApplicationModel.memberTypeName != undefined) {

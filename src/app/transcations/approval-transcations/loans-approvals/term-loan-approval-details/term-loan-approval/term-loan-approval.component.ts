@@ -324,14 +324,14 @@ export class TermLoanApprovalComponent {
   onStatusChange(event: any) {
     const selectedStatus = this.statusList.find((data: any) => data.value === event.value);
     if (selectedStatus) {
-      this.termLoanApplicationModel.accountStatusName = selectedStatus.label;
+      this.termLoanApplicationModel.statusName = selectedStatus.label;
     }
   }
   submit() {
     if (this.termLoanApplicationModel.status != null && this.termLoanApplicationModel.status != undefined) {
-      const accountStatusName = this.statusList.find((data: any) => data != null && data.value === this.termLoanApplicationModel.accountStatusName);
-      if (accountStatusName != null && accountStatusName != undefined) {
-        this.termLoanApplicationModel.accountStatusName = accountStatusName.label;
+      const statusName = this.statusList.find((data: any) => data != null && data.value === this.termLoanApplicationModel.statusName);
+      if (statusName != null && statusName != undefined) {
+        this.termLoanApplicationModel.statusName = statusName.label;
       }
     } else {
       this.commonComponent.stopSpinner();
@@ -381,8 +381,8 @@ export class TermLoanApprovalComponent {
         this.termLoanApplicationModel = this.responseModel.data[0];
 
         if (this.termLoanApplicationModel != null && this.termLoanApplicationModel != undefined) {
-          this.termLoanApplicationModel.accountStatus = null;
-          this.termLoanApplicationModel.accountStatusName = null;
+          this.termLoanApplicationModel.status = null;
+          this.termLoanApplicationModel.statusName = null;
 
           if (this.termLoanApplicationModel.termProductId != null && this.termLoanApplicationModel.termProductId != undefined)
             this.getProductDefinitionByProductId(this.termLoanApplicationModel.termProductId);
@@ -784,7 +784,7 @@ export class TermLoanApprovalComponent {
      
   }
   getAccountStatus(){
-    if(this.termLoanApplicationModel.accountStatus != null && this.termLoanApplicationModel.accountStatus != undefined){
+    if(this.termLoanApplicationModel.status != null && this.termLoanApplicationModel.status != undefined){
        this.isDisableSubmit = false;
     }
     else{

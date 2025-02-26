@@ -170,21 +170,21 @@ export class CiMembershipDetailsComponent {
                     this.tempKycList = this.ciLoanKycDetailsList;
                 }
                 //required documents
-              if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length >0) {
-                let i = 0;
-                for (let doc of this.documentNameList) {
-                  if (i == 0)
-                    this.requiredDocumentsNamesText = "Please Upload Mandatory KYC Documents ("
-                  if (doc.isMandatory) {
-                    i = i + 1;
-                    this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + "'" + doc.label + "'";
+                if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0) {
+                  let i = 0;
+                  for (let doc of this.documentNameList) {
+                    if (i == 0)
+                      this.requiredDocumentsNamesText = "Please Upload Mandatory KYC Documents ("
+                    if (doc.isMandatory) {
+                      i = i + 1;
+                      this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + "'" + doc.label + "'";
+                    }
+                  }
+                  this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + ")";
+                  if (i > 0) {
+                    this.mandatoryDoxsTextShow = true;
                   }
                 }
-                this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + ")";
-                if (i > 0) {
-                  this.mandatoryDoxsTextShow = true;
-                }
-              }
                 
                 this.memberTypeCheckForPromotersKyc(this.ciLoanApplicationModel.memberTypeName);
                 this.membershipDataFromSbModule(this.ciLoanApplicationModel);

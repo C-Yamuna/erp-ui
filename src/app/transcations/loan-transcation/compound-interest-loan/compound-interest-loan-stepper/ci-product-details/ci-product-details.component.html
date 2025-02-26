@@ -37,6 +37,22 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
+                        <label for="username"><span class="red">*</span>{{'ERP.SOCIETY_ACCOUNT_NUMBER' | translate}}
+                        </label>
+                        <input pInputText id="bunit_txt_name" type="text" formControlName="societyAccountNumber"
+                            [(ngModel)]="ciLoanApplicationModel.societyAccountNumber" placeholder="Enter Loan Account Number">
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label for="username"><span class="red">*</span>{{'ERP.APPLICATION_NUMBER' | translate}}
+                        </label>
+                        <input pInputText id="bunit_txt_name" type="text" formControlName="applicationNumber"
+                            [(ngModel)]="ciLoanApplicationModel.applicationNumber" placeholder="Enter Loan Account Number">
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
                         <label for="code"><span class="red">*</span>
                             {{'LOAN_TRANSACTION.APPLICATION_DATE' | translate}}
                         </label>
@@ -54,30 +70,6 @@
                         <p-dropdown [options]="operationTypesList" placeholder="Select"
                             formControlName="operationTypeId" [(ngModel)]="ciLoanApplicationModel.operationTypeId"
                             [disabled]="applicationType" (onChange)="onChangeAccountType($event)"></p-dropdown>
-                    </div>
-                </div>
-
-                
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                    <div class="form-label">
-                        <label for="username"><span class="red">*</span>{{'LOAN_TRANSACTION.REPAYMENT_FREQUENCY' | translate}}
-                        </label>
-                        <p-dropdown placeholder="Select" [options]="repaymentFrequencyList"
-                            formControlName="repaymentFrequency" (onChange)="onChangeRepayment($event)"
-                            [(ngModel)]="ciLoanApplicationModel.repaymentFrequency">
-                        </p-dropdown>
-                    </div>
-                </div>
-
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                    <div class="form-label">
-                        <label for="username"><span class="red">*</span>{{'LOAN_TRANSACTION.INCOME_PER_MONTH' | translate}}
-                        </label>
-                        <input pInputText id="bunit_txt_name" type="text" formControlName="monthlyIncome"
-                            [(ngModel)]="ciLoanApplicationModel.monthlyIncome" placeholder="Enter Amount">
-                        <p-message severity="error" text="Enter Valid Monthly Income"
-                                    *ngIf="!ciLoanApplicationForm.controls['monthlyIncome'].valid && ciLoanApplicationForm.controls['monthlyIncome'].dirty">
-                                </p-message>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
@@ -106,37 +98,12 @@
                         <label for="username"><span class="red">*</span>{{'LOAN_TRANSACTION.SANCTION_AMOUNT' | translate}}
                         </label>
                         <input pInputText id="bunit_txt_name" type="text" formControlName="sanctionAmount"
-                            [(ngModel)]="ciLoanApplicationModel.sanctionAmount" placeholder="Enter Amount" (keyup)="onSactionAmountChange(ciLoanApplicationModel.sanctionAmount)">
+                            [(ngModel)]="ciLoanApplicationModel.sanctionAmount" placeholder="Enter Amount" (focusout)="onSactionAmountChange(ciLoanApplicationModel.sanctionAmount)">
                             <p-message severity="error" text="Enter Valid sanction amount"
                             *ngIf="!ciLoanApplicationForm.controls['sanctionAmount'].valid && ciLoanApplicationForm.controls['sanctionAmount'].dirty">
                         </p-message>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                    <div class="form-label">
-                        <label for="username"><span class="red">*</span>{{'LOAN_TRANSACTION.ROI' | translate}}
-                        </label>
-                        <input pInputText id="bunit_txt_name" type="text" formControlName="effectiveRoi"
-                            [(ngModel)]="ciLoanApplicationModel.effectiveRoi" placeholder="Enter ROI">
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                    <div class="form-label">
-                        <label for="username">{{'LOAN_TRANSACTION.PENAL_ROI' | translate}}
-                        </label>
-                        <input pInputText id="bunit_txt_name" type="text" formControlName="penalRoi"
-                            [(ngModel)]="ciLoanApplicationModel.penalInterest" placeholder="Enter Penal ROI">
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                    <div class="form-label">
-                        <label for="username">{{'LOAN_TRANSACTION.IOD' | translate}}
-                        </label>
-                        <input pInputText id="bunit_txt_name" type="text" formControlName="iod"
-                            [(ngModel)]="ciLoanApplicationModel.iod" placeholder="Enter IOD">
-                    </div>
-                </div>
-
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label for="code"><span class="red">*</span>
@@ -148,6 +115,64 @@
                         </p-calendar>
                     </div>
                 </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label for="username"><span class="red">*</span>{{'LOAN_TRANSACTION.LOAN_PERIOD_IN_MONTHS' | translate}}
+                        </label>
+                        <input pInputText id="bunit_txt_name" type="text" formControlName="loanPeriod"
+                            [(ngModel)]="ciLoanApplicationModel.loanPeriod" placeholder="Enter Loan Period in Months" (focusout)="onChangeLoanPeriod(ciLoanApplicationModel.loanPeriod)" pKeyFilter="pint">
+                            <p-message severity="error" text="Enter Valid loan period"
+                            *ngIf="!ciLoanApplicationForm.controls['loanPeriod'].valid && ciLoanApplicationForm.controls['loanPeriod'].dirty">
+                        </p-message>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label for="username"><span class="red">*</span>{{'LOAN_TRANSACTION.REPAYMENT_FREQUENCY' | translate}}
+                        </label>
+                        <p-dropdown placeholder="Select" [options]="repaymentFrequencyList"
+                            formControlName="repaymentFrequency" (onChange)="onChangeRepayment($event)"
+                            [(ngModel)]="ciLoanApplicationModel.repaymentFrequency">
+                        </p-dropdown>
+                    </div>
+                </div>
+               
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label for="username"><span class="red">*</span>{{'LOAN_TRANSACTION.ROI' | translate}}
+                        </label>
+                        <input pInputText id="bunit_txt_name" type="text" formControlName="effectiveRoi"
+                            [(ngModel)]="ciLoanApplicationModel.effectiveRoi" placeholder="Enter ROI">
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label for="username"><span class="red">*</span>{{'LOAN_TRANSACTION.PENAL_ROI' | translate}}
+                        </label>
+                        <input pInputText id="bunit_txt_name" type="text" formControlName="penalRoi"
+                            [(ngModel)]="ciLoanApplicationModel.penalInterest" placeholder="Enter Penal ROI">
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label for="username"><span class="red">*</span>{{'LOAN_TRANSACTION.IOD' | translate}}
+                        </label>
+                        <input pInputText id="bunit_txt_name" type="text" formControlName="iod"
+                            [(ngModel)]="ciLoanApplicationModel.iod" placeholder="Enter IOD">
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label for="username"><span class="red">*</span>{{'AGENT_DETAILS_TRANSACTION.ANNUAL_INCOME' | translate}}
+                        </label>
+                        <input pInputText id="bunit_txt_name" type="text" formControlName="monthlyIncome"
+                            [(ngModel)]="ciLoanApplicationModel.monthlyIncome" placeholder="Enter Amount">
+                        <p-message severity="error" text="Enter Valid Monthly Income"
+                                    *ngIf="!ciLoanApplicationForm.controls['monthlyIncome'].valid && ciLoanApplicationForm.controls['monthlyIncome'].dirty">
+                                </p-message>
+                    </div>
+                </div>
+                
                 <!-- <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label for="username"><span class="red">*</span>{{'LOAN_TRANSACTION.NO_OF_PLANNED_DISBURSEMENTS' | translate}}
@@ -160,17 +185,7 @@
                         </p-message>
                     </div>
                 </div> -->
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                    <div class="form-label">
-                        <label for="username"><span class="red">*</span>{{'LOAN_TRANSACTION.LOAN_PERIOD_IN_MONTHS' | translate}}
-                        </label>
-                        <input pInputText id="bunit_txt_name" type="text" formControlName="loanPeriod"
-                            [(ngModel)]="ciLoanApplicationModel.loanPeriod" placeholder="Enter Loan Period in Months" (keyup)="onChangeLoanPeriod(ciLoanApplicationModel.loanPeriod)" pKeyFilter="pint">
-                            <p-message severity="error" text="Enter Valid loan period"
-                            *ngIf="!ciLoanApplicationForm.controls['loanPeriod'].valid && ciLoanApplicationForm.controls['loanPeriod'].dirty">
-                        </p-message>
-                    </div>
-                </div>
+                
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label for="code"><span class="red">*</span>

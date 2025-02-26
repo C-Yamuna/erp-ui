@@ -39,27 +39,44 @@ export class SavingsBankCommunicationModel {
 
     isSameAddress: any;
 
-    permntStateId: any;
 
-    permntDistrictId: any;
+    permanentStateId: any;
 
-    permntSubDistrictId: any;
+    permanentDistrictId: any;
 
-    permntVillageId: any;
+    permanentSubDistrictId: any;
 
-    permenentStateName : any;
-    
-    permenentDistrictName: any;
-    
-    permenentSubDistrictName: any;
-    
-    permenentVillageName: any;
+    permanentVillageId: any;
 
-    permntAddress1: any;
+    permanentAddress1: any;
 
-    permntAddress2: any;
+    permanentAddress2: any;
 
-    permntPincode: any;
+    permanentPinCode: any;
+
+    permanentStateName: any;
+
+    permanentDistrictName: any;
+
+    permanentSubDistrictName: any;
+
+    permanentVillageName: any;
+
+    divisionId: any;
+
+    blockId: any;
+
+    divisionName: any;
+
+    blockName: any;
+
+    permanentDivisionId: any;
+
+    permanentBlockId: any;
+
+    permanentDivisionName: any;
+
+    permanentBlockName: any;
 
     pacsId: any;
 
@@ -69,5 +86,5 @@ export class SavingsBankCommunicationModel {
 
     status: any;
 
-    
+
 }

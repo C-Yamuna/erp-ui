@@ -210,7 +210,10 @@ export class GroupBasicDetailsComponent implements OnInit{
     });
   }
  
- 
+   /**
+   * @implements get group deatils by groupId 
+   * @author k.yamuna
+   */
   getMembershipGroupDetailsById(id: any): void {
     this.membershipGroupDetailsService.getMembershipGroupDetailsById(id).subscribe(res => {
       this.responseModel = res;
@@ -269,7 +272,11 @@ export class GroupBasicDetailsComponent implements OnInit{
       this.updateData();
     });
   }
-
+ 
+   /**
+   * @implements get all promoter deatils by groupId and pacsid
+   * @author k.yamuna
+   */
   getAllPromotersByGroupIdAndPacsId() {
     this.commonComponent.startSpinner();
     this.groupPromotersService.getGroupPromoterDetailsByGroupId(this.groupId,this.pacsId,this.branchId).subscribe((data: any) => {
@@ -308,6 +315,10 @@ export class GroupBasicDetailsComponent implements OnInit{
     });
     
   }
+  /**
+   * @implements get all sub products
+   * @author k.yamuna
+   */
   getAllSubProducts() {
     this.commonComponent.startSpinner();
     this.membershipBasicDetailsService.getAllSubProduct().subscribe((res: any) => {
@@ -347,23 +358,13 @@ export class GroupBasicDetailsComponent implements OnInit{
   save() {
     this.updateData();
   }
-  // Centralize the logic for enabling/disabling form fields
-private toggleFormFields(isExistingMember: boolean): void {
-  const fields = [
-    'surName', 'name',  'dob', 'age', 'genderId', 
-    'martialId', 'mobileNumber', 'aadharNumber', 'emailId', 'startDate'
-  ];
-
-  fields.forEach(field => {
-    if (isExistingMember) {
-      this.promoterDetailsForm.get(field).disable();
-    } else {
-      this.promoterDetailsForm.get(field).enable();
-    }
-  });
-}
-
+ 
+/**
+   * @implements edit promoter details
+   * @author k.yamuna
+   */
 editPromoter(rowData: any) {
+  this.promterTypeDisabled = true;
   this.commonComponent.startSpinner();
   this.cancleButtonFlag = true;
   this.addButton = true;
@@ -410,6 +411,11 @@ editPromoter(rowData: any) {
   }
   this.updateData();
 }
+
+/**
+   * @implements disable promoter fields
+   * @author k.yamuna
+   */
 disableFormFields() {
   const fieldsToDisable = [
     'surName', 'name', 'dob', 'age', 'genderId', 'martialId', 
@@ -418,6 +424,10 @@ disableFormFields() {
   fieldsToDisable.forEach(field => this.promoterDetailsForm.get(field)?.disable());
 }
 
+/**
+   * @implements enable promoter fields
+   * @author k.yamuna
+   */
 enableFormFields() {
   const fieldsToEnable = [
     'surName', 'name', 'dob', 'age', 'genderId', 
@@ -426,6 +436,10 @@ enableFormFields() {
   fieldsToEnable.forEach(field => this.promoterDetailsForm.get(field)?.enable());
 }
 
+/**
+   * @implements add button for promoter popup
+   * @author k.yamuna
+   */
 onRowEditSave() {
   this.addButton = true;
   this.buttonsFlag  = false;
@@ -435,6 +449,7 @@ onRowEditSave() {
   this.cancleButtonFlag = false;
   this.submitDisableForImage= false;
   this.submitDisableForSignature= false;
+  this.promterTypeDisabled = false;
   this.promoterDetailsModel = new promoterDetailsModel();
   this.promoterDetailsForm.reset();
   this.onChangeExistedPrmoter(false);
@@ -445,6 +460,10 @@ onRowEditSave() {
   this.updateData();
 }
 
+  /**
+   * @implements getAll operation types
+   * @author k.yamuna
+   */
   getAllOperatorType() {
     this.commonComponent.startSpinner();
     this.operatorTypeService.getAllOperationTypes().subscribe((res: any) => {
@@ -475,6 +494,11 @@ onRowEditSave() {
         }, 2000);
       });
   }
+
+  /**
+   * @implements save Or Update PromoterDetails Details
+   * @author k.yamuna
+   */
   saveOrUpdatePromoterDetailsDetails(rowData: any) {
     this.promoterDisplayFlag = false;
     rowData.pacsId = this.pacsId;
@@ -574,18 +598,29 @@ onRowEditSave() {
         });
     }
   }
-  
+    /**
+   * @implements auto generate New AdmissionNumber
+   * @author k.yamuna
+   */
   generateNewAdmissionNumber(): void {
     this.admissionNumber = this.generateAdmissionNumber();
     this.memberGroupBasicDetails.admissionNumber =this.admissionNumber
   }
   
+     /**
+   * @implements auto generate New AdmissionNumber
+   * @author k.yamuna
+   */
   generateAdmissionNumber(): string {
     // Generate a random 12-digit number
     const admissionNumber = Math.floor(100000000000 + Math.random() * 900000000000);
     return admissionNumber.toString();
   }
 
+     /**
+   * @implements file upload for resolution copy
+   * @author k.yamuna
+   */
   fileUploader(event: any, fileUpload: FileUpload, filePathName: any) {
     this.isFileUploaded = applicationConstants.FALSE;
     this.multipleFilesList = [];
@@ -626,6 +661,10 @@ onRowEditSave() {
     }
   }
 
+  /**
+   * @implements file upload for promoter 
+   * @author k.yamuna
+   */
   fileUploadersForPromoter(event: any, fileUploadPhoto:FileUpload,fileUploadSign: FileUpload, filePathName: any,rowData:any) {
     this.isFileUploaded = applicationConstants.FALSE;
     this.multipleFilesList = [];
@@ -681,6 +720,12 @@ onRowEditSave() {
       reader.readAsDataURL(file);
     }
   }
+
+
+  /**
+   * @implements remove file uploader
+   * @author k.yamuna
+   */
   fileRemoveEvent(fileName: any, rowData: any) {
     if (fileName == "resolutionCopyPath") {
       this.submitDisableForResolution = false;
@@ -696,6 +741,10 @@ onRowEditSave() {
     }
     this.updateData();
   }
+   /**
+   * @implements remove file uploader for promoter
+   * @author k.yamuna
+   */
 fileRemoveEventForPromoter(fileName: any,rowData:any) {
     if (fileName == "photoCopyPath") {
       this.submitDisableForImage = false;
@@ -710,6 +759,7 @@ fileRemoveEventForPromoter(fileName: any,rowData:any) {
     rowData.uploadSignature = null;
 }
 }
+
 getSignatureUpload(rowdata:any){
   let data = rowdata.authorizedSignatory ;
     if(data == applicationConstants.TRUE){
@@ -723,6 +773,10 @@ getSignatureUpload(rowdata:any){
     }
 }
 
+  /**
+   * @implements admission date and resistration date check
+   * @author k.yamuna
+   */
 admissionDateOnSelect(){
   if(this.memberGroupBasicDetails.admissionDateVal != undefined && this.memberGroupBasicDetails.registrationDateVal != undefined){
     if(this.memberGroupBasicDetails.admissionDateVal < this.memberGroupBasicDetails.registrationDateVal){
@@ -877,7 +931,13 @@ admissionDateOnSelect(){
     });
   }
 
-// Method to validate and handle both DOB and Age fields
+
+  /**
+     * @author k.yamuna
+     * @implement Method to validate and handle both DOB and Age fields
+     * @argument admissionNumber
+     */
+
 datesValidationCheckAgeAndDob(model: any, type: number): void {
   if (type === 2) { 
     if (model.memDobVal) {
@@ -898,7 +958,11 @@ datesValidationCheckAgeAndDob(model: any, type: number): void {
   }
 }
 
-// Method to calculate age from date of birth
+
+ /**
+     * @author k.yamuna
+     * @implement  Method to calculate age from date of birth
+     */
 calculateAge(dateOfBirth: Date): number {
   if (!dateOfBirth) return 0;
   const today = new Date();
@@ -911,7 +975,10 @@ calculateAge(dateOfBirth: Date): number {
   return age;
 }
 
-// Method to calculate date of birth from age
+  /**
+       * @author k.yamuna
+       * @implement  Method to calculate date of birth from age
+       */
 calculateDobFromAge(age: number): Date {
   if (isNaN(age) || age <= 0) {
     return new Date(0);
@@ -925,6 +992,11 @@ calculateDobFromAge(age: number): Date {
 
   return dob;
 }
+
+ /**
+    * @author k.yamuna
+      * @implement  add Or Update group details
+    */
  addOrUpdate(rowData:any) {
     //saveorupdate code here
     rowData.branchId = this.branchId;
@@ -1015,7 +1087,10 @@ calculateDobFromAge(age: number): Date {
       });
   }
 }
- //is poc Name check
+  /**
+    * @author k.yamuna
+      * @implement  is poc Name check
+    */
 isPosCheck(isPoc: any) {
   if (this.promoterDetails && this.promoterDetails.length > 0) {
     let duplicate = this.promoterDetails.find(

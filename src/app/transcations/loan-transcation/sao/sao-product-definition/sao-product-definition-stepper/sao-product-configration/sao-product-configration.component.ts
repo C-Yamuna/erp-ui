@@ -36,6 +36,7 @@ export class SaoProductConfigrationComponent {
 
   selectedCollateralIds: number[] = [];
   amountAndTenureFlag: boolean = applicationConstants.TRUE;
+  loanpurposeList: any[] = [];
   constructor(private formBuilder: FormBuilder,private commonComponent: CommonComponent,private activateRoute: ActivatedRoute,
     private datePipe: DatePipe,private encryptService: EncryptDecryptService,
     private saoProductDefinitionsService : SaoProductDefinitionsService, private collateralTypesService : CollateralTypesService,
@@ -60,6 +61,7 @@ export class SaoProductConfigrationComponent {
      'interestPostingFrequency': new FormControl('', Validators.required),
      'nomineeRequired': new FormControl('', Validators.required),
      'collateraltypes': new FormControl('',),
+     'purposeId':new FormControl('', Validators.required),
     })    
   }
   /**
@@ -84,7 +86,7 @@ export class SaoProductConfigrationComponent {
       }
       this.updateData();
     });
-  
+    this.getAllLoanPurpose();
     this.productionDefinitionForm.valueChanges.subscribe((data: any) => {
       this.updateData();
       if (this.productionDefinitionForm.valid) {
@@ -92,6 +94,7 @@ export class SaoProductConfigrationComponent {
       }
     });
     this.getAllCollaterals();
+    
   }
   getPreviewDetailsByProductId(id: any) {
     this.isEdit = applicationConstants.TRUE;
@@ -178,6 +181,25 @@ export class SaoProductConfigrationComponent {
       this.commonComponent.stopSpinner();
     });
   }
+  getAllLoanPurpose() {
+    this.commonComponent.startSpinner();
+     this.saoProductDefinitionsService.getAllLoanPurpose().subscribe(response => {
+      this.responseModel = response;
+      if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+        this.commonComponent.stopSpinner();
+        this.loanpurposeList = this.responseModel.data.filter((loanPurpose: any) => loanPurpose.status == applicationConstants.ACTIVE
+      && loanPurpose.name == "Crop"  ).map((loanPurpose: any) => {
+          return { label: loanPurpose.name, value: loanPurpose.id };
+        });
+      }
+    },
+      error => {
+        this.msgs = [];
+        this.commonComponent.stopSpinner();
+        this.msgs.push({ severity: 'error', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST });
+      })
+  }
+
   initializeFormWithCollaterals(collaterals: any[]) {
     this.selectedCollateralIds =collaterals.filter((data: any) => data.status == applicationConstants.ACTIVE).map((collateral: any) => collateral.collateralType);
   

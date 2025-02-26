@@ -31,7 +31,7 @@ export class TermApplication {
 
     toatlLandSubUints: any;
 
-    accountStatus: any;
+    // accountStatus: any;
 
     foreclosureDate: any;
 
@@ -98,7 +98,7 @@ export class TermApplication {
 
     collateralTypeName: any;
 
-    accountStatusName: any;
+    // accountStatusName: any;
 
     repaymentFrequency: any;
 
@@ -232,6 +232,8 @@ export class TermApplication {
     termCollectionDTOList: any;
 
     totalCollectionAmount: any;
+
+    graceperiod: any;
 
 }
 export class TermLoanProductDefinition {
@@ -418,5 +420,7 @@ export class TermLoanDisbursementScheduleModel{
     amount: any;
 
     typeName: any;
+
+    disbursementDate: any;
 }
 

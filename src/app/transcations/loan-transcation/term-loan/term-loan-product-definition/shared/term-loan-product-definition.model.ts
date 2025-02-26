@@ -88,4 +88,8 @@ export class TermLoanProductDefinition {
     multipartFileList?:any;
 
     filesDTOList ?:any;
+
+    termLoanFieldVisitConfigDTOList?:any;
+
+    termLoanDisbursementScheduleDTOList?:any;
 }

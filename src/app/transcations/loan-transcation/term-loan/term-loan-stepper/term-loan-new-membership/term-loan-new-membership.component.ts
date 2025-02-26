@@ -1753,8 +1753,7 @@ export class TermLoanNewMembershipComponent {
           }, 3000);
         });
       } else {
-        this.termLoanApplicationModel.statusName = applicationConstants.IS_ACTIVE;
-        this.termLoanApplicationModel.accountStatusName = applicationConstants.IN_PROGRESS;
+        this.termLoanApplicationModel.statusName = applicationConstants.IN_PROGRESS;
         this.termLoanApplicationsService.addTermApplication(this.  termLoanApplicationModel).subscribe((response: any) => {
           this.responseModel = response;
           if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {

@@ -39,6 +39,7 @@ export class SaoDisbursmentConfigComponent {
   enableSaveAndNextButton: boolean = applicationConstants.FALSE;
   tenureTypeList: any[] = [];
   requiredlist: any[] = [];
+  visitNumberList: any;
 
   constructor(private formBuilder: FormBuilder, private commonComponent: CommonComponent, private activateRoute: ActivatedRoute,
     private datePipe: DatePipe, private commonFunctionService: CommonFunctionsService, private encryptService: EncryptDecryptService,
@@ -88,7 +89,7 @@ export class SaoDisbursmentConfigComponent {
       formValid: this.enableSaveAndNextButton,
       data: this.saoLoanDisbursementModel,
       savedId: this.saoProductId,
-      stepperIndex: 7,
+      stepperIndex: 6,
       isDisable: !this.schedulerForm.valid ? applicationConstants.TRUE : applicationConstants.FALSE,
     });
   }
@@ -159,6 +160,20 @@ export class SaoDisbursmentConfigComponent {
 
           if (null != this.saoProductDefinitionModel.effectiveStartDate && undefined != this.saoProductDefinitionModel.effectiveStartDate)
             this.saoProductDefinitionModel.effectiveStartDate = this.datePipe.transform(this.saoProductDefinitionModel.effectiveStartDate, this.orgnizationSetting.datePipe);
+
+          if (this.saoProductDefinitionModel.saoLoanFieldVisitConfigDTOList != null && this.saoProductDefinitionModel.saoLoanFieldVisitConfigDTOList.length > 0) {
+            this.addButton = applicationConstants.FALSE;
+           
+            this.visitNumberList = this.saoProductDefinitionModel.saoLoanFieldVisitConfigDTOList
+              .filter((data: any) => data.visitNumber != null && typeof data.visitNumber === 'number')
+              .map((count: { visitNumber: any }) => {
+                return { label: count.visitNumber, value: count.visitNumber };
+              });
+
+          } else {
+            this.addButton = applicationConstants.TRUE;
+            this.enableSaveAndNextButton = applicationConstants.FALSE;
+          }
 
           if (this.saoProductDefinitionModel.saoLoanDisbursementScheduleDTOList != null && this.saoProductDefinitionModel.saoLoanDisbursementScheduleDTOList != undefined &&
             this.saoProductDefinitionModel.saoLoanDisbursementScheduleDTOList.length > 0) {

@@ -75,4 +75,22 @@ export class SiLoanCommunication {
     buttonCheck:any;
 
     accountNumber : any;
+
+    divisionId:any;
+
+    blockId:any;
+
+    permanentDivisionId:any;
+
+    permanentBlockId:any;
+
+    divisionName:any;
+
+    blockName:any;
+
+    permanentDivisionName:any;
+
+    permanentBlockName:any;
+
+    
 }

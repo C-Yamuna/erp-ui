@@ -19,6 +19,7 @@ import { FileUpload } from 'primeng/fileupload';
 import { approvaltransactionsconstant } from 'src/app/transcations/approval-transcations/approval-transactions-constant';
 import { saveAs } from 'file-saver';
 
+
 @Component({
   selector: 'app-rd-preview',
   templateUrl: './rd-preview.component.html',
@@ -209,8 +210,8 @@ export class RdPreviewComponent {
       this.rdAccountsModel.depositDate = this.commonFunctionsService.getUTCEpoch(new Date(this.rdAccountsModel.depositDate));
     }
 
-    this.rdAccountsModel.accountStatus = 5;
-    this.rdAccountsModel.accountStatusName = CommonStatusData.SUBMISSION_FOR_APPROVAL;
+    this.rdAccountsModel.status = 5;
+    this.rdAccountsModel.statusName = CommonStatusData.SUBMISSION_FOR_APPROVAL;
     this.rdAccountsService.updateRbAccounts(this.rdAccountsModel).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {

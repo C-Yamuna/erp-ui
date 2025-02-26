@@ -129,6 +129,8 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
 
   previouseButtonDisable : boolean = false;
   memberPhotoCopyZoom: boolean = false;
+  groupPhotoCopyZoom: boolean = false;
+  institutionPhotoCopyZoom: boolean = false;
 
   isKycApproved :any;
   photoCopyFlag: boolean = false;
@@ -985,8 +987,8 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
         }, 3000);
       });
     } else {
-      this.savingBankApplicationModel.statusName = applicationConstants.IS_ACTIVE;
-      this.savingBankApplicationModel.accountStatusName = "In Progress";
+      this.savingBankApplicationModel.isActive = applicationConstants.TRUE;
+      this.savingBankApplicationModel.statusName = "In Progress";
       this.savingBankApplicationService.addSbApplication(this.savingBankApplicationModel).subscribe((response: any) => {
         this.responseModel = response;
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
@@ -1741,6 +1743,12 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
   closePhoto(){
     this.memberPhotoCopyZoom = false;
   }
+  groupclosePhotoCopy() {
+    this.groupPhotoCopyZoom = false;
+  }
+  institutionclosePhotoCopy() {
+    this.institutionPhotoCopyZoom = false;
+  }
 
    /**
    * @implement Image Zoom POp up
@@ -1748,6 +1756,12 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
    */
   onClickMemberPhotoCopy(){
     this.memberPhotoCopyZoom = true;
+  }
+  onClickGroupPhotoCopy(){
+    this.groupPhotoCopyZoom = true;
+  }
+  onClickInstitutionPhotoCopy(){
+    this.institutionPhotoCopyZoom = true;
   }
    /**
    * @implement Image Zoom POp up

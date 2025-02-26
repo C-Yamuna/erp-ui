@@ -334,5 +334,12 @@ export class RdAccountsService {
   getAllTransactionModes(){
     return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.TRANSACTION_MODES + Configuration.GET_ALL);
   }
+  getAllBlock(){
+    return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.BLOCKS + Configuration.GET_ALL);
+  }
+
+  getAllDivision(){
+    return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.DIVISION + Configuration.GET_ALL);
+  }
   
 }

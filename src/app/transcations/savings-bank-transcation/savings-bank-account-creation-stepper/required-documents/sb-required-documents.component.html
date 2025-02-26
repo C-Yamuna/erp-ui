@@ -1,28 +1,33 @@
 <div class="col-12">
     <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"></p-messages>
-    <h6 class="sub-heading">{{'DEMANDDEPOSITS.DOCUMENTS' | translate}}<span class="admission-text">(Admission
-            Number:&nbsp;{{admissionNumber}})</span></h6>
+    
             <div class="stepper-top-section-strip">
                 <div class="row">
-                    <div class="col-lg-3 col-md-3 col-sm-12 stepper-top-product-name-background">
+                    <div class="col-lg-2 col-md-2 col-sm-12 stepper-top-product-name-background">
                         <div class="form-group">
                             <span>{{'ERP.PRODUCT_NAME' | translate}}</span>
                             <p class="mb-0">{{productName}}</p>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-3 col-sm-12">
+                    <div class="col-lg-2 col-md-2 col-sm-12">
                         <div class="form-group ml-2">
-                            <span>{{'ERP.ACCOUNT_TYPE' | translate}}</span>
+                            <span>{{'ERP.ACCOUNT_NUMBER' | translate}}</span>
+                            <p class="mb-0">{{accountNumber}}</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-12">
+                        <div class="form-group ml-2">
+                            <span>{{'ERP.OPERATION_TYPE' | translate}}</span>
                             <p class="mb-0">{{accountType}}</p>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-3 col-sm-12">
+                    <div class="col-lg-2 col-md-2 col-sm-12">
                         <div class="form-group">
                             <span>{{'ERP.MIN_BALANCE' | translate}}</span>
                             <p class="mb-0">{{minBalence}}</p>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-3 col-sm-12">
+                    <div class="col-lg-2 col-md-2 col-sm-12">
                         <div class="form-group">
                             <span>{{'ERP.ACCOUNT_OPENING_DATE' | translate}}</span>
                             <p class="mb-0">{{accountOpeningDateVal}}</p>
@@ -31,6 +36,9 @@
                 </div>
             </div>      
             <div class="col-12"></div>
+            <!-- <h6 class="sub-heading">{{'DEMANDDEPOSITS.DOCUMENTS' | translate}}<span class="admission-text">(Admission
+                Number:&nbsp;{{admissionNumber}})</span></h6> -->
+                <h6 class="sub-heading">{{'DEMANDDEPOSITS.DOCUMENTS' | translate}}</h6>
         <form [formGroup]="requiredForm" id="exit_types_form">
             <p-button icon="fa fa-plus" label="{{'DEMANDDEPOSITS.ADD_ANOTHER_DOCUMENT' | translate}}"
                 (click)="addDocument($event)" [disabled]="buttonDisabled" class="kyc-btnm-0"></p-button>
@@ -111,21 +119,21 @@
                             </div>
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="form-label">
-                                        <div class="ml-2"> <span class="red">*</span> {{ 'ERP.DOCUMENT_COPY' | translate }} </div>
+                                        <div class="ml-2"> <span class="red">*</span> {{ 'ERP.DOCUMENT_COPY' | translate }} {{ 'DEMANDDEPOSITS.PDF_SIZE_FOR_BOTH' | translate }}</div>
                                         <div class="uplodad-style align-items-center">
                                         <!-- Upload Button Column -->
                                     
                                             <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]" chooseLabel=" " id="apply-leave_fileUp_attach" name="file"
-                                                accept=".png,.jpg,.jpeg,.pdf" (onRemove)="fileRemoeEvent()"  [customUpload]="true" formContralName="fileUpload" (onSelect)="imageUploader($event,fileUpload)">
+                                                accept=".pdf" (onRemove)="fileRemoeEvent()"  [customUpload]="true" formContralName="fileUpload" (onSelect)="imageUploader($event,fileUpload)">
                                             </p-fileUpload>
                                     
                                         <!-- Uploaded Files Display Column -->
                                         <div class="col-12 d-flex p-1 contant-body" *ngFor="let img of requiredDocumentsModel.multipartFileList">
-                                            <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                            <!-- <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                                 <a href="{{img.imageValue}}">
                                                     <img src="{{img.imageValue}}" width="22" height="22">
                                                 </a>
-                                            </span>
+                                            </span> -->
                                             <span *ngIf="img.fileType=='pdf'">
                                                 <a href="{{img.imageValue}}"> <img src="assets/images/pdficon-img.png" width="22" height="22"></a>
                                             </span>
@@ -174,22 +182,22 @@
                                                                                                     </div> -->
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
-                                    <div class="ml-2"> <span class="red">*</span> {{ 'ERP.DOCUMENT_COPY' | translate }} </div>
+                                    <div class="ml-2"> <span class="red">*</span> {{ 'ERP.DOCUMENT_COPY' | translate }} {{ 'DEMANDDEPOSITS.PDF_SIZE' | translate }}</div>
                                     <div class="uplodad-style align-items-center">
                                         <!-- Upload Button Column -->
                             
                                         <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]" chooseLabel=" "
-                                            id="apply-leave_fileUp_attach" name="file" accept=".png,.jpg,.jpeg,.pdf" (onRemove)="fileRemoeEvent()"
+                                            id="apply-leave_fileUp_attach" name="file" accept=".pdf" (onRemove)="fileRemoeEvent()"
                                             [customUpload]="true" formContralName="fileUpload" (onSelect)="imageUploader($event,fileUpload)">
                                         </p-fileUpload>
                             
                                         <!-- Uploaded Files Display Column -->
                                         <div class="col-12 d-flex p-1 contant-body" *ngFor="let img of requiredDocumentsModel.multipartFileList">
-                                            <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                            <!-- <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                                 <a href="{{img.imageValue}}">
                                                     <img src="{{img.imageValue}}" width="22" height="22">
                                                 </a>
-                                            </span>
+                                            </span> -->
                                             <span *ngIf="img.fileType=='pdf'">
                                                 <a href="{{img.imageValue}}"> <img src="assets/images/pdficon-img.png" width="22" height="22"></a>
                                             </span>

@@ -49,6 +49,7 @@ export class SaoProductDetailsComponent {
   pacsId: any;
   isEdit: boolean = false;
   msgs: any[] = [];
+  requestedAmount: any;
   savedId: any;
   societyId: any;
   branchId: any;
@@ -64,11 +65,13 @@ export class SaoProductDetailsComponent {
   statusList: any[] = [];
   isDisableFlag: boolean = false;
   disbursmentScheduleList: any[] = [];
+  fieldVisitList: any[] = [];
   collectionTypeList: any[] = [];
   editDeleteDisable: boolean = false;
   saveAndNextDisable: boolean = false;
   displayDialog: boolean = false;
   productInfoFalg: boolean = false;
+  isProductDisable: boolean = false;
   scheduleRecordsCount: any;
   collateralList: any[] = [];
   interestPolicyList: any[] = [];
@@ -77,6 +80,7 @@ export class SaoProductDetailsComponent {
   chargesList: any[] = [];
   purposeList: any[] = [];
   requiredDocumentsList: any[] = [];
+  disbursmentFlag :  boolean = false;
 
   saoLoanDisbursementModel: SaoLoanDisbursement = new SaoLoanDisbursement();
   // saoLoanDisbursementScheduleModel: SaoLoanDisbursementScheduleModel = new SaoLoanDisbursementScheduleModel();
@@ -92,21 +96,21 @@ export class SaoProductDetailsComponent {
       saoProductName: ['', [Validators.required]],
       accountNumber: [{ value: '', disabled: true }],
       effectiveRoi: [{ value: '', disabled: true }],
-      memberName: ['', [Validators.required, Validators.minLength(3)]],
+      societyAccountNumber: ['', [Validators.required, Validators.minLength(3)]],
       applicationDate: [{ value: '', disabled: true }],
       minLoanPeriod: [{ value: '', disabled: true }],
       maxLoanPeriod: [{ value: '', disabled: true }],
       penalInterest: [{ value: '', disabled: true }],
       iod: [{ value: '', disabled: true }],
       repaymentFrequencyName: [{ value: '', disabled: true }],
-      purposeName: ['', [Validators.required, Validators.minLength(3)]],
+      purposeName: [{ value: '', disabled: true }],
       operationTypeName: ['', [Validators.required, Validators.minLength(3)]],
       requestedAmount: ['', [Validators.required, Validators.minLength(3)]],
       sanctionAmount: [null, [Validators.required, this.sanctionAmountValidator.bind(this)]],
       loanPeriod: ['',],
       loanDueDate: ['',],
       plannedDisbursements: ['', [Validators.required]],
-      disbursedAmount: ['',],
+      annualIncome: ['', [Validators.required]],
       // cgstAmount:['', ],
       // sgstAmount: ['', ],
       // igstAmount: ['',],
@@ -115,7 +119,7 @@ export class SaoProductDetailsComponent {
 
     this.insurencedetailsform = this.formBuilder.group({
       policyName: new FormControl('', [Validators.required, Validators.pattern(applicationConstants.NEW_NAME_PATTERN)]),
-      policyNumber: new FormControl('', [Validators.pattern(applicationConstants.ALPHANUMERIC)]),
+      policyNumber: new FormControl('', [Validators.required,Validators.pattern(applicationConstants.ALPHANUMERIC)]),
       premium: ['', [Validators.required, Validators.minLength(3)]],
     })
 
@@ -131,10 +135,7 @@ export class SaoProductDetailsComponent {
   }
   ngOnInit() {
     this.orgnizationSetting = this.commonComponent.orgnizationSettings()
-    this.operationList = [
-      { label: 'single', value: 1 },
-      { label: 'joint', value: 2 },
-    ];
+    this.getAllOperationTypes();
     this.collectionTypeList = [
       { label: 'Amount', value: 1 },
       { label: 'Percentage', value: 2 },
@@ -143,7 +144,7 @@ export class SaoProductDetailsComponent {
     this.gender = this.commonComponent.genderList();
     this.maritalstatus = this.commonComponent.maritalStatusList();
     this.activateRoute.queryParams.subscribe(params => {
-      if (params['id'] != undefined || params['flag'] != undefined) {
+      if (params['id'] != undefined ) {
         this.commonComponent.startSpinner();
         let id = this.encryptDecryptService.decrypt(params['id']);
         this.savedId = id;
@@ -170,9 +171,14 @@ export class SaoProductDetailsComponent {
         this.save();
       }
     });
+    this.apllicationdetailsform.get('requestedAmount')?.valueChanges.subscribe(amount => {
+      this.requestedAmount = amount;
+      if (this.saoProductDetailsModel?.saoLoanDisbursementScheduleDTOList) {
+        this.calculateDisbursement();
+      }
+    });
     this.pacsId = 1;
     this.getAllActiveProductsList();
-    // this.getAllLoanPurposes();
   }
 
   getAllActiveProductsList() {
@@ -188,27 +194,7 @@ export class SaoProductDetailsComponent {
     });
   }
 
-  getPurposeTypesByProductId(id: any) {
-    this.saoProductPurposeService.getSaoProductPurposeByProductId(id).subscribe((data: any) => {
-      this.responseModel = data;
-      if (this.responseModel != null && this.responseModel != undefined) {
-        if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
-          if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
-            this.loanpurposeList = this.responseModel.data.map((item: { loanPurposeName: string, purposeId: any }) => ({
-              label: item.loanPurposeName,
-              value: item.purposeId
-            }));
-            // filter((data: any) => data != null && data.isRequired != null).
-          }
-        }
-        else {
-          this.msgs = [];
-          this.commonComponent.stopSpinner();
-          this.msgs.push({ severity: 'error', detail: this.responseModel.statusMsg });
-        }
-      }
-    });
-  }
+ 
    onSelectLoanDueDate() {
       let flag = false;
       this.msgs = [];
@@ -241,6 +227,13 @@ export class SaoProductDetailsComponent {
         }
       }
     }
+
+    onSelectRequestedAmount(){
+      
+    }
+
+
+
   /**
       * @implements SanctionAmount in between min and max amount for product definition
       * @author m.akhila
@@ -306,27 +299,28 @@ export class SaoProductDetailsComponent {
                   this.saoLoanApplicatonModel.loanDueDateVal = this.datePipe.transform(this.saoLoanApplicatonModel.loanDueDate, this.orgnizationSetting.datePipe);
                 }
                 if (this.saoLoanApplicatonModel.saoProductId != null && this.saoLoanApplicatonModel.saoProductId != undefined) {
+                  this.isProductDisable = applicationConstants.TRUE;
                   this.productInfoFalg = true;
-                  this.getPurposeTypesByProductId(this.saoLoanApplicatonModel.saoProductId)
+                  // this.getPurposeTypesByProductId(this.saoLoanApplicatonModel.saoProductId)
                   this.getProductDetailsById(this.saoLoanApplicatonModel.saoProductId);
                 }
-                if (this.saoLoanApplicatonModel.saoDisbursementDTOList != null) {
-                  this.disbursmentScheduleList = this.saoLoanApplicatonModel.saoDisbursementDTOList;
-                }
+                // if (this.saoLoanApplicatonModel.saoDisbursementDTOList != null) {
+                //   this.disbursmentScheduleList = this.saoLoanApplicatonModel.saoDisbursementDTOList;
+                // }
                 if (this.saoLoanApplicatonModel.plannedDisbursements != null && this.saoLoanApplicatonModel.plannedDisbursements != undefined) {
                   this.scheduleRecordsCount = this.saoLoanApplicatonModel.plannedDisbursements;
                 } else {
-                  this.saoLoanApplicatonModel.plannedDisbursements = this.disbursmentScheduleList.length;
+                  // this.saoLoanApplicatonModel.plannedDisbursements = this.disbursmentScheduleList.length;
                   this.scheduleRecordsCount = this.saoLoanApplicatonModel.plannedDisbursements;
                 }
-                if (this.saoLoanApplicatonModel.plannedDisbursements == null || this.saoLoanApplicatonModel.plannedDisbursements == 0) {
-                  this.apllicationdetailsform.get('plannedDisbursements')?.enable();
-                  this.addButton = false;
-                } else {
-                  this.apllicationdetailsform.get('plannedDisbursements')?.disable();
-                  if (this.saoLoanApplicatonModel.plannedDisbursements == this.disbursmentScheduleList.length)
-                    this.addButton = true;
-                }
+                // if (this.saoLoanApplicatonModel.plannedDisbursements == null || this.saoLoanApplicatonModel.plannedDisbursements == 0) {
+                //   this.apllicationdetailsform.get('plannedDisbursements')?.enable();
+                //   this.addButton = false;
+                // } else {
+                //   this.apllicationdetailsform.get('plannedDisbursements')?.disable();
+                //   if (this.saoLoanApplicatonModel.plannedDisbursements == this.disbursmentScheduleList.length)
+                //     this.addButton = true;
+                // }
               }
             }
           }
@@ -354,7 +348,7 @@ export class SaoProductDetailsComponent {
   }
 
   updateData() {
-    this.saveAndNextDisable = !(this.apllicationdetailsform.valid && this.insurencedetailsform.valid);
+    this.saveAndNextDisable = !(this.apllicationdetailsform.valid || this.insurencedetailsform.valid);
 
     this.saoLoanApplicatonModel.saoLoanInsuranceDetailsDTO = this.saoLoanInsuranceDetailsModel;
 
@@ -390,6 +384,59 @@ export class SaoProductDetailsComponent {
     }
 
   }
+  /**
+     * @implements get account Types 
+     * @author jyothi.naidana
+     */
+    getAllOperationTypes() {
+      this.saoLoanApplicationService.getAllAccountTypes().subscribe((res: any) => {
+        this.responseModel = res;
+        if (this.responseModel != null && this.responseModel != undefined) {
+          if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+            if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+              this.operationList = this.responseModel.data;
+              this.operationList = this.operationList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
+                return { label: relationType.name, value: relationType.id };
+              });
+            }
+          }
+          if (this.saoLoanApplicatonModel.operationTypeId != undefined) {
+            const filteredItem = this.operationList.find((item: { value: any; }) => item.value === this.saoLoanApplicatonModel.operationTypeId);
+            this.saoLoanApplicatonModel.operationTypeName = filteredItem.label;
+          }
+        }
+      }, error => {
+        this.msgs = [];
+       
+        this.msgs.push({ severity: 'error', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST });
+      })
+    }
+    calculateDisbursement() {
+      if (!this.saoLoanApplicatonModel.requestedAmount || !this.saoProductDetailsModel.saoLoanDisbursementScheduleDTOList) {
+        this.disbursmentScheduleList = []; // Reset list if data is incomplete
+        return;
+      }
+    
+      const requestedAmount = this.saoLoanApplicatonModel.requestedAmount;
+      const currentDate = new Date();
+    
+      this.disbursmentScheduleList = this.saoProductDetailsModel.saoLoanDisbursementScheduleDTOList.map((schedule: { visitNumber: any; tenureTypeName: any;disbursementPercentage: number; visitTenure: number; }) => {
+        const percentage = (schedule.disbursementPercentage / 100) * this.requestedAmount;
+      
+        const visitTenure = schedule.visitTenure ?? 0;
+    
+        const disbursementDate = new Date(currentDate);
+        disbursementDate.setDate(disbursementDate.getDate() + visitTenure);
+        const formattedDate = `${String(disbursementDate.getDate()).padStart(2, '0')}/${String(disbursementDate.getMonth() + 1).padStart(2, '0')}/${disbursementDate.getFullYear()}`;
+    
+        return {
+          disbursementOrder: schedule.visitNumber,
+          typeName: schedule.tenureTypeName,
+          disbursementAmount: percentage,
+          disbursementDateVal: formattedDate
+        };
+      });
+    }
   getProductDetailsById(id: any) {
     this.saoProductDefinitionsService.getPreviewDetailsByProductId(id).subscribe((data: any) => {
       this.responseModel = data;
@@ -407,8 +454,8 @@ export class SaoProductDetailsComponent {
             }));
         }
 
-        if (this.saoProductDetailsModel.minLoanPeriod != undefined && this.saoProductDetailsModel.minLoanPeriod != null)
-          this.saoLoanApplicatonModel.minLoanPeriod = this.saoProductDetailsModel.minLoanPeriod;
+        if (this.saoProductDetailsModel.purposeName != undefined && this.saoProductDetailsModel.purposeName != null)
+          this.saoLoanApplicatonModel.purposeName = this.saoProductDetailsModel.purposeName;
 
         if (this.saoProductDetailsModel.maxLoanPeriod != undefined && this.saoProductDetailsModel.maxLoanPeriod != null)
           this.saoLoanApplicatonModel.maxLoanPeriod = this.saoProductDetailsModel.maxLoanPeriod;
@@ -461,13 +508,13 @@ export class SaoProductDetailsComponent {
             return object;
           });
         }
-        if (this.saoProductDetailsModel.saoProdPurPoseConfgList != null && this.saoProductDetailsModel.saoProdPurPoseConfgList != undefined && this.saoProductDetailsModel.saoProdPurPoseConfgList.length > 0) {
-          this.purposeList = this.saoProductDetailsModel.saoProdPurPoseConfgList;
-          this.purposeList = this.purposeList.filter((data: any) => data != null && data.effectiveStartDate != null).map((object: any) => {
-            object.effectiveStartDate = this.datePipe.transform(object.effectiveStartDate, this.orgnizationSetting.datePipe);
-            return object;
-          });
-        }
+        // if (this.saoProductDetailsModel.saoProdPurPoseConfgList != null && this.saoProductDetailsModel.saoProdPurPoseConfgList != undefined && this.saoProductDetailsModel.saoProdPurPoseConfgList.length > 0) {
+        //   this.purposeList = this.saoProductDetailsModel.saoProdPurPoseConfgList;
+        //   this.purposeList = this.purposeList.filter((data: any) => data != null && data.effectiveStartDate != null).map((object: any) => {
+        //     object.effectiveStartDate = this.datePipe.transform(object.effectiveStartDate, this.orgnizationSetting.datePipe);
+        //     return object;
+        //   });
+        // }
 
         if (this.saoProductDetailsModel.saoRequiredDocumentsConfigDTOList != null && this.saoProductDetailsModel.saoRequiredDocumentsConfigDTOList != undefined && this.saoProductDetailsModel.saoRequiredDocumentsConfigDTOList.length > 0) {
           this.requiredDocumentsList = this.saoProductDetailsModel.saoRequiredDocumentsConfigDTOList;
@@ -475,6 +522,16 @@ export class SaoProductDetailsComponent {
             object.effectiveStartDate = this.datePipe.transform(object.effectiveStartDate, this.orgnizationSetting.datePipe);
             return object;
           });
+        }
+        if (this.saoProductDetailsModel.saoLoanFieldVisitConfigDTOList != null && this.saoProductDetailsModel.saoLoanFieldVisitConfigDTOList != undefined && this.saoProductDetailsModel.saoLoanFieldVisitConfigDTOList.length > 0) {
+          this.fieldVisitList = this.saoProductDetailsModel.saoLoanFieldVisitConfigDTOList;
+        }
+
+        if (this.saoProductDetailsModel.saoLoanDisbursementScheduleDTOList != null && this.saoProductDetailsModel.saoLoanDisbursementScheduleDTOList != undefined && this.saoProductDetailsModel.saoLoanDisbursementScheduleDTOList.length > 0) {
+            this.disbursmentScheduleList = this.saoProductDetailsModel.saoLoanDisbursementScheduleDTOList;
+            this.disbursmentFlag = false;
+        }else{
+          this.disbursmentFlag = true;
         }
       }
     });

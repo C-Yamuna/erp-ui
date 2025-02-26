@@ -113,6 +113,7 @@ export class SiKycComponent {
   promotersList: any [] =[];
   isPanNumber: boolean = false;
   buttonDisabledForKyc :boolean = false;
+  isNotmemberkycForm:any;
 
   constructor(private formBuilder: FormBuilder,
     private commonComponent: CommonComponent, private activateRoute: ActivatedRoute,
@@ -128,7 +129,20 @@ export class SiKycComponent {
       'nameAsPerDocument': new FormControl('', Validators.required),
       'fileUpload': new FormControl(''),
       'promoter': new FormControl('')
+
+      
     });
+    this.kycForm = this.formBuilder.group({
+      'documentNumber': new FormControl('', [Validators.required, Validators.pattern(applicationConstants.ALLOW_NUMBERS_ONLY)]),
+      'kycDocumentTypeName': new FormControl({ value: '', disabled: true }, Validators.required),
+      'nameAsPerDocument': new FormControl('', Validators.required),
+      'fileUpload': new FormControl(''),
+      'promoter': new FormControl({ value: '', disabled: true }),
+
+      
+    });
+
+    
   }
 
   ngOnInit(): void {
@@ -263,6 +277,7 @@ export class SiKycComponent {
       });
       // }
     });
+    this.updateFieldState();
     this.buttonDisabled = false;
     this.kycForm.valueChanges.subscribe((data: any) => {
       this.updateData();
@@ -274,34 +289,39 @@ export class SiKycComponent {
     this.updateData();
   }
 
-  //get all kyc types 
+   /**
+     * @implements get all kyc types from masters
+     * @author k.yamuna
+     */
   getAllKycTypes() {
     this.siLoanKycService.getAllKYCTypes().subscribe((res: any) => {
       this.responseModel = res;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         this.documentNameList = this.responseModel.data.filter((kyc: any) => kyc.status == applicationConstants.ACTIVE).map((count: any) => {
-          return { label: count.name, value: count.id , isMandatory:count.isMandatory }
-        });
-        let filteredObj = this.documentNameList.find((data: any) => null != data && this.siLoanKycModel.kycDocumentTypeId != null && data.value == this.siLoanKycModel.kycDocumentTypeId);
-            if (filteredObj != null && undefined != filteredObj){
-              this.siLoanKycModel.kycDocumentTypeName = filteredObj.label;
-            }
-        let i = 0;
-        for (let doc of this.documentNameList) {
-          if (i == 0)
-            this.requiredDocumentsNamesText = "Please Upload Mandatory KYC Documents ("
-          if (doc.isMandatory) {
-            i = i + 1;
-            this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + "'" + doc.label + "'";
-          }
+            return { label: count.name, value: count.id, isMandatory: count.isMandatory };
+          });
+        let filteredObj = this.documentNameList.find((data: any) =>
+          data && this.siLoanKycModel.kycDocumentTypeId != null && data.value == this.siLoanKycModel.kycDocumentTypeId
+        );
+        if (filteredObj) {
+          this.siLoanKycModel.kycDocumentTypeName = filteredObj.label;
         }
-        this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + ")";
-        if (i > 0) {
+        let mandatoryDocs = this.documentNameList.filter(doc => doc.isMandatory).map(doc => doc.label); // No quotes here
+        if (mandatoryDocs.length > 0) {
+          this.requiredDocumentsNamesText = `Please upload the mandatory KYC documents: "${mandatoryDocs.join(", ")}"`;
           this.mandatoryDoxsTextShow = true;
+        } else {
+          this.requiredDocumentsNamesText = "";
+          this.mandatoryDoxsTextShow = false;
         }
       }
     });
   }
+
+   /**
+     * @implements get all SI Loan application details for kyc list based on applicationId
+     * @author k.yamuna
+     */
 
   getSILoanApplicationWithKycDetailsByLoanAccId(loanAccId: any) {
     this.siLoanKycService.getSILoanApplicationWithKycDetailsByLoanAccId(loanAccId).subscribe((response: any) => {
@@ -418,7 +438,10 @@ export class SiKycComponent {
     });
   }
 
-
+  /**
+     * @implements update data
+     * @author k.yamuna
+     */
   updateData() {
     if(this.isMemberCreation){
       this.siLoanKycModel.siLoanApplicationId = this.loanAccId;
@@ -500,10 +523,11 @@ export class SiKycComponent {
         stepperIndex: 1,
       });
     }
-   
-  
 
-   //image upload and document path save
+  /**
+     * @implements /image upload and document path save
+     * @author k.yamuna
+     */
    imageUploader(event: any, fileUpload: FileUpload) {
     this.isFileUploaded = applicationConstants.FALSE;
     this.siLoanKycModel.multipartFileList = [];
@@ -535,7 +559,10 @@ export class SiKycComponent {
       reader.readAsDataURL(file);
     }
   }
-
+  /**
+     * @implements delete kyc details 
+     * @author k.yamuna
+     */
   deletDilogBox(rowData: any) {
     this.displayDialog = true;
     if (rowData.id != null && rowData.id != undefined) {
@@ -543,16 +570,28 @@ export class SiKycComponent {
     }
   }
 
+   /**
+     * @implements cancle kyc details 
+     * @author k.yamuna
+     */
   cancelForDialogBox() {
     this.displayDialog = false;
   }
 
+  /**
+     * @implements submit method for delete kyc details 
+     * @author k.yamuna
+     */
   submitDelete() {
     if (this.deleteId != null && this.deleteId != undefined) {
       this.delete(this.deleteId);
     }
     this.displayDialog = false;
   }
+   /**
+     * @implements getAll kyc details by si loan applicationId 
+     * @author k.yamuna
+     */
   getAllKycsDetailsSiKycDetails(id: any) {
     this.siLoanKycService.getSILoanKYCDetailsByLoanAccId(id).subscribe((response: any) => {
       this.responseModel = response;
@@ -618,7 +657,11 @@ export class SiKycComponent {
     });
   }
 
-  //add save
+  
+   /**
+     * @implements this.method for save kyc details
+     * @author k.yamuna
+     */
   saveKyc(row: any) {
     this.siLoanKycModel.status = applicationConstants.ACTIVE;
     this.siLoanKycModel.siLoanApplicationId = this.loanAccId;
@@ -660,6 +703,11 @@ export class SiKycComponent {
     this.addDocumentOfKycFalg = false;
     this.editButtonDisable = false;
   }
+
+    /**
+     * @implements this method for get member data from membership module
+     * @author k.yamuna
+     */
   membershipDataFromSbModule(){
     // this.promotersList =[];
     if (this.memberTypeName == "Individual") {
@@ -701,7 +749,11 @@ export class SiKycComponent {
     }
     
   }
-  //add kyc 
+  
+    /**
+     * @implements this method for add kyc details
+     * @author k.yamuna
+     */
   addKyc() {
     this.isFileUploaded = applicationConstants.FALSE;
     this.getAllKycTypes();
@@ -759,6 +811,10 @@ export class SiKycComponent {
     this.updateData();
   }
 
+   /**
+     * @implements this method for get kyc details By id
+     * @author k.yamuna
+     */
   getKycById(id: any) {
     this.siLoanKycService.getSILoanKYCDetails(id).subscribe((data: any) => {
       this.responseModel = data;
@@ -796,7 +852,10 @@ export class SiKycComponent {
     this.updateData();
   }
   
-
+/**
+     * @implements this method for edit kyc details 
+     * @author k.yamuna
+     */
   editsave(row: any) {
     this.siLoanKycModel.siLoanApplicationId = this.loanAccId;
     this.siLoanKycModel.admissionNumber = this.admissionNumber;
@@ -838,7 +897,10 @@ export class SiKycComponent {
       }, 3000);
     });
   }
-
+/**
+     * @implements this method for documents name setting
+     * @author k.yamuna
+     */
   onChangeDocument() {
     let filteredObj = this.documentNameList.find((data: any) => null != data && this.siLoanKycModel != null && data.value == this.siLoanKycModel.kycDocumentTypeId);
     if (filteredObj != null && undefined != filteredObj)
@@ -847,6 +909,10 @@ export class SiKycComponent {
         this.documentNumberDynamicValidation(this.siLoanKycModel.kycDocumentTypeName);
       }
   }
+  /**
+     * @implements this method for kyc duplicate showing while onchange the documentType
+     * @author k.yamuna
+     */
   kycModelDuplicateCheck(kycModelList: any) {
     let duplicate = false;
     const uniqueIds = new Set<number>();
@@ -892,6 +958,10 @@ export class SiKycComponent {
 //          }, 2000);
 //      }
 
+  /**
+     * @implements this method for kyc duplicate showing while onchange the documentType
+     * @author k.yamuna
+     */
   kycDplicate(kycModel: any) {
     if (kycModel != null && kycModel != undefined) {
       if (this.kycModelList != null && this.kycModelList != undefined && this.kycModelList.length > 0) {
@@ -917,7 +987,10 @@ export class SiKycComponent {
 
   }
    
-
+  /**
+     * @implements this method for kyc fime remove while uploading file
+     * @author k.yamuna
+     */
   fileRemoveEvent() {
     if (this.siLoanKycModel.filesDTOList != null && this.siLoanKycModel.filesDTOList != undefined && this.siLoanKycModel.filesDTOList.length > 0) {
       // this.saveButtonDisabled = false;
@@ -928,6 +1001,10 @@ export class SiKycComponent {
     }
   }
 
+   /**
+     * @implements this method for checking member type
+     * @author k.yamuna
+     */
   memberTypeCheck() {
     this.kycModelList = [];
     if (this.memberTypeName == MemberShipTypesData.INDIVIDUAL) {
@@ -939,6 +1016,10 @@ export class SiKycComponent {
     }
   }
 
+    /**
+     * @implements this method for getting member basic details by admission number
+     * @author k.yamuna
+     */
   getMembershipBasicDetailsByAdmissionNumber(admissionNumber: any) {
     this.membershipServiceService.getMembershipBasicDetailsByAdmissionNumber(admissionNumber).subscribe((data: any) => {
       this.responseModel = data;
@@ -968,6 +1049,10 @@ export class SiKycComponent {
     
   }
 
+    /**
+     * @implements this method for getting group basic details by admission number
+     * @author k.yamuna
+     */
   getGroupDetailsByAdmissionNumber(admissionNUmber: any) {
     this.membershipServiceService.getMemberGroupByAdmissionNumber(admissionNUmber).subscribe((data: any) => {
       this.responseModel = data;
@@ -996,6 +1081,10 @@ export class SiKycComponent {
     });
   }
 
+    /**
+     * @implements this method for getting instituion basic details by admission number
+     * @author k.yamuna
+     */
   getInstitutionDetailsByAdmissionNumber(admissionNUmber: any) {
     this.membershipServiceService.getMemberIstitutionByAdmissionNumber(admissionNUmber).subscribe((data: any) => {
       this.responseModel = data;
@@ -1073,5 +1162,22 @@ export class SiKycComponent {
       this.isPanNumber = false;
     }
   }
+
+  /**
+ * Function to enable or disable form controls based on isMemberCreation
+ */
+updateFieldState(): void {
+  if (this.isMemberCreation) {
+      this.kycForm.get('kycDocumentTypeName')?.enable();
+      this.kycForm.get('promoter')?.enable();
+  } else {
+      this.kycForm.get('kycDocumentTypeName')?.disable();
+      this.kycForm.get('promoter')?.disable();
+  }
+
+  // Ensure validation updates
+  this.kycForm.get('kycDocumentTypeName')?.updateValueAndValidity();
+  this.kycForm.get('promoter')?.updateValueAndValidity();
+}
 
 }

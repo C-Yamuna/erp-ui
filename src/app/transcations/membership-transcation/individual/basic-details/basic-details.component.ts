@@ -135,7 +135,10 @@ export class BasicDetailsComponent {
             if (this.responseModel.status == applicationConstants.STATUS_SUCCESS && this.responseModel.data && this.responseModel.data.length > 0) {
               // this.show = true
               this.memberBasicDetailsModel = this.responseModel.data[0];
-               this.onChangeProduct()
+              if(this.memberBasicDetailsModel.subProductId != null &&  this.memberBasicDetailsModel.subProductId != undefined){
+                this.onChangeProduct()
+              }
+               
               this.tempAge = this.memberBasicDetailsModel.age;
 
               this.memberBasicDetailsModel.memDobVal = this.datePipe.transform(this.memberBasicDetailsModel.dob, this.orgnizationSetting.datePipe);
@@ -625,7 +628,7 @@ fileRemoveEvent(fileName: any) {
    */
 
 onChangeProduct(){
-  if(this.memberBasicDetailsModel.subProductId == 1){
+  if(this.memberBasicDetailsModel.subProductId == applicationConstants.ACTIVE){
     this.show = true
   }
   else{
@@ -699,6 +702,7 @@ onChangeProduct(){
         model.memDobVal = calculatedDob; 
       } else if(model.age != null && model.age <= 0){
         this.memberBasicDetailsForm.get('age').reset();
+        this.memberBasicDetailsForm.get('dob').reset();
         this.msgs = [{ severity: 'error', detail: "Age should not be zero or negative" }];
         setTimeout(() =>{
           this.msgs =[];

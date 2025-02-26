@@ -45,6 +45,8 @@ export class FdCumulativeCommunicationComponent {
   memberTypeName: any;
   memberTypeId: any;
   accountNumber: any;
+  divisionList: any[]=[];
+  blocksList: any[] =[];
 
 
   constructor(private router: Router,
@@ -71,7 +73,11 @@ export class FdCumulativeCommunicationComponent {
         'permanentVillageId': new FormControl('',Validators.required),
         'permanentAddress1': new FormControl('',[Validators.required]),
         'permanentAddress2': new FormControl(''),
-        'permanentPinCode': new FormControl('',[Validators.pattern(applicationConstants.PINCODE_PATTERN),Validators.required])
+        'permanentPinCode': new FormControl('',[Validators.pattern(applicationConstants.PINCODE_PATTERN),Validators.required]),
+        'division': new FormControl({ value: '', disabled: true }),
+        'block': new FormControl({ value: '', disabled: true }),
+        'permanentDivision': new FormControl({ value: '', disabled: true }),
+        'permanentBlock': new FormControl({ value: '', disabled: true }),
       });
     }
   
@@ -95,6 +101,8 @@ export class FdCumulativeCommunicationComponent {
       });
       this.getAllStatesList();
       this.getAllPermanentStatesList();
+      this.getAllBocksList();
+      this.getAllDivisionList();
     }
   
     updateData() {
@@ -160,14 +168,12 @@ export class FdCumulativeCommunicationComponent {
     setAllFields(){
       if (this. fdCumulativeCommunicationModel.isSameAddress != null && this. fdCumulativeCommunicationModel.isSameAddress != undefined) {
         if (this. fdCumulativeCommunicationModel.isSameAddress == true) {
-          this.communicationForm.get('permanentStateId').disable();
-          this.communicationForm.get('permanentDistrictId').disable();
-          this.communicationForm.get('permanentSubDistrictId').disable();
-          this.communicationForm.get('permanentVillageId').disable();
-          this.communicationForm.get('permanentAddress1').disable();
-          this.communicationForm.get('permanentPinCode').disable();
-  
-       
+          this.communicationForm.get('stateName').disable();
+          this.communicationForm.get('districtId').disable();
+          this.communicationForm.get('subDistrictId').disable();
+          this.communicationForm.get('villageId').disable();
+          this.communicationForm.get('address1').disable();
+          this.communicationForm.get('pinCode').disable();
           this.RegAddressToComAddress();
         }
       }
@@ -296,8 +302,8 @@ export class FdCumulativeCommunicationComponent {
         this.communicationForm.get('villageId').reset();
         this.communicationForm.get('address1').reset();
         this.communicationForm.get('pinCode').reset();
-        this.communicationForm.get('permanentAddress1')?.reset();
-        this.communicationForm.get('permanentPinCode')?.reset();
+        this.communicationForm.get('division').reset();
+        this.communicationForm.get('block').reset();
         this.districtsList = [];
         this.mandalsList = [];
         this.villageList = [];
@@ -329,8 +335,8 @@ export class FdCumulativeCommunicationComponent {
         this.communicationForm.get('villageId').reset();
         this.communicationForm.get('address1').reset();
         this.communicationForm.get('pinCode').reset();
-        this.communicationForm.get('permanentAddress1')?.reset();
-        this.communicationForm.get('permanentPinCode')?.reset();
+        this.communicationForm.get('division').reset();
+        this.communicationForm.get('block').reset();
         this.mandalsList = [];
         this.villageList = [];
       }
@@ -360,8 +366,8 @@ export class FdCumulativeCommunicationComponent {
         this.communicationForm.get('villageId').reset();
         this.communicationForm.get('address1').reset();
         this.communicationForm.get('pinCode').reset();
-        this.communicationForm.get('permanentAddress1')?.reset();
-        this.communicationForm.get('permanentPinCode')?.reset();
+        this.communicationForm.get('division').reset();
+        this.communicationForm.get('block').reset();
         this.villageList = [];
       }
       this.fdCumulativeCommunicationService.getvillagesByMandalId(id).subscribe((response: any) => {
@@ -371,7 +377,7 @@ export class FdCumulativeCommunicationComponent {
             if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
               this.villageList = this.responseModel.data;
               this.villageList = this.villageList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
-                return { label: relationType.name, value: relationType.id };
+                return { label: relationType.name, value: relationType.id ,data:relationType};
               });
               const mandal = this.mandalsList.find((item: { value: any; }) => item.value === id);
               this. fdCumulativeCommunicationModel.subDistrictName = mandal.label;
@@ -389,10 +395,93 @@ export class FdCumulativeCommunicationComponent {
       });
     }
   
-    getVillage(id:any){
+
+    getVillage(id: any) {
+      this.fdCumulativeCommunicationModel.divisionId = null;;
+      this.fdCumulativeCommunicationModel.divisionName = null;
+      this.fdCumulativeCommunicationModel.blockId = null;;
+      this.fdCumulativeCommunicationModel.blockName = null;
       const village = this.villageList.find((item: { value: any; }) => item.value === id);
-      this. fdCumulativeCommunicationModel.villageName = village.label;
-      this.sameAsRegisterAddress();
+      this.fdCumulativeCommunicationModel.villageName = village.label;
+      this.getBlock(village.data.blockId);
+      this.getDivision(village.data.divisionId);
+      // this.sameAsRegisterAddress();
+    }
+
+    getDivision(id:any){
+      let division=  this.divisionList.find((data:any) => null != data && id != null && data.value === id);
+      if(division != null && undefined != division)
+       this.fdCumulativeCommunicationModel.divisionId = division.value
+       this.fdCumulativeCommunicationModel.divisionName = division.label
+     }
+     getBlock(id:any){
+       let block=  this.blocksList.find((data:any) => null != data && id != null && data.value === id);
+       if(block != null && undefined != block)
+        this.fdCumulativeCommunicationModel.blockId = block.value
+        this.fdCumulativeCommunicationModel.blockName = block.label
+      }
+    getAllBocksList() {
+      this.fdCumulativeCommunicationService.getAllBlock().subscribe((response: any) => {
+        this.responseModel = response;
+        if (this.responseModel != null && this.responseModel != undefined) {
+          if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+            if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
+              this.blocksList = this.responseModel.data;
+              this.blocksList = this.responseModel.data.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((state: { name: any; id: any; }) => {
+                return { label: state.name, value: state.id };
+              });
+            }
+            else {
+              this.msgs = [];
+              this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+              setTimeout(() => {
+                this.msgs = [];
+              }, 2000);
+            }
+          }
+          this.sameAsRegisterAddress();
+        }
+      },
+        error => {
+          this.msgs = [];
+          this.commonComponent.stopSpinner();
+          this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        });
+    }
+  
+    getAllDivisionList() {
+      this.fdCumulativeCommunicationService.getAllDivision().subscribe((response: any) => {
+        this.responseModel = response;
+        if (this.responseModel != null && this.responseModel != undefined) {
+          if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+            if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
+              this.divisionList = this.responseModel.data;
+              this.divisionList = this.responseModel.data.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((state: { name: any; id: any; }) => {
+                return { label: state.name, value: state.id };
+              });
+            }
+            else {
+              this.msgs = [];
+              this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+              setTimeout(() => {
+                this.msgs = [];
+              }, 2000);
+            }
+          }
+          // this.sameAsRegisterAddress();
+        }
+      },
+        error => {
+          this.msgs = [];
+          this.commonComponent.stopSpinner();
+          this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        });
     }
   
     getAllPermanentStatesList() {
@@ -415,6 +504,7 @@ export class FdCumulativeCommunicationComponent {
             }
           }
         }
+        this.sameAsRegisterAddress();
       });
     }
   
@@ -425,6 +515,8 @@ export class FdCumulativeCommunicationComponent {
         this.communicationForm.get('permanentVillageId').reset();
         this.communicationForm.get('permanentAddress1')?.reset();
         this.communicationForm.get('permanentPinCode')?.reset();
+        this.communicationForm.get('permanentDivision').reset();
+        this.communicationForm.get('permanentBlock').reset();
         this.permenentDistrictList = [];
         this.permenentSubDistrictList = [];
         this.permenentVillageList = [];
@@ -446,6 +538,7 @@ export class FdCumulativeCommunicationComponent {
             this.msgs = [];
           }, 2000);
         }
+        this.sameAsRegisterAddress();
       });
     }
   
@@ -455,6 +548,8 @@ export class FdCumulativeCommunicationComponent {
         this.communicationForm.get('permanentVillageId').reset();
         this.communicationForm.get('permanentAddress1')?.reset();
         this.communicationForm.get('permanentPinCode')?.reset();
+        this.communicationForm.get('permanentDivision').reset();
+        this.communicationForm.get('permanentBlock').reset();
         this.permenentSubDistrictList = [];
         this.permenentVillageList = [];
       }
@@ -475,6 +570,7 @@ export class FdCumulativeCommunicationComponent {
             this.msgs = [];
           }, 2000);
         }
+        this.sameAsRegisterAddress();
       });
     }
     getAllPermanentVillagesByMandalId(id: any, isResetIds: any) {
@@ -482,6 +578,8 @@ export class FdCumulativeCommunicationComponent {
         this.communicationForm.get('permanentVillageId').reset();
         this.communicationForm.get('permanentAddress1')?.reset();
         this.communicationForm.get('permanentPinCode')?.reset();
+        this.communicationForm.get('permanentDivision').reset();
+        this.communicationForm.get('permanentBlock').reset();
         this.permenentVillageList = [];
       }
       this.fdCumulativeCommunicationService.getvillagesByMandalId(id).subscribe((response: any) => {
@@ -491,7 +589,7 @@ export class FdCumulativeCommunicationComponent {
             if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
               this.permenentVillageList = this.responseModel.data;
               this.permenentVillageList = this.permenentVillageList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
-                return { label: relationType.name, value: relationType.id };
+                return { label: relationType.name, value: relationType.id,data: relationType  };
               });
               const perMandal = this.permenentSubDistrictList.find((item: { value: any; }) => item.value === id);
               this. fdCumulativeCommunicationModel.permanentSubDistrictName = perMandal.label;
@@ -505,105 +603,154 @@ export class FdCumulativeCommunicationComponent {
             }
           }
         }
+        this.sameAsRegisterAddress();
       });
     }
-    getPermanentVillage(id:any){
-      const perVillage = this.permenentVillageList.find((item: { value: any; }) => item.value === id);
-      this. fdCumulativeCommunicationModel.permanentVillageName = perVillage.label;
+    getPermanentVillage(id: any) {
+      this.fdCumulativeCommunicationModel.permanentBlockId = null;;
+      this.fdCumulativeCommunicationModel.permanentDivisionId = null;
+      this.fdCumulativeCommunicationModel.permanentBlockName = null;;
+      this.fdCumulativeCommunicationModel.permanentDivisionName = null;
+      let perVillage= this.permenentVillageList.find((obj:any) => null != obj && id != null && obj.value === id);
+      if(perVillage != null && undefined != perVillage)
+      this.fdCumulativeCommunicationModel.permanentVillageName = perVillage.label;
+      if(perVillage.data != null && perVillage.data != undefined){
+        this.getPermanentBlock(perVillage.data.blockId);
+        this.getPermanentDivision(perVillage.data.divisionId);
+      }
+      this.sameAsRegisterAddress();
     }
-    sameAsRegisterAddress() {
-      if (this. fdCumulativeCommunicationModel.isSameAddress == true) {
-        this. fdCumulativeCommunicationModel.permanentStateId = this. fdCumulativeCommunicationModel.stateId;
-        if (this. fdCumulativeCommunicationModel.districtId != this. fdCumulativeCommunicationModel.permanentDistrictId) {
-          this. fdCumulativeCommunicationModel.permanentDistrictId = null;
-          this.getAllPermanentDistrictsByStateId(this. fdCumulativeCommunicationModel.permanentStateId, false);
-          this. fdCumulativeCommunicationModel.permanentDistrictId = this. fdCumulativeCommunicationModel.districtId;
+    getPermanentDivision(id:any){
+      let division=  this.divisionList.find((data:any) => null != data && id != null && data.value === id);
+      if(division != null && undefined != division)
+       this.fdCumulativeCommunicationModel.permanentDivisionId = division.value
+       this.fdCumulativeCommunicationModel.permanentDivisionName = division.label
+     }
+     getPermanentBlock(id:any){
+       let block=  this.blocksList.find((data:any) => null != data && id != null && data.value === id);
+       if(block != null && undefined != block)
+        this.fdCumulativeCommunicationModel.permanentBlockId = block.value
+       this.fdCumulativeCommunicationModel.permanentBlockName = block.label
+      }
+
+      sameAsPerAddr(isSameAddress: any) {
+        if (isSameAddress) {
+          this.fdCumulativeCommunicationModel.isSameAddress = applicationConstants.TRUE;
+          this.communicationForm.get('pinCode').reset();
+          this.communicationForm.get('stateName').disable();
+          this.communicationForm.get('districtId').disable();
+          this.communicationForm.get('subDistrictId').disable();
+          this.communicationForm.get('villageId').disable();
+          this.communicationForm.get('address1').disable();
+          this.communicationForm.get('pinCode').disable();
+          
+          this.fdCumulativeCommunicationModel.stateId = this.fdCumulativeCommunicationModel.permanentStateId;
+          if (this.fdCumulativeCommunicationModel.permanentDistrictId != this.fdCumulativeCommunicationModel.districtId) {
+            this.fdCumulativeCommunicationModel.districtId = null;
+            this.getAllDistrictsByStateId(this.fdCumulativeCommunicationModel.stateId, false);
+            this.fdCumulativeCommunicationModel.districtId = this.fdCumulativeCommunicationModel.permanentDistrictId;
+          }
+          if (this.fdCumulativeCommunicationModel.permanentSubDistrictId != this.fdCumulativeCommunicationModel.subDistrictId) {
+            this.fdCumulativeCommunicationModel.subDistrictId = null;
+            this.getAllMandalsByDistrictId(this.fdCumulativeCommunicationModel.districtId, false);
+            this.fdCumulativeCommunicationModel.subDistrictId = this.fdCumulativeCommunicationModel.permanentSubDistrictId;
+          }
+          if (this.fdCumulativeCommunicationModel.permanentVillageId != this.fdCumulativeCommunicationModel.villageId) {
+            this.fdCumulativeCommunicationModel.villageId = null;
+            this.getAllVillagesByMandalId(this.fdCumulativeCommunicationModel.subDistrictId, false);
+            this.fdCumulativeCommunicationModel.villageId = this.fdCumulativeCommunicationModel.permanentVillageId;
+            // this.getPerVillage(this.fdCumulativeCommunicationModel.permanentVillageId);
+          }
+          this.fdCumulativeCommunicationModel.address1 = this.fdCumulativeCommunicationModel.permanentAddress1;
+          // this.fdCumulativeCommunicationModel.permanentAddress2 = this.fdCumulativeCommunicationModel.address2;
+          this.fdCumulativeCommunicationModel.pinCode = this.fdCumulativeCommunicationModel.permanentPinCode;
+          this.fdCumulativeCommunicationModel.blockId = this.fdCumulativeCommunicationModel.permanentBlockId;
+          this.fdCumulativeCommunicationModel.blockName = this.fdCumulativeCommunicationModel.permanentBlockName;
+    
+          this.fdCumulativeCommunicationModel.divisionId = this.fdCumulativeCommunicationModel.permanentDivisionId;
+          this.fdCumulativeCommunicationModel.divisionName = this.fdCumulativeCommunicationModel.permanentDivisionName;
+    
+    
         }
-        if (this. fdCumulativeCommunicationModel.subDistrictId != this. fdCumulativeCommunicationModel.permanentSubDistrictId) {
-          this. fdCumulativeCommunicationModel.permanentSubDistrictId = null;
-          this.getAllPermanentMandalsByDistrictId(this. fdCumulativeCommunicationModel.permanentDistrictId, false);
-          this. fdCumulativeCommunicationModel.permanentSubDistrictId = this. fdCumulativeCommunicationModel.subDistrictId;
+        else {
+          this.fdCumulativeCommunicationModel.isSameAddress = applicationConstants.FALSE;
+          this.communicationForm.get('stateName').enable();
+          this.communicationForm.get('districtId').enable();
+          this.communicationForm.get('subDistrictId').enable();
+          this.communicationForm.get('villageId').enable();
+          this.communicationForm.get('address1').enable();
+          this.communicationForm.get('pinCode').enable();
+    
+          this.communicationForm.get('stateName').reset();
+          this.communicationForm.get('districtId').reset();
+          this.communicationForm.get('subDistrictId').reset();
+          this.communicationForm.get('villageId').reset();
+          this.communicationForm.get('address1').reset();
+          this.communicationForm.get('pinCode').reset();
+          this.communicationForm.get('division').reset();
+          this.communicationForm.get('block').reset();
+    
+          this.districtsList = [];
+          this.mandalsList = [];
+          this.villageList = [];
+    
+          this.fdCumulativeCommunicationModel.stateId = null;
+          this.fdCumulativeCommunicationModel.districtId = null;
+          this.fdCumulativeCommunicationModel.subDistrictId = null;
+          this.fdCumulativeCommunicationModel.villageId = null;
+          this.fdCumulativeCommunicationModel.address1 = null;
+          this.fdCumulativeCommunicationModel.pinCode = null;
+          this.fdCumulativeCommunicationModel.blockId = null;
+          this.fdCumulativeCommunicationModel.divisionId = null;
+    
         }
-        if (this. fdCumulativeCommunicationModel.villageId != this. fdCumulativeCommunicationModel.permanentVillageId) {
-          this. fdCumulativeCommunicationModel.permanentVillageId = null;
-          this.getAllPermanentVillagesByMandalId(this. fdCumulativeCommunicationModel.permanentSubDistrictId, false);
-          this. fdCumulativeCommunicationModel.permanentVillageId = this. fdCumulativeCommunicationModel.villageId;
+        this.updateData();
+      }
+    
+      RegAddressToComAddress() {
+        if (this.fdCumulativeCommunicationModel.isSameAddress == applicationConstants.TRUE) {
+          this.fdCumulativeCommunicationModel.address1 = this.fdCumulativeCommunicationModel.permanentAddress1;
+          this.fdCumulativeCommunicationModel.pinCode = this.fdCumulativeCommunicationModel.permanentPinCode;
         }
       }
-    }
-  
-    sameAsPerAddr(isSameAddress: any) {
-      if (isSameAddress) {
-        this. fdCumulativeCommunicationModel.isSameAddress = applicationConstants.TRUE;
-        this.communicationForm.get('permanentStateId').disable();
-        this.communicationForm.get('permanentDistrictId').disable();
-        this.communicationForm.get('permanentSubDistrictId').disable();
-        this.communicationForm.get('permanentVillageId').disable();
-        this.communicationForm.get('permanentAddress1').disable();
-        this.communicationForm.get('permanentPinCode').disable();
-  
-        this. fdCumulativeCommunicationModel.permanentStateId = this. fdCumulativeCommunicationModel.stateId;
-        if (this. fdCumulativeCommunicationModel.districtId != this. fdCumulativeCommunicationModel.permanentDistrictId) {
-          this. fdCumulativeCommunicationModel.permanentDistrictId = null;
-          this.getAllPermanentDistrictsByStateId(this. fdCumulativeCommunicationModel.permanentStateId, false);
-          this. fdCumulativeCommunicationModel.permanentDistrictId = this. fdCumulativeCommunicationModel.districtId;
+      sameAsRegisterAddress() {
+        if (this.fdCumulativeCommunicationModel.isSameAddress ==  applicationConstants.TRUE) {
+          this.fdCumulativeCommunicationModel.stateId = this.fdCumulativeCommunicationModel.permanentStateId;
+          if (this.fdCumulativeCommunicationModel.permanentDistrictId != this.fdCumulativeCommunicationModel.districtId) {
+            this.fdCumulativeCommunicationModel.districtId = null;
+            this.getAllDistrictsByStateId(this.fdCumulativeCommunicationModel.stateId,false);
+            this.fdCumulativeCommunicationModel.districtId = this.fdCumulativeCommunicationModel.permanentDistrictId;
+          }
+          if (this.fdCumulativeCommunicationModel.permanentSubDistrictId != this.fdCumulativeCommunicationModel.subDistrictId) {
+            this.fdCumulativeCommunicationModel.subDistrictId = null;
+            this.getAllMandalsByDistrictId(this.fdCumulativeCommunicationModel.districtId,false);
+            this.fdCumulativeCommunicationModel.subDistrictId = this.fdCumulativeCommunicationModel.permanentSubDistrictId;
+          }
+          if (this.fdCumulativeCommunicationModel.permanentVillageId != this.fdCumulativeCommunicationModel.villageId) {
+            this.fdCumulativeCommunicationModel.villageId = null;
+            this.getAllVillagesByMandalId(this.fdCumulativeCommunicationModel.subDistrictId,false);
+            this.fdCumulativeCommunicationModel.villageId = this.fdCumulativeCommunicationModel.permanentVillageId;
+           
+          }
+          if (this.fdCumulativeCommunicationModel.address1 != this.fdCumulativeCommunicationModel.permanentAddress1) {
+            this.fdCumulativeCommunicationModel.address1 = null;
+            this.fdCumulativeCommunicationModel.address1 = this.fdCumulativeCommunicationModel.permanentAddress1;
+          }
+          if (this.fdCumulativeCommunicationModel.pinCode != this.fdCumulativeCommunicationModel.permanentPinCode) {
+            this.fdCumulativeCommunicationModel.pinCode = null;
+            this.fdCumulativeCommunicationModel.pinCode = this.fdCumulativeCommunicationModel.permanentPinCode;
+          }
+    
+          if (this.fdCumulativeCommunicationModel.divisionId != this.fdCumulativeCommunicationModel.permanentDivisionId) {
+            this.fdCumulativeCommunicationModel.divisionId = null;
+            this.fdCumulativeCommunicationModel.divisionId = this.fdCumulativeCommunicationModel.permanentDivisionId;
+          }
+          if (this.fdCumulativeCommunicationModel.blockId != this.fdCumulativeCommunicationModel.permanentBlockId) {
+            this.fdCumulativeCommunicationModel.blockId = null;
+            this.fdCumulativeCommunicationModel.blockId = this.fdCumulativeCommunicationModel.permanentBlockId;
+          }
+           this.getVillage(this.fdCumulativeCommunicationModel.villageId);
+           this.getPermanentVillage(this.fdCumulativeCommunicationModel.permanentVillageId)
         }
-        if (this. fdCumulativeCommunicationModel.subDistrictId != this. fdCumulativeCommunicationModel.permanentSubDistrictId) {
-          this. fdCumulativeCommunicationModel.permanentSubDistrictId = null;
-          this.getAllPermanentMandalsByDistrictId(this. fdCumulativeCommunicationModel.permanentDistrictId, false);
-          this. fdCumulativeCommunicationModel.permanentSubDistrictId = this. fdCumulativeCommunicationModel.subDistrictId;
-        }
-        if (this. fdCumulativeCommunicationModel.villageId != this. fdCumulativeCommunicationModel.permanentVillageId) {
-          this. fdCumulativeCommunicationModel.permanentVillageId = null;
-          this.getAllPermanentVillagesByMandalId(this. fdCumulativeCommunicationModel.permanentSubDistrictId, false);
-          this. fdCumulativeCommunicationModel.permanentVillageId = this. fdCumulativeCommunicationModel.villageId;
-        }
-  
-        this. fdCumulativeCommunicationModel.permanentAddress1 = this. fdCumulativeCommunicationModel.address1;
-        this. fdCumulativeCommunicationModel.permanentPinCode = this. fdCumulativeCommunicationModel.pinCode;
       }
-      else {
-        this. fdCumulativeCommunicationModel.isSameAddress = applicationConstants.FALSE;
-  
-        this.communicationForm.get('permanentStateId').enable();
-        this.communicationForm.get('permanentDistrictId').enable();
-        this.communicationForm.get('permanentSubDistrictId').enable();
-        this.communicationForm.get('permanentVillageId').enable();
-        this.communicationForm.get('permanentAddress1').enable();
-        this.communicationForm.get('permanentPinCode').enable();
-  
-        this.communicationForm.get('permanentStateId').reset();
-        this.communicationForm.get('permanentDistrictId').reset();
-        this.communicationForm.get('permanentSubDistrictId').reset();
-        this.communicationForm.get('permanentVillageId').reset();
-        this.communicationForm.get('permanentAddress1').reset();
-        this.communicationForm.get('permanentPinCode').reset();
-        this.permenentDistrictList = [];
-        this.permenentSubDistrictList = [];
-        this.permenentVillageList = [];
-  
-  
-        this.communicationForm.get('permanentStateId').enable();
-        this.communicationForm.get('permanentDistrictId').enable();
-        this.communicationForm.get('permanentSubDistrictId').enable();
-        this.communicationForm.get('permanentVillageId').enable();
-        this.communicationForm.get('permanentAddress1').enable();
-        this.communicationForm.get('permanentPinCode').enable();
-  
-        this. fdCumulativeCommunicationModel.permanentStateId = null;
-        this. fdCumulativeCommunicationModel.permanentDistrictId = null;
-        this. fdCumulativeCommunicationModel.permanentSubDistrictId = null;
-        this. fdCumulativeCommunicationModel.permanentVillageId = null;
-        this. fdCumulativeCommunicationModel.permanentAddress1 = null;
-        this. fdCumulativeCommunicationModel.permanentPinCode = null;
-      }
-      this.updateData();
-    }
-  
-    RegAddressToComAddress() {
-      if (this. fdCumulativeCommunicationModel.isSameAddress == true) {
-        this. fdCumulativeCommunicationModel.permanentAddress1 = this. fdCumulativeCommunicationModel.address1;
-        this. fdCumulativeCommunicationModel.permanentPinCode = this. fdCumulativeCommunicationModel.pinCode;
-      }
-    }
   }

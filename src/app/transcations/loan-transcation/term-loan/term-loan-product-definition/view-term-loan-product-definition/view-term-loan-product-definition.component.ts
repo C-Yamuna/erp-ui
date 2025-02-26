@@ -52,10 +52,17 @@ export class ViewTermLoanProductDefinitionComponent {
   isFileUploaded: boolean = false;
   multipleFilesList: any[] = [];
   uploadFileData: any;
+  fieldvisitList: any[] = [];
+  disbursementlist: any[] = [];
+  visiRoleList: any[] = [];
   constructor(private commonComponent: CommonComponent, private formBuilder: FormBuilder,
     private activateRoute: ActivatedRoute, private encryptService: EncryptDecryptService, private datePipe: DatePipe,
     private router: Router, private commonFunctionsService: CommonFunctionsService, private translate: TranslateService,
     private termLoanProductDefinitionService : TermLoanProductDefinitionService,) {
+      this.visiRoleList = [
+        { label: "Manager", value: 1 },
+        { label: "Clerk", value: 2 },
+      ]
 
   }
   ngOnInit(): void {
@@ -149,6 +156,32 @@ export class ViewTermLoanProductDefinitionComponent {
                   object.effectiveStartDate = this.datePipe.transform(object.effectiveStartDate, this.orgnizationSetting.datePipe);
                   return object;
                 });
+              }
+              if (this.termLoanProductDefinitionModel.termLoanFieldVisitConfigDTOList != null && this.termLoanProductDefinitionModel.termLoanFieldVisitConfigDTOList != undefined && this.termLoanProductDefinitionModel.termRequiredDocumentsConfigDTOList.length > 0) {
+                this.fieldvisitList = this.termLoanProductDefinitionModel.termLoanFieldVisitConfigDTOList;
+                for (let fieldVisit of this.fieldvisitList) {
+                  if (fieldVisit.visitRole != null) {
+                    let rolesSelected = fieldVisit.visitRole.split(',');
+    
+                    if (rolesSelected.length > 0) {
+    
+                      fieldVisit.visitRoleNames = fieldVisit.visitRoleNames || [];
+    
+                      for (let id of rolesSelected) {
+    
+                        let matchedRole = this.visiRoleList.find(role => role.value === Number(id));
+    
+                        if (matchedRole) {
+                          fieldVisit.visitRoleNames.push(matchedRole.label);
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+
+              if (this.termLoanProductDefinitionModel.termLoanDisbursementScheduleDTOList != null && this.termLoanProductDefinitionModel.termLoanDisbursementScheduleDTOList != undefined && this.termLoanProductDefinitionModel.termRequiredDocumentsConfigDTOList.length > 0) {
+                this.disbursementlist = this.termLoanProductDefinitionModel.termLoanDisbursementScheduleDTOList;
               }
             }
           });
@@ -282,6 +315,12 @@ export class ViewTermLoanProductDefinitionComponent {
         break;
       case 5:
         this.router.navigate([Loantransactionconstant.TERM_LOAN_REQUIRED_DOCUMENT_CONFIG], { queryParams: { id: this.encryptService.encrypt(rowData.termProductId) } });
+        break;
+      case 6:
+        this.router.navigate([Loantransactionconstant.TERM_LOAN_FIELD_VISIT_CONFIG], { queryParams: { id: this.encryptService.encrypt(rowData.termProductId) } });
+        break;
+      case 7:
+        this.router.navigate([Loantransactionconstant.TERM_LOAN_DISBURSEMENT_CONFIG], { queryParams: { id: this.encryptService.encrypt(rowData.termProductId) } });
         break;
     }
   }

@@ -1,27 +1,32 @@
 <div class="col-12">
-    <h6 class="sub-heading">{{'ERP.NOMINEE_DETAILS' | translate}}<span class="admission-text">(Admission
-        Number:&nbsp;{{admissionNumber}})</span></h6>
+    <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"></p-messages>
             <div class="stepper-top-section-strip">
                 <div class="row">
-                    <div class="col-lg-3 col-md-3 col-sm-12 stepper-top-product-name-background">
+                    <div class="col-lg-2 col-md-2 col-sm-12 stepper-top-product-name-background">
                         <div class="form-group">
                             <span>{{'ERP.PRODUCT_NAME' | translate}}</span>
                             <p class="mb-0">{{productName}}</p>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-3 col-sm-12">
+                    <div class="col-lg-2 col-md-2 col-sm-12">
                         <div class="form-group ml-2">
-                            <span>{{'ERP.ACCOUNT_TYPE' | translate}}</span>
+                            <span>{{'ERP.ACCOUNT_NUMBER' | translate}}</span>
+                            <p class="mb-0">{{accountNumber}}</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-12">
+                        <div class="form-group ml-2">
+                            <span>{{'ERP.OPERATION_TYPE' | translate}}</span>
                             <p class="mb-0">{{accountType}}</p>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-3 col-sm-12">
+                    <div class="col-lg-2 col-md-2 col-sm-12">
                         <div class="form-group">
                             <span>{{'ERP.MIN_BALANCE' | translate}}</span>
                             <p class="mb-0">{{minBalence}}</p>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-3 col-sm-12">
+                    <div class="col-lg-2 col-md-2 col-sm-12">
                         <div class="form-group">
                             <span>{{'ERP.ACCOUNT_OPENING_DATE' | translate}}</span>
                             <p class="mb-0">{{accountOpeningDateVal}}</p>
@@ -30,7 +35,7 @@
                 </div>
             </div>      
             <div class="col-12"></div>
-   
+            <h6 class="sub-heading">{{'ERP.NOMINEE_DETAILS' | translate}}</h6>
         <form [formGroup]="nomineeForm" id="exit_types_form">
             <div class="col-12 p-0">
                 <div class="col-12 p-0 bg-label-colorfull">
@@ -56,6 +61,16 @@
                         <div class="row g-3 mt-n1">
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-label">
+                                <label><span class="red">*</span>{{'ERP.NOMINEE_NAME' | translate}}</label>
+                                    <input type="text" formControlName="nomineeName" pInputText placeholder="Enter Name"
+                                        [(ngModel)]="savingsBankNomineeModel.name" />
+                                    <p-message severity="error" text="Enter Valid nomineeName"
+                                        *ngIf="!nomineeForm.controls['nomineeName'].valid && nomineeForm.controls['nomineeName'].dirty">
+                                    </p-message>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                <div class="form-label">
                                 <label><span class="red">*</span>{{'ERP.RELATIONSHIP_TYPE' | translate}}</label>
                                     <p-dropdown [options]="relationTypesList" placeholder="{{'ERP.SELECT' | translate}}"
                                         formControlName="relationName"
@@ -66,11 +81,20 @@
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-label">
-                                <label><span class="red">*</span>{{'ERP.NOMINEE_NAME' | translate}}</label>
-                                    <input type="text" formControlName="nomineeName" pInputText placeholder="Enter Name"
-                                        [(ngModel)]="savingsBankNomineeModel.name" />
-                                    <p-message severity="error" text="Enter Valid nomineeName"
-                                        *ngIf="!nomineeForm.controls['nomineeName'].valid && nomineeForm.controls['nomineeName'].dirty">
+                                    <label><span class="red">*</span>{{'ERP.DATE_OF_BIRTH' | translate}}</label>
+                                    <p-calendar formControlName="dateOfBirth" [showIcon]="true" [dateFormat]="orgnizationSetting.calendar"
+                                        [(ngModel)]="savingsBankNomineeModel.dateOfBirthVal" [appendTo]="'body'" placeholder="DD/MM/YYYY"
+                                        [maxDate]="today" (onSelect)="ageCaluculation(false)">
+                                    </p-calendar>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                <div class="form-label">
+                                    <label><span class="red">*</span>{{'ERP.AGE' | translate}}</label>
+                                    <input pInputText type="text" [(ngModel)]="savingsBankNomineeModel.age" minlength="1" maxlength="3"
+                                        formControlName="age" placeholder="Enter Aadhar Number" (focusout)="ageCaluculation(true)">
+                                    <p-message severity="error" text="Enter Valid Aadhar Number"
+                                        *ngIf="!nomineeForm.controls['age'].valid && nomineeForm.controls['age'].dirty">
                                     </p-message>
                                 </div>
                             </div>
@@ -106,22 +130,22 @@
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-label">
-                                <div class="ml-2"><span class="red">*</span> {{ 'DEMANDDEPOSITS.SIGNED_DOCUMENT' | translate }}</div>
+                                <div class="ml-2"><span class="red">*</span> {{ 'DEMANDDEPOSITS.SIGNED_DOCUMENT' | translate }}{{ 'DEMANDDEPOSITS.PDF_SIZE' | translate }}</div>
                                 <div class="uplodad-style align-items-center">
                                     <!-- Upload Button Column -->
                             
                                     <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]" chooseLabel=" "
-                                        id="apply-leave_fileUp_attach" name="file" accept=".png,.jpg,.jpeg,.pdf" (onRemove)="fileRemoeEvent('Nominee')"
+                                        id="apply-leave_fileUp_attach" name="file" accept=".pdf" (onRemove)="fileRemoeEvent('Nominee')"
                                         (onSelect)="fileUploader($event,fileUpload,'Nominee')">
                                     </p-fileUpload>
                             
                                     <!-- Uploaded Files Display Column -->
                             
                                     <div class="col-12 d-flex p-1 contant-body" *ngFor="let img of savingsBankNomineeModel.nomineeSighnedFormMultiPartList">
-                                        <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                        <!-- <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                             <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22"
                                                     height="22"></a>
-                                        </span> 
+                                        </span>  -->
                                         <span *ngIf="img.fileType=='pdf'">
                                             <a href="{{img.imageValue}}"> <img src="assets/images/pdficon-img.png" width="22"
                                                     height="22"></a>
@@ -155,19 +179,19 @@
                         <div class="row">
                             <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                 <div class="form-label">
-                                <div class="ml-2"><span class="red">*</span> {{ 'DEMANDDEPOSITS.SIGNED_DOCUMENT' | translate }} </div>
+                                <div class="ml-2"><span class="red">*</span> {{ 'DEMANDDEPOSITS.SIGNED_DOCUMENT' | translate }}{{ 'DEMANDDEPOSITS.PDF_SIZE' | translate }} </div>
                                 <div class="uplodad-style align-items-center">
                                     <!-- Upload Button Column -->
                                     <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
                                         id="apply-leave_fileUp_attach" chooseLabel=" " name="file"
-                                        accept=".png,.jpg,.jpeg" (onRemove)="fileRemoeEvent('Nominee')"
+                                        accept=".pdf" (onRemove)="fileRemoeEvent('Nominee')"
                                         (onSelect)="fileUploader($event,fileUpload,'Nominee')">
                                     </p-fileUpload>
                                     <div class="col-12  d-flex p-1 contant-body" *ngFor="let img of savingsBankNomineeModel.nomineeSighnedFormMultiPartList">
-                                        <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                        <!-- <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                             <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22"
                                                     height="22"></a>
-                                        </span>
+                                        </span> -->
                                         <span *ngIf="img.fileType=='pdf'">
                                             <a href="{{img.imageValue}}"> <img src="assets/images/pdficon-img.png" width="22"
                                                     height="22"></a>
@@ -181,7 +205,7 @@
                             
                             <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                 <div class="form-label">
-                                <label><span class="red">*</span> {{'ERP.REMARKS' | translate}}</label>
+                                <label>{{'ERP.REMARKS' | translate}}</label>
                                     <textarea type="text" class="form-control" formControlName="remarks" pInputTextarea placeholder="Enter Remarks Here"
                                         [(ngModel)]="savingsBankNomineeModel.remarks"></textarea>
                                 </div>
@@ -224,15 +248,6 @@
                             <div class="row g-3 mt-n1">
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                    <label><span class="red">*</span>{{'ERP.RELATIONSHIP_TYPE' | translate}}</label>
-                                        <p-dropdown placeholder="{{'ERP.SELECT' | translate}}"
-                                            [options]="relationTypesList" formControlName="relationNameOfGuardian"
-                                            id="id"
-                                            [(ngModel)]="memberGuardianDetailsModelDetail.relationshipTypeId"></p-dropdown>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-12">
-                                    <div class="form-label">
                                     <label><span class="red">*</span>{{'DEMANDDEPOSITS.GUARDAIN_NAME' | translate}}</label>
                                         <input type="text" formControlName="guardianName" pInputText placeholder="Enter Name"
                                             [(ngModel)]="memberGuardianDetailsModelDetail.name" />
@@ -241,7 +256,15 @@
                                     </p-message>
                                     </div>
                                 </div>
-
+                                <div class="col-lg-6 col-md-6 col-sm-12">
+                                    <div class="form-label">
+                                    <label><span class="red">*</span>{{'ERP.RELATIONSHIP_TYPE' | translate}}</label>
+                                        <p-dropdown placeholder="{{'ERP.SELECT' | translate}}"
+                                            [options]="relationTypesList" formControlName="relationNameOfGuardian"
+                                            id="id"
+                                            [(ngModel)]="memberGuardianDetailsModelDetail.relationshipTypeId"></p-dropdown>
+                                    </div>
+                                </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
                                     <label><span class="red">*</span>{{'ERP.AADHAR_NUMBER' | translate}}</label>
@@ -284,19 +307,19 @@
 
                                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                                             <div class="form-label">
-                                                            <div class="ml-2"><span class="red">*</span>{{ 'DEMANDDEPOSITS.SIGNED_DOCUMENT' | translate }}</div>
+                                                            <div class="ml-2"><span class="red">*</span>{{ 'DEMANDDEPOSITS.SIGNED_DOCUMENT' | translate }}{{ 'DEMANDDEPOSITS.PDF_SIZE' | translate }}</div>
                                                             <div class="uplodad-style align-items-center">
                                                                 <!-- Upload Button Column -->
                                                                 <p-fileUpload #fileUploadGuardain class="qua-upld file-attach semi-bold" name="myfile[]"
                                                                     id="apply-leave_fileUp_attach" chooseLabel=" " name="file"
-                                                                    accept=".png,.jpg,.jpeg" (onRemove)="fileRemoeEvent('Guardain')" 
+                                                                    accept=".pdf" (onRemove)="fileRemoeEvent('Guardain')" 
                                                                     (onSelect)="fileUploader($event,fileUploadGuardain,'Guardain')">
                                                                 </p-fileUpload>
                                                                 <div class="col-12 d-flex p-1 contant-body" *ngFor="let img of memberGuardianDetailsModelDetail.guardainSighnedMultipartFiles">
-                                                                    <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                                    <!-- <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                                                         <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22"
                                                                                 height="22"></a>
-                                                                    </span>  
+                                                                    </span>   -->
                                                                     <span *ngIf="img.fileType=='pdf'">
                                                                         <a href="{{img.imageValue}}"> <img src="assets/images/pdficon-img.png" width="22"
                                                                                 height="22"></a>
@@ -328,19 +351,19 @@
                                 <div class="row">
                                 <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                     <div class="form-label">
-                                    <div class="ml-2"><span class="red">*</span>{{ 'DEMANDDEPOSITS.SIGNED_DOCUMENT' | translate }}</div>
+                                    <div class="ml-2"><span class="red">*</span>{{ 'DEMANDDEPOSITS.SIGNED_DOCUMENT' | translate }}{{ 'DEMANDDEPOSITS.PDF_SIZE' | translate }}</div>
                                     <div class="uplodad-style align-items-center">
                                         <!-- Upload Button Column -->
                                         <p-fileUpload #fileUploadGuardain class="qua-upld file-attach semi-bold" name="myfile[]"
                                             id="apply-leave_fileUp_attach" chooseLabel=" " name="file"
-                                            accept=".png,.jpg,.jpeg" (onRemove)="fileRemoeEvent('Guardain')" 
+                                            accept=".pdf" (onRemove)="fileRemoeEvent('Guardain')" 
                                             (onSelect)="fileUploader($event,fileUploadGuardain,'Guardain')">
                                         </p-fileUpload>
                                         <div class="col-12 d-flex p-1 contant-body" *ngFor="let img of memberGuardianDetailsModelDetail.guardainSighnedMultipartFiles">
-                                            <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                            <!-- <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                                 <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22"
                                                         height="22"></a>
-                                            </span>  
+                                            </span>   -->
                                             <span *ngIf="img.fileType=='pdf'">
                                                 <a href="{{img.imageValue}}"> <img src="assets/images/pdficon-img.png" width="22"
                                                         height="22"></a>
@@ -361,7 +384,7 @@
                                                                                                 </div> -->
                                 <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                     <div class="form-label">
-                                    <label><span class="red">*</span>{{'ERP.REMARKS' | translate}}</label>
+                                    <label>{{'ERP.REMARKS' | translate}}</label>
                                         <textarea type="text" class="form-control" pInputTextarea formControlName="guardianRemarks" placeholder="Enter Remarks Here"
                                             [(ngModel)]="memberGuardianDetailsModelDetail.remarks"></textarea>
                                     </div>

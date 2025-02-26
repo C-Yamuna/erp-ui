@@ -56,7 +56,6 @@ export class RequiredDocumentsComponent {
       'documentTypeName': new FormControl('',Validators.required),
       'isRequired': new FormControl(''),
       'effectiveStartDate': new FormControl('',),
-  
     });
   }
   ngOnInit(): void {
@@ -87,11 +86,11 @@ export class RequiredDocumentsComponent {
   updateData() {
     this.requiredDocumentsModel.productId = this.productId
     this.productDefinitionService.changeData({
-      formValid: this.enableSaveAndNextButton ,
+      formValid: !this.addButton ,
       data: this.requiredDocumentsModel,
       savedId:this.productId,
       stepperIndex: 4,
-      isDisable: !this.requiredDocumentsForm.valid ? applicationConstants.TRUE:applicationConstants.FALSE,
+      isDisable: !this.addButton,
     });
   }
   save() {
@@ -111,22 +110,16 @@ export class RequiredDocumentsComponent {
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS && this.responseModel.data[0] != null) {
         this.generalConfigModel = this.responseModel.data[0];
         if (this.generalConfigModel != null && this.generalConfigModel != undefined) {
-
           if(null!=this.generalConfigModel.effectiveStartDate && undefined!=this.generalConfigModel.effectiveStartDate)
             this.generalConfigModel.effectiveStartDate = this.datePipe.transform(this.generalConfigModel.effectiveStartDate, this.orgnizationSetting.datePipe);
-          
-        if (this.generalConfigModel.requiredDocumentsConfigList != null && this.generalConfigModel.requiredDocumentsConfigList != undefined &&
+          if (this.generalConfigModel.requiredDocumentsConfigList != null && this.generalConfigModel.requiredDocumentsConfigList != undefined &&
             this.generalConfigModel.requiredDocumentsConfigList.length > 0) {
-
-              this.enableSaveAndNextButton = applicationConstants.TRUE;
-
-          this.requiredDocumentsModelList = this.generalConfigModel.requiredDocumentsConfigList;
-
-        
-        }
-        else{
-          this.enableSaveAndNextButton = applicationConstants.FALSE;
-        }
+            // this.enableSaveAndNextButton = applicationConstants.TRUE;
+            this.requiredDocumentsModelList = this.generalConfigModel.requiredDocumentsConfigList;
+          }
+          else {
+            // this.enableSaveAndNextButton = applicationConstants.FALSE;
+          }
       }
       this.updateData();
       }else {

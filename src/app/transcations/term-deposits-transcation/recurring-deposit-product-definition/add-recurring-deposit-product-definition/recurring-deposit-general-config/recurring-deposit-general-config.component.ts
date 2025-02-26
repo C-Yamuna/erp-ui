@@ -57,6 +57,9 @@ export class RecurringDepositGeneralConfigComponent {
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
     this.isSpecialSchemelist = this.commonComponent.requiredlist();
     this.tenureTypeList = this.commonComponent.tenureType();
+    this.tenureTypeList = this.commonComponent.tenureType().filter((obj: any) => obj != null && obj.label === "Months").map((tenure: { label: any; value: any }) => {
+      return { label: tenure.label, value: tenure.value };
+    });
     this.activateRoute.queryParams.subscribe(params => {
       if (params['id'] != undefined) {
         this.commonComponent.startSpinner();

@@ -11,6 +11,7 @@ import { SaoLoanApplication } from '../../shared/sao-loan-application.model';
 import { SaoLoanApplicationService } from '../../../shared/sao-loans/sao-loan-application.service';
 import { MembershipBasicDetailsService } from '../membership-basic-details/shared/membership-basic-details.service';
 import { DatePipe } from '@angular/common';
+import { CommonStatusData } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-sao-loan-joint-member',
@@ -147,7 +148,8 @@ export class SaoLoanJointMemberComponent {
       if (this.responseModel != null && this.responseModel != undefined) {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data && this.responseModel.data.length > 0) {
-            this.allTypesOfmembershipList = this.responseModel.data.filter((data: any) => data.memberTypeName == "Individual").map((relationType: any) => {
+            this.allTypesOfmembershipList = this.responseModel.data.filter((data: any) => data.memberTypeName == "Individual"
+          && data.statusName == CommonStatusData.APPROVED && this.admissionNumber != data.admissionNumber).map((relationType: any) => {
               return {
                 label: `${relationType.name} - ${relationType.admissionNumber} - ${relationType.memberTypeName}`,
                 value: relationType.admissionNumber,

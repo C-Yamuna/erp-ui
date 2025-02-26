@@ -55,6 +55,8 @@ export class MemberClosureComponent {
   commomCategory:any[]=[];
   statusList:any[]=[];
   memberPhotoCopyZoom: boolean = false;
+  groupPhotoCopyZoom: boolean = false;
+  institutionPhotoCopyZoom: boolean = false;
   admissionNumber: any;
   msgs: any[]=[];
   sbAccountNumber: any;
@@ -76,8 +78,6 @@ export class MemberClosureComponent {
   isEdit:Boolean= false;
   memberGroupBasicDetailsFlag: boolean= false;
   memberInstitutionBasicDetailsFlag: boolean= false;
-  groupPhotoCopyZoom: boolean= false;
-  institutionPhotoCopyZoom: boolean= false;
   multipleFilesList: any;
   uploadFileData: any;
   isFileUploaded: any;
@@ -338,8 +338,20 @@ export class MemberClosureComponent {
   closePhotoCopy() {
     this.memberPhotoCopyZoom = false;
   }
+  groupclosePhotoCopy() {
+    this.groupPhotoCopyZoom = false;
+  }
+  institutionclosePhotoCopy() {
+    this.institutionPhotoCopyZoom = false;
+  }
   onClickMemberPhotoCopy(){
     this.memberPhotoCopyZoom = true;
+  }
+  onClickGroupPhotoCopy(){
+    this.groupPhotoCopyZoom = true;
+  }
+  onClickInstitutionPhotoCopy(){
+    this.institutionPhotoCopyZoom = true;
   }
   closePhoto(){
     this.memberPhotoCopyZoom = false;
@@ -805,14 +817,6 @@ export class MemberClosureComponent {
   viewMoreInstitutionDetails() {
     this.memberInstitutionBasicDetailsFlag = true;
   }
-
-  onClickGroupPhotoCopy(){
-    this.groupPhotoCopyZoom = true;
-  }
-  onClickInstitutionPhotoCopy(){
-    this.institutionPhotoCopyZoom = true;
-  }
-
   //individual file uploader
    fileUploader(event: any, fileUpload: FileUpload) {
       this.isFileUploaded = applicationConstants.FALSE;
@@ -1019,6 +1023,23 @@ if (this.institutionBasicDetailsModel.filesDTOList != null && this.institutionBa
       this.msgs.push({ severity: 'error', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST });
     });
 
+  }
+// 1024 Responsive Popup 
+  individualBasicDetails: boolean = false;
+  groupBasicDetails: boolean = false;
+  institutionBasicDetails: boolean = false;
+  // position: string = 'center';
+  showindividualBasicDetailsDialog(position: string) {
+    this.position = position;
+    this.individualBasicDetails = true;
+  }
+  showgroupBasicDetailsDialog(position: string) {
+    this.position = position;
+    this.groupBasicDetails = true;
+  }
+  showinstitutionBasicDetailsDialog(position: string) {
+    this.position = position;
+    this.institutionBasicDetails = true;
   }
 
 }

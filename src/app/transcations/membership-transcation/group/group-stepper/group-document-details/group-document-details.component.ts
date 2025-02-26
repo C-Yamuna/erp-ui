@@ -185,12 +185,11 @@ export class GroupDocumentDetailsComponent {
         this.requiredDocumentsList?.some(uploadedDoc => uploadedDoc.requiredDocumentTypeId === doc.id)
     );
     if (mandatoryDocuments.length > 0) {
-        this.requiredDocumentsNames = "Please Upload Mandatory Required Documents ";
-        this.requiredDocumentsNames += mandatoryDocuments.map(doc => `${doc.name}`).join(", ");
-        // this.requiredDocumentsNames += ")";
-        this.mandatoryDoxsTextShow = true;
+      const documentNames = mandatoryDocuments.map(doc => doc.name).join(",");
+      this.requiredDocumentsNames = `Please Upload Mandatory Required Documents: "${documentNames}"`;
+      this.mandatoryDoxsTextShow = true;
     } else {
-        this.mandatoryDoxsTextShow = false;
+      this.mandatoryDoxsTextShow = false;
     }
     if (mandatoryDocuments.length > 0) {
         this.landFlag = allMandatoryUploaded && this.buttonsFlag;

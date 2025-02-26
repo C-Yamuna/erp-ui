@@ -18,7 +18,6 @@ import { FileUploadService } from 'src/app/shared/file-upload.service';
 import { TranslateService } from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
 import { MemberShipTypesData } from '../../common-status-data.json';
-import { MemberGuardianDetailsModel, MemberNomineeDetails } from '../../membership-transcation/shared/member-basic-details.model';
 
 @Component({
   selector: 'app-view-savings-bank',
@@ -34,8 +33,6 @@ export class ViewSavingsBankComponent {
   kycDetailsModel : KycDetailsModel = new KycDetailsModel();
   membershipBasicRequiredDetails: MembershipBasicRequiredDetails = new MembershipBasicRequiredDetails();
   memberGuardianDetailsModelDetails: MemberGuardianDetailsModelDetaila = new MemberGuardianDetailsModelDetaila();
-  memberNomineeDetailsModel: MemberNomineeDetails = new MemberNomineeDetails();
-  memberGuardianDetailsDetailsModel: MemberGuardianDetailsModel = new MemberGuardianDetailsModel();
   memberGroupDetailsModel: MemberGroupDetailsModel = new MemberGroupDetailsModel();
   membershipInstitutionDetailsModel: MembershipInstitutionDetailsModel = new MembershipInstitutionDetailsModel();
   responseModel!: Responsemodel;
@@ -202,7 +199,7 @@ export class ViewSavingsBankComponent {
   submit() {
     this.submitForApprovalCheck();
     if (this.submitForApprovalValidation) {
-      this.viewSavingBankModel.accountStatusName = savingsbanktransactionconstant.SUBMISSION_FOR_APPROVAL;
+      this.viewSavingBankModel.statusName = savingsbanktransactionconstant.SUBMISSION_FOR_APPROVAL;
       this.savingsAccountService.updateSavingsAccountDetails(this.viewSavingBankModel).subscribe((response: any) => {
         this.responseModel = response;
         if (this.responseModel != null && this.responseModel != undefined) {

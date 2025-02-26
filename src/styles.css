@@ -818,8 +818,6 @@ textarea{
 
 .pos-nominee-application{position: relative; top: 4px;}
 
-
-
 p-calendar{
     width: 100% !important;
     display: inline-grid;
@@ -1153,6 +1151,12 @@ body .p-inline-message.p-inline-message-error {
    background: #f7f8fb;
    border-radius: 5px;
    overflow: hidden;
+   flex-grow: 1;
+   box-sizing: border-box;
+}
+.card-ht-same{
+    display: flex;
+    align-items: stretch;
 }
 .card-leftbody{
     flex: 1;
@@ -1534,7 +1538,7 @@ body .p-inline-message.p-inline-message-error {
     color:#75F94C;
 }
 .moredetails-style{
-   width: 70vw;
+   width: 60vw;
 }
 .view-morepopup{position: absolute; top: 15px; left: 0px;}
 .view-moredetails-popup .p-dialog .p-dialog-header{background-color: #eceff9;}
@@ -1843,6 +1847,9 @@ body .p-inline-message.p-inline-message-error {
     border: 1px solid #24B400;
     border-radius: 5px;
     padding: 0.75rem !important;
+    flex: 1;
+    min-height: 160px;
+    box-sizing: border-box;
     /* height: 172px; */
 }
 .sb-memcard-style{border: 1px solid #24B400;}
@@ -1916,7 +1923,7 @@ body .p-inline-message.p-inline-message-error {
 .left-icon-data{display: flex; justify-content: center; align-items: center;}
 
 /* Member Closing and 360 view styles Media queries */
-.memcards-width{width: 25%;}
+.memcards-width{width: 25%; display: flex; gap: 10px; align-items: stretch;}
 @media screen and (max-width: 1880px){.memcards-width{width: 25%;}}
 @media screen and (max-width: 1500px){.memcards-width{width: 33.33333333%;}}
 @media screen and (max-width: 1250px){.memcards-width{width: 50%;}}

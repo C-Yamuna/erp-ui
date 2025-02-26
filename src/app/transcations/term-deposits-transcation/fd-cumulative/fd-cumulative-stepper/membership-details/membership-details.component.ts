@@ -147,11 +147,11 @@ export class MembershipDetailComponent {
     private fdCumulativeKycService:FdCumulativeKycService,
     ) {
       this.kycForm = this.formBuilder.group({
-        'docNumber': ['', [Validators.required]],
-        'docTypeName': ['', [Validators.required]],
-        'promoter': ['',],
-        'fileUpload': new FormControl(''),
-        'nameAsPerDocument': new FormControl(''),
+        'docNumber': [{ value: '', disabled: true }],
+        'docTypeName':[{ value: '', disabled: true }],
+        'promoter':['', ],
+        'fileUpload': new FormControl({ value: '', disabled: true }),
+        'nameAsPerDocument':['',[Validators.pattern(applicationConstants.ALPHA_NAME_PATTERN),Validators.compose([Validators.required])]],
       });
   }
 
@@ -704,14 +704,11 @@ ngOnInit(): void {
   * @author bhargavi
   */
   editCancle() {
-    // this.kycModelList = [];
     this.fdCumulativeKycModel = new FdCumulativeKyc();
     this.editDocumentOfKycFalg = true;
     this.buttonDisabled = false;
-    // this.kycModelList = this.tempKycList;
     this.editButtonDisable = false;
-    // this.kycModelList ;
-    // this.updateData();
+    this.updateData();
   }
 
   /**

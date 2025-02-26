@@ -48,6 +48,8 @@ export class RecurringDepositCommunicationComponent {
   memberTypeName: any;
   showForm: boolean = false;
   id:any;
+  divisionList: any;
+  blocksList: any;
 
 
 
@@ -57,19 +59,25 @@ export class RecurringDepositCommunicationComponent {
     private encryptDecryptService: EncryptDecryptService, private statesService: StatesService,
     private commonFunctionsService: CommonFunctionsService, private datePipe: DatePipe) {
     this.communicationForm = this.formBuilder.group({
-      stateName: ['',Validators.required],
-      districtName: ['',Validators.required],
-      subDistrictName: ['',Validators.required],
-      villageName: ['',Validators.required],
-      address1: ['',Validators.required],
-      pinCode: ['', [Validators.pattern(applicationConstants.PINCODE_PATTERN), Validators.compose([Validators.required])]],
-      permanentStateName: ['',Validators.required],
-      permanentDistrictName: ['',Validators.required],
-      permanentSubDistrictName: ['',Validators.required],
-      permanentVillageName: ['',Validators.required],
-      permanentAddress1: ['',Validators.required],
-      permanentPinCode:['', [Validators.pattern(applicationConstants.PINCODE_PATTERN), Validators.compose([Validators.required])]],
-      isSameAddress: ['']
+      'stateName': new FormControl('', Validators.required),
+      'districtId': new FormControl('',Validators.required),
+      'villageId': new FormControl('',Validators.required),
+      'subDistrictId': new FormControl('',Validators.required),
+      'address1': new FormControl('',[Validators.required]),
+      'address2': new FormControl(''),
+      'pinCode': new FormControl('',[Validators.pattern(applicationConstants.PINCODE_PATTERN),Validators.required]),
+      'isSameAddress': new FormControl(''),
+      'permanentStateId': new FormControl('',Validators.required),
+      'permanentDistrictId': new FormControl('',Validators.required),
+      'permanentSubDistrictId': new FormControl('',Validators.required),
+      'permanentVillageId': new FormControl('',Validators.required),
+      'permanentAddress1': new FormControl('',[Validators.required]),
+      'permanentAddress2': new FormControl(''),
+      'permanentPinCode': new FormControl('',[Validators.pattern(applicationConstants.PINCODE_PATTERN),Validators.required]),
+      'division': new FormControl({ value: '', disabled: true }),
+      'block': new FormControl({ value: '', disabled: true }),
+      'permanentDivision': new FormControl({ value: '', disabled: true }),
+      'permanentBlock': new FormControl({ value: '', disabled: true }),
     })
   }
 
@@ -93,6 +101,8 @@ export class RecurringDepositCommunicationComponent {
     });
     this.getAllStatesList();
     this.getAllPermanentStatesList();
+    this.getAllBocksList();
+    this.getAllDivisionList();
 
   }
 
@@ -160,12 +170,12 @@ export class RecurringDepositCommunicationComponent {
   setAllFields() {
     if (this.rdAccountCommunicationModel.isSameAddress != null && this.rdAccountCommunicationModel.isSameAddress != undefined) {
       if (this.rdAccountCommunicationModel.isSameAddress == true) {
-        this.communicationForm.get('permanentStateName').disable();
-        this.communicationForm.get('permanentDistrictName').disable();
-        this.communicationForm.get('permanentSubDistrictName').disable();
-        this.communicationForm.get('permanentVillageName').disable();
-        this.communicationForm.get('permanentAddress1').disable();
-        this.communicationForm.get('permanentPinCode').disable();
+        this.communicationForm.get('stateName').disable();
+        this.communicationForm.get('districtId').disable();
+        this.communicationForm.get('subDistrictId').disable();
+        this.communicationForm.get('villageId').disable();
+        this.communicationForm.get('address1').disable();
+        this.communicationForm.get('pinCode').disable();
         this.RegAddressToComAddress();
       }
     }
@@ -368,7 +378,7 @@ export class RecurringDepositCommunicationComponent {
           if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.villageList = this.responseModel.data;
             this.villageList = this.villageList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
-              return { label: relationType.name, value: relationType.id };
+              return { label: relationType.name, value: relationType.id,data:relationType };
             });
             const subDistrictName = this.subDistrictList.find((item: { value: any; }) => item.value === id);
             this.rdAccountCommunicationModel.subDistrictName = subDistrictName.label;
@@ -386,11 +396,93 @@ export class RecurringDepositCommunicationComponent {
     });
   }
 
-  getVillage(id: any) {
-    const villageName = this.villageList.find((item: { value: any; }) => item.value === id);
-    this.rdAccountCommunicationModel.villageName = villageName.label;
-    this.sameAsRegisterAddress();
-  }
+    getVillage(id: any) {
+      this.rdAccountCommunicationModel.divisionId = null;;
+      this.rdAccountCommunicationModel.divisionName = null;
+      this.rdAccountCommunicationModel.blockId = null;;
+      this.rdAccountCommunicationModel.blockName = null;
+      const village = this.villageList.find((item: { value: any; }) => item.value === id);
+      this.rdAccountCommunicationModel.villageName = village.label;
+      this.getBlock(village.data.blockId);
+      this.getDivision(village.data.divisionId);
+      // this.sameAsRegisterAddress();
+    }
+
+    getDivision(id:any){
+      let division=  this.divisionList.find((data:any) => null != data && id != null && data.value === id);
+      if(division != null && undefined != division)
+       this.rdAccountCommunicationModel.divisionId = division.value
+       this.rdAccountCommunicationModel.divisionName = division.label
+     }
+     getBlock(id:any){
+       let block=  this.blocksList.find((data:any) => null != data && id != null && data.value === id);
+       if(block != null && undefined != block)
+        this.rdAccountCommunicationModel.blockId = block.value
+        this.rdAccountCommunicationModel.blockName = block.label
+      }
+    getAllBocksList() {
+      this.rdAccountsService.getAllBlock().subscribe((response: any) => {
+        this.responseModel = response;
+        if (this.responseModel != null && this.responseModel != undefined) {
+          if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+            if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
+              this.blocksList = this.responseModel.data;
+              this.blocksList = this.responseModel.data.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((state: { name: any; id: any; }) => {
+                return { label: state.name, value: state.id };
+              });
+            }
+            else {
+              this.msgs = [];
+              this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+              setTimeout(() => {
+                this.msgs = [];
+              }, 2000);
+            }
+          }
+          this.sameAsRegisterAddress();
+        }
+      },
+        error => {
+          this.msgs = [];
+          this.commonComponent.stopSpinner();
+          this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        });
+    }
+  
+    getAllDivisionList() {
+      this.rdAccountsService.getAllDivision().subscribe((response: any) => {
+        this.responseModel = response;
+        if (this.responseModel != null && this.responseModel != undefined) {
+          if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+            if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
+              this.divisionList = this.responseModel.data;
+              this.divisionList = this.responseModel.data.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((state: { name: any; id: any; }) => {
+                return { label: state.name, value: state.id };
+              });
+            }
+            else {
+              this.msgs = [];
+              this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+              setTimeout(() => {
+                this.msgs = [];
+              }, 2000);
+            }
+          }
+          // this.sameAsRegisterAddress();
+        }
+      },
+        error => {
+          this.msgs = [];
+          this.commonComponent.stopSpinner();
+          this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        });
+    }
 
   getAllPermanentStatesList() {
     this.rdAccountsService.getstatesList().subscribe((response: any) => {
@@ -412,6 +504,7 @@ export class RecurringDepositCommunicationComponent {
           }
         }
       }
+      this.sameAsRegisterAddress();
     });
   }
 
@@ -443,6 +536,7 @@ export class RecurringDepositCommunicationComponent {
           this.msgs = [];
         }, 2000);
       }
+      this.sameAsRegisterAddress();
     });
   }
 
@@ -472,6 +566,7 @@ export class RecurringDepositCommunicationComponent {
           this.msgs = [];
         }, 2000);
       }
+      this.sameAsRegisterAddress();
     });
   }
 
@@ -489,7 +584,7 @@ export class RecurringDepositCommunicationComponent {
           if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.permanentVillageList = this.responseModel.data;
             this.permanentVillageList = this.permanentVillageList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
-              return { label: relationType.name, value: relationType.id };
+              return { label: relationType.name, value: relationType.id,data: relationType };
             });
             const persubDistrictName = this.permanentSubDistrictList.find((item: { value: any; }) => item.value === id);
             this.rdAccountCommunicationModel.permanentSubDistrictName = persubDistrictName.label;
@@ -503,110 +598,157 @@ export class RecurringDepositCommunicationComponent {
           }
         }
       }
+      this.sameAsRegisterAddress();
     });
   }
 
   getPermanentVillage(id: any) {
-    const perVillage = this.permanentVillageList.find((item: { value: any; }) => item.value === id);
+    this.rdAccountCommunicationModel.permanentBlockId = null;;
+    this.rdAccountCommunicationModel.permanentDivisionId = null;
+    this.rdAccountCommunicationModel.permanentBlockName = null;;
+    this.rdAccountCommunicationModel.permanentDivisionName = null;
+    let perVillage= this.permanentVillageList.find((obj:any) => null != obj && id != null && obj.value === id);
+    if(perVillage != null && undefined != perVillage)
     this.rdAccountCommunicationModel.permanentVillageName = perVillage.label;
+    if(perVillage.data != null && perVillage.data != undefined){
+      this.getPermanentBlock(perVillage.data.blockId);
+      this.getPermanentDivision(perVillage.data.divisionId);
+    }
+    this.sameAsRegisterAddress();
   }
+  getPermanentDivision(id:any){
+    let division=  this.divisionList.find((data:any) => null != data && id != null && data.value === id);
+    if(division != null && undefined != division)
+     this.rdAccountCommunicationModel.permanentDivisionId = division.value
+     this.rdAccountCommunicationModel.permanentDivisionName = division.label
+   }
+   getPermanentBlock(id:any){
+     let block=  this.blocksList.find((data:any) => null != data && id != null && data.value === id);
+     if(block != null && undefined != block)
+      this.rdAccountCommunicationModel.permanentBlockId = block.value
+     this.rdAccountCommunicationModel.permanentBlockName = block.label
+    }
 
-  sameAsRegisterAddress() {
-    if (this.rdAccountCommunicationModel.isSameAddress == true) {
-      this.rdAccountCommunicationModel.permanentStateId = this.rdAccountCommunicationModel.stateId;
-      if (this.rdAccountCommunicationModel.districtId != this.rdAccountCommunicationModel.permanentDistrictId) {
-        this.rdAccountCommunicationModel.permanentDistrictId = null;
-        this.getAllPermanentDistrictsByStateId(this.rdAccountCommunicationModel.permanentStateId, false);
-        this.rdAccountCommunicationModel.permanentDistrictId = this.rdAccountCommunicationModel.districtId;
+    sameAsPerAddr(isSameAddress: any) {
+      if (isSameAddress) {
+        this.rdAccountCommunicationModel.isSameAddress = applicationConstants.TRUE;
+        this.communicationForm.get('pinCode').reset();
+        this.communicationForm.get('stateName').disable();
+        this.communicationForm.get('districtId').disable();
+        this.communicationForm.get('subDistrictId').disable();
+        this.communicationForm.get('villageId').disable();
+        this.communicationForm.get('address1').disable();
+        this.communicationForm.get('pinCode').disable();
+        
+        this.rdAccountCommunicationModel.stateId = this.rdAccountCommunicationModel.permanentStateId;
+        if (this.rdAccountCommunicationModel.permanentDistrictId != this.rdAccountCommunicationModel.districtId) {
+          this.rdAccountCommunicationModel.districtId = null;
+          this.getAllDistrictsByStateId(this.rdAccountCommunicationModel.stateId, false);
+          this.rdAccountCommunicationModel.districtId = this.rdAccountCommunicationModel.permanentDistrictId;
+        }
+        if (this.rdAccountCommunicationModel.permanentSubDistrictId != this.rdAccountCommunicationModel.subDistrictId) {
+          this.rdAccountCommunicationModel.subDistrictId = null;
+          this.getAllSubDistrictByDistrictId(this.rdAccountCommunicationModel.districtId, false);
+          this.rdAccountCommunicationModel.subDistrictId = this.rdAccountCommunicationModel.permanentSubDistrictId;
+        }
+        if (this.rdAccountCommunicationModel.permanentVillageId != this.rdAccountCommunicationModel.villageId) {
+          this.rdAccountCommunicationModel.villageId = null;
+          this.getAllVillagesBySubDistrictId(this.rdAccountCommunicationModel.subDistrictId, false);
+          this.rdAccountCommunicationModel.villageId = this.rdAccountCommunicationModel.permanentVillageId;
+          // this.getPerVillage(this.rdAccountCommunicationModel.permanentVillageId);
+        }
+        this.rdAccountCommunicationModel.address1 = this.rdAccountCommunicationModel.permanentAddress1;
+        // this.rdAccountCommunicationModel.permanentAddress2 = this.rdAccountCommunicationModel.address2;
+        this.rdAccountCommunicationModel.pinCode = this.rdAccountCommunicationModel.permanentPinCode;
+        this.rdAccountCommunicationModel.blockId = this.rdAccountCommunicationModel.permanentBlockId;
+        this.rdAccountCommunicationModel.blockName = this.rdAccountCommunicationModel.permanentBlockName;
+  
+        this.rdAccountCommunicationModel.divisionId = this.rdAccountCommunicationModel.permanentDivisionId;
+        this.rdAccountCommunicationModel.divisionName = this.rdAccountCommunicationModel.permanentDivisionName;
+  
+  
       }
-      if (this.rdAccountCommunicationModel.subDistrictId != this.rdAccountCommunicationModel.permanentSubDistrictId) {
-        this.rdAccountCommunicationModel.permanentSubDistrictId = null;
-        this.getAllPermanentSubDistrictByDistrictId(this.rdAccountCommunicationModel.permanentDistrictId, false);
-        this.rdAccountCommunicationModel.permanentSubDistrictId = this.rdAccountCommunicationModel.subDistrictId;
+      else {
+        this.rdAccountCommunicationModel.isSameAddress = applicationConstants.FALSE;
+        this.communicationForm.get('stateName').enable();
+        this.communicationForm.get('districtId').enable();
+        this.communicationForm.get('subDistrictId').enable();
+        this.communicationForm.get('villageId').enable();
+        this.communicationForm.get('address1').enable();
+        this.communicationForm.get('pinCode').enable();
+  
+        this.communicationForm.get('stateName').reset();
+        this.communicationForm.get('districtId').reset();
+        this.communicationForm.get('subDistrictId').reset();
+        this.communicationForm.get('villageId').reset();
+        this.communicationForm.get('address1').reset();
+        this.communicationForm.get('pinCode').reset();
+        this.communicationForm.get('division').reset();
+        this.communicationForm.get('block').reset();
+  
+        this.districtsList = [];
+        this.subDistrictList = [];
+        this.villageList = [];
+  
+        this.rdAccountCommunicationModel.stateId = null;
+        this.rdAccountCommunicationModel.districtId = null;
+        this.rdAccountCommunicationModel.subDistrictId = null;
+        this.rdAccountCommunicationModel.villageId = null;
+        this.rdAccountCommunicationModel.address1 = null;
+        this.rdAccountCommunicationModel.pinCode = null;
+        this.rdAccountCommunicationModel.blockId = null;
+        this.rdAccountCommunicationModel.divisionId = null;
+  
       }
-      if (this.rdAccountCommunicationModel.villageId != this.rdAccountCommunicationModel.permanentVillageId) {
-        this.rdAccountCommunicationModel.permanentVillageId = null;
-        this.getAllPermanentVillagesBySubDistrictId(this.rdAccountCommunicationModel.permanentSubDistrictId, false);
-        this.rdAccountCommunicationModel.permanentVillageId = this.rdAccountCommunicationModel.villageId;
+      this.updateData();
+    }
+  
+    RegAddressToComAddress() {
+      if (this.rdAccountCommunicationModel.isSameAddress == applicationConstants.TRUE) {
+        this.rdAccountCommunicationModel.address1 = this.rdAccountCommunicationModel.permanentAddress1;
+        this.rdAccountCommunicationModel.pinCode = this.rdAccountCommunicationModel.permanentPinCode;
       }
     }
-  }
-
-  sameAsPerAddr(isSameAddress: any) {
-    if (isSameAddress) {
-      this.rdAccountCommunicationModel.isSameAddress = applicationConstants.TRUE;
-      this.communicationForm.get('permanentStateName').disable();
-      this.communicationForm.get('permanentDistrictName').disable();
-      this.communicationForm.get('permanentSubDistrictName').disable();
-      this.communicationForm.get('permanentVillageName').disable();
-      this.communicationForm.get('permanentAddress1').disable();
-      this.communicationForm.get('permanentPinCode').disable();
-
-
-      this.rdAccountCommunicationModel.permanentStateId = this.rdAccountCommunicationModel.stateId;
-      if (this.rdAccountCommunicationModel.districtId != this.rdAccountCommunicationModel.permanentDistrictId) {
-        this.rdAccountCommunicationModel.permanentDistrictId = null;
-        this.getAllPermanentDistrictsByStateId(this.rdAccountCommunicationModel.permanentStateId, false);
-        this.rdAccountCommunicationModel.permanentDistrictId = this.rdAccountCommunicationModel.districtId;
+    sameAsRegisterAddress() {
+      if (this.rdAccountCommunicationModel.isSameAddress ==  applicationConstants.TRUE) {
+        this.rdAccountCommunicationModel.stateId = this.rdAccountCommunicationModel.permanentStateId;
+        if (this.rdAccountCommunicationModel.permanentDistrictId != this.rdAccountCommunicationModel.districtId) {
+          this.rdAccountCommunicationModel.districtId = null;
+          this.getAllDistrictsByStateId(this.rdAccountCommunicationModel.stateId,false);
+          this.rdAccountCommunicationModel.districtId = this.rdAccountCommunicationModel.permanentDistrictId;
+        }
+        if (this.rdAccountCommunicationModel.permanentSubDistrictId != this.rdAccountCommunicationModel.subDistrictId) {
+          this.rdAccountCommunicationModel.subDistrictId = null;
+          this.getAllSubDistrictByDistrictId(this.rdAccountCommunicationModel.districtId,false);
+          this.rdAccountCommunicationModel.subDistrictId = this.rdAccountCommunicationModel.permanentSubDistrictId;
+        }
+        if (this.rdAccountCommunicationModel.permanentVillageId != this.rdAccountCommunicationModel.villageId) {
+          this.rdAccountCommunicationModel.villageId = null;
+          this.getAllVillagesBySubDistrictId(this.rdAccountCommunicationModel.subDistrictId,false);
+          this.rdAccountCommunicationModel.villageId = this.rdAccountCommunicationModel.permanentVillageId;
+         
+        }
+        if (this.rdAccountCommunicationModel.address1 != this.rdAccountCommunicationModel.permanentAddress1) {
+          this.rdAccountCommunicationModel.address1 = null;
+          this.rdAccountCommunicationModel.address1 = this.rdAccountCommunicationModel.permanentAddress1;
+        }
+        if (this.rdAccountCommunicationModel.pinCode != this.rdAccountCommunicationModel.permanentPinCode) {
+          this.rdAccountCommunicationModel.pinCode = null;
+          this.rdAccountCommunicationModel.pinCode = this.rdAccountCommunicationModel.permanentPinCode;
+        }
+  
+        if (this.rdAccountCommunicationModel.divisionId != this.rdAccountCommunicationModel.permanentDivisionId) {
+          this.rdAccountCommunicationModel.divisionId = null;
+          this.rdAccountCommunicationModel.divisionId = this.rdAccountCommunicationModel.permanentDivisionId;
+        }
+        if (this.rdAccountCommunicationModel.blockId != this.rdAccountCommunicationModel.permanentBlockId) {
+          this.rdAccountCommunicationModel.blockId = null;
+          this.rdAccountCommunicationModel.blockId = this.rdAccountCommunicationModel.permanentBlockId;
+        }
+         this.getVillage(this.rdAccountCommunicationModel.villageId);
+         this.getPermanentVillage(this.rdAccountCommunicationModel.permanentVillageId)
       }
-      if (this.rdAccountCommunicationModel.subDistrictId != this.rdAccountCommunicationModel.permanentSubDistrictId) {
-        this.rdAccountCommunicationModel.permanentSubDistrictId = null;
-        this.getAllPermanentSubDistrictByDistrictId(this.rdAccountCommunicationModel.permanentDistrictId, false);
-        this.rdAccountCommunicationModel.permanentSubDistrictId = this.rdAccountCommunicationModel.subDistrictId;
-      }
-      if (this.rdAccountCommunicationModel.villageId != this.rdAccountCommunicationModel.permanentVillageId) {
-        this.rdAccountCommunicationModel.permanentVillageId = null;
-        this.getAllPermanentVillagesBySubDistrictId(this.rdAccountCommunicationModel.permanentSubDistrictId, false);
-        this.rdAccountCommunicationModel.permanentVillageId = this.rdAccountCommunicationModel.villageId;
-      }
-
-      this.rdAccountCommunicationModel.permanentAddress1 = this.rdAccountCommunicationModel.address1;
-      this.rdAccountCommunicationModel.permanentPinCode = this.rdAccountCommunicationModel.pinCode;
     }
-    else {
-      this.rdAccountCommunicationModel.isSameAddress = applicationConstants.FALSE;
-
-      this.communicationForm.get('permanentStateName').enable();
-      this.communicationForm.get('permanentDistrictName').enable();
-      this.communicationForm.get('permanentSubDistrictName').enable();
-      this.communicationForm.get('permanentVillageName').enable();
-      this.communicationForm.get('permanentAddress1').enable();
-      this.communicationForm.get('permanentPinCode').enable();
-
-      this.communicationForm.get('permanentStateName').reset();
-      this.communicationForm.get('permanentDistrictName').reset();
-      this.communicationForm.get('permanentSubDistrictName').reset();
-      this.communicationForm.get('permanentVillageName').reset();
-      this.communicationForm.get('permanentAddress1').reset();
-      this.communicationForm.get('permanentPinCode').reset();
-      this.permanentDistrictList = [];
-      this.permanentSubDistrictList = [];
-      this.permanentVillageList = [];
-
-
-      this.communicationForm.get('permanentStateName').enable();
-      this.communicationForm.get('permanentDistrictName').enable();
-      this.communicationForm.get('permanentSubDistrictName').enable();
-      this.communicationForm.get('permanentVillageName').enable();
-      this.communicationForm.get('permanentAddress1').enable();
-      this.communicationForm.get('permanentPinCode').enable();
-
-      this.rdAccountCommunicationModel.permanentStateId = null;
-      this.rdAccountCommunicationModel.permanentDistrictId = null;
-      this.rdAccountCommunicationModel.permanentSubDistrictId = null;
-      this.rdAccountCommunicationModel.permanentVillageId = null;
-      this.rdAccountCommunicationModel.permanentAddress1 = null;
-      this.rdAccountCommunicationModel.permanentPinCode = null;
-    }
-    this.updateData();
-  }
-
-  RegAddressToComAddress() {
-    if (this.rdAccountCommunicationModel.isSameAddress == true) {
-      this.rdAccountCommunicationModel.permanentAddress1 = this.rdAccountCommunicationModel.address1;
-      this.rdAccountCommunicationModel.permanentPinCode = this.rdAccountCommunicationModel.pinCode;
-    }
-  }
 
 
 }

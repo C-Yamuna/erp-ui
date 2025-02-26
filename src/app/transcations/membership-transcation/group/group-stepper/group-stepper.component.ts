@@ -17,6 +17,7 @@ import { GroupKycDetailsService } from '../../shared/group-kyc-details.service';
 import { GroupPromotersService } from '../../shared/group-promoters.service';
 import { DatePipe } from '@angular/common';
 import { RequiredDocumentModel } from '../../shared/required-document-details.model';
+import { BankDetailsModel } from '../../shared/bank-details.model';
 
 @Component({
   selector: 'app-group-stepper',
@@ -29,6 +30,8 @@ export class GroupStepperComponent implements OnInit {
   groupKycDeatilsModel:GroupKycDeatilsModel = new GroupKycDeatilsModel();
   promoterDetailsModel:promoterDetailsModel = new promoterDetailsModel();
   requiredDocumentModel: RequiredDocumentModel = new RequiredDocumentModel();
+  bankDetailsModel: BankDetailsModel = new BankDetailsModel();
+
   items: MenuItem[] = [];
   activeIndex: number = 0;
   buttonDisabled: boolean=false;
@@ -43,6 +46,7 @@ export class GroupStepperComponent implements OnInit {
   orgnizationSetting:any;
   communication: any;
   document:any;
+  bank:any;
   kyc: any;
   land: any;
   nominee: any;
@@ -102,7 +106,10 @@ export class GroupStepperComponent implements OnInit {
           });
           this.translate.get('MEMBERSHIP_TRANSACTION.DOCUMENT_DEATAILS').subscribe((text: string) => {
             this.document = text;
-        this.items = [
+          });
+          this.translate.get('MEMBERSHIP_TRANSACTION.BANK_DETAILS').subscribe((text: string) => {
+            this.bank = text;
+           this.items = [
           {
             label: this.basicDetails, icon: 'fa fa-id-badge', routerLink: Membershiptransactionconstant.GROUP_BASIC_DETAILS, queryParams: { id: this.encryptDecryptService.encrypt(this.savedID) },
             command: (event: any) => {
@@ -127,6 +134,12 @@ export class GroupStepperComponent implements OnInit {
             command: (event: any) => {
               this.activeIndex = 3;
             }
+          },
+          {
+            label: this.bank, icon: 'fa fa-building', routerLink: Membershiptransactionconstant.GROUP_BANK_DETAILS, queryParams: { id: this.encryptDecryptService.encrypt(this.savedID) },
+            command: (event: any) => {
+              this.activeIndex = 4;
+            }
           }
         ];  
         this.memberBasicDetailsStepperService.currentStep.subscribe((data: any) => {
@@ -144,8 +157,12 @@ export class GroupStepperComponent implements OnInit {
               }
               else if(this.activeIndex == 2){
                 this.groupCommunicationModel = data.data;
-              }else{
+              } 
+              else if(this.activeIndex == 3){
                 this.requiredDocumentModel = data.data;
+              }
+              else{
+                this.bankDetailsModel = data.data;
               }
             }
           }
@@ -172,6 +189,9 @@ export class GroupStepperComponent implements OnInit {
       });
       this.translate.get('MEMBERSHIP_TRANSACTION.DOCUMENT_DEATAILS').subscribe((text: string) => {
         this.document = text;
+      });
+      this.translate.get('MEMBERSHIP_TRANSACTION.BANK_DETAILS').subscribe((text: string) => {
+        this.bank = text;
      
         this.items = [
           {
@@ -185,6 +205,9 @@ export class GroupStepperComponent implements OnInit {
           },
           {
             label: this.document,icon: 'fa fa-file-text'
+          },
+          {
+            label: this.bank,icon: 'fa fa-building'
           }
          
         ]
@@ -202,8 +225,10 @@ export class GroupStepperComponent implements OnInit {
                 this.groupKycDeatilsModel = data.data;
               } else if(this.activeIndex == 2){
                 this.groupCommunicationModel = data.data;
-              }else{
+              } else if(this.activeIndex == 3){
                 this.requiredDocumentModel = data.data;
+              }else{
+                this.bankDetailsModel = data.data;
               }
               // if (null != this.memberBasicDetailsModel && undefined != this.memberBasicDetailsModel && null != this.memberBasicDetailsModel.docFilesList && undefined != this.memberBasicDetailsModel.docFilesList) {
               //   this.docFilesList = [];
@@ -232,6 +257,9 @@ export class GroupStepperComponent implements OnInit {
         case 3:
           this.router.navigate([Membershiptransactionconstant.GROUP_DOCUMENT],{ queryParams: { id: this.encryptDecryptService.encrypt(savedId) } });
           break;
+        case 4:
+          this.router.navigate([Membershiptransactionconstant.GROUP_BANK_DETAILS],{ queryParams: { id: this.encryptDecryptService.encrypt(savedId) } });
+          break;
       }
     }
 
@@ -250,6 +278,9 @@ export class GroupStepperComponent implements OnInit {
     else if(activeIndex == 2){
       this.addOrUpdateCommunicationDetails(activeIndex,"next")
     }
+    else if(activeIndex == 3){
+      this.addOrUpdateDocumentsDetails(activeIndex,"next")
+    }
     else {
       this.activeIndex = activeIndex + 1;
       this.navigateTo(this.activeIndex,this.savedID);
@@ -265,7 +296,7 @@ export class GroupStepperComponent implements OnInit {
 
   submit(activeIndex: any){
     this.buttonDisabled = true;
-    this.addOrUpdateDocumentsDetails(activeIndex,"next")
+    this.addOrUpdateBankDetails(activeIndex,"next")
   }
   getProductDetailsObservable() {
     this.memberBasicDetailsStepperService.currentStep.subscribe((data: any) => {
@@ -521,10 +552,18 @@ addOrUpdateKycDetails(activeIndex:any,buttonName:any) {
   } 
   this.commonComponent.startSpinner();
 }
-addOrUpdateDocumentsDetails(activeIndex:any,buttonName:any) {
+addOrUpdateBankDetails(activeIndex:any,buttonName:any) {
   if (buttonName == "next") {
     this.activeIndex = activeIndex + 1;
     this.router.navigate([Membershiptransactionconstant.VIEW_MEMBERSHIP],{ queryParams: { id: this.encryptDecryptService.encrypt(this.savedID) ,type: this.encryptDecryptService.encrypt('Group'),editbtn:this.encryptDecryptService.encrypt(2),isGridPage:this.encryptDecryptService.encrypt(applicationConstants.ACTIVE)} });
+    // this.navigateTo(this.activeIndex,this.savedID)
+  } 
+  this.commonComponent.startSpinner();
+}
+addOrUpdateDocumentsDetails(activeIndex:any,buttonName:any) {
+  if (buttonName == "next") {
+    this.activeIndex = activeIndex + 1;
+    this.navigateTo(this.activeIndex,this.savedID)
     } 
   this.commonComponent.startSpinner();
 }

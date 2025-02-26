@@ -13,9 +13,13 @@ export class SaoLoanApplication {
 
     operationTypeName: any;
 
+    annualIncome: any;
+
     sanctionAmount: any;
 
     accountNumber: any;
+
+    societyAccountNumber: any;
 
     admissionNo: any;
 
@@ -148,7 +152,7 @@ export class SaoLoanApplication {
   
     saoFieldVerificationDetailsDTOList:any[] = [];
   
-    // saoLoanDisbursementScheduleDTOList:any[] = [];
+    saoLoanDisbursementScheduleDTOList:any[] = [];
 
     saoDisbursementDTOList: any[] = [];
   

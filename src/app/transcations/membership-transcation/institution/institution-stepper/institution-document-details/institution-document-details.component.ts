@@ -163,7 +163,7 @@ documentForm: FormGroup;
             this.docTypeList = this.responseModel.data.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((state: any) => {
               return { label: state.name, value: state.id };
             });
-            this.requiredDocumentList = this.responseModel.data.filter((obj: any) => obj != null &&  obj == applicationConstants.ACTIVE && obj.isMandatory == applicationConstants.TRUE);
+            this.requiredDocumentList = this.responseModel.data.filter((obj: any) => obj != null &&  obj.status == applicationConstants.ACTIVE && obj.isMandatory == applicationConstants.TRUE);
 
           }
           else {
@@ -186,12 +186,11 @@ documentForm: FormGroup;
         this.requiredDocumentsList?.some(uploadedDoc => uploadedDoc.requiredDocumentTypeId === doc.id)
     );
     if (mandatoryDocuments.length > 0) {
-        this.requiredDocumentsNames = "Please Upload Mandatory Required Documents ";
-        this.requiredDocumentsNames += mandatoryDocuments.map(doc => `${doc.name}`).join(", ");
-        // this.requiredDocumentsNames += ")";
-        this.mandatoryDoxsTextShow = true;
+      const documentNames = mandatoryDocuments.map(doc => doc.name).join(",");
+      this.requiredDocumentsNames = `Please Upload Mandatory Required Documents: "${documentNames}"`;
+      this.mandatoryDoxsTextShow = true;
     } else {
-        this.mandatoryDoxsTextShow = false;
+      this.mandatoryDoxsTextShow = false;
     }
     if (mandatoryDocuments.length > 0) {
         this.landFlag = allMandatoryUploaded && this.buttonsFlag;
@@ -481,25 +480,25 @@ documentForm: FormGroup;
     this.docPhotoCopyZoom = false;
   }
   // Popup Maximize
-                @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
-                
-                  onDialogResize(event: any) {
-                    this.isMaximized = event.maximized;
-                
-                    if (this.isMaximized) {
-                      // Restore original image size when maximized
-                      this.imageElement.nativeElement.style.width = 'auto';
-                      this.imageElement.nativeElement.style.height = 'auto';
-                      this.imageElement.nativeElement.style.maxWidth = '100%';
-                      this.imageElement.nativeElement.style.maxHeight = '100vh';
-                    } else {
-                      // Fit image inside the dialog without scrollbars
-                      this.imageElement.nativeElement.style.width = '100%';
-                      this.imageElement.nativeElement.style.height = '100%';
-                      this.imageElement.nativeElement.style.maxWidth = '100%';
-                      this.imageElement.nativeElement.style.maxHeight = '100%';
-                      this.imageElement.nativeElement.style.objectFit = 'contain';
-                    }
-                  }
+  @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+
+  onDialogResize(event: any) {
+    this.isMaximized = event.maximized;
+
+    if (this.isMaximized) {
+      // Restore original image size when maximized
+      this.imageElement.nativeElement.style.width = 'auto';
+      this.imageElement.nativeElement.style.height = 'auto';
+      this.imageElement.nativeElement.style.maxWidth = '100%';
+      this.imageElement.nativeElement.style.maxHeight = '100vh';
+    } else {
+      // Fit image inside the dialog without scrollbars
+      this.imageElement.nativeElement.style.width = '100%';
+      this.imageElement.nativeElement.style.height = '100%';
+      this.imageElement.nativeElement.style.maxWidth = '100%';
+      this.imageElement.nativeElement.style.maxHeight = '100%';
+      this.imageElement.nativeElement.style.objectFit = 'contain';
+    }
+  }
 }
   

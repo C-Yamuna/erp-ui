@@ -96,4 +96,11 @@ export class TermLoanCommunicationService {
   getVillageList(){
     return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.VILLAGES + Configuration.GET_ALL);
   }
+  getAllBlock(){
+    return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.BLOCKS + Configuration.GET_ALL);
+  }
+
+  getAllDivision(){
+    return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.DIVISION + Configuration.GET_ALL);
+  }
 }

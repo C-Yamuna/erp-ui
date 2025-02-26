@@ -89,6 +89,7 @@ export const ERP_TRANSACTION_CONSTANTS = {
     MEMBERSHIP_KYC_DETAILS: '/membership_kyc_details',
     MEMBERSHIP_FEE_DETAILS: '/membership_fee_details',
     MEMBERSHIP_COMMUNICATION: '/membership_communication',
+    MEMBERSHIP_BANK_DETAILS: '/member_bank_details',
     GET_MEMBER_NOMINEE_DETAILS_BY_MEMBERSHIP_ID_AND_PACS_ID: '/get_member_nominee_details_by_membershipId_and_pacsId',
     GET_MEMBER_LAND_DETAILS_BY_MEMBERSHIP_ID_AND_PACS_ID: '/get_member_land_details_by_memberId_and_pacsId',
     GET_MEMBER_KYC_DETAILS_BY_MEMBERSHIP_ID_AND_PACS_ID: '/get_kyc_details_by_memberId_and_pacsId_and_branchId',
@@ -952,6 +953,8 @@ export const ERP_TRANSACTION_CONSTANTS = {
    GET_ALL_AGENT_TRANSACTION_BY_AGENT_ID:'/get_agent_transaction_by_agent_id' ,
    GET_DAILY_DEPOSIT_TRANSCATION_BY_ACCOUNT_ID:'/get_latest_five_transaction_details_by_acc_id',
    SI_LOAN_APPLICATION_PREVIEW_DOWNLOAD :'/si_loan_application_preview_download',
-   TERM_LOAN_FIELD_VISIT_CONFIG:'/term_loan_field_visit_config'
+   TERM_LOAN_FIELD_VISIT_CONFIG:'/term_loan_field_visit_config',
+   GET_TERM_LOAN_FIELD_VISIT_LIST_BY_PRODUCT_ID:'/get_term_loan_field_visit_list_by_product_id',
+   GET_TERM_LOAN_DISBURSEMENT_SCHEDULE_LIST_BY_PRODUCT_ID:'/get_term_loan_disbursement_schedule_list_by_product_id'
 
 }

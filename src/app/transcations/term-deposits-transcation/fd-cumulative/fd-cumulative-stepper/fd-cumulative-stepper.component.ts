@@ -1174,7 +1174,7 @@ export class FdCumulativeStepperComponent implements OnInit {
       this.fdCumulativeApplicationModel.maturityDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdCumulativeApplicationModel.maturityDate));
     }
     if (this.isApplicationEdit) {
-      this.fdCumulativeApplicationModel.accountStatusName = applicationConstants.IS_ACTIVE;
+      this.fdCumulativeApplicationModel.statusName = applicationConstants.IS_ACTIVE;
       this.fdCumulativeApplicationService.updateFdCummApplicationWithMemberModuleDetails(this.fdCumulativeApplicationModel).subscribe((response: any) => {
         this.responseModel = response;
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
@@ -1217,8 +1217,8 @@ export class FdCumulativeStepperComponent implements OnInit {
         }, 3000);
       });
     } else {
-      this.fdCumulativeApplicationModel.accountStatusName = applicationConstants.IS_ACTIVE;
-      this.fdCumulativeApplicationModel.accountStatusName = CommonStatusData.IN_PROGRESS;
+      this.fdCumulativeApplicationModel.statusName = applicationConstants.IS_ACTIVE;
+      this.fdCumulativeApplicationModel.statusName = CommonStatusData.IN_PROGRESS;
       this.fdCumulativeApplicationService.addFdCummApplicationWithMemberModuleDetails(this.fdCumulativeApplicationModel).subscribe((response: any) => {
         this.responseModel = response;
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
@@ -1358,7 +1358,7 @@ export class FdCumulativeStepperComponent implements OnInit {
       this.fdCumulativeApplicationModel.maturityDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdCumulativeApplicationModel.maturityDate));
     }
     if (this.isApplicationEdit) {
-      this.fdCumulativeApplicationModel.accountStatusName = applicationConstants.IS_ACTIVE;
+      this.fdCumulativeApplicationModel.statusName = applicationConstants.IS_ACTIVE;
       this.fdCumulativeApplicationService.updateFdCummApplication(this.fdCumulativeApplicationModel).subscribe((response: any) => {
         this.responseModel = response;
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
@@ -1401,8 +1401,8 @@ export class FdCumulativeStepperComponent implements OnInit {
         }, 3000);
       });
     } else {
-      this.fdCumulativeApplicationModel.accountStatusName = applicationConstants.IS_ACTIVE;
-      this.fdCumulativeApplicationModel.accountStatusName = CommonStatusData.IN_PROGRESS;
+      this.fdCumulativeApplicationModel.statusName = applicationConstants.IS_ACTIVE;
+      this.fdCumulativeApplicationModel.statusName = CommonStatusData.IN_PROGRESS;
       this.fdCumulativeApplicationService.addFdCummApplication(this.fdCumulativeApplicationModel).subscribe((response: any) => {
         this.responseModel = response;
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {

@@ -41,4 +41,9 @@ export class SiDisbursementService {
     return this.commonHttpService.getById(headers, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.SI_DISBURSEMENT + ERP_TRANSACTION_CONSTANTS.GET_SI_LOAN_DISBURSEMENT_DETAILS_BY_APPLICATION_ID);
   }
 
+  getSILoanDisbursementScheduleByLoanApplicationId(id: string) {
+    let headers = new HttpHeaders({ 'id': id + '' })
+    return this.commonHttpService.getById(headers,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.SI_LOAN_DISBURSEMENT_SCHEDULE + ERP_TRANSACTION_CONSTANTS.GET_SI_LOAN_DISBURSEMENT_SCHEDULE_BY_LOAN_APPLICATION_ID);
+  }
+
 }

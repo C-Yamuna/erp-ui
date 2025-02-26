@@ -92,6 +92,10 @@ export class SaoProductDefinition {
   multipartFileList?:any;
 
   filesDTOList ?:any;
+
+  purposeId: any;
+
+  purposeName: any;
 }
 export class SaoCollateralConfig {
 

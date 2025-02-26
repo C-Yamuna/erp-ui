@@ -200,13 +200,12 @@ export class InstitutionkycComponent implements OnInit{
               });
               this.requiredDocumentList = this.responseModel.data.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE && obj.isMandatory == applicationConstants.TRUE);
               if (this.requiredDocumentList.length > 0) {
-                this.requiredDocumentsNames = "Please Upload Mandatory Required Documents ";
-                this.requiredDocumentsNames += this.requiredDocumentList.map(doc => `${doc.name}`).join(", ");
-                // this.requiredDocumentsNames += ")";
+                const documentNames = this.requiredDocumentList.map(doc => doc.name).join(",");
+                this.requiredDocumentsNames = `Please Upload Mandatory KYC Documents: "${documentNames}"`;
                 this.mandatoryDoxsTextShow = true;
-            } else {
+              } else {
                 this.mandatoryDoxsTextShow = false;
-            }
+              }
             }
             else {
               this.msgs = [];
@@ -487,6 +486,12 @@ export class InstitutionkycComponent implements OnInit{
         }, 3000);
       } 
     }
+    let documnetTypes = this.docTypeList.find((data: any) => null != data && this.kycModel.kycDocumentTypeId != null && data.value == this.kycModel.kycDocumentTypeId);
+    if (documnetTypes != null && undefined != documnetTypes)
+      this.kycModel.kycDocumentTypeName = documnetTypes.label;
+    if (this.kycModel.kycDocumentTypeName != null && this.kycModel != undefined) {
+      this.documentNumberDynamicValidation(this.kycModel.kycDocumentTypeName);
+    }
     }
     delete(rowDataId: any) {
       this.institutionKycDetailsService.deleteInstitutionKycDetails(rowDataId).subscribe((response: any) => {
@@ -568,7 +573,7 @@ export class InstitutionkycComponent implements OnInit{
      * @author k.yamuna
      */
   documentNumberDynamicValidation(docTypeName: any) {
-    if (DOCUMENT_TYPES.AADHAR == this.kycModel.kycDocumentTypeName) {
+    if (DOCUMENT_TYPES.AADHAR == docTypeName) {
       const controlTow = this.kycForm.get('documentNumber');
       if (controlTow) {
         controlTow.setValidators([
@@ -579,7 +584,7 @@ export class InstitutionkycComponent implements OnInit{
       }
       this.isPanNumber = false;
     }
-    else if (DOCUMENT_TYPES.PANNUMBER == this.kycModel.kycDocumentTypeName) {
+    else if (DOCUMENT_TYPES.PANNUMBER == docTypeName) {
       const controlTow = this.kycForm.get('documentNumber');
       if (controlTow) {
         controlTow.setValidators([

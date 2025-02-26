@@ -17,7 +17,7 @@
             <div class="row g-3">
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
-                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.PRODUCT_TYPE' | translate}}</label>
+                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.PRODUCT' | translate}}</label>
                             <p-dropdown [options]="productsList" placeholder="{{'ERP.SELECT' | translate}}" formControlName="fdNonCummulativeproductId"
                                 [(ngModel)]="fdNonCumulativeApplicationModel.fdNonCummulativeproductId" (onChange)="onChangeProduct($event)"
                                 [disabled]="isProductDisable">
@@ -33,6 +33,23 @@
                             [(ngModel)]="fdNonCumulativeApplicationModel.accountNumber" placeholder="Enter Loan Account Number">
                     </div>
                 </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="!accountTypeDropDownHide">
+                    <div class="form-label">
+                    <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.OPERATION_TYPE' | translate}}</label>
+                        <p-dropdown [options]="accountList" placeholder="{{'ERP.SELECT' | translate}}"
+                            formControlName="accountType" [disabled]="applicationType" (onChange)="onChangeAccountType($event)"
+                            [(ngModel)]="fdNonCumulativeApplicationModel.accountType">
+                        </p-dropdown>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.DEPOSIT_AMOUNT' | translate}}</label>
+                            <input pInputText id="state_txt_name" type="text" formControlName="depositAmount"
+                                [(ngModel)]=" fdNonCumulativeApplicationModel.depositAmount" placeholder="Enter Amount"
+                                (focusout)="maturityDateAndInterestAmountCalculation()">
+                    </div>
+                </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                     <label>{{'TERMDEPOSITSTRANSACTION.DEPOSIT_DATE' | translate}}</label>
@@ -40,52 +57,6 @@
                             [dateFormat]="orgnizationSetting.calendar" placeholder="DD/MM/YYYY"
                             [(ngModel)]="fdNonCumulativeApplicationModel.depositDateVal">
                         </p-calendar>
-
-                    </div>
-                </div>
-
-
-                <!-- <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                    <div class="form-label">
-                    <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.ACCOUNT_TYPE' | translate}}</label>
-                        <p-dropdown [options]="accountList" placeholder="{{'ERP.SELECT' | translate}}"
-                            formControlName="accountType" [disabled]="applicationType" (onChange)="onChangeAccountType($event)"
-                            [(ngModel)]="fdNonCumulativeApplicationModel.accountType">
-                        </p-dropdown>
-                    </div>
-                </div> -->
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="!accountTypeDropDownHide">
-                    <div class="form-label">
-                    <label><span class="red">*</span>{{'ERP.ACCOUNT_TYPE' | translate}}</label>
-                        <p-dropdown [options]="accountList" placeholder="{{'ERP.SELECT' | translate}}"
-                            formControlName="accountType" [disabled]="applicationType" (onChange)="onChangeAccountType($event)"
-                            [(ngModel)]="fdNonCumulativeApplicationModel.accountType">
-                        </p-dropdown>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                    <div class="form-label">
-                        <label for="username"><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.ROI' | translate}}
-                        </label>
-                        <input pInputText id="bunit_txt_name" type="text" formControlName="roi"
-                            [(ngModel)]="fdNonCumulativeApplicationModel.roi" placeholder="Enter ROI">
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                    <div class="form-label">
-                        <label>{{'TERMDEPOSITSTRANSACTION.MATURITY_DATE' | translate}}</label>
-                            <input pInputText id="state_txt_name" type="text" formControlName="maturityDate"
-                                [(ngModel)]=" fdNonCumulativeApplicationModel.maturityDate" (focusout)="maturityDateAndInterestAmountCalculation()">
-                    </div>
-                </div>
-
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                    <div class="form-label">
-                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.DEPOSIT_AMOUNT' | translate}}</label>
-                            <input pInputText id="state_txt_name" type="text" formControlName="depositAmount"
-                                [(ngModel)]=" fdNonCumulativeApplicationModel.depositAmount" placeholder="Enter Amount"
-                                (focusout)="maturityDateAndInterestAmountCalculation()">
-
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
@@ -96,8 +67,6 @@
                         [(ngModel)]="fdNonCumulativeApplicationModel.tenureType"> </p-dropdown>
                     </div>
                 </div>
-
-
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="fdNonCumulativeApplicationModel.tenureType == 2 || 
                 fdNonCumulativeApplicationModel.tenureType == 5 || fdNonCumulativeApplicationModel.tenureType == 6 ||
                 fdNonCumulativeApplicationModel.tenureType == 7"> 
@@ -128,7 +97,38 @@
                                 (focusout)="maturityDateAndInterestAmountCalculation()">
                     </div>
                 </div>
-
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label for="username"><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.ROI' | translate}}
+                        </label>
+                        <input pInputText id="bunit_txt_name" type="text" formControlName="roi"
+                            [(ngModel)]="fdNonCumulativeApplicationModel.roi" placeholder="Enter ROI">
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label for="username">{{'TERMDEPOSITSTRANSACTION.STAFF_ROI' | translate}}
+                        </label>
+                        <input pInputText id="bunit_txt_name" type="text" formControlName="staffRoi"
+                            [(ngModel)]="fdNonCumulativeApplicationModel.staffRoi" placeholder="Enter STAFF ROI">
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label for="username">{{'TERMDEPOSITSTRANSACTION.SENIOR_CITIZEN_ROI' | translate}}
+                        </label>
+                        <input pInputText id="bunit_txt_name" type="text" formControlName="seniorCitizenRoi"
+                            [(ngModel)]="fdNonCumulativeApplicationModel.seniorCitizenRoi" placeholder="Enter SENIOR CITIZEN ROI">
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label for="username">{{'TERMDEPOSITSTRANSACTION.FORECLOSURE_ROI' | translate}}
+                        </label>
+                        <input pInputText id="bunit_txt_name" type="text" formControlName="penalRoi"
+                            [(ngModel)]="fdNonCumulativeApplicationModel.penalRoi" placeholder="Enter Penal ROI">
+                    </div>
+                </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.INTEREST_PAYEMNET_FREQUENCY' | translate}}</label>
@@ -163,6 +163,13 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
+                        <label>{{'TERMDEPOSITSTRANSACTION.MATURITY_DATE' | translate}}</label>
+                            <input pInputText id="state_txt_name" type="text" formControlName="maturityDate"
+                                [(ngModel)]=" fdNonCumulativeApplicationModel.maturityDate" (focusout)="maturityDateAndInterestAmountCalculation()">
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
                         <label>{{'TERMDEPOSITSTRANSACTION.PAYMENT_TYPE' | translate}}</label>
                             <p-dropdown [options]="paymentTypeList" placeholder="{{'ERP.SELECT' | translate}}"
                                 formControlName="interestPayoutType"
@@ -170,7 +177,16 @@
                             </p-dropdown>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                <!-- <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                    <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.ACCOUNT_TYPE' | translate}}</label>
+                        <p-dropdown [options]="accountList" placeholder="{{'ERP.SELECT' | translate}}"
+                            formControlName="accountType" [disabled]="applicationType" (onChange)="onChangeAccountType($event)"
+                            [(ngModel)]="fdNonCumulativeApplicationModel.accountType">
+                        </p-dropdown>
+                    </div>
+                </div> -->
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="fdNonCumulativeApplicationModel.interestPayoutType == 2">
                     <div class="form-label">
                         <label>{{'TERMDEPOSITSTRANSACTION.INTEREST_TRANSFER_ACCOUNT' | translate}}</label>
                             <input pInputText id="state_txt_name" type="text" formControlName="interestPayoutTransferAccount"
@@ -179,7 +195,7 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
-                        <label>{{'TERMDEPOSITSTRANSACTION.IS_RENEWAL' | translate}}</label>
+                        <label>{{'TERMDEPOSITSTRANSACTION.IS_AUTO_RENEWAL' | translate}}</label>
                         <p-dropdown [options]="renewalList" placeholder="{{'ERP.SELECT' | translate}}"
                         formControlName="isRenewal"
                         [(ngModel)]="fdNonCumulativeApplicationModel.isAutoRenewal">
@@ -195,15 +211,6 @@
                     </p-dropdown>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                    <div class="form-label">
-                        <label for="username">{{'TERMDEPOSITSTRANSACTION.FORECLOSURE_ROI' | translate}}
-                        </label>
-                        <input pInputText id="bunit_txt_name" type="text" formControlName="penalRoi"
-                            [(ngModel)]="fdNonCumulativeApplicationModel.penalRoi" placeholder="Enter Penal ROI">
-                    </div>
-                </div>
-              
             </div>
         </div>
     </form>

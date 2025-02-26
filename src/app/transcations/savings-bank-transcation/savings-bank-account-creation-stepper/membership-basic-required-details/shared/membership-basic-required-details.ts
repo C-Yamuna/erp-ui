@@ -142,6 +142,13 @@ export class MembershipBasicRequiredDetails {
     mcrDocumentCopy:any;
 
     multipartFileListForMCRCopyPath:any;
+
+    mcrDocumentCopyMultiPartFileList: any;
+
+    resolutionDate:any;
+
+    resolutionDateVal:any;
+    
 }
 export class MemberGroupDetailsModel {
 
@@ -186,7 +193,8 @@ export class MemberGroupDetailsModel {
     signatureCopyPath: any;
 	societyAdmissionNumber: any;
    groupTypeName: any;
-
+    mcrDocumentCopy: any;
+    operatorTypeId:any;
 }
 export class MembershipInstitutionDetailsModel {
 
@@ -276,6 +284,9 @@ export class MembershipInstitutionDetailsModel {
     institutionTypeName :any;
 
 
+    operatorTypeId:any;
+
+
 }
 export class promoterDetailsModel {
     id: any;
@@ -345,6 +356,12 @@ export class promoterDetailsModel {
     multipartFileListForSignatureCopyPath:any;
 
     multipartFileListForPhotoCopyPath:any;
+
+    isPoc :any;
+
+    endDateVal:any;
+
+   
 }
 export class InstitutionPromoterDetailsModel {
     id: any;
@@ -413,6 +430,9 @@ export class InstitutionPromoterDetailsModel {
 
     isGroupLeader:any;
     
+    isPoc :any;
+
+    endDateVal:any;
 
 }
 

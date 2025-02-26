@@ -11,6 +11,7 @@ import { CommonComponent } from 'src/app/shared/common.component';
 import { Responsemodel } from 'src/app/shared/responsemodel';
 import { DatePipe } from '@angular/common';
 import { FdCummulativeAccountsService } from '../shared/fd-cummulative-accounts.service';
+import { CommonStatusData } from '../../common-status-data.json';
 
 @Component({
   selector: 'app-fd-cumulative',
@@ -38,9 +39,15 @@ export class FdCumulativeComponent implements OnInit {
   inactiveStatusCount: any;
   orgnizationSetting: any;
   gridListLenght: Number | undefined;
-  showForm: boolean=false;
+  showForm: boolean = false;
   memberPhotoCopyZoom: any;
   memberphotCopyMultipartFileList: any[] = [];
+  createdCount: any;
+  submissionForApprovalCount: any;
+  approvedCount: any;
+  requestForResubmmissionCount: any;
+  rejectCount: any;
+  inProgressCount: any;
 
   constructor(private router: Router,
     private translate: TranslateService,
@@ -77,7 +84,7 @@ export class FdCumulativeComponent implements OnInit {
       { field: 'depositAmount', header: 'Deposit Amount' },
       { field: 'depositDate', header: 'Deposit Date' },
       { field: 'roi', header: 'ROI' },
-      { field: 'accountStatusName', header: 'status' },
+      { field: 'statusName', header: 'status' },
     ];
 
     let tabLabels = [
@@ -100,9 +107,9 @@ export class FdCumulativeComponent implements OnInit {
 
   navigateToNewDepositer() {
     this.commonFunctionsService.setStorageValue(applicationConstants.B_CLASS_MEMBER_CREATION, false);
-    this.router.navigate([termdeposittransactionconstant.MEMBERSHIP_DETAIL],{ queryParams: { falg: this.encryptDecryptService.encrypt(true)}});
+    this.router.navigate([termdeposittransactionconstant.MEMBERSHIP_DETAIL], { queryParams: { falg: this.encryptDecryptService.encrypt(true) } });
   }
-  navigateToOperations(event: any,rowData:any) {
+  navigateToOperations(event: any, rowData: any) {
     // if (event.value === 1)
     //   this.router.navigate([termdeposittransactionconstant.TERMDEPOSIT_INTEREST_PAYMENT]);
     // else if (event.value === 2)
@@ -112,9 +119,9 @@ export class FdCumulativeComponent implements OnInit {
     // else if (event.value === 4)
     //   this.router.navigate([termdeposittransactionconstant.TERMDEPOSIT_RENEWAL]);
     if (event.value === 1)
-      this.router.navigate([termdeposittransactionconstant.FD_CUMULATIVE_FORECLOSURE],{ queryParams: { id: this.encryptDecryptService.encrypt(rowData.id) }, });
+      this.router.navigate([termdeposittransactionconstant.FD_CUMULATIVE_FORECLOSURE], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id) }, });
     else if (event.value === 2)
-      this.router.navigate([termdeposittransactionconstant.FD_CUMULATIVE_RENEWAL],{ queryParams: { id: this.encryptDecryptService.encrypt(rowData.id) }, });
+      this.router.navigate([termdeposittransactionconstant.FD_CUMULATIVE_RENEWAL], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id) }, });
   }
 
   getAllFdCummulativeByBranchIdPacsId() {
@@ -125,10 +132,14 @@ export class FdCumulativeComponent implements OnInit {
       this.gridListLenght = this.gridListData.length;
       this.gridListData = this.gridListData.map(fd => {
         if (fd.depositDate != null && fd.depositDate != undefined) {
-          fd.depositDate = this.datePipe.transform(fd.depositDate,this.orgnizationSetting.datePipe);
+          fd.depositDate = this.datePipe.transform(fd.depositDate, this.orgnizationSetting.datePipe);
         }
-        this.activeStatusCount = this.gridListData.filter(fdAccountApplication => fdAccountApplication.status === applicationConstants.ACTIVE).length;
-        this.inactiveStatusCount = this.gridListData.filter(fdAccountApplication => fdAccountApplication.status === applicationConstants.IN_ACTIVE).length;
+        // this.createdCount = this.gridListData.filter(fd => fd.statusName === CommonStatusData.CREATED).length;
+        this.inProgressCount = this.gridListData.filter(fd => fd.statusName === CommonStatusData.IN_PROGRESS).length;        
+        this.submissionForApprovalCount = this.gridListData.filter(fd => fd.statusName === CommonStatusData.SUBMISSION_FOR_APPROVAL).length;
+        this.approvedCount = this.gridListData.filter(fd => fd.statusName === CommonStatusData.APPROVED).length;
+        this.requestForResubmmissionCount = this.gridListData.filter(fd => fd.statusName === CommonStatusData.REQUEST_FOR_RESUBMISSION).length;
+        this.rejectCount = this.gridListData.filter(fd => fd.statusName === CommonStatusData.REJECTED).length;
         return fd;
       });
       this.tempGridListData = this.gridListData;
@@ -140,16 +151,16 @@ export class FdCumulativeComponent implements OnInit {
     });
   }
 
-  editAccount(rowData: any){
-    this.router.navigate([termdeposittransactionconstant.FD_CUMMULATIVE_PREVIEW], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id),editbutton: this.encryptDecryptService.encrypt(applicationConstants.ACTIVE), isGridPage: this.encryptDecryptService.encrypt(applicationConstants.IN_ACTIVE) } });
+  editAccount(rowData: any) {
+    this.router.navigate([termdeposittransactionconstant.FD_CUMMULATIVE_PREVIEW], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id), editbutton: this.encryptDecryptService.encrypt(applicationConstants.ACTIVE), isGridPage: this.encryptDecryptService.encrypt(applicationConstants.IN_ACTIVE) } });
   }
 
   view(rowData: any) {
     let viewScreen = true;
-    this.router.navigate([termdeposittransactionconstant.FD_CUMMULATIVE_PREVIEW], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id),view: this.encryptDecryptService.encrypt(viewScreen), editbutton: this.encryptDecryptService.encrypt(applicationConstants.IN_ACTIVE),isGridPage: this.encryptDecryptService.encrypt(applicationConstants.IN_ACTIVE) }});
-   }
+    this.router.navigate([termdeposittransactionconstant.FD_CUMMULATIVE_PREVIEW], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id), view: this.encryptDecryptService.encrypt(viewScreen), editbutton: this.encryptDecryptService.encrypt(applicationConstants.IN_ACTIVE), isGridPage: this.encryptDecryptService.encrypt(applicationConstants.IN_ACTIVE) } });
+  }
 
-   onChange(){
+  onChange() {
     this.showForm = !this.showForm;
   }
 

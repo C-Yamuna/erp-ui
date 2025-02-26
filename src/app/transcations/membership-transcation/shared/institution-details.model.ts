@@ -123,6 +123,8 @@ export class InstitutionBasicDetailsModel{
 
       operatorTypeName:any;
 
+      memberBankDetailsDTOList:any;
+
     
 }
 

@@ -76,4 +76,13 @@ export class SavingsBankCommunicationService {
     return this.commonHttpService.getById( headers, Configuration.DEMANDDEPOSITS + Configuration.SB_COMMUNICATION_DETAILS + Configuration.GET_COMMUNICATE_BY_ADMISSION_NUMBER);
     
   }
+
+  getBlockList(){
+    return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.BLOCKS + Configuration.GET_ALL);
+  }
+
+
+  getAllDivisionList(){
+    return this.commonHttpService.getAll(  Configuration.COMMON_MASTER + Configuration.DIVISION + Configuration.GET_ALL);
+  }
 }

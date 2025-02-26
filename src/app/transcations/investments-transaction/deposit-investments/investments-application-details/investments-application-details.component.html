@@ -71,28 +71,31 @@
                             <div class="form-label">
                             <label><span class="red">*</span>{{'INVESTMENTS_TRANSACTIONS.TENURE_IN_YEARS' | translate}}</label>
                                 <input type="text" pInputText formControlName="tenureInYears" placeholder="Enter Tenure (In Years)"
-                                    [(ngModel)]="investmentApplicationDetailsModel.tenureInYears" maxlength="2" pKeyFilter="num" />
+                                    [(ngModel)]="investmentApplicationDetailsModel.tenureInYears" maxlength="2" pKeyFilter="num"
+                                    (focusout)="calculateMaturityDetails()" />
                             </div>
                         </div>
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
                             <div class="form-label">
                             <label>{{'INVESTMENTS_TRANSACTIONS.TENURE_IN_MONTHS' | translate}}</label>
                                 <input type="text" pInputText formControlName="tenureInMonths" placeholder="Enter Tenure (In Months)"
-                                    [(ngModel)]="investmentApplicationDetailsModel.tenureInMonths" />
+                                    [(ngModel)]="investmentApplicationDetailsModel.tenureInMonths"
+                                    (focusout)="calculateMaturityDetails()" />
                             </div>
                         </div>
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
                             <div class="form-label">
                             <label>{{'INVESTMENTS_TRANSACTIONS.TENURE_IN_DAYS' | translate}}</label>
                                 <input type="text" pInputText formControlName="tenureInDays" placeholder="Enter Tenure (In Days)"
-                                    [(ngModel)]="investmentApplicationDetailsModel.tenureInDays" />
+                                    [(ngModel)]="investmentApplicationDetailsModel.tenureInDays"
+                                    (focusout)="calculateMaturityDetails()" />
                             </div>
                         </div>
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
                             <div class="form-label">
                             <label><span class="red">*</span>{{'INVESTMENTS_TRANSACTIONS.MATURITY_DATE' | translate}}</label>
                                 <p-calendar [showIcon]="true" formControlName="maturityDate" placeholder="Select Maturity Date"
-                                    dateFormat="{{orgnizationSetting.calendar}}" (onSelect)="dateCheck(false)"
+                                    dateFormat="{{orgnizationSetting.calendar}}" (onSelect)="dateCheck(false)" [disabled]="true"
                                     [(ngModel)]="investmentApplicationDetailsModel.maturityDate"></p-calendar>
                             </div>
                         </div>
@@ -100,14 +103,14 @@
                             <div class="form-label">
                             <label><span class="red">*</span>{{'INVESTMENTS_TRANSACTIONS.MATURITY_INTEREST_AMOUNT' | translate}}</label>
                                 <input type="text" pInputText formControlName="maturityInterest" placeholder="Enter Maturity Interest Amount"
-                                    [(ngModel)]="investmentApplicationDetailsModel.maturityInterest" />
+                                    [(ngModel)]="investmentApplicationDetailsModel.maturityInterest" [disabled]="true" />
                             </div>
                         </div>
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
                             <div class="form-label">
                             <label><span class="red">*</span>{{'INVESTMENTS_TRANSACTIONS.MATURITY_AMOUNT' | translate}}</label>
                                 <input type="text" pInputText formControlName="maturityAmount" placeholder="Enter Maturity Amount"
-                                    [(ngModel)]="investmentApplicationDetailsModel.maturityAmount"
+                                    [(ngModel)]="investmentApplicationDetailsModel.maturityAmount" [disabled]="true"
                                     (focusout)="amountCheck(false)" pKeyFilter="num" />
                             </div>
                         </div>
@@ -132,7 +135,7 @@
                                 <div class="uplodad-style align-items-center">
                                     <!-- Upload Button Column -->
                                     <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
-                                        id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".png,.jpg,.jpeg,.pdf"
+                                        id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".pdf"
                                         (onRemove)="fileRemoveEvent()"
                                         (onSelect)="imageUploader($event,fileUpload)">
                                     </p-fileUpload>

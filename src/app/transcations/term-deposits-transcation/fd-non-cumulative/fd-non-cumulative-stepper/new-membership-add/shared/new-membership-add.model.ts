@@ -142,6 +142,14 @@ export class NewMembershipAdd {
 
     filesDTOList?: any;
 
+    resolutionDate: any;
+
+    resolutionCopy:any;
+
+    resolutionDateVal: any;
+
+    multipartFileListForResolutionCopyPath: any;
+
 }
 
 export class MemberGroupDetailsModel{
@@ -234,6 +242,10 @@ export class MemberGroupDetailsModel{
 
     pocName:any;
 
+    resolutionDate: any;
+
+    resolutionCopy:any;
+
     multipartFileListForPhotoCopy?: any;
 
     multipartFileListForsignatureCopyPath?: any;
@@ -322,6 +334,10 @@ export class MembershipInstitutionDetailsModel {
     pocName?: any;
 
     pocNumber?: any;
+
+    resolutionDate: any;
+
+    resolutionCopy:any;
 }
 
 export class GroupPromoterDetailsModel {

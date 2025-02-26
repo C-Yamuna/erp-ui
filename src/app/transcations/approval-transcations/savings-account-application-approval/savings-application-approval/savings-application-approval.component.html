@@ -195,12 +195,12 @@
                         <!-- <span> <img class="table-circle-image" src="assets/images/avata2r-table.png" /></span> -->
                 
                     </div>
-                    <div class="status-style statusactive" *ngIf="(col.field =='accountStatusName') && rowData.approved"> {{rowData[col.field]}}</div>
-                    <div class="status-style statusreject" *ngIf="(col.field =='accountStatusName') && rowData.rejected"> {{rowData[col.field]}}</div>
-                    <div class="status-style statussubmissionforapproval" *ngIf="(col.field =='accountStatusName') && rowData.submissionForApproval"> {{rowData[col.field]}}</div>
-                    <div class="status-style statuspending" *ngIf="(col.field =='accountStatusName') && rowData.requestForResubmmission"> {{rowData[col.field]}}</div>
+                    <div class="status-style statusactive" *ngIf="(col.field =='statusName') && rowData.approved"> {{rowData[col.field]}}</div>
+                    <div class="status-style statusreject" *ngIf="(col.field =='statusName') && rowData.rejected"> {{rowData[col.field]}}</div>
+                    <div class="status-style statussubmissionforapproval" *ngIf="(col.field =='statusName') && rowData.submissionForApproval"> {{rowData[col.field]}}</div>
+                    <div class="status-style statuspending" *ngIf="(col.field =='statusName') && rowData.requestForResubmmission"> {{rowData[col.field]}}</div>
 
-                    <div *ngIf="col.field !='accountStatusName' && col.field !='accountNumber'"> {{rowData[col.field]}}</div>
+                    <div *ngIf="col.field !='statusName' && col.field !='accountNumber'"> {{rowData[col.field]}}</div>
                 
                 </td>
                 <td>

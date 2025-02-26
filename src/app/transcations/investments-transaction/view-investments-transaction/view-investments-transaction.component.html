@@ -6,7 +6,7 @@
             <div class="main-heading mt-1 justify-content-start" *ngIf="!editbutton">{{'INVESTMENTS_TRANSACTIONS.INVESTMENTS' |
                 translate}}<i class="fa fa-angle-right font-bold mr-3 ml-3"></i>{{'ERP.VIEW' | translate}}</div>
             <div class="main-heading mt-1 justify-content-start" *ngIf="editbutton">{{'INVESTMENTS_TRANSACTIONS.INVESTMENTS' |
-                translate}}<i class="fa fa-angle-right font-bold mr-3 ml-3"></i>{{'ERP.EDIT' | translate}}</div>
+                translate}}<i class="fa fa-angle-right font-bold mr-3 ml-3"></i>{{'ERP.PREVIEW' | translate}}</div>
         </div>
     </div>
 
@@ -219,9 +219,15 @@
                                                                     <div class="kycview-done icon-size text-right"><i class="fa fa-check-circle mr-0" aria-hidden="true"></i></div>
                                                                     <div class="col-12 px-0">
                                                                         <div class="col-12 px-0" *ngFor="let img of document.multipartFileList">
-                                                                            <div class="col-12 p-0" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                                            <!-- <div class="col-12 p-0" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                                                                 <a href="{{img.imageValue}}">
                                                                                     <img src="{{img.imageValue}}" class="upload-img img-fluid" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                                                                </a>
+                                                                            </div> -->
+                                                                            <div class="col-12 p-0" *ngIf="img.fileType=='pdf'">
+                                                                                <a href="{{img.imageValue}}">
+                                                                                    <img src="assets\images\pdf.png" class="upload-img img-fluid" pTooltip="{{img.fileName}}"
+                                                                                        tooltipPosition="bottom">
                                                                                 </a>
                                                                             </div>
                                                                         </div>
@@ -295,9 +301,19 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4"></div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4" *ngIf="!fileFlag"></div>
-                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 mt-4"></div>
+                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 mt-4">
+                    <h6 class="label-view">{{'ERP.REMARKS' | translate}}</h6>
+                    <p class="label-input-text">
+                        {{investmentApplicationDetailsModel.remarks}}</p>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4">
+                    <h6 class="label-view">{{'ERP.STATUS' | translate}}</h6>
+                    <p class="label-input-text">
+                        {{investmentApplicationDetailsModel.statusName}}</p>
+                </div>
+                <!-- <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4"></div> -->
+                <!-- <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 mt-4"></div> -->
                 <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 mt-4 pull-right">
                     <div class="d-flex justify-content-end">
                         <p-button (click)="navigateToBack()" label="Back" class="btn-back"></p-button>

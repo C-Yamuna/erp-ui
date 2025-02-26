@@ -627,7 +627,7 @@
                                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <div class="nominee-card p-3 pb-1 mb-2">
                                                             <div class="row">
-                                                                <h6 class="super-sub-heading mt-1">Registered</h6>
+                                                                <h6 class="super-sub-heading mt-1">{{'ERP.PERMANENT' | translate}}</h6>
                                                                 <div class="col-12">
                                                                     <div class="row">
                                                                         <div
@@ -635,46 +635,69 @@
                                                                             <div class="row">
                                                                                 <div
                                                                                     class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
-                                                                                    <h6 class="label-view">State</h6>
+                                                                                    <h6 class="label-view">{{'ERP.STATES' |
+                                                                                        translate}}</h6>
                                                                                     <p class="label-input-text">
-                                                                                        {{termLoanCommunicationModel.stateName}}
+                                                                                        {{termLoanCommunicationModel.permanentStateName}}
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
                                                                                     class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
-                                                                                    <h6 class="label-view">District</h6>
+                                                                                    <h6 class="label-view">{{'ERP.DISTRICTS' |
+                                                                                        translate}}</h6>
                                                                                     <p class="label-input-text">
-                                                                                        {{termLoanCommunicationModel.districtName}}
+                                                                                        {{termLoanCommunicationModel.permanentDistrictName}}
                                                                                     </p>
                                                                                 </div>
 
                                                                                 <div
                                                                                     class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
-                                                                                    <h6 class="label-view">Sub District
+                                                                                    <h6 class="label-view">{{'ERP.MANDAL/TESHIL' |
+                                                                                        translate}}
                                                                                     </h6>
                                                                                     <p class="label-input-text">
-                                                                                        {{termLoanCommunicationModel.subDistrictName}}
+                                                                                        {{termLoanCommunicationModel.permanentSubDistrictName}}
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
                                                                                     class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
-                                                                                    <h6 class="label-view">Village</h6>
+                                                                                    <h6 class="label-view">{{'ERP.VILLAGE' |
+                                                                                        translate}}</h6>
                                                                                     <p class="label-input-text">
-                                                                                        {{termLoanCommunicationModel.villageName}}
+                                                                                        {{termLoanCommunicationModel.permanentVillageName}}
+                                                                                    </p>
+                                                                                </div>
+
+
+                                                                                <div
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.DIVISION' | translate}}</h6>
+                                                                                <p class="label-input-text">
+                                                                                    {{termLoanCommunicationModel.permanentDivisionName}}
+                                                                                </p>
+                                                                            </div>
+
+                                                                            <div
+                                                                            class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                            <h6 class="label-view">  {{'MEMBERSHIP_TRANSACTION.BLOCK' | translate}}</h6>
+                                                                            <p class="label-input-text">
+                                                                                {{termLoanCommunicationModel.permanentBlockName}}
+                                                                            </p>
+                                                                        </div>
+
+
+                                                                                <div
+                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                    <h6 class="label-view"> {{'ERP.ADDRESS' | translate}}</h6>
+                                                                                    <p class="label-input-text">
+                                                                                        {{termLoanCommunicationModel.permanentAddress1}}
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
                                                                                     class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
-                                                                                    <h6 class="label-view">Address</h6>
+                                                                                    <h6 class="label-view">{{'ERP.PINCODE' | translate}}</h6>
                                                                                     <p class="label-input-text">
-                                                                                        {{termLoanCommunicationModel.address1}}
-                                                                                    </p>
-                                                                                </div>
-                                                                                <div
-                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
-                                                                                    <h6 class="label-view">Pincode</h6>
-                                                                                    <p class="label-input-text">
-                                                                                        {{termLoanCommunicationModel.pinCode}}
+                                                                                        {{termLoanCommunicationModel.permanentPinCode}}
                                                                                     </p>
                                                                                 </div>
                                                                             </div>
@@ -687,7 +710,9 @@
                                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <div class="nominee-card p-3 pb-1 mb-2">
                                                             <div class="row">
-                                                                <h6 class="super-sub-heading mt-1">Permanent</h6>
+                                                                <h6 class="super-sub-heading mt-1">{{'ERP.COMMUNICATION_ADDRESS' | translate}}</h6>
+
+                                                                
                                                                 <div class="col-12">
                                                                     <div class="row">
                                                                         <div
@@ -695,46 +720,65 @@
                                                                             <div class="row">
                                                                                 <div
                                                                                     class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
-                                                                                    <h6 class="label-view">State</h6>
+                                                                                    <h6 class="label-view">{{'ERP.STATES' |
+                                                                                        translate}}</h6>
                                                                                     <p class="label-input-text">
-                                                                                        {{termLoanCommunicationModel.permanentStateName}}
+                                                                                        {{termLoanCommunicationModel.stateName}}
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
                                                                                     class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
-                                                                                    <h6 class="label-view">District</h6>
+                                                                                    <h6 class="label-view">{{'ERP.DISTRICTS' |
+                                                                                        translate}}</h6>
                                                                                     <p class="label-input-text">
-                                                                                        {{termLoanCommunicationModel.permanentDistrictName}}
+                                                                                        {{termLoanCommunicationModel.districtName}}
                                                                                     </p>
                                                                                 </div>
 
                                                                                 <div
                                                                                     class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
-                                                                                    <h6 class="label-view">Sub District
+                                                                                    <h6 class="label-view"> {{'ERP.MANDAL/TESHIL' |
+                                                                                        translate}}
                                                                                     </h6>
                                                                                     <p class="label-input-text">
-                                                                                        {{termLoanCommunicationModel.permanentSubDistrictName}}
+                                                                                        {{termLoanCommunicationModel.subDistrictName}}
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
                                                                                     class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
-                                                                                    <h6 class="label-view">Village</h6>
+                                                                                    <h6 class="label-view">{{'ERP.VILLAGE' |
+                                                                                        translate}}</h6>
                                                                                     <p class="label-input-text">
-                                                                                        {{termLoanCommunicationModel.permanentVillageName}}
+                                                                                        {{termLoanCommunicationModel.villageName}}
+                                                                                    </p>
+                                                                                </div>
+                                                                                <div
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <h6 class="label-view">{{'MEMBERSHIP_TRANSACTION.DIVISION' | translate}}</h6>
+                                                                                <p class="label-input-text">
+                                                                                    {{termLoanCommunicationModel.divisionName}}
+                                                                                </p>
+                                                                            </div>
+
+                                                                            <div
+                                                                            class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                            <h6 class="label-view">  {{'MEMBERSHIP_TRANSACTION.BLOCK' | translate}}</h6>
+                                                                            <p class="label-input-text">
+                                                                                {{termLoanCommunicationModel.blockName}}
+                                                                            </p>
+                                                                        </div>
+                                                                                <div
+                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                    <h6 class="label-view"> {{'ERP.ADDRESS' | translate}}</h6>
+                                                                                    <p class="label-input-text">
+                                                                                        {{termLoanCommunicationModel.address1}}
                                                                                     </p>
                                                                                 </div>
                                                                                 <div
                                                                                     class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
-                                                                                    <h6 class="label-view">Address</h6>
+                                                                                    <h6 class="label-view">{{'ERP.PINCODE' | translate}}</h6>
                                                                                     <p class="label-input-text">
-                                                                                        {{termLoanCommunicationModel.permanentAddress1}}
-                                                                                    </p>
-                                                                                </div>
-                                                                                <div
-                                                                                    class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
-                                                                                    <h6 class="label-view">Pincode</h6>
-                                                                                    <p class="label-input-text">
-                                                                                        {{termLoanCommunicationModel.permanentPinCode}}
+                                                                                        {{termLoanCommunicationModel.pinCode}}
                                                                                     </p>
                                                                                 </div>
                                                                             </div>
@@ -806,12 +850,7 @@
                                                             {{termLoanApplicationModel.termProductName}}
                                                         </p>
                                                     </div>
-                                                    <div
-                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 " *ngIf ='termLoanApplicationModel.memberTypeName == "Individual"'>
-                                                        <h6 class="label-view">{{'LOAN_TRANSACTION.ACCOUNT_TYPE' | translate}}</h6>
-                                                        <p class="label-input-text">
-                                                            {{termLoanApplicationModel.operationTypeName}}</p>
-                                                    </div>
+                                                   
                                                     <div
                                                         class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                         <h6 class="label-view">{{'LOAN_TRANSACTION.ACCOUNT_NUMBER' | translate}}</h6>
@@ -819,6 +858,7 @@
                                                             {{termLoanApplicationModel.accountNumber}}
                                                         </p>
                                                     </div>
+                                               
                                                     <!-- </div>
                             <div class="row"> -->
                                                     <div
@@ -829,6 +869,45 @@
                                                             {{termLoanApplicationModel.applicationDateVal}}</p>
                                                     </div>
                                                     <div
+                                                    class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">{{'LOAN_TRANSACTION.APPLICATION_NUMBER' | translate}}</h6>
+                                                    <p class="label-input-text">
+                                                        {{termLoanApplicationModel.applicationNumber}}
+                                                    </p>
+                                                </div>
+                                                    <div
+                                                    class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 " *ngIf ='termLoanApplicationModel.memberTypeName == "Individual"'>
+                                                    <h6 class="label-view">{{'LOAN_TRANSACTION.OPERATION_TYPE' | translate}}</h6>
+                                                    <p class="label-input-text">
+                                                        {{termLoanApplicationModel.operationTypeName}}</p>
+                                                </div>
+                                                <div
+                                                class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                <h6 class="label-view">{{'LOAN_TRANSACTION.LOAN_PURPOSE' | translate}}</h6>
+                                                <p class="label-input-text">
+                                                    {{termLoanApplicationModel.purposeName}}
+                                                </p>
+                                            </div>
+                                            <div
+                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                        <h6 class="label-view">{{'LOAN_TRANSACTION.REQUEST_AMOUNT' | translate}}</h6>
+                                                        <p class="label-input-text">
+                                                            {{termLoanApplicationModel.requestedAmount}}</p>
+                                                    </div>
+                                                    <div
+                                                    class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">{{'LOAN_TRANSACTION.SANCTION_AMOUNT' | translate}}
+                                                    </h6>
+                                                    <p class="label-input-text">
+                                                        {{termLoanApplicationModel.sanctionAmount}}</p>
+                                                </div>
+                                                <div
+                                                class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                <h6 class="label-view">{{'LOAN_TRANSACTION.SANCTION_DATE' | translate}}</h6>
+                                                <p class="label-input-text">
+                                                    {{termLoanApplicationModel.sanctionDateVal}}</p>
+                                            </div>
+                                                    <div
                                                         class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                         <h6 class="label-view">{{'LOAN_TRANSACTION.MAX_LOAN_PERIOD_IN_MONTHS' |
                                                             translate}}</h6>
@@ -836,6 +915,27 @@
                                                             {{termLoanApplicationModel.loanPeriod}}
                                                         </p>
                                                     </div>
+                                                    <div
+                                                    class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">{{'LOANS.GRACE_PERIOD' |
+                                                        translate}}</h6>
+                                                    <p class="label-input-text">
+                                                        {{termLoanApplicationModel.graceperiod}}
+                                                    </p>
+                                                </div>
+                                                <div
+                                                class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                <h6 class="label-view">{{'LOAN_TRANSACTION.REPAYMENT_FREQUENCY' | translate}}
+                                                </h6>
+                                                <p class="label-input-text">
+                                                    {{termLoanApplicationModel.repaymentFrequencyName}}</p>
+                                            </div>
+                                            <div
+                                            class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                            <h6 class="label-view">{{'ERP.ROI' | translate}}</h6>
+                                            <p class="label-input-text">
+                                                {{termLoanApplicationModel.effectiveRoi}}</p>
+                                        </div>
                                                     <div
                                                         class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                         <h6 class="label-view">{{'LOAN_TRANSACTION.PENAL_ROI' | translate}}</h6>
@@ -848,60 +948,14 @@
                                                         <p class="label-input-text">{{termLoanApplicationModel.iod}}
                                                         </p>
                                                     </div>
+
                                                     <div
                                                         class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
-                                                        <h6 class="label-view">{{'LOAN_TRANSACTION.REPAYMENT_FREQUENCY' | translate}}
-                                                        </h6>
-                                                        <p class="label-input-text">
-                                                            {{termLoanApplicationModel.repaymentFrequencyName}}</p>
-                                                    </div>
-                                                    <div
-                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
-                                                        <h6 class="label-view">{{'LOAN_TRANSACTION.LOAN_PURPOSE' | translate}}</h6>
-                                                        <p class="label-input-text">
-                                                            {{termLoanApplicationModel.purposeName}}
-                                                        </p>
-                                                    </div>
-                                                    <!-- <div
-                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
-                                                        <h6 class="label-view">{{'LOAN_TRANSACTION.OPERATION_TYPE' | translate}}</h6>
-                                                        <p class="label-input-text">
-                                                            {{termLoanApplicationModel.operationTypeName}}</p>
-                                                    </div> -->
-                                                    <div
-                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
-                                                        <h6 class="label-view">{{'LOAN_TRANSACTION.REQUEST_AMOUNT' | translate}}</h6>
-                                                        <p class="label-input-text">
-                                                            {{termLoanApplicationModel.requestedAmount}}</p>
-                                                    </div>
-                                                    <div
-                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
-                                                        <h6 class="label-view">{{'LOAN_TRANSACTION.SANCTION_DATE' | translate}}</h6>
-                                                        <p class="label-input-text">
-                                                            {{termLoanApplicationModel.sanctionDateVal}}</p>
-                                                    </div>
-                                                    <div
-                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
-                                                        <h6 class="label-view">{{'LOAN_TRANSACTION.SANCTION_AMOUNT' | translate}}
-                                                        </h6>
-                                                        <p class="label-input-text">
-                                                            {{termLoanApplicationModel.sanctionAmount}}</p>
-                                                    </div>
-                                                    <div
-                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
-                                                        <h6 class="label-view">{{'LOAN_TRANSACTION.PLANNED_DISBURSEMENTS' |
+                                                        <h6 class="label-view">{{'ERP.INCOME_PER_ANNUAL' |
                                                             translate}}
                                                         </h6>
                                                         <p class="label-input-text">
-                                                            {{termLoanApplicationModel.plannedDisbursements}}</p>
-                                                    </div>
-                                                    <div
-                                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
-                                                        <h6 class="label-view">{{'LOAN_TRANSACTION.LOAN_PERIOD_IN_MONTHS' |
-                                                            translate}}
-                                                        </h6>
-                                                        <p class="label-input-text">
-                                                            {{termLoanApplicationModel.loanPeriod}}
+                                                            {{termLoanApplicationModel.monthlyIncome}}
                                                         </p>
                                                     </div>
                                                     <div
@@ -1620,7 +1674,7 @@
                         </div>
                             <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4" *ngIf="editFlag || viewButton">
                                  <p class="label-view text-fontwt">{{'ERP.STATUS' | translate}}</p>
-                                <p class="label-input-text">{{termLoanApplicationModel.accountStatusName}}</p>
+                                <p class="label-input-text">{{termLoanApplicationModel.statusName}}</p>
                             </div>
                             <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4" *ngIf="editFlag || viewButton">
                                 <p class="label-view text-fontwt">{{'ERP.REMARKS' | translate}}</p>

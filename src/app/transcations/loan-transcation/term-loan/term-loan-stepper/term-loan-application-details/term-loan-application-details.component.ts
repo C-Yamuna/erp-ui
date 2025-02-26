@@ -19,6 +19,7 @@ import { TermLoanDisbursementService } from '../../term-loan-operations/term-loa
 import { TermLoanDisbursement } from '../../term-loan-operations/term-loan-disbursement/shared/term-loan-disbursement.model';
 import { LoanPurposeService } from 'src/app/configurations/loan-config/loan-purpose/shared/loan-purpose.service';
 import { TermLoanPurposeService } from '../../term-loan-product-definition/term-loan-product-definition-stepper/term-loan-purpose/shared/term-loan-purpose.service';
+import { TermLoanDisbursementScheduleService } from '../../term-loan-product-definition/term-loan-product-definition-stepper/term-loan-disbursement-schedule/shared/term-loan-disbursement-schedule.service';
 
 @Component({
   selector: 'app-term-loan-application-details',
@@ -63,6 +64,7 @@ export class TermLoanApplicationDetailsComponent {
   membershipInstitutionDetailsModel: MembershipInstitutionDetailsModel = new MembershipInstitutionDetailsModel();
   termLoanInsuranceDetailsModel: TermLoanInsuranceDetails = new TermLoanInsuranceDetails();
   termLoanDisbursementModel: TermLoanDisbursement = new TermLoanDisbursement();
+  termLoanDisbursementScheduleModel : TermLoanDisbursementScheduleModel = new TermLoanDisbursementScheduleModel();
   memberTypeName: any;
   termLoanApplicationId: any;
   isEdit: boolean = false;
@@ -95,12 +97,19 @@ export class TermLoanApplicationDetailsComponent {
   isDisbursementsNotMatchedCheck: boolean = true;
   saveAndNextButton:boolean = false;
   temprepaymentList: any[]=[];
+  fieldvisitList: any[] = [];
+  disbursementlist: any[] = [];
+  visiRoleList: any[] = [];
+  requestedAmount: any;
+  saveAndNextEnableDisable: boolean = false;
   constructor(private router: Router, private formBuilder: FormBuilder,
     private translate: TranslateService, private commonFunctionsService: CommonFunctionsService,
     private encryptDecryptService: EncryptDecryptService, private commonComponent: CommonComponent,
    private datePipe: DatePipe, private termLoanPurposeService :TermLoanPurposeService,
     private commonFunction: CommonFunctionsService,  private termLoanApplicationsService: TermApplicationService,
-    private activateRoute: ActivatedRoute,  private fileUploadService: FileUploadService,private termLoanDisbursementService: TermLoanDisbursementService,) {
+    private activateRoute: ActivatedRoute,  private fileUploadService: FileUploadService
+    ,private termLoanDisbursementService: TermLoanDisbursementService,
+     private termLoanDisbursementScheduleService: TermLoanDisbursementScheduleService) {
 
       this.termLoanapplicationForm = this.formBuilder.group({
         termProductId: ['', [Validators.required]],
@@ -108,19 +117,20 @@ export class TermLoanApplicationDetailsComponent {
         roi: new FormControl({ value: '', disabled: true }, [Validators.required]),
         // applicationDate: ['', [Validators.required]],
         applicationDate: [{ value: '', disabled: true }],
-        applicationNumber: ['', [Validators.required]],
+        applicationNumber: ['', [Validators.pattern(applicationConstants.ACCOUNT_NUMBER_PATTERN), Validators.compose([Validators.required])]],
         penalRoi: new FormControl({ value: '', disabled: true }, [Validators.required]),
         iod: new FormControl({ value: '', disabled: true }, [Validators.required]),
-        repaymentFrequency: [{ value: '', disabled: true },[Validators.required]],
+        repaymentFrequency: [,[Validators.required]],
         monthlyIncome: ['', [Validators.required]],
         purposeId: ['', [Validators.required]],
         requestedAmount: ['', [Validators.required]],
         sanctionAmount: ['', [Validators.required]],
         sanctionDate: ['', [Validators.required]],
-        plannedDisbursements: ['', [Validators.required]],
+        // plannedDisbursements: ['', [Validators.required]],
         loanPeriod: ['', [Validators.required]],
         loanDueDate: ['', [Validators.required]],
         operationTypeId: ['', [Validators.required]],
+        graceperiod:['', [Validators.required]],
       })
       this.chargesDetailsForm = this.formBuilder.group({
   
@@ -135,12 +145,12 @@ export class TermLoanApplicationDetailsComponent {
       })
   
       this.disbursementForm = this.formBuilder.group({
-        'type': new FormControl('', Validators.required),
-        'disbursementAmount': ['', [Validators.required,Validators.pattern(applicationConstants.AMOUNT_PATTERN_VALIDATION)]],
-        'minMonthsForDisbursement':['', [Validators.required,Validators.pattern(applicationConstants.ALLOW_NUMBERS_ONLY)]],
-        'disbursementOrder': new FormControl('', Validators.required),
-        'remarks': new FormControl('', ),
-        'disbursementDate':new FormControl('', Validators.required),
+        // 'type': new FormControl('', Validators.required),
+        // 'disbursementAmount': ['', [Validators.required,Validators.pattern(applicationConstants.AMOUNT_PATTERN_VALIDATION)]],
+        // 'minMonthsForDisbursement':['', [Validators.required,Validators.pattern(applicationConstants.ALLOW_NUMBERS_ONLY)]],
+        // 'disbursementOrder': new FormControl('', Validators.required),
+        // 'remarks': new FormControl('', ),
+        // 'disbursementDate':new FormControl('', Validators.required),
       })
   
     }
@@ -149,29 +159,10 @@ export class TermLoanApplicationDetailsComponent {
       this.isMemberCreation = this.commonFunctionsService.getStorageValue('b-class-member_creation');
       this.pacsId = this.commonFunctionsService.getStorageValue(applicationConstants.PACS_ID);
       this.branchId = this.commonFunctionsService.getStorageValue(applicationConstants.BRANCH_ID);
-      this.gender = [
-        { status: 'Select', code: '0' },
-        { status: 'Male', code: '1' },
-        { status: 'Female', code: '2' },
-      ];
-      this.maritalstatus = [
-        { status: 'Select', code: '0' },
-        { status: 'Married', code: '1' },
-        { status: 'UnMarried', code: '2' }
-      ];
-      this.disbursementTypesList = [
-        // { label: 'Select', value: '0' },
-        { label: 'Amount', value: '1' },
-        { label: 'Percentage', value: '2' },
-      ];
       this.getAllProducts();
-      // this.getAllRepaymentFrequency();
-      // this.getAllLoanPurpose();
       this.getAllAccountTypes();
       this.getAllInsuranceVendors();
-      // this.getAllOccupationTypes();
-      // this.getAllGenders();
-      //  this.getAllSchemeTypes();
+      this.getAllRepaymentFrequency();
   
       this.activateRoute.queryParams.subscribe(params => {
         if (params['id'] != undefined) {
@@ -189,15 +180,29 @@ export class TermLoanApplicationDetailsComponent {
   
       this.termLoanapplicationForm.valueChanges.subscribe((data: any) => {
         this.updateData();
-        // if (this.termLoanapplicationForm.valid) {
-        //   this.save();
-        // }
+
+      });
+      this.insurenceDetailsForm.valueChanges.subscribe((data: any) => {
+        this.updateData();
       });
       if (this.termLoanApplicationModel != null && this.termLoanApplicationModel != undefined) {
         if (this.termLoanApplicationModel.termProductId != null && this.termLoanApplicationModel.termProductId != undefined) {
           this.getAllLoanPurpose(this.termLoanApplicationModel.termProductId);
         }
       }
+      this.termLoanapplicationForm.get('termProductId')?.valueChanges.subscribe(productId => {
+        if (productId) {
+          this.getProductDefinitionByProductId(productId);
+        }
+       
+      });
+  
+      this.termLoanapplicationForm.get('requestedAmount')?.valueChanges.subscribe(amount => {
+        this.requestedAmount = amount;
+        if (this.termLoanProductDefinitionModel?.termLoanDisbursementScheduleDTOList) {
+          this.calculateDisbursement();
+        }
+      });
     }
   
     save() {
@@ -205,15 +210,22 @@ export class TermLoanApplicationDetailsComponent {
     }
   
     updateData() {
-      // Ensure the disbursement schedule list has at least one entry and form is valid
-      const isDisbursementValid = this.termLoanDisbursementScheduleList && this.termLoanDisbursementScheduleList.length > 0;
-      const isFormValid = this.termLoanapplicationForm.valid;
-      this.saveAndNextButton = isDisbursementValid && isFormValid;
+      if(this.insurenceFlag){
+        this.saveAndNextEnableDisable = (!((this.termLoanapplicationForm.valid) && (this.insurenceDetailsForm.valid)))||this.editDeleteDisable;
+      }
+      else {
+        this.saveAndNextEnableDisable = (!(this.termLoanapplicationForm.valid))||this.editDeleteDisable;
+  
+      }
+      // if(this.isDisbursementsNotMatchedCheck){
+      //   this.saveAndNextEnableDisable = 
+      // }
+      this.termLoanApplicationModel.termLoanInsuranceDetailsDTO = this.termLoanInsuranceDetailsModel;
       this.termLoanApplicationsService.changeData({
-        formValid: isFormValid,
+        formValid: (!this.termLoanapplicationForm.valid && !this.insurenceDetailsForm.valid )? true : false,
         data: this.termLoanApplicationModel,
+        isDisable: this.saveAndNextEnableDisable,
         stepperIndex: 3,
-        isDisable: !this.saveAndNextButton,
       });
     }
   
@@ -247,7 +259,23 @@ export class TermLoanApplicationDetailsComponent {
       this.updateData();
     }
   
-  
+    getAllRepaymentFrequency() {
+    
+      this.termLoanApplicationsService.getAllRepaymentFrequency().subscribe(response => {
+        this.responseModel = response;
+        if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+         
+          this.repaymentFrequencyList = this.responseModel.data.filter((repaymentFrequency: { status: number; }) => repaymentFrequency.status == applicationConstants.ACTIVE).map((repaymentFrequency: any) => {
+            return { label: repaymentFrequency.name, value: repaymentFrequency.id };
+          });
+        }
+      },
+        error => {
+          this.msgs = [];
+         
+          this.msgs.push({ severity: 'error', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST });
+        })
+    }
 
 
     getAllLoanPurpose(productId: any) {
@@ -375,13 +403,22 @@ export class TermLoanApplicationDetailsComponent {
         })
     }
   
-    onChangeProduct(event: any) {
+    productOnChange(productId: any) {
       this.displayDialog = true;
       this.productInfoFalg = true;
-      if (event.value != null && event.value != undefined) {
-        this.getProductDefinitionByProductIdAndApplicationDate(event.value);
+      if (productId != null && productId != undefined) {
+        this.getProductDefinitionByProductId(productId);
+      }
+     
+      else {
+        this.msgs = [];
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "please select product" }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
       }
     }
+  
   
     onChangeRepayment(event: any) {
       //  if (event.value != null && event.value != undefined) {
@@ -484,71 +521,10 @@ export class TermLoanApplicationDetailsComponent {
               if (this.termLoanApplicationModel.termProductName != null && this.termLoanApplicationModel.termProductName != undefined)
                 this.productInfoFalg = true;
   
-              this.getProductDefinitionByProductIdAndApplicationDate(this.termLoanApplicationModel.termProductId); 
-              if(this.termLoanProductDefinitionModel.isInsuranceAppicable == applicationConstants.TRUE){
-                if (this.termLoanApplicationModel.termLoanInsuranceDetailsDTO != null && this.termLoanApplicationModel.termLoanInsuranceDetailsDTO != undefined) {
-                  this.termLoanInterestPolicyModel = this.termLoanApplicationModel.termLoanInsuranceDetailsDTO;
-                  this.insurenceFlag = true;
-                  const vendorId = this.insurenceDetailsForm.get('vendorId');
-                  if (vendorId) {
-                    vendorId.setValidators([Validators.required]);
-                    vendorId.updateValueAndValidity();
-                  }
-                  const policyName = this.insurenceDetailsForm.get('policyName');
-                  if (policyName) {
-                    policyName.setValidators([Validators.required]);
-                    policyName.updateValueAndValidity();
-                  }
-                  const policyNumber = this.insurenceDetailsForm.get('policyNumber');
-                  if (policyNumber) {
-                    policyNumber.setValidators([Validators.required]);
-                    policyNumber.updateValueAndValidity();
-                  }
-                  const sumInsured = this.insurenceDetailsForm.get('sumInsured');
-                  if (sumInsured) {
-                    sumInsured.setValidators([Validators.required]);
-                    sumInsured.updateValueAndValidity();
-                  }
-                  const premium = this.insurenceDetailsForm.get('premium');
-                  if (premium) {
-                    premium.setValidators([Validators.required]);
-                    premium.updateValueAndValidity();
-                  }
-      
-                }
-              }else{
-                this.insurenceFlag = false;
-                this.removeValidators('vendorId');
-                this.removeValidators('policyName');
-                this.removeValidators('policyNumber');
-                this.removeValidators('sumInsured');
-                this.removeValidators('premium');
+              if (this.termLoanApplicationModel.termLoanInsuranceDetailsDTO != null && this.termLoanApplicationModel.termLoanInsuranceDetailsDTO != undefined) {
+                this.termLoanInsuranceDetailsModel = this.termLoanApplicationModel.termLoanInsuranceDetailsDTO;
               }
-  
-              if (this.termLoanApplicationModel.termLoanDisbursementDTOList != null && this.termLoanApplicationModel.termLoanDisbursementDTOList != undefined && this.termLoanApplicationModel.termLoanDisbursementDTOList.length > 0) {
-                this.termLoanDisbursementScheduleList = this.termLoanApplicationModel.termLoanDisbursementDTOList;
-                this.termLoanDisbursementScheduleList = this.termLoanDisbursementScheduleList.filter((data: any) => data != null && data.disbursementDate != null).map((object: any) => {
-                  object.disbursementDateVal = this.datePipe.transform(object.disbursementDate, this.orgnizationSetting.datePipe);
-                  return object;
-                });
-              }
-              if (this.termLoanApplicationModel.plannedDisbursements != null && this.termLoanApplicationModel.plannedDisbursements != undefined && this.termLoanApplicationModel.plannedDisbursements > 0) {
-                if (this.termLoanApplicationModel.termLoanDisbursementDTOList != null && this.termLoanApplicationModel.termLoanDisbursementDTOList.length > 0) {
-                  if (this.termLoanApplicationModel.termLoanDisbursementDTOList.length >= this.termLoanApplicationModel.plannedDisbursements) {
-                    this.disableAddButton = true;
-                  } else {
-                    this.disableAddButton = false;
-                  }
-                } else {
-                  this.disableAddButton = false;
-                }
-                this.termLoanapplicationForm.get('plannedDisbursements')?.disable();
-              } else {
-                this.disableAddButton = true;
-                this.termLoanapplicationForm.get('plannedDisbursements')?.enable();
-              }
-             
-  
+              this.getProductDefinitionByProductId(this.termLoanApplicationModel.termProductId);
             
             }
             this.updateData();
@@ -580,7 +556,7 @@ export class TermLoanApplicationDetailsComponent {
           flag = true;
           this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.APPLICATION_DATE_SHOULD_NOT_GREATER_THAN_DUE_DATE }];
         } else {
-          this.getProductDefinitionByProductIdAndApplicationDate(this.termLoanApplicationModel.termProductId);
+          // this.getProductDefinitionByProductIdAndApplicationDate(this.termLoanApplicationModel.termProductId);
         }
   
         if(flag){
@@ -660,78 +636,7 @@ export class TermLoanApplicationDetailsComponent {
         }
       }
     }
-  
-    getProductDefinitionByProductIdAndApplicationDate(productId: any) {
-      if (this.termLoanApplicationModel.applicationDateVal != undefined && this.termLoanApplicationModel.applicationDateVal != null)
-        this.termLoanApplicationModel.applicationDate = this.commonFunctionsService.getUTCEpoch(new Date(this.termLoanApplicationModel.applicationDateVal));
-  
-      this.termLoanApplicationsService.getTermProductDefinitionByProductIdAndApplicationDate(this.pacsId, productId, this.termLoanApplicationModel.id).subscribe((data: any) => {
-        this.responseModel = data;
-        if (this.responseModel != null && this.responseModel != undefined) {
-          if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined && this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
-            this.termLoanProductDefinitionModel = this.responseModel.data[0];
-  
-            if (this.termLoanProductDefinitionModel.termInterestPolicyConfigDTOList != undefined && this.termLoanProductDefinitionModel.termInterestPolicyConfigDTOList != null) {
-              this.termLoanInterestPolicyModel = this.termLoanProductDefinitionModel.termInterestPolicyConfigDTOList[0];
-            }
-            if(this.termLoanProductDefinitionModel.isInsuranceAppicable != null && this.termLoanProductDefinitionModel.isInsuranceAppicable ==applicationConstants.TRUE){
-              this.insurenceFlag = true;
-  
-            
-              const vendorId = this.insurenceDetailsForm.get('vendorId');
-              if (vendorId) {
-                vendorId.setValidators([Validators.required]);
-                vendorId.updateValueAndValidity();
-              }
-              const policyName = this.insurenceDetailsForm.get('policyName');
-              if (policyName) {
-                policyName.setValidators([Validators.required]);
-                policyName.updateValueAndValidity();
-              }
-              const policyNumber = this.insurenceDetailsForm.get('policyNumber');
-              if (policyNumber) {
-                policyNumber.setValidators([Validators.required]);
-                policyNumber.updateValueAndValidity();
-              }
-              const sumInsured = this.insurenceDetailsForm.get('sumInsured');
-              if (sumInsured) {
-                sumInsured.setValidators([Validators.required]);
-                sumInsured.updateValueAndValidity();
-              }
-              const premium = this.insurenceDetailsForm.get('premium');
-              if (premium) {
-                premium.setValidators([Validators.required]);
-                premium.updateValueAndValidity();
-              }
-  
-            }else{
-              this.insurenceFlag = false;
-              this.removeValidators('vendorId');
-              this.removeValidators('policyName');
-              this.removeValidators('policyNumber');
-              this.removeValidators('sumInsured');
-              this.removeValidators('premium');
-            }
-    
-              if (this.termLoanInterestPolicyModel.roi != undefined && this.termLoanInterestPolicyModel.roi != null)
-              this.termLoanApplicationModel.effectiveRoi = this.termLoanInterestPolicyModel.roi;
-  
-              if (this.termLoanInterestPolicyModel.penalInterest != undefined && this.termLoanInterestPolicyModel.penalInterest != null)
-                this.termLoanApplicationModel.penalInterest = this.termLoanInterestPolicyModel.penalInterest;
-    
-              if (this.termLoanInterestPolicyModel.iod != undefined && this.termLoanInterestPolicyModel.iod != null)
-                this.termLoanApplicationModel.iod = this.termLoanInterestPolicyModel.iod;
-  
-              if (this.termLoanProductDefinitionModel.interestPostingFrequencyName != undefined && this.termLoanProductDefinitionModel.interestPostingFrequencyName != null)
-                this.termLoanApplicationModel.repaymentFrequency = this.termLoanProductDefinitionModel.interestPostingFrequency;
-  
-              this.repaymentFrequencyList = this.temprepaymentList.filter(obj => obj != null && obj.value == this.termLoanApplicationModel.repaymentFrequency);
-            
-          }
-        }
-        this.onChangeQualificationChange();
-      });
-    }
+
     removeValidators(controlName: string) {
       const control = this.insurenceDetailsForm.get(controlName);
       if (control) {
@@ -753,11 +658,7 @@ export class TermLoanApplicationDetailsComponent {
       this.visible = true;
     }
   
-    // getProductDefinition() {
-    //   this.productDefinitionFlag = true;
-    //   this.getProductDefinitionByProductId(this.termLoanApplicationModel.termProductId);
-    // }
-  
+   
     closeProductDefinition() {
       this.productDefinitionFlag = false;
     }
@@ -936,24 +837,24 @@ export class TermLoanApplicationDetailsComponent {
       this.displayDeleteDialog = applicationConstants.FALSE;
     }
   
-    checkPlannedDisbursement() {
-      if (this.termLoanApplicationModel.termLoanDisbursementDTOList != null)
-        this.termLoanDisbursementScheduleList = this.termLoanApplicationModel.termLoanDisbursementDTOList;
+    // checkPlannedDisbursement() {
+    //   if (this.termLoanApplicationModel.termLoanDisbursementDTOList != null)
+    //     this.termLoanDisbursementScheduleList = this.termLoanApplicationModel.termLoanDisbursementDTOList;
   
-      if (this.termLoanapplicationForm.valid && this.termLoanApplicationModel.plannedDisbursements != null && this.termLoanApplicationModel.plannedDisbursements != undefined && this.termLoanApplicationModel.plannedDisbursements > 0) {
-        if (this.termLoanApplicationModel.termLoanDisbursementDTOList != null && this.termLoanApplicationModel.termLoanDisbursementDTOList.length > 0) {
-          if (this.termLoanApplicationModel.termLoanDisbursementDTOList.length >= this.termLoanApplicationModel.plannedDisbursements) {
-            this.disableAddButton = applicationConstants.TRUE;
-          } else {
-            this.disableAddButton = applicationConstants.FALSE;
-          }
-        } else {
-          this.disableAddButton = applicationConstants.FALSE;
-        }
-      } else {
-        this.disableAddButton = applicationConstants.TRUE;
-      }
-    }
+    //   if (this.termLoanapplicationForm.valid && this.termLoanApplicationModel.plannedDisbursements != null && this.termLoanApplicationModel.plannedDisbursements != undefined && this.termLoanApplicationModel.plannedDisbursements > 0) {
+    //     if (this.termLoanApplicationModel.termLoanDisbursementDTOList != null && this.termLoanApplicationModel.termLoanDisbursementDTOList.length > 0) {
+    //       if (this.termLoanApplicationModel.termLoanDisbursementDTOList.length >= this.termLoanApplicationModel.plannedDisbursements) {
+    //         this.disableAddButton = applicationConstants.TRUE;
+    //       } else {
+    //         this.disableAddButton = applicationConstants.FALSE;
+    //       }
+    //     } else {
+    //       this.disableAddButton = applicationConstants.FALSE;
+    //     }
+    //   } else {
+    //     this.disableAddButton = applicationConstants.TRUE;
+    //   }
+    // }
       saveAndUpdateApplicationDetails(termLoanApplicationModel:any) {
         termLoanApplicationModel.pacsId = this.pacsId;
         // termLoanApplicationModel.pacsCode = this.pacsCode;
@@ -1049,81 +950,138 @@ export class TermLoanApplicationDetailsComponent {
          * @implements get product details
          * @param id 
          */
-    getProductDefinitionByProductId(id: any) {
+      getProductDefinitionByProductId(id: any) {
       this.termLoanApplicationsService.getPreviewDetailsByProductId(id).subscribe(res => {
         this.responseModel = res;
-        if (this.responseModel != null && this.responseModel != undefined) {
-          this.termLoanProductDefinitionModel = this.responseModel.data[0];
+          if (this.responseModel != null && this.responseModel != undefined) {
+                this.termLoanProductDefinitionModel = this.responseModel.data[0];
 
-          if(this.termLoanProductDefinitionModel.loanLinkedshareCapitalApplicable != null && this.termLoanProductDefinitionModel.loanLinkedshareCapitalApplicable != undefined && this.termLoanProductDefinitionModel.loanLinkedshareCapitalApplicable)
-            this.termLoanProductDefinitionModel.loanLinkedshareCapitalApplicable = applicationConstants.YES;
-          else 
-            this.termLoanProductDefinitionModel.loanLinkedshareCapitalApplicable = applicationConstants.NO;
+                if (null != this.termLoanProductDefinitionModel.effectiveStartDate && undefined != this.termLoanProductDefinitionModel.effectiveStartDate)
+                  this.termLoanProductDefinitionModel.effectiveStartDate = this.datePipe.transform(this.termLoanProductDefinitionModel.effectiveStartDate, this.orgnizationSetting.datePipe);
+  
+                if (this.termLoanProductDefinitionModel.interestPostingFrequencyName != undefined && this.termLoanProductDefinitionModel.interestPostingFrequencyName != null)
+                  this.termLoanApplicationModel.repaymentFrequencyName = this.termLoanProductDefinitionModel.interestPostingFrequencyName;
+    
+                // this.repaymentFrequencyList = this.temprepaymentList.filter(obj => obj != null && obj.value == this.termLoanApplicationModel.repaymentFrequency);
+            if (this.termLoanProductDefinitionModel.termInterestPolicyConfigDTOList != undefined && this.termLoanProductDefinitionModel.termInterestPolicyConfigDTOList != null) {
+              this.termLoanInterestPolicyModel = this.termLoanProductDefinitionModel.termInterestPolicyConfigDTOList[0];
+            }
 
-            // if(this.termLoanProductDefinitionModel.isInsuranceAppicable != null && this.termLoanProductDefinitionModel.isInsuranceAppicable != undefined && this.termLoanProductDefinitionModel.isInsuranceAppicable)
-            //   this.termLoanProductDefinitionModel.isInsuranceAppicable = applicationConstants.YES;
-            // else 
-            //   this.termLoanProductDefinitionModel.isInsuranceAppicable = applicationConstants.NO
-          if (null != this.termLoanProductDefinitionModel.effectiveStartDate && undefined != this.termLoanProductDefinitionModel.effectiveStartDate)
-            this.termLoanProductDefinitionModel.effectiveStartDate = this.datePipe.transform(this.termLoanProductDefinitionModel.effectiveStartDate, this.orgnizationSetting.datePipe);
+            if (this.termLoanInterestPolicyModel.roi != undefined && this.termLoanInterestPolicyModel.roi != null)
+              this.termLoanApplicationModel.effectiveRoi = this.termLoanInterestPolicyModel.roi;
   
-          if (this.termLoanProductDefinitionModel.termProdCollateralsConfigList) {
-            this.collateralList = this.termLoanProductDefinitionModel.termProdCollateralsConfigList
-              .filter((item: any) => item != null && item.status === applicationConstants.ACTIVE)
-              .map((item: { collateralTypeName: string, collateralType: any }) => ({
-                label: item.collateralTypeName,
-                value: item.collateralType
-              }));
-          }
+              if (this.termLoanInterestPolicyModel.penalInterest != undefined && this.termLoanInterestPolicyModel.penalInterest != null)
+                this.termLoanApplicationModel.penalInterest = this.termLoanInterestPolicyModel.penalInterest;
+    
+              if (this.termLoanInterestPolicyModel.iod != undefined && this.termLoanInterestPolicyModel.iod != null)
+                this.termLoanApplicationModel.iod = this.termLoanInterestPolicyModel.iod;
   
+                if(this.termLoanProductDefinitionModel.loanLinkedshareCapitalApplicable != null && this.termLoanProductDefinitionModel.loanLinkedshareCapitalApplicable != undefined && this.termLoanProductDefinitionModel.loanLinkedshareCapitalApplicable)
+                  this.termLoanProductDefinitionModel.loanLinkedshareCapitalApplicable = applicationConstants.YES;
+                else 
+                  this.termLoanProductDefinitionModel.loanLinkedshareCapitalApplicable = applicationConstants.NO;
+    
+            if(this.termLoanProductDefinitionModel.isInsuranceAppicable != null && this.termLoanProductDefinitionModel.isInsuranceAppicable != undefined && this.termLoanProductDefinitionModel.isInsuranceAppicable)
+              this.termLoanProductDefinitionModel.isInsuranceAppicable = applicationConstants.YES;
+            else 
+              this.termLoanProductDefinitionModel.isInsuranceAppicable = applicationConstants.NO
+                if (null != this.termLoanProductDefinitionModel.effectiveStartDate && undefined != this.termLoanProductDefinitionModel.effectiveStartDate)
+                    this.termLoanProductDefinitionModel.effectiveStartDate = this.datePipe.transform(this.termLoanProductDefinitionModel.effectiveStartDate, this.orgnizationSetting.datePipe);
+    
+                if (this.termLoanProductDefinitionModel.termProdCollateralsConfigList) {
+                  this.collateralList = this.termLoanProductDefinitionModel.termProdCollateralsConfigList
+                    .filter((item: any) => item != null && item.status === applicationConstants.ACTIVE)
+                    .map((item: { collateralTypeName: string, collateralType: any }) => ({
+                      label: item.collateralTypeName,
+                      value: item.collateralType
+                    }));
+                }
   
-          if (this.termLoanProductDefinitionModel.termInterestPolicyConfigDTOList != null && this.termLoanProductDefinitionModel.termInterestPolicyConfigDTOList != undefined && this.termLoanProductDefinitionModel.termInterestPolicyConfigDTOList.length > 0) {
-            this.interestPolicyList = this.termLoanProductDefinitionModel.termInterestPolicyConfigDTOList;
-            this.interestPolicyList = this.interestPolicyList.filter((data: any) => data != null && data.effectiveStartDate != null).map((object: any) => {
-              object.effectiveStartDate = this.datePipe.transform(object.effectiveStartDate, this.orgnizationSetting.datePipe);
-              return object;
-            });
-          }
-          if (this.termLoanProductDefinitionModel.termApportionConfigDTOList != null && this.termLoanProductDefinitionModel.termApportionConfigDTOList != undefined && this.termLoanProductDefinitionModel.termApportionConfigDTOList.length > 0) {
-            this.collectionOrderList = this.termLoanProductDefinitionModel.termApportionConfigDTOList;
-            this.collectionOrderList = this.collectionOrderList.filter((data: any) => data != null && data.effectiveStartDate != null).map((object: any) => {
-              object.effectiveStartDate = this.datePipe.transform(object.effectiveStartDate, this.orgnizationSetting.datePipe);
-              return object;
-            });
-          }
-          if (this.termLoanProductDefinitionModel.termLoanLinkedSharecapitalConfigList != null && this.termLoanProductDefinitionModel.termLoanLinkedSharecapitalConfigList != undefined && this.termLoanProductDefinitionModel.termLoanLinkedSharecapitalConfigList.length > 0) {
-            this.linkedShareCapitalList = this.termLoanProductDefinitionModel.termLoanLinkedSharecapitalConfigList;
-            this.linkedShareCapitalList = this.linkedShareCapitalList.filter((data: any) => data != null && data.effectiveStartDate != null).map((object: any) => {
-              object.effectiveStartDate = this.datePipe.transform(object.effectiveStartDate, this.orgnizationSetting.datePipe);
-              return object;
-            });
-          }
+                //insurance details
+                this.insurenceFlag = this.termLoanProductDefinitionModel.isInsuranceAppicable;
+                if(this.insurenceFlag){
+                  if(this.termLoanApplicationModel.termLoanInsuranceDetailsDTO != null && this.termLoanApplicationModel.termLoanInsuranceDetailsDTO != undefined)
+                    this.termLoanInsuranceDetailsModel= this.termLoanApplicationModel.termLoanInsuranceDetailsDTO;
+                }
+                if (this.termLoanProductDefinitionModel.termInterestPolicyConfigDTOList != null && this.termLoanProductDefinitionModel.termInterestPolicyConfigDTOList != undefined && this.termLoanProductDefinitionModel.termInterestPolicyConfigDTOList.length > 0) {
+                  this.interestPolicyList = this.termLoanProductDefinitionModel.termInterestPolicyConfigDTOList;
+                  this.interestPolicyList = this.interestPolicyList.filter((data: any) => data != null && data.effectiveStartDate != null).map((object: any) => {
+                    object.effectiveStartDate = this.datePipe.transform(object.effectiveStartDate, this.orgnizationSetting.datePipe);
+                    return object;
+                  });
+                }
+               
+                
+                if (this.termLoanProductDefinitionModel.termApportionConfigDTOList != null && this.termLoanProductDefinitionModel.termApportionConfigDTOList != undefined && this.termLoanProductDefinitionModel.termApportionConfigDTOList.length > 0) {
+                  this.collectionOrderList = this.termLoanProductDefinitionModel.termApportionConfigDTOList;
+                  this.collectionOrderList = this.collectionOrderList.filter((data: any) => data != null && data.effectiveStartDate != null).map((object: any) => {
+                    object.effectiveStartDate = this.datePipe.transform(object.effectiveStartDate, this.orgnizationSetting.datePipe);
+                    return object;
+                  });
+                }
+                if (this.termLoanProductDefinitionModel.termLoanLinkedSharecapitalConfigList != null && this.termLoanProductDefinitionModel.termLoanLinkedSharecapitalConfigList != undefined && this.termLoanProductDefinitionModel.termLoanLinkedSharecapitalConfigList.length > 0) {
+                  this.linkedShareCapitalList = this.termLoanProductDefinitionModel.termLoanLinkedSharecapitalConfigList;
+                  this.linkedShareCapitalList = this.linkedShareCapitalList.filter((data: any) => data != null && data.effectiveStartDate != null).map((object: any) => {
+                    object.effectiveStartDate = this.datePipe.transform(object.effectiveStartDate, this.orgnizationSetting.datePipe);
+                    return object;
+                  });
+                }
+    
+                if (this.termLoanProductDefinitionModel.termProductChargesConfigDTOList != null && this.termLoanProductDefinitionModel.termProductChargesConfigDTOList != undefined && this.termLoanProductDefinitionModel.termProductChargesConfigDTOList.length > 0) {
+                  this.chargesList = this.termLoanProductDefinitionModel.termProductChargesConfigDTOList;
+                  this.chargesList = this.chargesList.filter((data: any) => data != null && data.effectiveStartDate != null).map((object: any) => {
+                    object.effectiveStartDate = this.datePipe.transform(object.effectiveStartDate, this.orgnizationSetting.datePipe);
+                    return object;
+                  });
+                }
+                if (this.termLoanProductDefinitionModel.termProdPurPoseConfgList != null && this.termLoanProductDefinitionModel.termProdPurPoseConfgList != undefined && this.termLoanProductDefinitionModel.termProdPurPoseConfgList.length > 0) {
+                  this.purposeList = this.termLoanProductDefinitionModel.termProdPurPoseConfgList;
+                  this.purposeList = this.purposeList.filter((data: any) => data != null && data.effectiveStartDate != null).map((object: any) => {
+                    object.effectiveStartDate = this.datePipe.transform(object.effectiveStartDate, this.orgnizationSetting.datePipe);
+                    return object;
+                  });
+                }
+    
+                if (this.termLoanProductDefinitionModel.termRequiredDocumentsConfigDTOList != null && this.termLoanProductDefinitionModel.termRequiredDocumentsConfigDTOList != undefined && this.termLoanProductDefinitionModel.termRequiredDocumentsConfigDTOList.length > 0) {
+                  this.requiredDocumentsList = this.termLoanProductDefinitionModel.termRequiredDocumentsConfigDTOList;
+                  this.requiredDocumentsList = this.requiredDocumentsList.filter((data: any) => data != null && data.effectiveStartDate != null).map((object: any) => {
+                    object.effectiveStartDate = this.datePipe.transform(object.effectiveStartDate, this.orgnizationSetting.datePipe);
+                    return object;
+                  });
+            if (this.termLoanProductDefinitionModel.termLoanFieldVisitConfigDTOList != null && this.termLoanProductDefinitionModel.termLoanFieldVisitConfigDTOList != undefined && this.termLoanProductDefinitionModel.termRequiredDocumentsConfigDTOList.length > 0) {
+              this.fieldvisitList = this.termLoanProductDefinitionModel.termLoanFieldVisitConfigDTOList;
+              for (let fieldVisit of this.fieldvisitList) {
+                if (fieldVisit.visitRole != null) {
+                  let rolesSelected = fieldVisit.visitRole.split(',');
   
-          if (this.termLoanProductDefinitionModel.termProductChargesConfigDTOList != null && this.termLoanProductDefinitionModel.termProductChargesConfigDTOList != undefined && this.termLoanProductDefinitionModel.termProductChargesConfigDTOList.length > 0) {
-            this.chargesList = this.termLoanProductDefinitionModel.termProductChargesConfigDTOList;
-            this.chargesList = this.chargesList.filter((data: any) => data != null && data.effectiveStartDate != null).map((object: any) => {
-              object.effectiveStartDate = this.datePipe.transform(object.effectiveStartDate, this.orgnizationSetting.datePipe);
-              return object;
-            });
-          }
-          if (this.termLoanProductDefinitionModel.termProdPurPoseConfgList != null && this.termLoanProductDefinitionModel.termProdPurPoseConfgList != undefined && this.termLoanProductDefinitionModel.termProdPurPoseConfgList.length > 0) {
-            this.purposeList = this.termLoanProductDefinitionModel.termProdPurPoseConfgList;
-            this.purposeList = this.purposeList.filter((data: any) => data != null && data.effectiveStartDate != null).map((object: any) => {
-              object.effectiveStartDate = this.datePipe.transform(object.effectiveStartDate, this.orgnizationSetting.datePipe);
-              return object;
-            });
-          }
+                  if (rolesSelected.length > 0) {
   
-          if (this.termLoanProductDefinitionModel.termRequiredDocumentsConfigDTOList != null && this.termLoanProductDefinitionModel.termRequiredDocumentsConfigDTOList != undefined && this.termLoanProductDefinitionModel.termRequiredDocumentsConfigDTOList.length > 0) {
-            this.requiredDocumentsList = this.termLoanProductDefinitionModel.termRequiredDocumentsConfigDTOList;
-            this.requiredDocumentsList = this.requiredDocumentsList.filter((data: any) => data != null && data.effectiveStartDate != null).map((object: any) => {
-              object.effectiveStartDate = this.datePipe.transform(object.effectiveStartDate, this.orgnizationSetting.datePipe);
-              return object;
-            });
+                    fieldVisit.visitRoleNames = fieldVisit.visitRoleNames || [];
+  
+                    for (let id of rolesSelected) {
+  
+                      let matchedRole = this.visiRoleList.find(role => role.value === Number(id));
+  
+                      if (matchedRole) {
+                        fieldVisit.visitRoleNames.push(matchedRole.label);
+                      }
+                    }
+                  }
+                }
+              }
+            }
+
+            if (this.termLoanProductDefinitionModel.termLoanDisbursementScheduleDTOList != null && this.termLoanProductDefinitionModel.termLoanDisbursementScheduleDTOList != undefined && this.termLoanApplicationModel.termLoanDisbursementDTOList.length > 0) {
+              this.termLoanDisbursementScheduleList = this.termLoanProductDefinitionModel.termLoanDisbursementScheduleDTOList;
+              this.termLoanDisbursementScheduleList = this.termLoanDisbursementScheduleList.filter((data: any) => data != null && data.disbursementDate != null).map((object: any) => {
+                object.disbursementDateVal = this.datePipe.transform(object.disbursementDate, this.orgnizationSetting.datePipe);
+                return object;
+              });
           }
-        }
-      });
-    }
+            }
+          }
+        });
+      }
     productViewPopUp(){
       this.displayDialog = true;
       if(this.termLoanApplicationModel.termProductId != null && this.termLoanApplicationModel.termProductId != undefined){
@@ -1184,4 +1142,36 @@ export class TermLoanApplicationDetailsComponent {
       
     }
 }
+
+
+
+
+calculateDisbursement() {
+  if (!this.termLoanApplicationModel.requestedAmount || !this.termLoanProductDefinitionModel.termLoanDisbursementScheduleDTOList) {
+    this.termLoanDisbursementScheduleList = []; // Reset list if data is incomplete
+    return;
+  }
+
+  const requestedAmount = this.termLoanApplicationModel.requestedAmount;
+  const currentDate = new Date();
+
+  this.termLoanDisbursementScheduleList = this.termLoanProductDefinitionModel.termLoanDisbursementScheduleDTOList.map((schedule: { visitNumber: any; tenureTypeName: any;disbursementPercentage: number; visitTenure: number; }) => {
+    const percentage = (schedule.disbursementPercentage / 100) * this.requestedAmount;
+  
+    const visitTenure = schedule.visitTenure ?? 0;
+
+    const disbursementDate = new Date(currentDate);
+    disbursementDate.setDate(disbursementDate.getDate() + visitTenure);
+    const formattedDate = `${String(disbursementDate.getDate()).padStart(2, '0')}/${String(disbursementDate.getMonth() + 1).padStart(2, '0')}/${disbursementDate.getFullYear()}`;
+
+    return {
+      disbursementOrder: schedule.visitNumber,
+      typeName: schedule.tenureTypeName,
+      disbursementAmount: percentage,
+      disbursementDateVal: formattedDate
+    };
+  });
+}
+
+
 }

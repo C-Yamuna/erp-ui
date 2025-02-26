@@ -1382,7 +1382,7 @@ export class TermLoanStepperComponent {
         }, 3000);
       });
     } else {
-      this.termLoanApplicationModel.accountStatusName =  applicationConstants.IN_PROGRESS;
+      this.termLoanApplicationModel.statusName =  applicationConstants.IN_PROGRESS;
       if(activeIndex != 3){
       if (this.termLoanApplicationModel.termLoanInsuranceDetailsDTO != undefined && this.termLoanApplicationModel.termLoanInsuranceDetailsDTO != null)
         this.termLoanApplicationModel.termLoanInsuranceDetailsDTO.statusName = applicationConstants.IS_ACTIVE;

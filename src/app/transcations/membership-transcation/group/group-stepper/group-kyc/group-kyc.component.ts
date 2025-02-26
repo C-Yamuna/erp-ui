@@ -208,15 +208,14 @@ export class GroupKYCComponent implements OnInit{
               return { label: state.name, value: state.id };
             });
             this.requiredDocumentList = this.responseModel.data.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE && obj.isMandatory == applicationConstants.TRUE);
-             // Step 3: Show note if mandatory documents exist
-              if (this.requiredDocumentList.length > 0) {
-                this.requiredDocumentsNames = "Please Upload Mandatory KYC Documents ";
-                this.requiredDocumentsNames += this.requiredDocumentList.map(doc => `${doc.name}`).join(", ");
-                // this.requiredDocumentsNames += ")";
-                this.mandatoryDoxsTextShow = true;
+            if (this.requiredDocumentList.length > 0) {
+              const documentNames = this.requiredDocumentList.map(doc => doc.name).join(",");
+              this.requiredDocumentsNames = `Please Upload Mandatory KYC Documents: "${documentNames}"`;
+              this.mandatoryDoxsTextShow = true;
             } else {
-                this.mandatoryDoxsTextShow = false;
+              this.mandatoryDoxsTextShow = false;
             }
+      
           }
           else {
             this.msgs = [];

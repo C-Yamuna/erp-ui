@@ -31,5 +31,9 @@ export class TermLoanFieldVisitService {
     let headers = new HttpHeaders({ 'id': id + '', })
     return this.commonHttpService.delete( headers, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.TERM_LOAN_FIELD_VISIT_CONFIG + ERP_TRANSACTION_CONSTANTS.DELETE);
   }
+  getTermLoanRequiredFieldVisitByProductId(id: any){
+    let headers = new HttpHeaders({ 'id': id + '', })
+    return this.commonHttpService.getById( headers, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.TERM_LOAN_FIELD_VISIT_CONFIG + ERP_TRANSACTION_CONSTANTS.GET_TERM_LOAN_FIELD_VISIT_LIST_BY_PRODUCT_ID);
+  }
 
 }

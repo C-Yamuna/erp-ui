@@ -6,98 +6,18 @@
         <div class="col-12 bg-label-colorfull p-0">
             <div class="row g-3">
                 <div class="col-lg-6 col-md-12 col-sm-12">
-                    <h6 class="super-sub-heading">{{'TERMDEPOSITSTRANSACTION.COMMUNICATION_ADDRESS' | translate}}</h6>
-                    <div class="col-12 global-border">
-                        <div class="col-12">
-                            <div class="row g-3 mt-n1">
-                                <div class="col-lg-6 col-md-6 col-sm-12">
-                                    <div class="form-label">
-                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.STATE' | translate}}</label>
-
-                                        <p-dropdown [filter]="true" [options]="statesList" placeholder="Select"
-                                            formControlName="stateName"
-                                            [(ngModel)]="fdNonCumulativeCommunicationModel.stateId"
-                                            (onChange)="getAllDistrictsByStateId(fdNonCumulativeCommunicationModel.stateId,true)"></p-dropdown>
-
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-12">
-                                    <div class="form-label">
-                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.DISTRICT' | translate}}</label>
-
-                                        <p-dropdown [filter]="true" [options]="districtsList" placeholder="Select"
-                                            formControlName="districtId"
-                                            [(ngModel)]="fdNonCumulativeCommunicationModel.districtId"
-                                            (onChange)="getAllMandalsByDistrictId(fdNonCumulativeCommunicationModel.districtId,true)"></p-dropdown>
-
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-12">
-                                    <div class="form-label">
-                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.MANDAL/TESHIL' | translate}} </label>
-
-                                        <p-dropdown [filter]="true" [options]="mandalsList" placeholder="Select"
-                                            formControlName="subDistrictId"
-                                            [(ngModel)]="fdNonCumulativeCommunicationModel.subDistrictId"
-                                            (onChange)="getAllVillagesByMandalId(fdNonCumulativeCommunicationModel.subDistrictId,true)"></p-dropdown>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-12">
-                                    <div class="form-label">
-                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.VILLAGE' | translate}} </label>
-
-                                        <p-dropdown [filter]="true" [options]="villageList" placeholder="Select"
-                                            formControlName="villageId"
-                                            (onChange)='getVillage(fdNonCumulativeCommunicationModel.villageId)'
-                                            [(ngModel)]="fdNonCumulativeCommunicationModel.villageId"></p-dropdown>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-12">
-                                    <div class="form-label">
-                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.ADDRESS' | translate}}</label>
-                                        <textarea type="text" class="form-control" pInputTextarea placeholder="House No., Door No., Landmark..etc"
-                                            formControlName="address1" (keyup)="RegAddressToComAddress()"
-                                            [(ngModel)]="fdNonCumulativeCommunicationModel.address1"></textarea>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-6 col-md-6 col-sm-12">
-                                    <div class="form-label">
-                                        <label for="username"><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.PINCODE' | translate}}
-                                        </label>
-
-                                        <input pInputText id="bunit_txt_name" maxlength="40" type="text"
-                                            formControlName="pinCode" placeholder="Enter Pincode"
-                                            (keyup)="RegAddressToComAddress()"
-                                            [(ngModel)]="fdNonCumulativeCommunicationModel.pinCode">
-                                        <p-message severity="error" text="Enter Valid pinCode"
-                                            *ngIf="!communicationForm.controls['pinCode'].valid && communicationForm.controls['pinCode'].dirty">
-                                        </p-message>
-                                    </div>
-                                </div>
-                            </div>
-                    </div>
-                </div>
-                </div>
-                <div class="col-lg-6 col-md-12 col-sm-12">
                     <!-- <div class="col-12"> -->
                     <div class="d-flex justify-content-between mt-xl-0 mt-lg-0 mt-4">
                         <h6 class="super-sub-heading">{{'TERMDEPOSITSTRANSACTION.PERMANENT' | translate}}</h6>
-                        <div class="grid mr-3 d-flex">
-                            <p-inputSwitch formControlName="isSameAddress"
-                                [(ngModel)]="fdNonCumulativeCommunicationModel.isSameAddress"
-                                (click)="sameAsPerAddr(fdNonCumulativeCommunicationModel.isSameAddress)"></p-inputSwitch>
-                            <p class="pl-1 m-0">{{'TERMDEPOSITSTRANSACTION.SAME_AS_REGISTERED_ADDRESS' | translate}}</p>
 
-                        </div>
                     </div>
                     <div class="col-12 global-border">
                         <div class="col-12">
                             <div class="row g-3 mt-n1">
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.STATE' | translate}}</label>
-
+                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.STATE' |
+                                            translate}}</label>
                                         <p-dropdown [options]="permanentStatesList" placeholder="Select"
                                             formControlName="permanentStateId"
                                             [(ngModel)]="fdNonCumulativeCommunicationModel.permanentStateId"
@@ -106,7 +26,8 @@
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.DISTRICT' | translate}}</label>
+                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.DISTRICT' |
+                                            translate}}</label>
 
                                         <p-dropdown [options]="permenentDistrictList" placeholder="Select "
                                             formControlName="permanentDistrictId"
@@ -116,7 +37,8 @@
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label><span class="red">*</span> {{'TERMDEPOSITSTRANSACTION.MANDAL/TESHIL' | translate}}</label>
+                                        <label><span class="red">*</span> {{'TERMDEPOSITSTRANSACTION.MANDAL/TESHIL' |
+                                            translate}}</label>
 
                                         <p-dropdown [options]="permenentSubDistrictList"
                                             placeholder="{{'TERMDEPOSITSTRANSACTION.SELECT' | translate}}"
@@ -128,12 +50,31 @@
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.VILLAGE' | translate}} </label>
+                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.VILLAGE' |
+                                            translate}} </label>
 
                                         <p-dropdown [options]="permenentVillageList" placeholder="Select "
                                             formControlName="permanentVillageId"
                                             [(ngModel)]="fdNonCumulativeCommunicationModel.permanentVillageId"
                                             (onChange)='getPermanentVillage(fdNonCumulativeCommunicationModel.permanentVillageId)'></p-dropdown>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                                    <div class="form-label">
+                                        <label for="username">
+                                            {{'TERMDEPOSITSTRANSACTION.DIVISION' | translate}}
+                                        </label>
+                                        <input pInputText id="bunit_txt_name" type="text" formControlName="permanentDivision"
+                                            [(ngModel)]="this.fdNonCumulativeCommunicationModel.permanentDivisionName">
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                                    <div class="form-label">
+                                        <label for="username">
+                                            {{'TERMDEPOSITSTRANSACTION.BLOCK' | translate}}
+                                        </label>
+                                        <input pInputText id="bunit_txt_name" type="text" formControlName="permanentBlock"
+                                            [(ngModel)]="this.fdNonCumulativeCommunicationModel.permanentBlockName">
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
@@ -146,16 +87,19 @@
                                             formControlName="permanentAddress1"
                                             placeholder="House No., Door No., Landmark..etc"
                                             [(ngModel)]="fdNonCumulativeCommunicationModel.permanentAddress1"
+                                            (keyup)="RegAddressToComAddress()"
                                             [disabled]="sameAsPermanentAddress"></textarea>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label for="username"><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.PINCODE' | translate}}
+                                        <label for="username"><span
+                                                class="red">*</span>{{'TERMDEPOSITSTRANSACTION.PINCODE' | translate}}
                                         </label>
 
                                         <input pInputText id="bunit_txt_name" maxlength="40" type="text"
                                             placeholder="Enter Pincode" formControlName="permanentPinCode"
+                                            (keyup)="RegAddressToComAddress()"
                                             [(ngModel)]="fdNonCumulativeCommunicationModel.permanentPinCode">
                                         <p-message severity="error" text="Enter Valid pinCode"
                                             *ngIf="!communicationForm.controls['permanentPinCode'].valid && communicationForm.controls['permanentPinCode'].dirty">
@@ -163,10 +107,119 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
                     </div>
                 </div>
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                    <div class="d-flex justify-content-between mt-xl-0 mt-lg-0 mt-4">
+                        <h6 class="super-sub-heading">{{'TERMDEPOSITSTRANSACTION.COMMUNICATION_ADDRESS' | translate}}</h6>
+                        <div class="grid mr-3 d-flex">
+                            <p-inputSwitch formControlName="isSameAddress"
+                                [(ngModel)]="fdNonCumulativeCommunicationModel.isSameAddress"
+                                (click)="sameAsPerAddr(fdNonCumulativeCommunicationModel.isSameAddress)"></p-inputSwitch>
+                             <p class="pl-1 m-0">{{'TERMDEPOSITSTRANSACTION.SAME_AS_PERMANENT_ADDRESS' | translate}}</p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-12 global-border">
+                        <div class="col-12">
+                            <div class="row g-3 mt-n1">
+                                <div class="col-lg-6 col-md-6 col-sm-12">
+                                    <div class="form-label">
+                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.STATE' |
+                                            translate}}</label>
+
+                                        <p-dropdown [filter]="true" [options]="statesList" placeholder="Select"
+                                            formControlName="stateName"
+                                            [(ngModel)]="fdNonCumulativeCommunicationModel.stateId"
+                                            (onChange)="getAllDistrictsByStateId(fdNonCumulativeCommunicationModel.stateId,true)"></p-dropdown>
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12">
+                                    <div class="form-label">
+                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.DISTRICT' |
+                                            translate}}</label>
+
+                                        <p-dropdown [filter]="true" [options]="districtsList" placeholder="Select"
+                                            formControlName="districtId"
+                                            [(ngModel)]="fdNonCumulativeCommunicationModel.districtId"
+                                            (onChange)="getAllMandalsByDistrictId(fdNonCumulativeCommunicationModel.districtId,true)"></p-dropdown>
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12">
+                                    <div class="form-label">
+                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.MANDAL/TESHIL' |
+                                            translate}} </label>
+
+                                        <p-dropdown [filter]="true" [options]="mandalsList" placeholder="Select"
+                                            formControlName="subDistrictId"
+                                            [(ngModel)]="fdNonCumulativeCommunicationModel.subDistrictId"
+                                            (onChange)="getAllVillagesByMandalId(fdNonCumulativeCommunicationModel.subDistrictId,true)"></p-dropdown>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12">
+                                    <div class="form-label">
+                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.VILLAGE' |
+                                            translate}} </label>
+
+                                        <p-dropdown [filter]="true" [options]="villageList" placeholder="Select"
+                                            formControlName="villageId"
+                                            (onChange)='getVillage(fdNonCumulativeCommunicationModel.villageId)'
+                                            [(ngModel)]="fdNonCumulativeCommunicationModel.villageId"></p-dropdown>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                                    <div class="form-label">
+                                        <label for="username">
+                                            {{'TERMDEPOSITSTRANSACTION.DIVISION' | translate}}
+                                        </label>
+                                        <input pInputText id="bunit_txt_name" type="text" formControlName="division"
+                                            [(ngModel)]="this.fdNonCumulativeCommunicationModel.divisionName">
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                                    <div class="form-label">
+                                        <label for="username">
+                                            {{'TERMDEPOSITSTRANSACTION.BLOCK' | translate}}
+                                        </label>
+                                        <input pInputText id="bunit_txt_name" type="text" formControlName="block"
+                                            [(ngModel)]="this.fdNonCumulativeCommunicationModel.blockName">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12">
+                                    <div class="form-label">
+                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.ADDRESS' |
+                                            translate}}</label>
+                                        <textarea type="text" class="form-control" pInputTextarea
+                                            placeholder="House No., Door No., Landmark..etc" formControlName="address1"
+                                            [(ngModel)]="fdNonCumulativeCommunicationModel.address1"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 col-md-6 col-sm-12">
+                                    <div class="form-label">
+                                        <label for="username"><span
+                                                class="red">*</span>{{'TERMDEPOSITSTRANSACTION.PINCODE' | translate}}
+                                        </label>
+
+                                        <input pInputText id="bunit_txt_name" maxlength="40" type="text"
+                                            formControlName="pinCode" placeholder="Enter Pincode"
+                                            [(ngModel)]="fdNonCumulativeCommunicationModel.pinCode">
+                                        <p-message severity="error" text="Enter Valid pinCode"
+                                            *ngIf="!communicationForm.controls['pinCode'].valid && communicationForm.controls['pinCode'].dirty">
+                                        </p-message>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-        </div>
         </div>
     </form>
 

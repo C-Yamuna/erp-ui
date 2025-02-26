@@ -84,9 +84,9 @@ export class SavingsBankApplicationComponent implements OnInit {
       productInfo: [''],
       accountMember: [''],
       minimumBalenceRequired: [{ value: '', disabled: true }],
+      minimumBalenceRequiredWithoutCheque: [{ value: '', disabled: true }],
       accountOpeningDate:  [{ value: '', disabled: true }],
       accountNumber: [{ value: '', disabled: true }],
-
     })
     this.productInforFrom = this.formBuilder.group({
       productName: ['', Validators.required],
@@ -392,7 +392,6 @@ export class SavingsBankApplicationComponent implements OnInit {
               return object;
             });
           }
-
           if (this.productDefinitionModel.requiredDocumentsConfigList != null && this.productDefinitionModel.requiredDocumentsConfigList != undefined && this.productDefinitionModel.requiredDocumentsConfigList.length > 0) {
             this.requireddocumentlist = this.productDefinitionModel.requiredDocumentsConfigList;
             this.requireddocumentlist = this.requireddocumentlist.filter((data: any) => data != null && data.effectiveStartDate != null).map((object: any) => {

@@ -129,7 +129,7 @@ export class DepositInvestmentsComponent {
     if (this.investmentApplicationDetailsModel.maturityDate) {
       this.investmentApplicationDetailsModel.maturityDate = this.commonFunctionsService.getUTCEpoch(new Date(this.investmentApplicationDetailsModel.maturityDate));
     }
-    this.investmentApplicationDetailsModel.accountStatusName = "In Progress";
+    this.investmentApplicationDetailsModel.statusName = "In Progress";
     if (investmentApplicationDetailsModel.id != null && investmentApplicationDetailsModel.id != undefined) {
       this.investmentApplicationDetailsService.updateInvestmentApplicationDetails(investmentApplicationDetailsModel).subscribe((response: any) => {
         this.responseModel = response;

@@ -1471,72 +1471,59 @@
                 </p-scrollPanel>
                 <div class="col-12 viewbottom-footer icon-size">
                     <div class="row">
-                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4" *ngIf="isShowSubmit">
-                            <p-button icon="fa fa-download" iconPos="left" pTooltip="Filename.pdf" tooltipPosition="top"
-                                (click)="pdfDownload()"></p-button>
-                            <!-- <p-button  icon="fa fa-print" iconPos="left" pTooltip="Print" tooltipPosition="top"></p-button> -->
-                        </div>
-                        <div class="col-3 p-3 bottom-padding"></div>
-                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-4" *ngIf="isShowSubmit">
+                        <!-- <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4">
+                            <p-button icon="fa fa-download" iconPos="left" pTooltip="Filename.pdf"
+                                tooltipPosition="top"></p-button>
+                            <p-button icon="fa fa-print" iconPos="left" pTooltip="Print"
+                                tooltipPosition="top"></p-button>
+    
+                        </div> -->
+                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4">
                             <div class="form-label">
-                                <span class=""> {{ 'TERMDEPOSITSTRANSACTION.UPLOAD_DOCUMENT' | translate }} </span>
+                                <span class=""> {{ 'ERP.UPLOAD_DOCUMENT' | translate }} </span>
                                 <div class="uplodad-style align-items-center">
                                     <!-- Upload Button Column -->
                                     <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
-                                        id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".pdf"
-                                        (onRemove)="fileRemoveEvent()" (onSelect)="fileUploader($event, fileUpload)">
+                                        id="apply-leave_fileUp_attach" chooseLabel=" " name="file"
+                                        accept=".png,.jpg,.jpeg" (onRemove)="fileRemoveEvent()"
+                                        (onSelect)="fileUploader($event,fileUpload )">
                                     </p-fileUpload>
                                     <div class="col-12  d-flex p-1 contant-body"
                                         *ngFor="let img of fdNonCumulativeApplicationModel.multipartFileListsignedCopyPath">
-                                        <div *ngIf="img.fileType=='pdf'">
-                                            <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22"
+                                        <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                            <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22"
                                                     height="22"></a>
                                         </div>
                                         <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
                                             tooltipPosition="bottom">
-                                            {{img.fileName}}
-                                        </div>
+                                            {{img.fileName}}</div>
+    
                                     </div>
+    
                                 </div>
                             </div>
+    
                         </div>
-
-                        <div class="col-xl-7 col-lg-5 col-md-4 col-sm-4 mt-4" *ngIf="isShowSubmit">
-                            <div class="d-flex justify-content-end">
-                                <p-button (click)="backbutton()" label="BACK"></p-button>
-                                <p-button *ngIf="isShowSubmit" label="{{'TERMDEPOSITSTRANSACTION.SUBMIT' | translate}}"
-                                    (click)="submit()" [disabled]="isDisableSubmit"></p-button>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4" *ngIf="viewButton">
+                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4">
                             <div class="form-label">
-                                <h6 class="label-view"> {{ 'ERP.SCANNED COPY' | translate }} </h6>
-                                <div class="d-flex mt-2"
-                                    *ngFor="let img of fdNonCumulativeApplicationModel.multipartFileListsignedCopyPath">
-                                    <div *ngIf="img.fileType=='pdf'">
-                                        <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22"
-                                                height="22"></a>
-                                    </div>
-                                    <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
-                                        tooltipPosition="bottom">
-                                        {{img.fileName}}
-                                    </div>
-                                </div>
-                                <!-- </div> -->
+                                <label> <span class="red">*</span> {{'ERP.STATUS' | translate}}</label>
+                                <p-dropdown [filter]="true" [options]="statusList" placeholder="Select"
+                                    [(ngModel)]="fdNonCumulativeApplicationModel.statusName" (onChange)="onStatusChange($event)"></p-dropdown>
                             </div>
                         </div>
-                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4" *ngIf="editFlag || viewButton">
-                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.STATUS' | translate}}</p>
-                            <p class="label-input-text">{{fdNonCumulativeApplicationModel.accountStatusName}}</p>
+    
+                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4">
+                            <div class="form-label">
+                                <label>{{'ERP.REMARKS' | translate}}</label>
+                                <textarea type="text" class="form-control" pInputTextarea
+                                    placeholder="Enter Remarks Here"
+                                    [(ngModel)]="fdNonCumulativeApplicationModel.remarks"></textarea>
+                            </div>
                         </div>
-                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4" *ngIf="editFlag || viewButton">
-                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.REMARKS' | translate}}</p>
-                            <p class="label-input-text">{{fdNonCumulativeApplicationModel.remarks}}</p>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4" *ngIf="editFlag || viewButton">
+                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4">
                             <div class="d-flex justify-content-end">
                                 <p-button (click)="backbutton()" label="BACK"></p-button>
-                                <p-button *ngIf="isShowSubmit" label="{{'TERMDEPOSITSTRANSACTION.SUBMIT' | translate}}"
+                                <p-button label="{{'TERMDEPOSITSTRANSACTION.SUBMIT' | translate}}"
                                     (click)="submit()" [disabled]="isDisableSubmit"></p-button>
                             </div>
                         </div>

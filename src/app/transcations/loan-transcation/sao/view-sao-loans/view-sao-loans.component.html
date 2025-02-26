@@ -1282,14 +1282,14 @@
                     <div class="row">
                         <div class="col-xl-3 col-lg-4 col-md-3 col-sm-4 mt-4">
                             <p-button icon="fa fa-download" iconPos="left" (click)="pdfDownload()"
-                                pTooltip="Filename.pdf" tooltipPosition="top"></p-button>
+                                pTooltip="FilledApplication" tooltipPosition="top"></p-button>
                             <!-- <p-button icon="fa fa-print" iconPos="left" pTooltip="Print"
                                 tooltipPosition="top"></p-button> -->
                         </div>
 
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12" *ngIf="!editOpt && preveiwFalg">
                             <div class="form-label">
-                                <span class=""><span class="red">*</span>{{ 'ERP.UPLOAD_DOCUMENT' | translate}} </span>
+                                <span class=""><span class="red">*</span>{{ 'LOANS.DOCUMENT_COPY' | translate}} </span>
                                 <div class="uplodad-style align-items-center">
                                     <!-- Upload Button Column -->
                                     <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"

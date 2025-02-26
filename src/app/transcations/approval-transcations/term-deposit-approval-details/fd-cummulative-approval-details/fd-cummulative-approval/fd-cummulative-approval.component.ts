@@ -197,10 +197,10 @@ export class FdCummulativeApprovalComponent {
   }
   submit() {
     // Determine the status name before submission
-    if (this.fdCumulativeApplicationModel.accountStatus != null && this.fdCumulativeApplicationModel.accountStatus != undefined) {
-      const accountStatusName = this.statusList.find((data: any) => data != null && data.value === this.fdCumulativeApplicationModel.accountStatusName);
-      if (accountStatusName != null && accountStatusName != undefined) {
-        this.fdCumulativeApplicationModel.accountStatusName = accountStatusName.label;
+    if (this.fdCumulativeApplicationModel.status != null && this.fdCumulativeApplicationModel.status != undefined) {
+      const statusName = this.statusList.find((data: any) => data != null && data.value === this.fdCumulativeApplicationModel.statusName);
+      if (statusName != null && statusName != undefined) {
+        this.fdCumulativeApplicationModel.statusName = statusName.label;
       }
     } else {
       this.commonComponent.stopSpinner();
@@ -250,7 +250,7 @@ export class FdCummulativeApprovalComponent {
       if (this.responseModel.status != null && this.responseModel.status != undefined && this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
           this.fdCumulativeApplicationModel = this.responseModel.data[0];
-          if(this.fdCumulativeApplicationModel.accountStatusName == CommonStatusData.SUBMISSION_FOR_APPROVAL){
+          if(this.fdCumulativeApplicationModel.statusName == CommonStatusData.SUBMISSION_FOR_APPROVAL){
             this.isDisableSubmit = true;
           }
           else{
@@ -397,7 +397,7 @@ export class FdCummulativeApprovalComponent {
 
   // for submit button validation based on status
   onStatusChange(event: any) {
-    if (this.fdCumulativeApplicationModel.accountStatusName != null && this.fdCumulativeApplicationModel.accountStatusName != undefined) {
+    if (this.fdCumulativeApplicationModel.statusName != null && this.fdCumulativeApplicationModel.statusName != undefined) {
       this.isDisableSubmit = false;
     }
     else {

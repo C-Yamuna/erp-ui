@@ -46,4 +46,8 @@ export class SiLoanDisbursement {
      disbursementDateVal:any;
 
      transactionDateVal:any;
+
+     dueDisbursmentDateVal:any;
+
+     dueDisbursmentDate : any;
 }

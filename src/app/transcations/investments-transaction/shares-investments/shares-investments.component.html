@@ -67,13 +67,13 @@
                         <span class="">{{ 'ERP.UPLOAD' | translate }}&nbsp;{{ 'INVESTMENTS_TRANSACTIONS.SHARES_CERTIFICATE' | translate }} </span>
                         <div class="uplodad-style align-items-center">
                             <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]" chooseLabel=" "
-                                id="apply-leave_fileUp_attach" name="file" accept=".png,.jpg,.jpeg,.pdf" [customUpload]="true"
+                                id="apply-leave_fileUp_attach" name="file" accept=".pdf" [customUpload]="true"
                                 (onRemove)="fileRemoveEvent()" (onSelect)="imageUploader($event,fileUpload)">
                             </p-fileUpload>
                             <div class="col-12  d-flex p-1 contant-body" *ngFor="let img of sharesInvestmentsModel.multipartFileList">
-                                <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                <!-- <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                     <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22" height="22"></a>
-                                </div>
+                                </div> -->
                                 <div *ngIf="img.fileType=='pdf'">
                                     <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22" height="22"></a>
                                 </div>

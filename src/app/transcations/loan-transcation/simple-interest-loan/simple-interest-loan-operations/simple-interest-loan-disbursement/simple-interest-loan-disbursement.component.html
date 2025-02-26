@@ -4,368 +4,1171 @@
     <div class="row">
         <div class="d-flex justify-content-between top-header-section">
             <div class="main-heading mt-1 justify-content-start">{{'LOANS.SIMPLE_INTEREST_LOANS' | translate}} <i
-                    class="fa fa-angle-right font-bold mr-3 ml-3"></i>{{'ERP.DISBURSEMENT' | translate}}</div>
+                    class="fa fa-angle-right font-bold mr-3 ml-3"></i>{{'ERP.DISBURSEMENT_DETAILS' | translate}}</div>
         </div>
     </div>
     <div class="row">
         <div class="col-25-right">
-            <div class="col-12 sao-side-disbursment-card">
-                <div class="col-12">
-                    <h6 class="transaction-side-card-header">{{'ERP.ACCOUNT_DETAILS' | translate}}</h6>
+            <!-- member ship card -->
+            <!-- Individual view screen -->
+            <div class="col-12 basic-view side-card-style" *ngIf="individualFlag">
+                <div class="col-12 inner-border">
+                    <div class="side-card-header-border">
+                        <div class="row">
+                            <div class="col-10 py-0">
+                    <h6 class="side-card-header">{{'ERP.BASIC_DETAILS' | translate}}</h6>
                 </div>
-                <div class="col-12 pic-sig-status">
-                    <div class="d-flex justify-content-center mb-3" *ngIf="photoCopyFlag">
-                        <div *ngFor="let img of membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy">
-                            <span class="{{img.imageValue}}" (click)="onClickMemberPhotoCopy()"
-                                *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                <img src="{{img.imageValue}}" class="image-user">
-                            </span>
-                        </div>
-                        <p class="active-status"></p>
-                        <div
-                            *ngFor="let img of membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath">
-                            <span class="{{img.imageValue}}" (click)="onClickMemberPhotoCopy()"
-                                *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                <img src="{{img.imageValue}}" class="image-sign">
-                            </span>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-center mb-3" *ngIf="!photoCopyFlag">
-                        <div>
-                            <img src="assets/images/no-image.jpg" (click)="onClickMemberPhotoCopy()" class="image-user">
-                        </div>
-                        <p class="active-status"></p>
-                        <div>
-                            <img src="assets/images/no-image.jpg" (click)="onClickMemberPhotoCopy()" class="image-sign">
-                        </div>
-                    </div>
                 </div>
-
-                <div class="col-12 min-h-50px text-break text-center">
-                    <p class="m-0">{{'ERP.ADMISSION_NUMBER' | translate}}</p>
-                    <p class="font-semibold m-0">
-                        {{siLoanApplicationModel.admissionNo}}</p>
                 </div>
-                <div class="col-12 min-h-50px text-break text-center">
-                    <div class="text-center min-h-50px">
-                        <span class="text-fontwt">{{'ERP.NAME' | translate}}</span>
-                        <p class="font-semibold text-break"><span
-                                class="border-bottom">{{membershipBasicRequiredDetailsModel.name}}</span>
-                        </p>
-                    </div>
-                </div>
-                <div class="col-12 min-h-50px text-break">
-                    <p class="m-0">{{'ERP.APPLICATION_NUMBER' | translate}}</p>
-                    <p class="font-semibold m-0">
-                        {{siLoanApplicationModel.applicationNumber}}</p>
-
-                </div>
-                <div class="col-12 min-h-50px text-break">
-                    <p class="m-0">{{'ERP.PRODUCT' | translate}} </p>
-                    <p class="font-semibold m-0">
-                        {{siLoanProductDefinitionModel.name}}</p>
-                </div>
-                <div class="col-12 min-h-50px text-break">
-                    <p class="m-0">{{'ERP.SANCTIONED_AMOUNT' | translate}} </p>
-                    <p class="font-semibold m-0">
-                        {{siLoanApplicationModel.sanctionAmount}}</p>
-                </div>
-
-                <div class="col-12 min-h-50px">
                     <div class="row">
-                        <div class="col-6 text-break">
-                            <p class="m-0">{{'ERP.DISBURSEMENT' | translate}}</p>
-                            <p class="font-semibold m-0">
-                                {{siLoanApplicationModel.totalDisbursedAmount}}</p>
+                        <!-- Admission No & Image-part -->
+                        <div class="col-xl-12 col-lg-12 col-md-3 col-sm-4 col-xs-4">
+                            <div class="col-12 pic-sig-status">
+                                <div class="d-flex justify-content-center mb-1">
+                                    <div *ngFor="let img of membershipBasicDetailsModel.multipartFileListForPhotoCopy" (click)="onClickMemberPhotoCopy()">
+                                        <div *ngIf="photoCopyFlag">
+                                            <span class="{{img.imageValue}}"
+                                                *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                <!-- <a href="{{img.imageValue}}" (clicl)="onClickMemberPhotoCopy()"></a> -->
+                                                <img src="{{img.imageValue}}" class="image-user cursor-pointer">
+                                            </span>
+                                        </div>
+                                        <div *ngIf="!photoCopyFlag">
+                                            <span>
+                                                <img src="assets/images/no-image.jpg" class="image-user cursor-pointer">
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <p class="active-status"></p>
+                                    <div *ngFor="let img of membershipBasicDetailsModel.multipartFileListForsignatureCopyPath" (click)="onClickMemberPhotoCopy()">
+                                        <div *ngIf="photoCopyFlag">
+                                            <span class="{{img.imageValue}}"
+                                                *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                <!-- <a href="{{img.imageValue}}" (clicl)="onClickMemberPhotoCopy()"></a> -->
+                                                <img src="{{img.imageValue}}" class="image-sign cursor-pointer">
+                                            </span>
+                                        </div>
+                                        <div *ngIf="!photoCopyFlag">
+                                            <span>
+                                                <img src="assets/images/no-image.jpg" class="image-sign cursor-pointer">
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                                    
+                            <div class="text-center min-h-50px">
+                                <p class="text-break view-member-name">{{membershipBasicDetailsModel.name}} </p>
+                                <div class="d-flex justify-content-center">
+                                    <div class="member-name-border"></div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-6 text-break">
-                            <p class="m-0">{{'ERP.UNITS_NO' | translate}}</p>
-                            <p class="font-semibold m-0">
-                                {{siLoanApplicationModel.sanctionAmount}}</p>
+        
+                        <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-address-book"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.ADMISSION_NUMBER' | translate}}</p>
+                                        <p class="label-input-text">{{membershipBasicDetailsModel.tempAdmissionNumber}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-id-card-o"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.MEMBER_TYPE' | translate}}</p>
+                                        <p class="label-input-text">{{membershipBasicDetailsModel.memberTypeName}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-calendar"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.ADMISSION_DATE' | translate}}</p>
+                                        <p class="label-input-text">{{membershipBasicDetailsModel.admissionDateVal}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-calendar"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.DATE_OF_BIRTH' | translate}}&{{'ERP.AGE' |
+                                            translate}}</p>
+                                        <p class="label-input-text">{{membershipBasicDetailsModel.dobVal}} & {{membershipBasicDetailsModel.age}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-phone-square"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.CONTACT' | translate}}</p>
+                                        <p class="label-input-text">{{membershipBasicDetailsModel.mobileNumber}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-envelope"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.EMAIL' | translate}}</p>
+                                        <p class="label-input-text">{{membershipBasicDetailsModel.emailId}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-address-card-o"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.AADHAR_NO' | translate}}</p>
+                                        <p class="label-input-text">{{membershipBasicDetailsModel.aadharNumber}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-address-card-o"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.PAN_NO' | translate}}</p>
+                                        <p class="label-input-text">{{membershipBasicDetailsModel.panNumber}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card" *ngIf="membershipBasicDetailsModel.isKycApproved">
+                                    <div class="col-10 d-flex p-0">
+                                        <span class="basicdata-icons icon-size"><i class="fa fa-check-circle-o"></i></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
+                                            <p class="label-input-text">{{isKycApproved}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 kyc-done icon-size text-right"><i class="fa fa-check-circle"
+                                            aria-hidden="true"></i></div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card" *ngIf="!membershipBasicDetailsModel.isKycApproved">
+                                    <div class="col-10 d-flex p-0">
+                                        <span class="basicdata-icons icon-size"><i class="fa fa-check-circle-o"></i></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
+                                            <p class="label-input-text">{{isKycApproved}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 kyc-done icon-size text-right"><i class="fa fa-check-circle text-white"
+                                            aria-hidden="true"></i></div>
+                                </div>
+                                <div class="col-12 color-light justify-content-end text-right">
+                                    <a class="fst-italic text-light cursor-pointer" (click)="onClickMemberIndividualMoreDetails()">{{'ERP.MORE_DETAILS' | translate}}</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-12 min-h-50px text-break">
-                    <p class="m-0">{{'ERP.DISBURSEMENT_DUE_AMOUNT' | translate}}</p>
-                    <p class="font-semibold m-0">
-                        {{siLoanApplicationModel.sanctionAmount}}</p>
-                </div>
-                <div class="col-12 min-h-50px text-break">
-                    <p class="m-0">{{'ERP.NEXT_DISBURSEMENT_DATE' | translate}} </p>
-                    <p class="font-semibold m-0">
-                        {{siLoanApplicationModel.sanctionAmount}}</p>
-                </div>
-                <div class="col-12 min-h-50px">
-                    <div class="row">
-                        <div class="col-6 text-break">
-                            <p class="m-0">{{'ERP.LOAN_APPROVED_DATE' | translate}}</p>
-                            <p class="font-semibold m-0">
-                                {{siLoanApplicationModel.loanApprovedDateVal}}</p>
-                        </div>
-                        <div class="col-6 text-break">
-                            <p class="m-0">{{'ERP.LOAN_DUE_DATE' | translate}}</p>
-                            <p class="font-semibold m-0">
-                                {{siLoanApplicationModel.loanDueDateVal}}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 color-light justify-content-end text-right">
-                    <a class="fst-italic text-light cursor-pointer"
-                        (click)="onClickMemberIndividualMoreDetails()">{{'ERP.MORE_DETAILS' |
-                        translate}}</a>
                 </div>
             </div>
+        <!-- Group view screen -->
+            <div class="col-12 basic-view side-card-style" *ngIf="groupFlag">
+                <div class="col-12 inner-border">
+                    <div class="side-card-header-border">
+                        <div class="row">
+                            <div class="col-10 py-0">
+                    <h6 class="side-card-header">{{'ERP.GROUP_DETAILS' | translate}}</h6>
+                </div>
+                <div class="col-2 py-0">
+                    </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                        <!-- Admission No & Image-part -->
+                        <div class="col-xl-12 col-lg-12 col-md-3 col-sm-4 col-xs-4">
+                            <div class="col-12 pic-sig-status">
+                                <div class="d-flex justify-content-center mb-1">
+                                    <img src="assets/images/no-image.jpg" class="image-user">
+                                    <p class="active-status"></p>
+                                    <img src="assets/images/no-image.jpg" class="image-sign">
+                                </div>
+                                </div>
+                            
+                            <div class="text-center min-h-50px">
+                                <p class="text-break view-member-name">{{membershipGroupDetailsModel.name}}</p>
+                                <div class="d-flex justify-content-center">
+                                    <div class="member-name-border"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-address-book"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.ADMISSION_NUMBER' | translate}}</p>
+                                        <p class="label-input-text">{{membershipGroupDetailsModel.tempAdmissionNumber}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-id-card-o"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.MEMBER_TYPE' | translate}}</p>
+                                        <p class="label-input-text">Group</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-calendar"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.REGISTERED_DATE' | translate}}</p>
+                                        <p class="label-input-text">{{membershipGroupDetailsModel.registrationDateVal}}</p>
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-calendar"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.ADMISSION_DATE' | translate}}</p>
+                                        <p class="label-input-text">{{membershipGroupDetailsModel.admissionDateVal}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-phone-square"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.CONTACT' | translate}}</p>
+                                        <p class="label-input-text">{{membershipGroupDetailsModel.pocNumber}}</p>
+                                    </div>
+                                </div>
+                                <!-- <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-envelope"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.EMAIL' | translate}}</p>
+                                        <p class="label-input-text">{{membershipGroupDetailsModel.emailId}}</p>
+                                    </div>
+                                </div> -->
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-address-card-o"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.GST_NO' | translate}}</p>
+                                        <p class="label-input-text">{{membershipGroupDetailsModel.gstNumber}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-address-card-o"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.PAN_NO' | translate}}</p>
+                                        <p class="label-input-text">{{membershipGroupDetailsModel.panNumber}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-address-card-o"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.TAN_NO' | translate}}</p>
+                                        <p class="label-input-text">{{membershipGroupDetailsModel.tanNumber}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <div class="col-10 d-flex p-0">
+                                        <span class="basicdata-icons icon-size"><i class="fa fa-check-circle-o"></i></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
+                                            <p class="label-input-text">{{isKycApproved}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 kyc-done icon-size text-right"><i class="fa fa-check-circle"
+                                            aria-hidden="true"></i></div>
+                                </div>
+                                <div class="col-12 color-light justify-content-end text-right">
+                                    <a class="fst-italic text-light cursor-pointer" (click)="onClickOfGroupPromotes()">{{'ERP.MORE_DETAILS' | translate}}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <!-- Institution view screen -->
+            <div class="col-12 basic-view side-card-style" *ngIf="institutionFlag">
+                <div class="col-12 inner-border">
+                    <div class="side-card-header-border">
+                        <div class="row">
+                            <div class="col-10 py-0">
+                    <h6 class="side-card-header">{{'ERP.INSTITUTION_DETAILS' | translate}}</h6>
+                </div>
+                <div class="col-2 py-0">
+                </div>
+                </div>
+                </div>
+                    <div class="row">
+                        <!-- Admission No & Image-part -->
+                        <div class="col-xl-12 col-lg-12 col-md-3 col-sm-4 col-xs-4">
+                            <div class="col-12 pic-sig-status">
+                                <div class="d-flex justify-content-center mb-1">
+                                    <img src="assets/images/no-image.jpg" class="image-user">
+                                    <p class="active-status"></p>
+                                    <img src="assets/images/no-image.jpg" class="image-sign">
+                                </div>
+                                </div>
+                            
+                            <div class="text-center min-h-50px">
+                                <p class="text-break view-member-name">{{membershipInstitutionDetailsModel.name}}</p>
+                                <div class="d-flex justify-content-center">
+                                    <div class="member-name-border"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-address-book"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.ADMISSION_NUMBER' | translate}}</p>
+                                        <p class="label-input-text">{{membershipInstitutionDetailsModel.tempAdmissionNumber}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-id-card-o"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.MEMBER_TYPE' | translate}}</p>
+                                        <p class="label-input-text">{{membershipInstitutionDetailsModel.memberTypeName}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-calendar"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.ADMISSION_DATE' | translate}}</p>
+                                        <p class="label-input-text">{{membershipInstitutionDetailsModel.admissionDateVal}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-calendar"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.REGISTERED_DATE' | translate}}</p>
+                                        <p class="label-input-text">{{membershipInstitutionDetailsModel.registrationDateVal}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-phone-square"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.CONTACT' | translate}}</p>
+                                        <p class="label-input-text">{{membershipInstitutionDetailsModel.pocNumber}}</p>
+                                    </div>
+                                </div>
+                                <!-- <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-envelope"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.EMAIL' | translate}}</p>
+                                        <p class="label-input-text">{{membershipInstitutionDetailsModel.emailId}}</p>
+                                    </div>
+                                </div> -->
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-address-card-o"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.TAN_NO' | translate}}</p>
+                                        <p class="label-input-text">{{membershipInstitutionDetailsModel.tanNumber}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-address-card-o"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.PAN_NO' | translate}}</p>
+                                        <p class="label-input-text">{{membershipInstitutionDetailsModel.panNumber}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <span class="basicdata-icons icon-size"><i class="fa fa-address-card-o"></i></span>
+                                    <div>
+                                        <p class="label-view text-fontwt">{{'ERP.GST_NO' | translate}}</p>
+                                        <p class="label-input-text">{{membershipInstitutionDetailsModel.gstNumber}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                    <div class="col-10 d-flex p-0">
+                                        <span class="basicdata-icons icon-size"><i class="fa fa-check-circle-o"></i></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
+                                            <p class="label-input-text">{{isKycApproved}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 kyc-done icon-size text-right"><i class="fa fa-check-circle"
+                                            aria-hidden="true"></i></div>
+                                </div>
+                                <div class="col-12 color-light justify-content-end text-right">
+                                    <a class="fst-italic text-light cursor-pointer" (click)="onClickInstitutionMoreDetails()">{{'ERP.MORE_DETAILS' | translate}}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- member card end -->
         </div>
         <div class="col-75-fullmidd">
-            <div class="col-12 bg-card bg-label-colorfull p-3">
+            <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="col-12 p-0">
-                    <div class="row justify-content-between">
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <h6 class=" sub-heading">{{'ERP.DISBURSEMENT' | translate}}</h6>
-                        </div>
-                        <div class=" col-lg-6 col-md-6 col-sm-6">
-                            <div class=" d-flex justify-content-end">
-                                <div class="basic-detaisl-btn view-popup-top mr-2"><a
-                                        (click)="showBasicDetailsDialog('right')"
-                                        class="top-badge-btn btn-outline-0 ">Basic
-                                        Details</a></div>
+                    <div class="global-card-bg-color view-carddata icon-size pb-1">
+                        <div class="col-12 p-0">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="d-flex">
+                                        <span class="card-icon"><i class="fa fa-id-badge"></i></span>
+                                        <h6 class="sub-heading">{{'LOAN_TRANSACTION.APPLICATION_DETAILS' |
+                                            translate}}</h6>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 p-0">
+                                <div class="row">
+                                    <div
+                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                        <h6 class="label-view">{{'LOAN_TRANSACTION.PRODUCT_TYPE' | translate}}</h6>
+                                        <p class="label-input-text">
+                                            {{siLoanApplicationModel.siProductName}}
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 " *ngIf ='siLoanApplicationModel.memberTypeName == "Individual"'>
+                                        <h6 class="label-view">{{'LOAN_TRANSACTION.ACCOUNT_TYPE' | translate}}</h6>
+                                        <p class="label-input-text">
+                                            {{siLoanApplicationModel.operationTypeName}}</p>
+                                    </div>
+                                    <div
+                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                        <h6 class="label-view">{{'LOAN_TRANSACTION.ACCOUNT_NUMBER' | translate}}</h6>
+                                        <p class="label-input-text">
+                                            {{siLoanApplicationModel.accountNumber}}
+                                        </p>
+                                    </div>
+                                    <!-- </div>
+            <div class="row"> -->
+                                    <div
+                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                        <h6 class="label-view">{{'LOAN_TRANSACTION.APPLICATION_DATE' | translate}}
+                                        </h6>
+                                        <p class="label-input-text">
+                                            {{siLoanApplicationModel.applicationDateVal}}</p>
+                                    </div>
+                                    <div
+                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                        <h6 class="label-view">{{'LOAN_TRANSACTION.MAX_LOAN_PERIOD_IN_MONTHS' |
+                                            translate}}</h6>
+                                        <p class="label-input-text">
+                                            {{siLoanApplicationModel.loanPeriod}}
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                        <h6 class="label-view">{{'LOAN_TRANSACTION.PENAL_ROI' | translate}}</h6>
+                                        <p class="label-input-text">
+                                            {{siLoanApplicationModel.penalInterest}}</p>
+                                    </div>
+                                    <div
+                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                        <h6 class="label-view">{{'LOAN_TRANSACTION.IOD' | translate}}</h6>
+                                        <p class="label-input-text">{{siLoanApplicationModel.iod}}
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                        <h6 class="label-view">{{'LOAN_TRANSACTION.REPAYMENT_FREQUENCY' | translate}}
+                                        </h6>
+                                        <p class="label-input-text">
+                                            {{siLoanApplicationModel.repaymentFrequencyName}}</p>
+                                    </div>
+                                    <div
+                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                        <h6 class="label-view">{{'LOAN_TRANSACTION.LOAN_PURPOSE' | translate}}</h6>
+                                        <p class="label-input-text">
+                                            {{siLoanApplicationModel.purposeName}}
+                                        </p>
+                                    </div>
+                                    <!-- <div
+                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                        <h6 class="label-view">{{'LOAN_TRANSACTION.OPERATION_TYPE' | translate}}</h6>
+                                        <p class="label-input-text">
+                                            {{siLoanApplicationModel.operationTypeName}}</p>
+                                    </div> -->
+                                    <div
+                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                        <h6 class="label-view">{{'LOAN_TRANSACTION.REQUEST_AMOUNT' | translate}}</h6>
+                                        <p class="label-input-text">
+                                            {{siLoanApplicationModel.requestedAmount}}</p>
+                                    </div>
+                                    <div
+                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                        <h6 class="label-view">{{'LOAN_TRANSACTION.SANCTION_DATE' | translate}}</h6>
+                                        <p class="label-input-text">
+                                            {{siLoanApplicationModel.sanctionDateVal}}</p>
+                                    </div>
+                                    <div
+                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                        <h6 class="label-view">{{'LOAN_TRANSACTION.SANCTION_AMOUNT' | translate}}
+                                        </h6>
+                                        <p class="label-input-text">
+                                            {{siLoanApplicationModel.sanctionAmount}}</p>
+                                    </div>
+                                    <div
+                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                        <h6 class="label-view">{{'LOAN_TRANSACTION.PLANNED_DISBURSEMENTS' |
+                                            translate}}
+                                        </h6>
+                                        <p class="label-input-text">
+                                            {{siLoanApplicationModel.plannedDisbursements}}</p>
+                                    </div>
+                                    <div
+                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                        <h6 class="label-view">{{'LOAN_TRANSACTION.LOAN_PERIOD_IN_MONTHS' |
+                                            translate}}
+                                        </h6>
+                                        <p class="label-input-text">
+                                            {{siLoanApplicationModel.loanPeriod}}
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                        <h6 class="label-view">{{'LOAN_TRANSACTION.LOAN_DUE_DATE' | translate}}</h6>
+                                        <p class="label-input-text">
+                                            {{siLoanApplicationModel.loanDueDateVal}}</p>
+                                    </div>
+                                    <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-2">
+                                        <span class="text-fontwt">{{'LOANS.SIGNED_COPY' | translate}}</span>
+                                        <div class="col-xl-3 col-lg-4 col-md-3 col-sm-4 mt-4">
+                                            <div class="col-12 d-flex p-1 contant-body" *ngFor="let img of siLoanApplicationModel.multipartFileList">
+                                                <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                    <a href="{{img.imageValue}}">
+                                                        <img src="{{img.imageValue}}" width="22" height="22">
+                                                    </a>
+                                                </span>
+                                                <span *ngIf="img.fileType=='pdf'">
+                                                    <a href="{{img.imageValue}}"> <img src="assets/images/pdficon-img.png" width="22" height="22"></a>
+                                                </span>
+                                                <span class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                                    {{img.fileName}}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <form [formGroup]="disbursementForm">
-                    <div class="row g-3">
-                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
-                            <div class="form-label">
-                                <label for="username">{{'ERP.ACCOUNT_NUMBER' | translate}}
-                                </label>
-                                <input pInputText id="bunit_txt_name" type="text" formControlName="accountNumber"
-                                    [(ngModel)]="siLoanDisbursementModel.accountNumber"
-                                    placeholder="Enter Account Number">
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
-                            <div class="form-label">
-                                <label for="username">{{'ERP.DISBURSEMENT_DATE' | translate}}
-                                </label>
-                                <p-calendar formControlName="disbursementDate" [showIcon]="true"
-                                    [dateFormat]="orgnizationSetting.calendar"
-                                    [(ngModel)]="siLoanDisbursementModel.disbursementDateVal" placeholder="DD/MM/YYYY">
-                                </p-calendar>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
-                            <div class="form-label">
-                                <label for="username">{{'ERP.DISBURSEMENT_AMOUNT' | translate}}
-                                </label>
-                                <input pInputText id="bunit_txt_name" type="text" formControlName="disbursementAmount"
-                                    [(ngModel)]="siLoanDisbursementModel.disbursementAmount" placeholder="Enter Amount">
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
-                            <div class="form-label">
-                                <label for="username">{{'ERP.TRANSACTION_DATE' | translate}}
-                                </label>
-                                <p-calendar formControlName="transactionDate" [showIcon]="true"
-                                    [dateFormat]="orgnizationSetting.calendar"
-                                    [(ngModel)]="siLoanDisbursementModel.transactionDateVal" placeholder="DD/MM/YYYY">
-                                </p-calendar>
-                            </div>
-                        </div>
-                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mt-4">
-                            <div class="d-flex justify-content-end">
-                                <p-button label="{{'ERP.BACK' | translate}}" (click)="back()"></p-button>
-                                <!-- <p-button label="{{'ERP.CLEAR' | translate}}" (click)="clearDisbursement()" *ngIf = "!isRowView"></p-button> -->
-                                <p-button label="{{'ERP.SUBMIT' | translate}}" [disabled]="!disbursementForm.valid"
-                                    (click)="saveDisbursement()" *ngIf="!isRowView"></p-button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
             </div>
+           
             <div class="col-12 p-1"></div>
-            <div class="col-12 bg-card bg-label-colorfull p-3">
+            <div class="col-12 p-3 bg-light-card">
                 <div class="flex justify-content-between py-2">
                     <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                        <div class="sub-heading mt-1">Disbursement Details</div>
+                        <div class="sub-heading mt-1">{{'ERP.DISBURSEMENT_DETAILS' | translate}}</div>
                     </div>
                     <div class="col-xl-7 col-lg-7 col-md-7 col-sm-7 col-xs-7">
                         <div class="col-12 p-0">
                             <div class="d-flex justify-content-end search-input-style">
                                 <div class="input-group search-box d-flex justify-content-end">
+                                    
                                     <div class="search mr-0">
                                         <span class="p-input-icon-right">
                                             <i class="pi pi-search global-search-icon"></i>
-                                            <input type="text" pInputText class="searchbox"
-                                                placeholder="{{'ERP.SEARCH' | translate}}" />
+                                            <input autocomplete="off" type="text" id="skill_category_txt_search"
+                                                pInputText placeholder="Search" class="searchbox">
                                         </span>
                                     </div>
+                                    <p-button icon="fa fa-plus" label="{{'ADD' | translate}}" (click)="addDisbursment()"
+                                        [disabled]="addOrEdit" class="kyc-btnm-0"></p-button>
+                                        <p-button label="{{'ERP.BACK' | translate}}"  [disabled]="addOrEdit" (click)="navigateToBack()"></p-button>
                                 </div>
-
-                                <!-- <p-button (click)="addDisbursement()" label="{{ 'ERP.ADD' | translate }}" icon="fa fa-plus"
-                                                            iconPos="left" [disabled]="addButtonService" id="bunit_bt_submit">
-                                                        </p-button> -->
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="globel-border-top-color"></div>
-                <p-table #dt [columns]="siLoanDisbursementColumns" [value]="siLoanDisbursementList" dataKey="id"
-                    editMode="row" styleClass="p-datatable-striped" [rows]="5" [paginator]="true"
-                    [showJumpToPageDropdown]="true" [showPageLinks]="false" [pageLinks]="1" [responsive]="true"
-                    rowExpandMode="single">
-                    <ng-template pTemplate="header" let-columns>
+                <p-table [value]="siLoanDisbursementList" dataKey="id" selectionMode="single"
+                    [columns]="siLoanDisbursementColumns" styleClass="p-datatable-striped" [rows]="5"
+                    [showJumpToPageDropdown]="true" [paginator]="true" [responsive]="true" rowExpandMode="single"
+                    [showPageLinks]="false" [pageLinks]="1">
+
+                    <ng-template pTemplate="header">
                         <tr>
-                            <th *ngFor="let col of columns" pResizableColumn>
+                            <th *ngFor="let col of siLoanDisbursementColumns">
                                 {{col.header | translate}}
                             </th>
                             <th class="width-15em">{{'ERP.ACTION' | translate}}</th>
                         </tr>
                     </ng-template>
-                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                    <ng-template pTemplate="body" let-rowData let-accounttypes>
                         <tr [pSelectableRow]="rowData">
-                            <td *ngFor="let col of columns" class="p-resizable-column">
-                                {{rowData[col.field]}}
+                            <td *ngFor="let col of siLoanDisbursementColumns">
+                               
+                                <div class="status-style statussubmissionforapproval" *ngIf="(col.field =='statusName') && rowData.submissionForApproval"> {{rowData[col.field]}}</div>
+                                <div class="status-style statusactive" *ngIf="(col.field =='statusName') && rowData.approved"> {{rowData[col.field]}}</div>
+                                <div class="status-style statuspending" *ngIf="(col.field =='statusName') && rowData.scheduled"> {{rowData[col.field]}}</div>
+                                <div class="status-style statuspending" *ngIf="(col.field =='statusName') && rowData.requestForResubmmission"> {{rowData[col.field]}}</div>
+                                <div *ngIf="(col.field !='statusName')"> {{rowData[col.field]}}</div>
+
+                                
                             </td>
-                            <td style="text-align:center" class="action-button">
-                                <button class="action-pencil" pButton pTooltip="{{'ERP.EDIT' | translate}}"
-                                    type="button" icon="fa fa-pencil" tooltipPosition="top" (click)="editRow(rowData)"
-                                    id="category_info_button_status_edit" *ngIf="rowData.isEditShow">
-                                </button>
-                                <button class="action-pencil" pButton pTooltip="{{'ERP.VIEW' | translate}}"
-                                    type="button" icon="fa fa-eye" tooltipPosition="top" (click)="viewRow(rowData)"
-                                    id="category_info_button_status_edit" *ngIf="!rowData.isEditShow">
-                                </button>
+                            <td>
+                                <div class="global-action-btn flex align-items-center justify-content-center">
+                                    <p-button class="action-edit" label="{{'ERP.EDIT' | translate}}"
+                                        [disabled]="editDisable"
+                                        (click)="editDisbursements(rowData)"></p-button>
+                                    <!-- <p-button class="action-delete" label="{{'ERP.DELETE' | translate}}" [disabled] ="isEditDeleteButtonEnable" (click)="deleteAmountBlock(rowData)"></p-button> -->
+                                </div>
                             </td>
                         </tr>
                     </ng-template>
                 </p-table>
+                <div class="col-12 margtop-3rem">{{'ERP.TOTAL_DISBURSEMENT_AMOUNT' | translate}} {{totalDisbursement}}</div>
                 <div class="col-12 margtop-3rem"></div>
-                <p class="font-bold m-0">{{'ERP.TOTAL_DISBURSEMENT_AMOUNT' | translate}} : 30,000
             </div>
         </div>
     </div>
 </div>
 
-<!-- Individual details dialog -->
-<p-dialog header="More Basic Details" [(visible)]="membreIndividualFlag" styleClass="moredetails-style">
-    <!-- <h6 class="super-sub-heading">{{'ERP.MEMBERSHIP_CREATION' | translate}}</h6> -->
-    <div class="popup-basic-details">
-        <div class="row">
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="d-flex justify-content-start px-3 py-0 mb-2" *ngIf="photoCopyFlag">
-                    <div *ngFor="let img of membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy">
 
-                        <span class="{{img.imageValue}}" (click)="onClickMemberPhotoCopy()"
-                            *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                            <!-- <a href="{{img.imageValue}}" (clicl)="onClickMemberPhotoCopy()"></a> -->
-                            <img src="{{img.imageValue}}" class="image-user">
-                        </span>
+<!-- Individual details dialog -->
+<div class="view-moredetails-popup">
+    <p-dialog header="Basic Details" [modal]="true" [(visible)]="membreIndividualFlag" [style]="{ width: '55vw' }">
+        <div class="col-12 view-morepopup">
+            <div class="d-flex justify-content-center px-3 py-0 mb-2">
+                <div *ngIf="!this.membershipBasicDetailsModel.photoCopyPath">
+                    <img src="assets/images/no-image.jpg" class="image-user">
+                </div>
+                <div class="px-0" *ngFor="let img of membershipBasicDetailsModel.multipartFileListForPhotoCopy">
+                    <div class="col-12 p-0" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                        <!-- <a href="{{img.imageValue}}"> -->
+                        <img src="{{img.imageValue}}" class="image-user">
+                        <!-- </a> -->
+                    </div>
+                    <div class="col-12 p-0" *ngIf=" img.fileType =='pdf'">
+                        <!-- <a href="{{img.imageValue}}"> -->
+                        <img src="assets\images\pdf.png" class="image-user">
+                        <!-- </a> -->
+                    </div>
+                </div>
+                <!-- <p class="active-status"></p> -->
+                <div *ngIf="!this.membershipBasicDetailsModel.signatureCopyPath">
+                    <img src="assets/images/no-image.jpg" class="image-sign">
+                </div>
+                <div class="px-0" *ngFor="let img of membershipBasicDetailsModel.multipartFileListForsignatureCopyPath">
+                    <div class="col-12 p-0" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                        <!-- <a href="{{img.imageValue}}"> -->
+                        <img src="{{img.imageValue}}" class="image-sign">
+                        <!-- </a> -->
+                    </div>
+                    <div class="col-12 p-0" *ngIf=" img.fileType =='pdf'">
+                        <!-- <a href="{{img.imageValue}}"> -->
+                        <img src="assets\images\pdf.png" class="image-sign">
+                        <!-- </a> -->
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- <div class="d-flex justify-content-center mb-4" *ngIf ="!photoCopyFlag">
+                    <div>
+                        <img src="assets/images/no-image.jpg" class="image-user">
                     </div>
                     <p class="active-status"></p>
-                    <div *ngFor="let img of membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath">
-                        <span class="{{img.imageValue}}" (click)="onClickMemberPhotoCopy()"
-                            *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                            <!-- <a href="{{img.imageValue}}" (clicl)="onClickMemberPhotoCopy()"></a> -->
-                            <img src="{{img.imageValue}}" class="image-user">
-                        </span>
-                    </div>
-                </div>
-                <div class="d-flex justify-content-start px-3 py-0 mb-2" *ngIf="!photoCopyFlag">
                     <div>
-                        <img src="assets/images/no-image.jpg" (click)="onClickMemberPhotoCopy()" class="image-user">
+                        <img src="assets/images/no-image.jpg" class="image-sign">
                     </div>
-                    <p class="active-status"></p>
-                    <div>
-                        <img src="assets/images/no-image.jpg" (click)="onClickMemberPhotoCopy()" class="image-sign">
+                </div> -->
+
+        </div>
+        <div class="col-12 text-center popup-basic-details mt-5 pt-3">
+            <span class="fw-semibold">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
+            <p class="fw-bold">{{membershipBasicDetailsModel.tempAdmissionNumber}}</p>
+        </div>
+        <div class="col-12 popup-basic-details">
+            <div class="row">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <span class="fw-light">{{'ERP.MEMBER_TYPE' | translate}}</span>
+                        <p class="fw-semibold">{{ membershipBasicDetailsModel.memberTypeName }}</p>
                     </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.NAME' | translate}}</span>
-                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.name }}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <span class="fw-light">{{'ERP.SURNAME' | translate}}</span>
+                        <p class="fw-semibold">{{ membershipBasicDetailsModel.surname}}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
-                    <p class="label-input-text">{{admissionNumber}}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <span class="fw-light">{{'ERP.NAME' | translate}}</span>
+                        <p class="fw-semibold">{{membershipBasicDetailsModel.name}}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.MEMBER_TYPE' | translate}}</span>
-                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.memberTypeName }}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <span class="fw-light">{{'ERP.DATE_OF_BIRTH' | translate}}</span>
+                        <p class="fw-semibold">{{membershipBasicDetailsModel.dobVal}}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.ADMISSION_DATE' | translate}}</span>
-                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.admissionDateVal }}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <span class="fw-light">{{'ERP.AGE' | translate}}</span>
+                        <p class="fw-semibold">{{membershipBasicDetailsModel.age}}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.DATE_OF_BIRTH' | translate}}</span>
-                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.dobVal }}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <span class="fw-light">{{'ERP.GENDER' | translate}}</span>
+                        <p class="fw-semibold">{{membershipBasicDetailsModel.genderName }}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.AGE' | translate}}</span>
-                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.age }}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <span class="fw-light">{{'ERP.MARITAL_STATUS' | translate}}</span>
+                        <p class="fw-semibold">{{membershipBasicDetailsModel.maritalStatusName}}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.RELATION_WITH_APPLICANT' | translate}}</span>
-                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.relationTypeName }}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <span class="fw-light">{{'ERP.RELATION_WITH_MEMBER' | translate}}</span>
+                        <p class="fw-semibold">{{membershipBasicDetailsModel.relationTypeName}}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.RELATIVE_NAME' | translate}}</span>
-                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.relativeName }}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <span class="fw-light">{{'ERP.RELATION_NAME' | translate}}</span>
+                        <p class="fw-semibold">{{membershipBasicDetailsModel.relativeName }}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.MARITAL_STATUS' | translate}}</span>
-                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.maritalStatusName }}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <span class="fw-light">{{'ERP.QUALIFICATION' | translate}}</span>
+                        <p class="fw-semibold">{{membershipBasicDetailsModel.qualificationName }}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.CONTACT' | translate}}</span>
-                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.mobileNumber }}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <span class="fw-light">{{'ERP.OCCUPATION' | translate}}</span>
+                        <p class="fw-semibold">{{membershipBasicDetailsModel.occupationName }}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.EMAIL' | translate}}</span>
-                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.emailId }}</p>
+                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <span class="fw-light">{{'ERP.AADHAR_NO' | translate}}</span>
+                        <p class="fw-semibold">{{membershipBasicDetailsModel.aadharNumber }}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.AADHAR' | translate}}</span>
-                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.aadharNumber }}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <span class="fw-light">{{'ERP.PAN_NO' | translate}}</span>
+                        <p class="fw-semibold">{{membershipBasicDetailsModel.panNumber }}</p>
+                    </div>
+                </div> -->
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <span class="fw-light">{{'ERP.MOBILE_NUMBER' | translate}}</span>
+                        <p class="fw-semibold">{{membershipBasicDetailsModel.mobileNumber }}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.PAN' | translate}}</span>
-                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.panNumber }}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <span class="fw-light">{{'ERP.EMAIL' | translate}}</span>
+                        <p class="fw-semibold">{{membershipBasicDetailsModel.emailId }}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'ERP.KYC' | translate}}</span>
-                    <p class="label-input-text">{{isKycApproved}}</p>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <span class="fw-light">{{'ERP.CASTE' | translate}}</span>
+                        <p class="fw-semibold">{{membershipBasicDetailsModel.casteName }}</p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <span class="fw-light">{{'ERP.COMMUNITYS' | translate}}</span>
+                        <p class="fw-semibold">{{membershipBasicDetailsModel.communityName }}</p>
+                    </div>
+                </div>
+                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <span class="fw-light">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
+                        <p class="fw-semibold">{{membershipBasicDetailsModel.admissionNumber}}</p>
+                    </div>
+                </div> -->
+                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12" >
+                    <div class="form-group">
+                        <span class="fw-light">{{'MEMBERSHIP_TRANSACTION.RESOLUTION_NUMBER' | translate}}</span>
+                        <p class="fw-semibold">{{membershipBasicDetailsModel.mcrNumber }}</p>
+                    </div>
+                </div> -->
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <span class="fw-light">{{'ERP.ADMISSION_DATE' | translate}}</span>
+                        <p class="fw-semibold">{{membershipBasicDetailsModel.admissionDateVal}}</p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <span class="fw-light">{{'ERP.ADMISSION_FEE' | translate}}</span>
+                        <p class="fw-semibold">{{membershipBasicDetailsModel.admissionFee}}</p>
+                    </div>
                 </div>
             </div>
         </div>
-        <!-- <p-button class="pull-right" label="{{'ERP.CLOSE' | translate}}" (click)="close()"></p-button> -->
+    </p-dialog>
+</div>
+
+<!-- institution Promoter details dialog -->
+<div class="view-moredetails-popup">
+    <p-dialog header="More Basic Details" [(visible)]="institutionPromoterPromoterFlag" styleClass="moredetails-style">
+        <div class="col-12 view-morepopup">
+            <div class="d-flex justify-content-center px-3 py-0 mb-2">
+                <img src="assets/images/no-image.jpg" class="image-user">
+                <!-- <p class="active-status"></p> -->
+                <img src="assets/images/no-image.jpg" class="image-sign">
+            </div>
+        </div>
+        <div class="col-12 text-center popup-basic-details mt-5 pt-3">
+            <span class="fw-semibold">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
+            <p class="fw-bold">{{membershipInstitutionDetailsModel.tempAdmissionNumber}}</p>
+        </div>
+        <div class="col-12 popup-basic-details">
+            <div class="row">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.NAME' | translate}}</span>
+                        <p class="label-input-text">{{membershipInstitutionDetailsModel.name}}</p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
+                        <p class="label-input-text">{{membershipInstitutionDetailsModel.tempAdmissionNumber}}</p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.MEMBER_TYPE' | translate}}</span>
+                        <p class="label-input-text">{{membershipInstitutionDetailsModel.memberTypeName}}</p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.ADMISSION_DATE' | translate}}</span>
+                        <p class="label-input-text">{{membershipInstitutionDetailsModel.admissionDateVal}}</p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.REGISTERED_DATE' | translate}}</span>
+                        <p class="label-input-text">{{membershipInstitutionDetailsModel.registrationDateVal}}</p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.CONTACT' | translate}}</span>
+                        <p class="label-input-text">{{membershipInstitutionDetailsModel.pocNumber}}</p>
+                    </div>
+                </div>
+                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="form-group">
+                    <span class="label-view">{{'ERP.EMAIL' | translate}}</span>
+                    <p class="label-input-text">{{membershipInstitutionDetailsModel.emailId}}</p>
+                </div>
+            </div> -->
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.PAN_NO' | translate}}</span>
+                        <p class="label-input-text">{{membershipInstitutionDetailsModel.panNumber}}</p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.TAN_NO' | translate}}</span>
+                        <p class="label-input-text">{{membershipInstitutionDetailsModel.tanNumber}}</p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.GST_NO' | translate}}</span>
+                        <p class="label-input-text">{{membershipInstitutionDetailsModel.gstNumber}}</p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.KYC' | translate}}</span>
+                        <p class="label-input-text">{{isKycApproved}}</p>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="col-12"></div>
+        <h6 class="super-sub-heading">{{'ERP.INSTITUTION_PROMOTER_DETAILS' | translate}}</h6>
+
+        <div class="globel-border-top-color"></div>
+        <p-table #dt [columns]="groupPrmoters" [value]="institutionPromoter" dataKey="id"
+            styleClass="p-datatable-striped" [rows]="5" [paginator]="true" [showJumpToPageDropdown]="true"
+            [showPageLinks]="false" [pageLinks]="1" [responsive]="true" rowExpandMode="single">
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th *ngFor="let promoter of columns ">{{promoter.header | translate}}</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                <tr>
+                    <td *ngFor="let promoter of columns ">{{rowData[promoter.field]}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <!-- <ng-template pTemplate="footer">
+            <p-button class="pull-right" label="{{'ERP.CLOSE' | translate}}" (click)="close()"></p-button>
+        </ng-template> -->
+
+        <div class="col-12"></div>
+
+
+    </p-dialog>
+</div>
+
+<!-- group prmoter details dialog -->
+<div class="view-moredetails-popup">
+    <p-dialog header="More Basic Details" [(visible)]="groupPromotersPopUpFlag" styleClass="moredetails-style">
+        <div class="col-12 view-morepopup">
+            <div class="d-flex justify-content-center px-3 py-0 mb-2">
+                <img src="assets/images/no-image.jpg" class="image-user">
+                <!-- <p class="active-status"></p> -->
+                <img src="assets/images/no-image.jpg" class="image-sign">
+            </div>
+        </div>
+        <div class="col-12 text-center popup-basic-details mt-5 pt-3">
+            <span class="fw-semibold">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
+            <p class="fw-bold">{{membershipGroupDetailsModel.tempAdmissionNumber}}</p>
+        </div>
+        <div class="col-12 popup-basic-details">
+            <div class="row">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.NAME' | translate}}</span>
+                        <p class="label-input-text">{{membershipGroupDetailsModel.name}}</p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
+                        <p class="label-input-text">{{membershipGroupDetailsModel.tempAdmissionNumber}}</p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.MEMBER_TYPE' | translate}}</span>
+                        <p class="label-input-text">{{membershipGroupDetailsModel.memberTypeName}}</p>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.REGISTERED_DATE' | translate}}</span>
+                        <p class="label-input-text">{{membershipGroupDetailsModel.registrationDateVal}}</p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.ADMISSION_DATE' | translate}}</span>
+                        <p class="label-input-text">{{membershipGroupDetailsModel.admissionDateVal}}</p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.CONTACT' | translate}}</span>
+                        <p class="label-input-text">{{membershipGroupDetailsModel.pocNumber}}</p>
+                    </div>
+                </div>
+                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                                <div class="form-group">
+                                    <span class="label-view">{{'ERP.EMAIL' | translate}}</span>
+                                    <p class="label-input-text">{{membershipGroupDetailsModel.emailId}}</p>
+                                </div>
+                            </div> -->
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.TAN_NO' | translate}}</span>
+                        <p class="label-input-text">{{membershipGroupDetailsModel.tanNumber}}</p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.PAN_NO' | translate}}</span>
+                        <p class="label-input-text">{{membershipGroupDetailsModel.panNumber}}</p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.GST_NO' | translate}}</span>
+                        <p class="label-input-text">{{membershipGroupDetailsModel.gstNumber}}</p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                    <div class="form-group">
+                        <span class="label-view">{{'ERP.KYC' | translate}}</span>
+                        <p class="label-input-text">{{isKycApproved}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12"></div>
+        <h6 class="super-sub-heading">{{'ERP.GROUP_PROMOTER_DETAILS' | translate}}</h6>
+        <div class="globel-border-top-color"></div>
+        <p-table #dt [columns]="promoterDetails" [value]="promoterDetails" editMode="row"
+            styleClass="p-datatable-striped" [rows]="5" [paginator]="true" [showJumpToPageDropdown]="true"
+            [showPageLinks]="false" [pageLinks]="1" [responsive]="true" rowExpandMode="single"
+            [globalFilterFields]="['surname', 'name', 'operatorTypeName', 'dob', 'age', 'genderName', 'maritalStatusName', 'mobileNumber', 'aadharNumber', 'emailId', 'startDate']">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th *ngFor="let promoter of groupPrmoters ">{{promoter.header | translate}}</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row let-editing="editing" let-ri="rowIndex">
+                <tr>
+                    <td *ngFor="let promoter of groupPrmoters ">{{row[promoter.field]}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <!-- <ng-template pTemplate="footer">
+                    <p-button class="pull-right" label="{{'ERP.CLOSE' | translate}}"(click)="close()"></p-button>
+                </ng-template> -->
+
+        <div class="col-12"></div>
+
+
+    </p-dialog>
+</div>
+
+<!--Individual photo Copy dialog -->
+<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="memberPhotoCopyZoom" styleClass="photo-dialog">
+    <div id="carouselExampleRide" class="carousel slide" data-bs-ride="true">
+        <div class="carousel-inner">
+            <div class="carousel-item active" data-bs-interval="3000">
+                <div>
+                    <div *ngFor="let img of membershipBasicDetailsModel.multipartFileListForPhotoCopy">
+                        <div *ngIf="photoCopyFlag">
+                            <span class="{{img.imageValue}}"
+                                *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                <!-- <a href="{{img.imageValue}}" (clicl)="onClickMemberPhotoCopy()"></a> -->
+                                <img src="{{img.imageValue}}" class="popup-images">
+                            </span>
+                        </div>
+                        <div *ngIf="!photoCopyFlag">
+                            <span>
+                                <img src="assets/images/no-image.jpg" class="popup-images">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item" data-bs-interval="3000">
+                <div>
+                    <div *ngFor="let img of membershipBasicDetailsModel.multipartFileListForsignatureCopyPath">
+                        <div *ngIf="photoCopyFlag">
+                            <span class="{{img.imageValue}}" (click)="onClickMemberPhotoCopy()"
+                                *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                <!-- <a href="{{img.imageValue}}" (clicl)="onClickMemberPhotoCopy()"></a> -->
+                                <img src="{{img.imageValue}}" class="popup-images">
+                            </span>
+                        </div>
+                        <div *ngIf="!photoCopyFlag">
+                            <span>
+                                <img src="assets/images/no-image.jpg" class="popup-images">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleRide" data-bs-slide="prev">
+            <span class="fa fa-angle-left" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleRide" data-bs-slide="next">
+            <span class="fa fa-angle-right" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <!-- <div class="col-12">
+                    <div class="d-flex justify-content-end">
+        <p-button class="action-edit" label="{{'ERP.CLOSE' | translate}}" (click)="closePhoto()"></p-button>
+        </div> -->
+</p-dialog>
+
+<!-- disburment pop up -->
+<p-dialog header="Disbursement Details" [(visible)]="addOrEdit" styleClass="moredetails-style" [closable]="false">
+    <div class="popup-basic-details">
+        <form [formGroup]="disbursementForm">
+            <div class="col-12 p-2 bg-card bg-label-colorfull">
+                <div class="mt-n1 p-2">
+                    <div class="row g-3 mb-3">
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                            <div class="form-label">
+                                <label><span class="red">*</span>{{'LOANS.DISBURSEMENT_AMOUNT' | translate}}
+                                </label>
+                                <input pInputText formControlName="disbursementAmount" placeholder="Enter Amount"
+                                    id="bunit_txt_name" maxlength="40" type="text"
+                                    [(ngModel)]="siLoanDisbursementModel.disbursementAmount">
+                                    <p-message severity="error" text="Enter Valid Amount"
+                                    *ngIf="!disbursementForm.controls['disbursementAmount'].valid && disbursementForm.controls['disbursementAmount'].dirty">
+                                </p-message>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                            <div class="form-label">
+                                <label>{{'LOANS.ACCOUNT_NUMBER' | translate}}
+                                </label>
+                                <input pInputText formControlName="accountNumber" placeholder="Enter Amount"
+                                    id="bunit_txt_name" maxlength="40" type="text"
+                                    [(ngModel)]="siLoanApplicationModel.accountNumber">
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                            <div class="form-label">
+                                <label>{{'LOANS.DISBURSEMENT_DATE' | translate}}
+                                </label>
+                                <p-calendar [showIcon]="true" [dateFormat]="orgnizationSetting.calendar"
+                                    id="calendar" name="calendar" formControlName="disbursementDate"
+                                    [(ngModel)]="siLoanDisbursementModel.disbursementDateVal"
+                                    placeholder="DD/MM/YYYY"></p-calendar>
+
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                            <div class="form-label">
+                                <label for="username">{{'LOANS.TRANSACTION_DATE' | translate}}
+                                </label>
+                                <p-calendar [showIcon]="true" [dateFormat]="orgnizationSetting.calendar"
+                                    id="calendar" name="calendar" formControlName="transactionDate"
+                                    [(ngModel)]="siLoanDisbursementModel.transactionDateVal"
+                                    placeholder="DD/MM/YYYY"></p-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3 mb-3">
+                    <!-- <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                        <div class="form-label">
+                            <label for="code">
+                                {{'ERP.DISBURSEMENT_DUE_DATE' | translate}}
+                            </label>
+                            <p-calendar [showIcon]="true" [dateFormat]="orgnizationSetting.calendar" id="calendar"
+                                name="calendar" formControlName="disbursementDueDate"
+                                [(ngModel)]="siLoanDisbursementModel.dueDisbursmentDateVal"
+                                placeholder="DD/MM/YYYY"></p-calendar>
+                        </div>
+                    </div> -->
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                        <div class="form-label">
+                            <label for="code"><span class="red">*</span>
+                                {{'LOANS.IS_VERIFIED_PHOTO_SIGNATURE' | translate}}
+                            </label>
+                            <p-dropdown [options]="trueFalseList" placeholder="Select"
+                                formControlName="isPhotoSignatureVerified"
+                                [(ngModel)]="siLoanDisbursementModel.isPhotoSignVerfied" [appendTo]="'body'">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                    <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 btn-footer mt-4">
+                        <div class="col-12 d-flex justify-content-end p-0 pt-4 group-button-bottom">
+                           
+                            <!-- <p-button label="{{'ERP.CLEAR' | translate}}" (click)="cancelOrRefresh()"></p-button> -->
+                            <p-button label="{{'ERP.CANCEL' | translate}}" (click)="canclePopUp()"></p-button>
+                            <p-button label="{{'ERP.SUBMIT' | translate}}" [disabled]="!disbursementForm.valid"
+                                (click)="addOrUpdate()"></p-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
     </div>
 </p-dialog>

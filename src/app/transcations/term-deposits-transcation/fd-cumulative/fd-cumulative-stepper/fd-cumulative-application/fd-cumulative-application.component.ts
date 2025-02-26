@@ -103,9 +103,12 @@ export class FdCumulativeApplicationComponent {
       'renewalType':['',],
       'maturityDate': [{ value: '', disabled: true }],
       'maturityAmount': [{ value: '', disabled: true }],
-      'tenureType': [{ value: '', disabled: true }],
-      // 'interestPayoutType': ['',],
-      // 'interestPayoutTransferAccount': ['',],
+      'tenureType': ['',],
+      'interestPayoutType': ['',],
+      'interestPayoutTransferAccount': ['',],
+      'staffRoi':[{ value: '', disabled: true }],
+      'seniorCitizenRoi':[{ value: '', disabled: true }]
+      
     })
   }
 
@@ -125,7 +128,7 @@ export class FdCumulativeApplicationComponent {
 
     this.paymentTypeList = [
       { label: "Cash", value: 1 },
-      { label: "Standing Instructions", value: 2 }
+      { label: "To SB", value: 2 }
     ]
     this.getAllAccountTypes();
 
@@ -258,7 +261,7 @@ export class FdCumulativeApplicationComponent {
             else if (this.fdCumulativeApplicationModel.depositDate != null && this.fdCumulativeApplicationModel.depositDate != undefined) {
               this.fdCumulativeApplicationModel.depositDateVal = this.commonFunctionsService.dateConvertionIntoFormate(this.fdCumulativeApplicationModel.depositDate);
             }
-            // if (this.fdNonCumulativeApplicationModel.fdNonCummulativeproductId != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeproductId != undefined)
+            // if (this.fdCumulativeApplicationModel.fdNonCummulativeproductId != null && this.fdCumulativeApplicationModel.fdNonCummulativeproductId != undefined)
             //   this.isProductDisable = applicationConstants.TRUE;
 
             if (this.fdCumulativeApplicationModel.maturityDate != null && this.fdCumulativeApplicationModel.maturityDate != undefined) {
@@ -278,8 +281,8 @@ export class FdCumulativeApplicationComponent {
               }
             }
 
-            // if (this.fdNonCumulativeApplicationModel.depositDate != null && this.fdNonCumulativeApplicationModel.depositDate != undefined)
-            //   this.fdNonCumulativeApplicationModel.depositDateVal = this.datePipe.transform(this.fdNonCumulativeApplicationModel.depositDate, this.orgnizationSetting.datePipe);
+            // if (this.fdCumulativeApplicationModel.depositDate != null && this.fdCumulativeApplicationModel.depositDate != undefined)
+            //   this.fdCumulativeApplicationModel.depositDateVal = this.datePipe.transform(this.fdCumulativeApplicationModel.depositDate, this.orgnizationSetting.datePipe);
 
 
             if (this.fdCumulativeApplicationModel.memberTypeName != null && this.fdCumulativeApplicationModel.memberTypeName != undefined) {
@@ -359,6 +362,13 @@ export class FdCumulativeApplicationComponent {
 
             if (this.productDefinitionModel.intestPolicyConfigList[0].penaltyRoi != undefined && this.productDefinitionModel.intestPolicyConfigList[0].penaltyRoi != null)
               this.fdCumulativeApplicationModel.penalRoi = this.productDefinitionModel.intestPolicyConfigList[0].penaltyRoi;
+            
+            if (this.productDefinitionModel.intestPolicyConfigList[0].staffRoi != undefined && this.productDefinitionModel.intestPolicyConfigList[0].staffRoi != null)
+              this.fdCumulativeApplicationModel.staffRoi = this.productDefinitionModel.intestPolicyConfigList[0].staffRoi;
+
+            if (this.productDefinitionModel.intestPolicyConfigList[0].seniorCitizenRoi != undefined && this.productDefinitionModel.intestPolicyConfigList[0].seniorCitizenRoi != null)
+              this.fdCumulativeApplicationModel.seniorCitizenRoi = this.productDefinitionModel.intestPolicyConfigList[0].seniorCitizenRoi;
+
           }
 
           if (this.productDefinitionModel.requiredDocumentsConfigList != null && this.productDefinitionModel.requiredDocumentsConfigList != undefined && this.productDefinitionModel.requiredDocumentsConfigList.length > 0) {

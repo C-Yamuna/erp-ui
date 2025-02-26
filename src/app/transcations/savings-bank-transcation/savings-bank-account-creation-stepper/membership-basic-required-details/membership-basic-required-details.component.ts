@@ -164,7 +164,7 @@ export class MembershipBasicRequiredDetailsComponent {
     // });
 
     this.kycForm = this.formBuilder.group({
-      'docNumber':new FormControl('', [Validators.required]),
+      'docNumber': new FormControl({ value: '', disabled: true }),
       'docTypeName': new FormControl({ value: '', disabled: true }, Validators.required),
       'nameAsPerDocument': new FormControl({ value: '', disabled: false }, [Validators.pattern(applicationConstants.ALPHA_NAME_PATTERN), Validators.required]),
       'promoter': new FormControl({ value: '', disabled: true }), // 🔹 Disabled initially

@@ -203,4 +203,5 @@ export class SiLoanApplication {
     siLoanVehicleMortgageDetailsDTO?: any;
 
     siDisbursementDTOList?: any;
+
 }

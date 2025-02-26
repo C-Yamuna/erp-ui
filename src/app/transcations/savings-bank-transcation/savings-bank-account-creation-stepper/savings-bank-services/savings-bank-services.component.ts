@@ -118,20 +118,20 @@ export class SavingsBankServicesComponent implements OnInit{
     this.updateData();
   }
   updateData() {
-    if(this.serviceList == null || this.serviceList == undefined || this.serviceList.length == 0){
-      this.saveAndNextDisable = true;
-    }
-    else {
-      this.saveAndNextDisable = false;
-    }
-    if(this.addButtonService){
-      this.saveAndNextDisable = true;
-    }
+    // if(this.serviceList == null || this.serviceList == undefined || this.serviceList.length == 0){
+    //   this.saveAndNextDisable = true;
+    // }
+    // else {
+    //   this.saveAndNextDisable = false;
+    // }
+    // if(this.addButtonService){
+    //   this.saveAndNextDisable = true;
+    // }
     this.savingsBankServiceModel.sbAccId = this.sbAccId;
     this.savingBankApplicationService.changeData({
-      formValid: this.saveAndNextDisable,
+      formValid: this.addButtonService,
       data: this.savingsBankServiceModel,
-      isDisable: this.saveAndNextDisable,
+      isDisable: this.addButtonService,
       stepperIndex: 7,
     });
   }

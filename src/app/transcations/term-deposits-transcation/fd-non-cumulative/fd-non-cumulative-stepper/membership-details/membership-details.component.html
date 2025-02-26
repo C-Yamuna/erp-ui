@@ -18,19 +18,19 @@
                                 <div class="card-leftbody">
                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px"
                                         *ngIf="!individualFlag">
-                                        <h6 class="label-view">Promoter Name</h6>
-                                        <p class="label-input-text">{{document.promoterName}}</p>
+                                        <h6 class="label-view">{{ 'TERMDEPOSITSTRANSACTION.PROMOTER_NAME' | translate }}</h6>
+                                        <p class="label-input-text">{{document.promoterName}}</p> 
                                     </div>
                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <h6 class="label-view">Document Type</h6>
+                                        <h6 class="label-view">{{ 'TERMDEPOSITSTRANSACTION.DOCUMENT_TYPE' | translate }}</h6>
                                         <p class="label-input-text">{{document.kycDocumentTypeName}}</p>
                                     </div>
                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <h6 class="label-view">Document Number</h6>
+                                        <h6 class="label-view">{{ 'TERMDEPOSITSTRANSACTION.DOCUMENT_NUMBER' | translate }}</h6>
                                         <p class="label-input-text">{{document.documentNumber}}</p>
                                     </div>
                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <h6 class="label-view">Name as per Document</h6>
+                                        <h6 class="label-view">{{ 'TERMDEPOSITSTRANSACTION.NAME_AS_PER_DOCUMENT' | translate }}</h6>
                                         <p class="label-input-text docname-texteclipse">{{document.nameAsPerDocument}}
                                         </p>
                                     </div>
@@ -74,7 +74,7 @@
                         <div class="row g-3 mt-n1">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="!individualFlag">
                                 <div class="form-label">
-                                    <label><span class="red">*</span>Promoter</label>
+                                    <label><span class="red">*</span>{{ 'TERMDEPOSITSTRANSACTION.PROMOTER_NAME' | translate }}</label>
                                     <p-dropdown placeholder="{{'ERP.SELECT'| translate}}" formControlName="promoter"
                                         [options]="promotersList" id="docTypeId" [(ngModel)]="fdNonCumulativeKycModel.promoterId">
                                     </p-dropdown>
@@ -82,7 +82,7 @@
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
-                                    <label><span class="red">*</span>Document Type</label>
+                                    <label><span class="red">*</span>{{ 'TERMDEPOSITSTRANSACTION.DOCUMENT_TYPE' | translate }}</label>
                                     <p-dropdown placeholder="{{'ERP.SELECT'| translate}}" formControlName="docTypeName"
                                         [options]="documentNameList" id="docTypeId"
                                         [(ngModel)]="fdNonCumulativeKycModel.kycDocumentTypeId"
@@ -92,14 +92,14 @@
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
-                                    <label><span class="red">*</span>Document Number</label>
+                                    <label><span class="red">*</span>{{ 'TERMDEPOSITSTRANSACTION.DOCUMENT_NUMBER' | translate }}</label>
                                     <input id="documentNumber" type="text" formControlName="docNumber"
                                         [(ngModel)]="fdNonCumulativeKycModel.documentNumber" pInputText
                                         placeholder="Enter Document Number">
                                 </div>
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="form-label">
-                                        <label><span class="red">*</span>Name as per Document</label>
+                                        <label><span class="red">*</span>{{ 'TERMDEPOSITSTRANSACTION.NAME_AS_PER_DOCUMENT' | translate }}</label>
                                         <input id="documentNumber" type="text" formControlName="nameAsPerDocument"
                                             pInputText [(ngModel)]="fdNonCumulativeKycModel.nameAsPerDocument"
                                             placeholder="Enter Document Number">
@@ -111,14 +111,15 @@
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
-                                    <span class=""> {{ 'ERP.UPLOAD_DOCUMENT' | translate }} </span>
+                                    <span class=""> {{ 'TERMDEPOSITSTRANSACTION.DOCUMENT_COPY' | translate }} </span>
                                     <div class="uplodad-style align-items-center">
                                         <!-- Upload Button Column -->
-                                    
-                                            <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]" chooseLabel=" " id="apply-leave_fileUp_attach" name="file"
-                                                accept=".png,.jpg,.jpeg,.pdf" [customUpload]="true" formContralName="fileUpload" (onSelect)="imageUploader($event,fileUpload)">
-                                            </p-fileUpload>
-                                    
+                                        <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]" chooseLabel=" " 
+                                            id="apply-leave_fileUp_attach" accept=".png,.jpg,.jpeg,.pdf" 
+                                            [customUpload]="true" formControlName="fileUpload"
+                                            [disabled]="kycForm.get('fileUpload').disabled"
+                                            (onSelect)="imageUploader($event,fileUpload)">
+                                        </p-fileUpload>
                                         <!-- Uploaded Files Display Column -->
                                     
                                              <div class="col-12 d-flex p-1 contant-body"  *ngFor="let img of fdNonCumulativeKycModel.multipartFileList">
@@ -142,8 +143,8 @@
                             </div>
                             <div class="col-12">
                                 <div class="justify-content-end d-flex">
-                                    <p-button label="{{'cancel' | translate}}" (onClick)="editCancle()"></p-button>
-                                    <p-button label="{{'save' | translate}}" [disabled]="!kycForm.valid"
+                                    <p-button label="{{ 'TERMDEPOSITSTRANSACTION.CANCEL' | translate }}" (onClick)="editCancle()"></p-button>
+                                    <p-button label="{{ 'TERMDEPOSITSTRANSACTION.SAVE' | translate }}" [disabled]="!kycForm.valid"
                                         (onClick)="editsave(fdNonCumulativeKycModel)"></p-button>
                                 </div>
                             </div>

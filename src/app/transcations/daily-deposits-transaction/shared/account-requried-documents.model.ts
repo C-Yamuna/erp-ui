@@ -40,4 +40,6 @@ productId:any
 productName:any
 
 multipartFileList:any;
+
+nameAsPerDocument:any;
 }

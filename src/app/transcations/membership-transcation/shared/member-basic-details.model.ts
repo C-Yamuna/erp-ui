@@ -182,6 +182,8 @@ export class MemberBasicDetails {
 
    resolutionDateVal:any;
 
+   memberBankDetailsDTOList:any;
+
   
 }
 

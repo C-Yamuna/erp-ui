@@ -5,25 +5,25 @@
             number:&nbsp;{{admissionNumber}})</span></h6>
     <div class="stepper-top-section-strip">
         <div class="row">
-            <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 stepper-top-product-name-background">
                 <div class="form-group">
                     <span>{{'ERP.PRODUCT_NAME' | translate}}</span>
                     <p class="mb-0">{{accountsModel.productName}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
-                <div class="form-group">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="form-group ml-2">
                     <span>{{'ERP.ACCOUNT_TYPE' | translate}}</span>
                     <p class="mb-0">{{accountsModel.accountTypeName}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="form-group">
                     <span>{{'ERP.DEPOSIT_AMOUNT' | translate}}</span>
                     <p class="mb-0">{{depositAmount}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="form-group">
                     <span>{{'ERP.DEPOSIT_DATE' | translate}}</span>
                     <p class="mb-0">{{depositDate}}</p>
@@ -52,39 +52,21 @@
                                         <h6 class="label-view">{{'ERP.DOCUMENT_NUMBER' | translate }}</h6>
                                         <p class="label-input-text">{{document.documentNumber}}</p>
                                     </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
-                                        <h6 class="label-view">{{ 'ERP.UPLOAD_DOCUMENT' | translate }}</h6>
-                                        <p class="label-input-text docname-texteclipse"
-                                            pTooltip="{{document.requiredDocumentFilePath}}" tooltipPosition="bottom">
-                                            {{document.requiredDocumentFilePath}} </p>
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <h6 class="label-view">{{'ERP.NAME_AS_PER_DOCUMENT' | translate }}</h6>
+                                        <p class="label-input-text">{{document.nameAsPerDocument}}
+                                        </p>
                                     </div>
+                                    
                                 </div>
                             </div>
-                            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end">
-                                <div class="text-right">
-                                    <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn"
-                                        (click)="toggleEditForm(i ,document)" [disabled]="editButtonDisable"></p-button>
-                                    <p-button icon="fa fa-trash" class="kyc-edit-btn ml-3"
-                                        (click)="deletDilogBox(document)" [disabled]="editButtonDisable"></p-button>
-                                </div>
-
-                                <div class="col-12 px-0">
-                                    <div class="col-12 px-0" *ngFor="let img of document.multipartFileList">
-                                        <div class="col-12 p-0"
-                                            *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                            <a href="{{img.imageValue}}">
-                                                <img src="{{img.imageValue}}" class="upload-img img-fluid"
-                                                    pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                            </a>
-                                        </div>
-                                        <div class="col-12 p-0" *ngIf=" img.fileType =='pdf'">
-                                            <a href="{{img.imageValue}}">
-                                                <img src="assets\images\pdf.png" class="pdf-img img-fluid"
-                                                    pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
+                            
+                            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end d-flex right-actions">
+                                <div class="cardview-icon icon-size text-right cursor-pointer -mt-1" (click)="onClickkycPhotoCopy()"><i
+                                        class="fa fa-eye mr-3" aria-hidden="true"></i></div>
+                                <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn" (click)="toggleEditForm(i ,document)"
+                                    [disabled]="editButtonDisable"></p-button>
+                                <p-button icon="fa fa-trash" class="kyc-edit-btn ml-3" (click)="deletDilogBox(document)"></p-button>
                             </div>
                         </div>
                     </div>
@@ -112,34 +94,38 @@
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
-                                    <span class=""> {{ 'ERP.UPLOAD_DOCUMENT' | translate }} </span>
-                                    <div class="uplodad-style align-items-center">
-                                        <!-- Upload Button Column -->
+                                    <label><span class="red">*</span>{{'ERP.NAME_AS_PER_DOCUMENT' | translate }}</label>
+                                    <input id="nameAsPerDocument" type="text" pInputText formControlName="nameAsPerDocument"
+                                        [(ngModel)]="requiredDocumentDetails.nameAsPerDocument" placeholder="Enter Name As Per Document">
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="form-label">
+                                <div class="ml-2"><span class="red">*</span>{{ 'ERP.UPLOAD_DOCUMENT' | translate }} </div>
+                                <div class="uplodad-style align-items-center">
+                                    <!-- Upload Button Column -->
 
-                                        <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
-                                            chooseLabel=" " id="apply-leave_fileUp_attach" name="file"
-                                            accept=".png,.jpg,.jpeg,.pdf" (onRemove)="fileRemoeEvent()"
-                                            [customUpload]="true" formControlName="requiredDocumentFilePath"
-                                            (onSelect)="imageUploader($event,fileUpload)">
-                                        </p-fileUpload>
-
-                                        <!-- Uploaded Files Display Column -->
-
-                                        <div class="col-12  d-flex p-1 contant-body"
-                                            *ngFor="let img of requiredDocumentDetails.multipartFileList">
-                                            <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
-                                                tooltipPosition="bottom">
-                                                {{img.fileName}}
-                                            </div>
+                                    <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                                        chooseLabel=" " id="apply-leave_fileUp_attach" name="file"
+                                        accept=".png,.jpg,.jpeg,.pdf" [customUpload]="true" (onRemove)="fileRemoeEvent()"
+                                        (onSelect)="imageUploader($event,fileUpload)" formControlName="requiredDocumentFilePath">
+                                    </p-fileUpload>
+                                    <div class="col-12  d-flex p-1 contant-body" *ngFor="let img of requiredDocumentDetails.multipartFileList">
+                                        <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                            <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22" height="22"></a>
                                         </div>
+                                        <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                            {{img.fileName}}</div>
+                                        
                                     </div>
+                                </div>
                                 </div>
 
                             </div>
                             <div class="col-12">
                                 <div class="justify-content-end d-flex">
                                     <p-button label="{{'cancle' | translate}}" (onClick)="editCancle()"></p-button>
-                                    <p-button label="{{'save' | translate}}" [disabled]="!requiredForm.valid"
+                                    <p-button label="{{'save' | translate}}" [disabled]="!requiredForm.valid || !isFileUploaded"
                                         (onClick)="editsave(requiredDocumentDetails)"></p-button>
                                 </div>
                             </div>
@@ -169,27 +155,31 @@
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
-                                    <span class=""> {{ 'ERP.UPLOAD_DOCUMENT' | translate }} </span>
-                                    <div class="uplodad-style align-items-center">
-                                        <!-- Upload Button Column -->
+                                    <label><span class="red">*</span>{{'ERP.NAME_AS_PER_DOCUMENT' | translate }}</label>
+                                    <input id="nameAsPerDocument" type="text" pInputText formControlName="nameAsPerDocument"
+                                        [(ngModel)]="requiredDocumentDetails.nameAsPerDocument" placeholder="Enter Name As Per Document">
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="form-label">
+                                <div class="ml-2"><span class="red">*</span>{{ 'ERP.UPLOAD_DOCUMENT' | translate }} </div>
+                                <div class="uplodad-style align-items-center">
+                                    <!-- Upload Button Column -->
 
-                                        <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
-                                            chooseLabel=" " id="apply-leave_fileUp_attach" name="file"
-                                            accept=".png,.jpg,.jpeg,.pdf" (onRemove)="fileRemoeEvent()"
-                                            [customUpload]="true" formContralName="requiredDocumentFilePath"
-                                            (onSelect)="imageUploader($event,fileUpload)">
-                                        </p-fileUpload>
-
-                                        <!-- Uploaded Files Display Column -->
-
-                                        <div class="col-12  d-flex p-1 contant-body"
-                                            *ngFor="let img of requiredDocumentDetails.multipartFileList">
-                                            <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
-                                                tooltipPosition="bottom">
-                                                {{img.fileName}}
-                                            </div>
+                                    <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                                        chooseLabel=" " id="apply-leave_fileUp_attach" name="file"
+                                        accept=".png,.jpg,.jpeg,.pdf" [customUpload]="true" (onRemove)="fileRemoeEvent()"
+                                        (onSelect)="imageUploader($event,fileUpload)" formControlName="requiredDocumentFilePath">
+                                    </p-fileUpload>
+                                    <div class="col-12  d-flex p-1 contant-body" *ngFor="let img of requiredDocumentDetails.multipartFileList">
+                                        <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                            <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22" height="22"></a>
                                         </div>
+                                        <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                            {{img.fileName}}</div>
+                                        
                                     </div>
+                                </div>
                                 </div>
 
                             </div>
@@ -222,4 +212,19 @@
         <p-button pRipple class="no-button" label="{{'ERP.CANCEL' | translate}}"
             (click)="cancelForDialogBox()"></p-button>
     </div>
+</p-dialog>
+
+<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="kycPhotoCopyZoom" styleClass="doc-photo-dialog">
+    <div class="col-12">
+    <div *ngFor="let document of kycModelList ; let i = index">
+    <div *ngFor="let img of document.multipartFileList">
+        <div class="mb-3" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                <img src="{{img.imageValue}}" class="doc-photocopy">
+        </div>
+        <div class="mb-3" *ngIf=" img.fileType =='pdf'">
+                <img src="assets\images\pdf.png" class="doc-photocopy">
+        </div>
+    </div>
+    </div>
+</div>
 </p-dialog>

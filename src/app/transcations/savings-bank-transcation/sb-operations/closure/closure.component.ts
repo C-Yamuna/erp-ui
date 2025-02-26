@@ -63,6 +63,8 @@ export class ClosureComponent {
   groupPromotersPopUpFlag: boolean = false;
   institutionPromoterFlag: boolean = false;
   memberPhotoCopyZoom: boolean = false;
+  groupPhotoCopyZoom: boolean = false;
+  institutionPhotoCopyZoom: boolean = false;
   showForm: boolean = false;
   photoCopyFlag: boolean = true;
   signatureCopyFlag: boolean = true;
@@ -154,6 +156,12 @@ this.groupPromotersPopUpFlag = true;
 closePhotoCopy() {
 this.memberPhotoCopyZoom = false;
 }
+groupclosePhotoCopy() {
+  this.groupPhotoCopyZoom = false;
+}
+institutionclosePhotoCopy() {
+  this.institutionPhotoCopyZoom = false;
+}
 
 /**
 * @implement Image Zoom POp up
@@ -161,6 +169,12 @@ this.memberPhotoCopyZoom = false;
 */
 onClickMemberPhotoCopy(){
 this.memberPhotoCopyZoom = true;
+}
+onClickGroupPhotoCopy(){
+  this.groupPhotoCopyZoom = true;
+}
+onClickInstitutionPhotoCopy(){
+  this.institutionPhotoCopyZoom = true;
 }
 
 
@@ -482,13 +496,29 @@ this.memberPhotoCopyZoom = false;
     this.savingBankApplicationModel.filesDTOList.splice(removeFileIndex, 1);
     this.savingBankApplicationModel.closureSignedCopy = null;
   }
+  individualBasicDetails: boolean = false;
+  groupBasicDetails: boolean = false;
+  institutionBasicDetails: boolean = false;
+  // position: string = 'center';
+  showindividualBasicDetailsDialog(position: string) {
+    this.position = position;
+    this.individualBasicDetails = true;
+  }
+  showgroupBasicDetailsDialog(position: string) {
+    this.position = position;
+    this.groupBasicDetails = true;
+  }
+  showinstitutionBasicDetailsDialog(position: string) {
+    this.position = position;
+    this.institutionBasicDetails = true;
+  }
 
   /**
    * @implements savings Account update
    * @author jyothi.naidana
    */
   savingsAccountClosureUpdate(){
-      this.savingBankApplicationModel.accountStatusName = CommonStatusData.CLOSURE_REQUEST;
+      this.savingBankApplicationModel.statusName = CommonStatusData.CLOSURE_REQUEST;
       this.savingBankApplicationModel.closureDate =this.commonFunctionsService.getUTCEpoch(new Date(this.savingBankApplicationModel.closureDateVal));//closure date converstion
       this.savingsAccountService.updateSavingsAccountDetails(this.savingBankApplicationModel).subscribe((response: any) => {
         this.responseModel = response;

@@ -81,7 +81,7 @@ export class SavingsBankTranscationComponent {
       { field: 'accountTypeName', header: 'Account Type' },
       { field: 'admissionNumber',header:'Admission Number'},
       { field: 'accountOpenDate', header: 'Account Opening Date' },
-      { field: 'accountStatusName', header: 'Status' },
+      { field: 'statusName', header: 'Status' },
       // { field: 'Action', header: 'ACTION' },
     ];
     this.transactionForm = this.formBuilder.group({
@@ -227,7 +227,7 @@ getAllSbTransactionDetails() {
                 sb.accountTypeName = applicationConstants.SINGLE_ACCOUNT_TYPE;
               }
             }
-            if((sb.accountStatusName == savingsbanktransactionconstant.SUBMISSION_FOR_APPROVAL) ||  (sb.accountStatusName == savingsbanktransactionconstant.APPROVED)){
+            if((sb.statusName == savingsbanktransactionconstant.SUBMISSION_FOR_APPROVAL) ||  (sb.statusName == savingsbanktransactionconstant.APPROVED)){
               sb.viewButton = true;
               sb.actionButton = false;
             }
@@ -235,32 +235,32 @@ getAllSbTransactionDetails() {
               sb.actionButton = true;
               sb.viewButton = false;
             }
-            if(sb.accountStatusName == savingsbanktransactionconstant.APPROVED){
+            if(sb.statusName == savingsbanktransactionconstant.APPROVED){
               sb.approved = true;
               sb.actionButton = false;
               this.approvedCount = this.approvedCount + 1;
     
             }
-            else if(sb.accountStatusName == savingsbanktransactionconstant.REJECTED){
+            else if(sb.statusName == savingsbanktransactionconstant.REJECTED){
               sb.rejected = true;
               sb.actionButton = false;
               sb.approved = false;
               this.rejectCount =this.rejectCount +1;
             }
-            else if(sb.accountStatusName == savingsbanktransactionconstant.SUBMISSION_FOR_APPROVAL){
+            else if(sb.statusName == savingsbanktransactionconstant.SUBMISSION_FOR_APPROVAL){
               sb.submissionForApproval = true;
               sb.actionButton = false; 
               sb.approved = false;
               this.submissionForApprovalCount =this.submissionForApprovalCount +1;
             }
-            else if(sb.accountStatusName == savingsbanktransactionconstant.CREATED || sb.accountStatusName == savingsbanktransactionconstant.IN_PROGRESS){
+            else if(sb.statusName == savingsbanktransactionconstant.CREATED || sb.statusName == savingsbanktransactionconstant.IN_PROGRESS){
               sb.created = true; 
               sb.viewButton = true;
               sb.actionButton = true;
               sb.approved = false;
               this.inProgressCount = this.inProgressCount+1;
             }
-            else if(sb.accountStatusName == savingsbanktransactionconstant.REQUEST_FOR_RESUBIMSSION){
+            else if(sb.statusName == savingsbanktransactionconstant.REQUEST_FOR_RESUBIMSSION){
               sb.rejected = false;
               sb.approved = false;
               sb.submissionForApproval = false; 
@@ -269,7 +269,7 @@ getAllSbTransactionDetails() {
               sb.requestForResubmmission = true;
               this.requestForResubmmissionCount=this.requestForResubmmissionCount +1;
             }
-            else if(sb.accountStatusName == savingsbanktransactionconstant.CLOSURE){
+            else if(sb.statusName == savingsbanktransactionconstant.CLOSURE){
               sb.rejected = false;
               sb.approved = false;
               sb.submissionForApproval = false; 
@@ -279,7 +279,7 @@ getAllSbTransactionDetails() {
               sb.closed = true;
               this.requestForResubmmissionCount=this.requestForResubmmissionCount +1;
             }
-            else if(sb.accountStatusName == savingsbanktransactionconstant.CLOSURE_REQUEST){
+            else if(sb.statusName == savingsbanktransactionconstant.CLOSURE_REQUEST){
               sb.rejected = false;
               sb.approved = false;
               sb.submissionForApproval = false; 
@@ -292,8 +292,8 @@ getAllSbTransactionDetails() {
             }
             return sb
           });
-          this.activeStatusCount = this.gridList.filter(sbAccountApplication => sbAccountApplication.accountStatusName != null && sbAccountApplication.accountStatusName != undefined && sbAccountApplication.accountStatusName === savingsbanktransactionconstant.APPROVED).length;
-          this.inactiveStatusCount = this.gridList.filter(sbAccountApplication => sbAccountApplication.accountStatusName != null && sbAccountApplication.accountStatusName != undefined && sbAccountApplication.accountStatusName === savingsbanktransactionconstant.DORMANT).length;
+          this.activeStatusCount = this.gridList.filter(sbAccountApplication => sbAccountApplication.statusName != null && sbAccountApplication.statusName != undefined && sbAccountApplication.statusName === savingsbanktransactionconstant.APPROVED).length;
+          this.inactiveStatusCount = this.gridList.filter(sbAccountApplication => sbAccountApplication.statusName != null && sbAccountApplication.statusName != undefined && sbAccountApplication.statusName === savingsbanktransactionconstant.DORMANT).length;
           this.gridListLenght = this.gridList.length;
           this.tempGridListData = this.gridList;
           this.filterGridList = this.gridList;

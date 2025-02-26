@@ -2,14 +2,14 @@
     <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"></p-messages>
     <div class="stepper-top-section-strip">
         <div class="row ">
-            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-xs-12 stepper-top-product-name-background">
                 <div class="form-group">
                 <span>{{'LOANS.PRODUCT_NAME' | translate}} </span>
                 <p class="m-0 font-semibold text-break">{{saoProductDefinitionModel.name}}</p>
             </div>
         </div>
             <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-xs-12 viewcustom-input-number inputnumberht-5px">
-                <div class="form-group">
+                <div class="form-group ml-2">
                 <span>{{'LOANS.MIN_DEPOSIT_AMOUNT' | translate}}</span>
                 <p-inputNumber id="bunit_txt_name" [(ngModel)]="saoProductDefinitionModel.eligibleMInAmount" mode="currency"
                     inputId="currency-india" currency="INR" locale="en-IN" [disabled]="true" styleClass="label-input-text"> </p-inputNumber>
@@ -64,8 +64,8 @@
                  [globalFilterFields]="['isRequired','visitNumber','disbursementPercentage','tenureTypeName','tenure']">
                 <ng-template pTemplate="header">
                         <tr>
-                            <th><span class="red">*</span> {{'LOANS.IS_MANDATORY' | translate}}</th>
                             <th><span class="red">*</span> {{'LOANS.VISIT_NUMBER' | translate}}</th>
+                            <th><span class="red">*</span> {{'LOANS.IS_MANDATORY' | translate}}</th>
                             <th><span class="red">*</span> {{'LOANS.DISBURSMENT_PERCENTAGE' | translate}}</th>
                             <th><span class="red">*</span> {{'ERP.TENURE_TYPE' | translate}}</th>
                             <th><span class="red">*</span> {{'ERP.TENURE' | translate}}</th>
@@ -75,6 +75,23 @@
                     </ng-template>
                     <ng-template pTemplate="body" let-saoLoanDisbursementModel let-editing="editing" let-ri="rowIndex">
                         <tr [pEditableRow]="saoLoanDisbursementModel">
+                            
+                           
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <p-dropdown 
+                                            [options]="visitNumberList" 
+                                            formControlName="visitNumber" 
+                                            [(ngModel)]="saoLoanDisbursementModel.visitNumber" 
+                                            [appendTo]="'body'" 
+                                            placeholder="Select">
+                                        </p-dropdown>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">{{saoLoanDisbursementModel.visitNumber}}</ng-template>
+                                </p-cellEditor>
+                            </td>
+                            
                             <td>
                                 <p-cellEditor>
                                   <ng-template pTemplate="input">
@@ -87,15 +104,6 @@
                                   </ng-template>
                                 </p-cellEditor>
                             </td>  
-                            <td>
-                                <p-cellEditor>
-                                    <ng-template pTemplate="input">
-                                        <input pInputText type="text" [(ngModel)]="saoLoanDisbursementModel.visitNumber"
-                                            formControlName="visitNumber">
-                                    </ng-template>
-                                    <ng-template pTemplate="output">{{saoLoanDisbursementModel.visitNumber}}</ng-template>
-                                </p-cellEditor>
-                            </td>
                             <td>
                                 <p-cellEditor>
                                     <ng-template pTemplate="input">

@@ -3,7 +3,7 @@
     <div class="row">
         <div class="d-flex justify-content-between top-header-section">
             <div class="main-heading mt-1 justify-content-start" *ngIf="!editbutton">{{'INVESTMENTS_TRANSACTIONS.INVESTMENTS' | translate}}<i class="fa fa-angle-right font-bold mr-3 ml-3"></i>{{'ERP.VIEW' | translate}}</div>
-            <div class="main-heading mt-1 justify-content-start" *ngIf="editbutton">{{'INVESTMENTS_TRANSACTIONS.INVESTMENTS' | translate}}<i class="fa fa-angle-right font-bold mr-3 ml-3"></i>{{'ERP.EDIT' | translate}}</div>
+            <div class="main-heading mt-1 justify-content-start" *ngIf="editbutton">{{'INVESTMENTS_TRANSACTIONS.INVESTMENTS' | translate}}<i class="fa fa-angle-right font-bold mr-3 ml-3"></i>{{'ERP.PREVIEW' | translate}}</div>
         </div>
     </div>
     
@@ -142,9 +142,19 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4"></div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4" *ngIf="!fileFlag"></div>
-                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 mt-4"></div>
+                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 mt-4">
+                    <h6 class="label-view">{{'ERP.REMARKS' | translate}}</h6>
+                    <p class="label-input-text">
+                        {{sharesInvestmentsModel.remarks}}</p>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4">
+                    <h6 class="label-view">{{'ERP.STATUS' | translate}}</h6>
+                    <p class="label-input-text">
+                        {{sharesInvestmentsModel.statusName}}</p>
+                </div>
+                <!-- <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4"></div> -->
+                <!-- <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 mt-4"></div> -->
                 <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 mt-4 pull-right">
                     <div class="d-flex justify-content-end">
                         <p-button (click)="navigateToBack()" label="Back" class="btn-back"></p-button>

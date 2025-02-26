@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FdNonCummProductDefinitionModel, FdNonCumulativeApplication } from './shared/fd-non-cumulative-application.model';
 import { MemberGroupDetailsModel, MembershipInstitutionDetailsModel, NewMembershipAdd } from '../new-membership-add/shared/new-membership-add.model';
@@ -82,6 +82,7 @@ export class FdNonCumulativeApplicationComponent {
     private formBuilder: FormBuilder,
     private fdNonCumulativeApplicationService: FdNonCumulativeApplicationService,
     private commonComponent: CommonComponent,
+    private changeDetectorRef: ChangeDetectorRef,
     private activateRoute: ActivatedRoute,
     private encryptDecryptService: EncryptDecryptService,
     private commonFunctionsService: CommonFunctionsService,private fileUploadService: FileUploadService,
@@ -104,24 +105,28 @@ export class FdNonCumulativeApplicationComponent {
       'maturityAmount':[{ value: '', disabled: true }],
       'interestPayoutAmount': ['',],
       'totalInterestAmount': ['',],
-      'tenureType': [{ value: '', disabled: true }],
+      'tenureType': ['',],
       'interestPayoutType': ['',],
       'interestPayoutTransferAccount': ['',],
       'isRenewal': [''],
-      'renewalType': ['']
-      
+      'renewalType': [''],
+      'staffRoi':[{ value: '', disabled: true }],
+      'seniorCitizenRoi':[{ value: '', disabled: true }]
       })
   }
-  // interestPaymentFrequency
+
   ngOnInit() {
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
     this.isMemberCreation = this.commonFunctionsService.getStorageValue('b-class-member_creation');
     this.pacsId = this.commonFunctionsService.getStorageValue(applicationConstants.PACS_ID);
     this.branchId = this.commonFunctionsService.getStorageValue(applicationConstants.BRANCH_ID);
     this.tenureTypeList = this.commonComponent.tenureType();
-    this.interestPaymentFrequencyList = this.commonComponent.interestPaymentFrequency();
     this.renewalList = this.commonComponent.requiredlist();
-    
+    this.interestPaymentFrequencyList = this.commonComponent.interestPaymentFrequency();
+    this.interestPaymentFrequencyList = this.commonComponent.interestPaymentFrequency().filter((obj: any) => obj != null && obj.label != "Daily").map((tenure: { label: any; value: any }) => {
+      return { label: tenure.label, value: tenure.value };
+    });
+
     this.renewalTypeList =  [
       { label: "Deposit", value: 1 },
       { label: "Maturity Amount", value: 2 },
@@ -129,7 +134,7 @@ export class FdNonCumulativeApplicationComponent {
 
     this.paymentTypeList = [
       { label: "Cash", value: 1 },
-      { label: "Standing Instructions", value: 2 }
+      { label: "To SB", value: 2 }
     ]
     this.getAllAccountTypes();
     this.activateRoute.queryParams.subscribe(params => {
@@ -360,7 +365,7 @@ export class FdNonCumulativeApplicationComponent {
 
           if (this.productDefinitionModel.fdNonCummulativeInterestPolicyConfigList != null && this.productDefinitionModel.fdNonCummulativeInterestPolicyConfigList != undefined && this.productDefinitionModel.fdNonCummulativeInterestPolicyConfigList.length > 0) {
             this.interestPolicyList = this.productDefinitionModel.fdNonCummulativeInterestPolicyConfigList;
-           
+ 
           }
           if (this.productDefinitionModel.fdNonCummulativeInterestPolicyConfigList != null && this.productDefinitionModel.fdNonCummulativeInterestPolicyConfigList != undefined) {
             if (this.productDefinitionModel.fdNonCummulativeInterestPolicyConfigList[0].generalRoi != undefined && this.productDefinitionModel.fdNonCummulativeInterestPolicyConfigList[0].generalRoi != null)
@@ -368,6 +373,13 @@ export class FdNonCumulativeApplicationComponent {
   
             if (this.productDefinitionModel.fdNonCummulativeInterestPolicyConfigList[0].penaltyRoi != undefined && this.productDefinitionModel.fdNonCummulativeInterestPolicyConfigList[0].penaltyRoi != null)
               this.fdNonCumulativeApplicationModel.penalRoi = this.productDefinitionModel.fdNonCummulativeInterestPolicyConfigList[0].penaltyRoi;
+
+            if (this.productDefinitionModel.fdNonCummulativeInterestPolicyConfigList[0].staffRoi != undefined && this.productDefinitionModel.fdNonCummulativeInterestPolicyConfigList[0].staffRoi != null)
+              this.fdNonCumulativeApplicationModel.staffRoi = this.productDefinitionModel.fdNonCummulativeInterestPolicyConfigList[0].staffRoi;
+
+            if (this.productDefinitionModel.fdNonCummulativeInterestPolicyConfigList[0].seniorcitizenRoi != undefined && this.productDefinitionModel.fdNonCummulativeInterestPolicyConfigList[0].seniorcitizenRoi != null)
+              this.fdNonCumulativeApplicationModel.seniorCitizenRoi = this.productDefinitionModel.fdNonCummulativeInterestPolicyConfigList[0].seniorcitizenRoi;
+
           }
          
           if (this.productDefinitionModel.fdNonCummulativeRequiredDocumentsConfigList != null && this.productDefinitionModel.fdNonCummulativeRequiredDocumentsConfigList != undefined && this.productDefinitionModel.fdNonCummulativeRequiredDocumentsConfigList.length > 0) {
@@ -428,38 +440,93 @@ export class FdNonCumulativeApplicationComponent {
   //   }
   // }
 
+  // maturityDateAndInterestAmountCalculation() {
+  //   let depositAmount = parseFloat(this.applicationForm.get('depositAmount')?.value) || 0;
+  //   let roi = parseFloat(this.applicationForm.get('roi')?.value) || 0;
+  //   let tenureInDays = parseInt(this.applicationForm.get('tenureInDays')?.value) || 0;
+  //   let tenureInMonths = parseInt(this.applicationForm.get('tenureInMonths')?.value) || 0;
+  //   let tenureInYears = parseInt(this.applicationForm.get('tenureInYears')?.value) || 0;
+  //   let depositDate = this.applicationForm.get('depositDate')?.value;
+  //   let interestPaymentFrequency = this.applicationForm.get('interestPaymentFrequency')?.value;
+  //   let tenureType = this.applicationForm.get('tenureType')?.value;
+  
+  //   if (!depositAmount || !roi || (tenureInDays === 0 && tenureInMonths === 0 && tenureInYears === 0)) {
+  //     return;
+  //   }
+  
+  //   let totalTenureInDays = tenureInYears * 365 + tenureInMonths * 30 + tenureInDays;
+  //   let totalInterestAmount = (depositAmount * roi * totalTenureInDays) / (365 * 100);
+  //   let maturityAmount = depositAmount + totalInterestAmount;
+  
+  //   this.applicationForm.get('maturityAmount')?.setValue(maturityAmount.toFixed(2));
+  //   this.applicationForm.get('totalInterestAmount')?.setValue(totalInterestAmount.toFixed(2));
+  
+  //   // Calculate Maturity Date
+  //   if (depositDate) {
+  //     let maturityDate = new Date(depositDate);
+  //     if (!isNaN(maturityDate.getTime())) {
+  //       maturityDate.setDate(maturityDate.getDate() + totalTenureInDays);
+  //       const maturityDateFormatted = this.datePipe.transform(maturityDate, this.orgnizationSetting.datePipe);
+  //       this.applicationForm.get('maturityDate')?.setValue(maturityDateFormatted);
+  //     }
+  //   }
+  
+  //   // Calculate Interest Payout Amount
+  //   let interestPayoutAmount = 0;
+  //   if (interestPaymentFrequency === 1) { 
+  //     interestPayoutAmount = totalInterestAmount / totalTenureInDays;
+  //   } else if (interestPaymentFrequency === 2) { 
+  //     interestPayoutAmount = totalInterestAmount / (totalTenureInDays / 30);
+  //   } else if (interestPaymentFrequency === 3) { 
+  //     interestPayoutAmount = totalInterestAmount / (totalTenureInDays / 90);
+  //   } else if (interestPaymentFrequency === 4) { 
+  //     interestPayoutAmount = totalInterestAmount / (totalTenureInDays / 180);
+  //   } else if (interestPaymentFrequency === 5) { 
+  //     interestPayoutAmount = totalInterestAmount / (totalTenureInDays / 365);
+  //   } else if (interestPaymentFrequency === 6) { 
+  //     interestPayoutAmount = totalInterestAmount;
+  //   }
+  
+  //   this.applicationForm.get('interestPayoutAmount')?.setValue(interestPayoutAmount.toFixed(2));
+  // }
+
+  
   maturityDateAndInterestAmountCalculation() {
-    let depositAmount = parseFloat(this.applicationForm.get('depositAmount')?.value) || 0;
-    let roi = parseFloat(this.applicationForm.get('roi')?.value) || 0;
-    let tenureInDays = parseInt(this.applicationForm.get('tenureInDays')?.value) || 0;
-    let tenureInMonths = parseInt(this.applicationForm.get('tenureInMonths')?.value) || 0;
-    let tenureInYears = parseInt(this.applicationForm.get('tenureInYears')?.value) || 0;
-    let depositDate = this.applicationForm.get('depositDate')?.value;
-    let interestPaymentFrequency = this.applicationForm.get('interestPaymentFrequency')?.value;
-    let tenureType = this.applicationForm.get('tenureType')?.value;
+      let depositAmount = parseFloat(this.applicationForm.get('depositAmount')?.value) || 0;
+      let roi = parseFloat(this.applicationForm.get('roi')?.value) || 0;
+      let tenureInDays = parseInt(this.applicationForm.get('tenureInDays')?.value) || 0;
+      let tenureInMonths = parseInt(this.applicationForm.get('tenureInMonths')?.value) || 0;
+      let tenureInYears = parseInt(this.applicationForm.get('tenureInYears')?.value) || 0;
+      let depositDate = this.applicationForm.get('depositDate')?.value;
+      let interestPaymentFrequency = parseInt(this.applicationForm.get('interestPaymentFrequency')?.value) || 0;
+      let tenureType = this.applicationForm.get('tenureType')?.value;
   
-    if (!depositAmount || !roi || (tenureInDays === 0 && tenureInMonths === 0 && tenureInYears === 0)) {
-      return;
-    }
-  
-    let totalTenureInDays = tenureInYears * 365 + tenureInMonths * 30 + tenureInDays;
-    let totalInterestAmount = (depositAmount * roi * totalTenureInDays) / (365 * 100);
-    let maturityAmount = depositAmount + totalInterestAmount;
-  
-    this.applicationForm.get('maturityAmount')?.setValue(maturityAmount.toFixed(2));
-    this.applicationForm.get('totalInterestAmount')?.setValue(totalInterestAmount.toFixed(2));
-  
-    // Calculate Maturity Date
-    if (depositDate) {
-      let maturityDate = new Date(depositDate);
-      if (!isNaN(maturityDate.getTime())) {
-        maturityDate.setDate(maturityDate.getDate() + totalTenureInDays);
-        const maturityDateFormatted = this.datePipe.transform(maturityDate, this.orgnizationSetting.datePipe);
-        this.applicationForm.get('maturityDate')?.setValue(maturityDateFormatted);
+      if (!depositAmount || !roi || (tenureInDays === 0 && tenureInMonths === 0 && tenureInYears === 0)) {
+          return;
       }
-    }
   
-    // Calculate Interest Payout Amount
+      let totalTenureInDays = tenureInYears * 365 + tenureInMonths * 30 + tenureInDays;
+      if (totalTenureInDays <= 0) {
+          return;
+      }
+      let totalInterestAmount = (depositAmount * roi * totalTenureInDays) / (365 * 100);
+      let maturityAmount = depositAmount + totalInterestAmount;
+  
+      this.applicationForm.get('totalInterestAmount')?.setValue(totalInterestAmount.toFixed(2));
+      this.applicationForm.get('maturityAmount')?.setValue(maturityAmount.toFixed(2));
+      this.changeDetectorRef.detectChanges(); 
+  
+      // Calculate Maturity Date
+      if (depositDate) {
+          let maturityDate = new Date(depositDate);
+          if (!isNaN(maturityDate.getTime())) {
+              maturityDate.setDate(maturityDate.getDate() + totalTenureInDays);
+              const maturityDateFormatted = this.datePipe.transform(maturityDate, this.orgnizationSetting.datePipe);
+              this.applicationForm.get('maturityDate')?.setValue(maturityDateFormatted);
+          }
+      }
+  
+      // Calculate Interest Payout Amount
     let interestPayoutAmount = 0;
     if (interestPaymentFrequency === 1) { 
       interestPayoutAmount = totalInterestAmount / totalTenureInDays;
@@ -475,7 +542,8 @@ export class FdNonCumulativeApplicationComponent {
       interestPayoutAmount = totalInterestAmount;
     }
   
-    this.applicationForm.get('interestPayoutAmount')?.setValue(interestPayoutAmount.toFixed(2));
+      this.applicationForm.get('interestPayoutAmount')?.setValue(interestPayoutAmount.toFixed(2)); 
+      this.changeDetectorRef.detectChanges(); 
   }
-
+  
 }

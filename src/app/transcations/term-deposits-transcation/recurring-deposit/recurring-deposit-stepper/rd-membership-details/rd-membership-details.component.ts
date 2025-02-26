@@ -80,11 +80,11 @@ export class RdMembershipDetailsComponent {
     private rdAccountKycService: RdAccountKycService,
   ) {
     this.kycForm = this.formBuilder.group({
-      'docNumber': new FormControl('', [Validators.required, Validators.pattern(/^[^\s]+(\s.*)?$/)]),
-      'kycDocumentTypeName': new FormControl('', Validators.required),
-      'promoter': ['',],
-      'fileUpload': new FormControl(''),
-      'nameAsPerDocument': new FormControl(''),
+      'docNumber': [{ value: '', disabled: true }],
+      'kycDocumentTypeName':[{ value: '', disabled: true }],
+      'promoter':['', ],
+      'fileUpload': new FormControl({ value: '', disabled: true }),
+      'nameAsPerDocument':['',[Validators.pattern(applicationConstants.ALPHA_NAME_PATTERN),Validators.compose([Validators.required])]],
     });
   }
 
@@ -629,14 +629,11 @@ export class RdMembershipDetailsComponent {
   * @author bhargavi
   */
   editCancle() {
-    // this.kycModelList = [];
     this.rdKycModel = new RdKycModel();
     this.editDocumentOfKycFalg = true;
     this.buttonDisabled = false;
-    // this.kycModelList = this.tempKycList;
     this.editButtonDisable = false;
-    // this.kycModelList ;
-    // this.updateData();
+    this.updateData();
   }
 
   /**

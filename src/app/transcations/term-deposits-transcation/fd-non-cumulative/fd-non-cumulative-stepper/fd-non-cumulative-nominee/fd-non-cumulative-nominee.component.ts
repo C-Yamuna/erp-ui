@@ -89,6 +89,7 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
   isFileUploadedNominee: boolean = false;
   isFileUploadedGuardian: boolean = false;
   isSaveAndNextEnable : boolean = false;
+  depositDate: any;
 
   constructor(private router: Router, private formBuilder: FormBuilder,
     private fdNonCumulativeApplicationService: FdNonCumulativeApplicationService,
@@ -320,8 +321,8 @@ export class FdNonCumulativeNomineeComponent implements OnInit {
       if (this.responseModel != null && this.responseModel != undefined) {
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
-            if (this.responseModel.data[0].accountOpenDate != null && this.responseModel.data[0].accountOpenDate != undefined) {
-              this.accountOpeningDateVal = this.datePipe.transform(this.responseModel.data[0].accountOpenDate, this.orgnizationSetting.datePipe);
+            if (this.responseModel.data[0].depositDate != null && this.responseModel.data[0].depositDate != undefined) {
+              this.depositDate = this.datePipe.transform(this.responseModel.data[0].depositDate, this.orgnizationSetting.datePipe);
             }
             if (this.responseModel.data[0].memberTypeName != null && this.responseModel.data[0].memberTypeName != undefined) {
               this.memberTypeName = this.responseModel.data[0].memberTypeName;

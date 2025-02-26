@@ -86,7 +86,7 @@ export class SaoRequiredDocumentsConfigComponent {
       formValid: this.enableSaveAndNextButton ,
       data: this.saoRequiredDocumentsModel,
       savedId:this.saoProductId,
-      stepperIndex: 5,
+      stepperIndex: 4,
       isDisable: !this.requiredDocumentsForm.valid ? applicationConstants.TRUE : applicationConstants.FALSE,
     });
   }

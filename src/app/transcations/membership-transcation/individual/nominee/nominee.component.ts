@@ -22,7 +22,7 @@ import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-
   styleUrls: ['./nominee.component.css']
 })
 export class NomineeComponent {
-  nomineeForm: FormGroup;
+  nomineeForm: any;
   nominee: any;
   nomineeList: any;
   newNominee: boolean = false;
@@ -58,24 +58,26 @@ export class NomineeComponent {
   saveAndNextButtonDisable:Boolean = false;
   saveAndNextButtonDisableGardian:Boolean = false;
   admissionNumber: any;
+  today: any;
 
   constructor(private router: Router, private formBuilder: FormBuilder, private membershipBasicDetailsService: MembershipBasicDetailsService, private commonComponent: CommonComponent, private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService, private relationshipTypeService: RelationshipTypeService, private commonFunctionsService: CommonFunctionsService, private datePipe: DatePipe , private memberBasicDetailsStepperService : MemberBasicDetailsStepperService , private fileUploadService :FileUploadService) {
     this.nomineeForm = this.formBuilder.group({
       relationName:['', ],
       nomineeName: ['', ],
-      // age: new FormControl(['', [Validators.pattern(applicationConstants.ALLOW_NEW_NUMBERS), Validators.maxLength(40), Validators.pattern(/^[^\s]+(\s.*)?$/), Validators.compose([Validators.required])]],),
+      nomineeAge:  [''],
       aadhaar: ['', ],
       mobileNumber:['', ],
       email: ['', ],
-      dateOfBirth: new FormControl('', ),
+      nomineeDob: new FormControl('', ),
       remarks: new FormControl('', ),
       // 'nomineeAddres': new FormControl('', Validators.required),
-      nomineeType: ['', Validators.required],
+      nomineeType: [''],
 
       //guardian form fields
       relationNameOfGuardian: ['', ],
       guardianName: ['', ],
       guardianAge: ['', ],
+      guardianDob: ['', ],
       guardianAadhar: ['', ],
       guardianMobile: ['', ],
       guardianEmail: ['', ],
@@ -91,7 +93,7 @@ export class NomineeComponent {
   ngOnInit(): void {
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
     this.showForm = this.commonFunctionsService.getStorageValue(applicationConstants.B_CLASS_MEMBER_CREATION);
-
+    this.today = new Date();
       this.nomineeList = [
         { label: 'New Nominee', value: 1 },
         { label: 'No Nominee', value: 2 },
@@ -179,7 +181,11 @@ export class NomineeComponent {
     }
   }
 
- 
+/**
+   * @implements getting member basic details for nominee and guardian details based on memberId
+   * @param id 
+   * @author k.yamuna
+   */ 
   getMembershipBasicDetailsById(id: any) {
     this.membershipBasicDetailsService.getMembershipBasicDetailsById(this.memberId).subscribe(res => {
       this.responseModel = res;
@@ -410,6 +416,20 @@ export class NomineeComponent {
         ]);
         controlFive.updateValueAndValidity();
       }
+      const controlSix = this.nomineeForm.get('guardianAge');
+      if (controlSix) {
+        controlSix.setValidators([
+          Validators.required,
+        ]);
+        controlSix.updateValueAndValidity();
+      }
+      const controlSeven = this.nomineeForm.get('guardianDob');
+      if (controlSeven) {
+        controlSeven.setValidators([
+          Validators.required,
+        ]);
+        controlSeven.updateValueAndValidity();
+      }
       this.updateData();
     }
   }
@@ -457,6 +477,21 @@ export class NomineeComponent {
       ]);
       controlFive.updateValueAndValidity();
     }
+    const controlsix = this.nomineeForm.get('nomineeDob');
+    if (controlsix) {
+      controlsix.setValidators([
+        Validators.required,
+      ]);
+      controlsix.updateValueAndValidity();
+    }
+    const controlSeven = this.nomineeForm.get('nomineeAge');
+    if (controlSeven) {
+      controlSeven.setValidators([
+        Validators.required,
+        // Validators.pattern(applicationConstants.AADHAR_PATTERN)
+      ]);
+      controlSeven.updateValueAndValidity();
+    }
     this.updateData();
   }
 
@@ -465,6 +500,8 @@ export class NomineeComponent {
     this.removeValidators('nomineeName');
     this.removeValidators('aadhaar');
     this.removeValidators('mobileNumber');
+    this.removeValidators('nomineeDob');
+    this.removeValidators('nomineeAge');
     const remarksControl = this.nomineeForm.get('remarks');
     if (remarksControl) {
       remarksControl.setValidators([Validators.required]);
@@ -543,6 +580,14 @@ export class NomineeComponent {
    * @author k.yamuna
    */
   newGuardainType(flag : boolean){
+    this.nomineeForm.get('relationNameOfGuardian').reset();
+    this.nomineeForm.get('guardianName').reset();
+    this.nomineeForm.get('guardianAadhar').reset();
+    this.nomineeForm.get('guardianMobile').reset();
+    this.nomineeForm.get('guardianEmail').reset();
+    this.nomineeForm.get('guardianAge').reset();
+    this.nomineeForm.get('guardianDob').reset();
+
     this.saveDisabledForGuardian = true;
     this.courtAppointedGuardain = true;
       this.noGuardain  = false;
@@ -561,7 +606,11 @@ export class NomineeComponent {
       this.guardainFormValidation();
   }
 
-
+/**
+   * @implements no guardian memthod for remove validation and no guardian flag enable
+   * @param id 
+   * @author k.yamuna
+   */ 
   noGuardainaType(flag:boolean){
     this.saveDisabledForGuardian = true;
     this.courtAppointedGuardain = false;
@@ -600,6 +649,14 @@ export class NomineeComponent {
     this.nomineeForm.get('guardianAadhar')?.enable();
     this.nomineeForm.get('guardianMobile')?.enable();
     this.nomineeForm.get('guardianEmail')?.enable();
+
+    this.removeValidators('relationNameOfGuardian');
+    this.removeValidators('guardianName');
+    this.removeValidators('guardianAadhar');
+    this.removeValidators('guardianMobile');
+    this.removeValidators('guardianDob');
+    this.removeValidators('guardianAge');
+
     this.guarntorDetailsFalg = true;
     const controlName = this.nomineeForm.get('guardianRemarks');
     if (controlName) {
@@ -609,6 +666,86 @@ export class NomineeComponent {
       controlName.updateValueAndValidity();
     }
 
+    }
+  }
+ 
+ 
+  /**
+   * @implements Method to validate and handle both DOB and Age fields
+   * @param model and type
+   * @author k.yamuna
+   */
+  datesValidationCheckAgeAndDob(model: any, type: number): void {
+    if (type === 2) { 
+      if (model.nomineeDobVal) {
+        const calculatedAge = this.calculateAge(model.nomineeDobVal);
+        model.nomineeAge = calculatedAge; 
+      }
+    } else if (type === 1) { 
+      if (model.nomineeAge && model.nomineeAge > 0) {
+        const calculatedDob = this.calculateDobFromAge(model.nomineeAge);
+        model.nomineeDobVal = calculatedDob; 
+      } else if(model.nomineeAge != null && model.nomineeAge <= 0){
+        this.nomineeForm.get('nomineeAge').reset();
+        this.msgs = [{ severity: 'error', detail: "Age should not be zero or negative" }];
+        setTimeout(() =>{
+          this.msgs =[];
+        },2000);
+       
+      }
+    }
+  }
+   // Method to calculate age from date of birth
+   calculateAge(dateOfBirth: Date): number {
+    if (!dateOfBirth) return 0;
+    const today = new Date();
+    const birthDate = new Date(dateOfBirth);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  }
+
+  // Method to calculate date of birth from age
+  calculateDobFromAge(age: number): Date {
+    if (isNaN(age) || age <= 0) {
+      return new Date(0);
+    }
+    const today = new Date();
+    const birthYear = today.getFullYear() - age;
+    const dob = new Date(today); 
+    dob.setFullYear(birthYear); 
+    dob.setMonth(0); 
+    dob.setDate(1); 
+
+    return dob;
+  }
+
+   /**
+   * @implements Method to validate guardian and handle both DOB and Age fields
+   * @param model and type
+   * @author k.yamuna
+   */
+   guardianDatesValidationCheckAgeAndDob(model: any, type: number): void {
+    if (type === 2) { 
+      if (model.guardianDobVal) {
+        const calculatedAge = this.calculateAge(model.guardianDobVal);
+        model.guardianAge = calculatedAge; 
+      }
+    } else if (type === 1) { 
+      if (model.guardianAge && model.guardianAge > 0) {
+        const calculatedDob = this.calculateDobFromAge(model.guardianAge);
+        model.guardianDobVal = calculatedDob; 
+      } else if(model.guardianAge != null && model.guardianAge <= 0){
+        this.nomineeForm.get('guardianAge').reset();
+        this.msgs = [{ severity: 'error', detail: "Age should not be zero or negative" }];
+        setTimeout(() =>{
+          this.msgs =[];
+        },2000);
+       
+      }
     }
   }
 }

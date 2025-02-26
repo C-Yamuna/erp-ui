@@ -43,7 +43,11 @@ export class FdNonCummulativeApprovalDetailsComponent {
   showForm: boolean=false;
   memberPhotoCopyZoom: boolean =false;
   memberphotCopyMultipartFileList: any[] = [];
-
+  submissionForApprovalCount: any;
+  approvedCount: any;
+  requestForResubmmissionCount: any;
+  rejectCount: any;
+  
   constructor(private router: Router,
     private translate: TranslateService,
     private commonComponent: CommonComponent,
@@ -80,7 +84,7 @@ export class FdNonCummulativeApprovalDetailsComponent {
       { field: 'depositAmount', header: 'Deposit Amount' },
       { field: 'depositDate', header: 'Deposit Date' },
       { field: 'roi', header: 'ROI' },
-      { field: 'accountStatusName', header: 'status' },
+      { field: 'statusName', header: 'status' },
     ];
 
     let tabLabels = [
@@ -104,8 +108,8 @@ export class FdNonCummulativeApprovalDetailsComponent {
     this.fdNonCummulativeAccountsService.getFdNonCummulativeByBranchIdPacsId(this.pacsId, this.branchId).subscribe((data: any) => {
       this.responseModel = data;
        this.gridListData = this.responseModel.data;
-       this.gridListData = this.gridListData.filter((obj: any) => obj != null && obj.accountStatusName != CommonStatusData.IN_PROGRESS &&
-       obj.accountStatusName != CommonStatusData.CREATED).map((fdNonCummulative: any) => {
+       this.gridListData = this.gridListData.filter((obj: any) => obj != null && obj.statusName != CommonStatusData.IN_PROGRESS &&
+       obj.statusName != CommonStatusData.CREATED).map((fdNonCummulative: any) => {
 
          if (fdNonCummulative.depositDate != null && fdNonCummulative.depositDate != undefined) {
            fdNonCummulative.depositDate = this.datePipe.transform(fdNonCummulative.depositDate,this.orgnizationSetting.datePipe);
@@ -113,16 +117,20 @@ export class FdNonCummulativeApprovalDetailsComponent {
          if (fdNonCummulative.photoPath != null && fdNonCummulative.photoPath != undefined) {
            fdNonCummulative.multipartFileListForPhotoCopy = this.fileUploadService.getFile(fdNonCummulative.photoPath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + fdNonCummulative.photoPath);
          }
-         if (fdNonCummulative.accountStatusName == CommonStatusData.APPROVED || fdNonCummulative.accountStatusName == CommonStatusData.REQUEST_FOR_RESUBMISSION
-            || fdNonCummulative.accountStatusName == CommonStatusData.REJECTED ) {
+         if (fdNonCummulative.statusName == CommonStatusData.APPROVED || fdNonCummulative.statusName == CommonStatusData.REQUEST_FOR_RESUBMISSION
+            || fdNonCummulative.statusName == CommonStatusData.REJECTED ) {
            fdNonCummulative.viewButton = true; 
          } else {
            fdNonCummulative.viewButton = false;
          }
+         this.submissionForApprovalCount = this.gridListData.filter(fdNonCummulative => fdNonCummulative.statusName === CommonStatusData.SUBMISSION_FOR_APPROVAL).length;
+         this.approvedCount = this.gridListData.filter(fdNonCummulative => fdNonCummulative.statusName === CommonStatusData.APPROVED).length;
+         this.requestForResubmmissionCount = this.gridListData.filter(fdNonCummulative => fdNonCummulative.statusName === CommonStatusData.REQUEST_FOR_RESUBMISSION).length;
+         this.rejectCount = this.gridListData.filter(fdNonCummulative => fdNonCummulative.statusName === CommonStatusData.REJECTED).length;
          return fdNonCummulative 
        });
-       this.activeStatusCount = this.gridListData.filter(fdAccountApplication => fdAccountApplication.status != null && fdAccountApplication.status != undefined && fdAccountApplication.status === applicationConstants.ACTIVE).length;
-       this.inactiveStatusCount = this.gridListData.filter(fdAccountApplication => fdAccountApplication.status != null && fdAccountApplication.status != undefined && fdAccountApplication.status === applicationConstants.IN_ACTIVE).length;
+      //  this.activeStatusCount = this.gridListData.filter(fdAccountApplication => fdAccountApplication.status != null && fdAccountApplication.status != undefined && fdAccountApplication.status === applicationConstants.ACTIVE).length;
+      //  this.inactiveStatusCount = this.gridListData.filter(fdAccountApplication => fdAccountApplication.status != null && fdAccountApplication.status != undefined && fdAccountApplication.status === applicationConstants.IN_ACTIVE).length;
        this.gridListLenght = this.gridListData.length;
        this.tempGridListData = this.gridListData;
        this.commonComponent.stopSpinner();

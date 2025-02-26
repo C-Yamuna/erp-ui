@@ -179,10 +179,10 @@ export class ReccuringDepositApprovalComponent {
   }
   submit() {
     // Determine the status name before submission
-    if (this.rdAccountsModel.accountStatus != null && this.rdAccountsModel.accountStatus != undefined) {
-      const accountStatusName = this.statusList.find((data: any) => data != null && data.value === this.rdAccountsModel.accountStatusName);
-      if (accountStatusName != null && accountStatusName != undefined) {
-        this.rdAccountsModel.accountStatusName = accountStatusName.label;
+    if (this.rdAccountsModel.status != null && this.rdAccountsModel.status != undefined) {
+      const statusName = this.statusList.find((data: any) => data != null && data.value === this.rdAccountsModel.statusName);
+      if (statusName != null && statusName != undefined) {
+        this.rdAccountsModel.statusName = statusName.label;
       }
     } else {
       this.commonComponent.stopSpinner();
@@ -237,7 +237,7 @@ export class ReccuringDepositApprovalComponent {
       if (this.responseModel.status != null && this.responseModel.status != undefined && this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
           this.rdAccountsModel = this.responseModel.data[0];
-          if(this.rdAccountsModel.accountStatusName == CommonStatusData.SUBMISSION_FOR_APPROVAL){
+          if(this.rdAccountsModel.statusName == CommonStatusData.SUBMISSION_FOR_APPROVAL){
             this.isDisableSubmit = true;
           }
           else{
@@ -436,7 +436,7 @@ export class ReccuringDepositApprovalComponent {
 
   // for submit button validation based on status
   onStatusChange(event: any) {
-    if (this.rdAccountsModel.accountStatusName != null && this.rdAccountsModel.accountStatusName != undefined) {
+    if (this.rdAccountsModel.statusName != null && this.rdAccountsModel.statusName != undefined) {
       this.isDisableSubmit = false;
     }
     else {

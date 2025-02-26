@@ -94,10 +94,10 @@ export class SaoFieldVisitConfigComponent {
   updateData() {
     this.saoFieldVisitModel.saoProductId = this.saoProductId
     this.saoProductDefinitionsService.changeData({
-      formValid: this.enableSaveAndNextButton,
+      // formValid: this.enableSaveAndNextButton,
       data: this.saoFieldVisitModel,
       savedId: this.saoProductId,
-      stepperIndex: 6,
+      stepperIndex: 5,
       isDisable: !this.fieldVisitForm.valid ? applicationConstants.TRUE : applicationConstants.FALSE,
     });
   }
@@ -155,10 +155,11 @@ export class SaoFieldVisitConfigComponent {
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         this.saoFieldVisitModel = this.responseModel.data[0];
         let rolesSelected = this.saoFieldVisitModel.visitRole.split(',');
+        
         if (rolesSelected.length > 0) {
           for (let id of rolesSelected) {
             this.saoFieldVisitModel.visitRoleNames = this.saoFieldVisitModel.visitRoleNames || [];
-            
+          
             this.selectedRoles.push(Number(id));
             for (let id of rolesSelected) {
 
@@ -170,8 +171,6 @@ export class SaoFieldVisitConfigComponent {
             }
           }
         }
-        
-
       }
       else {
         this.msgs = [];
@@ -202,6 +201,7 @@ export class SaoFieldVisitConfigComponent {
 
           if (null != this.saoProductDefinitionModel.effectiveStartDate && undefined != this.saoProductDefinitionModel.effectiveStartDate)
             this.saoProductDefinitionModel.effectiveStartDate = this.datePipe.transform(this.saoProductDefinitionModel.effectiveStartDate, this.orgnizationSetting.datePipe);
+          
           if (this.saoProductDefinitionModel.saoLoanFieldVisitConfigDTOList != null && this.saoProductDefinitionModel.saoLoanFieldVisitConfigDTOList != undefined &&
             this.saoProductDefinitionModel.saoLoanFieldVisitConfigDTOList.length > 0) {
             this.enableSaveAndNextButton = applicationConstants.TRUE;
@@ -229,7 +229,7 @@ export class SaoFieldVisitConfigComponent {
 
 
           } else {
-            this.enableSaveAndNextButton = applicationConstants.FALSE;
+            // this.enableSaveAndNextButton = applicationConstants.FALSE;
           }
         }
         this.updateData();

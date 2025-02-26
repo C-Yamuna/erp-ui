@@ -40,7 +40,7 @@ export class TermLoanFieldVisitConfigComponent {
   enableSaveAndNextButton: boolean = applicationConstants.FALSE;
   requiredlist: any[] = [];
   visiRoleList: any[] = [];
-
+  tenureTypeList: any[] = [];
   constructor(private formBuilder: FormBuilder, private commonComponent: CommonComponent, private activateRoute: ActivatedRoute,
     private datePipe: DatePipe, private commonFunctionService: CommonFunctionsService, private encryptService: EncryptDecryptService,
     private termLoanProductDefinitionService : TermLoanProductDefinitionService,
@@ -48,7 +48,8 @@ export class TermLoanFieldVisitConfigComponent {
   ) {
     this.fieldVisitForm = this.formBuilder.group({
       'visitNumber':new FormControl({ value: '', disabled: true }, [Validators.required]),
-      'visitTenure': new FormControl('', Validators.required),
+      'visitTenure': new FormControl('', [Validators.required, ]),
+      'tenureTypeName': new FormControl('', Validators.required),
       'isMandatory': new FormControl('', Validators.required),
       'visitRoleNames': new FormControl('', Validators.required),
 
@@ -57,11 +58,15 @@ export class TermLoanFieldVisitConfigComponent {
 
   ngOnInit() {
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
-    this.requiredlist = this.commonComponent.mandatoryList();
+    this.requiredlist = this.commonComponent.requiredlist();
+
+    this.tenureTypeList=[
+      { label: "Days", value: 1 },
+      { label: "Months", value: 2 },
+    ]
     this.visiRoleList = [
       { label: "Manager", value: 1 },
-      { label: "Cleark", value: 2 },
-      { label: "Cashier", value: 3 }
+      { label: "Clerk", value: 2 },
     ]
     this.activateRoute.queryParams.subscribe(params => {
       let encrypted = params['id'];
@@ -81,6 +86,23 @@ export class TermLoanFieldVisitConfigComponent {
         this.save();
       }
     });
+    this.fieldVisitForm.get('visitTenure')?.valueChanges.subscribe((tenureValue) => {
+      this.validateVisitTenure(tenureValue);
+    });
+  
+    this.fieldVisitForm.get('tenureTypeName')?.valueChanges.subscribe(() => {
+      this.validateVisitTenure(this.fieldVisitForm.get('visitTenure')?.value);
+    });
+  }
+
+  validateVisitTenure(tenureValue: any) {
+    const tenureType = this.fieldVisitForm.get('tenureTypeName')?.value;
+  
+    if (tenureType === 1 && tenureValue > 30) { // If "Days" is selected and tenure exceeds 30
+      this.msgs = [{ severity: 'error', summary: applicationConstants.VISIT_TENURE_CANNOT_EXCEED_30_DAYS, detail: this.responseModel.statusMsg }];
+      this.fieldVisitForm.patchValue({ visitTenure: '' }); // Reset field
+      setTimeout(() => { this.msgs = []; }, 2000);
+    }
   }
   /**
     @author vinitha
@@ -89,11 +111,11 @@ export class TermLoanFieldVisitConfigComponent {
   updateData() {
     this.termLoanFieldVisitModel.termProductId = this.termProductId
     this.termLoanProductDefinitionService.changeData({
-      formValid: this.enableSaveAndNextButton,
+      // formValid: this.enableSaveAndNextButton,
       data: this.termLoanFieldVisitModel,
       savedId: this.termProductId,
       stepperIndex: 6,
-      isDisable: !this.fieldVisitForm.valid ? applicationConstants.TRUE : applicationConstants.FALSE,
+      // isDisable: !this.fieldVisitForm.valid ? applicationConstants.TRUE : applicationConstants.FALSE,
     });
   }
   /**
@@ -122,7 +144,7 @@ export class TermLoanFieldVisitConfigComponent {
   }
 
   addNewEntry() {
-    this.newRow = { visitNumber: this.termLoanFieldVisitModel.visitNumber,tenureTypeName: '', visitTenure: '' ,isMandatory:'',visitRoleNames:'' }
+    this.newRow = { visitNumber: this.termLoanFieldVisitModel.visitNumber,tenureType: '', visitTenure: '' ,isMandatory:'',visitRole:'' }
   }
   /**
    @author vinitha
@@ -146,47 +168,34 @@ export class TermLoanFieldVisitConfigComponent {
         @author vinitha
    
    */
+
   editInlineRow(row: any) {
-    this.addButton = applicationConstants.TRUE;
-    this.editDeleteDisable = applicationConstants.TRUE;
-    this.enableSaveAndNextButton = applicationConstants.FALSE;
+    this.addButton = true;
+    this.editDeleteDisable = true;
+    this.enableSaveAndNextButton = false;
+
     this.termLoanFieldVisitService.getTermLoanFieldVisitById(row.id).subscribe((response: any) => {
-      this.responseModel = response;
-      if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-        this.termLoanFieldVisitModel = this.responseModel.data[0];
-        let rolesSelected = this.termLoanFieldVisitModel.visitRole.split(',');
-        if (rolesSelected.length > 0) {
-          for (let id of rolesSelected) {
-            this.termLoanFieldVisitModel.visitRoleNames = this.termLoanFieldVisitModel.visitRoleNames || [];
-            
-            this.selectedRoles.push(Number(id));
-            for (let id of rolesSelected) {
+        this.responseModel = response;
+        if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+            this.termLoanFieldVisitModel = this.responseModel.data[0];      
+            this.termLoanFieldVisitModel.isMandatory = this.termLoanFieldVisitModel.isMandatory;
+            this.selectedRoles = this.termLoanFieldVisitModel.visitRole ? this.termLoanFieldVisitModel.visitRole.split(',').map(Number) : [];
 
-              let matchedRole = this.visiRoleList.find(role => role.value === Number(id));
-
-              if (matchedRole) {
-                this.termLoanFieldVisitModel.visitRoleNames.push(matchedRole.label);
-              }
-            }
-          }
+        this.termLoanFieldVisitModel.visitRoleNames = this.visiRoleList.filter(role => this.selectedRoles.includes(role.value)).map(role => role.label);
+        } else {
+            this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+            setTimeout(() => { this.msgs = []; }, 2000);
         }
-        
-
-      }
-      else {
-        this.msgs = [];
-        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-        setTimeout(() => {
-          this.msgs = [];
-        }, 2000);
-      }
     });
+
     this.updateData();
-  }
+}
+
+
   
   /**
    @implements term Loans Product Definition Configuration details 
-   @argument ProductId\
+   @argument ProductId
       @author Vinitha
   */
   getPreviewDetailsByProductId(id: any) {
@@ -206,7 +215,7 @@ export class TermLoanFieldVisitConfigComponent {
             this.termLoanProductDefinitionModel.termLoanFieldVisitConfigDTOList.length > 0) {
             this.enableSaveAndNextButton = applicationConstants.TRUE;
             this.fieldVisitList = this.termLoanProductDefinitionModel.termLoanFieldVisitConfigDTOList;
-
+          
             for (let fieldVisit of this.fieldVisitList) {
               if (fieldVisit.visitRole != null) {
                 let rolesSelected = fieldVisit.visitRole.split(',');
@@ -257,7 +266,7 @@ export class TermLoanFieldVisitConfigComponent {
     rowData.visitRole = this.selectedRoles.join(',');
     this.addButton = applicationConstants.FALSE;
     this.editDeleteDisable = applicationConstants.FALSE;
-
+    rowData.visitRoleNames = null; 
     this.termLoanFieldVisitModel.isMandatory = this.termLoanFieldVisitModel.isMandatory;
     if (rowData.id != null) {
       this.termLoanFieldVisitService.updateTermLoanFieldVisit(rowData).subscribe((response: any) => {

@@ -230,9 +230,9 @@ export class SavingsAccountApplicationApprovalComponent {
           this.memberTypeName = this.viewSavingBankModel.memberTypeName;
           this.memberTypeCheck(this.memberTypeName);
         }
-        if(this.viewSavingBankModel.accountStatusName != null && this.viewSavingBankModel.accountStatusName != undefined ){
-          if((this.viewSavingBankModel.accountStatusName == CommonStatusData.IN_PROGRESS) || (this.viewSavingBankModel.accountStatusName == CommonStatusData.SUBMISSION_FOR_APPROVAL)){
-            this.viewSavingBankModel.accountStatusName = null;
+        if(this.viewSavingBankModel.statusName != null && this.viewSavingBankModel.statusName != undefined ){
+          if((this.viewSavingBankModel.statusName == CommonStatusData.IN_PROGRESS) || (this.viewSavingBankModel.statusName == CommonStatusData.SUBMISSION_FOR_APPROVAL)){
+            this.viewSavingBankModel.statusName = null;
           }
         }
         

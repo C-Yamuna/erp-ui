@@ -2,14 +2,14 @@
     <p-messages label="Info" [(value)]="msgs" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"></p-messages>
     <div class="stepper-top-section-strip">
             <div class="row">
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-xs-12 stepper-top-product-name-background">
                     <div class="form-group">
                         <span>{{'DEMANDDEPOSITS.PRODUCT_NAME' | translate}}</span>
                         <p class="m-0 font-semibold text-break">{{generalConfigModel.productName}}</p>
                 </div>
             </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                    <div class="form-group">
+                    <div class="form-group ml-2">
                         <span>{{'DEMANDDEPOSITS.MIN_BALANCE_FOR_ACCOUNT_OPEN' | translate}}</span>
                         <p class="m-0 font-semibold text-break">{{generalConfigModel.minDepositAmountForAccountOpen}}</p>
                 </div>

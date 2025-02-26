@@ -54,6 +54,9 @@ import { DocumentDetailsComponent } from './individual/document-details/document
 import { GroupDocumentDetailsComponent } from './group/group-stepper/group-document-details/group-document-details.component';
 import { InstitutionDocumentDetailsComponent } from './institution/institution-stepper/institution-document-details/institution-document-details.component';
 import { Member360DetailsViewComponent } from './member360-details-view/member360-details-view.component';
+import { GroupBankDetailsComponent } from './group/group-stepper/group-bank-details/group-bank-details.component';
+import { InstitutionBankDetailsComponent } from './institution/institution-stepper/institution-bank-details/institution-bank-details.component';
+import { BankDetailsComponent } from './individual/bank-details/bank-details.component';
 
 
 export function httpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
@@ -93,6 +96,9 @@ export function httpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
     GroupDocumentDetailsComponent,
     InstitutionDocumentDetailsComponent,
     Member360DetailsViewComponent,
+    GroupBankDetailsComponent,
+    InstitutionBankDetailsComponent,
+    BankDetailsComponent,
        
   ],
   imports: [

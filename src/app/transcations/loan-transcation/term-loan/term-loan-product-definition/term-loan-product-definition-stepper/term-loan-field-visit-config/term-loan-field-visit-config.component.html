@@ -2,14 +2,14 @@
     <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"></p-messages>
     <div class="stepper-top-section-strip">
         <div class="row ">
-            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-xs-12 stepper-top-product-name-background">
                 <div class="form-group">
                 <span>{{'LOANS.PRODUCT_NAME' | translate}} </span>
                 <p class="m-0 font-semibold text-break">{{termLoanProductDefinitionModel.name}}</p>
             </div>
         </div>
             <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 col-xs-12 viewcustom-input-number inputnumberht-5px">
-                <div class="form-group">
+                <div class="form-group ml-2">
                 <span>{{'LOANS.MIN_DEPOSIT_AMOUNT' | translate}}</span>
                 <p-inputNumber id="bunit_txt_name" [(ngModel)]="termLoanProductDefinitionModel.eligibleMInAmount" mode="currency"
                     inputId="currency-india" currency="INR" locale="en-IN" [disabled]="true" styleClass="label-input-text"> </p-inputNumber>
@@ -65,7 +65,8 @@
                 <ng-template pTemplate="header">
                         <tr>
                             <th><span class="red">*</span> {{'LOANS.VISIT_NUMBER' | translate}}</th>
-                            <th><span class="red">*</span> {{'ERP.VISIT_TENUR_IN_DAYS' | translate}}</th>
+                            <th><span class="red">*</span> {{'ERP.TENURE_TYPE' | translate}}</th>
+                            <th><span class="red">*</span> {{'ERP.TENURE' | translate}}</th>
                             <th><span class="red">*</span> {{'LOANS.IS_MANDATORY' | translate}}</th>
                             <th><span class="red">*</span> {{'LOANS.VISIT_ROLES' | translate}}</th>
                             <th class="width-15em">{{'LOANS.ACTION' | translate}}</th>
@@ -87,42 +88,53 @@
                             <td>
                                 <p-cellEditor>
                                     <ng-template pTemplate="input">
+                                        <p-dropdown placeholder="{{'ERP.SELECT'| translate}}" formControlName="tenureTypeName"
+                                                [options]="tenureTypeList" [(ngModel)]="termLoanFieldVisitModel.tenureType"
+                                                [appendTo]="'body'" >
+                                            </p-dropdown>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">{{termLoanFieldVisitModel.tenureTypeName}}</ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
                                         <input pInputText type="text" [(ngModel)]="termLoanFieldVisitModel.visitTenure"
                                             formControlName="visitTenure">
                                     </ng-template>
                                     <ng-template pTemplate="output">{{termLoanFieldVisitModel.visitTenure}}</ng-template>
                                 </p-cellEditor>
                             </td>   
-                            <td>
+                              <td>
                                 <p-cellEditor>
-                                  <ng-template pTemplate="input">
-                                    <p-dropdown [options]="requiredlist" formControlName="isMandatory" 
-                                                [(ngModel)]="termLoanFieldVisitModel.isMandatory" [appendTo]="'body'" 
-                                                placeholder="select"></p-dropdown>
-                                  </ng-template>
-                                  <ng-template pTemplate="output">
-                                    {{ termLoanFieldVisitModel.isMandatory ? 'Yes' : 'No' }}
-                                  </ng-template>
+                                    <ng-template pTemplate="input">
+                                        <p-dropdown [options]="requiredlist"
+                                        [(ngModel)]="termLoanFieldVisitModel.isMandatory"
+                                        formControlName="isMandatory"
+                                        [appendTo]="'body'"
+                                        placeholder="Select">
+                            </p-dropdown>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{ termLoanFieldVisitModel.isMandatory ? 'Yes' : 'No' }}
+                                    </ng-template>
                                 </p-cellEditor>
                             </td>
-                           
                             <td>
                                 <p-cellEditor>
                                     <ng-template pTemplate="input">
-                                        <p-multiSelect 
-                                            placeholder="{{'ERP.SELECT' | translate}}" 
+                                        <p-multiSelect placeholder="{{'ERP.SELECT' | translate}}"
                                             formControlName="visitRoleNames"
-                                            [options]="visiRoleList" 
+                                            [options]="visiRoleList"
                                             [(ngModel)]="selectedRoles"
                                             [appendTo]="'body'"
-                                            optionLabel="label" 
+                                            optionLabel="label"
                                             optionValue="value">
                                         </p-multiSelect>
                                     </ng-template>
-                                    <ng-template pTemplate="output">{{termLoanFieldVisitModel.visitRoleNames}}</ng-template>
+                                    <ng-template pTemplate="output">{{ termLoanFieldVisitModel.visitRoleNames }}</ng-template>
                                 </p-cellEditor>
-                            </td>
-                            
+                            </td>                  
                             <td>
                                 <div class="global-action-btn flex align-items-center justify-content-center">
                                 <p-button *ngIf="editing"   [disabled]="!fieldVisitForm.valid" (click)="saveInlineRow(termLoanFieldVisitModel)" pSaveEditableRow id="prj_stakehlder_bt_cancel"  label="{{'LOANS.SAVE'|translate }}" class="action-save">

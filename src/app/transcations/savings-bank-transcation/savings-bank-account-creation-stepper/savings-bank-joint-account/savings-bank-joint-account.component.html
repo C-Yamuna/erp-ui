@@ -1,27 +1,32 @@
 
     <div class="col-12">
-        <h6 class="sub-heading">{{'ERP.ADD_JOINT_HOLDERS_SECONDARY' | translate}}</h6>
         <div class="stepper-top-section-strip">
             <div class="row">
-                <div class="col-lg-3 col-md-3 col-sm-12 stepper-top-product-name-background">
+                <div class="col-lg-2 col-md-2 col-sm-12 stepper-top-product-name-background">
                     <div class="form-group">
                         <span>{{'ERP.PRODUCT_NAME' | translate}}</span>
                         <p class="mb-0">{{productName}}</p>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="col-lg-2 col-md-2 col-sm-12">
                     <div class="form-group ml-2">
-                        <span>{{'ERP.ACCOUNT_TYPE' | translate}}</span>
+                        <span>{{'ERP.ACCOUNT_NUMBER' | translate}}</span>
+                        <p class="mb-0">{{savingBankApplicationModel.accountNumber}}</p>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-12">
+                    <div class="form-group ml-2">
+                        <span>{{'ERP.OPERATION_TYPE' | translate}}</span>
                         <p class="mb-0">{{accountType}}</p>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="col-lg-2 col-md-2 col-sm-12">
                     <div class="form-group">
                         <span>{{'ERP.MIN_BALANCE' | translate}}</span>
                         <p class="mb-0">{{minBalence}}</p>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="col-lg-2 col-md-2 col-sm-12">
                     <div class="form-group">
                         <span>{{'ERP.ACCOUNT_OPENING_DATE' | translate}}</span>
                         <p class="mb-0">{{accountOpeningDateVal}}</p>
@@ -30,6 +35,7 @@
             </div>
         </div>      
         <div class="col-12"></div>
+        <h6 class="sub-heading">{{'ERP.ADD_JOINT_HOLDERS_SECONDARY' | translate}}</h6>
                 <form [formGroup]="jointAccountForm" id="exit_types_form">
                     <div class="mt-n1 bg-label-colorfull">
                         <div class="row g-3">

@@ -211,8 +211,8 @@ export class FdNonCumulativePreviewComponent {
       this.fdNonCumulativeApplicationModel.maturityDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdNonCumulativeApplicationModel.maturityDate));
     }
     this.fdNonCumulativeApplicationModel.id = this.fdNonCummulativeAccId ;
-    this.fdNonCumulativeApplicationModel.accountStatus = 5;
-    this.fdNonCumulativeApplicationModel.accountStatusName = CommonStatusData.SUBMISSION_FOR_APPROVAL;
+    this.fdNonCumulativeApplicationModel.status = 5;
+    this.fdNonCumulativeApplicationModel.statusName = CommonStatusData.SUBMISSION_FOR_APPROVAL;
     this.fdNonCumulativeApplicationService.updateFdNonCummApplication(this.fdNonCumulativeApplicationModel).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {

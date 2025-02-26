@@ -134,6 +134,7 @@ export class SavingBankApplicationModel {
   multipartFileList: any;
 
   filesDTOList: any;
+  isActive: any;
 
 }
 export class ProductDefinitionModel {

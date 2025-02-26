@@ -122,6 +122,8 @@ export class MemberGroupBasicDetails {
 
   operatorTypeName:any;
 
+  memberBankDetailsDTOList:any
+
  
 }
 export class GroupCommunicationModel {

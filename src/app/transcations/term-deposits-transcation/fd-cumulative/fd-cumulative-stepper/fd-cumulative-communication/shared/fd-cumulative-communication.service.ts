@@ -37,4 +37,12 @@ export class FdCumulativeCommunicationService {
   addCommunication(fdNonCummCommunicationDto:any){
     return this.commonHttpService.post(fdNonCummCommunicationDto, Headers, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FD_CUMM_COMMUNICATION_DETAILS+ ERP_TRANSACTION_CONSTANTS.ADD);
   }
+
+  getAllBlock(){
+    return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.BLOCKS + Configuration.GET_ALL);
+  }
+
+  getAllDivision(){
+    return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.DIVISION + Configuration.GET_ALL);
+  }
 }

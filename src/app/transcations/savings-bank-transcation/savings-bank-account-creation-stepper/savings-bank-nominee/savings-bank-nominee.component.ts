@@ -17,6 +17,7 @@ import { FileUploadModel } from 'src/app/layout/mainmenu/shared/file-upload-mode
 import { NomineeDetailsModel } from '../../view-savings-bank/shared/view-saving-bank-model';
 import { FileUploadService } from 'src/app/shared/file-upload.service';
 import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-constants';
+import { savingsbanktransactionconstant } from '../../savingsbank-transaction-constant';
 
 @Component({
   selector: 'app-savings-bank-nominee',
@@ -84,32 +85,34 @@ export class SavingsBankNomineeComponent implements OnInit {
   historyFLag: boolean = false;
   flag: boolean = false;
   isSaveAndNextEnable : boolean = false;
+  today :any;
 
 
   constructor(private router: Router, private formBuilder: FormBuilder, private savingBankApplicationService: SavingBankApplicationService, private commonComponent: CommonComponent, private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService, private savingsBankNomineeService: SavingsBankNomineeService, private commonFunctionsService: CommonFunctionsService, private datePipe: DatePipe , private savingsBankCommunicationService : SavingsBankCommunicationService , private fileUploadService :FileUploadService) {
     this.nomineeForm = this.formBuilder.group({
-      relationName:['', ],
-      nomineeName: ['', ],
+      "relationName": new FormControl(''),
+      "nomineeName": new FormControl('',),
       // age: new FormControl(['', [Validators.pattern(applicationConstants.ALLOW_NEW_NUMBERS), Validators.maxLength(40), Validators.pattern(/^[^\s]+(\s.*)?$/), Validators.compose([Validators.required])]],),
-      aadhaar: ['', ],
-      mobileNumber:['', ],
-      email: ['', ],
-      dateOfBirth: new FormControl('', ),
-      remarks: new FormControl('', ),
+      "aadhaar": new FormControl('',),
+      "mobileNumber": new FormControl('',),
+      "email": new FormControl('',),
+      "dateOfBirth": new FormControl('', ),
+      "age": new FormControl('', ),
+      "remarks": new FormControl('', ),
       // 'nomineeAddres': new FormControl('', Validators.required),
-      nomineeType: ['', Validators.required],
+      "nomineeType": ['', Validators.required],
 
       //guardian form fields
-      relationNameOfGuardian: ['', ],
-      guardianName: ['', ],
-      guardianAge: ['', ],
-      guardianAadhar: ['', ],
-      guardianMobile: ['', ],
-      guardianEmail: ['', ],
-      guardianAddress: ['', ],
-      guardainType: [''],
-      fileUpload : ['', ],
-      guardianRemarks: new FormControl('', ),
+      "relationNameOfGuardian": new FormControl('',),
+      "guardianName": new FormControl('',),
+      "guardianAge": new FormControl('',),
+      "guardianAadhar": new FormControl('',),
+      "guardianMobile": new FormControl('',),
+      "guardianEmail": new FormControl('',),
+      "guardianAddress": new FormControl('',),
+      "guardainType": new FormControl('',),
+      "fileUpload" : new FormControl('',),
+      "guardianRemarks": new FormControl('', ),
 
     });
     this.nomineeFields = [
@@ -120,7 +123,7 @@ export class SavingsBankNomineeComponent implements OnInit {
       { field: 'nomineeEmail',header:'Email'},
       { field: 'statusName', header: 'Status' },
     ]
-
+    this.today = new Date();//for future date set to disable
   }
 
   // @jyothi.naidana
@@ -164,7 +167,7 @@ export class SavingsBankNomineeComponent implements OnInit {
         this.memberGuardianDetailsModelDetail.relationshipTypeName = guardain.label;
       }
     }
-    if (this.age <= 18) {
+    if (this.age < 18 || this.savingsBankNomineeModel.age < 18) {
       this.memberGuardianDetailsModelDetail.sbAccId = this.sbAccId ;
       this.memberGuardianDetailsModelDetail.accountNumber = this.accountNumber;
       this.savingsBankNomineeModel.memberGuardianDetailsModelDetaila = this.memberGuardianDetailsModelDetail;
@@ -192,6 +195,19 @@ export class SavingsBankNomineeComponent implements OnInit {
     if(flag){
       this.savingsBankNomineeModel.nomineeSighnedFormMultiPartList = [];
       this.isFileUploadedNominee = false;
+      if(this.savingsBankNomineeModel.age < 18){
+        this.guarntorDetailsFalg = false;
+          this.guarntorDetailsFalg = false;
+          let id = null;
+          if(this.memberGuardianDetailsModelDetail.id != null && this.memberGuardianDetailsModelDetail.id != undefined){
+            let id = this.memberGuardianDetailsModelDetail.id;
+          }
+          this.memberGuardianDetailsModelDetail = new MemberGuardianDetailsModelDetaila();
+          this.memberGuardianDetailsModelDetail.id = id;
+          this.sameAsMemberGuardain = false;
+          this.courtAppointedGuardain = false;
+            this.resetGuardain();
+      }
     }
     if (event == 1) {//new nominee
       this.newNomineeType(flag);
@@ -212,7 +228,8 @@ export class SavingsBankNomineeComponent implements OnInit {
   onChangeGuardain(event: any , flag :boolean) {
     if(flag){
       this.memberGuardianDetailsModelDetail.guardainSighnedMultipartFiles = [];
-      this.isFileUploadedNominee = false;
+      this.isFileUploadedGuardina = false;
+      this.resetGuardain();
     }
     if (event == 1) {//new guardain
       this.newGuardainType(flag);
@@ -326,6 +343,9 @@ export class SavingsBankNomineeComponent implements OnInit {
             }
             if(this.responseModel.data[0].sbNomineeDTO != null && this.responseModel.data[0].sbNomineeDTO != undefined){
               this.savingsBankNomineeModel = this.responseModel.data[0].sbNomineeDTO;
+              if(this.savingsBankNomineeModel.dateOfBirth != null && this.savingsBankNomineeModel.dateOfBirth != undefined){
+                this.savingsBankNomineeModel.dateOfBirthVal = this.datePipe.transform(this.savingsBankNomineeModel.dateOfBirth, this.orgnizationSetting.datePipe);
+              }
               if(this.savingsBankNomineeModel.signedNomineeForm != null && this.savingsBankNomineeModel.signedNomineeForm != undefined){
                 if(this.savingsBankNomineeModel.nomineeType != null && this.savingsBankNomineeModel.nomineeType != undefined){
                   if(this.savingsBankNomineeModel.nomineeType != 2){
@@ -336,7 +356,9 @@ export class SavingsBankNomineeComponent implements OnInit {
                   }
                   this.isFileUploadedNominee = applicationConstants.TRUE;
                 }
-                
+              }
+              if(this.savingsBankNomineeModel.age < 18){
+                this.guarntorDetailsFalg = true;
               }
             }
             else {
@@ -649,7 +671,12 @@ export class SavingsBankNomineeComponent implements OnInit {
               this.savingsBankNomineeModel.nomineeSighnedFormMultiPartList = this.fileUploadService.getFile(this.savingsBankNomineeModel.signedNomineeForm  , ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.savingsBankNomineeModel.signedNomineeForm );
               this.isFileUploadedNominee = applicationConstants.TRUE;
             }
+            if(this.responseModel.data[0].dateOfBirth != null && this.responseModel.data[0].dateOfBirth != undefined){
+              this.savingsBankNomineeModel.dateOfBirth = this.responseModel.data[0].dateOfBirth;
+              this.savingsBankNomineeModel.dateOfBirthVal = this.datePipe.transform(this.responseModel.data[0].dateOfBirth, this.orgnizationSetting.datePipe);
+            }
             this.savingsBankNomineeModel.nomineeType = 2;
+            this.updateData();
           }
         } else {
           this.commonComponent.stopSpinner();
@@ -805,14 +832,13 @@ export class SavingsBankNomineeComponent implements OnInit {
  * @author jyothi.naidana
  */
   guardainFormValidation() {
-    if (this.age <= 18) {
+    if (this.age < 18 || this.savingsBankNomineeModel.age < 18) {
+      this.resetGuardain();
       this.nomineeForm.get('relationNameOfGuardian')?.enable();
-    this.nomineeForm.get('guardianName')?.enable();
-    this.nomineeForm.get('guardianAadhar')?.enable();
-    this.nomineeForm.get('guardianMobile')?.enable();
-    this.nomineeForm.get('guardianEmail')?.enable();
-   
-
+      this.nomineeForm.get('guardianName')?.enable();
+      this.nomineeForm.get('guardianAadhar')?.enable();
+      this.nomineeForm.get('guardianMobile')?.enable();
+      this.nomineeForm.get('guardianEmail')?.enable();
       this.guarntorDetailsFalg = true;
       const controlName = this.nomineeForm.get('relationNameOfGuardian');
       if (controlName) {
@@ -842,6 +868,13 @@ export class SavingsBankNomineeComponent implements OnInit {
           Validators.required,Validators.pattern(applicationConstants.MOBILE_PATTERN)
         ]);
         controlFive.updateValueAndValidity();
+      }
+      const controlSix = this.nomineeForm.get('guardianEmail');
+      if (controlSix) {
+        controlSix.setValidators([
+          Validators.pattern(applicationConstants.EMAIL_PATTERN)
+        ]);
+        controlSix.updateValueAndValidity();
       }
       this.updateData();
     }
@@ -898,37 +931,48 @@ export class SavingsBankNomineeComponent implements OnInit {
    * @implements nominee form validation
    */
   nomineeFormValidation() {
+    this.nomineeForm.get('relationName')?.reset();
+    this.nomineeForm.get('nomineeName')?.reset();
+    this.nomineeForm.get('aadhaar')?.reset();
+    this.nomineeForm.get('mobileNumber')?.reset();
+    this.nomineeForm.get('email')?.reset();
+    this.nomineeForm.get('fileUpload')?.reset();
+    this.nomineeForm.get('age')?.reset();
+    this.nomineeForm.get('dateOfBirth')?.reset();
+
     this.nomineeForm.get('relationName')?.disable();
     this.nomineeForm.get('nomineeName')?.disable();
     this.nomineeForm.get('aadhaar')?.disable();
     this.nomineeForm.get('mobileNumber')?.disable();
     this.nomineeForm.get('email')?.disable();
-    const controlName = this.nomineeForm.get('relationName');
-    if (controlName) {
-      controlName.setValidators(null); // Set the required validator null
-      controlName.updateValueAndValidity();
-    }
+    this.nomineeForm.get('age')?.disable();
+    this.nomineeForm.get('dateOfBirth')?.disable();
+    // const controlName = this.nomineeForm.get('relationName');
+    // if (controlName) {
+    //   controlName.setValidators(null); // Set the required validator null
+    //   controlName.updateValueAndValidity();
+    // }
 
-    const controlTow = this.nomineeForm.get('nomineeName');
-    if (controlTow) {
-      controlTow.setValidators(null); // Set the required validator null
-      controlTow.updateValueAndValidity();
-    }
-    const controlFour = this.nomineeForm.get('aadhaar');
-    if (controlFour) {
-      controlFour.setValidators(null); // Set the required validator null
-      controlFour.updateValueAndValidity();
-    }
-    const controlFive = this.nomineeForm.get('mobileNumber');
-    if (controlFive) {
-      controlFive.setValidators(null); // Set the required validator null
-      controlFive.updateValueAndValidity();
-    }
-    const controlSix = this.nomineeForm.get('email');
-    if (controlSix) {
-      controlSix.setValidators(null); // Set the required validator null
-      controlSix.updateValueAndValidity();
-    }
+    // const controlTow = this.nomineeForm.get('nomineeName');
+    // if (controlTow) {
+    //   controlTow.setValidators(null); // Set the required validator null
+    //   controlTow.updateValueAndValidity();
+    // }
+    // const controlFour = this.nomineeForm.get('aadhaar');
+    // if (controlFour) {
+    //   controlFour.setValidators(null); // Set the required validator null
+    //   controlFour.updateValueAndValidity();
+    // }
+    // const controlFive = this.nomineeForm.get('mobileNumber');
+    // if (controlFive) {
+    //   controlFive.setValidators(null); // Set the required validator null
+    //   controlFive.updateValueAndValidity();
+    // }
+    // const controlSix = this.nomineeForm.get('email');
+    // if (controlSix) {
+    //   controlSix.setValidators(null); // Set the required validator null
+    //   controlSix.updateValueAndValidity();
+    // }
     this.updateData();
   }
   /**
@@ -936,12 +980,23 @@ export class SavingsBankNomineeComponent implements OnInit {
    * @implements nominee required valdation
    */
   nomineeValidatorsRequired(){
+    this.nomineeForm.get('relationName')?.reset();
+    this.nomineeForm.get('nomineeName')?.reset();
+    this.nomineeForm.get('aadhaar')?.reset();
+    this.nomineeForm.get('mobileNumber')?.reset();
+    this.nomineeForm.get('email')?.reset();
+    this.nomineeForm.get('fileUpload')?.reset();
+    this.nomineeForm.get('age')?.reset();
+    this.nomineeForm.get('dateOfBirth')?.reset();
+
     this.nomineeForm.get('relationName')?.enable();
     this.nomineeForm.get('nomineeName')?.enable();
     this.nomineeForm.get('aadhaar')?.enable();
     this.nomineeForm.get('mobileNumber')?.enable();
     this.nomineeForm.get('email')?.enable();
     this.nomineeForm.get('fileUpload')?.enable();
+    this.nomineeForm.get('age')?.enable();
+    this.nomineeForm.get('dateOfBirth')?.enable();
     const controlName = this.nomineeForm.get('relationName');
     if (controlName) {
       controlName.setValidators([
@@ -980,6 +1035,21 @@ export class SavingsBankNomineeComponent implements OnInit {
       ]);
       controlSix.updateValueAndValidity();
     }
+    const controlSeven = this.nomineeForm.get('age');
+    if (controlSeven) {
+      controlSeven.setValidators([
+        Validators.required,
+      ]); // Set the required validator null
+      controlSeven.updateValueAndValidity();
+    }
+    const controlEight = this.nomineeForm.get('dateOfBirth');
+    if (controlEight) {
+      controlEight.setValidators([
+        Validators.required
+        
+      ]); // Set the required validator null
+      controlEight.updateValueAndValidity();
+    }
     this.updateData();
   }
 
@@ -1009,13 +1079,23 @@ export class SavingsBankNomineeComponent implements OnInit {
       controlFive.setValidators(null); // Set the required validator null
       controlFive.updateValueAndValidity();
     }
-    const controlSix = this.nomineeForm.get('remarks');
-    if(controlSix){
-      controlSix.setValidators([
-        Validators.required,
-      ]);
-    controlSix.updateValueAndValidity();
+    const controlSix = this.nomineeForm.get('age');
+    if (controlSix) {
+      controlSix.setValidators(null); // Set the required validator null
+      controlSix.updateValueAndValidity();
     }
+    const controlSeven = this.nomineeForm.get('dateOfBirth');
+    if (controlSeven) {
+      controlSeven.setValidators(null); // Set the required validator null
+      controlSeven.updateValueAndValidity();
+    }
+    // const controlSix = this.nomineeForm.get('remarks');
+    // if(controlSix){
+    //   controlSix.setValidators([
+    //     Validators.required,
+    //   ]);
+    // controlSix.updateValueAndValidity();
+    // }
     this.updateData();
   }
 
@@ -1053,6 +1133,7 @@ export class SavingsBankNomineeComponent implements OnInit {
       this.noNominee = false;
       //onchange on update
       if(flag){
+       
         let nomineeId = null;
         if(this.savingsBankNomineeModel != null && this.savingsBankNomineeModel != undefined && this.savingsBankNomineeModel.id  != null && this.savingsBankNomineeModel.id  != undefined){
           nomineeId = this.savingsBankNomineeModel.id ;
@@ -1074,6 +1155,9 @@ export class SavingsBankNomineeComponent implements OnInit {
   samAsMemberNimineeType(flag:boolean){
     this.newNominee = true;
     this.noNominee = false;
+    if(this.savingsBankNomineeModel.age < 18 ){
+      this.guarntorDetailsFalg = false; 
+    }
     //onchange on update
     if(flag){
       let nomineeId = null;
@@ -1101,6 +1185,9 @@ export class SavingsBankNomineeComponent implements OnInit {
     this.noNominee = true;
     this.newNominee = false;
     this.sameAsMembershipNominee = false;
+    if(this.savingsBankNomineeModel.age < 18){
+      this.guarntorDetailsFalg = false; 
+    }
     if(flag){
       let nomineeId = null;//onchange on update
       let remarks = null;
@@ -1221,8 +1308,8 @@ export class SavingsBankNomineeComponent implements OnInit {
    * @author jyothi.naidana
    */
   noGuardainValidation(){
-    if (this.age <= 18) {
-      this.nomineeForm.get('relationNameOfGuardian')?.enable();
+    if (this.age < 18) {
+    this.nomineeForm.get('relationNameOfGuardian')?.enable();
     this.nomineeForm.get('guardianName')?.enable();
     this.nomineeForm.get('guardianAadhar')?.enable();
     this.nomineeForm.get('guardianMobile')?.enable();
@@ -1236,6 +1323,135 @@ export class SavingsBankNomineeComponent implements OnInit {
       controlName.updateValueAndValidity();
     }
 
+    }
+  }
+
+  /**
+   * @implements reset guardain
+   * @author jyothi.naidana
+   */
+  resetGuardain(){
+    this.nomineeForm.get('relationNameOfGuardian')?.reset();
+    this.nomineeForm.get('guardianName')?.reset();
+    this.nomineeForm.get('guardianAadhar')?.reset();
+    this.nomineeForm.get('guardianMobile')?.reset();
+    this.nomineeForm.get('guardianEmail')?.reset();
+    this.nomineeForm.get('relationNameOfGuardian')?.setValidators(null);
+    this.nomineeForm.get('guardianName')?.setValidators(null);
+    this.nomineeForm.get('guardianAadhar')?.setValidators(null);
+    this.nomineeForm.get('guardianMobile')?.setValidators(null);
+    this.nomineeForm.get('guardianEmail')?.setValidators(null);
+
+    // const controlName = this.nomineeForm.get('relationNameOfGuardian');
+    // if (controlName) {
+    //   controlName.setValidators(null); // Set the required validator null
+    //   controlName.updateValueAndValidity();
+    // }
+
+    // const controlTow = this.nomineeForm.get('guardianName');
+    // if (controlTow) {
+    //   controlTow.setValidators(null); // Set the required validator null
+    //   controlTow.updateValueAndValidity();
+    // }
+    // const controlFour = this.nomineeForm.get('guardianAadhar');
+    // if (controlFour) {
+    //   controlFour.setValidators(null); // Set the required validator null
+    //   controlFour.updateValueAndValidity();
+    // }
+    // const controlFive = this.nomineeForm.get('guardianMobile');
+    // if (controlFive) {
+    //   controlFive.setValidators(null); // Set the required validator null
+    //   controlFive.updateValueAndValidity();
+    // }
+    // const controlSix = this.nomineeForm.get('guardianEmail');
+    // if (controlSix) {
+    //   controlSix.setValidators(null); // Set the required validator null
+    //   controlSix.updateValueAndValidity();
+    // }
+  }
+
+  /**
+   * @implements nominee age calculation
+   * @author jyothi.naidana
+   */
+  /**
+   * @implements age caluculation
+   * @param age 
+   * @author jyothi.naidana
+   */
+  ageCaluculation(flag: any) {
+    if (flag) {//with age to date convertion
+      if (this.savingsBankNomineeModel.age != null && this.savingsBankNomineeModel.age != undefined) {
+        if (this.savingsBankNomineeModel.age > 0) {
+
+          const currentDate = new Date();  // Get the current date
+          const birthYear = currentDate.getFullYear() - this.savingsBankNomineeModel.age;  // Subtract the entered age from the current year
+          const birthMonth = currentDate.getMonth();  // Keep the current month
+          const birthDate = currentDate.getDate();   // Keep the current day
+
+          // Construct the calculated Date of Birth
+          const dob = new Date(birthYear, birthMonth, birthDate);
+
+          // Array of month names for formatting (e.g., 'Jan', 'Feb', 'Mar', etc.)
+          const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+          // Format the Date of Birth to 'DD/Mon/YYYY'
+          const formattedDob = `${dob.getDate() < 10 ? '0' + dob.getDate() : dob.getDate()}/${monthNames[dob.getMonth()]}/${dob.getFullYear()}`;
+
+          // Format the Date of Birth to YYYY-MM-DD to match the input type="date" format
+          this.savingsBankNomineeModel.dateOfBirth = null;
+          this.savingsBankNomineeModel.dateOfBirthVal = formattedDob;
+        }
+        else {
+          this.nomineeForm.get('age')?.reset();
+          this.nomineeForm.get("dateOfBirth")?.reset();
+          this.msgs = [{ severity: 'error',  detail: savingsbanktransactionconstant.AGE_SHOULD_NOT_BE_ZERO }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 3000);
+        }
+      }
+    }
+    else {//with date to age convertion
+      this.savingsBankNomineeModel.dateOfBirthVal = this.datePipe.transform(this.savingsBankNomineeModel.dateOfBirthVal, this.orgnizationSetting.datePipe);
+      if (this.savingsBankNomineeModel.dateOfBirthVal) {
+        const dob = new Date(this.savingsBankNomineeModel.dateOfBirthVal);  // Parse the date of birth entered by the user
+        const currentDate = new Date();  // Get the current date
+        let age = currentDate.getFullYear() - dob.getFullYear();  // Calculate age in years
+        const m = currentDate.getMonth() - dob.getMonth();  // Check if birthday has passed in the current year
+        if (m < 0 || (m === 0 && currentDate.getDate() < dob.getDate())) {
+          age--;  // If birthday hasn't occurred yet this year, subtract 1 from the age
+        }
+        this.savingsBankNomineeModel.age = age;  // Set the calculated age to the class property
+      }
+    }
+    if(this.age >= 18 && this.savingsBankNomineeModel.age != null && this.savingsBankNomineeModel.age != undefined){
+      if(this.savingsBankNomineeModel.age < 18){
+        this.guarntorDetailsFalg = true;
+        this.updateData();
+      }  
+      else {
+        this.guarntorDetailsFalg = false;
+      }
+    }
+    else if(this.age < 18 && this.savingsBankNomineeModel.age <18){
+      this.msgs = [];
+      this.savingsBankNomineeModel.age = null;
+      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "Minors Member Account Should Take Major Nominee Only" }];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    }
+
+  }
+
+  /**
+   * @implements guardaina enable based on nominee age
+   * @author jyothi.naidana
+   */
+  guardainEnableBasedOnNomineeAge(){
+    if(this.savingsBankNomineeModel.age < 18){
+        this.guarntorDetailsFalg = true;
     }
   }
 }

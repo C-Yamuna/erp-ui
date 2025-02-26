@@ -58,6 +58,8 @@ export class AccountServiceComponent {
   groupPromotersPopUpFlag: boolean = false;
   institutionPromoterFlag: boolean = false;
   memberPhotoCopyZoom: boolean = false;
+  groupPhotoCopyZoom: boolean = false;
+  institutionPhotoCopyZoom: boolean = false;
   columns: any[]= [];
   groupPrmoters: any[] =[];
 
@@ -313,6 +315,12 @@ this.groupPromotersPopUpFlag = true;
 closePhotoCopy() {
 this.memberPhotoCopyZoom = false;
 }
+groupclosePhotoCopy() {
+  this.groupPhotoCopyZoom = false;
+}
+institutionclosePhotoCopy() {
+  this.institutionPhotoCopyZoom = false;
+}
 
 /**
 * @implement Image Zoom POp up
@@ -321,6 +329,13 @@ this.memberPhotoCopyZoom = false;
 onClickMemberPhotoCopy(){
 this.memberPhotoCopyZoom = true;
 }
+onClickGroupPhotoCopy(){
+  this.groupPhotoCopyZoom = true;
+}
+onClickInstitutionPhotoCopy(){
+  this.institutionPhotoCopyZoom = true;
+}
+
 
 
 closePhoto(){
@@ -631,6 +646,22 @@ fileRemoeEvent() {
   this.accountService.filesDTOList.splice(removeFileIndex, 1);
   this.accountService.requestDocPath = null;
 }
+individualBasicDetails: boolean = false;
+  groupBasicDetails: boolean = false;
+  institutionBasicDetails: boolean = false;
+  // position: string = 'center';
+  showindividualBasicDetailsDialog(position: string) {
+    this.position = position;
+    this.individualBasicDetails = true;
+  }
+  showgroupBasicDetailsDialog(position: string) {
+    this.position = position;
+    this.groupBasicDetails = true;
+  }
+  showinstitutionBasicDetailsDialog(position: string) {
+    this.position = position;
+    this.institutionBasicDetails = true;
+  }
 
 /**
 * @author jyothi.naidana

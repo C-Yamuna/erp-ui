@@ -177,7 +177,7 @@ export class ViewSbApprovalComponent {
       this.router.navigate([savingsbanktransactionconstant.APPROVAL_GRID]);
   }
   submit(){
-    this.viewSavingBankModel.accountStatusName = savingsbanktransactionconstant.SUBMISSION_FOR_APPROVAL;
+    this.viewSavingBankModel.statusName = savingsbanktransactionconstant.SUBMISSION_FOR_APPROVAL;
     this.savingsAccountService.updateSavingsAccountDetails(this.viewSavingBankModel).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel != null && this.responseModel != undefined) {

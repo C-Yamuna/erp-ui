@@ -14,7 +14,6 @@ import { CommonComponent } from 'src/app/shared/common.component';
 import { CommonFunctionsService } from 'src/app/shared/commonfunction.service';
 import { EncryptDecryptService } from 'src/app/shared/encrypt-decrypt.service';
 import { Responsemodel } from 'src/app/shared/responsemodel';
-import { MembershipBasicRequiredDetails, MemberGroupDetailsModel, MembershipInstitutionDetailsModel, InstitutionPromoterDetailsModel, promoterDetailsModel } from 'src/app/transcations/savings-bank-transcation/savings-bank-account-creation-stepper/membership-basic-required-details/shared/membership-basic-required-details';
 import { SiLoanApplicationService } from '../../shared/si-loans/si-loan-application.service';
 import { SiLoanApplication } from '../../shared/si-loans/si-loan-application.model';
 import { SiLoanCommunication } from '../../shared/si-loans/si-loan-communication.model';
@@ -29,13 +28,14 @@ import { SiLoanGenealogyTree } from '../../shared/si-loans/si-loan-genealogy-tre
 import { SiGoldLoanMortgage } from '../../shared/si-loans/si-loan-mortgage.model';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Table } from 'primeng/table';
-import { MembershipServiceService } from 'src/app/transcations/savings-bank-transcation/savings-bank-account-creation-stepper/membership-basic-required-details/shared/membership-service.service';
 import { DatePipe } from '@angular/common';
 import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-constants';
 import { FileUploadService } from 'src/app/shared/file-upload.service';
 import { TranslateService } from '@ngx-translate/core';
 import { CommonStatusData, MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
 import { SiLoanMortagageDetailsService } from '../../shared/si-loans/si-loan-mortagage-details.service';
+import { InstitutionPromoterDetailsModel, MemberGroupDetailsModel, MembershipBasicRequiredDetails, MembershipInstitutionDetailsModel, promoterDetailsModel } from '../../shared/si-loans/si-loan-membership-details.model';
+import { MembershipDetailsService } from '../../compound-interest-loan/compound-interest-loan-stepper/ci-membership-details/shared/membership-details.service';
 
 @Component({
   selector: 'app-simple-interest-loan-stepper',
@@ -196,7 +196,7 @@ export class SimpleInterestLoanStepperComponent {
     private siLoanApplicationService: SiLoanApplicationService, private siLoanCoApplicantDetailsService: SiLoanCoApplicantDetailsService,
     private siLoanNomineeService: SiLoanNomineeService, private siLoanGuarantorDetailsService: SiLoanGuarantorDetailsService,
     private siLoanGenealogyTreeService: SiLoanGenealogyTreeService,
-    private membershipServiceService: MembershipServiceService, private formBuilder: FormBuilder, private datePipe: DatePipe,
+    private membershipServiceService: MembershipDetailsService, private formBuilder: FormBuilder, private datePipe: DatePipe,
     private siLoanGuardianService: SiLoanGuardianService, private fileUploadService: FileUploadService,
     private translate: TranslateService, private commonFunctionService: CommonFunctionsService,
     private siLoanMortagageDetailsService:SiLoanMortagageDetailsService
@@ -548,6 +548,9 @@ export class SimpleInterestLoanStepperComponent {
                 if (this.membershipBasicRequiredDetailsModel.admissionDate != null && this.membershipBasicRequiredDetailsModel.admissionDate != undefined)
                   this.membershipBasicRequiredDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
 
+                if (this.membershipBasicRequiredDetailsModel.resolutionDate != null && this.membershipBasicRequiredDetailsModel.resolutionDate != undefined)
+                  this.membershipBasicRequiredDetailsModel.resolutionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.resolutionDate, this.orgnizationSetting.datePipe);
+                
                 if (this.membershipBasicRequiredDetailsModel.isKycApproved != null && this.membershipBasicRequiredDetailsModel.isKycApproved != undefined && this.membershipBasicRequiredDetailsModel.isKycApproved)
                   this.isKycApproved = applicationConstants.KYC_APPROVED_NAME;
                 else
@@ -665,6 +668,9 @@ export class SimpleInterestLoanStepperComponent {
       }
       if (this.membershipBasicRequiredDetailsModel.admissionDate != null && this.membershipBasicRequiredDetailsModel.admissionDate != undefined) {
         this.membershipBasicRequiredDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
+      }
+      if (this.membershipBasicRequiredDetailsModel.resolutionDate != null && this.membershipBasicRequiredDetailsModel.resolutionDate != undefined) {
+        this.membershipBasicRequiredDetailsModel.resolutionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.resolutionDate, this.orgnizationSetting.datePipe);
       }
     } else if (memberType == MemberShipTypesData.GROUP) {
       this.groupFlag = true;
@@ -2988,6 +2994,9 @@ export class SimpleInterestLoanStepperComponent {
 
           if (this.membershipBasicRequiredDetailsModel.admissionDate != null && this.membershipBasicRequiredDetailsModel.admissionDate != undefined)
             this.membershipBasicRequiredDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
+
+          if (this.membershipBasicRequiredDetailsModel.resolutionDate != null && this.membershipBasicRequiredDetailsModel.resolutionDate != undefined)
+            this.membershipBasicRequiredDetailsModel.resolutionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.resolutionDate, this.orgnizationSetting.datePipe);
 
           if (this.membershipBasicRequiredDetailsModel.isKycApproved != null && this.membershipBasicRequiredDetailsModel.isKycApproved != undefined && this.membershipBasicRequiredDetailsModel.isKycApproved)
             this.isKycApproved = applicationConstants.KYC_APPROVED_NAME;

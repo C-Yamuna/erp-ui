@@ -44,6 +44,10 @@ export class FdCummulativeApprovalDetailsComponent {
   showForm: boolean = false;
   memberPhotoCopyZoom: boolean =false;
   memberphotCopyMultipartFileList: any[] = [];
+  submissionForApprovalCount: any;
+  approvedCount: any;
+  requestForResubmmissionCount: any;
+  rejectCount: any;
 
 
   constructor(private router: Router,
@@ -82,7 +86,7 @@ export class FdCummulativeApprovalDetailsComponent {
       { field: 'depositAmount', header: 'TERMDEPOSITSTRANSACTION.DEPOSIT_AMOUNT' },
       { field: 'depositDate', header: 'TERMDEPOSITSTRANSACTION.DEPOSIT_DATE' },
       { field: 'roi', header: 'TERMDEPOSITSTRANSACTION.ROI' },
-      { field: 'accountStatusName', header: 'TERMDEPOSITSTRANSACTION.STATUS' },
+      { field: 'statusName', header: 'TERMDEPOSITSTRANSACTION.STATUS' },
     ];
 
     let tabLabels = [
@@ -107,7 +111,7 @@ export class FdCummulativeApprovalDetailsComponent {
       this.responseModel = data;
        this.gridListData = this.responseModel.data;
        this.gridListData = this.gridListData.filter((obj: any) => obj != null && 
-       obj.accountStatusName != CommonStatusData.IN_PROGRESS && obj.accountStatusName != CommonStatusData.CREATED).map((fdCummulative: any) => {
+       obj.statusName != CommonStatusData.IN_PROGRESS && obj.statusName != CommonStatusData.CREATED).map((fdCummulative: any) => {
 
          if (fdCummulative.depositDate != null && fdCummulative.depositDate != undefined) {
            fdCummulative.depositDate = this.datePipe.transform(fdCummulative.depositDate,this.orgnizationSetting.datePipe);
@@ -115,16 +119,20 @@ export class FdCummulativeApprovalDetailsComponent {
          if (fdCummulative.photoCopyPath != null && fdCummulative.photoCopyPath != undefined) {
            fdCummulative.multipartFileListForPhotoCopy = this.fileUploadService.getFile(fdCummulative.photoCopyPath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + fdCummulative.photoCopyPath);
          }
-         if (fdCummulative.accountStatusName == CommonStatusData.APPROVED || fdCummulative.accountStatusName == CommonStatusData.REQUEST_FOR_RESUBMISSION
-            || fdCummulative.accountStatusName == CommonStatusData.REJECTED ) {
+         if (fdCummulative.statusName == CommonStatusData.APPROVED || fdCummulative.statusName == CommonStatusData.REQUEST_FOR_RESUBMISSION
+            || fdCummulative.statusName == CommonStatusData.REJECTED ) {
            fdCummulative.viewButton = true; 
          } else {
            fdCummulative.viewButton = false;
          }
+         this.submissionForApprovalCount = this.gridListData.filter(fdCummulative => fdCummulative.statusName === CommonStatusData.SUBMISSION_FOR_APPROVAL).length;
+         this.approvedCount = this.gridListData.filter(fdCummulative => fdCummulative.statusName === CommonStatusData.APPROVED).length;
+         this.requestForResubmmissionCount = this.gridListData.filter(fdCummulative => fdCummulative.statusName === CommonStatusData.REQUEST_FOR_RESUBMISSION).length;
+         this.rejectCount = this.gridListData.filter(fdCummulative => fdCummulative.statusName === CommonStatusData.REJECTED).length;
          return fdCummulative;
        });
-       this.activeStatusCount = this.gridListData.filter(fdAccountApplication => fdAccountApplication.status != null && fdAccountApplication.status != undefined && fdAccountApplication.status === applicationConstants.ACTIVE).length;
-       this.inactiveStatusCount = this.gridListData.filter(fdAccountApplication => fdAccountApplication.status != null && fdAccountApplication.status != undefined && fdAccountApplication.status === applicationConstants.IN_ACTIVE).length;
+      //  this.activeStatusCount = this.gridListData.filter(fdAccountApplication => fdAccountApplication.status != null && fdAccountApplication.status != undefined && fdAccountApplication.status === applicationConstants.ACTIVE).length;
+      //  this.inactiveStatusCount = this.gridListData.filter(fdAccountApplication => fdAccountApplication.status != null && fdAccountApplication.status != undefined && fdAccountApplication.status === applicationConstants.IN_ACTIVE).length;
        this.gridListLenght = this.gridListData.length;
        this.tempGridListData = this.gridListData;
        this.commonComponent.stopSpinner();

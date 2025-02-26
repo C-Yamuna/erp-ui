@@ -17,6 +17,7 @@ import { InstiteKycDetailsModel, InstituteCommunicationModel, InstitutePromoterD
 import { applicationConstants } from 'src/app/shared/applicationConstants';
 import { CommonStatusData, MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
 import { DatePipe } from '@angular/common';
+import { BankDetailsModel } from '../../shared/bank-details.model';
 
 @Component({
   selector: 'app-institution-stepper',
@@ -28,6 +29,8 @@ export class InstitutionStepperComponent implements OnInit {
   instituteCommunicationModel: InstituteCommunicationModel = new InstituteCommunicationModel()
   institeKycDetailsModel: InstiteKycDetailsModel = new InstiteKycDetailsModel();
   institutePromoterDetails: InstitutePromoterDetails = new InstitutePromoterDetails();
+  bankDetailsModel: BankDetailsModel = new BankDetailsModel();
+  
   items: MenuItem[] = [];
   activeIndex: number = 0;
   buttonDisabled: boolean = false;
@@ -48,6 +51,7 @@ export class InstitutionStepperComponent implements OnInit {
   nominee: any;
   familydetails: any;
   document:any;
+  bank:any;
   asset: any;
   basicDetails: any;
   buttonDisbled: boolean = true;
@@ -106,6 +110,9 @@ export class InstitutionStepperComponent implements OnInit {
         });
         this.translate.get('MEMBERSHIP_TRANSACTION.DOCUMENT_DEATAILS').subscribe((text: string) => {
           this.document = text;
+        });
+        this.translate.get('MEMBERSHIP_TRANSACTION.BANK_DETAILS').subscribe((text: string) => {
+          this.bank = text;
       
           this.items = [
             {
@@ -132,6 +139,12 @@ export class InstitutionStepperComponent implements OnInit {
               command: (event: any) => {
                 this.activeIndex = 3;
               }
+            },
+            {
+              label: this.bank,icon: 'fa fa-building', routerLink: Membershiptransactionconstant.INSTITUTION_BANK_DETAILS, queryParams: { id: this.encryptDecryptService.encrypt(this.savedID) },
+              command: (event: any) => {
+                this.activeIndex = 4;
+              }
             }
            
           ]; this.memberBasicDetailsStepperService.currentStep.subscribe((data: any) => {
@@ -151,8 +164,11 @@ export class InstitutionStepperComponent implements OnInit {
                 else if (this.activeIndex == 2) {
                   this.instituteCommunicationModel = data.data;
                 }
-                else {
+                else if (this.activeIndex == 3) {
                   this.institeKycDetailsModel = data.data;
+                }
+                else {
+                  this.bankDetailsModel = data.data;
                  
                 }
                 // if (null != this.memberBasicDetailsModel && undefined != this.memberBasicDetailsModel && null != this.memberBasicDetailsModel.docFilesList && undefined != this.memberBasicDetailsModel.docFilesList) {
@@ -184,6 +200,9 @@ export class InstitutionStepperComponent implements OnInit {
         });
         this.translate.get('MEMBERSHIP_TRANSACTION.DOCUMENT_DEATAILS').subscribe((text: string) => {
           this.document = text;
+        });
+        this.translate.get('MEMBERSHIP_TRANSACTION.BANK_DETAILS').subscribe((text: string) => {
+          this.bank = text;
           this.items = [
             {
               label: this.basicDetails,icon: 'fa fa-id-badge'
@@ -196,6 +215,9 @@ export class InstitutionStepperComponent implements OnInit {
             },
             {
               label: this.document,icon: 'fa fa-file-text'
+            },
+            {
+              label: this.bank,icon: 'fa fa-building'
             },
 
           ]
@@ -215,8 +237,10 @@ export class InstitutionStepperComponent implements OnInit {
                   this.institeKycDetailsModel = data.data;
                 } else if(this.activeIndex == 2){
                   this.instituteCommunicationModel = data.data;
-                }else{
+                } else if(this.activeIndex == 3){
                   this.institeKycDetailsModel = data.data;
+                }else{
+                  this.bankDetailsModel = data.data;
                 }
                 // if (null != this.memberBasicDetailsModel && undefined != this.memberBasicDetailsModel && null != this.memberBasicDetailsModel.docFilesList && undefined != this.memberBasicDetailsModel.docFilesList) {
                 //   this.docFilesList = [];
@@ -269,6 +293,9 @@ export class InstitutionStepperComponent implements OnInit {
       case 3:
         this.router.navigate([Membershiptransactionconstant.INSTITUTION_DOCUMENT], { queryParams: { id: this.encryptDecryptService.encrypt(savedId) } });
         break;
+      case 4:
+        this.router.navigate([Membershiptransactionconstant.INSTITUTION_BANK_DETAILS], { queryParams: { id: this.encryptDecryptService.encrypt(savedId) } });
+        break;
     }
   }
   
@@ -290,6 +317,9 @@ export class InstitutionStepperComponent implements OnInit {
     else if (activeIndex == 2) {
       this.addOrUpdateCommunicationDetails(activeIndex, "next")
     }
+    else if (activeIndex == 3) {
+      this.addOrUpdateDocumentDetails(activeIndex, "next")
+    }
     else {
       this.activeIndex = activeIndex + 1;
       this.navigateTo(this.activeIndex,this.savedID);
@@ -303,7 +333,7 @@ export class InstitutionStepperComponent implements OnInit {
   }
  
   submit(activeIndex: any) {
-    this.addOrUpdateDocumentDetails(activeIndex,"next");
+    this.addOrUpdateBankDetails(activeIndex,"next");
     
   }
   ngAfterContentChecked(): void {
@@ -426,6 +456,13 @@ addOrUpdateKycDetails(activeIndex:any,buttonName:any) {
   this.commonComponent.startSpinner();
 }
 addOrUpdateDocumentDetails(activeIndex:any,buttonName:any) {
+  if (buttonName == "next") {
+    this.activeIndex = activeIndex + 1;
+    this.navigateTo(this.activeIndex,this.savedID)
+  } 
+  this.commonComponent.startSpinner();
+}
+addOrUpdateBankDetails(activeIndex:any,buttonName:any) {
   if (buttonName == "next") {
     this.activeIndex = activeIndex + 1;
     this.router.navigate([Membershiptransactionconstant.VIEW_MEMBERSHIP], { queryParams: { id: this.encryptDecryptService.encrypt(this.savedID) , type: this.encryptDecryptService.encrypt('Institution') ,editbtn:this.encryptDecryptService.encrypt(2),isGridPage:this.encryptDecryptService.encrypt(applicationConstants.ACTIVE)}});

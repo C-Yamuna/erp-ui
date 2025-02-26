@@ -170,10 +170,6 @@ export class FdNonCumulativeApplication {
 
      fdNonCummulativeRequiredDocumentDetailsDTOList : any;
 
-     accountStatus:any;
-
-     accountStatusName: any;
-
      isRenewal:any;
 
      multipartFileList: any;
@@ -195,6 +191,10 @@ export class FdNonCumulativeApplication {
      tenureType: any;
 
      interestPayoutTransferAccount: any;
+
+     staffRoi: any;
+
+     seniorCitizenRoi: any;
 
 }
 

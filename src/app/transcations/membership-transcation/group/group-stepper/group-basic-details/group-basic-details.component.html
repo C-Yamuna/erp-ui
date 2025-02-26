@@ -3,7 +3,7 @@
     [hideTransitionOptions]="'500ms'"></p-messages> -->
     <p-messages label="Info" life="4000" [(value)]="msgs"></p-messages>
 
-    <h6 class="sub-heading">{{'ERP.GROUP' | translate}}</h6>
+    <h6 class="sub-heading">{{'ERP.BASIC_DETAILS' | translate}}</h6>
     <form [formGroup]="groupBasicDetailsForm">
         <div class="mt-n1  bg-label-colorfull">
             <div class="row g-3 mt-0">
@@ -38,7 +38,7 @@
                         <label for="username"> <span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.SOCIETY_ADMISSION_NUMBER' | translate}}
                         </label>
                         <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="societyAdmissionNo" 
-                        placeholder="Enter Admission Number"
+                        placeholder="Enter Society Admission Number"
                             [(ngModel)]="memberGroupBasicDetails.societyAdmissionNumber" >
                     </div>
                 </div>
@@ -146,7 +146,7 @@
                         </p-message>
                     </div>
                 </div>
-                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                <!-- <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                     <div class="form-label">
                         <label for="username">
                              {{'MEMBERSHIP_TRANSACTION.RESOLUTION_DATE' | translate}} 
@@ -159,7 +159,7 @@
                             [maxDate]="today">
                         </p-calendar>
                     </div>
-                </div>
+                </div> -->
                 <!-- <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                     <div class="form-label">
                         <label>{{'MEMBERSHIP_TRANSACTION.RESOLUTION NO' | translate}}</label>
@@ -171,7 +171,7 @@
                         </p-message>
                     </div>
                 </div> -->
-                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                <!-- <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                     <div class="form-label">
                         <span class="">{{ 'MEMBERSHIP_TRANSACTION.RESOLUTION_COPY_PATH' | translate }} </span>
                         <div class="uplodad-style align-items-center">
@@ -193,7 +193,7 @@
                         </div>
                     </div>
 
-                </div>
+                </div> -->
                 <!-- <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                     <div class="form-label">
                         <span class=""> <span class="red">*</span>{{ 'MEMBERSHIP_TRANSACTION.APPLICATION_COPY_PATH' | translate }} </span>

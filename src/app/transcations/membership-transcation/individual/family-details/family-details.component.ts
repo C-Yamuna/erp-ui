@@ -29,12 +29,6 @@ import { SelectItemGroup } from 'primeng/api';
 })
 export class FamilyDetailsComponent {
   @ViewChild('dt', { static: false }) private dt!: Table;
-  @ViewChild('dd', { static: false }) private dd!: Table;
-  @ViewChild('dl', { static: false }) private dl!: Table;
-  @ViewChild('cv', { static: false }) private cv!: Table;
-  @ViewChild('cc', { static: false }) private cc!: Table;
-  @ViewChild('bd', { static: false }) private bd!: Table;
-
   familyForm: any;
   commomCategory: any[] = [];
   tempCommomCategory: any[] = [];

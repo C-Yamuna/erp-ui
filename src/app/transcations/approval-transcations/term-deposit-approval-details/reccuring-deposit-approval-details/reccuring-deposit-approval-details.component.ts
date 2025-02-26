@@ -43,6 +43,10 @@ export class ReccuringDepositApprovalDetailsComponent {
   activeStatusCount: any;
   inactiveStatusCount: any;
   gridListLenght: Number | undefined;
+  submissionForApprovalCount: any;
+  approvedCount: any;
+  requestForResubmmissionCount: any;
+  rejectCount: any;
 
   constructor(private router: Router, private translate: TranslateService,
     private commonComponent: CommonComponent, private encryptDecryptService:
@@ -77,7 +81,7 @@ export class ReccuringDepositApprovalDetailsComponent {
       { field: 'memberTypeName', header: 'TERMDEPOSITSTRANSACTION.MEMBER_TYPE' },
       { field: 'productName', header: 'TERMDEPOSITSTRANSACTION.PRODUCT_NAME' },
       { field: 'roi', header: 'TERMDEPOSITSTRANSACTION.ROI' },
-      { field: 'accountStatusName', header: 'TERMDEPOSITSTRANSACTION.STATUS' },
+      { field: 'statusName', header: 'TERMDEPOSITSTRANSACTION.STATUS' },
     ];
 
     let tabLabels = [
@@ -105,8 +109,8 @@ export class ReccuringDepositApprovalDetailsComponent {
     this.rdAccountsService.getRdAccountsByPacsAndBranchId(this.pacsId, this.branchId).subscribe((data: any) => {
       this.responseModel = data;
       this.gridListData = this.responseModel.data;
-      this.gridListData = this.gridListData.filter((obj: any) => obj != null && obj.accountStatusName != CommonStatusData.IN_PROGRESS &&
-        obj.accountStatusName != CommonStatusData.CREATED).map((reccuringDeposit: any) => {
+      this.gridListData = this.gridListData.filter((obj: any) => obj != null && obj.statusName != CommonStatusData.IN_PROGRESS &&
+        obj.statusName != CommonStatusData.CREATED).map((reccuringDeposit: any) => {
 
           if (reccuringDeposit.depositDate != null && reccuringDeposit.depositDate != undefined) {
             reccuringDeposit.depositDate = this.datePipe.transform(reccuringDeposit.depositDate, this.orgnizationSetting.datePipe);
@@ -114,16 +118,20 @@ export class ReccuringDepositApprovalDetailsComponent {
           if (reccuringDeposit.photoCopyPath != null && reccuringDeposit.photoCopyPath != undefined) {
             reccuringDeposit.multipartFileListForPhotoCopy = this.fileUploadService.getFile(reccuringDeposit.photoCopyPath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + reccuringDeposit.photoCopyPath);
           }
-          if (reccuringDeposit.accountStatusName == CommonStatusData.APPROVED || reccuringDeposit.accountStatusName == CommonStatusData.REQUEST_FOR_RESUBMISSION
-            || reccuringDeposit.accountStatusName == CommonStatusData.REJECTED) {
+          if (reccuringDeposit.statusName == CommonStatusData.APPROVED || reccuringDeposit.statusName == CommonStatusData.REQUEST_FOR_RESUBMISSION
+            || reccuringDeposit.statusName == CommonStatusData.REJECTED) {
             reccuringDeposit.viewButton = true;
           } else {
             reccuringDeposit.viewButton = false;
           }
+          this.submissionForApprovalCount = this.gridListData.filter(reccuringDeposit => reccuringDeposit.statusName === CommonStatusData.SUBMISSION_FOR_APPROVAL).length;
+          this.approvedCount = this.gridListData.filter(reccuringDeposit => reccuringDeposit.statusName === CommonStatusData.APPROVED).length;
+          this.requestForResubmmissionCount = this.gridListData.filter(reccuringDeposit => reccuringDeposit.statusName === CommonStatusData.REQUEST_FOR_RESUBMISSION).length;
+          this.rejectCount = this.gridListData.filter(reccuringDeposit => reccuringDeposit.statusName === CommonStatusData.REJECTED).length; 
           return reccuringDeposit
         });
-      this.activeStatusCount = this.gridListData.filter(rdAccountApplication => rdAccountApplication.status != null && rdAccountApplication.status != undefined && rdAccountApplication.status === applicationConstants.ACTIVE).length;
-      this.inactiveStatusCount = this.gridListData.filter(rdAccountApplication => rdAccountApplication.status != null && rdAccountApplication.status != undefined && rdAccountApplication.status === applicationConstants.IN_ACTIVE).length;
+      // this.activeStatusCount = this.gridListData.filter(rdAccountApplication => rdAccountApplication.status != null && rdAccountApplication.status != undefined && rdAccountApplication.status === applicationConstants.ACTIVE).length;
+      // this.inactiveStatusCount = this.gridListData.filter(rdAccountApplication => rdAccountApplication.status != null && rdAccountApplication.status != undefined && rdAccountApplication.status === applicationConstants.IN_ACTIVE).length;
       this.gridListLenght = this.gridListData.length;
       this.tempGridListData = this.gridListData;
       this.commonComponent.stopSpinner();

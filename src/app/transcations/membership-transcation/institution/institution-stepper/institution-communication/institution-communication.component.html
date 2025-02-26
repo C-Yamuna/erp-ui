@@ -3,7 +3,7 @@
 
     <div class="stepper-top-section-strip">
         <div class="row">
-            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12 stepper-top-product-name-background">
                 <div class="form-group">
                     <span>{{'ERP.MEMBER_TYPE' | translate}}</span>
                     <p class="mb-0">{{ institutionBasicDetailsModel.memberTypeName }}&nbsp;({{
@@ -41,12 +41,12 @@
                     <p class="mb-0">{{institutionBasicDetailsModel.pocName}}</p>
                 </div>
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+            <!-- <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
                 <div class="form-group">
                     <span>{{'ERP.POC_MOBILE_NUMBER' | translate}}</span>
                     <p class="mb-0">{{institutionBasicDetailsModel.pocNumber}}</p>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
     <div class="col-12"></div>
@@ -97,7 +97,7 @@
                                             [(ngModel)]="instituteCommunicationModel.permanentVillageId"></p-dropdown>
                                     </div>
                                 </div>
-                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                     <div class="form-label">
                                         <label for="username">
                                             {{'MEMBERSHIP_TRANSACTION.DIVISION' | translate}}
@@ -106,7 +106,7 @@
                                             [(ngModel)]="instituteCommunicationModel.permanentDivisionName">
                                     </div>
                                 </div>
-                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                     <div class="form-label">
                                         <label for="username">
                                             {{'MEMBERSHIP_TRANSACTION.BLOCK' | translate}}
@@ -201,7 +201,7 @@
                                             formControlName="villageId" (onChange)='getVillage(instituteCommunicationModel.villageId)' [(ngModel)]="instituteCommunicationModel.villageId"></p-dropdown>
                                     </div>
                                 </div>
-                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                     <div class="form-label">
                                         <label for="username">
                                             {{'MEMBERSHIP_TRANSACTION.DIVISION' | translate}}
@@ -210,7 +210,7 @@
                                             [(ngModel)]="instituteCommunicationModel.divisionName">
                                     </div>
                                 </div>
-                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                     <div class="form-label">
                                         <label for="username">
                                             {{'MEMBERSHIP_TRANSACTION.BLOCK' | translate}}

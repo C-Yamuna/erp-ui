@@ -132,7 +132,7 @@ export class InvestmentAccountDocumentsComponent implements OnInit {
         this.investmentApplicationDetailsModel = this.responseModel.data[0];
         this.investmentApplicationDetailsModel.depositDate = this.datePipe.transform(this.investmentApplicationDetailsModel.depositDate, this.orgnizationSetting.datePipe);
         if (this.investmentApplicationDetailsModel.productId != null && this.investmentApplicationDetailsModel.productId != undefined){
-          this.getRequirequiredDocumentsByProdId(this.investmentApplicationDetailsModel.productId);
+          // this.getRequirequiredDocumentsByProdId(this.investmentApplicationDetailsModel.productId);
         }
         if (this.investmentApplicationDetailsModel.investmentAccountDocumentsDTO != null && this.investmentApplicationDetailsModel.investmentAccountDocumentsDTO != undefined &&
           this.investmentApplicationDetailsModel.investmentAccountDocumentsDTO.length > 0) {
@@ -224,7 +224,7 @@ export class InvestmentAccountDocumentsComponent implements OnInit {
       this.responseModel = data;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         this.documentTypeList = this.responseModel.data;
-        this.documentTypeList = this.documentTypeList.filter((documentType: any) => documentType != null).map((document: { name: any; id: any; }) => {
+        this.documentTypeList = this.documentTypeList.filter((documentType: any) => documentType != null && documentType.status == applicationConstants.ACTIVE).map((document: { name: any; id: any; }) => {
           return { label: document.name, value: document.id };
         });
       } else {

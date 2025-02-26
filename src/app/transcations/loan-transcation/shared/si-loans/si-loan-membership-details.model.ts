@@ -137,7 +137,14 @@ export class MembershipBasicRequiredDetails {
 
     mcrDocumentCopy:any;
 
-    multipartFileListForMCRCopyPath:any;}
+    multipartFileListForMCRCopyPath:any;
+
+    resolutionDate:any
+
+    resolutionDateVal:any;
+
+    societyAdmissionNumber:any;
+}
 
 export class MemberGroupDetailsModel {
 

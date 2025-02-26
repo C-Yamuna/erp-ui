@@ -207,27 +207,27 @@ export class KYCComponent  implements OnInit {
       if (documnetTypes != null && undefined != documnetTypes)
       this.kycModel.kycDocumentTypeName = documnetTypes.label;
     }
- 
+    
     updateData() {
       const mandatoryDocuments = this.requiredDocumentList ? 
           this.requiredDocumentList.filter(doc => doc.isMandatory) : [];
-  
       const allMandatoryUploaded = mandatoryDocuments.every(doc =>
           this.kycModelList?.some(kyc => kyc.kycDocumentTypeId === doc.id)
       );
       if (mandatoryDocuments.length > 0) {
-          this.requiredDocumentsNames = "Please Upload Mandatory KYC Documents ";
-          this.requiredDocumentsNames += mandatoryDocuments.map(doc => `${doc.name}`).join(", ");
-          // this.requiredDocumentsNames += "";
+          const documentNames = mandatoryDocuments.map(doc => doc.name).join(",");
+          this.requiredDocumentsNames = `Please Upload Mandatory KYC Documents: "${documentNames}"`;
           this.mandatoryDoxsTextShow = true;
       } else {
           this.mandatoryDoxsTextShow = false;
       }
+  
       if (mandatoryDocuments.length > 0) {
           this.landFlag = allMandatoryUploaded && this.buttonsFlag;
       } else {
           this.landFlag = this.kycModelList?.length > 0 && this.buttonsFlag;
       }
+  
       this.kycModel.membershipId = this.memberId;
       this.memberBasicDetailsStepperService.changeData({
           formValid: this.kycForm.valid,

@@ -501,7 +501,7 @@
                                         <label>{{'ERP.AMOUNT' | translate}}</label>
                                         <input type="text" class="form-control" 
                                             formControlName="amount" placeholder="Enter Amount"
-                                            [(ngModel)]="transactionModel.transactionAmount">
+                                            [(ngModel)]="transactionModel.transactionAmount" (keyup)="onAmountChange()">
                                     </div>
                                 </div>
                                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
@@ -510,7 +510,7 @@
                                         <input type="text" class="form-control" id="amountInWords"
                                             formControlName="amountInWords" placeholder="Enter Amount in Words"
                                             [(ngModel)]="transactionModel.transactionAmountInWords"
-                                            (keyup)="onAmountChange()">
+                                            >
                                     </div>
                                 </div>
                                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
@@ -574,7 +574,7 @@
                                         <label for="chequeAmountInWords">{{'ERP.AMOUNT' | translate}}</label>
                                         <input type="text" class="form-control" id="chequeAmountInWords"
                                             name="chequeAmountInWords" formControlName="chequeAmount" placeholder="Enter Amount"
-                                            [(ngModel)]="chequeDetails.amount">
+                                            [(ngModel)]="chequeDetails.amount" (keyup)="onAmountChange()">
                                     </div>
                                 </div>
     
@@ -582,7 +582,7 @@
                                     <div class="form-label">
                                         <label for="chequeAmountInWords">{{'ERP.AMOUNT_IN_WORDS' | translate}}</label>
                                         <input type="text" class="form-control" id="chequeAmountInWords"
-                                            name="chequeAmountInWords" formControlName="amountInWords"
+                                            name="chequeAmountInWords" formControlName="amountInWords" 
                                             [(ngModel)]="chequeDetails.transactionAmountInWords" placeholder="Enter Amount in Words">
                                     </div>
                                 </div>
@@ -605,7 +605,7 @@
                                     <div class="form-label">
                                         <label for="chequeAccountNumber">{{'ERP.AMOUNT' | translate}}</label>
                                         <input type="text" class="form-control" id="chequeAccountNumber"
-                                        formControlName="amount"
+                                        formControlName="amount" (keyup)="onAmountChange()"
                                         [(ngModel)]="transferTransactionDetails.transactionAmount" placeholder="Enter Amount">
                                     </div>
                                 </div>
@@ -614,7 +614,7 @@
                                     <div class="form-label">
                                         <label for="chequeHolderName">{{'ERP.AMOUNT_IN_WORDS' | translate}}</label>
                                         <input type="text" class="form-control" id="chequeHolderName"
-                                        formControlName="amountInWords"
+                                        formControlName="amountInWords" 
                                         [(ngModel)]="transferTransactionDetails.amountInWords" placeholder="Enter Amount in Words">
                                     </div>
                                 </div>
@@ -1029,7 +1029,7 @@
                 <div class="col-lg-3 col-md-3 col-sm-12">
                     <div class="form-group">
                         <span class="fw-light">{{'ERP.ACCOUNT_TYPE' | translate}}</span>
-                        <p class="fw-semibold">Savings</p>
+                        <p class="fw-semibold">Daily Deposits</p>
     
                     </div>
                 </div>

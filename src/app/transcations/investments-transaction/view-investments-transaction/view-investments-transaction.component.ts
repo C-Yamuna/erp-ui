@@ -170,7 +170,7 @@ export class ViewInvestmentsTransactionComponent implements OnInit {
       else
         this.investmentApplicationDetailsModel.isAutoRenewal = applicationConstants.FALSE;
 
-      this.investmentApplicationDetailsModel.accountStatusName = "Submission for Approval";
+      this.investmentApplicationDetailsModel.statusName = "Submission for Approval";
       this.investmentApplicationDetailsService.updateInvestmentApplicationDetails(this.investmentApplicationDetailsModel).subscribe((response: any) => {
         this.responseModel = response;
         this.commonComponent.stopSpinner();

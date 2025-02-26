@@ -30,6 +30,8 @@ export class TermLoanDisbursementSchedule {
     isMandatory?: any;
 
     visitRole?: any;
+
+    visitRoleNames?: any;
     
     tenureType?: any;
 

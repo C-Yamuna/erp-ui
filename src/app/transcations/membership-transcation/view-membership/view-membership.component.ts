@@ -74,6 +74,7 @@ export class ViewMembershipComponent {
   membershipFamilyDetailsList: any[] = [];
   membershipAssetsDetailsList: any[] = [];
   memberAssetDetails: any
+  bankDetailsColumns:any;
   institutePromoterList: any;
   editbtn: Boolean = true;
   addressOne: any;
@@ -120,6 +121,8 @@ export class ViewMembershipComponent {
   measuringSubUnit: any;
   isMaximized: boolean = false;
   uomModel: LandUom = new LandUom();
+  memberBankDetailsDTOList: any[]=[];
+  groupBankDetailsDTOList: any[]=[];
   constructor(private commonComponent: CommonComponent, private formBuilder: FormBuilder, private membershipBasicDetailsService: MembershipBasicDetailsService,
     private activateRoute: ActivatedRoute, private encryptService: EncryptDecryptService, private datePipe: DatePipe,
     private router: Router, private commonFunctionsService: CommonFunctionsService,private fileUploadService :FileUploadService,
@@ -177,6 +180,13 @@ export class ViewMembershipComponent {
       { field: 'initialValue', header: 'ERP.INITIAL_VALUE' },
       { field: 'currentValue', header: 'ERP.CURRENT_VALUE' },
       { field: 'depreciationPercentage', header: 'MEMBERSHIPCONFIG.DEPRECIATION_PERCENTAGE' },
+      // { field: 'assetFilePath', header: 'ERP.UPLOAD_DOCUMENT' },
+    ];
+    this.bankDetailsColumns = [
+      { field: 'bankName', header: 'MEMBERSHIP_TRANSACTION.BANK_NAME' },
+      { field: 'nameInBank', header: 'MEMBERSHIP_TRANSACTION.NAME_IN_BANK' },
+      { field: 'ifscCode', header: 'MEMBERSHIP_TRANSACTION.IFSC_CODE' },
+      { field: 'accountNumber', header: 'MEMBERSHIP_TRANSACTION.ACCOUNT_NUMBER' },
       // { field: 'assetFilePath', header: 'ERP.UPLOAD_DOCUMENT' },
     ];
 
@@ -377,6 +387,10 @@ export class ViewMembershipComponent {
           });
 
         }
+
+        if (this.memberBasicDetailsModel.memberBankDetailsDTOList != null && this.memberBasicDetailsModel.memberBankDetailsDTOList.length > 0) {
+          this.memberBankDetailsDTOList = this.memberBasicDetailsModel.memberBankDetailsDTOList;
+        }
       }
     });
   }
@@ -477,6 +491,9 @@ export class ViewMembershipComponent {
         else{
           this.showdocumentForm = true;
         }
+        if (this.memberGroupBasicDetails.memberBankDetailsDTOList != null && this.memberGroupBasicDetails.memberBankDetailsDTOList.length > 0) {
+          this.groupBankDetailsDTOList = this.memberGroupBasicDetails.memberBankDetailsDTOList;
+        }
       }
     });
   }
@@ -538,6 +555,9 @@ export class ViewMembershipComponent {
         }
         else{
           this.showdocumentForm = true;
+        }
+        if (this.memberGroupBasicDetails.memberBankDetailsDTOList != null && this.memberGroupBasicDetails.memberBankDetailsDTOList.length > 0) {
+          this.groupBankDetailsDTOList = this.memberGroupBasicDetails.memberBankDetailsDTOList;
         }
         if (this.institutionBasicDetailsModel.institutionPromoterList != null && this.institutionBasicDetailsModel.institutionPromoterList.length > 0) {
           this.institutePromoterList = this.institutionBasicDetailsModel.institutionPromoterList;
@@ -700,6 +720,9 @@ export class ViewMembershipComponent {
       case 3:
         this.router.navigate([Membershiptransactionconstant.INSTITUTION_DOCUMENT], { queryParams: { id: this.encryptService.encrypt(rowData.id) } });
         break;
+        case 4:
+        this.router.navigate([Membershiptransactionconstant.INSTITUTION_BANK_DETAILS], { queryParams: { id: this.encryptService.encrypt(rowData.id) } });
+        break;
     }
   }
 
@@ -716,6 +739,9 @@ export class ViewMembershipComponent {
         break;
       case 3:
         this.router.navigate([Membershiptransactionconstant.GROUP_DOCUMENT], { queryParams: { id: this.encryptService.encrypt(rowData.id) } });
+        break;
+      case 4:
+        this.router.navigate([Membershiptransactionconstant.GROUP_BANK_DETAILS], { queryParams: { id: this.encryptService.encrypt(rowData.id) } });
         break;
     }
   }
@@ -746,6 +772,9 @@ export class ViewMembershipComponent {
       case 7:
         this.router.navigate([Membershiptransactionconstant.INDIVIDUAL_ASSET], { queryParams: { id: this.encryptService.encrypt(rowData.id) } });
         break;
+        case 8:
+          this.router.navigate([Membershiptransactionconstant.INDIVIDUAL_BANK_DETAILS], { queryParams: { id: this.encryptService.encrypt(rowData.id) } });
+          break;
     }
   }
 

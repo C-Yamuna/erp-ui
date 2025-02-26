@@ -23,6 +23,7 @@ import { MembershipLandDetailsService } from '../shared/membership-land-details.
 import { MemberGuardianDetailsService } from '../shared/member-guardian-details.service';
 import {TabMenuModule} from 'primeng/tabmenu';
 import { RequiredDocumentModel } from '../shared/required-document-details.model';
+import { BankDetailsModel } from '../shared/bank-details.model';
 
 @Component({
   selector: 'app-individual',
@@ -42,6 +43,8 @@ export class IndividualComponent {
   membershipAssetsDetailsModel :MembershipAssetsDetailsModel = new MembershipAssetsDetailsModel();
   memberNomoineeGuardianDetailsModel:MemberNomoineeGuardianDetailsModel = new MemberNomoineeGuardianDetailsModel();
   requiredDocumentModel: RequiredDocumentModel = new RequiredDocumentModel();
+  bankDetailsModel: BankDetailsModel = new BankDetailsModel();
+  
   
 
   activeIndex: number = 0;
@@ -73,6 +76,8 @@ export class IndividualComponent {
   activeItem!: MenuItem;
   flagForLableNameOfScreen: boolean=false;
   menuDisabled: any;
+  bank: any;
+
   // productTypeList: any[]=[];
 
   constructor(public messageService: MessageService, private router: Router, private membershipBasicDetailsService: MembershipBasicDetailsService,
@@ -138,6 +143,9 @@ export class IndividualComponent {
         });
         this.translate.get('MEMBERSHIP_TRANSACTION.ASSET').subscribe((text: string) => {
           this.asset = text;
+        });
+        this.translate.get('MEMBERSHIP_TRANSACTION.BANK_DETAILS').subscribe((text: string) => {
+          this.bank = text;
           this.items = [
             {
               label: this.basicDetails,icon: 'fa fa-id-badge', routerLink: Membershiptransactionconstant.INDIVIDUAL_BASIC_DETAILS, queryParams: { id: this.encryptDecryptService.encrypt(this.savedID) },
@@ -186,6 +194,12 @@ export class IndividualComponent {
               command: (event: any) => {
                 this.activeIndex = 7;
               }
+            },
+            {
+              label: this.bank,icon: 'fa fa-building' ,routerLink: Membershiptransactionconstant.INDIVIDUAL_BANK_DETAILS, queryParams: { id: this.encryptDecryptService.encrypt(this.savedID) },
+              command: (event: any) => {
+                this.activeIndex = 8;
+              }
             }
           ];
           this.memberBasicDetailsStepperService.currentStep.subscribe((data: any) => {
@@ -229,8 +243,13 @@ export class IndividualComponent {
                   this.membershipFamilyDetailsModel = data.data;
                   if(null != data.savedId && undefined != data.savedId)
                     this.savedID = data.savedId;
-                } else {
+                }
+                else if (this.activeIndex == 7) {
                   this.membershipAssetsDetailsModel = data.data;
+                  if(null != data.savedId && undefined != data.savedId)
+                    this.savedID = data.savedId;
+                } else {
+                  this.bankDetailsModel = data.data;
                   if(null != data.savedId && undefined != data.savedId)
                       this.savedID = data.savedId;
                 }
@@ -275,6 +294,9 @@ export class IndividualComponent {
         });
         this.translate.get('MEMBERSHIP_TRANSACTION.ASSET').subscribe((text: string) => {
           this.asset = text;
+        });
+        this.translate.get('MEMBERSHIP_TRANSACTION.BANK_DETAILS').subscribe((text: string) => {
+          this.bank = text;
           this.items = [
             {
               label: this.basicDetails,icon: 'fa fa-id-badge',
@@ -323,6 +345,12 @@ export class IndividualComponent {
               command: (event: any) => {
                 this.activeIndex = 7;
               }
+            },
+            {
+              label: this.bank,icon: 'fa fa-building',
+              command: (event: any) => {
+                this.activeIndex = 8;
+              }
             }
           ];
           this.memberBasicDetailsStepperService.currentStep.subscribe((data: any) => {
@@ -363,8 +391,14 @@ export class IndividualComponent {
                   this.membershipFamilyDetailsModel = data.data;
                   if(null != data.savedId && undefined != data.savedId)
                     this.savedID = data.savedId;
-                } else {
+                } 
+                else if (this.activeIndex == 7) {
                   this.membershipAssetsDetailsModel = data.data;
+                  if(null != data.savedId && undefined != data.savedId)
+                      this.savedID = data.savedId;
+                }
+                 else {
+                  this.bankDetailsModel = data.data;
                   if(null != data.savedId && undefined != data.savedId)
                       this.savedID = data.savedId;
                 }
@@ -431,6 +465,9 @@ export class IndividualComponent {
       case 7:
         this.router.navigate([Membershiptransactionconstant.INDIVIDUAL_ASSET], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
         break;
+        case 8:
+          this.router.navigate([Membershiptransactionconstant.INDIVIDUAL_BANK_DETAILS], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
+          break;
     }
   }
   prevStep(activeIndex: any) {
@@ -467,6 +504,9 @@ export class IndividualComponent {
     }
     else if(activeIndex == 7){
       this.addOrUpdateAssetsDetails(activeIndex,"next")
+    }
+    else if(activeIndex == 8){
+      this.addOrUpdateBankDetails(activeIndex,"next")
     }
      else {
       this.activeIndex = activeIndex + 1;
@@ -507,6 +547,9 @@ export class IndividualComponent {
       });
       this.translate.get('ERP.ASSET_DETAILS').subscribe((text: string) => {
         this.asset = text;
+      });
+      this.translate.get('MEMBERSHIP_TRANSACTION.BANK_DETAILS').subscribe((text: string) => {
+        this.asset = text;
         this.items = [
           {
             label: this.basicDetails
@@ -528,6 +571,9 @@ export class IndividualComponent {
           },
           {
             label: this.asset
+          },
+          {
+            label: this.bank
           },
         ];
         
@@ -744,8 +790,8 @@ addOrUpdateLandDetails(activeIndex:any,buttonName:any) {
       this.responseModel = response;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         this.memberNomineeDetailsModel = this.responseModel.data[0]; 
-        if(null != this.memberNomineeDetailsModel.nomineeDob)
-          this.memberNomineeDetailsModel.nomineeDobVal=this.datePipe.transform(this.memberNomineeDetailsModel.nomineeDob, this.orgnizationSetting.datePipe);
+        // if(null != this.memberNomineeDetailsModel.nomineeDob)
+        //   this.memberNomineeDetailsModel.nomineeDobVal=this.datePipe.transform(this.memberNomineeDetailsModel.nomineeDob, this.orgnizationSetting.datePipe);
 
         this.commonComponent.stopSpinner();
         this.msgs = [];
@@ -898,6 +944,13 @@ addOrUpdateFamilyDetails(activeIndex:any,buttonName:any) {
 }
 
 addOrUpdateAssetsDetails(activeIndex:any,buttonName:any) {
+  if (buttonName == "next") {
+    this.activeIndex = activeIndex + 1;
+    this.navigateTo(this.activeIndex,this.savedID)
+  } 
+  this.commonComponent.startSpinner();
+}
+addOrUpdateBankDetails(activeIndex:any,buttonName:any) {
   if (buttonName == "next") {
     this.activeIndex = activeIndex + 1;
     this.navigateTo(this.activeIndex,this.savedID)

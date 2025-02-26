@@ -114,28 +114,28 @@ export class SaoProductDefinitionStepperComponent {
             this.activeIndex = 3;
           }
         },
+        // {
+        //   label: 'Purpose', icon: 'fa fa-bandcamp', routerLink: Loantransactionconstant.SAO_PROD_PURPOSE_CONFIG,
+        //   command: (event: any) => {
+        //     this.activeIndex = 4;
+        //   }
+        // },
         {
-          label: 'Purpose', icon: 'fa fa-bandcamp', routerLink: Loantransactionconstant.SAO_PROD_PURPOSE_CONFIG,
+          label: 'Required Documents', icon: 'fa fa-file-text', routerLink: Loantransactionconstant.SAO_REQUIRED_DOCUMENT_CONFIG,
           command: (event: any) => {
             this.activeIndex = 4;
           }
         },
         {
-          label: 'Required Documents', icon: 'fa fa-file-text', routerLink: Loantransactionconstant.SAO_REQUIRED_DOCUMENT_CONFIG,
+          label: 'Field Visit Config', icon: 'fa fa-map-signs', routerLink: Loantransactionconstant.SAO_FIELD_VISIT_CONFIG,
           command: (event: any) => {
             this.activeIndex = 5;
           }
         },
         {
-          label: 'Field Visit Config', icon: 'fa fa-file-text', routerLink: Loantransactionconstant.SAO_FIELD_VISIT_CONFIG,
+          label: 'Disbursment', icon: 'fa fa-folder-open', routerLink: Loantransactionconstant.SAO_DISBURSMENT_CONFIG,
           command: (event: any) => {
             this.activeIndex = 6;
-          }
-        },
-        {
-          label: 'Disbursment', icon: 'fa fa-file-text', routerLink: Loantransactionconstant.SAO_DISBURSMENT_CONFIG,
-          command: (event: any) => {
-            this.activeIndex = 7;
           }
         }
       ];
@@ -160,13 +160,13 @@ export class SaoProductDefinitionStepperComponent {
             this.saoLoanLinkedShareCapitalModel = data.data;
           } else if (this.activeIndex == 3) {
             this.saoProductChargesModel = data.data;
+          // } else if (this.activeIndex == 4) {
+          //   this.saoProdPurposesModel = data.data;
           } else if (this.activeIndex == 4) {
-            this.saoProdPurposesModel = data.data;
-          } else if (this.activeIndex == 5) {
             this.saoRequiredDocumentsModel = data.data;
-          }  else if (this.activeIndex == 6) {
+          }  else if (this.activeIndex == 5) {
             this.saoFieldVisitModel = data.data;
-          }  else if (this.activeIndex == 7) {
+          }  else if (this.activeIndex == 6) {
             this.saoDisbursmentScheduleModel = data.data;
           }
         }
@@ -193,16 +193,16 @@ export class SaoProductDefinitionStepperComponent {
       case 3:
         this.router.navigate([Loantransactionconstant.SAO_PRODUCT_CHARGES_CONFIG], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
         break;
+      // case 4:
+      //   this.router.navigate([Loantransactionconstant.SAO_PROD_PURPOSE_CONFIG], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
+      //   break;
       case 4:
-        this.router.navigate([Loantransactionconstant.SAO_PROD_PURPOSE_CONFIG], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
-        break;
-      case 5:
         this.router.navigate([Loantransactionconstant.SAO_REQUIRED_DOCUMENT_CONFIG], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
         break;
-      case 6:
+      case 5:
         this.router.navigate([Loantransactionconstant.SAO_FIELD_VISIT_CONFIG], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
         break;
-      case 7:
+      case 6:
         this.router.navigate([Loantransactionconstant.SAO_DISBURSMENT_CONFIG], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
         break;
     }
@@ -242,6 +242,10 @@ export class SaoProductDefinitionStepperComponent {
       this.activeIndex = activeIndex + 1;
       this.navigateTo(this.activeIndex, this.savedID);
     }
+    // else if (activeIndex == 4) {
+    //   this.activeIndex = activeIndex + 1;
+    //   this.navigateTo(this.activeIndex, this.savedID);
+    // }
     else if (activeIndex == 4) {
       this.activeIndex = activeIndex + 1;
       this.navigateTo(this.activeIndex, this.savedID);
@@ -251,10 +255,6 @@ export class SaoProductDefinitionStepperComponent {
       this.navigateTo(this.activeIndex, this.savedID);
     }
     else if (activeIndex == 6) {
-      this.activeIndex = activeIndex + 1;
-      this.navigateTo(this.activeIndex, this.savedID);
-    }
-    else if (activeIndex == 7) {
       this.activeIndex = activeIndex + 1;
       this.navigateTo(this.activeIndex, this.savedID);
     }
@@ -349,9 +349,9 @@ export class SaoProductDefinitionStepperComponent {
       this.translate.get('Loantransactionconstant.CHARGES').subscribe((text: string) => {
         this.charges = text;
       });
-      this.translate.get('Loantransactionconstant.PURPOSE').subscribe((text: string) => {
-        this.purpose = text;
-      });
+      // this.translate.get('Loantransactionconstant.PURPOSE').subscribe((text: string) => {
+      //   this.purpose = text;
+      // });
       this.translate.get('Loantransactionconstant.REQUIRED_DOCUMENTS').subscribe((text: string) => {
         this.reqiredDocumentsDetails = text;
       });
@@ -373,9 +373,9 @@ export class SaoProductDefinitionStepperComponent {
           {
             label: this.charges
           },
-          {
-            label: this.purpose
-          },
+          // {
+          //   label: this.purpose
+          // },
           {
             label: this.reqiredDocumentsDetails
           },

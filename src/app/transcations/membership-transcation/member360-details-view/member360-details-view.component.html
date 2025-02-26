@@ -6,21 +6,19 @@
     </div>
     <div class="row g-3">
         <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 left-sidecard">
-            <div class="col-12 basic-view side-card-style">
+            <div class="col-12 memnbership-side-closure-card border-light">
                     <div class="col-12">
                         <h5 class="transaction-side-card-header">{{'MEMBERSHIP_TRANSACTION.OVERALL_ACCOUNT_DETAILS' | translate}}</h5>
                     </div>
-                    <div class="col-12 py-0">
+                    <div class="col-12 py-0 mb-3">
                         <p class="text-fontwt mb-2">{{'ERP.ADMISSION_DETAILS' | translate}}</p>
                         <p-dropdown [options]="admissionNumbersList" [filter]="true" placeholder="Please Enter Admission Number"
                             [(ngModel)]="admissionNumber" (onChange)="OnChangeAdmissionNumber(admissionNumber)"></p-dropdown>
                     </div>
-                    <div class="col-12 px-1" *ngIf="individualFlag">
-                    <div class="row" >
+                    <div class="col-12 p-0" *ngIf="individualFlag">
                         <!-- Admission No & Image-part -->
-                        <div class="col-xl-12 col-lg-12 col-md-3 col-sm-4 col-xs-4" >
                             <div class="col-12 pic-sig-status">
-                                <div class="d-flex justify-content-center mb-3">
+                                <div class="d-flex justify-content-center mb-2">
                                     <div *ngIf="!this.memberBasicDetailsModel.photoCopyPath"
                                         (click)="onClickMemberPhotoCopy()">
                                         <img src="assets/images/no-image.jpg" class="image-user cursor-pointer">
@@ -67,90 +65,69 @@
                                 <p class="font-semibold text-break">{{memberBasicDetailsModel.admissionNumber}}</p>
                             </div> -->
                             <div class="text-center min-h-50px">
-                                <span class="text-fontwt">{{'ERP.NAME' | translate}}</span>
-                                <p class="font-semibold text-break"><span
-                                        class="border-bottom">{{memberBasicDetailsModel.name}}</span></p>
+                                <p class="text-break view-member-name">{{memberBasicDetailsModel.name}}</p>
+                                <div class="d-flex justify-content-center">
+                                    <div class="member-name-border"></div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
-                            <div class="row">
-                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                    <span class="basicdata-icons icon-size"><i class="fa fa-id-card-o"></i></span>
-                                    <div>
+                        <div class="row px-2">
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
                                         <p class="label-view text-fontwt">{{'ERP.MEMBER_TYPE' | translate}}</p>
                                         <p class="label-input-text">{{memberBasicDetailsModel.memberTypeName}}</p>
-                                    </div>
                                 </div>
-                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                    <span class="basicdata-icons icon-size"><i class="fa fa-calendar"></i></span>
-                                    <div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
                                         <p class="label-view text-fontwt">{{'ERP.ADMISSION_DATE' | translate}}</p>
                                         <p class="label-input-text">{{memberBasicDetailsModel.admissionDateVal}}</p>
-                                    </div>
                                 </div>
-                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                    <span class="basicdata-icons icon-size"><i class="fa fa-calendar"></i></span>
-                                    <div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
                                         <p class="label-view text-fontwt">{{'ERP.DATE_OF_BIRTH' | translate}} &
                                             {{'ERP.AGE' |
                                             translate}}</p>
                                         <p class="label-input-text">{{memberBasicDetailsModel.memDobVal}} & {{
                                             memberBasicDetailsModel.age }}</p>
-                                    </div>
                                 </div>
-                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                    <span class="basicdata-icons icon-size"><i class="fa fa-phone-square"></i></span>
-                                    <div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
                                         <p class="label-view text-fontwt">{{'ERP.MOBILE_NUMBER' | translate}}</p>
                                         <p class="label-input-text">{{memberBasicDetailsModel.mobileNumber}}</p>
-                                    </div>
                                 </div>
-                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                    <span class="basicdata-icons icon-size"><i class="fa fa-envelope"></i></span>
-                                    <div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
                                         <p class="label-view text-fontwt">{{'ERP.EMAIL' | translate}}</p>
                                         <p class="label-input-text">{{memberBasicDetailsModel.emailId}}</p>
-                                    </div>
                                 </div>
-                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                    <span class="basicdata-icons icon-size"><i class="fa fa-address-card-o"></i></span>
-                                    <div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
                                         <p class="label-view text-fontwt">{{'ERP.AADHAR_NO' | translate}}</p>
                                         <p class="label-input-text">{{memberBasicDetailsModel.aadharNumber}}</p>
-                                    </div>
                                 </div>
-                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                    <span class="basicdata-icons icon-size"><i class="fa fa-address-card-o"></i></span>
-                                    <div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
                                         <p class="label-view text-fontwt">{{'ERP.PAN_NO' | translate}}</p>
                                         <p class="label-input-text">{{memberBasicDetailsModel.panNumber}}</p>
-                                    </div>
                                 </div>
-                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                    <div class="col-10 d-flex p-0">
-                                        <span class="basicdata-icons icon-size"><i
-                                                class="fa fa-check-circle-o"></i></span>
-                                        <div>
-                                            <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
-                                            <p class="label-input-text">{{isKycApproved}}</p>
-                                        </div>
-                                    </div>
+                                <!-- KYC Approved -->
+                                <!-- <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
+                                    <div class="col-10 d-flex">
+                                    <div>
+                                    <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
+                                    <p class="label-input-text">{{isKycApproved}}</p>
                                 </div>
+                                    </div>
+                                    <div><img src="assets/images/verify.png" alt="" class="verifykyc mt-2"></div>
+                                </div> -->
+                                    <!-- KYC Not Approved -->
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
+                                        <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
+                                        <p class="label-input-text">{{isKycApproved}}</p>
+                                    </div>
                                 <div class="col-12 color-light justify-content-end text-right">
                                     <a class="fst-italic text-light cursor-pointer"
                                         (click)="onClickMemberIndividualMoreDetails()">{{'ERP.MORE_DETAILS' |
                                         translate}}</a>
                                 </div>
-                            </div>
-                        </div>
+                                </div>
                     </div>
-                </div>
-                <div class="col-12 px-1" *ngIf="groupFlag">
-                    <div class="row">
+                <div class="col-12 p-0" *ngIf="groupFlag">
                         <!-- Admission No & Image-part -->
-                        <div class="col-xl-12 col-lg-12 col-md-3 col-sm-4 col-xs-4">
                             <div class="col-12 pic-sig-status">
-                                <div class="d-flex justify-content-center mb-3" (click)="onClickGroupPhotoCopy()">
+                                <div class="d-flex justify-content-center mb-2" (click)="onClickGroupPhotoCopy()">
                                     <img src="assets/images/no-image.jpg" class="image-user cursor-pointer">
                                     <!-- <p class="active-status"></p> -->
                                     <img src="assets/images/no-image.jpg" class="image-sign cursor-pointer">
@@ -161,84 +138,53 @@
                                 <p class="font-semibold text-break">{{memberGroupBasicDetails.admissionNumber}}</p>
                             </div> -->
                             <div class="text-center min-h-50px">
-                                <span class="text-fontwt">{{'ERP.NAME' | translate}}</span>
-                                <p class="font-semibold text-break"><span
-                                        class="border-bottom">{{memberGroupBasicDetails.name}}</span>
-                                </p>
+                                <p class="text-break view-member-name">{{memberGroupBasicDetails.name}}</p>
+                                <div class="d-flex justify-content-center">
+                                    <div class="member-name-border"></div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
-                            <div class="row">
-                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                    <span class="basicdata-icons icon-size"><i class="fa fa-id-card-o"></i></span>
-                                    <div>
+                            <div class="row px-2">
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
                                         <p class="label-view text-fontwt">{{'ERP.MEMBER_TYPE' | translate}}</p>
                                         <p class="label-input-text">{{memberGroupBasicDetails.memberTypeName}}</p>
-                                    </div>
                                 </div>
-                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                    <span class="basicdata-icons icon-size"><i class="fa fa-calendar"></i></span>
-                                    <div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
                                         <p class="label-view text-fontwt">{{'ERP.ADMISSION_DATE' | translate}}</p>
                                         <p class="label-input-text">{{memberGroupBasicDetails.admissionDateVal}}</p>
-                                    </div>
                                 </div>
-                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                    <span class="basicdata-icons icon-size"><i class="fa fa-calendar"></i></span>
-                                    <div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
                                         <p class="label-view text-fontwt">{{'ERP.REGISTERED_DATE' | translate}}</p>
                                         <p class="label-input-text">{{memberGroupBasicDetails.registrationDateVal}}</p>
-                                    </div>
                                 </div>
-                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                    <span class="basicdata-icons icon-size"><i class="fa fa-id-card-o"></i></span>
-                                    <div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
                                         <p class="label-view text-fontwt">{{'ERP.POC_NAME' | translate}}</p>
                                         <p class="label-input-text">{{memberGroupBasicDetails.pocName}}</p>
-                                    </div>
                                 </div>
-                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                    <span class="basicdata-icons icon-size"><i class="fa fa-phone-square"></i></span>
-                                    <div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
                                         <p class="label-view text-fontwt">{{'ERP.POC_MOBILE_NO' | translate}}</p>
                                         <p class="label-input-text">{{memberGroupBasicDetails.pocNumber}}</p>
-                                    </div>
                                 </div>
-                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                    <span class="basicdata-icons icon-size"><i class="fa fa-address-card-o"></i></span>
-                                    <div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
                                         <p class="label-view text-fontwt">{{'ERP.PAN_NO' | translate}}</p>
                                         <p class="label-input-text">{{memberGroupBasicDetails.panNumber}}</p>
-                                    </div>
                                 </div>
-                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                    <span class="basicdata-icons icon-size"><i class="fa fa-address-card-o"></i></span>
-                                    <div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
                                         <p class="label-view text-fontwt">{{'ERP.TAN_NO' | translate}}</p>
                                         <p class="label-input-text">{{memberGroupBasicDetails.tanNumber}}</p>
-                                    </div>
                                 </div>
                                 <!-- KYC Approved -->
-                                <!-- <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                    <div class="col-10 d-flex p-0">
-                                        <span class="basicdata-icons icon-size"><i
-                                                class="fa fa-check-circle-o"></i></span>
-                                        <div>
+                                <!-- <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
+                                    <div class="col-10 d-flex">
+                                        
                                             <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                             <p class="label-input-text">{{isKycApproved}}</p>
-                                        </div>
                                     </div>
                                     <div><img src="assets/images/verify.png" alt="" class="verifykyc mt-2"></div>
                                 </div> -->
                                 <!-- KYC Not Approved -->
-                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                        <div class="col-10 d-flex p-0">
-                                            <span class="basicdata-icons icon-size"><i class="fa fa-check-circle-o"></i></span>
-                                            <div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
                                                 <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                                 <p class="label-input-text">{{isKycApproved}}</p>
-                                            </div>
-                                        </div>
                                         </div>
                                 <div class="col-12 color-light justify-content-end text-right">
                                     <a class="fst-italic text-light cursor-pointer"
@@ -246,15 +192,11 @@
                                         translate}}</a>
                                 </div>
                             </div>
-                        </div>
-                    </div>
                 </div>
-                <div class="col-12 px-1" *ngIf="institutionFlag">
-                    <div class="row">
+                <div class="col-12 p-0" *ngIf="institutionFlag">
                         <!-- Admission No & Image-part -->
-                        <div class="col-xl-12 col-lg-12 col-md-3 col-sm-4 col-xs-4">
                             <div class="col-12 pic-sig-status">
-                                <div class="d-flex justify-content-center mb-3" (click)="onClickInstitutionPhotoCopy()">
+                                <div class="d-flex justify-content-center mb-2" (click)="onClickInstitutionPhotoCopy()">
                                     <img src="assets/images/no-image.jpg" class="image-user cursor-pointer">
                                     <!-- <p class="active-status"></p> -->
                                     <img src="assets/images/no-image.jpg" class="image-sign cursor-pointer">
@@ -265,99 +207,65 @@
                                 <p class="font-semibold text-break">{{institutionBasicDetailsModel.admissionNumber}}</p>
                             </div> -->
                             <div class="text-center min-h-50px">
-                                <span class="text-fontwt">{{'ERP.NAME' | translate}}</span>
-                                <p class="font-semibold text-break"><span
-                                        class="border-bottom">{{institutionBasicDetailsModel.name}}</span>
-                                </p>
+                                <p class="text-break view-member-name">{{institutionBasicDetailsModel.name}}</p>
+                                <div class="d-flex justify-content-center">
+                                    <div class="member-name-border"></div>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-3">
-                            <div class="row">
-                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                    <span class="basicdata-icons icon-size"><i class="fa fa-id-card-o"></i></span>
-                                    <div>
+                            <div class="row px-2">
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
                                         <p class="label-view text-fontwt">{{'ERP.MEMBER_TYPE' | translate}}</p>
                                         <p class="label-input-text">{{institutionBasicDetailsModel.memberTypeName}}</p>
-                                    </div>
                                 </div>
-                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                    <span class="basicdata-icons icon-size"><i class="fa fa-calendar"></i></span>
-                                    <div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
                                         <p class="label-view text-fontwt">{{'ERP.ADMISSION_DATE' | translate}}</p>
                                         <p class="label-input-text">{{institutionBasicDetailsModel.admissionDateVal}}
                                         </p>
-                                    </div>
                                 </div>
-                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                    <span class="basicdata-icons icon-size"><i class="fa fa-calendar"></i></span>
-                                    <div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
                                         <p class="label-view text-fontwt">{{'ERP.REGISTERED_DATE' | translate}}</p>
                                         <p class="label-input-text">{{institutionBasicDetailsModel.registrationDateVal}}
                                         </p>
-                                    </div>
                                 </div>
-                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                    <span class="basicdata-icons icon-size"><i class="fa fa-id-card-o"></i></span>
-                                    <div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
                                         <p class="label-view text-fontwt">{{'ERP.POC_NAME' | translate}}</p>
                                         <p class="label-input-text">{{institutionBasicDetailsModel.pocName}}</p>
-                                    </div>
                                 </div>
-                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                    <span class="basicdata-icons icon-size"><i class="fa fa-phone-square"></i></span>
-                                    <div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
                                         <p class="label-view text-fontwt">{{'ERP.POC_MOBILE_NO' | translate}}</p>
                                         <p class="label-input-text">{{institutionBasicDetailsModel.pocNumber}}</p>
-                                    </div>
                                 </div>
-                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                    <span class="basicdata-icons icon-size"><i class="fa fa-address-card-o"></i></span>
-                                    <div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
                                         <p class="label-view text-fontwt">{{'ERP.PAN_NO' | translate}}</p>
                                         <p class="label-input-text">{{institutionBasicDetailsModel.panNumber}}</p>
-                                    </div>
                                 </div>
-                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                    <span class="basicdata-icons icon-size"><i class="fa fa-address-card-o"></i></span>
-                                    <div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
                                         <p class="label-view text-fontwt">{{'ERP.TAN_NO' | translate}}</p>
                                         <p class="label-input-text">{{institutionBasicDetailsModel.tanNumber}}</p>
-                                    </div>
                                 </div>
                                 <!-- KYC Approved -->
-                                <!-- <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                <!-- <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
                                     <div class="col-10 d-flex p-0">
-                                        <span class="basicdata-icons icon-size"><i
-                                                class="fa fa-check-circle-o"></i></span>
-                                        <div>
+                                        
                                             <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                             <p class="label-input-text">{{isKycApproved}}</p>
-                                        </div>
                                     </div>
                                     <div><img src="assets/images/verify.png" alt="" class="verifykyc mt-2"></div>
                                 </div> -->
                                 <!-- KYC Not Approved -->
-                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                    <div class="col-10 d-flex p-0">
-                                        <span class="basicdata-icons icon-size"><i
-                                                class="fa fa-check-circle-o"></i></span>
-                                        <div>
+                                <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
                                             <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                             <p class="label-input-text">{{isKycApproved}}</p>
-                                        </div>
-                                    </div>
                                 </div>
                                 <div class="col-12 color-light justify-content-end text-right">
                                     <a class="fst-italic text-light cursor-pointer"
                                         (click)="viewMoreInstitutionDetails()">{{'ERP.MORE_DETAILS' | translate}}</a>
                                 </div>
                             </div>
+                            </div>
                         </div>
-                    </div>
             </div>
-        </div>
-        </div>
        
         <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10 right-sidecard">
             <div class="col-12 bg-card p-3">
@@ -916,6 +824,42 @@
     <!-- <div class="col-12">
         <div class="d-flex justify-content-end">
             <p-button class="action-edit" label="{{'ERP.CLOSE' | translate}}" (click)="closePhoto()"></p-button>
+        </div>
+    </div> -->
+</p-dialog>
+<!--Group photo Copy dialog -->
+<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [modal]="true" [(visible)]="groupPhotoCopyZoom" styleClass="photo-dialog">
+    <div class="col-12 px-0">
+        <div class="row">
+            <div class="col-6">
+                <img src="assets/images/no-image.jpg" class="popup-images">
+            </div>
+            <div class="col-6">
+                <img src="assets/images/no-image.jpg" class="popup-images">
+            </div>
+        </div>
+    </div>
+                <!-- <div class="col-12">
+                    <div class="d-flex justify-content-end">
+        <p-button class="action-edit" label="{{'ERP.CLOSE' | translate}}" (click)="closePhoto()"></p-button>
+        </div>
+    </div> -->
+</p-dialog>
+<!--Institution photo Copy dialog -->
+<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [modal]="true" [(visible)]="institutionPhotoCopyZoom" styleClass="photo-dialog">
+    <div class="col-12 px-0">
+        <div class="row">
+            <div class="col-6">
+                <img src="assets/images/no-image.jpg" class="popup-images">
+            </div>
+            <div class="col-6">
+                <img src="assets/images/no-image.jpg" class="popup-images">
+            </div>
+        </div>
+    </div>
+                <!-- <div class="col-12">
+                    <div class="d-flex justify-content-end">
+        <p-button class="action-edit" label="{{'ERP.CLOSE' | translate}}" (click)="closePhoto()"></p-button>
         </div>
     </div> -->
 </p-dialog>

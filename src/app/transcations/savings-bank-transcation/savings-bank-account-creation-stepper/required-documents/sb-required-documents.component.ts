@@ -42,6 +42,7 @@ export class SbRequiredDocumentsComponent implements OnInit {
   requiredDocumentsNamesText: any;
   mandatoryDoxsTextShow: boolean = false;
   multipartFileList: any [] =[];
+  accountNumber: any;
 ;
   kyc: any;
   checked: any;
@@ -403,6 +404,9 @@ export class SbRequiredDocumentsComponent implements OnInit {
             } 
             if(this.responseModel.data[0].admissionNumber != null && this.responseModel.data[0].admissionNumber != undefined){
               this.admissionNumber = this.responseModel.data[0].admissionNumber;
+            }
+            if(this.responseModel.data[0].accountNumber != null && this.responseModel.data[0].accountNumber != undefined){
+              this.accountNumber = this.responseModel.data[0].accountNumber;
             }
             if(this.responseModel.data[0].memberTypeName != null && this.responseModel.data[0].memberTypeName != undefined){
               this.memberTypeName = this.responseModel.data[0].memberTypeName;

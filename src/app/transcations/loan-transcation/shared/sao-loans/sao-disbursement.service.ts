@@ -33,4 +33,9 @@ export class SaoDisbursementService {
     let headers = new HttpHeaders({ 'id': id + '' })
     return this.commonHttpService.getById(headers,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.SAO_DISBURSEMENT + ERP_TRANSACTION_CONSTANTS.GET_DISBURSHMENT_LIST_APPLICATION_ID);
   }
+
+  getSaoLoanDisbursementScheduleByLoanApplicationId(id: string) {
+    let headers = new HttpHeaders({ 'id': id + '' })
+    return this.commonHttpService.getById(headers,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.SAO_LOAN_DISBURSEMENT_SCHEDULE + ERP_TRANSACTION_CONSTANTS.GET_SAO_LOAN_DISBURSEMENT_SCHEDULE_BY_LOAN_APPLICATION_ID);
+  }
 }

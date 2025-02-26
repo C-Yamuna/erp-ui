@@ -418,7 +418,7 @@ export class TermLoanPreviewComponent {
       }
     }
     submit(){
-      this.termLoanApplicationModel.accountStatusName = applicationConstants.SUBMISSION_FOR_APPROVAL;
+      this.termLoanApplicationModel.statusName = applicationConstants.SUBMISSION_FOR_APPROVAL;
       this.termLoanApplicationsService.updateTermApplication(this.termLoanApplicationModel).subscribe((response: any) => {
         this.responseModel = response;
         if (this.responseModel != null && this.responseModel != undefined) {

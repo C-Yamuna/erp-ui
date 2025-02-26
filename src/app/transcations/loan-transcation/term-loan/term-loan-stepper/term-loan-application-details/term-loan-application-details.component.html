@@ -5,8 +5,7 @@
         </div>
 
         <div class="col-6 text-end">
-            <a (click)="productViewPopUp()" class="text-end cursor-pointer">View
-                Product Details</a>
+            <a (click)="productOnChange(termLoanApplicationModel.termProductId)" class="text-end cursor-pointer">View Product Details</a>
         </div>
     </div>
     <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
@@ -22,8 +21,8 @@
                         </label>
                         <p-dropdown placeholder="Select" [options]="productsList" formControlName="termProductId"
                             [(ngModel)]="termLoanApplicationModel.termProductId" [disabled]="isProductDisable"
-                            (onChange)="getProductDefinitionByProductIdAndApplicationDate(termLoanApplicationModel.termProductId)"
-                            (onChange)="getAllLoanPurpose(termLoanApplicationModel.termProductId)" >
+                            (onChange)="getProductDefinitionByProductId(termLoanApplicationModel.termProductId)"
+                            (onChange)="getAllLoanPurpose(termLoanApplicationModel.termProductId)"  >
                         </p-dropdown>
                     </div>
                 </div>
@@ -72,55 +71,6 @@
                             [disabled]="applicationType" (onChange)="onChangeAccountType()"></p-dropdown>
                     </div>
                 </div>
-
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                    <div class="form-label">
-                        <label for="username">
-                            <span class="red">*</span>{{'ERP.ROI' | translate}}
-                        </label>
-                        <input pInputText id="bunit_txt_name" type="text" formControlName="roi"
-                            [(ngModel)]="termLoanApplicationModel.effectiveRoi" placeholder="Enter ROI">
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                    <div class="form-label">
-                        <label for="username">
-                            <span class="red">*</span>{{'ERP.PENAL_ROI' | translate}}
-                        </label>
-                        <input pInputText id="bunit_txt_name" type="text" formControlName="penalRoi"
-                            [(ngModel)]="termLoanApplicationModel.penalInterest" placeholder="Enter Penal ROI">
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                    <div class="form-label">
-                        <label for="username">
-                            <span class="red">*</span>{{'ERP.IOD' | translate}}
-                        </label>
-                        <input pInputText id="bunit_txt_name" type="text" formControlName="iod"
-                            [(ngModel)]="termLoanApplicationModel.iod" placeholder="Enter IOD">
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                    <div class="form-label">
-                        <label for="username">
-                            <span class="red">*</span>{{'ERP.REPAYMENT_FREQUENCY' | translate}}
-                        </label>
-                        <input pInputText id="bunit_txt_name" type="text" formControlName="repaymentFrequency"
-                            [(ngModel)]="termLoanApplicationModel.repaymentFrequencyName">
-                    </div>
-                </div>
-
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                    <div class="form-label">
-                        <label for="username">
-                            <span class="red">*</span>{{'ERP.INCOME_PER_MONTH' | translate}}
-                        </label>
-                        <p-inputNumber id="bunit_txt_name" formControlName="monthlyIncome"
-                            [(ngModel)]="termLoanApplicationModel.monthlyIncome" mode="currency" inputId="currency-india"
-                            currency="INR" locale="en-IN">
-                        </p-inputNumber>
-                    </div>
-                </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label for="code">
@@ -138,7 +88,7 @@
                         </label>
                         <p-inputNumber id="bunit_txt_name" formControlName="requestedAmount"
                             [(ngModel)]="termLoanApplicationModel.requestedAmount" mode="currency"
-                            inputId="currency-india" currency="INR" locale="en-IN">
+                            inputId="currency-india" currency="INR" locale="en-IN"  >
                         </p-inputNumber>
                     </div>
                 </div>
@@ -168,20 +118,6 @@
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label for="username">
-                            <span class="red">*</span>{{'LOANS.PLANNED_DISBURSEMENTS' | translate}}
-                        </label>
-                        <input pInputText id="bunit_txt_name" type="text" formControlName="plannedDisbursements" pKeyFilter="int"
-                            [(ngModel)]="termLoanApplicationModel.plannedDisbursements"
-                            placeholder="Enter No of Planned Disbursements" (focusout)="checkPlannedDisbursement()"
-                            >
-                            <!-- <p-message severity="error" text="Enter Planned Disbursements"
-                            *ngIf="!termLoanapplicationForm.controls['plannedDisbursements'].valid && termLoanapplicationForm.controls['plannedDisbursements'].dirty">
-                        </p-message> Condition to disable input -->
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                    <div class="form-label">
-                        <label for="username">
                             <span class="red">*</span>{{'LOANS.LOAN_PERIOD_IN_MONTHS' | translate}}
                         </label>
                         <input pInputText id="bunit_txt_name" type="text" formControlName="loanPeriod"
@@ -189,6 +125,87 @@
                             (focusout)="onSelectPeriodInMonths(termLoanApplicationModel.loanPeriod)">
                     </div>
                 </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label for="username">
+                            <span class="red">*</span>{{'LOANS.GRACE_PERIOD' | translate}}
+                        </label>
+                        <input pInputText id="bunit_txt_name" type="text" formControlName="graceperiod"
+                            [(ngModel)]="termLoanApplicationModel.graceperiod" placeholder=""
+                            (focusout)="onSelectPeriodInMonths(termLoanApplicationModel.graceperiod)">
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label for="username">
+                            <span class="red">*</span>{{'ERP.REPAYMENT_FREQUENCY' | translate}}
+                        </label>
+                        <!-- <input pInputText id="bunit_txt_name" type="text" formControlName="repaymentFrequency"
+                            [(ngModel)]="termLoanApplicationModel.repaymentFrequencyName"> -->
+                            <p-dropdown placeholder="Select" [options]="repaymentFrequencyList"
+                            formControlName="repaymentFrequency" (onChange)="onChangeRepayment($event)"
+                            [(ngModel)]="termLoanApplicationModel.repaymentFrequency">
+                        </p-dropdown>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label for="username">
+                            <span class="red">*</span>{{'ERP.ROI' | translate}}
+                        </label>
+                        <input pInputText id="bunit_txt_name" type="text" formControlName="roi"
+                            [(ngModel)]="termLoanApplicationModel.effectiveRoi" placeholder="Enter ROI">
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label for="username">
+                            <span class="red">*</span>{{'ERP.PENAL_ROI' | translate}}
+                        </label>
+                        <input pInputText id="bunit_txt_name" type="text" formControlName="penalRoi"
+                            [(ngModel)]="termLoanApplicationModel.penalInterest" placeholder="Enter Penal ROI">
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label for="username">
+                            <span class="red">*</span>{{'ERP.IOD' | translate}}
+                        </label>
+                        <input pInputText id="bunit_txt_name" type="text" formControlName="iod"
+                            [(ngModel)]="termLoanApplicationModel.iod" placeholder="Enter IOD">
+                    </div>
+                </div>
+               
+
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label for="username">
+                            <span class="red">*</span>{{'ERP.INCOME_PER_ANNUAL' | translate}}
+                        </label>
+                        <p-inputNumber id="bunit_txt_name" formControlName="monthlyIncome"
+                            [(ngModel)]="termLoanApplicationModel.monthlyIncome" mode="currency" inputId="currency-india"
+                            currency="INR" locale="en-IN">
+                        </p-inputNumber>
+                    </div>
+                </div>
+               
+               
+              
+               
+                <!-- <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label for="username">
+                            <span class="red">*</span>{{'LOANS.PLANNED_DISBURSEMENTS' | translate}}
+                        </label>
+                        <input pInputText id="bunit_txt_name" type="text" formControlName="plannedDisbursements" pKeyFilter="int"
+                            [(ngModel)]="termLoanApplicationModel.plannedDisbursements"
+                            placeholder="Enter No of Planned Disbursements" (focusout)="checkPlannedDisbursement()"
+                            >
+                           
+                    </div>
+                </div> -->
+               
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label for="code">
@@ -291,13 +308,9 @@
                                     </span>
                                 </div>
                             </div>
-                            <p-button type="submit" (click)="saveAndUpdateApplicationDetails(termLoanApplicationModel)" label="Submit"
-                            [disabled]="!termLoanapplicationForm.valid || !insurenceDetailsForm.valid" iconPos="left"
-                            id="add_btn"></p-button>
+                          
 
-                            <p-button (click)="addTermLoanDisbursementSchedule()" label="{{ 'ADD' | translate }}"
-                                icon="fa fa-plus" iconPos="left" [disabled]="disableAddButton"
-                                id="bunit_bt_submit"></p-button>
+                          
                         </div>
                     </div>
                 </div>
@@ -311,111 +324,23 @@
                 [globalFilterFields]="[ 'disbursementOrder', 'typeName', 'disbursementDateVal', 'disbursementAmount', 'minMonthsForDisbursement','remarks']">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th><span class="red">*</span>{{'ERP.DISBURSEMENT_ORDER' | translate}}</th>
-                        <th><span class="red">*</span>{{'ERP.DISBURSEMENT_TYPE' | translate}}</th>
-                        <th><span class="red">*</span>{{'ERP.SCHEDULE_DATE' | translate}}</th>
-                        <th><span class="red">*</span>{{'ERP.MIN_AMOUNT' | translate}}</th>
-                        <th><span class="red">*</span>{{'ERP.MIN_MONTHS_FOR_DISBURSEMNT' | translate}}</th>
-                        <th>{{'ERP.REMARKS' | translate}}</th>
-                        <th class="width-15em">{{'ERP.ACTION' | translate}}</th>
+                        <th>{{'ERP.DISBURSEMENT_ORDER' | translate}}</th>
+                        <th>{{'ERP.DISBURSEMENT_TYPE' | translate}}</th>
+                        <th>{{'ERP.SCHEDULE_DATE' | translate}}</th>
+                        <th>{{'ERP.MIN_AMOUNT' | translate}}</th>
+                        <!-- <th>{{'ERP.MIN_MONTHS_FOR_DISBURSEMNT' | translate}}</th> -->
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-row let-editing="editing" let-ri="rowIndex">
-                    <tr [pEditableRow]="row">
-                        <td>
-                            <p-cellEditor>
-                                <ng-template pTemplate="input">
-                                    <input pInputText type="text" formControlName="disbursementOrder"
-                                        [(ngModel)]="row.disbursementOrder" [disabled]="true">
-                                </ng-template>
-                                <ng-template pTemplate="output">{{row.disbursementOrder}}</ng-template>
-                            </p-cellEditor>
-                        </td>
-                       
-                        <td>
-                            <p-cellEditor>
-                                <ng-template pTemplate="input">
-                                    <p-dropdown placeholder="{{'ERP.SELECT'| translate}}" formControlName="type"
-                                        [options]="disbursementTypesList" id="type" [(ngModel)]="row.type"
-                                        [appendTo]="'body'">
-                                    </p-dropdown>
-                                </ng-template>
-                                <ng-template pTemplate="output">
-                                    {{row.typeName}}
-                                </ng-template>
-                            </p-cellEditor>
-                        </td>
-
-
-                        <td>
-                            <p-cellEditor>
-                              <ng-template pTemplate="input">    
-                             <p-calendar formControlName="disbursementDate" 
-                             [showIcon]="true" 
-                             [dateFormat]="orgnizationSetting.calendar"
-                             [(ngModel)]="row.disbursementDateVal" 
-                             placeholder="DD/MM/YYYY"   [appendTo]="'body'">
-                         </p-calendar>
-                              </ng-template>
-                              <ng-template pTemplate="output">{{row.disbursementDateVal}}</ng-template>
-                            </p-cellEditor>
-                          </td>
-
-
-                        <td>
-                            <p-cellEditor>
-                                <ng-template pTemplate="input">
-                                    <input pInputText type="text" formControlName="disbursementAmount"
-                                        [(ngModel)]="row.disbursementAmount">
-                                </ng-template>
-                                <ng-template pTemplate="output">{{row.disbursementAmount}}</ng-template>
-                                <p-message severity="error" text="Enter Valid Amount"
-                                *ngIf="!disbursementForm.controls['disbursementAmount'].valid && disbursementForm.controls['disbursementAmount'].dirty">
-                            </p-message>
-                            </p-cellEditor>
-                        </td>
-                        <td>
-                            <p-cellEditor>
-                                <ng-template pTemplate="input">
-                                    <input pInputText type="text" formControlName="minMonthsForDisbursement"
-                                        [(ngModel)]="row.minMonthsForDisbursement">
-                                </ng-template>
-                                <ng-template pTemplate="output">{{row.minMonthsForDisbursement}}</ng-template>
-                                <p-message severity="error" text="Enter Valid Numbers"
-                                *ngIf="!disbursementForm.controls['minMonthsForDisbursement'].valid && disbursementForm.controls['minMonthsForDisbursement'].dirty">
-                            </p-message>
-                            </p-cellEditor>
-                        </td>
-                       
-                        <td>
-                            <p-cellEditor>
-                                <ng-template pTemplate="input">
-                                    <input pInputText type="text" formControlName="remarks" [(ngModel)]="row.remarks">
-                                </ng-template>
-                                <ng-template pTemplate="output">{{row.remarks}}</ng-template>
-                            </p-cellEditor>
-                        </td>
-
-                        <td>
-                            <div class="global-action-btn flex align-items-center justify-content-center">
-                                <p-button label="{{'ERP.SAVE'|translate }}" *ngIf="editing"
-                                    [disabled]="!disbursementForm.valid" (click)="saveTermLoanDisbursementSchedule(row)"
-                                    pSaveEditableRow id="prj_stakehlder_bt_cancel" class="action-save">
-                                </p-button>
-                                <p-button label="{{'ERP.CANCEL'|translate }}" *ngIf="editing" pCancelEditableRow
-                                    id="prj_stakehlder_bt_cancel" class="action-cancel"
-                                    (click)="cancelTermLoanDisbursementSchedule()">
-                                </p-button>
-                                <p-button label="{{'ERP.EDIT' | translate}}" *ngIf="!editing" pInitEditableRow
-                                    [disabled]="editDeleteDisable" (click)="editTermLoanDisbursementSchedule(row)"
-                                    id="prj_stakehlder_bt_edit" class="action-edit"></p-button>
-                                <p-button label="{{'ERP.DELETE' | translate}}" *ngIf="!editing"
-                                    [disabled]="editDeleteDisable" (click)="deleteTermLoanDisbursementSchedule(row)"
-                                    id="prj_stakehlder_bt_edit" class="action-delete"></p-button>
-                            </div>
-                        </td>
+                <ng-template pTemplate="body" let-rowData>
+                    <tr>
+                        <td>{{ rowData.disbursementOrder }}</td>
+                        <td>{{ rowData.typeName }}</td>
+                        <td>{{ rowData.disbursementDateVal }}</td>
+                        <td>{{ rowData.disbursementAmount }}</td>
+                        <!-- <td>{{ rowData.minMonthsForDisbursement }}</td> -->
                     </tr>
                 </ng-template>
+               
             </p-table>
         </form>
 
@@ -501,7 +426,7 @@
                                                             <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">
                                                                 <h6 class="label-view">{{'LOANS.LINK_SHARE_CAPITAL_APPLICABLE'
                                                                     |translate}}</h6>
-                                                                <p class="label-input-text"> {{ termLoanProductDefinitionModel.loanLinkedshareCapitalApplicable ? 'Yes' : '' }}
+                                                                <p class="label-input-text"> {{ termLoanProductDefinitionModel.loanLinkedshareCapitalApplicable  }}
                                                                 </p>
                                                             </div>
                                                             <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">
@@ -512,7 +437,7 @@
                                                             <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">
                                                                 <h6 class="label-view">{{'LOANS.IS_INSURANCE_APPLICABLE'
                                                                     |translate}}</h6>
-                                                                <p class="label-input-text"> {{ termLoanProductDefinitionModel.isInsuranceAppicable ? 'Yes' : '' }}
+                                                                <p class="label-input-text"> {{ termLoanProductDefinitionModel.isInsuranceAppicable  }}
                                                                 </p>
                                                             </div>
                                                             <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px">
@@ -826,6 +751,97 @@
                                                                 <td>{{ rowData.documentTypeName }}</td>
                                                                 <td>{{ rowData.isRequired ? 'Yes' : 'No' }}</td>
                                                               
+                                                            </tr>
+                                                        </ng-template>
+                                                    </p-table>
+                                                    <div class="col-12 margtop-3rem"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 p-1"></div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div class="col-12 p-0">
+                                            <div class=" global-card-bg-color view-carddata icon-size">
+                                                <div class="col-12">
+                                                    <div class="row">
+                                                        <div class="col-9">
+                                                            <div class="d-flex">
+                                                                <span class="card-icon"><i class="fa fa-file-text"></i></span>
+                                                                <h6 class="sub-heading">
+                                                                    {{'LOANS.VISIT_DETAILS' |translate}}</h6>
+                                                            </div>
+                                                        </div>
+                                                       
+                                                    </div>
+            
+                                                    <div class="globel-border-top-color"></div>
+                                                    <p-table [value]="fieldvisitList" dataKey="id" selectionMode="single"
+                                                        styleClass="p-datatable-striped"
+                                                        [showJumpToPageDropdown]="true" [showPageLinks]="false" [rows]="5"
+                                                        [paginator]="false" [pageLinks]="1" [responsive]="true"
+                                                        rowExpandMode="single">
+                                                        <ng-template pTemplate="header">
+                                                            <tr>
+                                                                <th><span class="red">*</span> {{'LOANS.VISIT_NUMBER' | translate}}</th>
+                                                                <th><span class="red">*</span> {{'ERP.TENURE_TYPE' | translate}}</th>
+                                                                <th><span class="red">*</span> {{'ERP.TENURE' | translate}}</th>
+                                                                <th><span class="red">*</span> {{'LOANS.IS_MANDATORY' | translate}}</th>
+                                                                <th><span class="red">*</span> {{'LOANS.VISIT_ROLES' | translate}}</th>
+                                                            </tr>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="body" let-rowData>
+                                                            <tr>
+                                                                <td>{{ rowData.visitNumber }}</td>
+                                                                <td>{{ rowData.tenureTypeName }}</td>
+                                                                <td>{{ rowData.visitTenure }}</td>
+                                                                <td>{{ rowData.isMandatory ? 'Yes' : 'No' }}</td>
+                                                                <td>{{ rowData.visitRoleNames }}</td>
+                                                            </tr>
+                                                        </ng-template>
+                                                    </p-table>
+                                                    <div class="col-12 margtop-3rem"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+            
+                                    <div class="col-12 p-1"></div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div class="col-12 p-0">
+                                            <div class=" global-card-bg-color view-carddata icon-size">
+                                                <div class="col-12">
+                                                    <div class="row">
+                                                        <div class="col-9">
+                                                            <div class="d-flex">
+                                                                <span class="card-icon"><i class="fa fa-file-text"></i></span>
+                                                                <h6 class="sub-heading">
+                                                                    {{'ERP.DISBURSEMENT_SCHEDULE' |translate}}</h6>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    </div>
+            
+                                                    <div class="globel-border-top-color"></div>
+                                                    <p-table [value]="disbursementlist" dataKey="id" selectionMode="single"
+                                                        styleClass="p-datatable-striped"
+                                                        [showJumpToPageDropdown]="true" [showPageLinks]="false" [rows]="5"
+                                                        [paginator]="false" [pageLinks]="1" [responsive]="true"
+                                                        rowExpandMode="single">
+                                                        <ng-template pTemplate="header">
+                                                            <tr>
+                                                                <th><span class="red">*</span> {{'LOANS.VISIT_NUMBER' | translate}}</th>
+                                                                <th><span class="red">*</span> {{'ERP.TENURE_TYPE' | translate}}</th>
+                                                                <th><span class="red">*</span> {{'ERP.TENURE' | translate}}</th>
+                                                                <th><span class="red">*</span> {{'LOANS.DISBURSMENT_PERCENTAGE' | translate}}</th>
+                                                            </tr>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="body" let-rowData>
+                                                            <tr>
+                                                                <td>{{ rowData.visitNumber }}</td>
+                                                                <td>{{ rowData.tenureTypeName }}</td>
+                                                                <td>{{ rowData.visitTenure }}</td>
+                                                                <td>{{ rowData.disbursementPercentage }}</td>
                                                             </tr>
                                                         </ng-template>
                                                     </p-table>

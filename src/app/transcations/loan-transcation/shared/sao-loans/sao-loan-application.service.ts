@@ -4,6 +4,7 @@ import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-
 import { CommonHttpService } from 'src/app/shared/common-http.service';
 import { BehaviorSubject } from 'rxjs';
 import { CommonFunctionsService } from 'src/app/shared/commonfunction.service';
+import { Configuration } from 'src/app/configurations/configurations-constants';
 
 export type stepperDataModel = {
   formValid?: boolean,
@@ -65,7 +66,9 @@ export class SaoLoanApplicationService {
   getAllLoanPurposes(){
     return this.commonHttpService.getAll(ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.LOAN_PURPOSES + ERP_TRANSACTION_CONSTANTS.GET_ALL);
   }
-
+  getAllAccountTypes() {
+    return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.ACCOUNTS_TYPES + ERP_TRANSACTION_CONSTANTS.GET_ALL);
+  }
   getInsurenceDetailsByApplicationId(id: any){
     let headers = new HttpHeaders({ 'id': id + '' })
     return this.commonHttpService.getById(headers,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.SAO_LOAN_INSURANCE_DETAILS + ERP_TRANSACTION_CONSTANTS.GET_INSURENCE_DETAILS_BY_APPLICATION_ID);

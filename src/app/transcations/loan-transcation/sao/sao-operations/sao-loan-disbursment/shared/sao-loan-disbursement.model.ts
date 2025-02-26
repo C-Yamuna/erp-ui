@@ -44,4 +44,6 @@ export class SaoLoanDisbursement {
     paymentModeName: any;
 
     sbAccountNumber: any;
+
+    dueDisbursmentDateVal: any;
 }

@@ -13,6 +13,7 @@ import { termdeposittransactionconstant } from '../term-deposit-transaction-cons
 import { DatePipe } from '@angular/common';
 import { ERP_TRANSACTION_CONSTANTS } from '../../erp-transaction-constants';
 import { FileUploadService } from 'src/app/shared/file-upload.service';
+import { CommonStatusData } from '../../common-status-data.json';
 
 @Component({
   selector: 'app-recurring-deposit',
@@ -36,15 +37,21 @@ export class RecurringDepositComponent {
   gridListData: any[] = [];
   msgs: any[] = [];
   orgnizationSetting: any;
-  showForm: boolean=false;
+  showForm: boolean = false;
   memberphotCopyMultipartFileList: any[] = [];
   memberPhotoCopyZoom: any;
+  createdCount: any;
+  submissionForApprovalCount: any;
+  approvedCount: any;
+  requestForResubmmissionCount: any;
+  rejectCount: any;
+  inProgressCount: any;
 
   constructor(private router: Router, private translate: TranslateService,
     private commonComponent: CommonComponent, private encryptDecryptService:
       EncryptDecryptService, private commonFunctionsService: CommonFunctionsService,
-      private datePipe: DatePipe,
-      private fileUploadService : FileUploadService,
+    private datePipe: DatePipe,
+    private fileUploadService: FileUploadService,
     private rdAccountsService: RdAccountsService) { }
 
   ngOnInit() {
@@ -63,9 +70,9 @@ export class RecurringDepositComponent {
       // { label: "Interest Payment", value: 1 },
       { label: "Foreclosure/Closure", value: 1 },
       // { label: "Closure", value: 3 },
-      { label: "Renewal", value: 2 },
-
+      // { label: "Renewal", value: 2 },
     ]
+    
     this.termdeposits = [
       { field: 'adminssionNumber', header: 'TERMDEPOSITSTRANSACTION.ADMINSSION_NUMBER' },
       { field: 'accountNumber', header: 'TERMDEPOSITSTRANSACTION.ACCOUNT_NUMBER' },
@@ -75,7 +82,7 @@ export class RecurringDepositComponent {
       { field: 'depositAmount', header: 'TERMDEPOSITSTRANSACTION.DEPOSIT_AMOUNT' },
       { field: 'depositDate', header: 'TERMDEPOSITSTRANSACTION.DEPOSIT_DATE' },
       { field: 'roi', header: 'TERMDEPOSITSTRANSACTION.ROI' },
-      { field: 'accountStatusName', header: 'TERMDEPOSITSTRANSACTION.STATUS' },
+      { field: 'statusName', header: 'TERMDEPOSITSTRANSACTION.STATUS' },
     ];
 
     let tabLabels = [
@@ -98,21 +105,21 @@ export class RecurringDepositComponent {
   }
 
 
-  navigateToOperations(event: any,rowData:any) {
-  //   if (event.value === 1)
-  // this.router.navigate([termdeposittransactionconstant.TERMDEPOSIT_INTEREST_PAYMENT]);
-  // else if (event.value === 2)
-  // this.router.navigate([termdeposittransactionconstant.TERMDEPOSIT_FORE_CLOSURE]);
-  // else if (event.value === 3)
-  // this.router.navigate([termdeposittransactionconstant.TERMDEPOSIT_CLOSURE]);
-  // else if (event.value === 4)
-  // this.router.navigate([termdeposittransactionconstant.TERMDEPOSIT_RENEWAL]);
-  if (event.value === 1)
-    this.router.navigate([termdeposittransactionconstant.RD_FORECLOSURE],{ queryParams: { id: this.encryptDecryptService.encrypt(rowData.id) }, });
-  else if (event.value === 2)
-    this.router.navigate([termdeposittransactionconstant.RD_RENEWAL],{ queryParams: { id: this.encryptDecryptService.encrypt(rowData.id) }, });
+  navigateToOperations(event: any, rowData: any) {
+    //   if (event.value === 1)
+    // this.router.navigate([termdeposittransactionconstant.TERMDEPOSIT_INTEREST_PAYMENT]);
+    // else if (event.value === 2)
+    // this.router.navigate([termdeposittransactionconstant.TERMDEPOSIT_FORE_CLOSURE]);
+    // else if (event.value === 3)
+    // this.router.navigate([termdeposittransactionconstant.TERMDEPOSIT_CLOSURE]);
+    // else if (event.value === 4)
+    // this.router.navigate([termdeposittransactionconstant.TERMDEPOSIT_RENEWAL]);
+    if (event.value === 1)
+      this.router.navigate([termdeposittransactionconstant.RD_FORECLOSURE], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id) }, });
+    // else if (event.value === 2)
+    // this.router.navigate([termdeposittransactionconstant.RD_RENEWAL],{ queryParams: { id: this.encryptDecryptService.encrypt(rowData.id) }, });
 
-}
+  }
 
   getGridListData() {
     this.commonComponent.startSpinner();
@@ -123,9 +130,9 @@ export class RecurringDepositComponent {
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         this.gridListData = this.responseModel.data;
         this.gridListData = this.gridListData.map(rd => {
-        if (rd.depositDate != null && rd.depositDate != undefined) {
-          rd.depositDate = this.datePipe.transform(rd.depositDate,this.orgnizationSetting.datePipe);
-        }
+          if (rd.depositDate != null && rd.depositDate != undefined) {
+            rd.depositDate = this.datePipe.transform(rd.depositDate, this.orgnizationSetting.datePipe);
+          }
           rd.multipartFileListForPhotoCopy = null;
           rd.multipartFileListForSignatureCopy = null;
           if (rd.memberPhotoCopyPath != null && rd.memberPhotoCopyPath != undefined && rd.isNewMember) {
@@ -150,8 +157,13 @@ export class RecurringDepositComponent {
           else {
             rd.signatureCopy = false;
           }
-        return rd;
-      });
+        // this.createdCount = this.gridListData.filter(fd => fd.statusName === CommonStatusData.CREATED).length;
+          this.inProgressCount = this.gridListData.filter(fd => fd.statusName === CommonStatusData.IN_PROGRESS).length;           this.submissionForApprovalCount = this.gridListData.filter(rd => rd.statusName === CommonStatusData.SUBMISSION_FOR_APPROVAL).length;
+          this.approvedCount = this.gridListData.filter(rd => rd.statusName === CommonStatusData.APPROVED).length;
+          this.requestForResubmmissionCount = this.gridListData.filter(rd => rd.statusName === CommonStatusData.REQUEST_FOR_RESUBMISSION).length;
+          this.rejectCount = this.gridListData.filter(rd => rd.statusName === CommonStatusData.REJECTED).length;
+          return rd;
+        });
       } else {
         this.msgs = [];
         this.msgs = [{ severity: "error", summary: 'Failed', detail: this.responseModel.statusMsg }];
@@ -167,17 +179,17 @@ export class RecurringDepositComponent {
 
   addNewDeposit() {
     this.commonFunctionsService.setStorageValue(applicationConstants.B_CLASS_MEMBER_CREATION, false);
-    this.router.navigate([termdeposittransactionconstant.RECURRING_DEPOSIT_MEMBERSHIP_DETAILS],{ queryParams: { falg: this.encryptDecryptService.encrypt(true)}});
+    this.router.navigate([termdeposittransactionconstant.RECURRING_DEPOSIT_MEMBERSHIP_DETAILS], { queryParams: { falg: this.encryptDecryptService.encrypt(true) } });
   }
-  editRecurringDepositDetails(rowData: any){
-    this.router.navigate([termdeposittransactionconstant.RECURRING_DEPOSIT_PREVIEW], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id),editbutton: this.encryptDecryptService.encrypt(applicationConstants.ACTIVE), isGridPage: this.encryptDecryptService.encrypt(applicationConstants.IN_ACTIVE) } });
+  editRecurringDepositDetails(rowData: any) {
+    this.router.navigate([termdeposittransactionconstant.RECURRING_DEPOSIT_PREVIEW], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id), editbutton: this.encryptDecryptService.encrypt(applicationConstants.ACTIVE), isGridPage: this.encryptDecryptService.encrypt(applicationConstants.IN_ACTIVE) } });
   }
 
   viewRecurringDepositDetails(rowData: any) {
     let viewScreen = true;
-    this.router.navigate([termdeposittransactionconstant.RECURRING_DEPOSIT_PREVIEW], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id),view: this.encryptDecryptService.encrypt(viewScreen), editbutton: this.encryptDecryptService.encrypt(applicationConstants.IN_ACTIVE),isGridPage: this.encryptDecryptService.encrypt(applicationConstants.IN_ACTIVE) }});
-   }
-  onChange(){
+    this.router.navigate([termdeposittransactionconstant.RECURRING_DEPOSIT_PREVIEW], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id), view: this.encryptDecryptService.encrypt(viewScreen), editbutton: this.encryptDecryptService.encrypt(applicationConstants.IN_ACTIVE), isGridPage: this.encryptDecryptService.encrypt(applicationConstants.IN_ACTIVE) } });
+  }
+  onChange() {
     this.showForm = !this.showForm;
   }
   onClickMemberPhotoCopy(rowData: any) {
@@ -188,5 +200,5 @@ export class RecurringDepositComponent {
   closePhoto() {
     this.memberPhotoCopyZoom = false;
   }
-  
+
 }

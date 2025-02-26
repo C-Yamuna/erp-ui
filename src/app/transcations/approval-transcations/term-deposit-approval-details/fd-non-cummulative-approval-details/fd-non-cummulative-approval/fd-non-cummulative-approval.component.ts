@@ -158,24 +158,23 @@ export class FdNonCummulativeApprovalComponent {
           let idEdit = this.encryptDecryptService.decrypt(params['editbutton']);
           this.fdNonCummulativeAccId = Number(id);
   
-        if (idEdit == "1"){
-          this.preveiwFalg = true;
-          this.viewButton = false;
-        }else {
-          this.preveiwFalg = false;
-          this.viewButton = true;
-        }
-
-        if (params['isGridPage'] != undefined && params['isGridPage'] != null) {
-          let isGrid = this.encryptDecryptService.decrypt(params['isGridPage']);
-          if (isGrid === "0") {
-            this.isShowSubmit = applicationConstants.FALSE;
-            // this.viewButton = false;
-            this.editFlag = true;
-          } else {
-            this.isShowSubmit = applicationConstants.TRUE;
+        if (idEdit == "1") {
+            this.preveiwFalg = true;
+            this.isShowSubmit = applicationConstants.TRUE; // Allow Submit
+            this.viewButton = false;
+            this.editFlag = false;
+        } else {
             this.preveiwFalg = false;
-          }
+        }
+        if (params['isGridPage'] != undefined && params['isGridPage'] != null) {
+            let isGrid = this.encryptDecryptService.decrypt(params['isGridPage']);
+            if (isGrid === "0") {
+                this.isShowSubmit = applicationConstants.FALSE;
+                this.viewButton = true;
+                this.editFlag = false;
+            } else {
+                this.isShowSubmit = applicationConstants.TRUE;
+            }
         }
             this.getFdNonCummApplicationById();
         } 
@@ -188,10 +187,10 @@ export class FdNonCummulativeApprovalComponent {
 
   submit() {
     // Determine the status name before submission
-    if (this.fdNonCumulativeApplicationModel.accountStatus != null && this.fdNonCumulativeApplicationModel.accountStatus != undefined) {
-      const accountStatusName = this.statusList.find((data: any) => data != null && data.value === this.fdNonCumulativeApplicationModel.accountStatusName);
-      if (accountStatusName != null && accountStatusName != undefined) {
-        this.fdNonCumulativeApplicationModel.accountStatusName = accountStatusName.label;
+    if (this.fdNonCumulativeApplicationModel.status != null && this.fdNonCumulativeApplicationModel.status != undefined) {
+      const statusName = this.statusList.find((data: any) => data != null && data.value === this.fdNonCumulativeApplicationModel.statusName);
+      if (statusName != null && statusName != undefined) {
+        this.fdNonCumulativeApplicationModel.statusName = statusName.label;
       }
     } else {
       this.commonComponent.stopSpinner();
@@ -248,7 +247,7 @@ export class FdNonCummulativeApprovalComponent {
       if (this.responseModel.status != null && this.responseModel.status != undefined && this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
           this.fdNonCumulativeApplicationModel = this.responseModel.data[0];
-          if(this.fdNonCumulativeApplicationModel.accountStatusName == CommonStatusData.SUBMISSION_FOR_APPROVAL){
+          if(this.fdNonCumulativeApplicationModel.statusName == CommonStatusData.SUBMISSION_FOR_APPROVAL){
             this.isDisableSubmit = true;
           }
           else{
@@ -585,7 +584,7 @@ export class FdNonCummulativeApprovalComponent {
    }
   // for submit button validation based on status
   onStatusChange(event: any) {
-    if (this.fdNonCumulativeApplicationModel.accountStatusName != null && this.fdNonCumulativeApplicationModel.accountStatusName != undefined) {
+    if (this.fdNonCumulativeApplicationModel.statusName != null && this.fdNonCumulativeApplicationModel.statusName != undefined) {
       this.isDisableSubmit = false;
     }
     else {

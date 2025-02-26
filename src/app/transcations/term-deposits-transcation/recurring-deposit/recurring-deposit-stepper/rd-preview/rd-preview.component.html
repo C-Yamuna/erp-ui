@@ -40,8 +40,7 @@
                             <div class="col-xl-12 col-lg-12 col-md-3 col-sm-4 col-xs-4">
                                 <div class="col-12 pic-sig-status">
                                     <div class="d-flex justify-content-center mb-1" *ngIf="photoCopyFlag">
-                                        <div
-                                            *ngFor="let img of membershipBasicDetail.multipartFileListForPhotoCopy">
+                                        <div *ngFor="let img of membershipBasicDetail.multipartFileListForPhotoCopy">
                                             <span class="{{img.imageValue}}" (click)="onClickMemberPhotoCopy()"
                                                 *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                                 <img src="{{img.imageValue}}" class="image-user">
@@ -78,11 +77,14 @@
                             <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
                                 <div class="row">
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                        <span class="basicdata-icons icon-size"><i class="fa fa-address-book"></i></span>
+                                        <span class="basicdata-icons icon-size"><i
+                                                class="fa fa-address-book"></i></span>
                                         <div>
-                                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' |
+                                            <p class="label-view text-fontwt">
+                                                {{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' |
                                                 translate}}</p>
-                                            <p class="label-input-text">{{membershipBasicDetail.tempAdmissionNumber}}</p>
+                                            <p class="label-input-text">{{membershipBasicDetail.tempAdmissionNumber}}
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
@@ -146,9 +148,11 @@
                                             <p class="label-input-text">{{membershipBasicDetail.panNumber}}</p>
                                         </div>
                                     </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card" *ngIf="membershipBasicDetail.isKycApproved">
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card"
+                                        *ngIf="membershipBasicDetail.isKycApproved">
                                         <div class="col-10 d-flex p-0">
-                                            <span class="basicdata-icons icon-size"><i class="fa fa-check-circle-o"></i></span>
+                                            <span class="basicdata-icons icon-size"><i
+                                                    class="fa fa-check-circle-o"></i></span>
                                             <div>
                                                 <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                                 <p class="label-input-text">{{isKycApproved}}</p>
@@ -204,9 +208,11 @@
                             <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
                                 <div class="row">
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                        <span class="basicdata-icons icon-size"><i class="fa fa-address-book"></i></span>
+                                        <span class="basicdata-icons icon-size"><i
+                                                class="fa fa-address-book"></i></span>
                                         <div>
-                                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' |
+                                            <p class="label-view text-fontwt">
+                                                {{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' |
                                                 translate}}</p>
                                             <p class="label-input-text">{{memberGroupDetailsModel.admissionNumber}}</p>
                                         </div>
@@ -272,9 +278,11 @@
                                             <p class="label-input-text">{{memberGroupDetailsModel.tanNumber}}</p>
                                         </div>
                                     </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card" *ngIf="memberGroupDetailsModel.isKycApproved">
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card"
+                                        *ngIf="memberGroupDetailsModel.isKycApproved">
                                         <div class="col-10 d-flex p-0">
-                                            <span class="basicdata-icons icon-size"><i class="fa fa-check-circle-o"></i></span>
+                                            <span class="basicdata-icons icon-size"><i
+                                                    class="fa fa-check-circle-o"></i></span>
                                             <div>
                                                 <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                                 <p class="label-input-text">{{isKycApproved}}</p>
@@ -320,7 +328,8 @@
                                 </div>
 
                                 <div class="text-center min-h-50px">
-                                    <p class="text-break view-member-name">{{membershipInstitutionDetailsModel.name}}</p>
+                                    <p class="text-break view-member-name">{{membershipInstitutionDetailsModel.name}}
+                                    </p>
                                     <div class="d-flex justify-content-center">
                                         <div class="member-name-border"></div>
                                     </div>
@@ -330,9 +339,11 @@
                             <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
                                 <div class="row">
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
-                                        <span class="basicdata-icons icon-size"><i class="fa fa-address-book"></i></span>
+                                        <span class="basicdata-icons icon-size"><i
+                                                class="fa fa-address-book"></i></span>
                                         <div>
-                                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' |
+                                            <p class="label-view text-fontwt">
+                                                {{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' |
                                                 translate}}</p>
                                             <p class="label-input-text">
                                                 {{membershipInstitutionDetailsModel.tempAdmissionNumber}}</p>
@@ -405,9 +416,11 @@
                                             </p>
                                         </div>
                                     </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card" *ngIf="membershipInstitutionDetailsModel.isKycApproved">
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card"
+                                        *ngIf="membershipInstitutionDetailsModel.isKycApproved">
                                         <div class="col-10 d-flex p-0">
-                                            <span class="basicdata-icons icon-size"><i class="fa fa-check-circle-o"></i></span>
+                                            <span class="basicdata-icons icon-size"><i
+                                                    class="fa fa-check-circle-o"></i></span>
                                             <div>
                                                 <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                                 <p class="label-input-text">{{isKycApproved}}</p>
@@ -553,79 +566,7 @@
                                         </div>
                                         <div class="col-12 p-0">
                                             <div class="row g-3">
-                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <div class="nominee-card p-3 pb-1 mb-2">
-                                                        <div class="row">
-                                                            <h6 class="super-sub-heading mt-1">
-                                                                {{'TERMDEPOSITSTRANSACTION.REGISTERED' | translate}}
-                                                            </h6>
-                                                            <div class="col-12">
-                                                                <div class="row">
-                                                                    <div
-                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                                        <div class="row">
-                                                                            <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
-                                                                                <h6 class="label-view">
-                                                                                    {{'TERMDEPOSITSTRANSACTION.STATE' |
-                                                                                    translate}}</h6>
-                                                                                <p class="label-input-text">
-                                                                                    {{rdAccountCommunicationModel.stateName}}
-                                                                                </p>
-                                                                            </div>
-                                                                            <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
-                                                                                <h6 class="label-view">
-                                                                                    {{'TERMDEPOSITSTRANSACTION.DISTRICT'
-                                                                                    | translate}}</h6>
-                                                                                <p class="label-input-text">
-                                                                                    {{rdAccountCommunicationModel.districtName}}
-                                                                                </p>
-                                                                            </div>
 
-                                                                            <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
-                                                                                <h6 class="label-view">
-                                                                                    {{'TERMDEPOSITSTRANSACTION.SUB_DISTRICT'
-                                                                                    | translate}}</h6>
-                                                                                <p class="label-input-text">
-                                                                                    {{rdAccountCommunicationModel.subDistrictName}}
-                                                                                </p>
-                                                                            </div>
-                                                                            <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
-                                                                                <h6 class="label-view">
-                                                                                    {{'TERMDEPOSITSTRANSACTION.VILLAGE'
-                                                                                    | translate}}</h6>
-                                                                                <p class="label-input-text">
-                                                                                    {{rdAccountCommunicationModel.villageName}}
-                                                                                </p>
-                                                                            </div>
-                                                                            <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
-                                                                                <h6 class="label-view">
-                                                                                    {{'TERMDEPOSITSTRANSACTION.ADDRESS'
-                                                                                    | translate}}</h6>
-                                                                                <p class="label-input-text">
-                                                                                    {{rdAccountCommunicationModel.address1}}
-                                                                                </p>
-                                                                            </div>
-                                                                            <div
-                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
-                                                                                <h6 class="label-view">
-                                                                                    {{'TERMDEPOSITSTRANSACTION.PINCODE'
-                                                                                    | translate}}</h6>
-                                                                                <p class="label-input-text">
-                                                                                    {{rdAccountCommunicationModel.pinCode}}
-                                                                                </p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
                                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <div class="nominee-card p-3 pb-1 mb-2">
                                                         <div class="row">
@@ -675,6 +616,24 @@
                                                                             <div
                                                                                 class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">
+                                                                                    {{'TERMDEPOSITSTRANSACTION.DIVISION'
+                                                                                    | translate}}</h6>
+                                                                                <p class="label-input-text">
+                                                                                    {{rdAccountCommunicationModel.permanentDivisionName}}
+                                                                                </p>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <h6 class="label-view">
+                                                                                    {{'TERMDEPOSITSTRANSACTION.BLOCK'
+                                                                                    | translate}}</h6>
+                                                                                <p class="label-input-text">
+                                                                                    {{rdAccountCommunicationModel.permanentBlockName}}
+                                                                                </p>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <h6 class="label-view">
                                                                                     {{'TERMDEPOSITSTRANSACTION.ADDRESS'
                                                                                     | translate}}</h6>
                                                                                 <p class="label-input-text">
@@ -694,6 +653,97 @@
                                                                     </div>
 
 
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <div class="nominee-card p-3 pb-1 mb-2">
+                                                        <div class="row">
+                                                            <h6 class="super-sub-heading mt-1">
+                                                                {{'TERMDEPOSITSTRANSACTION.COMMUNICATION_ADDRESS' | translate}}
+                                                            </h6>
+                                                            <div class="col-12">
+                                                                <div class="row">
+                                                                    <div
+                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                                        <div class="row">
+                                                                            <div
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <h6 class="label-view">
+                                                                                    {{'TERMDEPOSITSTRANSACTION.STATE' |
+                                                                                    translate}}</h6>
+                                                                                <p class="label-input-text">
+                                                                                    {{rdAccountCommunicationModel.stateName}}
+                                                                                </p>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <h6 class="label-view">
+                                                                                    {{'TERMDEPOSITSTRANSACTION.DISTRICT'
+                                                                                    | translate}}</h6>
+                                                                                <p class="label-input-text">
+                                                                                    {{rdAccountCommunicationModel.districtName}}
+                                                                                </p>
+                                                                            </div>
+
+                                                                            <div
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <h6 class="label-view">
+                                                                                    {{'TERMDEPOSITSTRANSACTION.SUB_DISTRICT'
+                                                                                    | translate}}</h6>
+                                                                                <p class="label-input-text">
+                                                                                    {{rdAccountCommunicationModel.subDistrictName}}
+                                                                                </p>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <h6 class="label-view">
+                                                                                    {{'TERMDEPOSITSTRANSACTION.VILLAGE'
+                                                                                    | translate}}</h6>
+                                                                                <p class="label-input-text">
+                                                                                    {{rdAccountCommunicationModel.villageName}}
+                                                                                </p>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <h6 class="label-view">
+                                                                                    {{'TERMDEPOSITSTRANSACTION.DIVISION'
+                                                                                    | translate}}</h6>
+                                                                                <p class="label-input-text">
+                                                                                    {{rdAccountCommunicationModel.divisionName}}
+                                                                                </p>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <h6 class="label-view">
+                                                                                    {{'TERMDEPOSITSTRANSACTION.BLOCK'
+                                                                                    | translate}}</h6>
+                                                                                <p class="label-input-text">
+                                                                                    {{rdAccountCommunicationModel.blockName}}
+                                                                                </p>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <h6 class="label-view">
+                                                                                    {{'TERMDEPOSITSTRANSACTION.ADDRESS'
+                                                                                    | translate}}</h6>
+                                                                                <p class="label-input-text">
+                                                                                    {{rdAccountCommunicationModel.address1}}
+                                                                                </p>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <h6 class="label-view">
+                                                                                    {{'TERMDEPOSITSTRANSACTION.PINCODE'
+                                                                                    | translate}}</h6>
+                                                                                <p class="label-input-text">
+                                                                                    {{rdAccountCommunicationModel.pinCode}}
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -759,17 +809,18 @@
                                                     </p>
                                                 </div>
                                                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
-                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.ACCOUNT_TYPE' |
-                                                        translate}}</h6>
-                                                    <p class="label-input-text">
-                                                        {{rdAccountsModel.accountTypeName}}</p>
-                                                </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.ACCOUNT_NUMBER' |
                                                         translate}}</h6>
                                                     <p class="label-input-text">
                                                         {{rdAccountsModel.accountNumber}}</p>
                                                 </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.OPERATION_TYPE' |
+                                                        translate}}</h6>
+                                                    <p class="label-input-text">
+                                                        {{rdAccountsModel.accountTypeName}}</p>
+                                                </div>
+
                                                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
                                                     <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.DEPOSIT_DATE' |
                                                         translate}}
@@ -777,38 +828,119 @@
                                                     <p class="label-input-text">
                                                         {{rdAccountsModel.depositDate}}</p>
                                                 </div>
-                                                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
-                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.TENURE_IN_DAYS' |
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.INSTALLMENT_AMOUNT' |
                                                         translate}}</h6>
                                                     <p class="label-input-text">
-                                                        {{rdAccountsModel.tenureInDays}}</p>
-                                                </div> -->
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
-                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.TENURE_IN_MONTHS'
-                                                        | translate}}</h6>
-                                                    <p class="label-input-text">
-                                                        {{rdAccountsModel.tenureInMonths}}</p>
+                                                        {{rdAccountsModel.installmentAmount}}</p>
                                                 </div>
                                                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.INSTALLMENT_DATE' |
+                                                        translate}}</h6>
+                                                    <p class="label-input-text">
+                                                        {{rdAccountsModel.installmentDate}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.TOTAL_DEPOSIT_AMOUNT' |
+                                                        translate}}</h6>
+                                                    <p class="label-input-text">
+                                                        {{rdAccountsModel.depositAmount}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.TENURE_TYPE'
+                                                        | translate}}</h6>
+                                                    <p class="label-input-text">
+                                                        {{rdAccountsModel.tenureType}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 "
+                                                *ngIf="rdAccountsModel.tenureType == 2 || 
+                                                    rdAccountsModel.tenureType == 5 || rdAccountsModel.tenureType == 6 ||
+                                                    rdAccountsModel.tenureType == 7">
                                                     <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.TENURE_IN_YEARS' |
                                                         translate}}
                                                     </h6>
                                                     <p class="label-input-text">
                                                         {{rdAccountsModel.tenureInYears}}</p>
                                                 </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 "
+                                                *ngIf="rdAccountsModel.tenureType == 3 || 
+                                                    rdAccountsModel.tenureType == 4 || rdAccountsModel.tenureType == 6 ||
+                                                    rdAccountsModel.tenureType == 7">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.TENURE_IN_MONTHS'
+                                                        | translate}}</h6>
+                                                    <p class="label-input-text">
+                                                        {{rdAccountsModel.tenureInMonths}}</p>
+                                                </div>
                                                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
-                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.INSTALLMENT_PAYEMNET_FREQUENCY' |
+                                                    <h6 class="label-view">
+                                                        {{'TERMDEPOSITSTRANSACTION.ROI' |
+                                                        translate}}
+                                                    </h6>
+                                                    <p class="label-input-text">
+                                                        {{rdAccountsModel.roi}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">
+                                                        {{'TERMDEPOSITSTRANSACTION.STAFF_ROI' |
+                                                        translate}}
+                                                    </h6>
+                                                    <p class="label-input-text">
+                                                        {{rdAccountsModel.staffRoi}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">
+                                                        {{'TERMDEPOSITSTRANSACTION.SENIOR_CITIZEN_ROI' |
+                                                        translate}}
+                                                    </h6>
+                                                    <p class="label-input-text">
+                                                        {{rdAccountsModel.seniorCitizenRoi}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">
+                                                        {{'TERMDEPOSITSTRANSACTION.FORECLOSURE_ROI' |
+                                                        translate}}
+                                                    </h6>
+                                                    <p class="label-input-text">
+                                                        {{rdAccountsModel.penalRoi}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">
+                                                        {{'TERMDEPOSITSTRANSACTION.INSTALLMENT_PAYEMNET_FREQUENCY' |
                                                         translate}}
                                                     </h6>
                                                     <p class="label-input-text">
                                                         {{rdAccountsModel.installmentFrequency}}</p>
                                                 </div>
                                                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
-                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.IS_AUTO_RENEWAL' |
+                                                    <h6 class="label-view">
+                                                        {{'TERMDEPOSITSTRANSACTION.MATURITY_DATE' |
                                                         translate}}
                                                     </h6>
                                                     <p class="label-input-text">
-                                                        {{rdAccountsModel.isRenewal}}</p>
+                                                        {{rdAccountsModel.maturityDate}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">
+                                                        {{'TERMDEPOSITSTRANSACTION.MATURITY_AMOUNT' |
+                                                        translate}}
+                                                    </h6>
+                                                    <p class="label-input-text">
+                                                        {{rdAccountsModel.maturityAmount}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.PAYMENT_TYPE' |
+                                                        translate}}
+                                                    </h6>
+                                                    <p class="label-input-text">
+                                                        {{rdAccountsModel.interestPayoutType}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 "
+                                                *ngIf="rdAccountsModel.interestPayoutType == 2">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.INTEREST_TRANSFER_ACCOUNT' |
+                                                        translate}}
+                                                    </h6>
+                                                    <p class="label-input-text">
+                                                        {{rdAccountsModel.interestPayoutTransferAccount}}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1361,64 +1493,73 @@
                 <div class="col-12 viewbottom-footer icon-size">
                     <div class="row">
                         <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4" *ngIf="isShowSubmit">
-                            <p-button icon="fa fa-download" iconPos="left" pTooltip="Filename.pdf" tooltipPosition="top" (click)="pdfDownload()"></p-button>
+                            <p-button icon="fa fa-download" iconPos="left" pTooltip="Filename.pdf" tooltipPosition="top"
+                                (click)="pdfDownload()"></p-button>
                             <!-- <p-button  icon="fa fa-print" iconPos="left" pTooltip="Print" tooltipPosition="top"></p-button> -->
                         </div>
                         <div class="col-3 p-3 bottom-padding"></div>
-                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-4" *ngIf="isShowSubmit"> 
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-4" *ngIf="isShowSubmit">
                             <div class="form-label">
                                 <span class=""> {{ 'TERMDEPOSITSTRANSACTION.UPLOAD_DOCUMENT' | translate }} </span>
                                 <div class="uplodad-style align-items-center">
                                     <!-- Upload Button Column -->
                                     <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
-                                        id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".pdf" 
+                                        id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".pdf"
                                         (onRemove)="fileRemoveEvent()" (onSelect)="fileUploader($event, fileUpload)">
                                     </p-fileUpload>
-                                    <div class="col-12  d-flex p-1 contant-body" *ngFor="let img of rdAccountsModel.multipartFileListsignedCopyPath">
+                                    <div class="col-12  d-flex p-1 contant-body"
+                                        *ngFor="let img of rdAccountsModel.multipartFileListsignedCopyPath">
                                         <div *ngIf="img.fileType=='pdf'">
-                                            <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22" height="22"></a>
+                                            <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22"
+                                                    height="22"></a>
                                         </div>
-                                        <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                        <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
+                                            tooltipPosition="bottom">
                                             {{img.fileName}}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="col-xl-7 col-lg-5 col-md-4 col-sm-4 mt-4" *ngIf="isShowSubmit">
                             <div class="d-flex justify-content-end">
-                            <p-button (click)="backbutton()" label="BACK"></p-button>
-                            <p-button *ngIf="isShowSubmit" label="{{'TERMDEPOSITSTRANSACTION.SUBMIT' | translate}}" (click)="submit()" [disabled]="isDisableSubmit" ></p-button>
+                                <p-button (click)="backbutton()" label="BACK"></p-button>
+                                <p-button *ngIf="isShowSubmit" label="{{'TERMDEPOSITSTRANSACTION.SUBMIT' | translate}}"
+                                    (click)="submit()" [disabled]="isDisableSubmit"></p-button>
+                            </div>
                         </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4" *ngIf="viewButton"> 
+                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4" *ngIf="viewButton">
                             <div class="form-label">
-                                <h6 class="label-view"> {{ 'ERP.SCANNED COPY' | translate }} </h6>                                  
-                                    <div class="d-flex mt-2" *ngFor="let img of rdAccountsModel.multipartFileListsignedCopyPath">
-                                        <div *ngIf="img.fileType=='pdf'">
-                                            <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22" height="22"></a>
-                                        </div>
-                                        <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                            {{img.fileName}}
-                                        </div>
+                                <h6 class="label-view"> {{ 'ERP.SCANNED COPY' | translate }} </h6>
+                                <div class="d-flex mt-2"
+                                    *ngFor="let img of rdAccountsModel.multipartFileListsignedCopyPath">
+                                    <div *ngIf="img.fileType=='pdf'">
+                                        <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22"
+                                                height="22"></a>
                                     </div>
+                                    <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
+                                        tooltipPosition="bottom">
+                                        {{img.fileName}}
+                                    </div>
+                                </div>
                                 <!-- </div> -->
                             </div>
                         </div>
                         <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4" *ngIf="editFlag || viewButton">
-                             <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.STATUS' | translate}}</p>
-                            <p class="label-input-text">{{rdAccountsModel.accountStatusName}}</p>
+                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.STATUS' | translate}}</p>
+                            <p class="label-input-text">{{rdAccountsModel.statusName}}</p>
                         </div>
-                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4"*ngIf="editFlag || viewButton">
+                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4" *ngIf="editFlag || viewButton">
                             <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.REMARKS' | translate}}</p>
-                           <p class="label-input-text">{{rdAccountsModel.remarks}}</p>
-                       </div>
+                            <p class="label-input-text">{{rdAccountsModel.remarks}}</p>
+                        </div>
                         <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4" *ngIf="editFlag || viewButton">
                             <div class="d-flex justify-content-end">
-                            <p-button (click)="backbutton()" label="BACK"></p-button>
-                            <p-button *ngIf="isShowSubmit" label="{{'TERMDEPOSITSTRANSACTION.SUBMIT' | translate}}" (click)="submit()" [disabled]="isDisableSubmit" ></p-button>
-                        </div>
+                                <p-button (click)="backbutton()" label="BACK"></p-button>
+                                <p-button *ngIf="isShowSubmit" label="{{'TERMDEPOSITSTRANSACTION.SUBMIT' | translate}}"
+                                    (click)="submit()" [disabled]="isDisableSubmit"></p-button>
+                            </div>
                         </div>
                     </div>
                 </div>

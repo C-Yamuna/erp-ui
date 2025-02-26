@@ -131,6 +131,7 @@
     padding: 5px;
     color: #ffff;
 }
+.right-prfile-language  .p-dropdown-items .p-element .p-dropdown-item {width: 190px;}
 .notification-bell{padding-right: 35px; margin-top: 5px;}
 .notification-bell .fa-bell{
     background: #fff;
@@ -578,6 +579,7 @@ display: inline-block;
     --view-theme-bgcolor:#0c457cc2;
     --view-theme-bordercolor:#0c457c;
     --view-theme-textcolor:#fff;
+    --strip-bgcolor:#d6dcf1;
   }
  .darkcerulean-theme{
     --background-color: #ffffff;
@@ -651,6 +653,7 @@ display: inline-block;
     --view-theme-bgcolor:#0c457cc2;
     --view-theme-bordercolor:#0c457c;
     --view-theme-textcolor:#fff;
+    --strip-bgcolor:#d6dcf1;
   }
   
   /* Dark Theme after required colors*/
@@ -724,6 +727,7 @@ display: inline-block;
     --view-theme-bgcolor:#5c5c5c;
     --view-theme-bordercolor:#5c5c5c;
     --view-theme-textcolor:#fff;
+    --strip-bgcolor:#d3d3d3;
   }
      /* Orange Theme after required colors*/
      .orange-theme {
@@ -796,6 +800,7 @@ display: inline-block;
       --view-theme-bgcolor:#d79624;
       --view-theme-bordercolor:#d79624;
       --view-theme-textcolor:#fff;
+      --strip-bgcolor:#fbebce;
     }
     /* Yellow Theme after required colors*/
     .yellow-theme {
@@ -868,6 +873,7 @@ display: inline-block;
       --view-theme-bgcolor:#c79908;
       --view-theme-bordercolor:#c79908;
       --view-theme-textcolor:#fff;
+      --strip-bgcolor:#f7ebca;
     } 
     /* Green Theme after required colors*/
     .green-theme {
@@ -940,6 +946,7 @@ display: inline-block;
       --view-theme-bgcolor:#3b6554d1;
       --view-theme-bordercolor:#3b6554d1;
       --view-theme-textcolor:#fff;
+      --strip-bgcolor:#c7d8d1;
     }
     /* Blue Theme after required colors*/
     .blue-theme {
@@ -1012,6 +1019,7 @@ display: inline-block;
       --view-theme-bgcolor:#17696c;
       --view-theme-bordercolor:#17696c;
       --view-theme-textcolor:#fff;
+      --strip-bgcolor:#c1dbdd;
     }
     /* Indigo Theme after required colors*/
     .indigo-theme {
@@ -1084,6 +1092,7 @@ display: inline-block;
       --view-theme-bgcolor:#24016a;
       --view-theme-bordercolor:#24016a;
       --view-theme-textcolor:#fff;
+      --strip-bgcolor:#d4cbe6;
     }
     /* Violet Theme after required colors*/
     .violet-theme {
@@ -1156,6 +1165,7 @@ display: inline-block;
       --view-theme-bgcolor:#480058;
       --view-theme-bordercolor:#480058;
       --view-theme-textcolor:#fff;
+      --strip-bgcolor:#ddc5e2;
     }
   
   body {
@@ -1448,5 +1458,6 @@ background-color:var(--member-top-section-strip);
 .p-chips .p-chips-multiple-container .p-chips-token{
   background-color: var(--member-top-section-strip) !important;
 }
-
-.right-prfile-language  .p-dropdown-items .p-element .p-dropdown-item {width: 190px;}
+.stepper-top-product-name-background{
+  background-color: var(--strip-bgcolor);
+}

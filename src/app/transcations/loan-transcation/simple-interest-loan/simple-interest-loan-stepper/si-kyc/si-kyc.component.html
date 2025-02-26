@@ -1,15 +1,18 @@
 <div class="col-12">
     <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
-    [hideTransitionOptions]="'500ms'"></p-messages>
-    <h6 class="sub-heading">{{'ERP.KYC' | translate}}<span class="admission-text">(Admission
-            number:&nbsp;{{admissionNumber}})</span></h6>
-    
+        [hideTransitionOptions]="'500ms'"></p-messages>
+    <h6 class="sub-heading">{{'ERP.KYC' | translate}}</h6>
+    <!-- <span class="admission-text">(Admission
+            number:&nbsp;{{admissionNumber}})</span> -->
+
     <form [formGroup]="kycForm" id="exit_types_form">
         <p-button icon="fa fa-plus" label="{{'ADD ANOTHER DOCUMENT' | translate}}" (click)="addKyc()"
             [disabled]="buttonDisabled" *ngIf="isMemberCreation" class="kyc-btnm-0"></p-button>
-            <div *ngIf="isMemberCreation"> <p class="label-input-text text-danger mt-2" *ngIf="mandatoryDoxsTextShow">Note :
-                {{requiredDocumentsNamesText}}</p></div>
-            
+        <div *ngIf="isMemberCreation">
+            <p class="label-input-text text-danger mt-2" *ngIf="mandatoryDoxsTextShow">Note :
+                {{requiredDocumentsNamesText}}</p>
+        </div>
+
         <div class="col-12 px-0">
             <div class="row g-3">
                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12" *ngFor="let document of kycModelList ; let i = index">
@@ -72,29 +75,29 @@
 
                     <!-- Edit form -->
                     <div class="col-12 global-border bg-label-colorfull p-3"
-                    *ngIf="editIndex === i  && !editDocumentOfKycFalg">
-                    <div class="row g-3 mt-n1">
-                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="!individualFlag">
-                            <div class="form-label">
-                                <label><span class="red">*</span>Promoter</label>
-                                <p-dropdown placeholder="{{'ERP.SELECT'| translate}}" formControlName="promoter"
-                                    [options]="promotersList" id="docTypeId"
-                                    [(ngModel)]="siLoanKycModel.promoterId"  (onChange)="kycDplicate(siLoanKycModel)">
-                                </p-dropdown>
+                        *ngIf="editIndex === i  && !editDocumentOfKycFalg">
+                        <div class="row g-3 mt-n1">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="!individualFlag">
+                                <div class="form-label">
+                                    <label><span class="red">*</span>Promoter</label>
+                                    <p-dropdown placeholder="{{'ERP.SELECT'| translate}}" formControlName="promoter"
+                                        [options]="promotersList" id="docTypeId" [(ngModel)]="siLoanKycModel.promoterId"
+                                        (onChange)="kycDplicate(siLoanKycModel)">
+                                    </p-dropdown>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="form-label">
-                                <label><span class="red">*</span>Document Type</label>
-                                <p-dropdown placeholder="{{'ERP.SELECT'| translate}}" formControlName="kycDocumentTypeName"
-                                    [options]="documentNameList" id="docTypeId"
-                                    [(ngModel)]="siLoanKycModel.kycDocumentTypeId"
-                                    (onChange)="kycDplicate(siLoanKycModel)">
-                                </p-dropdown>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="form-label">
+                                    <label><span class="red">*</span>Document Type</label>
+                                    <p-dropdown placeholder="{{'ERP.SELECT'| translate}}"
+                                        formControlName="kycDocumentTypeName" [options]="documentNameList"
+                                        id="docTypeId" [(ngModel)]="siLoanKycModel.kycDocumentTypeId"
+                                        (onChange)="kycDplicate(siLoanKycModel)">
+                                    </p-dropdown>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <!-- <div class="form-label">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <!-- <div class="form-label">
                                 <label><span class="red">*</span>Document Number</label>
                                 <input id="documentNumber" type="text" formControlName="documentNumber" pInputText
                                     [(ngModel)]="siLoanKycModel.documentNumber" placeholder="Enter Document Number">
@@ -102,75 +105,69 @@
                                     *ngIf="!kycForm.controls['documentNumber'].valid && kycForm.controls['documentNumber'].dirty">
                                 </p-message>
                             </div> -->
-                            <div class="form-label">
-                                <label *ngIf="!isPanNumber"><span class="red">*</span>Document Number</label>
-                                <label *ngIf="isPanNumber"><span class="red">*</span>Pan Number(AFZPK7190K)</label>
-                                <input id="documentNumber" type="text" formControlName="documentNumber" pInputText
-                                    [(ngModel)]="siLoanKycModel.documentNumber" placeholder="Enter Document Number">
-                                <p-message severity="error" text="Enter Valid Number"
-                                    *ngIf="!kycForm.controls['documentNumber'].valid && kycForm.controls['documentNumber'].dirty">
-                                </p-message>
-                            </div>
-                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
-                                    <label><span class="red">*</span>Name as per Document</label>
-                                    <input id="documentNumber" type="text" formControlName="nameAsPerDocument"
-                                        pInputText [(ngModel)]="siLoanKycModel.nameAsPerDocument"
-                                        placeholder="Enter Document Number">
-                                    <p-message severity="error" text="Enter Valid Name"
-                                        *ngIf="!kycForm.controls['nameAsPerDocument'].valid && kycForm.controls['nameAsPerDocument'].dirty">
+                                    <label *ngIf="!isPanNumber"><span class="red">*</span>Document Number</label>
+                                    <label *ngIf="isPanNumber"><span class="red">*</span>Pan Number(AFZPK7190K)</label>
+                                    <input id="documentNumber" type="text" formControlName="documentNumber" pInputText
+                                        [(ngModel)]="siLoanKycModel.documentNumber" placeholder="Enter Document Number">
+                                    <p-message severity="error" text="Enter Valid Number"
+                                        *ngIf="!kycForm.controls['documentNumber'].valid && kycForm.controls['documentNumber'].dirty">
                                     </p-message>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="form-label">
-                                <div class="ml-2"><span class="red">*</span> {{ 'ERP.UPLOAD_DOCUMENT' |
-                                    translate }} </div>
-                                <div class="uplodad-style align-items-center">
-                                    <!-- Upload Button Column -->
-
-                                    <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
-                                        chooseLabel=" " id="apply-leave_fileUp_attach" name="file"
-                                        (onRemove)="fileRemoeEvent()" accept=".png,.jpg,.jpeg,.pdf"
-                                        [customUpload]="true" formContralName="fileUpload"
-                                        (onSelect)="imageUploader($event,fileUpload)">
-                                    </p-fileUpload>
-
-                                    <!-- Uploaded Files Display Column -->
-
-                                    <div class="col-12 d-flex p-1 contant-body"
-                                        *ngFor="let img of siLoanKycModel.multipartFileList">
-                                        <span
-                                            *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                            <a href="{{img.imageValue}}">
-                                                <img src="{{img.imageValue}}" width="22" height="22">
-                                            </a>
-                                        </span>
-                                        <span *ngIf="img.fileType=='pdf'">
-                                            <a href="{{img.imageValue}}"> <img src="assets/images/pdficon-img.png"
-                                                    width="22" height="22"></a>
-                                        </span>
-                                        <span class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
-                                            tooltipPosition="bottom">
-                                            {{img.fileName}}
-                                        </span>
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="form-label">
+                                        <label><span class="red">*</span>Name as per Document</label>
+                                        <input id="documentNumber" type="text" formControlName="nameAsPerDocument"
+                                            pInputText [(ngModel)]="siLoanKycModel.nameAsPerDocument"
+                                            placeholder="Enter Document Number">
+                                        <p-message severity="error" text="Enter Valid Name"
+                                            *ngIf="!kycForm.controls['nameAsPerDocument'].valid && kycForm.controls['nameAsPerDocument'].dirty">
+                                        </p-message>
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="form-label">
+                                    <div class="ml-2"><span class="red">*</span>
+                                        {{'MEMBERSHIP_TRANSACTION.DOCUMENT_COPY' |
+                                        translate }} </div>
+                                    <div class="uplodad-style align-items-center">
+                                        <!-- Upload Button Column -->
 
-                        </div>
-                        <div class="col-12">
-                            <div class="justify-content-end d-flex">
-                                <p-button label="{{'CANCEL' | translate}}" (onClick)="editCancle()"></p-button>
-                                <p-button label="{{'SAVE' | translate}}"
-                                    [disabled]="!kycForm.valid  || !isFileUploaded"
-                                    (onClick)="editsave(siLoanKycModel)"></p-button>
+                                        <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                                            chooseLabel=" " id="apply-leave_fileUp_attach" name="file"
+                                            (onRemove)="fileRemoeEvent()" accept=".pdf" [customUpload]="true"
+                                            formContralName="fileUpload" (onSelect)="imageUploader($event,fileUpload)">
+                                        </p-fileUpload>
+
+                                        <!-- Uploaded Files Display Column -->
+
+                                        <div class="col-12 d-flex p-1 contant-body"
+                                            *ngFor="let img of siLoanKycModel.multipartFileList">
+                                            <div *ngIf="img.fileType=='pdf'">
+                                                <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png"
+                                                        width="22" height="22"></a>
+                                            </div>
+                                            <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
+                                                tooltipPosition="bottom">
+                                                {{img.fileName}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-12">
+                                <div class="justify-content-end d-flex">
+                                    <p-button label="{{'CANCEL' | translate}}" (onClick)="editCancle()"></p-button>
+                                    <p-button label="{{'SAVE' | translate}}"
+                                        [disabled]="!kycForm.valid  || !isFileUploaded"
+                                        (onClick)="editsave(siLoanKycModel)"></p-button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-           
+
                 </div>
 
                 <!-- add form -->
@@ -182,17 +179,17 @@
                                 <div class="form-label">
                                     <label><span class="red">*</span>Promoter</label>
                                     <p-dropdown placeholder="{{'ERP.SELECT'| translate}}" formControlName="promoter"
-                                        [options]="promotersList" id="docTypeId"
-                                        [(ngModel)]="siLoanKycModel.promoterId" (onChange)="kycDplicate(siLoanKycModel)">
+                                        [options]="promotersList" id="docTypeId" [(ngModel)]="siLoanKycModel.promoterId"
+                                        (onChange)="kycDplicate(siLoanKycModel)">
                                     </p-dropdown>
                                 </div>
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
                                     <label><span class="red">*</span>Document Type</label>
-                                    <p-dropdown placeholder="{{'ERP.SELECT'| translate}}" formControlName="kycDocumentTypeName"
-                                        [options]="documentNameList" id="docTypeId"
-                                        [(ngModel)]="siLoanKycModel.kycDocumentTypeId"
+                                    <p-dropdown placeholder="{{'ERP.SELECT'| translate}}"
+                                        formControlName="kycDocumentTypeName" [options]="documentNameList"
+                                        id="docTypeId" [(ngModel)]="siLoanKycModel.kycDocumentTypeId"
                                         (onChange)="kycDplicate(siLoanKycModel)">
                                     </p-dropdown>
                                 </div>
@@ -233,16 +230,16 @@
                                                                                                             </div> -->
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
-                                    <div class="ml-2"><span class="red">*</span> {{ 'ERP.UPLOAD_DOCUMENT' |
+                                    <div class="ml-2"><span class="red">*</span>
+                                        {{'MEMBERSHIP_TRANSACTION.DOCUMENT_COPY' |
                                         translate }} </div>
                                     <div class="uplodad-style align-items-center">
                                         <!-- Upload Button Column -->
 
                                         <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
                                             chooseLabel=" " id="apply-leave_fileUp_attach" name="file"
-                                            (onRemove)="fileRemoeEvent()" accept=".png,.jpg,.jpeg,.pdf"
-                                            [customUpload]="true" formContralName="fileUpload"
-                                            (onSelect)="imageUploader($event,fileUpload)">
+                                            (onRemove)="fileRemoeEvent()" accept=".pdf" [customUpload]="true"
+                                            formContralName="fileUpload" (onSelect)="imageUploader($event,fileUpload)">
                                         </p-fileUpload>
 
                                         <!-- Uploaded Files Display Column -->

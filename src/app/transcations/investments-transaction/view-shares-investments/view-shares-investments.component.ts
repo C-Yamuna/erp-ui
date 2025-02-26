@@ -122,7 +122,7 @@ export class ViewSharesInvestmentsComponent implements OnInit {
       this.sharesInvestmentsModel.sharesPurchasedDate = this.commonFunctionsService.getUTCEpoch(new Date(this.sharesInvestmentsModel.sharesPurchasedDate));
     }
     if (this.sharesInvestmentsModel.id != undefined) {
-      this.sharesInvestmentsModel.accountStatusName = "Submission for Approval";
+      this.sharesInvestmentsModel.statusName = "Submission for Approval";
       this.sharesInvestmentsService.updateSharesInvestments(this.sharesInvestmentsModel).subscribe((response: any) => {
         this.responseModel = response;
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {

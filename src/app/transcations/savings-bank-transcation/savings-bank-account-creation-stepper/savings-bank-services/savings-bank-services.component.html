@@ -1,36 +1,42 @@
 <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"></p-messages>
 <div class="col-12">
-    <h6 class="sub-heading">{{'ERP.SERVICE' | translate}}<span class="admission-text">(Admission Number:&nbsp;{{admissionNumber}})</span></h6>
+    
     <div class="stepper-top-section-strip">
         <div class="row">
-            <div class="col-lg-3 col-md-3 col-sm-12 stepper-top-product-name-background">
+            <div class="col-lg-2 col-md-2 col-sm-12 stepper-top-product-name-background">
                 <div class="form-group">
                     <span>{{'ERP.PRODUCT_NAME' | translate}}</span>
                     <p class="mb-0">{{productName}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="col-lg-2 col-md-2 col-sm-12">
                 <div class="form-group ml-2">
-                    <span>{{'ERP.ACCOUNT_TYPE' | translate}}</span>
+                    <span>{{'ERP.ACCOUNT_NUMBER' | translate}}</span>
+                    <p class="mb-0">{{accountNumber}}</p>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-12">
+                <div class="form-group ml-2">
+                    <span>{{'ERP.OPERATION_TYPE' | translate}}</span>
                     <p class="mb-0">{{accountType}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="col-lg-2 col-md-2 col-sm-12">
                 <div class="form-group">
                     <span>{{'ERP.MIN_BALANCE' | translate}}</span>
                     <p class="mb-0">{{minBalence}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="col-lg-2 col-md-2 col-sm-12">
                 <div class="form-group">
                     <span>{{'ERP.ACCOUNT_OPENING_DATE' | translate}}</span>
                     <p class="mb-0">{{accountOpeningDateVal}}</p>
                 </div>
             </div>
         </div>
-    </div>      
+    </div> 
     <div class="col-12"></div>
-
+    <h6 class="sub-heading">{{'ERP.SERVICE' | translate}}</h6>   
     <!-- <form [formGroup]="serviceForm" id="exit_types_form"> -->
             <form [formGroup]="serviceForm" id="proj_stakeholder_form">
                 <div class="flex justify-content-between py-2">
@@ -64,7 +70,7 @@
                             <th><span class="red">*</span>{{'ERP.IS_CHARGE_APPLICAPABLE' | translate}}</th>
                              <th>{{'ERP.FREQUENCY_TYPE' | translate}}</th>
                              <th>{{'ERP.SERVICE_CHARGES' | translate}}</th>
-                            <th>{{'ERP.DOCUMENT_COPY' | translate}}</th>
+                            <th>{{'ERP.DOCUMENT_COPY' | translate}}{{ 'DEMANDDEPOSITS.PDF_SIZE' | translate }}</th>
                             <!-- <th><span class="red">*</span>{{'ERP.STATUS' | translate}}</th> -->
                             <th class="width-15em">{{'ERP.ACTION'|translate }}</th>
                         </tr>
@@ -130,7 +136,7 @@
                                             <!-- Upload Button Column -->
                                             <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
                                                     id="apply-leave_fileUp_attach" chooseLabel=" " name="file"
-                                                    accept=".png,.jpg,.jpeg,.pdf" (onRemove)="fileRemoeEvent()" 
+                                                    accept=".pdf" (onRemove)="fileRemoeEvent()" 
                                                     (onSelect)="fileUploader($event,fileUpload ,row)" >
                                             </p-fileUpload>
                                         </div>

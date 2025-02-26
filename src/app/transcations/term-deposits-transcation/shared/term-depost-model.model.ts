@@ -183,13 +183,19 @@ export class RdAccountsModel {
 
     promoterName:any;
 
-    accountStatus:any;
-
-    accountStatusName: any;
-
     interestPaymentsList:any;
 
     tenureType: any;
+    
+    interestPayoutTransferAccount: any;
+
+    interestPayoutType: any;
+    
+    installmentDate: any;
+
+    staffRoi: any;
+
+    seniorCitizenRoi: any;
 }
 
 export class RdAccountCommunication {
@@ -265,6 +271,22 @@ export class RdAccountCommunication {
     accountNumber:any;
 
     rdProductId:any;
+
+    divisionId: any;
+
+    blockId: any;
+
+    divisionName: any;
+
+    blockName: any;
+
+    permanentDivisionId: any;
+
+    permanentBlockId: any;
+
+    permanentDivisionName: any;
+
+    permanentBlockName: any;
 
 }
 

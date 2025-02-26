@@ -166,8 +166,10 @@ export class SiLoanMembershipDetailsComponent {
       'communityId': new FormControl('', Validators.required),
       // 'mcrNumber': new FormControl(''),
       'admissionDate': new FormControl('', Validators.required),
-      'admissionFee': new FormControl(''),
+      // 'admissionFee': new FormControl(''),
       'isStaff': new FormControl('', Validators.required),
+      'societyAdmissionNo': new FormControl('', Validators.required),
+      'resolutionDate': new FormControl('',Validators.required),
     })
 
     this.groupForm = this.formBuilder.group({
@@ -608,6 +610,9 @@ export class SiLoanMembershipDetailsComponent {
             if (this.membershipBasicRequiredDetailsModel.admissionDate != null && this.membershipBasicRequiredDetailsModel.admissionDate != undefined) {
               this.membershipBasicRequiredDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
             }
+            if (this.membershipBasicRequiredDetailsModel.resolutionDate != null && this.membershipBasicRequiredDetailsModel.resolutionDate != undefined) {
+              this.membershipBasicRequiredDetailsModel.resolutionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.resolutionDate, this.orgnizationSetting.datePipe);
+            }
             if (this.membershipBasicRequiredDetailsModel.memberTypeId != undefined && this.membershipBasicRequiredDetailsModel.memberTypeId) {
               this.memberTypeId = this.membershipBasicRequiredDetailsModel.memberTypeId;
             }
@@ -1022,6 +1027,8 @@ export class SiLoanMembershipDetailsComponent {
 
       if (this.memberGroupDetailsModel.registrationDateVal != null && this.memberGroupDetailsModel.registrationDateVal != undefined)
         this.memberGroupDetailsModel.registrationDate = this.commonFunctionsService.getUTCEpoch(this.memberGroupDetailsModel.registrationDateVal);
+
+
       this.admissionDateOnSelect();
     }
     if (this.membershipBasicRequiredDetailsModel != null && this.membershipBasicRequiredDetailsModel != undefined) {
@@ -1030,6 +1037,9 @@ export class SiLoanMembershipDetailsComponent {
 
       if (this.membershipBasicRequiredDetailsModel.dobVal != null && this.membershipBasicRequiredDetailsModel.dobVal != undefined)
         this.membershipBasicRequiredDetailsModel.dob = this.commonFunctionsService.getUTCEpoch(this.membershipBasicRequiredDetailsModel.dobVal);
+
+      if (this.membershipBasicRequiredDetailsModel.resolutionDateVal != null && this.membershipBasicRequiredDetailsModel.resolutionDateVal != undefined)
+        this.membershipBasicRequiredDetailsModel.resolutionDate = this.commonFunctionsService.getUTCEpoch(this.membershipBasicRequiredDetailsModel.resolutionDateVal);
     }
     if (this.membershipInstitutionDetailsModel != null && this.membershipInstitutionDetailsModel != undefined) {
       if (this.membershipInstitutionDetailsModel.admissionDateVal != null && this.membershipInstitutionDetailsModel.admissionDateVal != undefined)
@@ -1352,6 +1362,11 @@ export class SiLoanMembershipDetailsComponent {
       if (model.admissionDateVal) {
         // const calculatedAge = this.calculateAge(model.dobVal);
         this.membershipBasicRequiredDetailsModel.admissionDate = this.commonFunctionsService.getUTCEpoch(new Date(model.admissionDateVal));
+      }
+    }else if(type == 2){
+      if (model.resolutionDateVal) {
+        // const calculatedAge = this.calculateAge(model.dobVal);
+        this.membershipBasicRequiredDetailsModel.resolutionDate = this.commonFunctionsService.getUTCEpoch(new Date(model.resolutionDateVal));
       }
     }
   }

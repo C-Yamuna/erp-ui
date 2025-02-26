@@ -90,6 +90,7 @@ export class AccountRequireDocumentsComponent {
   depositAmount: any;
   mandatoryDoxsTextShow: boolean = false;
   requiredDocumentsNamesText: any;
+  kycPhotoCopyZoom: boolean = false;
 
   constructor(private router: Router, 
     private formBuilder: FormBuilder, 
@@ -103,7 +104,8 @@ export class AccountRequireDocumentsComponent {
     this.requiredForm = this.formBuilder.group({
       'documentNumber': new FormControl('', [Validators.required, Validators.pattern(/^[^\s]+(\s.*)?$/)]),
       'requiredDocumentTypeName': new FormControl('', Validators.required),
-      'requiredDocumentFilePath': new FormControl(''),
+      'nameAsPerDocument': new FormControl('',[Validators.required,Validators.pattern(applicationConstants.NEW_NAME_PATTERN), Validators.maxLength(40), Validators.pattern(/^[^\s]+(\s.*)?$/)]),
+      'requiredDocumentFilePath': new FormControl('')
     });
   }
   ngOnInit(): void {
@@ -183,7 +185,7 @@ export class AccountRequireDocumentsComponent {
     });
   }
   imageUploader(event: any, fileUpload: FileUpload) {
-    this.isFileUploaded = applicationConstants.FALSE;
+    this.isFileUploaded = applicationConstants.TRUE;
     this.multipleFilesList = [];
     this.requiredDocumentDetails.filesDTOList = [];
     this.requiredDocumentDetails.requiredDocumentFilePath = null;
@@ -252,6 +254,7 @@ export class AccountRequireDocumentsComponent {
                 this.buttonDisabled = false;
                 if(kyc.requiredDocumentFilePath != null && kyc.requiredDocumentFilePath != undefined){
                   kyc.multipartFileList  = this.fileUploadService.getFile(kyc.requiredDocumentFilePath ,ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.requiredDocumentFilePath);
+                  this.isFileUploaded = applicationConstants.TRUE;
                 }
                 this.updateData();
               }
@@ -311,11 +314,12 @@ export class AccountRequireDocumentsComponent {
               this.depositAmount = this.responseModel.data[0].depositAmount;
             }
             this.getAllKycTypes()
-            if(this.responseModel.data[0].rdRequiredDocumentDetailsDTOList != null && this.responseModel.data[0].rdRequiredDocumentDetailsDTOList != undefined){
-              this.kycModelList = this.responseModel.data[0].rdRequiredDocumentDetailsDTOList;
+            if(this.responseModel.data[0].requiredDocumentDetailsDTOList != null && this.responseModel.data[0].requiredDocumentDetailsDTOList != undefined){
+              this.kycModelList = this.responseModel.data[0].requiredDocumentDetailsDTOList;
               for (let kyc of this.kycModelList) {
                 if(kyc.requiredDocumentFilePath != null && kyc.requiredDocumentFilePath != undefined){
-                  kyc.multipartFileList  = this.fileUploadService.getFile(kyc.requiredDocumentFilePath ,ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.requiredDocumentFilePath);
+                  kyc.multipartFileList  = this.fileUploadService.getFile(kyc.requiredDocumentFilePath ,ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.requiredDocumentFilePath);
+                  this.isFileUploaded = applicationConstants.TRUE;
                 }
               }
             }
@@ -448,7 +452,8 @@ export class AccountRequireDocumentsComponent {
     this.editDocumentOfKycFalg = true;
     this.buttonDisabled = false;
     this.editButtonDisable = false;
-      this.getRdRequiredDocsByaccId(this.accId);
+    this.isFileUploaded = applicationConstants.FALSE;
+    this.getRdRequiredDocsByaccId(this.accId);
     
     this.updateData();
   }
@@ -516,8 +521,10 @@ export class AccountRequireDocumentsComponent {
               this.requiredDocumentDetails = this.responseModel.data[0];
               if (this.requiredDocumentDetails.requiredDocumentFilePath != undefined) {
                 if(this.requiredDocumentDetails.requiredDocumentFilePath != null && this.requiredDocumentDetails.requiredDocumentFilePath != undefined){
-                  this.requiredDocumentDetails.multipartFileList  = this.fileUploadService.getFile(this.requiredDocumentDetails.requiredDocumentFilePath ,ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.requiredDocumentDetails.requiredDocumentFilePath);
-
+                  this.requiredDocumentDetails.multipartFileList  = this.fileUploadService.getFile(this.requiredDocumentDetails.requiredDocumentFilePath ,ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.requiredDocumentDetails.requiredDocumentFilePath);
+                  this.isFileUploaded=applicationConstants.TRUE;
+                }else{
+                  this.isFileUploaded=applicationConstants.FALSE;
                 }
               }
             }
@@ -569,6 +576,7 @@ export class AccountRequireDocumentsComponent {
    * @author bhargavi
    */
   fileRemoeEvent(){
+    this.isFileUploaded = applicationConstants.FALSE;
    if(this.requiredDocumentDetails.filesDTOList != null && this.requiredDocumentDetails.filesDTOList != undefined && this.requiredDocumentDetails.filesDTOList.length > 0){
     let removeFileIndex = this.requiredDocumentDetails.filesDTOList.findIndex((obj:any) => obj && obj.fileName === this.requiredDocumentDetails.requiredDocumentFilePath);
     if(removeFileIndex != null && removeFileIndex != undefined){
@@ -576,5 +584,14 @@ export class AccountRequireDocumentsComponent {
       this.requiredDocumentDetails.requiredDocumentFilePath = null;
     }
    }
+  }
+  onClickkycPhotoCopy(){
+    this.kycPhotoCopyZoom = true;
+  }
+  kycclosePhoto(){
+    this.kycPhotoCopyZoom = false;
+  }
+  kycclosePhotoCopy() {
+    this.kycPhotoCopyZoom = false;
   }
 }

@@ -74,6 +74,8 @@ export class StandingInstructionComponent {
   groupPromotersPopUpFlag: boolean = false;
   institutionPromoterFlag: boolean = false;
   memberPhotoCopyZoom: boolean = false;
+  groupPhotoCopyZoom: boolean = false;
+  institutionPhotoCopyZoom: boolean = false;
   columns: any[]= [];
   groupPrmoters: any[] =[];
 
@@ -454,6 +456,12 @@ this.groupPromotersPopUpFlag = true;
 closePhotoCopy() {
 this.memberPhotoCopyZoom = false;
 }
+groupclosePhotoCopy() {
+  this.groupPhotoCopyZoom = false;
+}
+institutionclosePhotoCopy() {
+  this.institutionPhotoCopyZoom = false;
+}
 
 /**
 * @implement Image Zoom POp up
@@ -461,6 +469,12 @@ this.memberPhotoCopyZoom = false;
 */
 onClickMemberPhotoCopy(){
 this.memberPhotoCopyZoom = true;
+}
+onClickGroupPhotoCopy(){
+  this.groupPhotoCopyZoom = true;
+}
+onClickInstitutionPhotoCopy(){
+  this.institutionPhotoCopyZoom = true;
 }
 
 
@@ -740,12 +754,23 @@ this.memberPhotoCopyZoom = false;
     this.standingInstruction.filesDTOList.splice(removeFileIndex, 1);
     this.standingInstruction.signedCopyPath = null;
   }
-  isBasicDetails: boolean = false;
+  individualBasicDetails: boolean = false;
+  groupBasicDetails: boolean = false;
+  institutionBasicDetails: boolean = false;
   position: string = 'center';
-  showBasicDetailsDialog(position: string) {
+  showindividualBasicDetailsDialog(position: string) {
     this.position = position;
-    this.isBasicDetails = true;
+    this.individualBasicDetails = true;
   }
+  showgroupBasicDetailsDialog(position: string) {
+    this.position = position;
+    this.groupBasicDetails = true;
+  }
+  showinstitutionBasicDetailsDialog(position: string) {
+    this.position = position;
+    this.institutionBasicDetails = true;
+  }
+
 
   /**
    * @implements get product details

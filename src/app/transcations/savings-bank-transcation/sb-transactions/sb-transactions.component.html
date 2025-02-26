@@ -14,7 +14,7 @@
                         <h5 class="transaction-side-card-header">{{'ERP.ADMISSION_DETAILS' | translate}}</h5>
                     </div>
                     <div class="col-12 pic-sig-status">
-                        <div class="d-flex justify-content-center">
+                        <div class="d-flex justify-content-center mb-2">
                             <div *ngFor="let img of membershipBasicRequiredDetails.multipartFileListForPhotoCopy"
                                 (click)="onClickMemberPhotoCopy()">
                                 <div *ngIf="photoCopyFlag">
@@ -30,7 +30,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <p class="active-status"></p>
+                            <!-- <p class="active-status"></p> -->
                             <div *ngFor="let img of membershipBasicRequiredDetails.multipartFileListForsignatureCopyPath"
                                 (click)="onClickMemberPhotoCopy()">
                                 <div *ngIf="photoCopyFlag">
@@ -48,51 +48,51 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 min-h-50px d-flex justify-content-left">
+                    <div class="col-12 basicdata-card d-flex justify-content-center py-0">
                         <span class="basicdata-icons mx-2"><i class="fa fa-keyboard-o fa-2x text-left"
                                 aria-hidden="true"></i></span>
                         <div class="text-left text-white">
-                            <p class="m-0">{{'ERP.ACCOUNT_NUMBER' | translate}}</p>
-                            <p class="font-semibold text-break m-0">{{sbTransactionModel.accountNumber}}</p>
+                            <p class="label-view text-fontwt">{{'ERP.ACCOUNT_NUMBER' | translate}}</p>
+                            <p class="label-input-text">{{sbTransactionModel.accountNumber}}</p>
                         </div>
                     </div>
-                    <div class="col-12 min-h-50px d-flex justify-content-left">
+                    <div class="col-12 basicdata-card d-flex justify-content-center py-0">
                         <span class="basicdata-icons mx-2"><i class="fa fa-briefcase fa-2x text-left"
                                 aria-hidden="true"></i></span>
                         <div class="text-left text-white">
-                            <p class="m-0">{{'ERP.ACCOUNT_BALANCE' | translate}}</p>
-                            <p class="font-semibold text-break m-0"><i class="fa fa-inr mr-1"
+                            <p class="label-view text-fontwt">{{'ERP.ACCOUNT_BALANCE' | translate}}</p>
+                            <p class="label-input-text"><i class="fa fa-inr mr-1"
                                     aria-hidden="true"></i>{{savingBankApplicationModel.balance}}</p>
                         </div>
                     </div>
         
-                    <div class="col-12 min-h-50px text-white text-break ">
-                        <p class="m-0">{{'ERP.NAME' | translate}}</p>
-                        <p class="font-semibold m-0"> {{membershipBasicRequiredDetails.name}}</p>
+                    <div class="col-12 basicdata-card text-white text-break py-0">
+                        <p class="label-view text-fontwt">{{'ERP.NAME' | translate}}</p>
+                        <p class="label-input-text"> {{membershipBasicRequiredDetails.name}}</p>
                     </div>
         
-                    <div class="col-12 min-h-50px">
+                    <div class="col-12 basicdata-card py-0">
                         <div class="grid">
                             <div class="col-6 text-white text-break">
-                                <p class="m-0">{{'ERP.ADMINSSION_NUMBER' | translate}}</p>
-                                <p class="font-semibold m-0"> {{membershipBasicRequiredDetails.tempAdmissionNumber}}</p>
+                                <p class="label-view text-fontwt">{{'ERP.ADMINSSION_NUMBER' | translate}}</p>
+                                <p class="label-input-text"> {{membershipBasicRequiredDetails.tempAdmissionNumber}}</p>
                             </div>
                             <div class="col-6 text-white  text-break">
-                                <p class="m-0">{{'ERP.ADMISSION_DATE' | translate}}</p>
-                                <p class="font-semibold m-0">{{membershipBasicRequiredDetails.admissionDateVal}}</p>
+                                <p class="label-view text-fontwt">{{'ERP.ADMISSION_DATE' | translate}}</p>
+                                <p class="label-input-text">{{membershipBasicRequiredDetails.admissionDateVal}}</p>
                             </div>
                         </div>
                     </div>
         
-                    <div class="col-12 min-h-50px">
+                    <div class="col-12 basicdata-card py-0">
                         <div class=" grid">
                             <div class="col-6 text-white text-break">
-                                <p class="m-0">{{'ERP.MEMBER_TYPE' | translate}}</p>
-                                <p class="font-semibold m-0"> {{membershipBasicRequiredDetails.memberTypeName}}</p>
+                                <p class="label-view text-fontwt">{{'ERP.MEMBER_TYPE' | translate}}</p>
+                                <p class="label-input-text"> {{membershipBasicRequiredDetails.memberTypeName}}</p>
                             </div>
                             <div class="col-6 text-white text-break">
-                                <p class="m-0">{{'ERP.OPERATION_TYPE' | translate}}</p>
-                                <p class="font-semibold m-0"> Single</p>
+                                <p class="label-view text-fontwt">{{'ERP.OPERATION_TYPE' | translate}}</p>
+                                <p class="label-input-text"> Single</p>
                             </div>
                             <!-- <div class="col-6 text-white text-break">
                                                                             <span>{{'ERP.AGE' | translate}}</span>
@@ -102,64 +102,69 @@
                         </div>
                     </div>
         
-                    <div class="col-12 min-h-50px">
+                    <div class="col-12 basicdata-card py-0">
                         <div class=" grid">
                             <div class="col-6 text-break">
-                                <span>{{'ERP.GENDER' | translate}}</span>
-                                <p class="font-semibold m-0"> {{membershipBasicRequiredDetails.genderName}}</p>
+                                <p class="label-view text-fontwt">{{'ERP.GENDER' | translate}}</p>
+                                <p class="label-input-text"> {{membershipBasicRequiredDetails.genderName}}</p>
                             </div>
                             <div class="col-6  text-break">
-                                <span>{{'ERP.AGE' | translate}}</span>
-                                <p class="font-semibold m-0"> {{membershipBasicRequiredDetails.age}}</p>
+                                <p class="label-view text-fontwt">{{'ERP.AGE' | translate}}</p>
+                                <p class="label-input-text"> {{membershipBasicRequiredDetails.age}}</p>
                             </div>
                         </div>
                     </div>
         
-                    <div class="col-12 min-h-50px">
+                    <div class="col-12 basicdata-card py-0">
                         <div class=" grid">
                             <div class="col-6 text-break">
-                                <span>{{'ERP.AADHAR_NO' | translate}} </span>
-                                <p class="font-semibold m-0">{{membershipBasicRequiredDetails.aadharNumber}}</p>
+                                <p class="label-view text-fontwt">{{'ERP.AADHAR_NO' | translate}} </p>
+                                <p class="label-input-text">{{membershipBasicRequiredDetails.aadharNumber}}</p>
                             </div>
                             <div class="col-6 text-break">
-                                <span>{{'ERP.PAN_NO' | translate}}</span>
-                                <p class="font-semibold m-0">{{membershipBasicRequiredDetails.panNumber}}</p>
+                                <p class="label-view text-fontwt">{{'ERP.PAN_NO' | translate}}</p>
+                                <p class="label-input-text">{{membershipBasicRequiredDetails.panNumber}}</p>
                             </div>
                         </div>
                     </div>
         
-                    <div class="col-12 min-h-50px">
+                    <div class="col-12 basicdata-card py-0">
                         <div class=" grid">
                             <div class="col-6 text-break">
-                                <span>{{'ERP.CONTACT' | translate}}</span>
-                                <p class="font-semibold">{{membershipBasicRequiredDetails.mobileNumber}}</p>
+                                <p class="label-view text-fontwt">{{'ERP.MOBILE_NUMBER' | translate}}</p>
+                                <p class="label-input-text">{{membershipBasicRequiredDetails.mobileNumber}}</p>
                             </div>
                             <div class="col-6 text-break">
-                                <span>{{'ERP.EMAIL' | translate}}</span>
-                                <p class="font-semibold m-0">{{membershipBasicRequiredDetails.emailId}}</p>
+                                <p class="label-view text-fontwt">{{'ERP.EMAIL' | translate}}</p>
+                                <p class="label-input-text">{{membershipBasicRequiredDetails.emailId}}</p>
                             </div>
                         </div>
                     </div>
         
-                    <div class="col-12 min-h-50px text-break">
-                        <span>{{'ERP.ADDRESS' | translate}}</span>
-                        <p class="font-semibold m-0">{{membershipBasicRequiredDetails.name}}</p>
+                    <div class="col-12 basicdata-card text-break py-0">
+                        <p class="label-view text-fontwt">{{'ERP.ADDRESS' | translate}}</p>
+                        <p class="label-input-text">{{membershipBasicRequiredDetails.name}}</p>
         
                     </div>
         
-                    <div class="col-12 min-h-50px text-break">
-                        <div class="d-flex justify-content-between">
-                            <div class="text-break">
-                                <span>{{'ERP.KYC' | translate}}</span>
-                                <p class="font-semibold m-0"> {{isKycApproved}}</p>
-                            </div>
-                            <div class="kyc-done icon-size text-right">
-                                <i class="fa fa-check-circle" aria-hidden="true"></i>
-        
-                            </div>
-        
+                    <!-- KYC Approved -->
+                    <!-- <div class="col-12 basicdata-card text-break py-0">
+                        <div class="col-10 d-flex p-0">
+                        <div>
+                        <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
+                        <p class="label-input-text">{{isKycApproved}}</p>
+                    </div>
                         </div>
-        
+                        <div><img src="assets/images/verify.png" alt="" class="verifykyc mt-2"></div>
+                    </div> -->
+                    <!-- KYC Not Approved -->
+                    <div class="col-12 basicdata-card text-break py-0">
+                        <div class="col-12 d-flex p-0">
+                        <div>
+                        <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
+                        <p class="label-input-text">{{isKycApproved}}</p>
+                    </div>
+                        </div>
                     </div>
                     <div class="col-12 color-light justify-content-end text-right">
                         <a class="fst-italic text-light cursor-pointer"
@@ -184,43 +189,43 @@
                         <h5 class="transaction-side-card-header">{{'ERP.ADMISSION_DETAILS' | translate}}</h5>
                     </div>
                     <div class="col-12 pic-sig-status">
-                        <div class="d-flex justify-content-center">
-                            <img src="assets/images/no-image.jpg" class="image-user">
-                            <p class="active-status"></p>
-                            <img src="assets/images/no-image.jpg" class="image-sign">
+                        <div class="d-flex justify-content-center mb-2">
+                            <img src="assets/images/no-image.jpg" class="image-user cursor-pointer" (click)="onClickGroupPhotoCopy()">
+                            <!-- <p class="active-status"></p> -->
+                            <img src="assets/images/no-image.jpg" class="image-sign cursor-pointer" (click)="onClickGroupPhotoCopy()">
                         </div>
                     </div>
-                    <div class="col-12 min-h-50px d-flex mt-2 justify-content-left">
+                    <div class="col-12 basicdata-card d-flex justify-content-center py-0">
                         <span class="basicdata-icons mx-2"><i class="fa fa-keyboard-o fa-2x text-left"
                                 aria-hidden="true"></i></span>
                         <div class="text-left text-white">
-                            <p class="m-0">{{'ERP.ACCOUNT_NUMBER' | translate}}</p>
-                            <p class="font-semibold text-break m-0">{{sbTransactionModel.accountNumber}}</p>
+                            <p class="label-view text-fontwt">{{'ERP.ACCOUNT_NUMBER' | translate}}</p>
+                            <p class="label-input-text">{{sbTransactionModel.accountNumber}}</p>
                         </div>
                     </div>
-                    <div class="col-12 min-h-50px d-flex justify-content-left">
+                    <div class="col-12 basicdata-card d-flex justify-content-center py-0">
                         <span class="basicdata-icons mx-2"><i class="fa fa-briefcase fa-2x text-left"
                                 aria-hidden="true"></i></span>
                         <div class="text-left text-white">
-                            <p class="m-0">{{'ERP.ACCOUNT_BALANCE' | translate}}</p>
-                            <p class="font-semibold text-break m-0"><i class="fa fa-inr mr-1"
+                            <p class="label-view text-fontwt">{{'ERP.ACCOUNT_BALANCE' | translate}}</p>
+                            <p class="label-input-text"><i class="fa fa-inr mr-1"
                                     aria-hidden="true"></i>{{savingBankApplicationModel.balance}}</p>
                         </div>
                     </div>
         
-                    <div class="col-12 min-h-50px text-white text-break ">
-                        <p class="m-0">{{'ERP.NAME' | translate}}</p>
-                        <p class="font-semibold m-0"> {{memberGroupDetailsModel.name}}</p>
+                    <div class="col-12 basicdata-card text-white text-break py-0">
+                        <p class="label-view text-fontwt">{{'ERP.NAME' | translate}}</p>
+                        <p class="label-input-text"> {{memberGroupDetailsModel.name}}</p>
                     </div>
-                    <div class="col-12 min-h-50px">
+                    <div class="col-12 basicdata-card py-0">
                         <div class="grid">
                             <div class="col-6 text-white text-break">
-                                <p class="m-0">{{'ERP.ADMINSSION_NUMBER' | translate}}</p>
-                                <p class="font-semibold m-0"> {{memberGroupDetailsModel.tempAdmissionNumber}}</p>
+                                <p class="label-view text-fontwt">{{'ERP.ADMINSSION_NUMBER' | translate}}</p>
+                                <p class="label-input-text"> {{memberGroupDetailsModel.tempAdmissionNumber}}</p>
                             </div>
                             <div class="col-6 text-white  text-break">
-                                <p class="m-0">{{'ERP.ADMISSION_DATE' | translate}}</p>
-                                <p class="font-semibold m-0">{{memberGroupDetailsModel.admissionDateVal}}</p>
+                                <p class="label-view text-fontwt">{{'ERP.ADMISSION_DATE' | translate}}</p>
+                                <p class="label-input-text">{{memberGroupDetailsModel.admissionDateVal}}</p>
                             </div>
                         </div>
                     </div>
@@ -237,11 +242,11 @@
                                                             
                                                         </div>
                                                     </div> -->
-                    <div class="col-12 min-h-50px">
+                    <div class="col-12 basicdata-card py-0">
                         <div class=" grid">
                             <div class="col-6 text-white text-break">
-                                <p class="m-0">{{'ERP.MEMBER_TYPE' | translate}}</p>
-                                <p class="font-semibold m-0"> {{memberGroupDetailsModel.memberTypeName}}</p>
+                                <p class="label-view text-fontwt">{{'ERP.MEMBER_TYPE' | translate}}</p>
+                                <p class="label-input-text"> {{memberGroupDetailsModel.memberTypeName}}</p>
                             </div>
                             <!-- <div class="col-6 text-white text-break">
                                                                                             <span>{{'ERP.AGE' | translate}}</span>
@@ -250,63 +255,68 @@
                                                                                         </div> -->
                         </div>
                     </div>
-                    <div class="col-12 min-h-50px">
+                    <div class="col-12 basicdata-card py-0">
                         <div class=" grid">
                             <div class="col-6  text-break">
-                                <span>{{'ERP.REGISTRATION_NO' | translate}}</span>
-                                <p class="font-semibold m-0"> {{memberGroupDetailsModel.registrationNumber}}</p>
+                                <p class="label-view text-fontwt">{{'ERP.REGISTRATION_NO' | translate}}</p>
+                                <p class="label-input-text"> {{memberGroupDetailsModel.registrationNumber}}</p>
                             </div>
                             <div class="col-6 text-break">
-                                <span>{{'ERP.REGISTRATION_DATE' | translate}}</span>
-                                <p class="font-semibold m-0"> {{memberGroupDetailsModel.registrationDateVal}}</p>
+                                <p class="label-view text-fontwt">{{'ERP.REGISTRATION_DATE' | translate}}</p>
+                                <p class="label-input-text"> {{memberGroupDetailsModel.registrationDateVal}}</p>
                             </div>
                         </div>
                     </div>
         
-                    <div class="col-12 min-h-50px">
+                    <div class="col-12 basicdata-card py-0">
                         <div class=" grid">
                             <div class="col-6 text-break">
-                                <span>{{'ERP.PAN_NO' | translate}} </span>
-                                <p class="font-semibold m-0">{{memberGroupDetailsModel.panNumber}} </p>
+                                <p class="label-view text-fontwt">{{'ERP.PAN_NO' | translate}} </p>
+                                <p class="label-input-text">{{memberGroupDetailsModel.panNumber}} </p>
                             </div>
                             <div class="col-6 text-break">
-                                <span>{{'ERP.TAN_NO' | translate}}</span>
-                                <p class="font-semibold m-0">{{memberGroupDetailsModel.tanNumber}} </p>
+                                <p class="label-view text-fontwt">{{'ERP.TAN_NO' | translate}}</p>
+                                <p class="label-input-text">{{memberGroupDetailsModel.tanNumber}} </p>
                             </div>
                         </div>
                     </div>
         
-                    <div class="col-12 min-h-50px">
+                    <div class="col-12 basicdata-card py-0">
                         <div class=" grid">
                             <div class="col-6 text-break">
-                                <span>{{'ERP.CONTACT' | translate}}</span>
-                                <p class="font-semibold m-0">{{memberGroupDetailsModel.mobileNumber}} </p>
+                                <p class="label-view text-fontwt">{{'ERP.MOBILE_NUMBER' | translate}}</p>
+                                <p class="label-input-text">{{memberGroupDetailsModel.mobileNumber}} </p>
                             </div>
                             <div class="col-6 text-break">
-                                <span>{{'ERP.EMAIL' | translate}}</span>
-                                <p class="font-semibold m-0">{{memberGroupDetailsModel.emailId}} </p>
+                                <p class="label-view text-fontwt">{{'ERP.EMAIL' | translate}}</p>
+                                <p class="label-input-text">{{memberGroupDetailsModel.emailId}} </p>
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="col-12">
-                                                                                            <span>{{'ERP.ADDRESS' | translate}}</span>
-                                                                                            <p class="font-semibold text-break"> {{memberGroupDetailsModel.name}}</p>
-                                                                                            
-                                                                                        </div> -->
+                    <!-- <div class="col-12 basicdata-card text-break py-0">
+                        <p class="label-view text-fontwt">{{'ERP.ADDRESS' | translate}}</p>
+                        <p class="label-input-text"> {{memberGroupDetailsModel.name}}</p>
+                        
+                    </div> -->
         
-                    <div class="col-12 min-h-50px text-break">
-                        <div class="d-flex justify-content-between">
-                            <div class="text-break">
-                                <span>{{'ERP.KYC' | translate}}</span>
-                                <p class="font-semibold m-0"> {{isKycApproved}}</p>
-                            </div>
-                            <div class="kyc-done icon-size text-right">
-                                <i class="fa fa-check-circle" aria-hidden="true"></i>
-        
-                            </div>
-        
+                    <!-- KYC Approved -->
+                    <!-- <div class="col-12 basicdata-card text-break py-0">
+                        <div class="col-10 d-flex p-0">
+                        <div>
+                        <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
+                        <p class="label-input-text">{{isKycApproved}}</p>
+                    </div>
                         </div>
-        
+                        <div><img src="assets/images/verify.png" alt="" class="verifykyc mt-2"></div>
+                    </div> -->
+                    <!-- KYC Not Approved -->
+                    <div class="col-12 basicdata-card text-break py-0">
+                        <div class="col-12 d-flex p-0">
+                        <div>
+                        <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
+                        <p class="label-input-text">{{isKycApproved}}</p>
+                    </div>
+                        </div>
                     </div>
                     <div class="col-12 color-light justify-content-end text-right">
                         <a class="fst-italic text-light cursor-pointer" (click)="onClickOfGroupPromotes()">{{'ERP.MORE_DETAILS'
@@ -319,111 +329,116 @@
                     </div>
         
                     <div class="col-12 pic-sig-status">
-                        <div class="d-flex justify-content-center">
-                            <img src="assets/images/no-image.jpg" class="image-user">
-                            <p class="active-status"></p>
-                            <img src="assets/images/no-image.jpg" class="image-sign">
+                        <div class="d-flex justify-content-center mb-2">
+                            <img src="assets/images/no-image.jpg" class="image-user cursor-pointer" (click)="onClickInstitutionPhotoCopy()">
+                            <!-- <p class="active-status"></p> -->
+                            <img src="assets/images/no-image.jpg" class="image-sign cursor-pointer" (click)="onClickInstitutionPhotoCopy()">
                         </div>
                     </div>
-                    <div class="col-12 min-h-50px d-flex justify-content-left">
+                    <div class="col-12 basicdata-card d-flex justify-content-center py-0">
                         <span class="basicdata-icons mx-2"><i class="fa fa-keyboard-o fa-2x text-left"
                                 aria-hidden="true"></i></span>
                         <div class="text-left text-white">
-                            <p class="m-0">{{'ERP.ACCOUNT_NUMBER' | translate}}</p>
-                            <p class="font-semibold text-break m-0">{{sbTransactionModel.accountNumber}}</p>
+                            <p class="label-view text-fontwt">{{'ERP.ACCOUNT_NUMBER' | translate}}</p>
+                            <p class="label-input-text">{{sbTransactionModel.accountNumber}}</p>
                         </div>
                     </div>
-                    <div class="col-12 min-h-50px d-flex justify-content-left">
+                    <div class="col-12 basicdata-card d-flex justify-content-center py-0t">
                         <span class="basicdata-icons mx-2"><i class="fa fa-briefcase fa-2x text-left"
                                 aria-hidden="true"></i></span>
                         <div class="text-left text-white">
-                            <p class="m-0">{{'ERP.ACCOUNT_BALANCE' | translate}}</p>
-                            <p class="font-semibold text-break m-0"><i class="fa fa-inr mr-1"
+                            <p class="label-view text-fontwt">{{'ERP.ACCOUNT_BALANCE' | translate}}</p>
+                            <p class="label-input-text"><i class="fa fa-inr mr-1"
                                     aria-hidden="true"></i>{{savingBankApplicationModel.balance}}</p>
                         </div>
                     </div>
         
-                    <div class="col-12 min-h-50px text-white text-break ">
-                        <p class="m-0">{{'ERP.NAME' | translate}}</p>
-                        <p class="font-semibold m-0">{{membershipInstitutionDetailsModel.name}}</p>
+                    <div class="col-12 basicdata-card text-white text-break py-0">
+                        <p class="label-view text-fontwt">{{'ERP.NAME' | translate}}</p>
+                        <p class="label-input-text">{{membershipInstitutionDetailsModel.name}}</p>
                     </div>
         
-                    <div class="col-12 min-h-50px">
+                    <div class="col-12 basicdata-card py-0">
                         <div class="grid">
                             <div class="col-6 text-white text-break">
-                                <p class="m-0">{{'ERP.ADMINSSION_NUMBER' | translate}}</p>
-                                <p class="font-semibold m-0">{{membershipInstitutionDetailsModel.tempAdmissionNumber}} </p>
+                                <p class="label-view text-fontwt">{{'ERP.ADMINSSION_NUMBER' | translate}}</p>
+                                <p class="label-input-text">{{membershipInstitutionDetailsModel.tempAdmissionNumber}} </p>
                             </div>
                             <div class="col-6 text-white  text-break">
-                                <p class="m-0">{{'ERP.ADMISSION_DATE' | translate}}</p>
-                                <p class="font-semibold m-0">{{membershipInstitutionDetailsModel.admissionDateVal}}</p>
+                                <p class="label-view text-fontwt">{{'ERP.ADMISSION_DATE' | translate}}</p>
+                                <p class="label-input-text">{{membershipInstitutionDetailsModel.admissionDateVal}}</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 min-h-50px text-white text-break ">
-                        <p class="m-0">{{'ERP.MEMBER_TYPE' | translate}}</p>
-                        <p class="font-semibold m-0">{{membershipInstitutionDetailsModel.memberTypeName}}</p>
+                    <div class="col-12 basicdata-card text-break py-0">
+                        <p class="label-view text-fontwt">{{'ERP.MEMBER_TYPE' | translate}}</p>
+                        <p class="label-input-text">{{membershipInstitutionDetailsModel.memberTypeName}}</p>
                     </div>
-                    <div class="col-12 min-h-50px">
+                    <div class="col-12 basicdata-card py-0">
                         <div class="grid">
                             <div class="col-6 text-white text-break">
-                                <p class="m-0">{{'ERP.REGISTRATION_DATE' | translate}}</p>
-                                <p class="font-semibold m-0">{{membershipInstitutionDetailsModel.registrationDateVal}}</p>
+                                <p class="label-view text-fontwt">{{'ERP.REGISTRATION_DATE' | translate}}</p>
+                                <p class="label-input-text">{{membershipInstitutionDetailsModel.registrationDateVal}}</p>
                             </div>
                             <div class="col-6 text-white text-break">
-                                <p class="m-0">{{'ERP.REGISTERED_NO' | translate}}</p>
-                                <p class="font-semibold m-0"> {{membershipInstitutionDetailsModel.registrationNumber}}</p>
+                                <p class="label-view text-fontwt">{{'ERP.REGISTERED_NO' | translate}}</p>
+                                <p class="label-input-text"> {{membershipInstitutionDetailsModel.registrationNumber}}</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 min-h-50px">
+                    <div class="col-12 basicdata-card py-0">
                         <div class="grid">
                             <div class="col-6 text-white text-break">
-                                <p class="m-0">{{'ERP.PAN_NO' | translate}}</p>
-                                <p class="font-semibold m-0">{{membershipInstitutionDetailsModel.panNumber}}</p>
+                                <p class="label-view text-fontwt">{{'ERP.PAN_NO' | translate}}</p>
+                                <p class="label-input-text">{{membershipInstitutionDetailsModel.panNumber}}</p>
                             </div>
                             <div class="col-6 text-white text-break">
-                                <p class="m-0">{{'ERP.TAN_NO' | translate}} </p>
-                                <p class="font-semibold m-0"> {{membershipInstitutionDetailsModel.tanNumber}}</p>
+                                <p class="label-view text-fontwt">{{'ERP.TAN_NO' | translate}} </p>
+                                <p class="label-input-text"> {{membershipInstitutionDetailsModel.tanNumber}}</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 min-h-50px text-white text-break ">
-                        <p class="m-0">{{'ERP.GST_NO' | translate}}</p>
-                        <p class="font-semibold m-0"> {{membershipInstitutionDetailsModel.gstNumber}}</p>
+                    <div class="col-12 basicdata-card text-break py-0">
+                        <p class="label-view text-fontwt">{{'ERP.GST_NO' | translate}}</p>
+                        <p class="label-input-text"> {{membershipInstitutionDetailsModel.gstNumber}}</p>
                     </div>
         
-                    <div class="col-12 min-h-50px">
+                    <div class="col-12 basicdata-card py-0">
                         <div class="grid">
                             <div class="col-6 text-white text-break">
-                                <p class="m-0">{{'ERP.CONTACT' | translate}}</p>
-                                <p class="font-semibold m-0"> {{membershipInstitutionDetailsModel.mobileNumber}}</p>
+                                <p class="label-view text-fontwt">{{'ERP.MOBILE_NUMBER' | translate}}</p>
+                                <p class="label-input-text"> {{membershipInstitutionDetailsModel.mobileNumber}}</p>
                             </div>
                             <div class="col-6 text-white text-break">
-                                <p class="m-0">{{'ERP.EMAIL' | translate}}</p>
-                                <p class="font-semibold m-0">{{membershipInstitutionDetailsModel.emailId}}</p>
+                                <p class="label-view text-fontwt">{{'ERP.EMAIL' | translate}}</p>
+                                <p class="label-input-text">{{membershipInstitutionDetailsModel.emailId}}</p>
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="col-12">
-                                                                                            <span>{{'ERP.ADDRESS' | translate}}</span>
-                                                                                            <p class="font-semibold text-break">{{membershipInstitutionDetailsModel.}} </p>
-                                                                                            
-                                                                                        </div> -->
+                    <!-- <div class="col-12 basicdata-card text-break py-0">
+                        <p class="label-view text-fontwt">{{'ERP.ADDRESS' | translate}}</p>
+                        <p class="label-input-text">{{membershipInstitutionDetailsModel.}} </p>
+                        
+                    </div> -->
         
-                    <div class="col-12 min-h-50px text-break">
-                        <div class="d-flex justify-content-between">
-                            <div class="text-break">
-                                <span>{{'ERP.KYC' | translate}}</span>
-                                <p class="font-semibold m-0">{{isKycApproved}}</p>
-                            </div>
-                            <div class="kyc-done icon-size text-right">
-                                <i class="fa fa-check-circle" aria-hidden="true"></i>
-        
-                            </div>
-        
+                    <!-- KYC Approved -->
+                    <!-- <div class="col-12 basicdata-card text-break py-0">
+                        <div class="col-10 d-flex p-0">
+                        <div>
+                        <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
+                        <p class="label-input-text">{{isKycApproved}}</p>
+                    </div>
                         </div>
-        
+                        <div><img src="assets/images/verify.png" alt="" class="verifykyc mt-2"></div>
+                    </div> -->
+                    <!-- KYC Not Approved -->
+                    <div class="col-12 basicdata-card text-break py-0">
+                        <div class="col-12 d-flex p-0">
+                        <div>
+                        <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
+                        <p class="label-input-text">{{isKycApproved}}</p>
+                    </div>
+                        </div>
                     </div>
                     <div class="col-12 color-light justify-content-end text-right">
                         <a class="fst-italic text-light cursor-pointer" (click)="onClick()">{{'ERP.MORE_DETAILS' |
@@ -437,13 +452,13 @@
                         <div class="col-12 p-1">
                             <div class=" d-flex justify-content-end">
                                 <div class="basic-detaisl-btn view-popup-top mr-2 mb-2" *ngIf="memberTypeName == 'Individual'">
-                                    <a (click)="showBasicDetailsDialog('right')" class="top-badge-btn btn-outline-0 ">Basic
+                                    <a (click)="showindividualBasicDetailsDialog('right')" class="top-badge-btn btn-outline-0 ">Basic
                                         Details</a></div>
                                 <div class="basic-detaisl-btn view-popup-top mr-2 mb-2" *ngIf="memberTypeName == 'Group'"><a
-                                        (click)="showBasicDetailsDialog('right')" class="top-badge-btn btn-outline-0 ">Basic
+                                        (click)="showgroupBasicDetailsDialog('right')" class="top-badge-btn btn-outline-0 ">Basic
                                         Details</a></div>
                                 <div class="basic-detaisl-btn view-popup-top mr-2 mb-2" *ngIf="memberTypeName == 'Institution'">
-                                    <a (click)="showBasicDetailsDialog('right')" class="top-badge-btn btn-outline-0 ">Basic
+                                    <a (click)="showinstitutionBasicDetailsDialog('right')" class="top-badge-btn btn-outline-0 ">Basic
                                         Details</a></div>
                             </div>
                         </div>
@@ -778,21 +793,21 @@
             <div class="row g-3">
                 <div class="col-lg-3 col-md-3 col-sm-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.ACCOUNT_TYPE' | translate}}</span>
-                        <p class="fw-semibold">Savings</p>
+                        <span class="label-view">{{'ERP.ACCOUNT_TYPE' | translate}}</span>
+                        <p class="label-input-text">Savings</p>
     
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'DEMANDDEPOSITS.TRANSACTION_TYPE' | translate}}</span>
-                        <p class="fw-semibold">{{sbTransactionModel.transactionTypeName}}</p>
+                        <span class="label-view">{{'DEMANDDEPOSITS.TRANSACTION_TYPE' | translate}}</span>
+                        <p class="label-input-text">{{sbTransactionModel.transactionTypeName}}</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'DEMANDDEPOSITS.TRANSACTION_MODE' | translate}}</span>
-                        <p class="fw-semibold">{{sbTransactionModel.transactionModeName}}</p>
+                        <span class="label-view">{{'DEMANDDEPOSITS.TRANSACTION_MODE' | translate}}</span>
+                        <p class="label-input-text">{{sbTransactionModel.transactionModeName}}</p>
                     </div>
                 </div>
             </div>
@@ -806,8 +821,8 @@
                 
                 <div class="col-lg-3 col-md-3 col-sm-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.ACCOUNT_NUMBER' | translate}}</span>
-                        <p class="fw-semibold">{{sbTransactionModel.accountNumber}}</p>
+                        <span class="label-view">{{'ERP.ACCOUNT_NUMBER' | translate}}</span>
+                        <p class="label-input-text">{{sbTransactionModel.accountNumber}}</p>
     
                     </div>
                 </div>
@@ -815,22 +830,22 @@
                 <!-- <div class="col-lg-3 col-md-3 col-sm-12">
                     <div class="form-label">
                         <div class="form-group">
-                        <span class="fw-light">{{'ERP.ACCOUNT_HOLDER_NAME' | translate}}</span>
-                            <p class="fw-semibold">{{sbTransactionModel.accountNumber}}</p>
+                        <span class="label-view">{{'ERP.ACCOUNT_HOLDER_NAME' | translate}}</span>
+                            <p class="label-input-text">{{sbTransactionModel.accountNumber}}</p>
                         </div>
                     </div>
                     
                 </div> -->
                 <div class="col-lg-3 col-md-3 col-sm-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.AMOUNT' | translate}}</span>
-                        <p class="fw-semibold">{{sbTransactionModel.transactionAmount}}</p>
+                        <span class="label-view">{{'ERP.AMOUNT' | translate}}</span>
+                        <p class="label-input-text">{{sbTransactionModel.transactionAmount}}</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-12">
                     <div class="form-group">
-                    <span class="fw-light">{{'ERP.AMOUNT_IN_WORDS' | translate}}</span>
-                        <p class="fw-semibold">{{sbTransactionModel.amountInWords}}</p>
+                    <span class="label-view">{{'ERP.AMOUNT_IN_WORDS' | translate}}</span>
+                        <p class="label-input-text">{{sbTransactionModel.amountInWords}}</p>
                     </div>
                 </div>
     
@@ -847,45 +862,45 @@
                     </div>
                     <div class="col-lg-3 col-md-3 col-sm-12">
                         <div class="form-group">
-                            <span class="fw-light">{{'DEMANDDEPOSITS.AMOUNT' | translate}}</span>
-                            <p class="fw-semibold">{{transferTransactionDetails.transactionAmount}}</p>
+                            <span class="label-view">{{'DEMANDDEPOSITS.AMOUNT' | translate}}</span>
+                            <p class="label-input-text">{{transferTransactionDetails.transactionAmount}}</p>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-3 col-sm-12">
                         <div class="form-group">
-                            <span class="fw-light">{{'DEMANDDEPOSITS.AMOUNT_IN_WORDS' | translate}}</span>
-                            <p class="fw-semibold">{{transferTransactionDetails.amountInWords}}</p>
+                            <span class="label-view">{{'DEMANDDEPOSITS.AMOUNT_IN_WORDS' | translate}}</span>
+                            <p class="label-input-text">{{transferTransactionDetails.amountInWords}}</p>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-3 col-sm-12">
                         <div class="form-group">
-                            <span class="fw-light">{{'ERP.NARRATION' | translate}}</span>
-                            <p class="fw-semibold">{{transferTransactionDetails.narration}}</p>
+                            <span class="label-view">{{'ERP.NARRATION' | translate}}</span>
+                            <p class="label-input-text">{{transferTransactionDetails.narration}}</p>
                         </div>
                     </div>
                     
                     <div class="col-lg-3 col-md-3 col-sm-12">
                         <div class="form-group">
-                            <span class="fw-light">{{'ERP.ACCOUNT_NUMBER' | translate}}</span>
-                            <p class="fw-semibold">{{sbTransactionModel.accountNumber}}</p>
+                            <span class="label-view">{{'ERP.ACCOUNT_NUMBER' | translate}}</span>
+                            <p class="label-input-text">{{sbTransactionModel.accountNumber}}</p>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-3 col-sm-12">
                         <div class="form-group">
-                            <span class="fw-light">{{'ERP.ACCOUNT_HOLDER_NAME' | translate}}</span>
-                            <p class="fw-semibold">{{transferTransactionDetails.beneficiaryName}}</p>
+                            <span class="label-view">{{'ERP.ACCOUNT_HOLDER_NAME' | translate}}</span>
+                            <p class="label-input-text">{{transferTransactionDetails.beneficiaryName}}</p>
                         </div>
                     </div>
                     <!-- <div class="col-lg-3 col-md-3 col-sm-12">
                         <div class="form-group">
-                            <span class="fw-light">{{'ERP.BRANCH' | translate}}</span>
-                            <p class="fw-semibold">{{transferTransactionDetails.branchName}}</p>
+                            <span class="label-view">{{'ERP.BRANCH' | translate}}</span>
+                            <p class="label-input-text">{{transferTransactionDetails.branchName}}</p>
                         </div>
                     </div> -->
                     <div class="col-lg-3 col-md-3 col-sm-12">
                         <div class="form-group">
-                            <span class="fw-light">{{'ERP.AMOUNT' | translate}}</span>
-                            <p class="fw-semibold">{{transferTransactionDetails.transactionAmount}}</p>
+                            <span class="label-view">{{'ERP.AMOUNT' | translate}}</span>
+                            <p class="label-input-text">{{transferTransactionDetails.transactionAmount}}</p>
                         </div>
                     </div>
                     <p-button class="pull-right" label="{{'DEMANDDEPOSITS.CONFIRM' | translate}}"
@@ -900,27 +915,27 @@
             <div class="row g-3 popup-basic-details">
                 <div class="col-lg-3 col-md-3 col-sm-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.ACCOUNT_NUMBER' | translate}}</span>
-                        <p class="fw-semibold">{{sbTransactionModel.accountNumber}}</p>
+                        <span class="label-view">{{'ERP.ACCOUNT_NUMBER' | translate}}</span>
+                        <p class="label-input-text">{{sbTransactionModel.accountNumber}}</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.HOLDER_NAME' | translate}}</span>
-                        <p class="fw-semibold">{{chequeDetails.beneficiaryName}}</p>
-                        <!-- <p class="fw-light">{{sbTransactionModel.holdeName}}</p> -->
+                        <span class="label-view">{{'ERP.HOLDER_NAME' | translate}}</span>
+                        <p class="label-input-text">{{chequeDetails.beneficiaryName}}</p>
+                        <!-- <p class="label-view">{{sbTransactionModel.holdeName}}</p> -->
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.BRANCH' | translate}}</span>
-                        <p class="fw-semibold">{{chequeDetails.beneficiaryName}}</p>
+                        <span class="label-view">{{'ERP.BRANCH' | translate}}</span>
+                        <p class="label-input-text">{{chequeDetails.beneficiaryName}}</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.CHEQUE_NUMBER' | translate}}</span>
-                        <p class="fw-semibold">{{chequeDetails.chequeNumber}}</p>
+                        <span class="label-view">{{'ERP.CHEQUE_NUMBER' | translate}}</span>
+                        <p class="label-input-text">{{chequeDetails.chequeNumber}}</p>
                     </div>
                 </div>
                 <!-- Transaction ID -->
@@ -930,26 +945,26 @@
                         <input type="text" class="form-control" id="transactionId" name="transactionId">
                 
                         <span>{{'DEMANDDEPOSITS.TRANSACTION_ID' | translate}}</span>
-                        <p class="fw-semibold">{{sbTransactionModel.amount}}</p>
+                        <p class="label-input-text">{{sbTransactionModel.amount}}</p>
                     </div>
                 </div> -->
                 <div class="col-lg-3 col-md-3 col-sm-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.VALID_FROM' | translate}}</span>
-                        <p class="fw-semibold">{{chequeDetails.amountTransferedDateVal}}</p>
+                        <span class="label-view">{{'ERP.VALID_FROM' | translate}}</span>
+                        <p class="label-input-text">{{chequeDetails.amountTransferedDateVal}}</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.AMOUNT' | translate}}</span>
-                        <p class="fw-semibold">{{chequeDetails.amount}}</p>
+                        <span class="label-view">{{'ERP.AMOUNT' | translate}}</span>
+                        <p class="label-input-text">{{chequeDetails.amount}}</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.NARRATION' | translate}}</span>
-                        <p class="fw-semibold">{{chequeDetails.transactionAmountInWords}}</p>
-                        <!-- <p class="fw-light">{{sbTransactionModel.narration}}</p> -->
+                        <span class="label-view">{{'ERP.NARRATION' | translate}}</span>
+                        <p class="label-input-text">{{chequeDetails.transactionAmountInWords}}</p>
+                        <!-- <p class="label-view">{{sbTransactionModel.narration}}</p> -->
                     </div>
                 </div>
                 <p-button class="pull-right" label="{{'DEMANDDEPOSITS.CONFIRM' | translate}}"
@@ -1011,7 +1026,7 @@
 
 <!-- Individual details dialog -->
 <div class="view-moredetails-popup">
-    <p-dialog header="Basic Details" [modal]="true" [(visible)]="membreIndividualFlag" [style]="{ width: '55vw' }">  
+    <p-dialog header="Basic Details" [modal]="true" [(visible)]="membreIndividualFlag" styleClass="moredetails-style">  
         <div class="col-12 view-morepopup">
                 <div class="d-flex justify-content-center px-3 py-0 mb-2">
                     <div *ngIf ="!this.membershipBasicRequiredDetails.photoCopyPath">
@@ -1067,129 +1082,129 @@
             <div class="row">
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.MEMBER_TYPE' | translate}}</span>
-                        <p class="fw-semibold">{{ membershipBasicRequiredDetails.memberTypeName }}</p>
+                        <span class="label-view">{{'ERP.MEMBER_TYPE' | translate}}</span>
+                        <p class="label-input-text">{{ membershipBasicRequiredDetails.memberTypeName }}</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.SURNAME' | translate}}</span>
-                        <p class="fw-semibold">{{ membershipBasicRequiredDetails.surname}}</p>
+                        <span class="label-view">{{'ERP.SURNAME' | translate}}</span>
+                        <p class="label-input-text">{{ membershipBasicRequiredDetails.surname}}</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.NAME' | translate}}</span>
-                        <p class="fw-semibold">{{membershipBasicRequiredDetails.name}}</p>
+                        <span class="label-view">{{'ERP.NAME' | translate}}</span>
+                        <p class="label-input-text">{{membershipBasicRequiredDetails.name}}</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.DATE_OF_BIRTH' | translate}}</span>
-                        <p class="fw-semibold">{{membershipBasicRequiredDetails.dobVal}}</p>
+                        <span class="label-view">{{'ERP.DATE_OF_BIRTH' | translate}}</span>
+                        <p class="label-input-text">{{membershipBasicRequiredDetails.dobVal}}</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.AGE' | translate}}</span>
-                        <p class="fw-semibold">{{membershipBasicRequiredDetails.age}}</p>
+                        <span class="label-view">{{'ERP.AGE' | translate}}</span>
+                        <p class="label-input-text">{{membershipBasicRequiredDetails.age}}</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.GENDER' | translate}}</span>
-                        <p class="fw-semibold">{{membershipBasicRequiredDetails.genderName }}</p>
+                        <span class="label-view">{{'ERP.GENDER' | translate}}</span>
+                        <p class="label-input-text">{{membershipBasicRequiredDetails.genderName }}</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.MARITAL_STATUS' | translate}}</span>
-                        <p class="fw-semibold">{{membershipBasicRequiredDetails.maritalStatusName}}</p>
+                        <span class="label-view">{{'ERP.MARITAL_STATUS' | translate}}</span>
+                        <p class="label-input-text">{{membershipBasicRequiredDetails.maritalStatusName}}</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.RELATION_WITH_MEMBER' | translate}}</span>
-                        <p class="fw-semibold">{{membershipBasicRequiredDetails.relationTypeName}}</p>
+                        <span class="label-view">{{'ERP.RELATION_WITH_MEMBER' | translate}}</span>
+                        <p class="label-input-text">{{membershipBasicRequiredDetails.relationTypeName}}</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.RELATION_NAME' | translate}}</span>
-                        <p class="fw-semibold">{{membershipBasicRequiredDetails.relativeName }}</p>
+                        <span class="label-view">{{'ERP.RELATION_NAME' | translate}}</span>
+                        <p class="label-input-text">{{membershipBasicRequiredDetails.relativeName }}</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.QUALIFICATION' | translate}}</span>
-                        <p class="fw-semibold">{{membershipBasicRequiredDetails.qualificationName }}</p>
+                        <span class="label-view">{{'ERP.QUALIFICATION' | translate}}</span>
+                        <p class="label-input-text">{{membershipBasicRequiredDetails.qualificationName }}</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.OCCUPATION' | translate}}</span>
-                        <p class="fw-semibold">{{membershipBasicRequiredDetails.occupationName }}</p>
+                        <span class="label-view">{{'ERP.OCCUPATION' | translate}}</span>
+                        <p class="label-input-text">{{membershipBasicRequiredDetails.occupationName }}</p>
                     </div>
                 </div>
                 <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.AADHAR_NO' | translate}}</span>
-                        <p class="fw-semibold">{{membershipBasicRequiredDetails.aadharNumber }}</p>
+                        <span class="label-view">{{'ERP.AADHAR_NO' | translate}}</span>
+                        <p class="label-input-text">{{membershipBasicRequiredDetails.aadharNumber }}</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.PAN_NO' | translate}}</span>
-                        <p class="fw-semibold">{{membershipBasicRequiredDetails.panNumber }}</p>
+                        <span class="label-view">{{'ERP.PAN_NO' | translate}}</span>
+                        <p class="label-input-text">{{membershipBasicRequiredDetails.panNumber }}</p>
                     </div>
                 </div> -->
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.MOBILE_NUMBER' | translate}}</span>
-                        <p class="fw-semibold">{{membershipBasicRequiredDetails.mobileNumber }}</p>
+                        <span class="label-view">{{'ERP.MOBILE_NUMBER' | translate}}</span>
+                        <p class="label-input-text">{{membershipBasicRequiredDetails.mobileNumber }}</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.EMAIL' | translate}}</span>
-                        <p class="fw-semibold">{{membershipBasicRequiredDetails.emailId }}</p>
+                        <span class="label-view">{{'ERP.EMAIL' | translate}}</span>
+                        <p class="label-input-text">{{membershipBasicRequiredDetails.emailId }}</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.CASTE' | translate}}</span>
-                        <p class="fw-semibold">{{membershipBasicRequiredDetails.casteName }}</p>
+                        <span class="label-view">{{'ERP.CASTE' | translate}}</span>
+                        <p class="label-input-text">{{membershipBasicRequiredDetails.casteName }}</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.COMMUNITYS' | translate}}</span>
-                        <p class="fw-semibold">{{membershipBasicRequiredDetails.communityName }}</p>
+                        <span class="label-view">{{'ERP.COMMUNITYS' | translate}}</span>
+                        <p class="label-input-text">{{membershipBasicRequiredDetails.communityName }}</p>
                     </div>
                 </div>
                 <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
-                        <p class="fw-semibold">{{membershipBasicRequiredDetails.admissionNumber}}</p>
+                        <span class="label-view">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
+                        <p class="label-input-text">{{membershipBasicRequiredDetails.admissionNumber}}</p>
                     </div>
                 </div> -->
                 <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12" >
                     <div class="form-group">
-                        <span class="fw-light">{{'MEMBERSHIP_TRANSACTION.RESOLUTION_NUMBER' | translate}}</span>
-                        <p class="fw-semibold">{{membershipBasicRequiredDetails.mcrNumber }}</p>
+                        <span class="label-view">{{'MEMBERSHIP_TRANSACTION.RESOLUTION_NUMBER' | translate}}</span>
+                        <p class="label-input-text">{{membershipBasicRequiredDetails.mcrNumber }}</p>
                     </div>
                 </div> -->
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.ADMISSION_DATE' | translate}}</span>
-                        <p class="fw-semibold">{{membershipBasicRequiredDetails.admissionDateVal}}</p>
+                        <span class="label-view">{{'ERP.ADMISSION_DATE' | translate}}</span>
+                        <p class="label-input-text">{{membershipBasicRequiredDetails.admissionDateVal}}</p>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
-                        <span class="fw-light">{{'ERP.ADMISSION_FEE' | translate}}</span>
-                        <p class="fw-semibold">{{membershipBasicRequiredDetails.admissionFee}}</p>
+                        <span class="label-view">{{'ERP.ADMISSION_FEE' | translate}}</span>
+                        <p class="label-input-text">{{membershipBasicRequiredDetails.admissionFee}}</p>
                     </div>
                 </div>
             </div>
@@ -1212,67 +1227,67 @@
         </div>
         <div class="col-12 popup-basic-details">
             <div class="row">
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.NAME' | translate}}</span>
                         <p class="label-input-text">{{membershipInstitutionDetailsModel.name}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
                         <p class="label-input-text">{{membershipInstitutionDetailsModel.tempAdmissionNumber}}</p>
                     </div>
-                </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                </div> -->
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.MEMBER_TYPE' | translate}}</span>
                         <p class="label-input-text">{{membershipInstitutionDetailsModel.memberTypeName}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.ADMISSION_DATE' | translate}}</span>
                         <p class="label-input-text">{{membershipInstitutionDetailsModel.admissionDateVal}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.REGISTERED_DATE' | translate}}</span>
                         <p class="label-input-text">{{membershipInstitutionDetailsModel.registrationDateVal}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
-                        <span class="label-view">{{'ERP.CONTACT' | translate}}</span>
+                        <span class="label-view">{{'ERP.MOBILE_NUMBER' | translate}}</span>
                         <p class="label-input-text">{{membershipInstitutionDetailsModel.pocNumber}}</p>
                     </div>
                 </div>
-                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="form-group">
                     <span class="label-view">{{'ERP.EMAIL' | translate}}</span>
                     <p class="label-input-text">{{membershipInstitutionDetailsModel.emailId}}</p>
                 </div>
             </div> -->
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.PAN_NO' | translate}}</span>
                         <p class="label-input-text">{{membershipInstitutionDetailsModel.panNumber}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.TAN_NO' | translate}}</span>
                         <p class="label-input-text">{{membershipInstitutionDetailsModel.tanNumber}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.GST_NO' | translate}}</span>
                         <p class="label-input-text">{{membershipInstitutionDetailsModel.gstNumber}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.KYC' | translate}}</span>
                         <p class="label-input-text">{{isKycApproved}}</p>
@@ -1326,68 +1341,68 @@
         </div>
         <div class="col-12 popup-basic-details">
             <div class="row">
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.NAME' | translate}}</span>
                         <p class="label-input-text">{{memberGroupDetailsModel.name}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
                         <p class="label-input-text">{{memberGroupDetailsModel.tempAdmissionNumber}}</p>
                     </div>
-                </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                </div> -->
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.MEMBER_TYPE' | translate}}</span>
                         <p class="label-input-text">{{memberGroupDetailsModel.memberTypeName}}</p>
                     </div>
                 </div>
 
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.REGISTERED_DATE' | translate}}</span>
                         <p class="label-input-text">{{memberGroupDetailsModel.registrationDateVal}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.ADMISSION_DATE' | translate}}</span>
                         <p class="label-input-text">{{memberGroupDetailsModel.admissionDateVal}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
-                        <span class="label-view">{{'ERP.CONTACT' | translate}}</span>
+                        <span class="label-view">{{'ERP.MOBILE_NUMBER' | translate}}</span>
                         <p class="label-input-text">{{memberGroupDetailsModel.pocNumber}}</p>
                     </div>
                 </div>
-                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                 <div class="form-group">
                                     <span class="label-view">{{'ERP.EMAIL' | translate}}</span>
                                     <p class="label-input-text">{{memberGroupDetailsModel.emailId}}</p>
                                 </div>
                             </div> -->
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.TAN_NO' | translate}}</span>
                         <p class="label-input-text">{{memberGroupDetailsModel.tanNumber}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.PAN_NO' | translate}}</span>
                         <p class="label-input-text">{{memberGroupDetailsModel.panNumber}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.GST_NO' | translate}}</span>
                         <p class="label-input-text">{{memberGroupDetailsModel.gstNumber}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.KYC' | translate}}</span>
                         <p class="label-input-text">{{isKycApproved}}</p>
@@ -1424,8 +1439,8 @@
 </div>
 
 
-<!--photo Copy dialog -->
-<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="memberPhotoCopyZoom" styleClass="photo-dialog">
+<!--Individual photo Copy dialog -->
+<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [modal]="true" [(visible)]="memberPhotoCopyZoom" styleClass="photo-dialog">
                 <div id="carouselExampleRide" class="carousel slide" data-bs-ride="true">
                     <div class="carousel-inner">
                       <div class="carousel-item active" data-bs-interval="3000">
@@ -1481,3 +1496,352 @@
         </div>
     </div> -->
 </p-dialog>
+<!--Group photo Copy dialog -->
+<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [modal]="true" [(visible)]="groupPhotoCopyZoom" styleClass="photo-dialog">
+    <div class="col-12 px-0">
+        <div class="row">
+            <div class="col-6">
+                <img src="assets/images/no-image.jpg" class="popup-images">
+            </div>
+            <div class="col-6">
+                <img src="assets/images/no-image.jpg" class="popup-images">
+            </div>
+        </div>
+    </div>
+                <!-- <div class="col-12">
+                    <div class="d-flex justify-content-end">
+        <p-button class="action-edit" label="{{'ERP.CLOSE' | translate}}" (click)="closePhoto()"></p-button>
+        </div>
+    </div> -->
+</p-dialog>
+<!--Institution photo Copy dialog -->
+<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [modal]="true" [(visible)]="institutionPhotoCopyZoom" styleClass="photo-dialog">
+    <div class="col-12 px-0">
+        <div class="row">
+            <div class="col-6">
+                <img src="assets/images/no-image.jpg" class="popup-images">
+            </div>
+            <div class="col-6">
+                <img src="assets/images/no-image.jpg" class="popup-images">
+            </div>
+        </div>
+    </div>
+                <!-- <div class="col-12">
+                    <div class="d-flex justify-content-end">
+        <p-button class="action-edit" label="{{'ERP.CLOSE' | translate}}" (click)="closePhoto()"></p-button>
+        </div>
+    </div> -->
+</p-dialog>
+
+<!-- 1024px basic details start -->
+ <!-- Individual -->
+ <p-dialog header="{{'ERP.ACCOUNT_DETAILS' | translate}}" [modal]="true" [(visible)]="individualBasicDetails" [style]="{ width: '80%'}">
+    <div class="col-12 sb-side-amountblock-card border-light text-center">
+        <div class="row ">
+            <div class="col-12 image-view-768p">
+                <div class="d-flex justify-content-center">
+                    <div *ngIf="!this.membershipBasicRequiredDetails.photoCopyPath">
+                        <img src="assets/images/no-image.jpg" class="image-user m-2">
+                    </div>
+                    <div class="px-0" *ngFor="let img of membershipBasicRequiredDetails.multipartFileListForPhotoCopy">
+                        <div class="col-12 p-0" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                            <!-- <a href="{{img.imageValue}}"> -->
+                            <img src="{{img.imageValue}}" class="image-user m-2">
+                            <!-- </a> -->
+                        </div>
+                        <div class="col-12 p-0" *ngIf=" img.fileType =='pdf'">
+                            <!-- <a href="{{img.imageValue}}"> -->
+                            <img src="assets\images\pdf.png" class="image-user m-2">
+                            <!-- </a> -->
+                        </div>
+                    </div>
+                    <!-- <p class="active-status"></p> -->
+                    <div *ngIf="!this.membershipBasicRequiredDetails.signatureCopyPath">
+                        <img src="assets/images/no-image.jpg" class="image-sign m-2">
+                    </div>
+                    <div class="px-0"
+                        *ngFor="let img of membershipBasicRequiredDetails.multipartFileListForsignatureCopyPath">
+                        <div class="col-12 p-0" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                            <!-- <a href="{{img.imageValue}}"> -->
+                            <img src="{{img.imageValue}}" class="image-sign m-2">
+                            <!-- </a> -->
+                        </div>
+                        <div class="col-12 p-0" *ngIf=" img.fileType =='pdf'">
+                            <!-- <a href="{{img.imageValue}}"> -->
+                            <img src="assets\images\pdf.png" class="image-sign m-2">
+                            <!-- </a> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="col-12 pic-sig-status">
+                <div class="d-flex justify-content-center">
+                    <img src="assets/images/avatar-table.png" class="image-user">
+                    <p class="active-status"></p>
+                    <img src="assets/images/sign.png" class="image-sign">
+
+                </div>
+                <p class="name-border-bottom"></p>
+            </div> -->
+            <div class="col-12 basicdata-card">
+                <div class="row">
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.ADMISSION_NUMBER' | translate}}</p>
+                    <p class="label-input-text m-0">{{membershipBasicRequiredDetails.tempAdmissionNumber}}</p>
+            </div>
+            
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.MEMBER_TYPE' | translate}}</p>
+                        <p class="label-input-text m-0">{{ membershipBasicRequiredDetails.memberTypeName }}</p>
+               
+            </div>
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.SURNAME' | translate}}</p>
+                <p class="label-input-text m-0"> {{ membershipBasicRequiredDetails.surname}}</p>
+            </div>
+        
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.NAME' | translate}}</p>
+                <p class="label-input-text m-0">{{membershipBasicRequiredDetails.name}}</p>
+            </div>
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.DATE_OF_BIRTH' | translate}}</p>
+                <p class="label-input-text m-0"> {{membershipBasicRequiredDetails.dobVal}}</p>
+            </div>
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.AGE' | translate}}</p>
+                                <p class="label-input-text m-0">{{membershipBasicRequiredDetails.age}}</p>
+            </div>
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.GENDER' | translate}}</p>
+                                <p class="label-input-text m-0">{{membershipBasicRequiredDetails.genderName }}</p>
+            </div>
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.MARITAL_STATUS' | translate}} </p>
+                                <p class="label-input-text m-0">{{membershipBasicRequiredDetails.maritalStatusName}}</p>
+            </div>
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.RELATION_WITH_MEMBER' | translate}}</p>
+                                <p class="label-input-text m-0">{{membershipBasicRequiredDetails.relationTypeName}}</p>
+            </div>
+        
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.RELATION_NAME' | translate}}</p>
+                                <p class="label-input-text m-0">{{membershipBasicRequiredDetails.relativeName }}</p>
+            </div>
+        
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.QUALIFICATION' | translate}}</p>
+                                <p class="label-input-text m-0">{{membershipBasicRequiredDetails.qualificationName }}</p>
+            </div>
+        
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.OCCUPATION' | translate}}</p>
+                        <p class="label-input-text m-0">{{membershipBasicRequiredDetails.occupationName }}</p>
+            </div>
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.MOBILE_NUMBER' | translate}}</p>
+                        <p class="label-input-text m-0">{{membershipBasicRequiredDetails.mobileNumber }}</p>
+            </div>
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.EMAIL' | translate}}</p>
+                        <p class="label-input-text m-0">{{membershipBasicRequiredDetails.emailId }}</p>
+            </div>
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.CASTE' | translate}}</p>
+                        <p class="label-input-text m-0">{{membershipBasicRequiredDetails.casteName }}</p>
+            </div>
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.COMMUNITYS' | translate}}</p>
+                        <p class="label-input-text m-0">{{membershipBasicRequiredDetails.communityName }}</p>
+            </div>
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.ADMISSION_DATE' | translate}}</p>
+                        <p class="label-input-text m-0">{{membershipBasicRequiredDetails.admissionDateVal}}</p>
+            </div>
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.ADMISSION_FEE' | translate}}</p>
+                        <p class="label-input-text m-0">{{membershipBasicRequiredDetails.admissionFee}}</p>
+            </div>
+            <!-- KYC Approved -->
+           <!-- <div class="col-6 text-break text-white">
+             <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
+                                <p class="label-input-text m-0">{{isKycApproved}}</p>
+             </div> -->
+            <!-- KYC Not Approved -->
+            <!-- <div class="col-6 text-break text-white">
+            <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
+            <p class="label-input-text m-0">{{isKycApproved}}</p>
+            </div> -->
+            </div>
+            </div>
+        <!-- <div class="col-md-6 col-sm-12 min-h-50px text-break">
+            <a class="fst-italic text-light">{{'ERP.MORE_DETAILS' | translate}}</a>
+        </div> -->
+    </div>
+</div>
+</p-dialog>
+ <!-- Group -->
+ <p-dialog header="{{'ERP.ACCOUNT_DETAILS' | translate}}" [modal]="true" [(visible)]="groupBasicDetails" [style]="{ width: '80%'}">
+    <div class="col-12 sb-side-amountblock-card border-light text-center">
+        <div class="row ">
+            <div class="col-12 image-view-768p">
+                <div class="d-flex justify-content-center">
+                        <img src="assets/images/no-image.jpg" class="image-user cursor-pointer m-2">
+                        <!-- <p class="active-status"></p> -->
+                        <img src="assets/images/no-image.jpg" class="image-sign cursor-pointer m-2">
+                    </div>
+            </div>
+            <!-- <div class="col-12 pic-sig-status">
+                <div class="d-flex justify-content-center">
+                    <img src="assets/images/avatar-table.png" class="image-user">
+                    <p class="active-status"></p>
+                    <img src="assets/images/sign.png" class="image-sign">
+        
+                </div>
+                <p class="name-border-bottom"></p>
+            </div> -->
+            <div class="col-12 basicdata-card">
+                <div class="row">
+                    <div class="col-6 text-break text-white">
+                        <p class="label-view text-fontwt">{{'ERP.ADMISSION_NUMBER' | translate}}</p>
+                            <p class="label-input-text m-0">{{memberGroupDetailsModel.tempAdmissionNumber}}</p>
+                    </div>
+            
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.NAME' | translate}}</p>
+                        <p class="label-input-text m-0">{{memberGroupDetailsModel.name}}</p>
+               
+            </div>
+            
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.MEMBER_TYPE' | translate}}</p>
+                <p class="label-input-text m-0">{{memberGroupDetailsModel.memberTypeName}}</p>
+            </div>
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.REGISTERED_DATE' | translate}}</p>
+                                <p class="label-input-text m-0">{{memberGroupDetailsModel.registrationDateVal}}</p>
+            </div>
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.ADMISSION_DATE' | translate}}</p>
+                                <p class="label-input-text m-0">{{memberGroupDetailsModel.admissionDateVal}}</p>
+            </div>
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.MOBILE_NUMBER' | translate}}</p>
+                                <p class="label-input-text m-0">{{memberGroupDetailsModel.pocNumber}}</p>
+            </div>
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.TAN_NO' | translate}}</p>
+                                <p class="label-input-text m-0">{{memberGroupDetailsModel.tanNumber}}</p>
+            </div>
+        
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.PAN_NO' | translate}}</p>
+                                <p class="label-input-text m-0">{{memberGroupDetailsModel.panNumber}}</p>
+            </div>
+        
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.GST_NO' | translate}}</p>
+                                <p class="label-input-text m-0">{{memberGroupDetailsModel.gstNumber}}</p>
+            </div>
+        
+            
+            <!-- KYC Approved -->
+            <!-- <div class="col-6 text-break text-white">
+            <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
+                                <p class="label-input-text m-0">{{isKycApproved}}</p>
+                    </div> -->
+            <!-- KYC Not Approved -->
+            <div class="col-6 text-break text-white">
+            <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
+            <p class="label-input-text m-0">{{isKycApproved}}</p>
+            </div>
+            </div>
+        <!-- <div class="col-md-6 col-sm-12 min-h-50px text-break">
+            <a class="fst-italic text-light">{{'ERP.MORE_DETAILS' | translate}}</a>
+        </div> -->
+        </div>
+        </div>
+    </div>
+</p-dialog>
+ <!-- Institution -->
+ <p-dialog header="{{'ERP.ACCOUNT_DETAILS' | translate}}" [modal]="true" [(visible)]="institutionBasicDetails" [style]="{ width: '80%'}">
+    <div class="col-12 sb-side-amountblock-card border-light text-center">
+        <div class="row ">
+            <div class="col-12 image-view-768p">
+                <div class="d-flex justify-content-center">
+                        <img src="assets/images/no-image.jpg" class="image-user cursor-pointer m-2">
+                        <!-- <p class="active-status"></p> -->
+                        <img src="assets/images/no-image.jpg" class="image-sign cursor-pointer m-2">
+                    </div>
+            </div>
+            <!-- <div class="col-12 pic-sig-status">
+                <div class="d-flex justify-content-center">
+                    <img src="assets/images/avatar-table.png" class="image-user">
+                    <p class="active-status"></p>
+                    <img src="assets/images/sign.png" class="image-sign">
+        
+                </div>
+                <p class="name-border-bottom"></p>
+            </div> -->
+            <div class="col-12 basicdata-card">
+                <div class="row">
+                    <div class="col-6 text-break text-white">
+                        <p class="label-view text-fontwt">{{'ERP.ADMISSION_NUMBER' | translate}}</p>
+                            <p class="label-input-text m-0">{{membershipInstitutionDetailsModel.tempAdmissionNumber}}</p>
+                    </div>
+            
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.NAME' | translate}}</p>
+                        <p class="label-input-text m-0">{{membershipInstitutionDetailsModel.name}}</p>
+            </div>
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.MEMBER_TYPE' | translate}}</p>
+                <p class="label-input-text m-0">{{membershipInstitutionDetailsModel.memberTypeName}}</p>
+            </div>
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.ADMISSION_DATE' | translate}}</p>
+                                <p class="label-input-text m-0">{{membershipInstitutionDetailsModel.admissionDateVal}}</p>
+            </div>
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.REGISTERED_DATE' | translate}}</p>
+                                <p class="label-input-text m-0">{{membershipInstitutionDetailsModel.registrationDateVal}}</p>
+            </div>
+            
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.MOBILE_NUMBER' | translate}}</p>
+                                <p class="label-input-text m-0">{{membershipInstitutionDetailsModel.pocNumber}}</p>
+            </div>
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.PAN_NO' | translate}}</p>
+                                <p class="label-input-text m-0">{{membershipInstitutionDetailsModel.panNumber}}</p>
+            </div>
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.TAN_NO' | translate}}</p>
+                                <p class="label-input-text m-0">{{membershipInstitutionDetailsModel.tanNumber}}</p>
+            </div>
+            <div class="col-6 text-break text-white">
+                <p class="label-view text-fontwt">{{'ERP.GST_NO' | translate}}</p>
+                                <p class="label-input-text m-0">{{membershipInstitutionDetailsModel.gstNumber}}</p>
+            </div>
+        
+            
+            <!-- KYC Approved -->
+            <!-- <div class="col-6 text-break text-white">
+            <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
+                                <p class="label-input-text m-0">{{isKycApproved}}</p>
+                                </div> -->
+            <!-- KYC Not Approved -->
+            <div class="col-6 text-break text-white">
+            <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
+            <p class="label-input-text m-0">{{isKycApproved}}</p>
+            </div>
+            </div>
+        </div>
+        </div>
+        <!-- <div class="col-md-6 col-sm-12 min-h-50px text-break">
+            <a class="fst-italic text-light">{{'ERP.MORE_DETAILS' | translate}}</a>
+        </div> -->
+    </div>
+</p-dialog>
+ <!-- 1024px basic details start -->

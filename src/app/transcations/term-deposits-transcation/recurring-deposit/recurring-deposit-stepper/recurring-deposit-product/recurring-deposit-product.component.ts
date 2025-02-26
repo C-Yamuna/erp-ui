@@ -49,7 +49,7 @@ export class RecurringDepositProductComponent implements OnInit {
    recurringDepositProductDefinitionModel :RecurringDepositProductDefinition = new RecurringDepositProductDefinition();
     recurringDepositInterestPolicyModel :RecurringDepositInterestPolicy = new RecurringDepositInterestPolicy();
   memberTypeName: any;
-  fdNonCummulativeAccId: any;
+  rdAccId: any;
   isEdit: boolean = false;
   admissionNumber: any;
   promoterDetails: any[] = [];
@@ -77,6 +77,7 @@ export class RecurringDepositProductComponent implements OnInit {
   accountTypeDropDownHide: boolean = false;
   tenureTypeList: any[] = [];
   renewalTypeList: any[] = [];
+  paymentTypeList: any[] = [];
 
   
   constructor(private router: Router,private datePipe: DatePipe, private formBuilder: FormBuilder, 
@@ -97,12 +98,17 @@ export class RecurringDepositProductComponent implements OnInit {
       'tenureInYears':['',],
       'depositAmount': [{ value: '', disabled: true }],
       'accountType': ['', [Validators.required]],
-      'isRenewal' :[''],
-      'renewalType': [''],
-      'installmentFrequency':[{ value: '', disabled: true }],
+      // 'isRenewal' :[''],
+      // 'renewalType': [''],
+      'installmentFrequency':[''],
       'maturityDate':[{ value: '', disabled: true }],
       'maturityAmount':[{ value: '', disabled: true }],
-      'tenureType': [{ value: '', disabled: true }],
+      'tenureType': [''],
+      'installmentDate':[''],
+      'interestPayoutType': ['',],
+      'interestPayoutTransferAccount': ['',],
+      'staffRoi':[{ value: '', disabled: true }],
+      'seniorCitizenRoi':[{ value: '', disabled: true }]
       })
    
   }
@@ -110,25 +116,33 @@ export class RecurringDepositProductComponent implements OnInit {
     this.installmentfrequencyList = [     
       { label: 'Monthly', value: 1},
     ]
-        
-    this.renewalTypeList =  [
-      { label: "Deposit", value: 1 },
-      { label: "Maturity Amount", value: 2 },
+    
+  
+    this.paymentTypeList = [
+      { label: "Cash", value: 1 },
+      { label: "To SB", value: 2 }
     ]
+
+    // this.renewalTypeList =  [
+    //   { label: "Deposit", value: 1 },
+    //   { label: "Maturity Amount", value: 2 },
+    // ]
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
     this.isMemberCreation = this.commonFunctionsService.getStorageValue('b-class-member_creation');
     this.pacsId = this.commonFunctionsService.getStorageValue(applicationConstants.PACS_ID);
     this.branchId = this.commonFunctionsService.getStorageValue(applicationConstants.BRANCH_ID);
-    this.renewalList = this.commonComponent.requiredlist();
-    this.tenureTypeList = this.commonComponent.tenureType();
+    this.tenureTypeList = this.commonComponent.tenureType().filter((obj: any) => obj != null && obj.label === "Months").map((tenure: { label: any; value: any }) => {
+      return { label: tenure.label, value: tenure.value };
+    });
+
     this.getAllAccountTypes();
     this.activateRoute.queryParams.subscribe(params => {
       if (params['id'] != undefined) {
         this.commonComponent.startSpinner();
         let id = this.encryptDecryptService.decrypt(params['id']);
-        this.fdNonCummulativeAccId = Number(id);
+        this.rdAccId = Number(id);
         this.isEdit = true;
-        this.getRdAccounts(this.fdNonCummulativeAccId);
+        this.getRdAccounts(this.rdAccId);
         this.commonComponent.stopSpinner();
       } else {
         this.isEdit = false;
@@ -232,8 +246,8 @@ export class RecurringDepositProductComponent implements OnInit {
 
 
   //get account details by admissionNumber list
-  getRdAccounts(fdNonCummulativeAccId: any) {
-    this.rdAccountsService.getRdAccounts(fdNonCummulativeAccId).subscribe((data: any) => {
+  getRdAccounts(rdAccId: any) {
+    this.rdAccountsService.getRdAccounts(rdAccId).subscribe((data: any) => {
       this.responseModel = data;
       if (this.responseModel != null && this.responseModel != undefined) {
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
@@ -250,11 +264,12 @@ export class RecurringDepositProductComponent implements OnInit {
             else if(this.rdAccountModel.depositDate != null && this.rdAccountModel.depositDate != undefined){
               this.rdAccountModel.depositDateVal = this.commonFunctionsService.dateConvertionIntoFormate(this.rdAccountModel.depositDate);
             }
+            if(this.rdAccountModel.installmentDate != null && this.rdAccountModel.installmentDate != undefined){
+              this.rdAccountModel.installmentDate = this.commonFunctionsService.dateConvertionIntoFormate(this.rdAccountModel.installmentDate);
+            }
 
-            // if (this.rdAccountModel.rdProductId != null && this.rdAccountModel.rdProductId != undefined)
-            //   this.isProductDisable = applicationConstants.TRUE;
             if (this.rdAccountModel.maturityDate != null && this.rdAccountModel.maturityDate != undefined) {
-              this.rdAccountModel.maturityDate = this.datePipe.transform(this.rdAccountModel.maturityDate, this.orgnizationSetting.datePipe);
+              this.rdAccountModel.maturityDate = this.commonFunctionsService.dateConvertionIntoFormate(this.rdAccountModel.maturityDate);
             }
             if (this.rdAccountModel.memberShipBasicDetailsDTO != undefined) {
               this.membershipBasicDetail = this.rdAccountModel.memberShipBasicDetailsDTO;
@@ -354,6 +369,13 @@ export class RecurringDepositProductComponent implements OnInit {
   
             if (this.recurringDepositProductDefinitionModel.intestPolicyConfigList[0].penaltyRoi != undefined && this.recurringDepositProductDefinitionModel.intestPolicyConfigList[0].penaltyRoi != null)
               this.rdAccountModel.penalRoi = this.recurringDepositProductDefinitionModel.intestPolicyConfigList[0].penaltyRoi;
+
+            if (this.recurringDepositProductDefinitionModel.intestPolicyConfigList[0].staffRoi != undefined && this.recurringDepositProductDefinitionModel.intestPolicyConfigList[0].staffRoi != null)
+              this.rdAccountModel.staffRoi = this.recurringDepositProductDefinitionModel.intestPolicyConfigList[0].staffRoi;
+
+            if (this.recurringDepositProductDefinitionModel.intestPolicyConfigList[0].seniorCitizenRoi != undefined && this.recurringDepositProductDefinitionModel.intestPolicyConfigList[0].seniorCitizenRoi != null)
+              this.rdAccountModel.seniorCitizenRoi = this.recurringDepositProductDefinitionModel.intestPolicyConfigList[0].seniorCitizenRoi;
+
           }
          
           if (this.recurringDepositProductDefinitionModel.requiredDocumentsConfigList != null && this.recurringDepositProductDefinitionModel.requiredDocumentsConfigList != undefined && this.recurringDepositProductDefinitionModel.requiredDocumentsConfigList.length > 0) {
@@ -393,23 +415,30 @@ export class RecurringDepositProductComponent implements OnInit {
     let tenureInMonths = parseInt(this.applicationForm.get('tenureInMonths')?.value) || 0;
     let tenureInYears = parseInt(this.applicationForm.get('tenureInYears')?.value) || 0;
     let depositDate = this.applicationForm.get('depositDate')?.value;
+  
     if (!installmentAmount || !roi || (tenureInYears === 0 && tenureInMonths === 0)) {
       return;
     }
-    let tenureInYearsTotal = tenureInYears + (tenureInMonths / 12);
-    let maturityAmount = installmentAmount * Math.pow((1 + roi / 100), tenureInYearsTotal);
+  
+    let tenureInDays = (tenureInYears * 365) + (tenureInMonths * 30);
+    let tenureInYearsTotal = tenureInDays / 365; 
+  
+    let N = 365;
+    let maturityAmount = installmentAmount * Math.pow((1 + roi / (N * 100)), N * tenureInYearsTotal);
+    let depositAmount = installmentAmount * ((tenureInDays) / 30); 
+  
     this.applicationForm.get('maturityAmount')?.setValue(maturityAmount.toFixed(2));
-
+    this.applicationForm.get('depositAmount')?.setValue(depositAmount.toFixed(2));
+  
     if (depositDate) {
       let maturityDate = new Date(depositDate);
       if (isNaN(maturityDate.getTime())) {
         return;
       }
-      maturityDate.setFullYear(maturityDate.getFullYear() + tenureInYears);
-      maturityDate.setMonth(maturityDate.getMonth() + tenureInMonths);
+      maturityDate.setDate(maturityDate.getDate() + tenureInDays);
       const maturityDateFormatted = this.datePipe.transform(maturityDate, this.orgnizationSetting.datePipe);
       this.applicationForm.get('maturityDate')?.setValue(maturityDateFormatted);
     }
   }
-
+  
 }

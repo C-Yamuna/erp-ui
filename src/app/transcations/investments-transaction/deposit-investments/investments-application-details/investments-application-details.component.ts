@@ -62,9 +62,9 @@ export class InvestmentsApplicationDetailsComponent implements OnInit{
       tenureInYears: ['', Validators.required],
       tenureInMonths: [''],
       tenureInDays: [''],
-      maturityDate: ['', Validators.required],
-      maturityInterest: ['', Validators.required],
-      maturityAmount: ['', Validators.required],
+      maturityDate: [{ value: '', disabled: true }, Validators.required],
+      maturityInterest: [{ value: '', disabled: true }, Validators.required],
+      maturityAmount: [{ value: '', disabled: true }, Validators.required],
       interestOrInstallmentFrequencyName: ['', Validators.required],
       isAutoRenewal: [false],
       autoRenewalType: [''],
@@ -317,6 +317,41 @@ export class InvestmentsApplicationDetailsComponent implements OnInit{
           }, 2000);
         }
       }
+    }
+  }
+
+  calculateMaturityDetails() {
+    if (this.investmentApplicationDetailsModel.tenureInYears != null && this.investmentApplicationDetailsModel.tenureInYears != undefined &&
+      this.investmentApplicationDetailsModel.depositAmount != null && this.investmentApplicationDetailsModel.depositAmount != undefined &&
+      this.investmentApplicationDetailsModel.depositDate != null && this.investmentApplicationDetailsModel.depositDate != undefined &&
+      this.investmentApplicationDetailsModel.roi != null && this.investmentApplicationDetailsModel.roi != undefined) {
+
+      let tenureInMonths;
+      let tenureInDays;
+      if (this.investmentApplicationDetailsModel.tenureInMonths == null || this.investmentApplicationDetailsModel.tenureInMonths == undefined){
+        tenureInMonths = 0;
+      }else{
+        tenureInMonths = this.investmentApplicationDetailsModel.tenureInMonths;
+      }
+      if (this.investmentApplicationDetailsModel.tenureInDays == null || this.investmentApplicationDetailsModel.tenureInDays == undefined){
+        tenureInDays = 0;
+      }else{
+        tenureInDays = this.investmentApplicationDetailsModel.tenureInDays;
+      }
+      const totalMonths = (Number(this.investmentApplicationDetailsModel.tenureInYears )* 12) + Number(tenureInMonths);
+      const totalDays = Number(tenureInDays);
+
+      const maturityDate = new Date(this.investmentApplicationDetailsModel.depositDate);
+      maturityDate.setMonth(maturityDate.getMonth() + totalMonths);
+      maturityDate.setDate(maturityDate.getDate() + totalDays);
+      this.investmentApplicationDetailsModel.maturityDate = maturityDate;
+
+      const timeInYears = (Number(this.investmentApplicationDetailsModel.tenureInYears)) + (Number(tenureInMonths) / 12) + (Number(tenureInDays) / 365);
+
+      const interest = (Number(this.investmentApplicationDetailsModel.depositAmount) * Number(this.investmentApplicationDetailsModel.roi) * Number(timeInYears)) / 100;
+      this.investmentApplicationDetailsModel.maturityInterest = interest.toFixed(2);
+
+      this.investmentApplicationDetailsModel.maturityAmount = (Number(this.investmentApplicationDetailsModel.depositAmount) + interest).toFixed(2);
     }
   }
 

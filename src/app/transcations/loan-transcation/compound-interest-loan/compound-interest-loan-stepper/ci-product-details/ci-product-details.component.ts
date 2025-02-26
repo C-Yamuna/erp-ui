@@ -17,6 +17,7 @@ import { applicationConstants } from 'src/app/shared/applicationConstants';
 import { Table } from 'primeng/table';
 import { AccountTypes, CommonStatusData } from 'src/app/transcations/common-status-data.json';
 import { CiLoanDisbursement } from '../../ci-loan-operations/shared/ci-loan-disbursement.model';
+import { unwrapDeep } from 'angular-pipes/utils/utils';
 
 @Component({
   selector: 'app-ci-product-details',
@@ -102,15 +103,17 @@ export class CiProductDetailsComponent {
       effectiveRoi: [{ value: '', disabled: true }],
       penalRoi: [{ value: '', disabled: true }],
       iod: [{ value: '', disabled: true }],
-      repaymentFrequency:  [{ value: '', disabled: true }],
+      repaymentFrequency:  ['', [Validators.required]],
       monthlyIncome: ['', [Validators.pattern(applicationConstants.NEW_AMOUNT_PATTERN), Validators.compose([Validators.required])]],
       purposeId:['', [Validators.required]],
-      requestedAmount:  ['', [Validators.pattern(applicationConstants.NEW_AMOUNT_PATTERN), Validators.compose([Validators.required])]],
-      sanctionAmount:  ['', [Validators.pattern(applicationConstants.NEW_AMOUNT_PATTERN), Validators.compose([Validators.required])]],
+      requestedAmount:  ['', [Validators.pattern(applicationConstants.ALLOW_DECIMALS_UPTO_TWO_PLACES), Validators.compose([Validators.required])]],
+      sanctionAmount:  ['', [Validators.pattern(applicationConstants.ALLOW_DECIMALS_UPTO_TWO_PLACES), Validators.compose([Validators.required])]],
       sanctionDate:['', [Validators.required]],
       // plannedDisbursements: ['', [Validators.required]],
       loanPeriod:  ['', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.compose([Validators.required])]],
       loanDueDate: ['', [Validators.required]],
+      applicationNumber: ['', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.compose([Validators.required])]],
+      societyAccountNumber: ['', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.compose([Validators.required])]],
     })
 
     this.insuranceForm = this.formBuilder.group({
@@ -225,10 +228,18 @@ export class CiProductDetailsComponent {
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
             this.ciProductDefinitionModel = this.responseModel.data[0];
+
             if(this.ciProductDefinitionModel.loanLinkedshareCapitalApplicable != null && this.ciProductDefinitionModel.loanLinkedshareCapitalApplicable != undefined && this.ciProductDefinitionModel.loanLinkedshareCapitalApplicable)
               this.ciProductDefinitionModel.loanLinkedshareCapitalApplicable = applicationConstants.YES;
             else 
               this.ciProductDefinitionModel.loanLinkedshareCapitalApplicable = applicationConstants.NO;
+
+              //insurance details
+              this.insuranceDetailsFlag = this.ciProductDefinitionModel.isInsuranceAppicable;
+              if(this.insuranceDetailsFlag){
+                if(this.ciLoanApplicationModel.ciLoanInsuranceDetailsDTO != null && this.ciLoanApplicationModel.ciLoanInsuranceDetailsDTO != undefined)
+                  this.ciLoanInsuranceDetailsModel= this.ciLoanApplicationModel.ciLoanInsuranceDetailsDTO;
+              }
 
               if(this.ciProductDefinitionModel.isInsuranceAppicable != null && this.ciProductDefinitionModel.isInsuranceAppicable != undefined && this.ciProductDefinitionModel.isInsuranceAppicable)
                 this.ciProductDefinitionModel.isInsuranceAppicable = applicationConstants.YES;
@@ -242,17 +253,11 @@ export class CiProductDetailsComponent {
               this.ciLoanApplicationModel.repaymentFrequency = this.ciProductDefinitionModel.interestPostingFrequency;
 
             let repamentFrequency = this.repaymentFrequencyList.filter((obj:any)=> obj.value == this.ciProductDefinitionModel.interestPostingFrequency );
-            if(repamentFrequency != null && repamentFrequency != undefined){
+            if(repamentFrequency != null && repamentFrequency != undefined && repamentFrequency.length >0){
+              if(repamentFrequency[0] != null && repamentFrequency[0] != undefined && repamentFrequency[0].label != null && repamentFrequency[0].label != undefined)
               this.ciProductDefinitionModel.interestPostingFrequencyName = repamentFrequency[0].label;
               this.ciLoanApplicationModel.repaymentFrequencyName = repamentFrequency[0].label;
             }
-              
-              //insurance details
-              this.insuranceDetailsFlag = this.ciProductDefinitionModel.isInsuranceAppicable;
-              if(this.insuranceDetailsFlag){
-                if(this.ciLoanApplicationModel.ciLoanInsuranceDetailsDTO != null && this.ciLoanApplicationModel.ciLoanInsuranceDetailsDTO != undefined)
-                  this.ciLoanInsuranceDetailsModel= this.ciLoanApplicationModel.ciLoanInsuranceDetailsDTO;
-              }
 
             if (this.ciProductDefinitionModel.ciProdCollateralsConfigDTOList) {
               this.collateralList = this.ciProductDefinitionModel.ciProdCollateralsConfigDTOList
@@ -323,11 +328,9 @@ export class CiProductDetailsComponent {
   }
 
   getAllRepaymentFrequency() {
-    
     this.ciLoanApplicationService.getAllRepaymentFrequency().subscribe(response => {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-       
         this.repaymentFrequencyList = this.responseModel.data.filter((repaymentFrequency: { status: number; }) => repaymentFrequency.status == applicationConstants.ACTIVE).map((repaymentFrequency: any) => {
           return { label: repaymentFrequency.name, value: repaymentFrequency.id };
         });
@@ -579,6 +582,7 @@ export class CiProductDetailsComponent {
     }
     else {
       this.msgs = [];
+      this.ciLoanApplicationModel.sanctionAmount = null;
         this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "Given Saction Amount is Not in between of any Slabs in Product definition" }];
         setTimeout(() => {
           this.msgs = [];
@@ -586,6 +590,10 @@ export class CiProductDetailsComponent {
     }
   
   }
+  /**
+   * @implements add data
+   * @author jyothi.naidana
+   */
   addData() {
     this.applicationSubmitEnable = true;
     this.addButton = true;

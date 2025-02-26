@@ -91,7 +91,8 @@ export class SbTransactionsComponent {
   groupPromotersPopUpFlag: boolean = false;
   institutionPromoterFlag: boolean = false;
   memberPhotoCopyZoom: boolean = false;
-
+  groupPhotoCopyZoom: boolean = false;
+  institutionPhotoCopyZoom: boolean = false;
   admissionNumber : any;
   groupPrmoters: any[] = [];
   groupPrmotersList: any [] = [];
@@ -640,6 +641,22 @@ export class SbTransactionsComponent {
 
 
   // }
+  individualBasicDetails: boolean = false;
+  groupBasicDetails: boolean = false;
+  institutionBasicDetails: boolean = false;
+  // position: string = 'center';
+  showindividualBasicDetailsDialog(position: string) {
+    this.position = position;
+    this.individualBasicDetails = true;
+  }
+  showgroupBasicDetailsDialog(position: string) {
+    this.position = position;
+    this.groupBasicDetails = true;
+  }
+  showinstitutionBasicDetailsDialog(position: string) {
+    this.position = position;
+    this.institutionBasicDetails = true;
+  }
 
   /**
    * @author jyothi.naidana
@@ -684,6 +701,12 @@ export class SbTransactionsComponent {
   closePhotoCopy() {
     this.memberPhotoCopyZoom = false;
   }
+  groupclosePhotoCopy() {
+    this.groupPhotoCopyZoom = false;
+  }
+  institutionclosePhotoCopy() {
+    this.institutionPhotoCopyZoom = false;
+  }
 
   /**
    * @implement Image Zoom POp up
@@ -692,6 +715,13 @@ export class SbTransactionsComponent {
   onClickMemberPhotoCopy(){
     this.memberPhotoCopyZoom = true;
   }
+  onClickGroupPhotoCopy(){
+    this.groupPhotoCopyZoom = true;
+  }
+  onClickInstitutionPhotoCopy(){
+    this.institutionPhotoCopyZoom = true;
+  }
+  
 
   
   /**

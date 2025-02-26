@@ -127,6 +127,7 @@
     "LOAN_PURPOSE": "Loan Purpose",
     "INTEREST_CALCULATION_TYPE": "Interest Calculation Type",
     "COMMON_STATUS_NAME": "Common Status Name",
+    "INDIVIDUAL":"INDIVIDUAL",
     "GROUP": "Group",
     "MEMBERSHIP": "MEMBERSHIP",
     "ADMISSION_NO": "Admission Number",
@@ -165,7 +166,7 @@
     "MANDAL/TESHIL": "Mandal/Teshil",
     "ADDRESS1": "Address1",
     "ADDRESS2": "Address2",
-    "SAME_AS_REGISTERED_ADDRESS": "Same as Registered Address",
+    "SAME_AS_REGISTERED_ADDRESS": "Same as Permanent Address",
     "PERMANENT": "Permanent",
     "DOCUMENT_TYPES": "Document Types",
     "DOCUMENT_NUMBER": "Document Number",
@@ -187,6 +188,8 @@
     "PASSBOOK_NUMBER": "Passbook Number",
     "SURVEY_NO": "Survey Number",
     "LAND": "Land",
+    "SOCIETY_ACCOUNT_NUMBER":"Society Account Number",
+    "ANNUAL_INCOME":"Income Per Annual",
     "LAND_IN_CENTS": "Land(In Cents)",
     "SOIL_TYPE": "Soil Type",
     "WATER_SOURCE_TYPE": "Water Source Type",
@@ -715,10 +718,11 @@
     "SCHEDULE_DATE":"Schedule Date",
     "VIEW_DOC":"View Document",
     "DOC_DOWNLOAD":"Document Download",
-    "DOWNLOAD_FILLED_COPY":"Download Filled Copy",
+    "DOWNLOAD_FILLED_APP":"Download Filled Application",
     "DOCUMENT_PATH":"Document Path",
     "COMMUNICATION_ADDRESS":"Communication Address",
-    "DOCUMENTS":"Documents"
+    "DOCUMENTS":"Documents",
+    "INCOME_PER_ANNUAL":"Income Per Annual"
     
   },
   "MEMBERSHIPCONFIG": {
@@ -1358,6 +1362,12 @@
     "RECURRING_DEPOSIT": "Recurring Deposit"
   },
   "TERMDEPOSITSTRANSACTION": {
+    "BLOCK":" Block",
+    "DIVISION":"Division",
+    "SAME_AS_PERMANENT_ADDRESS":"Same As Permanent Address",
+    "NAME_AS_PER_DOCUMENT":"Name as per Document",
+    "PROMOTER_NAME":"Promoter Name",
+    "INSTALLMENT_DATE":"Installment Date",
     "IS_RENEWAL":"Is Renewal",
     "TOTAL_DEPOSIT_AMOUNT":"Total Deposit Amount",
     "RENEWAL_TYPE":"Renewal Type",
@@ -1704,7 +1714,11 @@
     "INTEREST":"interest(%)",
     "PRINCIPAL":"Principal($)",
     "TOTAL_OUT_STANDING_PRINCIPAL":"Total Out Standing Principal",
-    "SIGNED_COPY":"Signed Copy"
+    "SIGNED_COPY":"Signed Copy",
+    "DOCUMENT_COPY":"Document Copy",
+    "ANNUAL_INCOME":"Anual Income(Rs)",
+    "LOAN_COLLATERAL":"Loan Collateral",
+    "GRACE_PERIOD":"Grace Period"
 
   },
   "DEMANDDEPOSITS": {
@@ -1888,7 +1902,20 @@
     "TO_ACCOUNT_DETAILS": "To Account Details",
     "DO_YOU_REALLY_TO_DELETE_THESE_RECORDS": "Do You Really Want To Delete These Records?",
     "DOCUMENT_COPY":"Document Copy",
-    "DOWNLOAD_LETTER_FORMATE":"Download Letter Format"
+    "DOWNLOAD_LETTER_FORMATE":"Download Letter Format",
+    "RESOLUTION_COPY":"Resolution Copy",
+    "RESOLUTION_NUMBER":"Resolution Number",
+    "PHOTO_COPY":"Photo Copy",
+    "SIGNATURE_COPY":"Signature Copy",
+    "IS_POC":"Poc",
+    "EXIT_DATE":"Exit Date",
+    "TYPE_OF_OPERATION":"Type Of Operation",
+    "DIVISION":"Division",
+    "BLOCK":"Block",
+    "MINIMUM_BALANCE_REQUIRED_WITH_CHEQUE": "Minimum Balance Required With Cheque",
+    "MINIMUM_BALANCE_REQUIRED_WITHOUT_CHECK": "Minimum Balance Required Without Cheque",
+    "FILE_SIZE_FOR_BOTH":"(Image 2MB ,PDF 5MB)",
+    "PDF_SIZE":"(PDF 5MB)"
   },
   "CASHIERCONFIG": {
     "NAME": "Name",
@@ -2097,7 +2124,7 @@
     "RELATIONSHIP_TYPE": "Relationship Type",
     "NOMINEE_NAME": "Nominee Name",
     "REMARKS": "Remarks",
-    "UPLOAD_SIGNED_COPY": "Upload Signed Copy",
+    "UPLOAD_SIGNED_COPY": "Signed Copy",
     "REQUIRED_DETAILS": "Required Details",
     "ADDRESS": "Address",
     "FULL_NAME": "Full Name",
@@ -2543,7 +2570,7 @@
     "APPROVE": "APPROVE",
     "REMARKS": "Remarks",
     "ADMISSION_DETAILS":"Admission Details",
-    "DOCUMENT_DEATAILS":"Document",
+    "DOCUMENT_DEATAILS":"Documents",
     "IS_EXISTED_PROMOTER":"Is Existing Member",
     "RESOLUTION_COPY":"Resolution Copy",
     "RESOLUTION_NUMBER":"Resolution Number",
@@ -2589,7 +2616,7 @@
     "COMMUNICATION_ADDRESS":"Communication Address",
     "RESOLUTION_DATE":"Resolution Date",
     "PHOTO_COPY":"Photo Copy",
-    "IS_POC":"Is Poc",
+    "IS_POC":"Poc",
     "EXIT_DATE":"Exit Date",
     "BASIC_DETAILS":"Basic Details",
     "KYC_DETAILS":"KYC",
@@ -2602,12 +2629,19 @@
     "DIVISION":"Division",
     "BLOCK":"Block",
     "SAME_AS_PERMANENT_ADDRESS":"Same As Permanent Address",
-    "INSTITUTION":"Institution / Legal Entity",
+    "INSTITUTION":"Institution",
+    "LEGAL_ENTITY":"Legal Entity",
     "MEMBERSHIP_TYPE":"Membership Type",
     "REGISTRATION_DATE":"Registration Date",
     "RELIGION":"Religion",
     "REGISTRATION_NUMBER":"Registration Number",
-    "TYPE_OF_OPERATION":"Type Of Operation"
+    "TYPE_OF_OPERATION":"Type Of Operation",
+    "BANK_DETAILS":"Bank Details",
+    "NAME_IN_BANK":"Name In Bank",
+    "IFSC_CODE":"IFSC Code",
+    "BANK_NAME":"Bank Name",
+    "ACCOUNT_NUMBER":"Account Number",
+    "STAFF":"Staff"
   },
   "LOCKERCONFIG": {
     "LOCKER_VENDOR_DETAILS": "LOCKER VENDOR DETAILS",

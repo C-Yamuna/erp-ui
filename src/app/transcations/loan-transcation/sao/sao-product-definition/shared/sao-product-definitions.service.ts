@@ -4,6 +4,7 @@ import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-
 import { CommonHttpService } from 'src/app/shared/common-http.service';
 import { BehaviorSubject } from 'rxjs';
 import { CommonFunctionsService } from 'src/app/shared/commonfunction.service';
+import { Configuration } from 'src/app/configurations/configurations-constants';
 
 export type stepperDataModel = {
   stepperIndex?: number;
@@ -67,4 +68,8 @@ export class SaoProductDefinitionsService {
     const headers = new HttpHeaders({});
      return this.commonHttpService.generateAssetSheet(headers,url);
    }
+
+   getAllLoanPurpose() {
+      return this.commonHttpService.getAll(Configuration.LOANS + Configuration.LOAN_PURPOSE + Configuration.GET_ALL);
+    }
 }
