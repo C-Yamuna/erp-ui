@@ -81,7 +81,7 @@
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
                                     <input pInputText type="text" [(ngModel)]="ciInterestPolicyModel.minSlabAmount" 
-                                    (keyup)="checkForAmount()" formControlName="minSlabAmount">
+                                    (focusout)="checkForAmount(1)" formControlName="minSlabAmount" pKeyFilter="num">
                                     
                                 </ng-template>
                                 <ng-template pTemplate="output">{{ciInterestPolicyModel.minSlabAmount}}</ng-template>
@@ -93,7 +93,7 @@
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
                                     <input pInputText type="text" [(ngModel)]="ciInterestPolicyModel.maxSlabAmount" 
-                                    (keyup)="checkForAmount()" formControlName="maxSlabAmount">
+                                    (focusout)="checkForAmount(2)" formControlName="maxSlabAmount" pKeyFilter="num">
                                     
                                 </ng-template>
                                 <ng-template pTemplate="output">{{ciInterestPolicyModel.maxSlabAmount}}</ng-template>
@@ -262,7 +262,8 @@
                         <td>
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
-                                    <input pInputText type="text" [(ngModel)]="saoCollectionApportionOrderModel.apportionOrder" formControlName="apportionOrder">
+                                    <input pInputText type="text" [(ngModel)]="saoCollectionApportionOrderModel.apportionOrder" formControlName="apportionOrder"
+                                    (focusout)="checkApportionOrder(saoCollectionApportionOrderModel.apportionOrder)">
                                     
                                 </ng-template>
                                 <ng-template pTemplate="output">{{saoCollectionApportionOrderModel.apportionOrder}}</ng-template>

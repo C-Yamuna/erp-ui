@@ -33,12 +33,12 @@
                     <p class="mb-0">{{memberGroupBasicDetails.admissionDateVal}}</p>
                 </div>
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+            <!-- <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
                 <div class="form-group">
                     <span>{{'ERP.POC_NAME' | translate}}</span>
                     <p class="mb-0">{{memberGroupBasicDetails.pocName}}</p>
                 </div>
-            </div>
+            </div> -->
             <!-- <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
                 <div class="form-group">
                     <span>{{'ERP.POC_MOBILE_NUMBER' | translate}}</span>
@@ -95,7 +95,7 @@
                                         <label><span class="red">*</span>{{'ERP.VILLAGES' | translate}} </label>
                 
                                             <p-dropdown [options]="pervillageList" placeholder="Select " formControlName="permanentVillageId"
-                                                [(ngModel)]="groupCommunicationModel.permanentVillageId"  (onChange)='getPerVillage(groupCommunicationModel.permanentVillageId)'></p-dropdown>
+                                                [(ngModel)]="groupCommunicationModel.permanentVillageId"  (onChange)='getPerVillage(groupCommunicationModel.permanentVillageId,true)'></p-dropdown>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -186,7 +186,7 @@
                                 <div class="form-label">
                                     <label><span class="red">*</span>{{'ERP.VILLAGES' | translate}} </label>
                                     <p-dropdown [filter]="true" [options]="villageList" placeholder="Select"
-                                        formControlName="villageName" (onChange)='getVillage(groupCommunicationModel.villageId)' [(ngModel)]="groupCommunicationModel.villageId"></p-dropdown>
+                                        formControlName="villageName" (onChange)='getVillage(groupCommunicationModel.villageId,false)' [(ngModel)]="groupCommunicationModel.villageId"></p-dropdown>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">

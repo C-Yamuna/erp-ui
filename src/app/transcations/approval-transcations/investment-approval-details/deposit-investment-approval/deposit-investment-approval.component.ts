@@ -44,6 +44,7 @@ export class DepositInvestmentApprovalComponent {
   remarks: any;
   submitFlag: boolean = true;
   depostiBondFile: any[] = [];
+  resolutionCopyFileList: any[]=[];
   constructor(private router: Router,
     private datePipe: DatePipe,
     private activateRoute: ActivatedRoute,
@@ -100,6 +101,9 @@ export class DepositInvestmentApprovalComponent {
               if (this.investmentApplicationDetailsModel.maturityDate != null) {
                 this.investmentApplicationDetailsModel.maturityDate = this.datePipe.transform(this.investmentApplicationDetailsModel.maturityDate, this.orgnizationSetting.datePipe);
               }
+              if (this.investmentApplicationDetailsModel.resolutionDate != null) {
+                this.investmentApplicationDetailsModel.resolutionDate = this.datePipe.transform(this.investmentApplicationDetailsModel.resolutionDate, this.orgnizationSetting.datePipe);
+              }
               if (this.investmentApplicationDetailsModel.depositType != undefined && this.investmentApplicationDetailsModel.depositType != null) {
                 this.depositTypeList.filter(data => data.value == this.investmentApplicationDetailsModel.depositType).map(count => {
                   this.depositTypeName = count.label;
@@ -129,6 +133,10 @@ export class DepositInvestmentApprovalComponent {
               if (this.investmentApplicationDetailsModel.depositBondCopyPath != null && this.investmentApplicationDetailsModel.depositBondCopyPath != undefined) {
                 this.depostiBondFile = this.fileUploadService.getFile(this.investmentApplicationDetailsModel.depositBondCopyPath,
                   ERP_TRANSACTION_CONSTANTS.INVESTMENTS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.investmentApplicationDetailsModel.depositBondCopyPath);
+              }
+              if (this.investmentApplicationDetailsModel.resolutionCopyPath != null && this.investmentApplicationDetailsModel.resolutionCopyPath != undefined) {
+                this.resolutionCopyFileList = this.fileUploadService.getFile(this.investmentApplicationDetailsModel.resolutionCopyPath,
+                  ERP_TRANSACTION_CONSTANTS.INVESTMENTS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.investmentApplicationDetailsModel.resolutionCopyPath);
               }
 
               if (this.investmentApplicationDetailsModel.depositType != undefined && this.investmentApplicationDetailsModel.depositType != null)
@@ -222,6 +230,9 @@ export class DepositInvestmentApprovalComponent {
       if (this.investmentApplicationDetailsModel.maturityDate)
         this.investmentApplicationDetailsModel.maturityDate = this.commonFunctionsService.getUTCEpoch(new Date(this.investmentApplicationDetailsModel.maturityDate));
 
+      if (this.investmentApplicationDetailsModel.resolutionDate != null)
+        this.investmentApplicationDetailsModel.resolutionDate = this.commonFunctionsService.getUTCEpoch(new Date(this.investmentApplicationDetailsModel.resolutionDate));
+      
       if (this.investmentApplicationDetailsModel.isAutoRenewal == applicationConstants.YES)
         this.investmentApplicationDetailsModel.isAutoRenewal = applicationConstants.TRUE;
       else

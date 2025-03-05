@@ -18,6 +18,7 @@ import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-
 import { FileUploadService } from 'src/app/shared/file-upload.service';
 import { MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
 import { SiLoanApplication } from '../../../shared/si-loans/si-loan-application.model';
+import { savingsbanktransactionconstant } from 'src/app/transcations/savings-bank-transcation/savingsbank-transaction-constant';
 
 @Component({
   selector: 'app-si-nominee',
@@ -25,7 +26,7 @@ import { SiLoanApplication } from '../../../shared/si-loans/si-loan-application.
   styleUrls: ['./si-nominee.component.css']
 })
 export class SiNomineeComponent {
-   nomineeForm: any;
+   nomineeForm: FormGroup;
     guarantorDetailsForm: any;
     nominee: any;
     nomineeList: any;
@@ -35,14 +36,13 @@ export class SiNomineeComponent {
     noNominee: boolean = false;
     responseModel!: Responsemodel;
     msgs: any[] = [];
-    isMemberCreation: any;
-
-   siLoanGuardianModel: SiLoanGuardian = new SiLoanGuardian();
     siLoanNomineeModel: SiLoanNominee = new SiLoanNominee();
+    siLoanGuardianModel: SiLoanGuardian = new SiLoanGuardian();
     membershipBasicRequiredDetails: MembershipBasicRequiredDetails = new MembershipBasicRequiredDetails();
     memberGroupDetailsModel: MemberGroupDetailsModel = new MemberGroupDetailsModel();
     membershipInstitutionDetailsModel: MembershipInstitutionDetailsModel = new MembershipInstitutionDetailsModel();
-  
+    siLoanApplicationModel: SiLoanApplication = new SiLoanApplication();
+
     fileName: any;
     loanAccId: any;
     isEdit: boolean = false;
@@ -58,13 +58,14 @@ export class SiNomineeComponent {
     orgnizationSetting: any;
   
     accountNumber: any;
-    productName: any;
+    siProductName: any;
     statesList: any;
     districtsList: any;
     mandalsList: any;
     villageList: any;
     guadianTypesList: any[] = [];
     guardain :any;
+    isMemberCreation: any;
     memberTypeName: any;
     institutionPromoter: any;
     promoterDetails: any;
@@ -86,40 +87,37 @@ export class SiNomineeComponent {
     historyFLag: boolean = false;
     flag: boolean = false;
     isSaveAndNextEnable : boolean = false;
-      siLoanApplicationModel: SiLoanApplication = new SiLoanApplication();
-    
-
+    today :any;
+    fileSizeMsgForImage: any;
+    fileSizeMsgForImageGuardiand: any;
+    isNewMember :boolean = false;
   
-  
-    constructor(private router: Router, private formBuilder: FormBuilder, private siLoanApplicationService: SiLoanApplicationService,
-       private commonComponent: CommonComponent, private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService, 
-        private commonFunctionsService: CommonFunctionsService, 
-       private datePipe: DatePipe ,
-        private fileUploadService :FileUploadService,
-       private siLoanNomineeService: SiLoanNomineeService,) {
+    constructor(private router: Router, private formBuilder: FormBuilder, private siLoanApplicationService: SiLoanApplicationService, private commonComponent: CommonComponent, private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService, 
+      private siLoanNomineeService: SiLoanNomineeService, private commonFunctionsService: CommonFunctionsService, private datePipe: DatePipe , private fileUploadService :FileUploadService) {
       this.nomineeForm = this.formBuilder.group({
-        relationName:['', ],
-        nomineeName: ['', ],
+        "relationName": new FormControl(''),
+        "nomineeName": new FormControl('',),
         // age: new FormControl(['', [Validators.pattern(applicationConstants.ALLOW_NEW_NUMBERS), Validators.maxLength(40), Validators.pattern(/^[^\s]+(\s.*)?$/), Validators.compose([Validators.required])]],),
-        aadhaar: ['', ],
-        mobileNumber:['', ],
-        email: ['', ],
-        dateOfBirth: new FormControl('', ),
-        remarks: new FormControl('', ),
+        "aadhaar": new FormControl('',),
+        "mobileNumber": new FormControl('',),
+        "email": new FormControl('',),
+        "nomineeDob": new FormControl('', ),
+        "age": new FormControl('', ),
+        "remarks": new FormControl('', ),
         // 'nomineeAddres': new FormControl('', Validators.required),
-        nomineeType: ['', Validators.required],
+        "nomineeType": ['', Validators.required],
   
         //guardian form fields
-        relationNameOfGuardian: ['', ],
-        guardianName: ['', ],
-        guardianAge: ['', ],
-        guardianAadhar: ['', ],
-        guardianMobile: ['', ],
-        guardianEmail: ['', ],
-        guardianAddress: ['', ],
-        guardainType: [''],
-        fileUpload : ['', ],
-        guardianRemarks: new FormControl('', ),
+        "relationNameOfGuardian": new FormControl('',),
+        "guardianName": new FormControl('',),
+        "guardianAge": new FormControl('',),
+        "guardianAadhar": new FormControl('',),
+        "guardianMobile": new FormControl('',),
+        "guardianEmail": new FormControl('',),
+        "guardianAddress": new FormControl('',),
+        "guardainType": new FormControl('',),
+        "fileUpload" : new FormControl('',),
+        "guardianRemarks": new FormControl('', ),
   
       });
       this.nomineeFields = [
@@ -130,7 +128,7 @@ export class SiNomineeComponent {
         { field: 'nomineeEmail',header:'Email'},
         { field: 'statusName', header: 'Status' },
       ]
-  
+      this.today = new Date();//for future date set to disable
     }
   
     // @k.yamuna
@@ -168,7 +166,7 @@ export class SiNomineeComponent {
           if(params['id'] != undefined && params['id'] != null){
             let queryParams = this.encryptDecryptService.decrypt(params['id']);
             this.loanAccId = Number(queryParams);
-            this.getSbAccountDetailsById(this.loanAccId);
+            this.getSiLoanApplicationById(this.loanAccId);
             this.isEdit = true;
           }
           
@@ -189,7 +187,7 @@ export class SiNomineeComponent {
     //@k.yamuna
     updateData() {
       this.siLoanNomineeModel.memberTypeName = this.memberTypeName;
-      if(this.relationTypesList != null && this.relationTypesList != undefined && this.relationTypesList.length > 0){
+      if (this.age <= 18 || this.siLoanNomineeModel.nomineeAge <= 18) {
         let nominee = this.relationTypesList.find((data: any) => null != data && this.siLoanNomineeModel.relationTypeId != null && data.value == this.siLoanNomineeModel.relationTypeId);
         if (nominee != null && undefined != nominee && nominee.label != null && nominee.label != undefined) {
           this.siLoanNomineeModel.relationTypeName = nominee.label;
@@ -198,8 +196,6 @@ export class SiNomineeComponent {
         if (guardain != null && undefined != guardain && guardain.label != null && guardain.label != undefined) {
           this.siLoanGuardianModel.relationshipTypeName = guardain.label;
         }
-      }
-      if (this.age <= 18) {
         this.siLoanGuardianModel.siLoanApplicationId = this.loanAccId ;
         this.siLoanGuardianModel.accountNumber = this.accountNumber;
         this.siLoanNomineeModel.siMemberGuardianDetailsDTO = this.siLoanGuardianModel;
@@ -208,7 +204,6 @@ export class SiNomineeComponent {
       else {
         this.isSaveAndNextEnable = (!this.nomineeForm.valid) || (!this.isFileUploadedNominee);
       }
-      this.siLoanNomineeModel.accountNumber = this.accountNumber;
       this.siLoanNomineeModel.siLoanApplicationId = this.loanAccId;
       this.siLoanApplicationService.changeData({
         formValid: !this.nomineeForm.valid ? true : false,
@@ -224,12 +219,23 @@ export class SiNomineeComponent {
     //on change nominee type need to update validation
     //@k.yamuna
     onChange(event: any ,flag :boolean) {
-      this.nomineeForm.get('relationName').reset();
-      this.nomineeForm.get('nomineeName').reset();
-      this.nomineeForm.get('aadhaar').reset();
-      this.nomineeForm.get('mobileNumber').reset();
-      this.nomineeForm.get('email').reset();
-
+      if(flag){
+        this.siLoanNomineeModel.nomineeSighnedFormMultiPartList = [];
+        this.isFileUploadedNominee = false;
+        if(this.siLoanNomineeModel.nomineeAge < 18){
+          this.guarntorDetailsFalg = false;
+            this.guarntorDetailsFalg = false;
+            let id = null;
+            if(this.siLoanGuardianModel.id != null && this.siLoanGuardianModel.id != undefined){
+              let id = this.siLoanGuardianModel.id;
+            }
+            this.siLoanGuardianModel = new SiLoanGuardian();
+            this.siLoanGuardianModel.id = id;
+            this.sameAsMemberGuardain = false;
+            this.courtAppointedGuardain = false;
+              this.resetGuardain();
+        }
+      }
       if (event == 1) {//new nominee
         this.newNomineeType(flag);
       }
@@ -247,12 +253,11 @@ export class SiNomineeComponent {
      * @param event guardain Type
      */
     onChangeGuardain(event: any , flag :boolean) {
-      this.nomineeForm.get('relationNameOfGuardian').reset();
-      this.nomineeForm.get('guardianName').reset();
-      this.nomineeForm.get('guardianAadhar').reset();
-      this.nomineeForm.get('guardianMobile').reset();
-      this.nomineeForm.get('guardianEmail').reset();
-
+      if(flag){
+        this.siLoanGuardianModel.guardainSighnedMultipartFiles = [];
+        this.isFileUploadedGuardina = false;
+        this.resetGuardain();
+      }
       if (event == 1) {//new guardain
         this.newGuardainType(flag);
       }
@@ -268,8 +273,8 @@ export class SiNomineeComponent {
      * @implements memberType Check For Guardian And Nominee typwe List
      * @author k.yamuna
      */
-    memberTypeCheck(memberTypeName : any){
-      if(memberTypeName != "Individual"){
+    memberTypeCheck(memberTypeName: any) {
+      if (memberTypeName != "Individual") {
         this.nomineeList = [
           { label: 'New Nominee', value: 1 },
           { label: 'No Nominee', value: 3 },
@@ -282,7 +287,7 @@ export class SiNomineeComponent {
       }
     }
   
-    //nominee details by si account id
+    //nominee details by sb account id
     //@k.yamuna
     getNomineDetailsBySbId(loanAccId: any) {
       this.siLoanNomineeService.getNomineeDetailsBySILoanLoanAccId(loanAccId).subscribe((response: any) => {
@@ -292,7 +297,7 @@ export class SiNomineeComponent {
             if (this.responseModel.data.length > 0 &&  this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
               this.siLoanNomineeModel = this.responseModel.data[0];
               if (this.siLoanNomineeModel.nomineeDob != null && this.siLoanNomineeModel.nomineeDob != undefined) {
-                this.siLoanNomineeModel.nomineeDobVal = this.datePipe.transform(this.siLoanNomineeModel.nomineeDobVal, this.orgnizationSetting.datePipe);
+                this.siLoanNomineeModel.nomineeDobVal = this.datePipe.transform(this.siLoanNomineeModel.nomineeDob, this.orgnizationSetting.datePipe);
               }
               if (this.siLoanNomineeModel.nomineeType!= 0) {
                   this.onChange(this.siLoanNomineeModel.nomineeType, this.flag);
@@ -309,21 +314,21 @@ export class SiNomineeComponent {
             }, 2000);
           }
         }
-        // this.getSbAccountDetailsById(loanAccId);
+        // this.getSiLoanApplicationById(loanAccId);
       })
     }
-    //get si account details for header data  
+    //get sI account details for header data  
     //@k.yamuna
-    getSbAccountDetailsById(id: any) {
+    getSiLoanApplicationById(id: any) {
       this.siLoanApplicationService.getSILoanApplicationById(id).subscribe((data: any) => {
         this.responseModel = data;
         if (this.responseModel != null && this.responseModel != undefined) {
           if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
-            this.siLoanApplicationModel = this.responseModel.data[0]
-            if (this.responseModel.data.length > 0 && this.siLoanApplicationModel != null && this.siLoanApplicationModel != undefined) {
-              
+            if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+              this.siLoanApplicationModel = this.responseModel.data[0];
+             
               if ( this.siLoanApplicationModel.siProductName != null &&  this.siLoanApplicationModel.siProductName != undefined) {
-                this.productName =this.siLoanApplicationModel.siProductName;
+                this.siProductName =this.siLoanApplicationModel.siProductName;
               }
               if (this.siLoanApplicationModel.accountTypeName != null && this.siLoanApplicationModel.accountTypeName != undefined) {
                 this.accountType = this.siLoanApplicationModel.accountTypeName;
@@ -342,28 +347,30 @@ export class SiNomineeComponent {
                 //   this.getNomineeHistoryBysbAccountNumber(this.accountNumber);
                 // }
               }
-              if(this.siLoanApplicationModel.age != null && this.siLoanApplicationModel.age != undefined){
-                this.age = this.siLoanApplicationModel.age;
+              if(this.siLoanApplicationModel.individualMemberDetailsDTO.age != null && this.siLoanApplicationModel.individualMemberDetailsDTO.age != undefined){
+                this.age = this.siLoanApplicationModel.individualMemberDetailsDTO.age;
                 if(this.age < 18){
                   this.guarntorDetailsFalg = true;
                 }
               }
               if(this.siLoanApplicationModel.siLoanNomineeDetailsDTO != null && this.siLoanApplicationModel.siLoanNomineeDetailsDTO != undefined){
                 this.siLoanNomineeModel = this.siLoanApplicationModel.siLoanNomineeDetailsDTO;
+                if(this.siLoanNomineeModel.nomineeDob != null && this.siLoanNomineeModel.nomineeDob != undefined){
+                  this.siLoanNomineeModel.nomineeDobVal = this.datePipe.transform(this.siLoanNomineeModel.nomineeDob, this.orgnizationSetting.datePipe);
+                }
                 if(this.siLoanNomineeModel.nomineeFilePath != null && this.siLoanNomineeModel.nomineeFilePath != undefined){
                   if(this.siLoanNomineeModel.nomineeType != null && this.siLoanNomineeModel.nomineeType != undefined){
                     if(this.siLoanNomineeModel.nomineeType != 2){
                       this.siLoanNomineeModel.nomineeSighnedFormMultiPartList =  this.fileUploadService.getFile(this.siLoanNomineeModel.nomineeFilePath , ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.siLoanNomineeModel.nomineeFilePath);
-                      this.isFileUploadedNominee = applicationConstants.TRUE;                    
                     }
                     else {
                       this.siLoanNomineeModel.nomineeSighnedFormMultiPartList =  this.fileUploadService.getFile(this.siLoanNomineeModel.nomineeFilePath , ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.siLoanNomineeModel.nomineeFilePath);
-                      this.isFileUploadedNominee = applicationConstants.TRUE;
                     }
                     this.isFileUploadedNominee = applicationConstants.TRUE;
-                    this.updateData();
                   }
-                  
+                }
+                if(this.siLoanNomineeModel.nomineeAge < 18){
+                  this.guarntorDetailsFalg = true;
                 }
               }
               else {
@@ -402,7 +409,7 @@ export class SiNomineeComponent {
                 }
               }
             }
-            this.updateData();
+            this.updateData();          
           }
           else {
             this.msgs = [];
@@ -613,84 +620,49 @@ export class SiNomineeComponent {
      * @param admissionNumber 
      * @author k.yamuna
      */
-    // getNomineeFromMemberModule(admissionNumber : any){
-    //   this.siLoanNomineeService.getNomineeFromMemberModuleByAdmissionNumber(admissionNumber).subscribe((response: any) => {
-    //     this.responseModel = response;
-    //     if (this.responseModel != null && this.responseModel != undefined) {
-    //       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-    //         if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
-    //           this.siLoanNomineeModel = this.responseModel.data[0];
-    //           // if (this.siLoanNomineeModel.nomineeDob != null && this.siLoanNomineeModel.nomineeDob != undefined) {
-    //           //   this.siLoanNomineeModel.dateOfBirthVal = this.datePipe.transform(this.siLoanNomineeModel.dateOfBirthVal, this.orgnizationSetting.datePipe);
-    //           // }
-    //           // if(this.responseModel.data[0].nomineeEmailId != null && this.responseModel.data[0].nomineeEmailId != undefined){
-    //           //   this.siLoanNomineeModel.nomineeEmail = this.responseModel.data[0].nomineeEmailId;
-    //           // }
-    //           // if(this.responseModel.data[0].relationTypeId != null && this.responseModel.data[0].relationTypeId != undefined){
-    //           //   this.siLoanNomineeModel.relationshipTypeId = this.responseModel.data[0].relationTypeId;
-    //           //   this.getAllRelationTypes();
-    //           // }
-    //           // if(this.responseModel.data[0].relationTypeName != null && this.responseModel.data[0].relationTypeName != undefined){
-    //           //   this.siLoanNomineeModel.relationshipTypeName = this.responseModel.data[0].relationTypeName;
-    //           // }
-    //           // if(this.responseModel.data[0].nomineeAadharNumber != null && this.responseModel.data[0].nomineeAadharNumber != undefined){
-    //           //   this.siLoanNomineeModel.aadharNumber = this.responseModel.data[0].nomineeAadharNumber;
-    //           // }
-    //           // if(this.responseModel.data[0].nomineeMobileNumber != null && this.responseModel.data[0].nomineeMobileNumber != undefined){
-    //           //   this.siLoanNomineeModel.mobileNumber = this.responseModel.data[0].nomineeMobileNumber;
-    //           // }
-    //           // if(this.responseModel.data[0].nomineeName != null && this.responseModel.data[0].nomineeName != undefined){
-    //           //   this.siLoanNomineeModel.name = this.responseModel.data[0].nomineeName;
-    //           // }
-    //           // if(this.responseModel.data[0].nomineeFilePath != null && this.responseModel.data[0].nomineeFilePath != undefined){
-    //           //   this.siLoanNomineeModel.addressProofCopyPath = this.responseModel.data[0].nomineeFilePath;
-    //           // }
-    //           if (this.responseModel.data[0].nomineeFilePath != null && this.responseModel.data[0].nomineeFilePath != undefined) {
-    //             this.siLoanNomineeModel.nomineeFilePath = this.responseModel.data[0].nomineeFilePath;
-    //             this.siLoanNomineeModel.nomineeSighnedFormMultiPartList = this.fileUploadService.getFile(this.siLoanNomineeModel.nomineeFilePath  , ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.siLoanNomineeModel.nomineeFilePath );
-    //             this.isFileUploadedNominee = applicationConstants.TRUE;
-    //           }
-    //           this.siLoanNomineeModel.nomineeType = 2;
-    //         }
-    //       } else {
-    //         this.commonComponent.stopSpinner();
-    //         this.msgs = [];
-    //         this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
-    //         setTimeout(() => {
-    //           this.msgs = [];
-    //         }, 2000);
-    //       }
-    //     }
-    //   },
-    //     error => {
-    //       this.msgs = [];
-    //       this.commonComponent.stopSpinner();
-    //       this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
-    //       setTimeout(() => {
-    //         this.msgs = [];
-    //       }, 2000);
-    //     });
-    // }
-    getNomineeFromMemberModule(admissionNumber: any) {
+    getNomineeFromMemberModule(admissionNumber : any){
       this.siLoanNomineeService.getNomineeFromMemberModuleByAdmissionNumber(admissionNumber).subscribe((response: any) => {
         this.responseModel = response;
         if (this.responseModel != null && this.responseModel != undefined) {
           if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
             if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
               this.siLoanNomineeModel = this.responseModel.data[0];
-  
-              this.siLoanNomineeModel.id = null;
               if (this.siLoanNomineeModel.nomineeDob != null && this.siLoanNomineeModel.nomineeDob != undefined) {
                 this.siLoanNomineeModel.nomineeDobVal = this.datePipe.transform(this.siLoanNomineeModel.nomineeDob, this.orgnizationSetting.datePipe);
               }
-              if (this.siLoanNomineeModel.nomineeFilePath != null && this.siLoanNomineeModel.nomineeFilePath != undefined){
-                this.siLoanNomineeModel.nomineeSighnedFormMultiPartList = this.fileUploadService.getFile(this.siLoanNomineeModel.nomineeFilePath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.siLoanNomineeModel.nomineeFilePath);
-                this.isFileUploadedNominee = applicationConstants.TRUE;
+              if(this.siLoanNomineeModel.nomineeEmailId != null && this.siLoanNomineeModel.nomineeEmailId != undefined){
+                this.siLoanNomineeModel.nomineeEmailId = this.siLoanNomineeModel.nomineeEmailId;
               }
-              if (this.siLoanNomineeModel.relationTypeId != null && this.siLoanNomineeModel.relationTypeId != undefined) {
+              if(this.siLoanNomineeModel.relationTypeId != null && this.siLoanNomineeModel.relationTypeId != undefined){
+                this.siLoanNomineeModel.relationTypeId = this.siLoanNomineeModel.relationTypeId;
                 this.getAllRelationTypes();
               }
+              if(this.siLoanNomineeModel.relationTypeName != null && this.siLoanNomineeModel.relationTypeName != undefined){
+                this.siLoanNomineeModel.relationTypeName = this.siLoanNomineeModel.relationTypeName;
+              }
+              if(this.siLoanNomineeModel.nomineeAadharNumber != null && this.siLoanNomineeModel.nomineeAadharNumber != undefined){
+                this.siLoanNomineeModel.nomineeAadharNumber = this.siLoanNomineeModel.nomineeAadharNumber;
+              }
+              if(this.siLoanNomineeModel.nomineeMobileNumber != null && this.siLoanNomineeModel.nomineeMobileNumber != undefined){
+                this.siLoanNomineeModel.nomineeMobileNumber = this.siLoanNomineeModel.nomineeMobileNumber;
+              }
+              if(this.siLoanNomineeModel.nomineeName != null && this.siLoanNomineeModel.nomineeName != undefined){
+                this.siLoanNomineeModel.nomineeName = this.siLoanNomineeModel.nomineeName;
+              }
+              if(this.siLoanNomineeModel.nomineeFilePath != null && this.siLoanNomineeModel.nomineeFilePath != undefined){
+                this.siLoanNomineeModel.nomineeFilePath = this.siLoanNomineeModel.nomineeFilePath;
+              }
+              if (this.siLoanNomineeModel.nomineeFilePath != null && this.siLoanNomineeModel.nomineeFilePath != undefined) {
+                this.siLoanNomineeModel.nomineeFilePath = this.siLoanNomineeModel.nomineeFilePath;
+                this.siLoanNomineeModel.nomineeSighnedFormMultiPartList = this.fileUploadService.getFile(this.siLoanNomineeModel.nomineeFilePath  , ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.siLoanNomineeModel.nomineeFilePath );
+                this.isFileUploadedNominee = applicationConstants.TRUE;
+              }
+              if(this.siLoanNomineeModel.nomineeDob != null && this.siLoanNomineeModel.nomineeDob != undefined){
+                this.siLoanNomineeModel.nomineeDob = this.siLoanNomineeModel.nomineeDob;
+                this.siLoanNomineeModel.nomineeDobVal = this.datePipe.transform(this.siLoanNomineeModel.nomineeDob, this.orgnizationSetting.datePipe);
+              }
               this.siLoanNomineeModel.nomineeType = 2;
+              this.updateData();
             }
           } else {
             this.commonComponent.stopSpinner();
@@ -723,36 +695,6 @@ export class SiNomineeComponent {
         if (this.responseModel != null && this.responseModel != undefined) {
           if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
             if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
-              // if (this.responseModel.data[0].guardianDob != null && this.responseModel.data[0].guardianDob != undefined) {
-              //   this.siLoanGuardianModel.dateOfBirthVal = this.datePipe.transform(this.responseModel.data[0].guardianDob, this.orgnizationSetting.datePipe);
-              // }
-              // if (this.responseModel.data[0].guardianName != null && this.responseModel.data[0].guardianName != undefined) {
-              //   this.siLoanGuardianModel.name = this.responseModel.data[0].guardianName;
-              // }
-              // if (this.responseModel.data[0].guardianAadharNumber != null && this.responseModel.data[0].guardianAadharNumber != undefined) {
-              //   this.siLoanGuardianModel.aadharNumber = this.responseModel.data[0].guardianAadharNumber;
-              // }
-              // if (this.responseModel.data[0].guardianMobileNumber != null && this.responseModel.data[0].guardianMobileNumber != undefined) {
-              //   this.siLoanGuardianModel.mobileNumber = this.responseModel.data[0].guardianMobileNumber;
-              // }
-              // if (this.responseModel.data[0].guardianEmailId != null && this.responseModel.data[0].guardianEmailId != undefined) {
-              //   this.siLoanGuardianModel.email = this.responseModel.data[0].guardianEmailId;
-              // }
-              // if (this.responseModel.data[0].relationshipTypeId != null && this.responseModel.data[0].relationshipTypeId != undefined) {
-              //   this.siLoanGuardianModel.relationshipTypeId = this.responseModel.data[0].relationshipTypeId;
-              // }
-              // if (this.responseModel.data[0].guardianDob != null && this.responseModel.data[0].guardianDob != undefined) {
-              //   this.siLoanGuardianModel.dateOfBirth = this.responseModel.data[0].guardianDob;
-              // }
-              // if (this.responseModel.data[0].guardianAge != null && this.responseModel.data[0].guardianAge != undefined) {
-              //   this.siLoanGuardianModel.age = this.responseModel.data[0].guardianAge;
-              // }
-              // if (this.responseModel.data[0].guardianAge != null && this.responseModel.data[0].guardianAge != undefined) {
-              //   this.siLoanGuardianModel.age = this.responseModel.data[0].guardianAge;
-              // }
-              // if (this.responseModel.data[0].guardianAge != null && this.responseModel.data[0].guardianAge != undefined) {
-              //   this.siLoanGuardianModel.age = this.responseModel.data[0].guardianAge;
-              // }
               if (this.responseModel.data[0].uploadFilePath != null && this.responseModel.data[0].uploadFilePath != undefined) {
                 this.siLoanGuardianModel.uploadFilePath = this.responseModel.data[0].uploadFilePath;
                 this.siLoanGuardianModel.guardainSighnedMultipartFiles = this.fileUploadService.getFile(this.siLoanGuardianModel.uploadFilePath , ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.siLoanGuardianModel.uploadFilePath);
@@ -779,72 +721,95 @@ export class SiNomineeComponent {
           }, 2000);
         });
     }
-      // /**
-    //  * @implements fileUpload service
-    //  * @param event 
-    //  * @param fileUpload 
-    //  * @param filePathName 
-    //  */
+  
+    /**
+     * @implements fileUpload service
+     * @param event 
+     * @param fileUpload 
+     * @param filePathName 
+     */
     fileUploader(event: any, fileUpload: FileUpload , filePathName:any) {
       this.multipleFilesList = [];
+      this.fileSizeMsgForImage = null;
+      this.fileSizeMsgForImageGuardiand = null;
+      let fileSizeFalg = false;
       if(this.siLoanNomineeModel != null && this.siLoanNomineeModel != undefined && this.isEdit && this.siLoanNomineeModel.filesDTOList == null || this.siLoanNomineeModel.filesDTOList == undefined){
           this.siLoanNomineeModel.filesDTOList = [];
       }
       if(this.isEdit && this.siLoanGuardianModel != null && this.siLoanGuardianModel != undefined && this.siLoanGuardianModel.filesDTOList == null || this.siLoanGuardianModel.filesDTOList == undefined){
         this.siLoanGuardianModel.filesDTOList = [];
       }
+      let selectedFiles = [...event.files];
+      
+      fileUpload.clear();
+    
       if (filePathName === "Nominee") {
         this.isFileUploadedNominee = applicationConstants.FALSE;
+        this.siLoanNomineeModel.nomineeSighnedFormMultiPartList = [];
+        if (selectedFiles[0].size/1024/1024 > 5) {
+          this.fileSizeMsgForImage= "file is bigger than 5MB";
+          fileSizeFalg = true;
+         }
       }
       if (filePathName === "Guardain") {
         this.isFileUploadedGuardina = applicationConstants.FALSE;
+        this.siLoanGuardianModel.guardainSighnedMultipartFiles = [];
+        if (selectedFiles[0].size/1024/1024 > 5) {
+          this.fileSizeMsgForImageGuardiand = "file is bigger than 5MB";
+          fileSizeFalg = true;
+         }
       }
-      for (let file of event.files) {
+      let files: FileUploadModel = new FileUploadModel();
+      if(!fileSizeFalg){
+        for (let file of selectedFiles) {
        
-        let reader = new FileReader();
-        reader.onloadend = (e) => {
-          let files = new FileUploadModel();
-          this.uploadFileData = e.currentTarget;
-          files.fileName = file.name;
-          files.fileType = file.type.split('/')[1];
-          files.value = this.uploadFileData.result.split(',')[1];
-          files.imageValue = this.uploadFileData.result;
-          
-            this.multipleFilesList.push(files);
-            // Add to filesDTOList array
-          let timeStamp = this.commonComponent.getTimeStamp();
-          if (filePathName === "Nominee") {
-            this.isFileUploadedNominee = applicationConstants.TRUE;
-            this.siLoanNomineeModel.filesDTOList.push(files); 
-            this.siLoanNomineeModel.nomineeFilePath = null;
-            this.siLoanNomineeModel.filesDTOList[this.siLoanNomineeModel.filesDTOList.length-1].fileName = "SB_NOMINEE" + this.loanAccId + "_" + timeStamp + "_" + file.name;
-            this.siLoanNomineeModel.nomineeFilePath = "SB_NOMINEE" + this.loanAccId + "_" +timeStamp+"_"+ file.name; 
+          let reader = new FileReader();
+          reader.onloadend = (e) => {
+            let files = new FileUploadModel();
+            this.uploadFileData = e.currentTarget;
+            files.fileName = file.name;
+            files.fileType = file.type.split('/')[1];
+            files.value = this.uploadFileData.result.split(',')[1];
+            files.imageValue = this.uploadFileData.result;
+            
+              this.multipleFilesList.push(files);
+              // Add to filesDTOList array
+            let timeStamp = this.commonComponent.getTimeStamp();
+            if (filePathName === "Nominee") {
+              this.isFileUploadedNominee = applicationConstants.TRUE;
+              this.siLoanNomineeModel.filesDTOList.push(files); 
+              this.siLoanNomineeModel.nomineeSighnedFormMultiPartList.push(files);
+              this.siLoanNomineeModel.nomineeFilePath = null;
+              this.siLoanNomineeModel.filesDTOList[this.siLoanNomineeModel.filesDTOList.length-1].fileName = "SI_NOMINEE" + this.loanAccId + "_" + timeStamp + "_" + file.name;
+              this.siLoanNomineeModel.nomineeFilePath = "SI_NOMINEE" + this.loanAccId + "_" +timeStamp+"_"+ file.name; 
+            }
+            if (filePathName === "Guardain") {
+              this.isFileUploadedGuardina = applicationConstants.TRUE;
+              this.siLoanGuardianModel.filesDTOList.push(files); 
+              this.siLoanGuardianModel.guardainSighnedMultipartFiles.push(files);
+              this.siLoanGuardianModel.uploadFilePath = null;
+              this.siLoanGuardianModel.filesDTOList[this.siLoanGuardianModel.filesDTOList.length-1].fileName = "SI_GUARDAIN" + "_" + timeStamp + "_" + file.name;
+              this.siLoanGuardianModel.uploadFilePath = "SI_GUARDAIN" + "_" + timeStamp + "_" + file.name; 
+            }
+            this.updateData();
           }
-          if (filePathName === "Guardain") {
-            this.isFileUploadedGuardina = applicationConstants.TRUE;
-            this.siLoanGuardianModel.filesDTOList.push(files); 
-            this.siLoanGuardianModel.uploadFilePath = null;
-            this.siLoanGuardianModel.filesDTOList[this.siLoanGuardianModel.filesDTOList.length-1].fileName = "SB_GUARDAIN" + "_" + timeStamp + "_" + file.name;
-            this.siLoanGuardianModel.uploadFilePath = "SB_GUARDAIN" + "_" + timeStamp + "_" + file.name; 
-          }
-          this.updateData();
+          reader.readAsDataURL(file);
         }
-        reader.readAsDataURL(file);
       }
+      
     }
   /**
    * @implements gurdaind from validation
    * @author k.yamuna
    */
     guardainFormValidation() {
-      if (this.age <= 18) {
+      if (this.age < 18 || this.siLoanNomineeModel.nomineeAge < 18) {
+        this.resetGuardain();
         this.nomineeForm.get('relationNameOfGuardian')?.enable();
-      this.nomineeForm.get('guardianName')?.enable();
-      this.nomineeForm.get('guardianAadhar')?.enable();
-      this.nomineeForm.get('guardianMobile')?.enable();
-      this.nomineeForm.get('guardianEmail')?.enable();
-     
-  
+        this.nomineeForm.get('guardianName')?.enable();
+        this.nomineeForm.get('guardianAadhar')?.enable();
+        this.nomineeForm.get('guardianMobile')?.enable();
+        this.nomineeForm.get('guardianEmail')?.enable();
         this.guarntorDetailsFalg = true;
         const controlName = this.nomineeForm.get('relationNameOfGuardian');
         if (controlName) {
@@ -865,26 +830,32 @@ export class SiNomineeComponent {
         if (controlFour) {
           controlFour.setValidators([
             Validators.required,
-            Validators.pattern(applicationConstants.AADHAR_PATTERN)
           ]);
           controlFour.updateValueAndValidity();
         }
         const controlFive = this.nomineeForm.get('guardianMobile');
         if (controlFive) {
           controlFive.setValidators([
-            Validators.required,
-            Validators.pattern(applicationConstants.MOBILE_PATTERN)
+            Validators.required,Validators.pattern(applicationConstants.MOBILE_PATTERN)
           ]);
           controlFive.updateValueAndValidity();
         }
-        const controlSeven = this.nomineeForm.get('guardianRemarks');
-        if(controlSeven){
-          controlSeven.setValidators(null);
-          controlSeven.updateValueAndValidity();
+        const controlSix = this.nomineeForm.get('guardianEmail');
+        if (controlSix) {
+          controlSix.setValidators([
+            Validators.pattern(applicationConstants.EMAIL_PATTERN)
+          ]);
+          controlSix.updateValueAndValidity();
+        }
+        const controlHight = this.nomineeForm.get('remarks');
+        if(controlHight){
+          controlHight.setValidators(null);
+          controlHight.updateValueAndValidity();
         }
         this.updateData();
       }
     }
+  
   
     /**
      * @author k.yamuna
@@ -904,42 +875,48 @@ export class SiNomineeComponent {
      * @implements nominee form validation
      */
     nomineeFormValidation() {
+      this.nomineeForm.get('relationName')?.reset();
+      this.nomineeForm.get('nomineeName')?.reset();
+      this.nomineeForm.get('aadhaar')?.reset();
+      this.nomineeForm.get('mobileNumber')?.reset();
+      this.nomineeForm.get('email')?.reset();
+      this.nomineeForm.get('fileUpload')?.reset();
+      this.nomineeForm.get('age')?.reset();
+      this.nomineeForm.get('nomineeDob')?.reset();
+  
       this.nomineeForm.get('relationName')?.disable();
       this.nomineeForm.get('nomineeName')?.disable();
       this.nomineeForm.get('aadhaar')?.disable();
       this.nomineeForm.get('mobileNumber')?.disable();
       this.nomineeForm.get('email')?.disable();
-      const controlName = this.nomineeForm.get('relationName');
-      if (controlName) {
-        controlName.setValidators(null); // Set the required validator null
-        controlName.updateValueAndValidity();
-      }
+      this.nomineeForm.get('age')?.disable();
+      this.nomineeForm.get('nomineeDob')?.disable();
+      // const controlName = this.nomineeForm.get('relationName');
+      // if (controlName) {
+      //   controlName.setValidators(null); // Set the required validator null
+      //   controlName.updateValueAndValidity();
+      // }
   
-      const controlTow = this.nomineeForm.get('nomineeName');
-      if (controlTow) {
-        controlTow.setValidators(null); // Set the required validator null
-        controlTow.updateValueAndValidity();
-      }
-      const controlFour = this.nomineeForm.get('aadhaar');
-      if (controlFour) {
-        controlFour.setValidators(null); // Set the required validator null
-        controlFour.updateValueAndValidity();
-      }
-      const controlFive = this.nomineeForm.get('mobileNumber');
-      if (controlFive) {
-        controlFive.setValidators(null); // Set the required validator null
-        controlFive.updateValueAndValidity();
-      }
-      const controlSix = this.nomineeForm.get('email');
-      if (controlSix) {
-        controlSix.setValidators(null); // Set the required validator null
-        controlSix.updateValueAndValidity();
-      }
-      const controlSeven = this.nomineeForm.get('remarks');
-      if(controlSeven){
-        controlSeven.setValidators(null);
-        controlSeven.updateValueAndValidity();
-      }
+      // const controlTow = this.nomineeForm.get('nomineeName');
+      // if (controlTow) {
+      //   controlTow.setValidators(null); // Set the required validator null
+      //   controlTow.updateValueAndValidity();
+      // }
+      // const controlFour = this.nomineeForm.get('aadhaar');
+      // if (controlFour) {
+      //   controlFour.setValidators(null); // Set the required validator null
+      //   controlFour.updateValueAndValidity();
+      // }
+      // const controlFive = this.nomineeForm.get('mobileNumber');
+      // if (controlFive) {
+      //   controlFive.setValidators(null); // Set the required validator null
+      //   controlFive.updateValueAndValidity();
+      // }
+      // const controlSix = this.nomineeForm.get('email');
+      // if (controlSix) {
+      //   controlSix.setValidators(null); // Set the required validator null
+      //   controlSix.updateValueAndValidity();
+      // }
       this.updateData();
     }
     /**
@@ -947,12 +924,23 @@ export class SiNomineeComponent {
      * @implements nominee required valdation
      */
     nomineeValidatorsRequired(){
+      this.nomineeForm.get('relationName')?.reset();
+      this.nomineeForm.get('nomineeName')?.reset();
+      this.nomineeForm.get('aadhaar')?.reset();
+      this.nomineeForm.get('mobileNumber')?.reset();
+      this.nomineeForm.get('email')?.reset();
+      this.nomineeForm.get('fileUpload')?.reset();
+      this.nomineeForm.get('age')?.reset();
+      this.nomineeForm.get('nomineeDob')?.reset();
+  
       this.nomineeForm.get('relationName')?.enable();
       this.nomineeForm.get('nomineeName')?.enable();
       this.nomineeForm.get('aadhaar')?.enable();
       this.nomineeForm.get('mobileNumber')?.enable();
       this.nomineeForm.get('email')?.enable();
       this.nomineeForm.get('fileUpload')?.enable();
+      this.nomineeForm.get('age')?.enable();
+      this.nomineeForm.get('nomineeDob')?.enable();
       const controlName = this.nomineeForm.get('relationName');
       if (controlName) {
         controlName.setValidators([
@@ -973,7 +961,6 @@ export class SiNomineeComponent {
       if (controlFour) {
         controlFour.setValidators([
           Validators.required,
-          Validators.pattern(applicationConstants.AADHAR_PATTERN)
         ]);
         controlFour.updateValueAndValidity();
       }
@@ -992,10 +979,25 @@ export class SiNomineeComponent {
         ]);
         controlSix.updateValueAndValidity();
       }
-      const controlSeven = this.nomineeForm.get('remarks');
-      if(controlSeven){
-        controlSeven.setValidators(null);
+      const controlSeven = this.nomineeForm.get('age');
+      if (controlSeven) {
+        controlSeven.setValidators([
+          Validators.required,
+        ]); // Set the required validator null
         controlSeven.updateValueAndValidity();
+      }
+      const controlEight = this.nomineeForm.get('nomineeDob');
+      if (controlEight) {
+        controlEight.setValidators([
+          Validators.required
+          
+        ]); // Set the required validator null
+        controlEight.updateValueAndValidity();
+      }
+      const controlHight = this.nomineeForm.get('remarks');
+      if(controlHight){
+        controlHight.setValidators(null);
+        controlHight.updateValueAndValidity();
       }
       this.updateData();
     }
@@ -1026,13 +1028,23 @@ export class SiNomineeComponent {
         controlFive.setValidators(null); // Set the required validator null
         controlFive.updateValueAndValidity();
       }
-      // const controlSix = this.nomineeForm.get('remarks');
-      // if(controlSix){
-      //   controlSix.setValidators([
-      //     Validators.required,
-      //   ]);
-      // controlSix.updateValueAndValidity();
-      // }
+      const controlSix = this.nomineeForm.get('age');
+      if (controlSix) {
+        controlSix.setValidators(null); // Set the required validator null
+        controlSix.updateValueAndValidity();
+      }
+      const controlSeven = this.nomineeForm.get('nomineeDob');
+      if (controlSeven) {
+        controlSeven.setValidators(null); // Set the required validator null
+        controlSeven.updateValueAndValidity();
+      }
+      const controlHight = this.nomineeForm.get('remarks');
+      if(controlHight){
+        controlHight.setValidators([
+          Validators.required,
+        ]);
+        controlHight.updateValueAndValidity();
+      }
       this.updateData();
     }
   
@@ -1070,7 +1082,7 @@ export class SiNomineeComponent {
         this.noNominee = false;
         //onchange on update
         if(flag){
-          this.isFileUploadedNominee = applicationConstants.FALSE
+         
           let nomineeId = null;
           if(this.siLoanNomineeModel != null && this.siLoanNomineeModel != undefined && this.siLoanNomineeModel.id  != null && this.siLoanNomineeModel.id  != undefined){
             nomineeId = this.siLoanNomineeModel.id ;
@@ -1092,6 +1104,9 @@ export class SiNomineeComponent {
     samAsMemberNimineeType(flag:boolean){
       this.newNominee = true;
       this.noNominee = false;
+      if(this.siLoanNomineeModel.nomineeAge < 18 ){
+        this.guarntorDetailsFalg = false; 
+      }
       //onchange on update
       if(flag){
         let nomineeId = null;
@@ -1119,12 +1134,13 @@ export class SiNomineeComponent {
       this.noNominee = true;
       this.newNominee = false;
       this.sameAsMembershipNominee = false;
-     
+      if(this.siLoanNomineeModel.nomineeAge < 18){
+        this.guarntorDetailsFalg = false; 
+      }
       if(flag){
         let nomineeId = null;//onchange on update
         let remarks = null;
         let nomineeFilePath = null;
-        this.isFileUploadedNominee = applicationConstants.FALSE
         if(this.siLoanNomineeModel != null && this.siLoanNomineeModel != undefined){
           if(this.siLoanNomineeModel.id  != null && this.siLoanNomineeModel.id  != undefined){
             nomineeId = this.siLoanNomineeModel.id ;
@@ -1149,17 +1165,7 @@ export class SiNomineeComponent {
         this.siLoanNomineeModel.nomineeFilePath = nomineeFilePath;
         }
       }
-      const controlSix = this.nomineeForm.get('remarks');
-      if(controlSix){
-        controlSix.setValidators([
-          Validators.required,
-        ]);
-      controlSix.updateValueAndValidity();
-      }
-     
-      // this.updateData();
       this.nomineeValidatorsFormNotRequired();
-      this.updateData();
       // this.newNominee = false;
     }
   
@@ -1172,7 +1178,6 @@ export class SiNomineeComponent {
       this.courtAppointedGuardain = false;
         this.sameAsMemberGuardain = true;
         this.noGuardain  = false;
-        this.isFileUploadedNominee = applicationConstants.FALSE
         //onchange on update
         if(flag){
           let guardainId = null;
@@ -1216,7 +1221,6 @@ export class SiNomineeComponent {
     noGuardainaType(flag:boolean){
       this.courtAppointedGuardain = true;
       this.sameAsMemberGuardain = false;
-      this.isFileUploadedNominee = applicationConstants.FALSE
       this.noGuardain  = true;
       //onchange on update
       let guardainId = null;
@@ -1254,11 +1258,18 @@ export class SiNomineeComponent {
      */
     noGuardainValidation(){
       if (this.age <= 18) {
-        this.nomineeForm.get('relationNameOfGuardian')?.enable();
+      this.nomineeForm.get('relationNameOfGuardian')?.enable();
       this.nomineeForm.get('guardianName')?.enable();
       this.nomineeForm.get('guardianAadhar')?.enable();
       this.nomineeForm.get('guardianMobile')?.enable();
       this.nomineeForm.get('guardianEmail')?.enable();
+
+      this.removeValidators('relationNameOfGuardian');
+      this.removeValidators('guardianName');
+      this.removeValidators('guardianAadhar');
+      this.removeValidators('guardianMobile');
+      this.removeValidators('guardianDob');
+      this.removeValidators('guardianAge');
       this.guarntorDetailsFalg = true;
       const controlName = this.nomineeForm.get('guardianRemarks');
       if (controlName) {
@@ -1268,6 +1279,110 @@ export class SiNomineeComponent {
         controlName.updateValueAndValidity();
       }
   
+      }
+    }
+    removeValidators(controlName: string) {
+      const control = this.nomineeForm.get(controlName);
+      if (control) {
+        control.setValidators(null);
+        control.updateValueAndValidity();
+      }
+    }
+  
+    /**
+     * @implements reset guardain
+     * @author k.yamuna
+     */
+    resetGuardain(){
+      this.nomineeForm.get('relationNameOfGuardian')?.reset();
+      this.nomineeForm.get('guardianName')?.reset();
+      this.nomineeForm.get('guardianAadhar')?.reset();
+      this.nomineeForm.get('guardianMobile')?.reset();
+      this.nomineeForm.get('guardianEmail')?.reset();
+      this.nomineeForm.get('relationNameOfGuardian')?.setValidators(null);
+      this.nomineeForm.get('guardianName')?.setValidators(null);
+      this.nomineeForm.get('guardianAadhar')?.setValidators(null);
+      this.nomineeForm.get('guardianMobile')?.setValidators(null);
+      this.nomineeForm.get('guardianEmail')?.setValidators(null);
+    }  
+    /**
+     * @implements nominee age calculation
+     * @author k.yamuna
+     */
+   
+    ageCaluculation(flag: any) {
+      if (flag) {//with age to date convertion
+        if (this.siLoanNomineeModel.nomineeAge != null && this.siLoanNomineeModel.nomineeAge != undefined) {
+          if (this.siLoanNomineeModel.nomineeAge > 0) {
+  
+            const currentDate = new Date();  // Get the current date
+            const birthYear = currentDate.getFullYear() - this.siLoanNomineeModel.nomineeAge;  // Subtract the entered age from the current year
+            const birthMonth = currentDate.getMonth();  // Keep the current month
+            const birthDate = currentDate.getDate();   // Keep the current day
+  
+            // Construct the calculated Date of Birth
+            const dob = new Date(birthYear, birthMonth, birthDate);
+  
+            // Array of month names for formatting (e.g., 'Jan', 'Feb', 'Mar', etc.)
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  
+            // Format the Date of Birth to 'DD/Mon/YYYY'
+            const formattedDob = `${dob.getDate() < 10 ? '0' + dob.getDate() : dob.getDate()}/${monthNames[dob.getMonth()]}/${dob.getFullYear()}`;
+  
+            // Format the Date of Birth to YYYY-MM-DD to match the input type="date" format
+            this.siLoanNomineeModel.nomineeDob = null;
+            this.siLoanNomineeModel.nomineeDobVal = formattedDob;
+          }
+          else {
+            this.nomineeForm.get('age')?.reset();
+            this.nomineeForm.get("nomineeDob")?.reset();
+            this.msgs = [{ severity: 'error',  detail: savingsbanktransactionconstant.AGE_SHOULD_NOT_BE_ZERO }];
+            setTimeout(() => {
+              this.msgs = [];
+            }, 3000);
+          }
+        }
+      }
+      else {//with date to age convertion
+        this.siLoanNomineeModel.nomineeDobVal = this.datePipe.transform(this.siLoanNomineeModel.nomineeDobVal, this.orgnizationSetting.datePipe);
+        if (this.siLoanNomineeModel.nomineeDobVal) {
+          const dob = new Date(this.siLoanNomineeModel.nomineeDobVal);  // Parse the date of birth entered by the user
+          const currentDate = new Date();  // Get the current date
+          let age = currentDate.getFullYear() - dob.getFullYear();  // Calculate age in years
+          const m = currentDate.getMonth() - dob.getMonth();  // Check if birthday has passed in the current year
+          if (m < 0 || (m === 0 && currentDate.getDate() < dob.getDate())) {
+            age--;  // If birthday hasn't occurred yet this year, subtract 1 from the age
+          }
+          this.siLoanNomineeModel.nomineeAge = age;  // Set the calculated age to the class property
+        }
+      }
+      if(this.age >= 18 && this.siLoanNomineeModel.nomineeAge != null && this.siLoanNomineeModel.nomineeAge != undefined){
+        if(this.siLoanNomineeModel.nomineeAge < 18){
+          this.guarntorDetailsFalg = true;
+          this.updateData();
+        }  
+        else {
+          this.guarntorDetailsFalg = false;
+        }
+      }
+      else if(this.age < 18 && this.siLoanNomineeModel.nomineeAge <18){
+        this.msgs = [];
+        this.siLoanNomineeModel.nomineeAge = null;
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "Minors Member Account Should Take Major Nominee Only" }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      }
+  
+    }
+  
+    /**
+     * @implements guardaina enable based on nominee age
+     * @author k.yamuna
+     */
+    guardainEnableBasedOnNomineeAge(){
+      if(this.siLoanNomineeModel.nomineeAge < 18){
+          this.guarntorDetailsFalg = true;
       }
     }
   }

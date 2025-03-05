@@ -1,6 +1,6 @@
 <div class="col-12">
-    <h6 class="sub-heading">{{'ERP.NOMINEE_DETAILS' | translate}}<span class="admission-text">(Admission
-            Number:&nbsp;{{admissionNumber}})</span></h6>
+    <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
+        [hideTransitionOptions]="'500ms'"></p-messages>
     <div class="stepper-top-section-strip">
         <div class="row">
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 stepper-top-product-name-background">
@@ -30,7 +30,7 @@
         </div>
     </div>
     <div class="col-12"></div>
-
+    <h6 class="sub-heading">{{'ERP.NOMINEE_DETAILS' | translate}}</h6>
     <form [formGroup]="nomineeForm" id="exit_types_form">
         <div class="col-12 p-0">
             <div class="col-12 p-0 bg-label-colorfull">
@@ -52,8 +52,20 @@
                                 <h6 class="sub-heading">{{'ERP.REQUIRED_DETAILS' | translate}}</h6>
                             </div>
                             <div class="col-12">
-                                <div class="col-12 global-border p-3">
+                                <div class="col-12 global-border p-3 pt-2">
                                     <div class="row g-3 mt-n1">
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="form-label">
+                                                <label><span class="red">*</span>{{'ERP.NOMINEE_NAME' |
+                                                    translate}}</label>
+                                                <input type="text" formControlName="nomineeName" pInputText
+                                                    placeholder="Enter Name"
+                                                    [(ngModel)]="siLoanNomineeModel.nomineeName" />
+                                                <p-message severity="error" text="Enter Valid nomineeName"
+                                                    *ngIf="!nomineeForm.controls['nomineeName'].valid && nomineeForm.controls['nomineeName'].dirty">
+                                                </p-message>
+                                            </div>
+                                        </div>
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
                                                 <label><span class="red">*</span>{{'ERP.RELATIONSHIP_TYPE' |
@@ -68,13 +80,25 @@
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
-                                                <label><span class="red">*</span>{{'ERP.NOMINEE_NAME' |
+                                                <label><span class="red">*</span>{{'ERP.DATE_OF_BIRTH' |
                                                     translate}}</label>
-                                                <input type="text" formControlName="nomineeName" pInputText
-                                                    placeholder="Enter Name"
-                                                    [(ngModel)]="siLoanNomineeModel.nomineeName" />
-                                                <p-message severity="error" text="Enter Valid Nominee Name"
-                                                    *ngIf="!nomineeForm.controls['nomineeName'].valid && nomineeForm.controls['nomineeName'].dirty">
+                                                <p-calendar formControlName="nomineeDob" [showIcon]="true"
+                                                    [dateFormat]="orgnizationSetting.calendar"
+                                                    [(ngModel)]="siLoanNomineeModel.nomineeDobVal"
+                                                    [appendTo]="'body'" placeholder="DD/MM/YYYY" [maxDate]="today"
+                                                    (onSelect)="ageCaluculation(false)">
+                                                </p-calendar>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="form-label">
+                                                <label><span class="red">*</span>{{'ERP.AGE' | translate}}</label>
+                                                <input pInputText type="text" [(ngModel)]="siLoanNomineeModel.nomineeAge"
+                                                    minlength="1" maxlength="3" formControlName="age"
+                                                    placeholder="Enter Aadhar Number"
+                                                    (focusout)="ageCaluculation(true)">
+                                                <p-message severity="error" text="Enter Valid Aadhar Number"
+                                                    *ngIf="!nomineeForm.controls['age'].valid && nomineeForm.controls['age'].dirty">
                                                 </p-message>
                                             </div>
                                         </div>
@@ -82,8 +106,9 @@
                                             <div class="form-label">
                                                 <label><span class="red">*</span>{{'ERP.AADHAR_NUMBER' |
                                                     translate}}</label>
-                                                <input type="text" formControlName="aadhaar" pInputText minlength="12" maxlength="12"
-                                                    placeholder="Enter Aadhar Number"
+                                                <input type="text" formControlName="aadhaar" pInputText
+                                                    placeholder="Enter Aadhar Number" minlength="12" maxlength="12"
+                                                    pKeyFilter="pnum"
                                                     [(ngModel)]="siLoanNomineeModel.nomineeAadharNumber" />
                                                 <p-message severity="error" text="Enter Valid aadhaar"
                                                     *ngIf="!nomineeForm.controls['aadhaar'].valid && nomineeForm.controls['aadhaar'].dirty">
@@ -94,10 +119,11 @@
                                             <div class="form-label">
                                                 <label><span class="red">*</span>{{'ERP.MOBILE_NUMBER' |
                                                     translate}}</label>
-                                                <input type="text" formControlName="mobileNumber" pInputText minlength="10" maxlength="10"
-                                                    placeholder="Enter Mobile Number"
+                                                <input type="text" formControlName="mobileNumber" pInputText
+                                                    placeholder="Enter Mobile Number" minlength="10" maxlength="10"
+                                                    pKeyFilter="pnum"
                                                     [(ngModel)]="siLoanNomineeModel.nomineeMobileNumber" />
-                                                <p-message severity="error" text="Enter Valid Mobile Number"
+                                                <p-message severity="error" text="Enter Valid mobileNumber"
                                                     *ngIf="!nomineeForm.controls['mobileNumber'].valid && nomineeForm.controls['mobileNumber'].dirty">
                                                 </p-message>
                                             </div>
@@ -116,26 +142,21 @@
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
                                                 <div class="ml-2"><span class="red">*</span> {{
-                                                    'DEMANDDEPOSITS.SIGNED_DOCUMENT' | translate }}</div>
+                                                    'DEMANDDEPOSITS.SIGNED_DOCUMENT' | translate }}{{
+                                                    'DEMANDDEPOSITS.PDF_SIZE' | translate }}</div>
                                                 <div class="uplodad-style align-items-center">
                                                     <!-- Upload Button Column -->
 
                                                     <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold"
                                                         name="myfile[]" chooseLabel=" " id="apply-leave_fileUp_attach"
-                                                        name="file" accept=".png,.jpg,.jpeg,.pdf"
-                                                        (onRemove)="fileRemoeEvent('Nominee')"
+                                                        name="file" accept=".pdf" (onRemove)="fileRemoeEvent('Nominee')"
                                                         (onSelect)="fileUploader($event,fileUpload,'Nominee')">
                                                     </p-fileUpload>
 
                                                     <!-- Uploaded Files Display Column -->
-
+                                                    <span class="red"> {{fileSizeMsgForImage}}</span>
                                                     <div class="col-12 d-flex p-1 contant-body"
                                                         *ngFor="let img of siLoanNomineeModel.nomineeSighnedFormMultiPartList">
-                                                        <span
-                                                            *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                            <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}"
-                                                                    width="22" height="22"></a>
-                                                        </span>
                                                         <span *ngIf="img.fileType=='pdf'">
                                                             <a href="{{img.imageValue}}"> <img
                                                                     src="assets/images/pdficon-img.png" width="22"
@@ -161,9 +182,10 @@
                             <div class="col-12">
                                 <div class="col-12 global-border p-3">
                                     <div class="row g-3 mt-n1 mb-3">
-                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mt-4 pt-2">
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
-                                                <p-button icon="fa fa-download p-2" label="Download letter format"
+                                                <p-button icon="fa fa-download p-2"
+                                                    label="{{'DEMANDDEPOSITS.DOWNLOAD_LETTER_FORMATE' | translate}}"
                                                     class="kyc-btnm-0"></p-button>
 
                                             </div>
@@ -173,22 +195,18 @@
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
                                                 <div class="ml-2"><span class="red">*</span> {{
-                                                    'DEMANDDEPOSITS.SIGNED_DOCUMENT' | translate }} </div>
+                                                    'DEMANDDEPOSITS.SIGNED_DOCUMENT' | translate }}{{
+                                                    'DEMANDDEPOSITS.PDF_SIZE' | translate }} </div>
                                                 <div class="uplodad-style align-items-center">
                                                     <!-- Upload Button Column -->
                                                     <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold"
                                                         name="myfile[]" id="apply-leave_fileUp_attach" chooseLabel=" "
-                                                        name="file" accept=".png,.jpg,.jpeg"
-                                                        (onRemove)="fileRemoeEvent('Nominee')"
+                                                        name="file" accept=".pdf" (onRemove)="fileRemoeEvent('Nominee')"
                                                         (onSelect)="fileUploader($event,fileUpload,'Nominee')">
                                                     </p-fileUpload>
+                                                    <span class="red"> {{fileSizeMsgForImage}}</span>
                                                     <div class="col-12  d-flex p-1 contant-body"
                                                         *ngFor="let img of siLoanNomineeModel.nomineeSighnedFormMultiPartList">
-                                                        <span
-                                                            *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                            <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}"
-                                                                    width="22" height="22"></a>
-                                                        </span>
                                                         <span *ngIf="img.fileType=='pdf'">
                                                             <a href="{{img.imageValue}}"> <img
                                                                     src="assets/images/pdficon-img.png" width="22"
@@ -204,7 +222,7 @@
 
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
-                                                <label><span class="red">*</span> {{'ERP.REMARKS' | translate}}</label>
+                                                <label>{{'ERP.REMARKS' | translate}}</label>
                                                 <textarea type="text" class="form-control" formControlName="remarks"
                                                     pInputTextarea placeholder="Enter Remarks Here"
                                                     [(ngModel)]="siLoanNomineeModel.remarks"></textarea>
@@ -234,18 +252,8 @@
                                 <h6 class="sub-heading">{{'ERP.REQUIRED_DETAILS' | translate}}</h6>
                             </div>
                             <div class="col-12">
-                                <div class="col-12 global-border p-3">
+                                <div class="col-12 global-border p-3 pt-2">
                                     <div class="row g-3 mt-n1">
-                                        <div class="col-lg-6 col-md-6 col-sm-12">
-                                            <div class="form-label">
-                                                <label><span class="red">*</span>{{'ERP.RELATIONSHIP_TYPE' |
-                                                    translate}}</label>
-                                                <p-dropdown placeholder="{{'ERP.SELECT' | translate}}"
-                                                    [options]="relationTypesList"
-                                                    formControlName="relationNameOfGuardian" id="id"
-                                                    [(ngModel)]="siLoanGuardianModel.relationshipTypeId"></p-dropdown>
-                                            </div>
-                                        </div>
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
                                                 <label><span class="red">*</span>{{'DEMANDDEPOSITS.GUARDAIN_NAME' |
@@ -258,13 +266,23 @@
                                                 </p-message>
                                             </div>
                                         </div>
-
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="form-label">
+                                                <label><span class="red">*</span>{{'ERP.RELATIONSHIP_TYPE' |
+                                                    translate}}</label>
+                                                <p-dropdown placeholder="{{'ERP.SELECT' | translate}}"
+                                                    [options]="relationTypesList"
+                                                    formControlName="relationNameOfGuardian" id="id"
+                                                    [(ngModel)]="siLoanGuardianModel.relationshipTypeId"></p-dropdown>
+                                            </div>
+                                        </div>
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
                                                 <label><span class="red">*</span>{{'ERP.AADHAR_NUMBER' |
                                                     translate}}</label>
                                                 <input type="text" formControlName="guardianAadhar" pInputText
-                                                    placeholder="Enter Aadhar Number"
+                                                    placeholder="Enter Aadhar Number" minlength="12" maxlength="12"
+                                                    pKeyFilter="pnum"
                                                     [(ngModel)]="siLoanGuardianModel.guardianAadharNumber" />
                                                 <p-message severity="error" text="Enter Valid aadhaar"
                                                     *ngIf="!nomineeForm.controls['guardianAadhar'].valid && nomineeForm.controls['guardianAadhar'].dirty">
@@ -276,7 +294,8 @@
                                                 <label><span class="red">*</span>{{'ERP.MOBILE_NUMBER' |
                                                     translate}}</label>
                                                 <input type="text" formControlName="guardianMobile" pInputText
-                                                    placeholder="Enter Mobile Number"
+                                                    placeholder="Enter Mobile Number" minlength="10" maxlength="10"
+                                                    pKeyFilter="pnum"
                                                     [(ngModel)]="siLoanGuardianModel.guardianMobileNumber" />
                                                 <p-message severity="error" text="Enter Valid Phone Number"
                                                     *ngIf="!nomineeForm.controls['guardianMobile'].valid && nomineeForm.controls['guardianMobile'].dirty">
@@ -294,26 +313,22 @@
                                                 </p-message>
                                             </div>
                                         </div>
-
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
                                                 <div class="ml-2"><span class="red">*</span>{{
-                                                    'DEMANDDEPOSITS.SIGNED_DOCUMENT' | translate }}</div>
+                                                    'DEMANDDEPOSITS.SIGNED_DOCUMENT' | translate }}{{
+                                                    'DEMANDDEPOSITS.PDF_SIZE' | translate }}</div>
                                                 <div class="uplodad-style align-items-center">
                                                     <!-- Upload Button Column -->
-                                                    <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold"
-                                                        name="myfile[]" id="apply-leave_fileUp_attach" chooseLabel=" "
-                                                        name="file" accept=".png,.jpg,.jpeg"
-                                                        (onRemove)="fileRemoeEvent('Guardain')"
-                                                        (onSelect)="fileUploader($event,fileUpload,'Guardain')">
+                                                    <p-fileUpload #fileUploadGuardain
+                                                        class="qua-upld file-attach semi-bold" name="myfile[]"
+                                                        id="apply-leave_fileUp_attach" chooseLabel=" " name="file"
+                                                        accept=".pdf" (onRemove)="fileRemoeEvent('Guardain')"
+                                                        (onSelect)="fileUploader($event,fileUploadGuardain,'Guardain')">
                                                     </p-fileUpload>
+                                                    <span class="red"> {{fileSizeMsgForImageGuardiand}}</span>
                                                     <div class="col-12 d-flex p-1 contant-body"
                                                         *ngFor="let img of siLoanGuardianModel.guardainSighnedMultipartFiles">
-                                                        <span
-                                                            *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                            <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}"
-                                                                    width="22" height="22"></a>
-                                                        </span>
                                                         <span *ngIf="img.fileType=='pdf'">
                                                             <a href="{{img.imageValue}}"> <img
                                                                     src="assets/images/pdficon-img.png" width="22"
@@ -349,22 +364,18 @@
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
                                                 <div class="ml-2"><span class="red">*</span>{{
-                                                    'DEMANDDEPOSITS.SIGNED_DOCUMENT' | translate }}</div>
+                                                    'DEMANDDEPOSITS.SIGNED_DOCUMENT' | translate }}{{
+                                                    'DEMANDDEPOSITS.PDF_SIZE' | translate }}</div>
                                                 <div class="uplodad-style align-items-center">
                                                     <!-- Upload Button Column -->
-                                                    <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold"
-                                                        name="myfile[]" id="apply-leave_fileUp_attach" chooseLabel=" "
-                                                        name="file" accept=".png,.jpg,.jpeg"
-                                                        (onRemove)="fileRemoeEvent('Guardain')"
-                                                        (onSelect)="fileUploader($event,fileUpload,'Guardain')">
+                                                    <p-fileUpload #fileUploadGuardain
+                                                        class="qua-upld file-attach semi-bold" name="myfile[]"
+                                                        id="apply-leave_fileUp_attach" chooseLabel=" " name="file"
+                                                        accept=".pdf" (onRemove)="fileRemoeEvent('Guardain')"
+                                                        (onSelect)="fileUploader($event,fileUploadGuardain,'Guardain')">
                                                     </p-fileUpload>
                                                     <div class="col-12 d-flex p-1 contant-body"
                                                         *ngFor="let img of siLoanGuardianModel.guardainSighnedMultipartFiles">
-                                                        <span
-                                                            *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                            <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}"
-                                                                    width="22" height="22"></a>
-                                                        </span>
                                                         <span *ngIf="img.fileType=='pdf'">
                                                             <a href="{{img.imageValue}}"> <img
                                                                     src="assets/images/pdficon-img.png" width="22"
@@ -379,7 +390,7 @@
                                         </div>
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
-                                                <label><span class="red">*</span>{{'ERP.REMARKS' | translate}}</label>
+                                                <label>{{'ERP.REMARKS' | translate}}</label>
                                                 <textarea type="text" class="form-control" pInputTextarea
                                                     formControlName="guardianRemarks" placeholder="Enter Remarks Here"
                                                     [(ngModel)]="siLoanGuardianModel.remarks"></textarea>
@@ -394,30 +405,4 @@
             </div>
         </div>
     </form>
-
-
-    <div class="mt-4" *ngIf="historyFLag">
-        <h6 class="sub-heading">Nominee History Details</h6>
-        <div class="globel-border-top-color"></div>
-        <p-table [columns]="nomineeFields" [value]="nomineeHistoryList" dataKey="id" selectionMode="single"
-            styleClass="p-datatable-striped" [rows]="5" [paginator]="true" [showJumpToPageDropdown]="true"
-            [showPageLinks]="false" [pageLinks]="1" [responsive]="true" rowExpandMode="single">
-            <ng-template pTemplate="header">
-                <tr>
-                    <th *ngFor="let col of nomineeFields">
-                        {{col.header | translate}}
-                    </th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-gridList let-expanded="expanded" let-rowData>
-                <tr>
-                    <td *ngFor="let col of nomineeFields">
-                        <div> {{rowData[col.field]}}</div>
-                    </td>
-                </tr>
-            </ng-template>
-        </p-table>
-    </div>
-
-    <!-- </div> -->
 </div>

@@ -435,7 +435,10 @@ export class InstitutionCommunicationComponent implements OnInit {
 * @implements get village method for set villageName
 * @author k.yamuna
 */
-  getVillage(id: any) {
+  getVillage(id: any,isResetIds:any){
+    if(!isResetIds){
+      this.instituteCommunicationForm.get('address1').reset();
+    }
     this.instituteCommunicationModel.divisionId = null;;
     this.instituteCommunicationModel.divisionName = null;
     this.instituteCommunicationModel.blockId = null;;
@@ -641,7 +644,10 @@ export class InstitutionCommunicationComponent implements OnInit {
   * @implements get all permanent Villages and setVillage name
   * @author k.yamuna
   */ 
-  getPerVillage(id: any) {
+  getPerVillage(id: any,isResetIds:any){
+    if(isResetIds){
+      this.instituteCommunicationForm.get('permanentAddress1').reset();
+    }
     this.instituteCommunicationModel.permanentBlockId = null;;
     this.instituteCommunicationModel.permanentDivisionId = null;
     this.instituteCommunicationModel.permanentBlockName = null;;
@@ -714,7 +720,7 @@ export class InstitutionCommunicationComponent implements OnInit {
 
       this.instituteCommunicationModel.address1 = this.instituteCommunicationModel.permanentAddress1;
       // this.instituteCommunicationModel.permanentAddress2 = this.instituteCommunicationModel.address2;
-      this.instituteCommunicationModel.pinCode = this.instituteCommunicationModel.permanentPinCode;
+      this.instituteCommunicationModel.pincode = this.instituteCommunicationModel.permanentPinCode;
       this.instituteCommunicationModel.blockId = this.instituteCommunicationModel.permanentBlockId;
       this.instituteCommunicationModel.blockName = this.instituteCommunicationModel.permanentBlockName;
 
@@ -749,7 +755,7 @@ export class InstitutionCommunicationComponent implements OnInit {
       this.instituteCommunicationModel.subDistrictId = null;
       this.instituteCommunicationModel.villageId = null;
       this.instituteCommunicationModel.address1 = null;
-      this.instituteCommunicationModel.pinCode = null;
+      this.instituteCommunicationModel.pincode = null;
       this.instituteCommunicationModel.blockId = null;
       this.instituteCommunicationModel.divisionId = null;
     }
@@ -763,7 +769,7 @@ export class InstitutionCommunicationComponent implements OnInit {
   RegAddressToComAddress() {
     if (this.instituteCommunicationModel.isSameAddress == applicationConstants.TRUE) {
       this.instituteCommunicationModel.address1 = this.instituteCommunicationModel.permanentAddress1;
-      this.instituteCommunicationModel.pinCode = this.instituteCommunicationModel.permanentPinCode;
+      this.instituteCommunicationModel.pincode = this.instituteCommunicationModel.permanentPinCode;
     }
   }
     /**
@@ -796,9 +802,9 @@ export class InstitutionCommunicationComponent implements OnInit {
         this.instituteCommunicationModel.address1 = null;
         this.instituteCommunicationModel.address1 = this.instituteCommunicationModel.permanentAddress1;
       }
-      if (this.instituteCommunicationModel.pinCode != this.instituteCommunicationModel.permanentPinCode) {
-        this.instituteCommunicationModel.pinCode = null;
-        this.instituteCommunicationModel.pinCode = this.instituteCommunicationModel.permanentPinCode;
+      if (this.instituteCommunicationModel.pincode != this.instituteCommunicationModel.permanentPinCode) {
+        this.instituteCommunicationModel.pincode = null;
+        this.instituteCommunicationModel.pincode = this.instituteCommunicationModel.permanentPinCode;
       }
       if (this.instituteCommunicationModel.divisionId != this.instituteCommunicationModel.permanentDivisionId) {
         this.instituteCommunicationModel.divisionId = null;
@@ -808,7 +814,7 @@ export class InstitutionCommunicationComponent implements OnInit {
         this.instituteCommunicationModel.blockId = null;
         this.instituteCommunicationModel.blockId = this.instituteCommunicationModel.permanentBlockId;
       }
-        this.getVillage(this.instituteCommunicationModel.villageId);
+        this.getVillage(this.instituteCommunicationModel.villageId,true);
     }
   }
 }

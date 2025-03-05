@@ -40,9 +40,9 @@ export class SaoCommunication {
 
   statusName: any;
 
-  pinCode: any;
+  pincode: any;
 
-  isSameAddress:any;
+  isSameAddress: any;
 
   pacsId: any;
 
@@ -69,25 +69,27 @@ export class SaoCommunication {
   permanentStateName: any;
 
   permanentDistrictName: any;
-  
+
   permanentSubDistrictName: any;
 
   permanentVillageName: any;
 
+  isActive: any;
+
   divisionId: any;
 
-    blockId: any;
+  blockId: any;
 
-    divisionName: any;
+  divisionName: any;
 
-    blockName: any;
+  blockName: any;
 
-    permanentDivisionId: any;
+  permanentDivisionId: any;
 
-    permanentBlockId: any;
+  permanentBlockId: any;
 
-    permanentDivisionName: any;
+  permanentDivisionName: any;
 
-    permanentBlockName: any;
-  
+  permanentBlockName: any;
+
 }

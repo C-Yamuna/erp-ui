@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MemberGroupDetailsModel, MembershipBasicDetail, MembershipInstitutionDetailsModel } from '../../term-deposits-transcation/shared/membership-basic-detail.model';
 import { applicationConstants } from 'src/app/shared/applicationConstants';
 import { Accounts } from '../shared/accounts.model';
@@ -18,7 +18,7 @@ import { FileUploadService } from 'src/app/shared/file-upload.service';
 import { FileUpload } from 'primeng/fileupload';
 import { FileUploadModel } from 'src/app/layout/mainmenu/shared/file-upload-model.model';
 import { DailyDepositTransactionConstants } from '../daily-deposits-transaction-constants';
-import { CommonStatusData } from '../../common-status-data.json';
+import { CommonStatusData, MemberShipTypesData } from '../../common-status-data.json';
 import { DailyDepositsAccountsService } from '../shared/daily-deposits-accounts.service';
 import { ERP_TRANSACTION_CONSTANTS } from '../../erp-transaction-constants';
 
@@ -32,7 +32,7 @@ export class ViewDailyDepositsComponent {
   admissionNumber: any;
   msgs: any[] = [];
   id: any;
-  rdAccId: any;
+  accId: any;
   isView: any;
   kycGridList: any[] = [];
   orgnizationSetting: any;
@@ -97,6 +97,17 @@ export class ViewDailyDepositsComponent {
   viewButton: boolean = false;
   editFlag: boolean = false;
   roleName: any;
+  isMaximized: boolean = false;
+  docPhotoCopyZoom:boolean = false;
+  nomineePhotoCopyZoom:boolean = false;
+  guardianPhotoCopyZoom:boolean = false;
+  submitForApprovalMessage: any;
+  submitForApprovalValidation: boolean = true;
+  fileSizeMsgForImage: any;
+  requiredDocumentsEnable: boolean = false;
+  kycPhotoCopyZoom: boolean = false;
+  isKycEmpty: boolean = false;
+
   constructor(private router: Router,
     private commonComponent: CommonComponent,
     private activateRoute: ActivatedRoute,
@@ -162,7 +173,7 @@ export class ViewDailyDepositsComponent {
         let id = this.encryptDecryptService.decrypt(params['id']);
         // let type = this.encryptDecryptService.decrypt(params['memType']);
         let idEdit = this.encryptDecryptService.decrypt(params['editbutton']);
-        this.rdAccId = Number(id);
+        this.accId = Number(id);
         if (idEdit == "1")
           this.preveiwFalg = true
         else {
@@ -178,7 +189,7 @@ export class ViewDailyDepositsComponent {
             this.isShowSubmit = applicationConstants.TRUE;
           }
         }
-        this.getRdAccountById();
+        this.getAccountsById();
       }
     })
   }
@@ -202,7 +213,7 @@ export class ViewDailyDepositsComponent {
         if (this.responseModel.data[0] != undefined && this.responseModel.data[0] != null && this.responseModel.data.length > 0) {
           this.accountsModel = this.responseModel.data[0];
           if (this.accountsModel.id != undefined && this.accountsModel.id != null)
-            this.rdAccId = this.accountsModel.id;
+            this.accId = this.accountsModel.id;
           if (this.accountsModel.accountTypeName != null && this.accountsModel.accountTypeName != undefined)
             this.accountTypeName = this.accountsModel.accountTypeName;
           if (this.accountsModel.memberTypeName != null && this.accountsModel.memberTypeName != undefined)
@@ -232,8 +243,8 @@ export class ViewDailyDepositsComponent {
     });
 
   }
-  getRdAccountById() {
-    this.dailyDepositsAccountsService.getAccounts(this.rdAccId).subscribe((data: any) => {
+  getAccountsById() {
+    this.dailyDepositsAccountsService.getAccounts(this.accId).subscribe((data: any) => {
       this.responseModel = data;
       if (this.responseModel.status != null && this.responseModel.status != undefined && this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
@@ -345,25 +356,43 @@ export class ViewDailyDepositsComponent {
           if (this.accountsModel.accountKycList != null && this.accountsModel.accountKycList != undefined) {
             this.kycGridList = this.accountsModel.accountKycList;
             for (let kyc of this.kycGridList) {
-              kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath, ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
-              if (kyc.multipartFileList != null && kyc.multipartFileList != undefined) {
-                kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
+              if (kyc.kycFilePath != null && kyc.kycFilePath != undefined) {
+                if (kyc.kycFilePath != null && kyc.kycFilePath != undefined) {
+                  if (this.accountsModel.isNewMember)
+                    kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath, ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
+                  else {
+                    kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
+                  }
+                }
               }
             }
           }
-
-          if (this.accountsModel.accountNomineeList != null && this.accountsModel.accountNomineeList != undefined &&
-            this.accountsModel.accountNomineeList[0] != null && this.accountsModel.accountNomineeList[0] != undefined)
-            this.accountNomineeModel = this.accountsModel.accountNomineeList[0];
-          if (this.accountNomineeModel.identityProofDocPath != null && this.accountNomineeModel.identityProofDocPath != undefined) {
-            this.accountNomineeModel.nomineeMultiPartList = this.fileUploadService.getFile(this.accountNomineeModel.identityProofDocPath, ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.accountNomineeModel.identityProofDocPath);
+          else {
+            this.isKycEmpty = true;
           }
 
-          if (this.accountsModel.termAccountGaurdianList != null && this.accountsModel.termAccountGaurdianList != undefined &&
-            this.accountsModel.termAccountGaurdianList[0] != null && this.accountsModel.termAccountGaurdianList[0] != undefined)
+          if (this.accountsModel.accountNomineeList != null && this.accountsModel.accountNomineeList != undefined) {
+            this.accountNomineeModel = this.accountsModel.accountNomineeList[0];
+            if (this.accountNomineeModel.name != null && this.accountNomineeModel.name != undefined && this.accountNomineeModel.surName != null && this.accountNomineeModel.surName != undefined)
+              this.nomineeMemberFullName = this.accountNomineeModel.name + this.accountNomineeModel.surName;
+            if (this.accountNomineeModel.signedCopyPath != null && this.accountNomineeModel.signedCopyPath != undefined){
+              if(this.accountNomineeModel.nomineeType == 2){
+                this.accountNomineeModel.nomineeSighnedFormMultiPartList =  this.fileUploadService.getFile(this.accountNomineeModel.signedCopyPath , ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.accountNomineeModel.signedCopyPath);
+              }
+              else {
+                this.accountNomineeModel.nomineeSighnedFormMultiPartList =  this.fileUploadService.getFile(this.accountNomineeModel.signedCopyPath , ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.accountNomineeModel.signedCopyPath);
+              }
+              if(this.accountNomineeModel.dateOfBirth != null && this.accountNomineeModel.dateOfBirth != undefined)
+               this.accountNomineeModel.dateOfBirthVal = this.datePipe.transform(this.accountNomineeModel.dateOfBirth, this.orgnizationSetting.datePipe);
+            }
+          }
+
+          if (this.accountsModel.termAccountGaurdianList != null && this.accountsModel.termAccountGaurdianList != undefined) {
             this.accountGuardianModel = this.accountsModel.termAccountGaurdianList[0];
-          if (this.accountGuardianModel.identityProofDocPath != null && this.accountGuardianModel.identityProofDocPath != undefined) {
-            this.accountGuardianModel.guardainMultipartList = this.fileUploadService.getFile(this.accountGuardianModel.identityProofDocPath, ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.accountGuardianModel.identityProofDocPath);
+            this.gardianFullName = this.accountGuardianModel.guardianName + this.accountGuardianModel.surName;
+            if (this.accountGuardianModel.identityProofDocPath != null && this.accountGuardianModel.identityProofDocPath != undefined) {
+              this.accountGuardianModel.guardainMultipartList = this.fileUploadService.getFile(this.accountGuardianModel.identityProofDocPath, ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.accountGuardianModel.identityProofDocPath);
+            }
           }
           if (this.accountsModel.accountTypeName != null && this.accountsModel.accountTypeName != undefined && this.accountsModel.accountTypeName === "Joint") {
             this.jointHoldersFlag = true;
@@ -372,14 +401,19 @@ export class ViewDailyDepositsComponent {
             this.jointHoldersFlag = true;
             this.jointHolderDetailsList = this.accountsModel.tdJointAccHolderDetailsDTOList;
           }
+          
           if (this.accountsModel.requiredDocumentDetailsDTOList != null && this.accountsModel.requiredDocumentDetailsDTOList != undefined && this.accountsModel.requiredDocumentDetailsDTOList.length > 0) {
             this.requiredDocumentsList = this.accountsModel.requiredDocumentDetailsDTOList;
+            this.requiredDocumentsEnable = true;
             for (let document of this.requiredDocumentsList) {
               if (document.requiredDocumentFilePath != null && document.requiredDocumentFilePath != undefined) {
-                document.multipartFileList = this.fileUploadService.getFile(document.requiredDocumentFilePath, ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + document.requiredDocumentFilePath);
+                  document.multipartFileList = this.fileUploadService.getFile(document.requiredDocumentFilePath, ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + document.requiredDocumentFilePath);
               }
             }
           }
+          // if(this.accountsModel.requiredDocumentsConfigDTOList != null && this.accountsModel.requiredDocumentsConfigDTOList != undefined){
+          //   this.requiredDocumentsEnable = true;
+          // }
         }
       } else {
         this.msgs = [];
@@ -388,6 +422,7 @@ export class ViewDailyDepositsComponent {
           this.msgs = [];
         }, 2000);
       }
+    
     }, (error: any) => {
       this.msgs = [];
       this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST }];
@@ -459,32 +494,44 @@ export class ViewDailyDepositsComponent {
   }
 
   fileUploader(event: any, fileUpload: FileUpload) {
-    this.isFileUploaded = applicationConstants.FALSE;
+    this.isFileUploaded = applicationConstants.TRUE;
+    this.fileSizeMsgForImage = null;
+    let fileSizeFalg = false;
     this.multipleFilesList = [];
-    if (this.isEdit && this.accountsModel.filesDTOList == null || this.accountsModel.filesDTOList == undefined) {
-      this.accountsModel.filesDTOList = [];
-    }
+    this.accountsModel.filesDTOList = [];
+    this.accountsModel.multipartFileList = [];
+    this.accountsModel.applicationSignedForm = null;
     let files: FileUploadModel = new FileUploadModel();
-    for (let file of event.files) {
-      let reader = new FileReader();
-      reader.onloadend = (e) => {
-        let files = new FileUploadModel();
-        this.uploadFileData = e.currentTarget;
-        files.fileName = file.name;
-        files.fileType = file.type.split('/')[1];
-        files.value = this.uploadFileData.result.split(',')[1];
-        files.imageValue = this.uploadFileData.result;
-        this.multipleFilesList.push(files);
-        let timeStamp = this.commonComponent.getTimeStamp();
-        this.accountsModel.multipartFileListsignedCopyPath = [];
-        this.accountsModel.filesDTOList.push(files);
-        this.accountsModel.signedCopyPath = null;
-        this.accountsModel.filesDTOList[this.accountsModel.filesDTOList.length - 1].fileName = "RD_Filled_pdf" + "_" + timeStamp + "_" + file.name;
-        this.accountsModel.signedCopyPath = "RD_Filled_pdf" + "_" + timeStamp + "_" + file.name;
-        this.isDisableSubmit = false;
+    if (event.files[0].size/1024/1024 > 5) {
+      this.fileSizeMsgForImage= "file is bigger than 5MB";
+      fileSizeFalg = true;
+     }
+     if(!fileSizeFalg){
+      for (let file of event.files) {
+        let reader = new FileReader();
+        reader.onloadend = (e) => {
+          let files = new FileUploadModel();
+          this.uploadFileData = e.currentTarget;
+          files.fileName = file.name;
+          files.fileType = file.type.split('/')[1];
+          files.value = this.uploadFileData.result.split(',')[1];
+          files.imageValue = this.uploadFileData.result;
+  
+          let index = this.multipleFilesList.findIndex(x => x.fileName == files.fileName);
+          if (index === -1) {
+            this.multipleFilesList.push(files);
+            this.accountsModel.filesDTOList.push(files); // Add to filesDTOList array
+          }
+          let timeStamp = this.commonComponent.getTimeStamp();
+          this.accountsModel.filesDTOList[0].fileName = "Daily_deposits_signed_copy" + this.accId + "_" +timeStamp+ "_"+ file.name ;
+          this.accountsModel.applicationSignedForm = "Daily_deposits_signed_copy" + this.accId + "_" +timeStamp+"_"+ file.name; // This will set the last file's name as docPath
+          let index1 = event.files.findIndex((x: any) => x === file);
+          fileUpload.remove(event, index1);
+          fileUpload.clear();
+        }
+        reader.readAsDataURL(file);
       }
-      reader.readAsDataURL(file);
-    }
+     }
   }
 
   
@@ -498,11 +545,11 @@ export class ViewDailyDepositsComponent {
   }
   pdfDownload() {
     this.commonComponent.startSpinner();
-    this.dailyDepositsAccountsService.downloadPreviewPDf(this.rdAccId).subscribe((data: any) => {
+    this.dailyDepositsAccountsService.downloadPreviewPDf(this.accId).subscribe((data: any) => {
       var file = new Blob([data], { type: 'application/pdf' });
-      saveAs(file, "Recurring_Deposit_filled_Document.pdf");
+      saveAs(file, "Daily_Deposit_filled_Document.pdf");
       this.msgs = [];
-      this.msgs.push({ severity: "success", detail: 'Recurring Deposit file downloaded successfully' });
+      this.msgs.push({ severity: "success", detail: 'Daily Deposit file downloaded successfully' });
       this.commonComponent.stopSpinner();
     }, error => {
       this.msgs = [];
@@ -511,4 +558,59 @@ export class ViewDailyDepositsComponent {
     })
      
   }
+
+  memberTypeCheck(memberTypeName :any){
+    if(memberTypeName == MemberShipTypesData.INDIVIDUAL){
+      this.individualFlag = true;
+      this.institutionFlag = false;
+      this.groupFlag = false;
+    }else if(memberTypeName == MemberShipTypesData.GROUP){
+      this.individualFlag = false;
+      this.institutionFlag = false;
+      this.groupFlag = true;
+
+    }else if(memberTypeName == MemberShipTypesData.INSTITUTION){
+      this.individualFlag = false;
+      this.institutionFlag = true;
+      this.groupFlag = false;
+
+    }
+  }
+  onClickkycPhotoCopy(rowData :any){
+    this.multipleFilesList = [];
+    this.kycPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
+  }
+  onClickdoccPhotoCopy(rowData :any){
+    this.multipleFilesList = [];
+    this.docPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
+  }
+  onClicknomineePhotoCopy(){
+    this.nomineePhotoCopyZoom = true;
+  }
+  onClickguardianPhotoCopy(){
+    this.guardianPhotoCopyZoom = true;
+  }
+  // Popup Maximize
+    @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+    
+      onDialogResize(event: any) {
+        this.isMaximized = event.maximized;
+    
+        if (this.isMaximized) {
+          // Restore original image size when maximized
+          this.imageElement.nativeElement.style.width = 'auto';
+          this.imageElement.nativeElement.style.height = 'auto';
+          this.imageElement.nativeElement.style.maxWidth = '100%';
+          this.imageElement.nativeElement.style.maxHeight = '100vh';
+        } else {
+          // Fit image inside the dialog without scrollbars
+          this.imageElement.nativeElement.style.width = '100%';
+          this.imageElement.nativeElement.style.height = '100%';
+          this.imageElement.nativeElement.style.maxWidth = '100%';
+          this.imageElement.nativeElement.style.maxHeight = '100%';
+          this.imageElement.nativeElement.style.objectFit = 'contain';
+        }
+      }
 }

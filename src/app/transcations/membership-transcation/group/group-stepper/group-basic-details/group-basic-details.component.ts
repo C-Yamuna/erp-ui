@@ -332,7 +332,8 @@ export class GroupBasicDetailsComponent implements OnInit{
             this.msgs = [];
           }, 2000);
         }
-        this.subProductList = this.responseModel.data.filter((customertype:any) => customertype.status == applicationConstants.ACTIVE).map((count:any) => {
+        this.subProductList = this.responseModel.data.filter((customertype:any) => customertype.status == applicationConstants.ACTIVE &&
+        customertype.isAclass != applicationConstants.TRUE ).map((count:any) => {
           return { label: count.name, value: count.id }
         });
         this.commonComponent.stopSpinner();
@@ -364,7 +365,8 @@ export class GroupBasicDetailsComponent implements OnInit{
    * @author k.yamuna
    */
 editPromoter(rowData: any) {
-  this.promterTypeDisabled = true;
+  // this.promterTypeDisabled = true;
+  this.promoterDetailsForm.reset();
   this.commonComponent.startSpinner();
   this.cancleButtonFlag = true;
   this.addButton = true;
@@ -449,7 +451,7 @@ onRowEditSave() {
   this.cancleButtonFlag = false;
   this.submitDisableForImage= false;
   this.submitDisableForSignature= false;
-  this.promterTypeDisabled = false;
+  // this.promterTypeDisabled = false;
   this.promoterDetailsModel = new promoterDetailsModel();
   this.promoterDetailsForm.reset();
   this.onChangeExistedPrmoter(false);
@@ -675,12 +677,24 @@ onRowEditSave() {
     if (filePathName === "photoCopyPath") {
       this.submitDisableForImage = false;
       rowData.multipartFileListForPhotoCopy = [];
+      if (selectedFiles[0].size/1024/1024 > 2) {
+        this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_2MB}];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      }
       // Clear file input before processing files
       fileUploadPhoto.clear();
     }
     if (filePathName === "signaturePath") {
       this.submitDisableForSignature = applicationConstants.FALSE;
       rowData.multipartFileListForsignatureCopyPath = [];
+      if (selectedFiles[0].size/1024/1024 > 2) {
+        this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_2MB}];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+       }
       fileUploadSign.clear();
     }
    
@@ -809,9 +823,10 @@ admissionDateOnSelect(){
    */
    onChangeExistedPrmoter(isExistingMember :any){
     if(isExistingMember){
+      this.resetFields();
         this.admissionNumberDropDown = true;
         this.getAllTypeOfMembershipDetails(this.pacsId,this.branchId);
-        this.resetFields();
+        
     }
     else {
       this.resetFields();
@@ -839,6 +854,12 @@ admissionDateOnSelect(){
       this.promoterDetailsForm.get('emailId').reset();
       this.promoterDetailsForm.get('startDate').reset();
       this.promoterDetailsForm.get('authorizedSignatory').reset();
+      this.promoterDetailsForm.get('isPoc').reset();
+      // this.promoterDetailsModel = new promoterDetailsModel();
+      this.promoterDetailsModel.multipartFileListForsignatureCopyPath =[];
+      this.promoterDetailsModel.multipartFileListForPhotoCopy=[];
+      this.submitDisableForSignature = applicationConstants.FALSE;
+      this.submitDisableForImage = applicationConstants.FALSE;
 
     }
 
@@ -943,6 +964,17 @@ datesValidationCheckAgeAndDob(model: any, type: number): void {
     if (model.memDobVal) {
       const calculatedAge = this.calculateAge(model.memDobVal);
       model.age = calculatedAge; 
+      if (model.age && model.age > 0) {
+        const calculatedDob = this.calculateDobFromAge(model.age);
+        model.memDobVal = calculatedDob; 
+      } else {
+        this.promoterDetailsForm.get('age')?.reset();
+        this.promoterDetailsForm.get('dob')?.reset();
+        this.msgs = [{ severity: 'warning', detail: applicationConstants.AGE_SHOULD_NOT_BE_ZERO_OR_NEGATIVE}];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
     }
   } else if (type === 1) { 
     if (model.age && model.age > 0) {
@@ -950,7 +982,8 @@ datesValidationCheckAgeAndDob(model: any, type: number): void {
       model.memDobVal = calculatedDob; 
     } else {
       this.promoterDetailsForm.get('age')?.reset();
-      this.msgs = [{ severity: 'warning', detail: "Age should not be zero or negative" }];
+      this.promoterDetailsForm.get('dob')?.reset();
+      this.msgs = [{ severity: 'warning', detail:applicationConstants.AGE_SHOULD_NOT_BE_ZERO_OR_NEGATIVE}];
       setTimeout(() => {
         this.msgs = [];
       }, 2000);
@@ -976,23 +1009,19 @@ calculateAge(dateOfBirth: Date): number {
 }
 
   /**
-       * @author k.yamuna
-       * @implement  Method to calculate date of birth from age
-       */
-calculateDobFromAge(age: number): Date {
-  if (isNaN(age) || age <= 0) {
-    return new Date(0);
-  }
-  const today = new Date();
-  const birthYear = today.getFullYear() - age;
-  const dob = new Date(today); 
-  dob.setFullYear(birthYear); 
-  dob.setMonth(0); 
-  dob.setDate(1); 
+   * @implements Method to calculate date of birth from age
+   * @author k.yamuna
+   */
+  calculateDobFromAge(age: number): Date {
+    if (isNaN(age) || age <= 0) {
+      return new Date(0);
+    }
+    const today = new Date();
+    const birthYear = today.getFullYear() - age;
+    const dob = new Date(birthYear, today.getMonth(), today.getDate());
 
-  return dob;
-}
-
+    return dob;
+} 
  /**
     * @author k.yamuna
       * @implement  add Or Update group details
@@ -1098,7 +1127,7 @@ isPosCheck(isPoc: any) {
         obj && obj.status === applicationConstants.ACTIVE && obj.isPoc === applicationConstants.TRUE
     );
     if (isPoc === applicationConstants.TRUE && duplicate) {
-      this.promoterDetailsForm.reset();
+      this.promoterDetailsForm.get('isPoc').reset();
       this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.POC_ALREADY_EXIST }];
       setTimeout(() => {
         this.msgs = [];

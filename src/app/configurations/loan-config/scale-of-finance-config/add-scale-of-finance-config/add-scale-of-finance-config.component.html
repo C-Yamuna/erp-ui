@@ -30,6 +30,14 @@
                         </div>
                         <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
                             <div class="form-label">
+                                <label for="limit"><span class="red">*</span>{{'LOANS.UOM' | translate}}
+                                </label>
+                                <p-dropdown [options]="uomTypesList" placeholder="Select" formControlName="uom"
+                                [(ngModel)]="scaleOfFinanceConfigModel.uomType"></p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                            <div class="form-label">
                                 <label for="limit">{{'LOANS.LIMIT' | translate}}
                                 </label>
                                 <input pInputText id="bunit_txt_name" formControlName="maxAmount"

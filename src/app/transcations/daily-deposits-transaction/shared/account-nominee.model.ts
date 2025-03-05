@@ -72,4 +72,14 @@ export class AccountNominee {
 
 	  nomineeTypeName: any;
 
+	  dateOfBirthVal:any;
+
+	  nomineeSighnedFormMultiPartList:any;
+  		
+	  remarks: any;
+
+  	  accountGuardian: any;
+
+	  requiredDocumentsConfigDTOList:any;
+
 }

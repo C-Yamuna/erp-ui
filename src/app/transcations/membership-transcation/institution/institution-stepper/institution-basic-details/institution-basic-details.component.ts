@@ -21,7 +21,7 @@ import { FileUpload } from 'primeng/fileupload';
 import { FileUploadService } from 'src/app/shared/file-upload.service';
 import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-constants';
 import { MemberBasicDetails } from '../../../shared/member-basic-details.model';
-import { MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
+import { CommonStatusData, MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-institution-basic-details',
@@ -305,7 +305,8 @@ export class InstitutionBasicDetailsComponent implements OnInit{
              this.msgs = [];
            }, 2000);
          }
-         this.subProductList = this.responseModel.data.filter((customertype:any) => customertype.status == applicationConstants.ACTIVE).map((count:any) => {
+         this.subProductList = this.responseModel.data.filter((customertype:any) => customertype.status == applicationConstants.ACTIVE
+        && customertype.isAclass != applicationConstants.TRUE).map((count:any) => {
            return { label: count.name, value: count.id }
          });
          this.commonComponent.stopSpinner();
@@ -610,17 +611,28 @@ export class InstitutionBasicDetailsComponent implements OnInit{
      }
      let selectedFiles = [...event.files];
      if (filePathName === "photoCopyPath") {
-       this.submitDisableForImage = false;
-       rowData.multipartFileListForPhotoCopy = [];
-       // Clear file input before processing files
-       fileUploadPhoto.clear();
-     }
-     if (filePathName === "signaturePath") {
-       this.submitDisableForSignature = applicationConstants.FALSE;
-       rowData.multipartFileListForsignatureCopyPath = [];
-       fileUploadSign.clear();
-     }
-    
+      this.submitDisableForImage = false;
+      rowData.multipartFileListForPhotoCopy = [];
+      if (selectedFiles[0].size/1024/1024 > 2) {
+        this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_2MB}];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      }
+      // Clear file input before processing files
+      fileUploadPhoto.clear();
+    }
+    if (filePathName === "signaturePath") {
+      this.submitDisableForSignature = applicationConstants.FALSE;
+      rowData.multipartFileListForsignatureCopyPath = [];
+      if (selectedFiles[0].size/1024/1024 > 2) {
+        this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_2MB}];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+       }
+      fileUploadSign.clear();
+    }
      let files: FileUploadModel = new FileUploadModel();
      for (let file of selectedFiles) {
        let reader = new FileReader();
@@ -734,9 +746,10 @@ export class InstitutionBasicDetailsComponent implements OnInit{
     */
     onChangeExistedPrmoter(isExistingMember :any){
      if(isExistingMember){
+      this.resetFields();
          this.admissionNumberDropDown = true;
          this.getAllTypeOfMembershipDetails(this.pacsId,this.branchId);
-         this.resetFields();
+        
      }
      else {
        this.resetFields();
@@ -772,6 +785,14 @@ export class InstitutionBasicDetailsComponent implements OnInit{
        this.institutepromoterDetailsForm.get('aadharNumber').reset();
        this.institutepromoterDetailsForm.get('emailId').reset();
        this.institutepromoterDetailsForm.get('startDate').reset();
+       this.institutepromoterDetailsForm.get('isPoc').reset();
+      
+        this.institutePromoterDetails.multipartFileListForsignatureCopyPath =[];
+        this.institutePromoterDetails.multipartFileListForPhotoCopy=[];
+        this.submitDisableForSignature = applicationConstants.FALSE;
+        this.submitDisableForImage = applicationConstants.FALSE;
+
+      
      }
  
      /**
@@ -787,7 +808,7 @@ export class InstitutionBasicDetailsComponent implements OnInit{
            if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
              if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
                this.allTypesOfmembershipList = this.responseModel.data;
-               this.admissionNumbersList = this.allTypesOfmembershipList.filter((obj: any) => (obj != null) && obj.memberTypeName == MemberShipTypesData.INDIVIDUAL).map((relationType: any) => {
+               this.admissionNumbersList = this.allTypesOfmembershipList.filter((obj: any) => (obj != null) && obj.memberTypeName == MemberShipTypesData.INDIVIDUAL && obj.statusName == CommonStatusData.APPROVED ).map((relationType: any) => {
                  return relationType.admissionNumber
                });
              }
@@ -879,6 +900,17 @@ datesValidationCheckAgeAndDob(model: any, type: number): void {
     if (model.memDobVal) {
       const calculatedAge = this.calculateAge(model.memDobVal);
       model.age = calculatedAge; 
+      if (model.age && model.age > 0) {
+        const calculatedDob = this.calculateDobFromAge(model.age);
+        model.memDobVal = calculatedDob; 
+      } else {
+        this.institutepromoterDetailsForm.get('age')?.reset();
+        this.institutepromoterDetailsForm.get('dob')?.reset();
+        this.msgs = [{ severity: 'warning', detail: applicationConstants.AGE_SHOULD_NOT_BE_ZERO_OR_NEGATIVE}];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
     }
   } else if (type === 1) { 
     if (model.age && model.age > 0) {
@@ -886,7 +918,8 @@ datesValidationCheckAgeAndDob(model: any, type: number): void {
       model.memDobVal = calculatedDob; 
     } else {
       this.institutepromoterDetailsForm.get('age')?.reset();
-      this.msgs = [{ severity: 'warning', detail: "Age should not be zero or negative" }];
+      this.institutepromoterDetailsForm.get('dob')?.reset();
+      this.msgs = [{ severity: 'warning', detail: applicationConstants.AGE_SHOULD_NOT_BE_ZERO_OR_NEGATIVE}];
       setTimeout(() => {
         this.msgs = [];
       }, 2000);
@@ -906,21 +939,20 @@ calculateAge(dateOfBirth: Date): number {
   }
   return age;
 }
+  /**
+   * @implements Method to calculate date of birth from age
+   * @author k.yamuna
+   */
+  calculateDobFromAge(age: number): Date {
+    if (isNaN(age) || age <= 0) {
+      return new Date(0);
+    }
+    const today = new Date();
+    const birthYear = today.getFullYear() - age;
+    const dob = new Date(birthYear, today.getMonth(), today.getDate());
 
-// Method to calculate date of birth from age
-calculateDobFromAge(age: number): Date {
-  if (isNaN(age) || age <= 0) {
-    return new Date(0);
-  }
-  const today = new Date();
-  const birthYear = today.getFullYear() - age;
-  const dob = new Date(today); 
-  dob.setFullYear(birthYear); 
-  dob.setMonth(0); 
-  dob.setDate(1); 
-
-  return dob;
-}
+    return dob;
+} 
  addOrUpdate(rowData:any) {
     //saveorupdate code here
     rowData.branchId = this.branchId;
@@ -1019,7 +1051,7 @@ isPosCheck(isPoc: any) {
         obj && obj.status === applicationConstants.ACTIVE && obj.isPoc === applicationConstants.TRUE
     );
     if (isPoc === applicationConstants.TRUE && duplicate) {
-      this.institutepromoterDetailsForm.reset();
+      this.institutepromoterDetailsForm.get("isPoc").reset();
       this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.POC_ALREADY_EXIST }];
       setTimeout(() => {
         this.msgs = [];

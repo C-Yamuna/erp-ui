@@ -10,7 +10,7 @@
                         <label for="username"><span class="red">*</span>{{'LOANS.PRODUCT_NAME' | translate}}
                         </label>
                     <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="name"
-                        [(ngModel)]="simpleInterestProductDefinitionModel.name">
+                        [(ngModel)]="simpleInterestProductDefinitionModel.name" (focusout) = "productNameDuplicateCheck()">
                     <p-message severity="error" text="Enter Valid Name"
                         *ngIf="!productionDefinitionForm.controls['name'].valid && productionDefinitionForm.controls['name'].dirty">
                     </p-message>
@@ -144,12 +144,24 @@
                 </div>
                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                     <div class="form-label">
-                    <label>{{'LOANS.COLLATERAL_TYPE' | translate}}</label>
+                    <label><span class="red">*</span>{{'LOANS.COLLATERAL_TYPE' | translate}}</label>
                     <p-multiSelect [options]="siProdCollateralsConfigDTOList" [(ngModel)]="selectedCollateralIds"
                         optionLabel="label" optionValue="value"  placeholder="Please Select"
                         [showClear]="false" formControlName="collateraltypes"
                         (onChange)="onCollateralChange($event)"></p-multiSelect>
+                   </div>
                 </div>
+           
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                <div class="form-label">
+                <label><span class="red">*</span>{{'LOAN_TRANSACTION.LOAN_PURPOSE' | translate}}</label>
+                <p-multiSelect [options]="purposeTypeList" [(ngModel)]="selectedPurposeTypes"
+                    optionLabel="label" optionValue="value"  placeholder="Please Select"
+                    [showClear]="false" formControlName="purposeType"
+                    (onChange)="onChangePurPoseTypes($event)"></p-multiSelect>
+                    <!-- <p-multiSelect id="user_menu_select" [options]="purposeTypeList" formControlName="purposeType"
+                        [(ngModel)]="selectedPurposeTypes" [virtualScroll]="true" (onSelect)="onChangePurPoseTypes($event)"></p-multiSelect> -->
+               </div>
             </div>
                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                     <div class="form-label">

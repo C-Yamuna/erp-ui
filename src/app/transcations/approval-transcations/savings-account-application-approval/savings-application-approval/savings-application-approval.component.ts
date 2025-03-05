@@ -63,14 +63,14 @@ export class SavingsApplicationApprovalComponent {
       { label: "Death Claim ", value: 7 },
     ]
     this.savingsbank = [
-      { field: 'accountNumber', header: 'Account Number' },
-      { field: 'balance', header: 'Account Balence' },
-      { field: 'name', header: 'Name' },
-      { field: 'memberTypeName', header: 'Member Type' },
-      { field: 'accountTypeName', header: 'Account Type' },
-      { field: 'admissionNumber',header:'Admission Number'},
-      { field: 'accountOpenDate', header: 'Account Openinig Date' },
-      { field: 'statusName', header: 'Status' },
+      { field: 'accountNumber', header: 'ERP.ACCOUNT_NUMBER' },
+      { field: 'balance', header: 'ERP.ACCOUNT_BALANCE' },
+      { field: 'name', header: 'ERP.NAME' },
+      { field: 'memberTypeName', header: 'ERP.MEMBER_TYPE' },
+      { field: 'accountTypeName', header: 'ERP.OPERATION_TYPE' },
+      { field: 'admissionNumber',header:'ERP.ADMISSION_NUMBER'},
+      { field: 'accountOpenDate', header: 'ERP.ACCOUNT_OPENING_DATE' },
+      { field: 'statusName', header: 'ERP.STATUS' },
       // { field: 'Action', header: 'ACTION' },
     ];
    }

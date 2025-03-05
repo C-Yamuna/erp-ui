@@ -45,7 +45,7 @@ export class AccountCommunication {
 
       address2 : any;
 
-      pinCode : any;
+      pincode : any;
 
       isSameAddress : any;
 
@@ -61,7 +61,7 @@ export class AccountCommunication {
 
       permanentAddress2 : any;
 
-      permanentPinCode : any;
+      permanentPincode : any;
 
       permanentStateName : any;
     
@@ -78,5 +78,21 @@ export class AccountCommunication {
       branchId : any;
     
       isNewMember : any;
+
+      divisionId: any;
+
+      blockId: any;
+
+      divisionName: any;
+
+      blockName: any;
+
+      permanentDivisionId: any;
+
+      permanentBlockId: any;
+
+      permanentDivisionName: any;
+
+      permanentBlockName: any;
 }
 

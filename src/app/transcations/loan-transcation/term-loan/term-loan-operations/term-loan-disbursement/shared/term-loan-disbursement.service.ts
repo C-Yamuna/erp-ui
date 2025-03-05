@@ -66,4 +66,9 @@ export class TermLoanDisbursementService {
     return this.commonHttpService.getById(headers,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.TERM_LOAN_DISBURSEMENT_SCHEDULE + ERP_TRANSACTION_CONSTANTS.GET_TERM_LOAN_DISBURSEMENT_SCHEDULE_LIST_BY_PRODUCT_ID);
   }
 
+  getTermDisbursmentListByApplicationId(id: string){
+    let headers = new HttpHeaders({ 'id': id + '' })
+    return this.commonHttpService.getById(headers,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.TERM_DISBURSEMENTS + ERP_TRANSACTION_CONSTANTS.GET_TERM_DISBURSEMENT_LIST_BY_APPLICATIONID);
+  }
+  
 }

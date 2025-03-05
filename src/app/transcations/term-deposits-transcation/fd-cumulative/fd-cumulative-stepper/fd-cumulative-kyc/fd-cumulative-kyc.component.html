@@ -18,19 +18,19 @@
                             <div class="col-lg-7 col-md-7 col-sm-7 col-xs-6 d-flex align-items-center">
                             
                                 <div class="card-leftbody" >
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px" *ngIf ="!individualFlag">
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf ="!individualFlag">
                                         <h6 class="label-view">Promoter Name</h6>
                                         <p class="label-input-text">{{document.promoterName}}</p>
                                     </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <h6 class="label-view">Document Type</h6>
                                         <p class="label-input-text">{{document.kycDocumentTypeName}}</p>
                                     </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <h6 class="label-view">Document Number</h6>
                                         <p class="label-input-text">{{document.documentNumber}}</p>
                                     </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <h6 class="label-view">Name As Per Document</h6>
                                         <p class="label-input-text">{{document.nameAsPerDocument}}</p>
                                         <!-- <p class="label-input-text docname-texteclipse" pTooltip="{{document.kycFilePath}}"
@@ -38,16 +38,15 @@
                                     </div>
                                 </div>
                         </div>
-                            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end">
-                                <div class="text-right">
-                                    
+                            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end d-flex right-actions">
+                                    <div class="cardview-icon icon-size text-right cursor-pointer -mt-1"
+                                    (click)="onClickkycPhotoCopy(document)"><i class="fa fa-eye mr-3" aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}" tooltipPosition="top"></i></div>
                                     <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn"
-                                        (click)="toggleEditForm(i ,document)" [disabled]="editButtonDisable"></p-button>
+                                        (click)="toggleEditForm(i ,document)" [disabled]="editButtonDisable" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                         <p-button icon="fa fa-trash" class="kyc-edit-btn ml-3" (click)="deletDilogBox(document)"
-                                        [disabled]="editButtonDisable"></p-button>
-                                </div>
+                                        [disabled]="editButtonDisable" pTooltip="{{'ERP.DELETE' | translate}}" tooltipPosition="top"></p-button>
 
-                                        <div class="col-12 px-0">
+                                        <!-- <div class="col-12 px-0">
                                             <div class="col-12 px-0" *ngFor="let img of document.multipartFileList">
                                                 <div class="col-12 p-0"
                                                     *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
@@ -61,7 +60,7 @@
                                                     </a>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
 
                                         <!-- <div class="col-12 border-top" *ngFor="let img of document.multipartFileList">
                                                                 <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
@@ -96,7 +95,9 @@
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
-                                <label><span class="red">*</span>Document Number</label>
+                                    <label *ngIf="!isPanNumber"><span class="red">*</span>{{'ERP.DOCUMENT_NUMBER' | translate}}</label>
+                                    <label *ngIf="isPanNumber"><span class="red">*</span>{{'ERP.PAN_NUMBER' | translate}}</label>
+                                <!-- <label><span class="red">*</span>Document Number</label> -->
                                 <input id="documentNumber" type="text" formControlName="docNumber" pInputText
                                     [(ngModel)]=" FdCumulativeKycModel.documentNumber" placeholder="Enter Document Number">
                                     <p-message severity="error" text="Enter Valid Document Number"
@@ -116,15 +117,15 @@
                     </div>
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
-                                <span class=""><span class="red">*</span> {{ 'ERP.DOCUMENT_COPY' | translate }} </span>
+                                <span class=""><span class="red">*</span> {{ 'ERP.DOCUMENT_COPY' | translate }} {{'TERMDEPOSITSTRANSACTION.FILE_SIZE_FOR_BOTH' | translate}}</span>
                                 <div class="uplodad-style align-items-center">
                                     <!-- Upload Button Column -->
 
-                                    <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
-                                        chooseLabel=" " id="apply-leave_fileUp_attach" name="file"
-                                        accept=".png,.jpg,.jpeg,.pdf" [customUpload]="true" formContralName="fileUpload"
-                                        (onSelect)="imageUploader($event,fileUpload)">
-                                    </p-fileUpload>
+                                    <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" formContralName="kycFilePath"
+                                    name="myfile[]" chooseLabel=" " id="apply-leave_fileUp_attach"
+                                    name="file" accept=".png,.jpg,.jpeg,.pdf" [customUpload]="true"
+                                    (onRemove)="fileRemoeEvent()" (onSelect)="imageUploader($event,fileUpload)">
+                                </p-fileUpload>
 
                                     <!-- Uploaded Files Display Column -->
 
@@ -181,7 +182,9 @@
                     </div>
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="form-label">
-                            <label><span class="red">*</span>Document Number</label>
+                                <label *ngIf="!isPanNumber"><span class="red">*</span>{{'ERP.DOCUMENT_NUMBER' | translate}}</label>
+                                <label *ngIf="isPanNumber"><span class="red">*</span>{{'ERP.PAN_NUMBER' | translate}}</label>
+                            <!-- <label><span class="red">*</span>Document Number</label> -->
                             <input id="documentNumber" type="text" formControlName="docNumber" pInputText
                                 [(ngModel)]=" FdCumulativeKycModel.documentNumber" placeholder="Enter Document Number">
                                 <p-message severity="error" text="Enter Valid Document Number"
@@ -205,24 +208,20 @@
                                                                                                                 </div> -->
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="form-label">
-                            <span class=""><span class="red">*</span> {{ 'ERP.DOCUMENT_COPY' | translate }} </span>
-                            <div class="uplodad-style align-items-center">
+                                <span class=""><span class="red">*</span> {{ 'TERMDEPOSITSTRANSACTION.DOCUMENT_COPY' | translate }} {{'TERMDEPOSITSTRANSACTION.FILE_SIZE_FOR_BOTH' | translate}}</span>
+                                <div class="uplodad-style align-items-center">
                                 <!-- Upload Button Column -->
 
-                                <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
-                                    chooseLabel=" " id="apply-leave_fileUp_attach" name="file"
-                                    accept=".png,.jpg,.jpeg,.pdf" [customUpload]="true" formContralName="fileUpload"
-                                    (onSelect)="imageUploader($event,fileUpload)">
-                                </p-fileUpload>
+                                        <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                                            chooseLabel=" " id="apply-leave_fileUp_attach" name="file"
+                                            accept=".png,.jpg,.jpeg,.pdf" (onRemove)="fileRemoeEvent()"
+                                            [customUpload]="true" formContralName="kycFilePath"
+                                            (onSelect)="imageUploader($event,fileUpload)">
+                                        </p-fileUpload>
 
                                 <!-- Uploaded Files Display Column -->
 
                                 <div class="col-12 d-flex p-1 contant-body" *ngFor="let img of  FdCumulativeKycModel.multipartFileList">
-                                    <!-- <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                                        <a href="{{img.imageValue}}">
-                                                                    <img src="{{img.imageValue}}">
-                                                                </a>
-                                                                </div>&nbsp;&nbsp; -->
                                     <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
                                         {{img.fileName}}
                                     </div>
@@ -259,4 +258,21 @@
         <p-button pRipple class="yes-button" label="{{'ERP.DELETE' | translate}}" (click)="submitDelete()"></p-button>
         <p-button pRipple class="no-button" label="{{'ERP.CANCEL' | translate}}" (click)="cancelForDialogBox()"></p-button>
     </div>
+</p-dialog>
+
+<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="kycPhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
+    <div class="col-12">
+            <div *ngFor="let img of multipleFilesList">
+                <div class="mb-3 imgcustom-class" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                    <a href="{{img.imageValue}}">
+                        <img src="{{img.imageValue}}" class="doc-photocopy">
+                    </a>
+                </div>
+                <div class="mb-3 imgcustom-class" *ngIf=" img.fileType =='pdf'">
+                    <a href="{{img.imageValue}}">
+                        <img src="assets\images\pdf.png" class="doc-photocopy">
+                    </a>
+                </div>
+            </div>
+        </div>
 </p-dialog>

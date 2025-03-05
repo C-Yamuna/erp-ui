@@ -140,18 +140,37 @@ export class FamilyDetailsComponent {
     });
   }
 
+  // updateData() {
+  //   if (this.memberBasicDetailsModel.memberShipFamilyDetailsDTOList != null && this.memberBasicDetailsModel.memberShipFamilyDetailsDTOList != undefined &&
+  //     this.memberBasicDetailsModel.memberShipFamilyDetailsDTOList.length > 0 && this.buttonsFlag ) {
+  //     this.landFlag = true;
+  //   }
+  //   this.membershipFamilyDetailsModel.membershipId =this.memberBasicDetailsModel.id
+  //   this.memberBasicDetailsStepperService.changeData({
+  //     formValid: this.familyForm.valid ,
+  //     data: this.membershipFamilyDetailsModel,
+  //     savedId:this.memberId,
+  //     stepperIndex: 6,
+  //     isDisable: !this.landFlag ? true : false,
+  //   });
+  // }
   updateData() {
-    if (this.memberBasicDetailsModel.memberShipFamilyDetailsDTOList != null && this.memberBasicDetailsModel.memberShipFamilyDetailsDTOList != undefined &&
-      this.memberBasicDetailsModel.memberShipFamilyDetailsDTOList.length > 0 && this.buttonsFlag ) {
-      this.landFlag = true;
+    if (this.memberBasicDetailsModel.memberShipFamilyDetailsDTOList == null || this.memberBasicDetailsModel.memberShipFamilyDetailsDTOList == undefined ||
+      this.memberBasicDetailsModel.memberShipFamilyDetailsDTOList.length == 0) {
+      this.buttonsFlag = true;
     }
-    this.membershipFamilyDetailsModel.membershipId =this.memberBasicDetailsModel.id
+    else {
+      this.buttonsFlag = false;
+    }
+    if (this.landFlag) {
+      this.buttonsFlag = true;
+    }
     this.memberBasicDetailsStepperService.changeData({
       formValid: this.familyForm.valid ,
       data: this.membershipFamilyDetailsModel,
       savedId:this.memberId,
       stepperIndex: 6,
-      isDisable: !this.landFlag ? true : false,
+      isDisable: this.landFlag
     });
   }
  
@@ -161,8 +180,8 @@ export class FamilyDetailsComponent {
   editVillageRow(row: any) {
     this.addButton = true;
     this.editDeleteDisable = true;
-    this.buttonsFlag  = false;
-    this.landFlag =false
+    // this.buttonsFlag  = false;
+    this.landFlag =applicationConstants.TRUE;
     this.updateData();
     this.getAllRelationshipType();
     this.getAllGroupedQualificationAndSubQualification();
@@ -175,9 +194,9 @@ export class FamilyDetailsComponent {
     this.familyForm.reset();
     this.addNewEntry();
     this.editDeleteDisable = true;
-    this.addButton = true;
-    this.buttonsFlag  = false;
-    this.landFlag =false
+    this.addButton =applicationConstants.TRUE;
+    // this.buttonsFlag  = false;
+    this.landFlag =applicationConstants.TRUE;
     this.updateData();
     this.dt._first = 0;
     this.dt.value.unshift(this.newRow);
@@ -189,8 +208,8 @@ export class FamilyDetailsComponent {
   onRowEditCancel() {
     this.addButton = false;
     this.editDeleteDisable = false;
-    this.buttonsFlag  = true;
-    // this.landFlag =true;
+    // this.buttonsFlag  = true;
+    this.landFlag =applicationConstants.FALSE;
     this.updateData();
     const index = this.dt.value.indexOf(this.newRow);
 
@@ -290,6 +309,7 @@ export class FamilyDetailsComponent {
     rowData.branchId = 1;
     rowData.membershipId = this.memberBasicDetailsModel.id;
     this.addButton = false;
+    this.landFlag = applicationConstants.FALSE;
     this.editDeleteDisable = false;
     this.tempSubQualificationList.filter(data => data != null && data.value == rowData.qualificationId).map(count => {
       rowData.qualificationName = count.label;
@@ -305,8 +325,8 @@ export class FamilyDetailsComponent {
         this.responseModel = response;
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
           this.getMembershipDetailsById(rowData.membershipId);
-          this.buttonsFlag  = true;
-          this.landFlag =true;;
+          // this.buttonsFlag  = true;
+          // this.landFlag =true;;
           this.updateData();
 
           if (null != rowData.dob)
@@ -339,8 +359,8 @@ export class FamilyDetailsComponent {
           this.getMembershipDetailsById(rowData.membershipId);
           if (null != this.responseModel.data[0].dob)
             this.responseModel.data[0].memDobVal = this.datePipe.transform(this.responseModel.data[0].dob, this.orgnizationSetting.datePipe);
-          this.buttonsFlag  = true;
-          this.landFlag =true;
+          // this.buttonsFlag  = true;
+          // this.landFlag =true;
           this.memberShipFamilyDetailsDTOList.unshift(this.responseModel.data[0]);
           this.memberShipFamilyDetailsDTOList.splice(1, 1);
           this.updateData();
@@ -411,26 +431,33 @@ export class FamilyDetailsComponent {
     return age;
   }
 
-  // Method to calculate date of birth from age
-  calculateDobFromAge(age: number): Date {
+   /**
+   * @implements Method to calculate date of birth from age
+   * @author k.yamuna
+   */
+   calculateDobFromAge(age: number): Date {
     if (isNaN(age) || age <= 0) {
       return new Date(0);
     }
     const today = new Date();
     const birthYear = today.getFullYear() - age;
-    const dob = new Date(today); 
-    dob.setFullYear(birthYear); 
-    dob.setMonth(0); 
-    dob.setDate(1); 
-
+    const dob = new Date(birthYear, today.getMonth(), today.getDate());
     return dob;
-  }
+}
   // Method to validate and handle both DOB and Age fields
   datesValidationCheckAgeAndDob(model: any, type: number): void {
     if (type === 2) { 
       if (model.memDobVal) {
         const calculatedAge = this.calculateAge(model.memDobVal);
         model.age = calculatedAge; 
+        if (model.age && model.age > 0) {
+          const calculatedDob = this.calculateDobFromAge(model.age);
+          model.memDobVal = calculatedDob; 
+        } else {
+          this.familyForm.get('age').reset();
+          this.familyForm.get('dob').reset();
+          this.msgs = [{ severity: 'warning', detail:applicationConstants.AGE_SHOULD_NOT_BE_ZERO_OR_NEGATIVE}];
+        }
       }
     } else if (type === 1) { 
       if (model.age && model.age > 0) {
@@ -438,7 +465,8 @@ export class FamilyDetailsComponent {
         model.memDobVal = calculatedDob; 
       } else {
         this.familyForm.get('age').reset();
-        this.msgs = [{ severity: 'error', detail: "Age should not be zero or negative" }];
+        this.familyForm.get('dob').reset();
+        this.msgs = [{ severity: 'warning', detail:applicationConstants.AGE_SHOULD_NOT_BE_ZERO_OR_NEGATIVE}];
       }
     }
   }

@@ -107,6 +107,15 @@ export class FdNonCumulativePreviewComponent {
   docPhotoCopyZoom: boolean = false;
   nomineePhotoCopyZoom: boolean = false;
   guardianPhotoCopyZoom: boolean = false;
+  maritalStatusList: any[]=[];
+  requiredlist: any[]=[];
+  yearFlag: boolean = false;
+  monthFlag: boolean = false;
+  daysFlag: boolean = false;
+  interestPayoutFlag: boolean = false;
+  renewalFlag: boolean = false;
+  interestFrequencyFlag: boolean = false;
+  maturityFlag: boolean = false;
 
 
   constructor(private router: Router,
@@ -128,35 +137,35 @@ export class FdNonCumulativePreviewComponent {
       { field: 'docPath', header: 'Documents' },
     ];
     this.institutionPrmoters = [
-      { field: 'surname', header: 'Surname' },
-      { field: 'name', header: 'Name' },
-      { field: 'operatorTypeName', header: 'Type Of Operator' },
-      { field: 'authorizedSignatoryName', header: 'Authorized Signatory'},
-      { field: 'memDobVal', header: 'Date Of Birth' },
-      { field: 'age', header: 'Age' },
-      { field: 'genderTypeName', header: 'Gender' },
-      { field: 'maritalStatusName', header: 'Marital status' },
-      { field: 'mobileNumber', header: 'Mobile number' },
-      { field: 'emailId', header: 'Email' },
-      { field: 'aadharNumber', header: 'Aadhar Name' },
-      { field: 'startDateVal', header: 'Joining Date' },
+      { field: 'isPocName', header: 'TERMDEPOSITSTRANSACTION.POC' },
+      { field: 'surname', header: 'TERMDEPOSITSTRANSACTION.SURNAME' },
+      { field: 'name', header: 'TERMDEPOSITSTRANSACTION.NAME' },
+      { field: 'authorizedSignatoryName', header: 'TERMDEPOSITSTRANSACTION.AUTHORIZED_SIGNATORY' },
+      { field: 'memDobVal', header: 'TERMDEPOSITSTRANSACTION.DATE_OF_BIRTH' },
+      { field: 'age', header: 'TERMDEPOSITSTRANSACTION.AGE' },
+      { field: 'genderTypeName', header: 'TERMDEPOSITSTRANSACTION.GENDER' },
+      { field: 'maritalStatusName', header: 'TERMDEPOSITSTRANSACTION.MARITAL_STATUS' },
+      { field: 'mobileNumber', header: 'TERMDEPOSITSTRANSACTION.CONTACT' },
+      { field: 'emailId', header: 'TERMDEPOSITSTRANSACTION.EMAIL' },
+      { field: 'aadharNumber', header: 'TERMDEPOSITSTRANSACTION.AADHAR' },
+      { field: 'startDateVal', header: 'TERMDEPOSITSTRANSACTION.START_DATE' },
+      { field: 'endDateVal', header: 'TERMDEPOSITSTRANSACTION.EXIT_DATE' },
     ];
     this.groupPrmoters = [
-      { field: 'surname', header: 'Surname' },
-      { field: 'name', header: 'Name' },
-      { field: 'operatorTypeName', header: 'Type Of Operator' },
-      { field: 'authorizedSignatory', header: 'Authorized Signatory'},
-      { field: 'memDobVal', header: 'Date Of Birth' },
-      { field: 'age', header: 'Age' },
-      { field: 'genderTypeName', header: 'Gender' },
-      { field: 'maritalStatusName', header: 'Marital status' },
-      { field: 'mobileNumber', header: 'Mobile number' },
-      { field: 'emailId', header: 'Email' },
-      { field: 'aadharNumber', header: 'Aadhar Name' },
-      { field: 'startDateVal', header: 'Joining Date' },
-      // { field: 'uploadImage', header: 'Upload Image' },
-      // { field: 'uploadSignature', header: 'Upload Signature' }
-    ]
+      { field: 'isPocName', header: 'TERMDEPOSITSTRANSACTION.POC' },
+      { field: 'surname', header: 'TERMDEPOSITSTRANSACTION.SURNAME' },
+      { field: 'name', header: 'TERMDEPOSITSTRANSACTION.NAME' },
+      { field: 'authorizedSignatoryName', header: 'TERMDEPOSITSTRANSACTION.AUTHORIZED_SIGNATORY' },
+      { field: 'memDobVal', header: 'TERMDEPOSITSTRANSACTION.DATE_OF_BIRTH' },
+      { field: 'age', header: 'TERMDEPOSITSTRANSACTION.AGE' },
+      { field: 'genderName', header: 'TERMDEPOSITSTRANSACTION.GENDER' },
+      { field: 'maritalStatusName', header: 'TERMDEPOSITSTRANSACTION.MARITAL_STATUS' },
+      { field: 'mobileNumber', header: 'TERMDEPOSITSTRANSACTION.CONTACT' },
+      { field: 'emailId', header: 'TERMDEPOSITSTRANSACTION.EMAIL' },
+      { field: 'aadharNumber', header: 'TERMDEPOSITSTRANSACTION.AADHAR' },
+      { field: 'startDateVal', header: 'TERMDEPOSITSTRANSACTION.START_DATE' },
+      { field: 'endDateVal', header: 'TERMDEPOSITSTRANSACTION.EXIT_DATE' },
+    ];
 
   }
 
@@ -164,6 +173,8 @@ export class FdNonCumulativePreviewComponent {
     this.roleName = this.commonFunctionsService.getStorageValue(applicationConstants.roleName);
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
     this.genderList = this.commonComponent.genderList();
+    this.maritalStatusList = this.commonComponent.maritalStatusList();
+    this.requiredlist = this.commonComponent.requiredlist();
     this.translate.use(this.commonFunctionsService.getStorageValue('language'));
     this.activateRoute.queryParams.subscribe(params => {
       if (params['id'] != undefined && params['editbutton'] != undefined) {
@@ -174,18 +185,19 @@ export class FdNonCumulativePreviewComponent {
 
         if (idEdit == "1") {
             this.preveiwFalg = true;
-            this.isShowSubmit = applicationConstants.TRUE; // Allow Submit
+            // this.isShowSubmit = applicationConstants.TRUE; // Allow Submit
             this.viewButton = false;
-            this.editFlag = false;
+            // this.editFlag = false;
         } else {
             this.preveiwFalg = false;
+            this.viewButton = true;
         }
         if (params['isGridPage'] != undefined && params['isGridPage'] != null) {
             let isGrid = this.encryptDecryptService.decrypt(params['isGridPage']);
             if (isGrid === "0") {
                 this.isShowSubmit = applicationConstants.FALSE;
-                this.viewButton = true;
-                this.editFlag = false;
+                // this.viewButton = true;
+                this.editFlag = true;
             } else {
                 this.isShowSubmit = applicationConstants.TRUE;
             }
@@ -262,6 +274,10 @@ export class FdNonCumulativePreviewComponent {
           if (this.fdNonCumulativeApplicationModel.maturityDate != null && this.fdNonCumulativeApplicationModel.maturityDate != undefined) {
             this.fdNonCumulativeApplicationModel.maturityDate = this.datePipe.transform(this.fdNonCumulativeApplicationModel.maturityDate, this.orgnizationSetting.datePipe);
           }
+          this.tenureCheck();
+          this.interestPayoutCheck();
+          this.renewalCheck();
+          this.interestFrequencyCheck();
           if (this.fdNonCumulativeApplicationModel.memberTypeName != null && this.fdNonCumulativeApplicationModel.memberTypeName != undefined) {
             this.memberTypeName = this.fdNonCumulativeApplicationModel.memberTypeName;
             this.memberTypeCheck(this.memberTypeName);
@@ -270,7 +286,8 @@ export class FdNonCumulativePreviewComponent {
             }
           }
           if (this.responseModel.data[0].memberTypeName == MemberShipTypesData.INDIVIDUAL) {
-            if (this.fdNonCumulativeApplicationModel.memberShipBasicDetailsDTO.age != null && this.fdNonCumulativeApplicationModel.memberShipBasicDetailsDTO.age != undefined && this.fdNonCumulativeApplicationModel.memberShipBasicDetailsDTO.age < 18) {
+            if (this.fdNonCumulativeApplicationModel.memberShipBasicDetailsDTO.age != null && this.fdNonCumulativeApplicationModel.memberShipBasicDetailsDTO.age != undefined && 
+              this.fdNonCumulativeApplicationModel.memberShipBasicDetailsDTO.age < 18) {
               this.guardainFormEnable = true;
             }
           }
@@ -322,8 +339,14 @@ export class FdNonCumulativePreviewComponent {
             if (this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountNomineeList != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountNomineeList != undefined &&
               this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountNomineeList[0] != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountNomineeList[0] != undefined)
               this.nomineeDetailsModel = this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountNomineeList[0];
+              if (this.nomineeDetailsModel.nomineeDob != null && this.nomineeDetailsModel.nomineeDob != undefined) {
+                this.nomineeDetailsModel.nomineeDobVal = this.datePipe.transform(this.nomineeDetailsModel.nomineeDob, this.orgnizationSetting.datePipe);
+              }
             if (this.nomineeDetailsModel.nomineeFilePath != null && this.nomineeDetailsModel.nomineeFilePath != undefined) {
               this.nomineeDetailsModel.nomineeSighnedFormMultiPartList = this.fileUploadService.getFile(this.nomineeDetailsModel.nomineeFilePath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.nomineeDetailsModel.nomineeFilePath);
+            }
+            if (this.nomineeDetailsModel.nomineeAge < 18) {
+              this.guardainFormEnable = true;
             }
             if (this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountGaurdianList != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountGaurdianList != undefined &&
               this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountGaurdianList[0] != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeAccountGaurdianList[0] != undefined)
@@ -483,6 +506,9 @@ export class FdNonCumulativePreviewComponent {
       if (this.membershipBasicRequiredDetailsModel.admissionDate != null && this.membershipBasicRequiredDetailsModel.admissionDate != undefined) {
         this.membershipBasicRequiredDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
       }
+      if (this.membershipBasicRequiredDetailsModel.resolutionDate != null && this.membershipBasicRequiredDetailsModel.resolutionDate != undefined) {
+        this.membershipBasicRequiredDetailsModel.resolutionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.resolutionDate, this.orgnizationSetting.datePipe);
+      }
       if (this.membershipBasicRequiredDetailsModel.photoPath != null && this.membershipBasicRequiredDetailsModel.photoPath != undefined) {
         if (this.membershipBasicRequiredDetailsModel.isNewMember) {
           this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.photoPath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.photoPath);
@@ -504,6 +530,17 @@ export class FdNonCumulativePreviewComponent {
       }
       else {
         this.signatureCopyFlag = false;
+      }
+      if (this.membershipBasicRequiredDetailsModel.resolutionCopy != null && this.membershipBasicRequiredDetailsModel.resolutionCopy != undefined) {
+        if (this.membershipBasicRequiredDetailsModel.isNewMember) {
+          this.membershipBasicRequiredDetailsModel.multipartFileListForResolutionCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.resolutionCopy, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.resolutionCopy);
+        }
+        else {
+          this.membershipBasicRequiredDetailsModel.multipartFileListForResolutionCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.resolutionCopy, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.resolutionCopy);
+        }
+      }
+      else {
+        this.photoCopyFlag = false;
       }
       if (this.membershipBasicRequiredDetailsModel.isStaff != null && this.membershipBasicRequiredDetailsModel.isStaff != undefined && this.membershipBasicRequiredDetailsModel.isStaff) {
         this.isStaff = applicationConstants.YES;
@@ -535,11 +572,30 @@ export class FdNonCumulativePreviewComponent {
           if (promoter.startDate != null && promoter.startDate != undefined) {
             promoter.startDateVal = this.datePipe.transform(promoter.startDate, this.orgnizationSetting.datePipe);
           }
+          if (promoter.endDate != null && promoter.endDate != undefined) {
+            promoter.endDateVal = this.datePipe.transform(promoter.endDate, this.orgnizationSetting.datePipe);
+          }
           if (promoter.genderId != null && promoter.genderId != undefined) {
             let gender = this.genderList.filter((obj: any) => obj.value == promoter.genderId);
             if (gender != null && gender != undefined && gender.length > 0)
               promoter.genderName = gender[0].label;
           }
+          if (promoter.martialId != null && promoter.martialId != undefined) {
+            let marital = this.maritalStatusList.filter((obj: any) => obj.value == promoter.martialId);
+            if (marital != null && marital != undefined && marital.length > 0)
+              promoter.maritalStatusName = marital[0].label;
+          }
+          if (promoter.isPoc != null && promoter.isPoc != undefined) {
+            let poc = this.requiredlist.filter((obj: any) => obj.value == promoter.isPoc);
+            if (poc != null && poc != undefined && poc.length > 0)
+              promoter.isPocName = poc[0].label;
+          }              
+          if (promoter.authorizedSignatory != null && promoter.authorizedSignatory != undefined) {
+            let author = this.requiredlist.filter((obj: any) => obj.value == promoter.authorizedSignatory);
+            if (author != null && author != undefined && author.length > 0)
+              promoter.authorizedSignatoryName = author[0].label;
+          }
+
         }
       }
       if (this.memberGroupDetailsModel.registrationDate != null && this.memberGroupDetailsModel.registrationDate != undefined) {
@@ -576,6 +632,9 @@ export class FdNonCumulativePreviewComponent {
           }
           if (promoter.startDate != null && promoter.startDate != undefined) {
             promoter.startDateVal = this.datePipe.transform(promoter.startDate, this.orgnizationSetting.datePipe);
+          }
+          if (promoter.endDate != null && promoter.endDate != undefined) {
+            promoter.endDateVal = this.datePipe.transform(promoter.endDate, this.orgnizationSetting.datePipe);
           }
           if (promoter.genderId != null && promoter.genderId != undefined) {
             let gender = this.genderList.filter((obj: any) => obj.value == promoter.genderId);
@@ -661,4 +720,44 @@ export class FdNonCumulativePreviewComponent {
   onClickGuardianPhotoCopy(){
     this.guardianPhotoCopyZoom = true;
   }
+
+    /**
+ * @implements check for years,months,days to show and hide based on tenuretype
+ * @author bhargavi
+ */
+    tenureCheck() {
+      const tenureType = this.fdNonCumulativeApplicationModel.tenureType;
+      this.yearFlag = tenureType === 2 || tenureType === 5 || tenureType === 6 || tenureType === 7 ? true : false;
+      this.monthFlag = tenureType === 3 || tenureType === 4 || tenureType === 6 || tenureType === 7 ? true : false;
+      this.daysFlag = tenureType === 1 || tenureType === 4 || tenureType === 5 || tenureType === 7 ? true : false;
+    }
+  
+    /**
+     * @implements check for paymenttype show and hide based on interestPayoutType
+     * @author bhargavi
+     */
+    interestPayoutCheck() {
+      const interestPayoutType = this.fdNonCumulativeApplicationModel.interestPayoutType;
+      this.interestPayoutFlag = interestPayoutType === 3 ? true : false;
+    }
+  
+    /**
+     * @implements check for renewalType show and hide based on autorenewal
+     * @author bhargavi
+     */
+    renewalCheck() {
+      const renewalType = this.fdNonCumulativeApplicationModel.isAutoRenewal;
+      this.renewalFlag = renewalType === true ? true : false;
+    }
+  
+    /**
+  * @implements check for interest payment to show and hide based on interestPaymentFrequency
+  * @author bhargavi
+  */
+    interestFrequencyCheck() {
+      const interestPaymentFrequency = this.fdNonCumulativeApplicationModel.interestPaymentFrequencyId;
+      this.interestFrequencyFlag = interestPaymentFrequency === 1 || interestPaymentFrequency === 2 || interestPaymentFrequency === 3 || 
+      interestPaymentFrequency === 4 || interestPaymentFrequency === 5 ? true : false;
+      this.maturityFlag =  interestPaymentFrequency === 6 ? true : false;
+    }
 }

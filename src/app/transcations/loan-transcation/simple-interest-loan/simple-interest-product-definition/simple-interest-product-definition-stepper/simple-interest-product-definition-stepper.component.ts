@@ -108,12 +108,12 @@ ngOnInit() {
           this.activeIndex = 3;
         }
       },
-      {
-        label: 'Purpose',icon: 'fa fa-bandcamp', routerLink: Loantransactionconstant.SIMPLE_INTEREST_PROD_PURPOSE_CONFIG,
-        command: (event: any) => {
-          this.activeIndex = 4;
-        }
-      },
+      // {
+      //   label: 'Purpose',icon: 'fa fa-bandcamp', routerLink: Loantransactionconstant.SIMPLE_INTEREST_PROD_PURPOSE_CONFIG,
+      //   command: (event: any) => {
+      //     this.activeIndex = 4;
+      //   }
+      // },
       {
         label: 'Required Documents',icon: 'fa fa-file-text', routerLink: Loantransactionconstant.SIMPLE_INTEREST_REQUIRED_DOCUMENT_CONFIG,
         command: (event: any) => {
@@ -142,9 +142,11 @@ this.currentStepper();
             this.siLoanLinkedShareCapitalModel = data.data;
           } else if (this.activeIndex == 3) {
             this.siChargesModel = data.data;
-          } else if (this.activeIndex == 4) {
-            this.siPurposeModel = data.data;
-          } else if (this.activeIndex == 5) {
+          } 
+          // else if (this.activeIndex == 4) {
+          //   this.siPurposeModel = data.data;
+          // } 
+          else if (this.activeIndex == 5) {
             this.siRequiredDocumentsModel = data.data;
           }
         }
@@ -171,9 +173,9 @@ navigateTo(activeIndex: any,saveId:any) {
       case 3:
         this.router.navigate([Loantransactionconstant.SIMPLE_INTEREST_PRODUCT_CHARGES_CONFIG], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
         break;
-        case 4:
-      this.router.navigate([Loantransactionconstant.SIMPLE_INTEREST_PROD_PURPOSE_CONFIG], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
-      break;
+      //   case 4:
+      // this.router.navigate([Loantransactionconstant.SIMPLE_INTEREST_PROD_PURPOSE_CONFIG], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
+      // break;
       case 5:
         this.router.navigate([Loantransactionconstant.SIMPLE_INTEREST_REQUIRED_DOCUMENT_CONFIG], { queryParams: { id: this.encryptDecryptService.encrypt(saveId) } });
         break;
@@ -189,12 +191,14 @@ ngAfterContentChecked(): void {
     @implements Previous Step button navigation realated function
     @argument activeIndex
    */
+
 prevStep(activeIndex: any) {
+  if(this.activeIndex == 5)
+    activeIndex = activeIndex - 1;
   this.activeIndex = activeIndex - 1;
   this.navigateTo(this.activeIndex,this.savedID);
 
 }
-
 /**
     @author Vinitha
     @implements Save data and next navigation realated function
@@ -211,7 +215,7 @@ saveAndNext(activeIndex: number) {
       this.activeIndex = activeIndex + 1;
       this.navigateTo(this.activeIndex,this.savedID);
   } else if (activeIndex == 3) {
-    this.activeIndex = activeIndex + 1;
+    this.activeIndex = activeIndex + 2;
     this.navigateTo(this.activeIndex,this.savedID);
   }
   else if (activeIndex == 4) {
@@ -313,9 +317,9 @@ cancel(activeIndex: any){
       this.translate.get('Loantransactionconstant.CHARGES').subscribe((text: string) => {
         this.charges = text;
       });
-      this.translate.get('Loantransactionconstant.PURPOSE').subscribe((text: string) => {
-        this.purpose = text;
-      });
+      // this.translate.get('Loantransactionconstant.PURPOSE').subscribe((text: string) => {
+      //   this.purpose = text;
+      // });
       this.translate.get('Loantransactionconstant.REQUIRED_DOCUMENTS').subscribe((text: string) => {
         this.reqiredDocumentsDetails = text;
         this.items = [
@@ -331,9 +335,9 @@ cancel(activeIndex: any){
           {
             label: this.charges
           },
-          {
-            label: this.purpose
-          },
+          // {
+          //   label: this.purpose
+          // },
           {
             label: this.reqiredDocumentsDetails
           }

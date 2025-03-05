@@ -22,7 +22,7 @@
                         </label>
                         <p-dropdown placeholder="Select" [options]="productsList" formControlName="siProductId"
                             [(ngModel)]="siLoanApplicationModel.siProductId" [disabled]="isProductDisable"
-                            (onChange)="getProductDefinitionByProductIdAndApplicationDate(siLoanApplicationModel.siProductId)">
+                            (onChange)="getProductDefinitionByProductIdAndApplicationDate(siLoanApplicationModel.siProductId,false)">
                         </p-dropdown>
                     </div>
                 </div>
@@ -71,10 +71,10 @@
                         </p-message>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="isIndividual">
                     <div class="form-label">
-                        <label for="code">
-                            <span class="red">*</span>{{'ERP.OPERATION_TYPE' | translate}}
+                        <label for="code"><span class="red">*</span>
+                            {{'LOAN_TRANSACTION.OPERATION_TYPE' | translate}}
                         </label>
                         <p-dropdown [options]="operationTypesList" placeholder="Select"
                             formControlName="operationTypeId" [(ngModel)]="siLoanApplicationModel.operationTypeId"
@@ -86,7 +86,7 @@
                         <label for="code">
                             <span class="red">*</span>{{'ERP.LOAN_PURPOSE' | translate}}
                         </label>
-                        <p-dropdown placeholder="Select" [options]="loanPurposeList" formControlName="purposeId"
+                        <p-dropdown placeholder="Select" [options]="purposeTypeList" formControlName="purposeId"
                             (onChange)="onChangePurpose($event)" [(ngModel)]="siLoanApplicationModel.purposeId">
                         </p-dropdown>
                     </div>
@@ -121,7 +121,7 @@
                         <p-calendar formControlName="sanctionDate" [showIcon]="true"
                             [dateFormat]="orgnizationSetting.calendar"
                             [(ngModel)]="siLoanApplicationModel.sanctionDateVal" placeholder="DD/MM/YYYY"
-                            (onSelect)="onSelectSanctionDate()">
+                            (onSelect)="onSelectSanctionDate()" >
                         </p-calendar>
                     </div>
                 </div>

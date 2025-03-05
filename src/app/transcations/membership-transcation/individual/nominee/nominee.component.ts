@@ -46,7 +46,7 @@ export class NomineeComponent {
   uploadFileData: any;
   isFileUploaded: any;
   sameAsMemberGuardain: boolean = false;
-  noGuardain: boolean = true;
+  noGuardain: boolean = false;
   flag: boolean = false;
   memberId: any;
   subProductName: any;
@@ -127,7 +127,7 @@ export class NomineeComponent {
   //update model data to stepper component
   //@k.yamuna
   updateData() {
-    if (this.age <= 18) {
+    if (this.age <= 18 || this.memberNomineeDetailsModel.nomineeAge <= 18) {
       this.memberGuardianDetailsModel.memberId = this.memberId;
       this.memberGuardianDetailsModel.admissionNumber = this.admissionNumber;
 
@@ -156,15 +156,44 @@ export class NomineeComponent {
   //on change nominee type need to update validation
   //@k.yamuna
   onChange(event: any ,flag :boolean) {
+    if(flag){
+      this.memberNomineeDetailsModel.multipartFileList = [];
+      this.saveDisabled = false;
+      if(this.memberNomineeDetailsModel.nomineeAge < 18){
+        this.guarntorDetailsFalg = false;
+          this.guarntorDetailsFalg = false;
+          let id = null;
+          if(this.memberGuardianDetailsModel.id != null && this.memberGuardianDetailsModel.id != undefined){
+            let id = this.memberGuardianDetailsModel.id;
+          }
+          this.memberGuardianDetailsModel = new MemberGuardianDetailsModel();
+          this.memberGuardianDetailsModel.id = id;
+          this.sameAsMemberGuardain = false;
+          this.courtAppointedGuardain = false;
+            this.resetGuardain();
+      }
+    }
     if (event == 1) {//new nominee
       this.newNomineeType(flag);
     }
     else if (event == 2) {//same as membership nominee
       this.noNomineeType(flag);
     }
-    if(this.age > 18){
+    if(this.age > 18 || this.memberNomineeDetailsModel.nomineeAge >18){
       this.isGurdianAdded = true;
     }
+  }
+  resetGuardain(){
+    this.nomineeForm.get('relationNameOfGuardian')?.reset();
+    this.nomineeForm.get('guardianName')?.reset();
+    this.nomineeForm.get('guardianAadhar')?.reset();
+    this.nomineeForm.get('guardianMobile')?.reset();
+    this.nomineeForm.get('guardianEmail')?.reset();
+    this.nomineeForm.get('relationNameOfGuardian')?.setValidators(null);
+    this.nomineeForm.get('guardianName')?.setValidators(null);
+    this.nomineeForm.get('guardianAadhar')?.setValidators(null);
+    this.nomineeForm.get('guardianMobile')?.setValidators(null);
+    this.nomineeForm.get('guardianEmail')?.setValidators(null);
   }
 
   /**
@@ -198,8 +227,8 @@ export class NomineeComponent {
           this.age = this.memberBasicDetailsModel.age;
           if (this.age < 18) {
             this.guarntorDetailsFalg = true;
-            this.noGuardain = false;
-            this.courtAppointedGuardain = false
+            // this.noGuardain = false;
+            // this.courtAppointedGuardain = false
           }
         }
         if (this.memberBasicDetailsModel.memberShipGuadianDetailsDTOList != null && this.memberBasicDetailsModel.memberShipGuadianDetailsDTOList != undefined && this.memberBasicDetailsModel.memberShipGuadianDetailsDTOList.length > 0 && this.memberBasicDetailsModel.memberShipGuadianDetailsDTOList[0] != null && this.memberBasicDetailsModel.memberShipGuadianDetailsDTOList[0] != undefined) {
@@ -228,9 +257,14 @@ export class NomineeComponent {
         if (this.memberBasicDetailsModel.memberShipNomineeDetailsDTOList != null && this.memberBasicDetailsModel.memberShipNomineeDetailsDTOList != undefined && this.memberBasicDetailsModel.memberShipNomineeDetailsDTOList.length > 0 && this.memberBasicDetailsModel.memberShipNomineeDetailsDTOList[0] != null && this.memberBasicDetailsModel.memberShipNomineeDetailsDTOList[0] != undefined) {//nominee details
           this.memberNomineeDetailsModel = this.memberBasicDetailsModel.memberShipNomineeDetailsDTOList[0];
           // this.memberNomineeDetailsModel.subProductId = this.memberBasicDetailsModel.subProductId
+
+          if(this.memberNomineeDetailsModel.nomineeAge < 18){
+            this.guarntorDetailsFalg = true;
+          }
           if (this.memberNomineeDetailsModel.nomineeType != null && this.memberNomineeDetailsModel.nomineeType != undefined) {
             this.onChange(this.memberNomineeDetailsModel.nomineeType, this.flag);
           }
+          // this.onChangeNomineeAge(this.memberNomineeDetailsModel);
           if (this.memberNomineeDetailsModel.nomineeDob != null && this.memberNomineeDetailsModel.nomineeDob != undefined) {
             this.memberNomineeDetailsModel.nomineeDobVal = this.datePipe.transform(this.memberNomineeDetailsModel.nomineeDob, this.orgnizationSetting.datePipe);
           }
@@ -303,7 +337,15 @@ export class NomineeComponent {
     this.multipartFileList = [];
     this.memberNomineeDetailsModel.filesDTO = null; // Initialize as a single object
     this.memberNomineeDetailsModel.nomineeFilePath = null;
-    let file = event.files[0]; // Only one file
+    let file = event.files[0];
+    let fileSizeMB = file.size / (1024 * 1024);
+   
+    if (fileSizeMB > 5) {
+      this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_5MB}];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    }
     let reader = new FileReader();
     reader.onloadend = (e) => {
       let filesDTO = new FileUploadModel();
@@ -324,7 +366,6 @@ export class NomineeComponent {
     reader.readAsDataURL(file);
     this.updateData();
   }
-
   //remove documnet for nominee
   fileRemoveEventForNominee() {
     this.saveDisabled = false;
@@ -343,7 +384,15 @@ export class NomineeComponent {
     this.multipartsFileList = [];
     this.memberGuardianDetailsModel.filesDTO = null; // Initialize as a single object
     this.memberGuardianDetailsModel.uploadFilePath = null;
-    let file = event.files[0]; // Only one file
+    let file = event.files[0];
+    let fileSizeMB = file.size / (1024 * 1024);
+   
+    if (fileSizeMB > 5) {
+      this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_5MB}];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    }
     let reader = new FileReader();
     reader.onloadend = (e) => {
       let filesDTO = new FileUploadModel();
@@ -429,6 +478,11 @@ export class NomineeComponent {
           Validators.required,
         ]);
         controlSeven.updateValueAndValidity();
+      }
+      const controlhight = this.nomineeForm.get('guardianRemarks');
+      if (controlhight) {
+        controlhight.setValidators(null);
+        controlhight.updateValueAndValidity();
       }
       this.updateData();
     }
@@ -639,6 +693,14 @@ export class NomineeComponent {
       }
     }
     this.memberGuardianDetailsModel.guardianType = 2;
+    const controlName = this.nomineeForm.get('guardianRemarks');
+    if (controlName) {
+      controlName.setValidators([
+        Validators.required,
+      ]);
+      controlName.updateValueAndValidity();
+    }
+    this.updateData();
     this.noGuardainValidation();
    
   }
@@ -667,6 +729,7 @@ export class NomineeComponent {
     }
 
     }
+    this.updateData();
   }
  
  
@@ -680,6 +743,15 @@ export class NomineeComponent {
       if (model.nomineeDobVal) {
         const calculatedAge = this.calculateAge(model.nomineeDobVal);
         model.nomineeAge = calculatedAge; 
+        if(model.nomineeAge != null && model.nomineeAge <= 0){
+          this.nomineeForm.get('nomineeDob').reset();
+          this.nomineeForm.get('nomineeAge').reset();
+          this.msgs = [{ severity: 'warning', detail: applicationConstants.AGE_SHOULD_NOT_BE_ZERO_OR_NEGATIVE }];
+          setTimeout(() =>{
+            this.msgs =[];
+          },2000);
+         
+        }
       }
     } else if (type === 1) { 
       if (model.nomineeAge && model.nomineeAge > 0) {
@@ -687,13 +759,15 @@ export class NomineeComponent {
         model.nomineeDobVal = calculatedDob; 
       } else if(model.nomineeAge != null && model.nomineeAge <= 0){
         this.nomineeForm.get('nomineeAge').reset();
-        this.msgs = [{ severity: 'error', detail: "Age should not be zero or negative" }];
+        this.nomineeForm.get('nomineeDob').reset();
+        this.msgs = [{ severity: 'warning', detail: applicationConstants.AGE_SHOULD_NOT_BE_ZERO_OR_NEGATIVE }];
         setTimeout(() =>{
           this.msgs =[];
         },2000);
        
       }
     }
+    this.onChangeNomineeAge(model);
   }
    // Method to calculate age from date of birth
    calculateAge(dateOfBirth: Date): number {
@@ -708,21 +782,21 @@ export class NomineeComponent {
     return age;
   }
 
-  // Method to calculate date of birth from age
+ /**
+   * @implements Method to calculate date of birth from age
+   * @param model and type
+   * @author k.yamuna
+   */
   calculateDobFromAge(age: number): Date {
     if (isNaN(age) || age <= 0) {
       return new Date(0);
     }
     const today = new Date();
     const birthYear = today.getFullYear() - age;
-    const dob = new Date(today); 
-    dob.setFullYear(birthYear); 
-    dob.setMonth(0); 
-    dob.setDate(1); 
+    const dob = new Date(birthYear, today.getMonth(), today.getDate());
 
     return dob;
-  }
-
+}
    /**
    * @implements Method to validate guardian and handle both DOB and Age fields
    * @param model and type
@@ -733,19 +807,52 @@ export class NomineeComponent {
       if (model.guardianDobVal) {
         const calculatedAge = this.calculateAge(model.guardianDobVal);
         model.guardianAge = calculatedAge; 
+        if(model.guardianAge != null && model.guardianAge <= 18){
+          this.nomineeForm.get('guardianAge').reset();
+          this.nomineeForm.get('guardianDob').reset();
+          this.msgs = [{ severity: 'warning', detail: applicationConstants.GUARDIAN_MUST_BE_18_YEARS_OR_OLDER }];
+          setTimeout(() =>{
+            this.msgs =[];
+          },2000);
+         
+        }
       }
     } else if (type === 1) { 
-      if (model.guardianAge && model.guardianAge > 0) {
+      if (model.guardianAge && model.guardianAge > 18) {
         const calculatedDob = this.calculateDobFromAge(model.guardianAge);
         model.guardianDobVal = calculatedDob; 
-      } else if(model.guardianAge != null && model.guardianAge <= 0){
+      } else if(model.guardianAge != null && model.guardianAge <= 18){
         this.nomineeForm.get('guardianAge').reset();
-        this.msgs = [{ severity: 'error', detail: "Age should not be zero or negative" }];
+        this.nomineeForm.get('guardianDob').reset();
+        this.msgs = [{ severity: 'warning', detail: applicationConstants.GUARDIAN_MUST_BE_18_YEARS_OR_OLDER }];
         setTimeout(() =>{
           this.msgs =[];
         },2000);
        
       }
+    }
+   
+  }
+
+  onChangeNomineeAge(model: any) {
+    if (this.age >= 18 && model.nomineeAge != null && model.nomineeAge != undefined) {
+      if (model.nomineeAge < 18) {
+        this.guarntorDetailsFalg = true;
+        // this.noGuardain = false;
+        // this.courtAppointedGuardain = false
+        this.updateData();
+      }
+      else {
+        this.guarntorDetailsFalg = false;
+      }
+    }
+    else if (this.age < 18 && model.nomineeAge < 18) {
+      this.msgs = [];
+      model.nomineeAge = null;
+      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "Minors Member Account Should Take Major Nominee Only" }];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
     }
   }
 }

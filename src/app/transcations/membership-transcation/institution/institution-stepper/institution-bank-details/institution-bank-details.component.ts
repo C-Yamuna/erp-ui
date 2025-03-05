@@ -133,17 +133,36 @@ export class InstitutionBankDetailsComponent {
     });
   }
 
+  // updateData() {
+  //   this.bankDetailsModel.memberId = this.institutionModel.id
+  //   this.memberBasicDetailsStepperService.changeData({
+  //     formValid: this.bankForm.valid,
+  //     data: this.bankDetailsModel,
+  //     savedId: this.memberId,
+  //     stepperIndex: 4,
+  //     // isDisable: !this.landFlag ? true : false,
+  //   });
+  // }
   updateData() {
     this.bankDetailsModel.memberId = this.institutionModel.id
+    if (this.memberBankDetailsDTOList == null || this.memberBankDetailsDTOList == undefined ||
+      this.memberBankDetailsDTOList.length == 0) {
+      this.buttonsFlag = true;
+    }
+    else {
+      this.buttonsFlag = false;
+    }
+    if (this.landFlag) {
+      this.buttonsFlag = true;
+    }
     this.memberBasicDetailsStepperService.changeData({
-      formValid: this.bankForm.valid,
+      formValid: this.bankForm.valid ,
       data: this.bankDetailsModel,
-      savedId: this.memberId,
+      savedId:this.memberId,
       stepperIndex: 4,
-      // isDisable: !this.landFlag ? true : false,
+      isDisable: this.landFlag
     });
   }
-
   save() {
     this.updateData();
   }
@@ -156,8 +175,8 @@ export class InstitutionBankDetailsComponent {
     this.addButton = true;
     this.editDeleteDisable = true;
     // this.buttonsFlag  = false;
-    // this.landFlag =false
-    // this.updateData();
+    this.landFlag =applicationConstants.TRUE;
+    this.updateData();
   }
   addNewEntry() {
     this.newRow = { bankName: '', nameInBank: '', ifscCode: '', accountNumber: '', status: '' }
@@ -172,7 +191,7 @@ export class InstitutionBankDetailsComponent {
     this.editDeleteDisable = true;
     this.addButton = true;
     // this.buttonsFlag  = false;
-    // this.landFlag =false
+    this.landFlag = applicationConstants.TRUE;
     // this.updateData();
     this.dt._first = 0;
     this.dt.value.unshift(this.newRow);
@@ -186,10 +205,10 @@ export class InstitutionBankDetailsComponent {
 * @author yamuna.k
 */
   onRowEditCancel() {
-    this.addButton = false;
-    this.editDeleteDisable = false;
-    this.buttonsFlag = true;
-    // this.landFlag =true;
+    this.addButton = applicationConstants.FALSE;
+    this.editDeleteDisable = applicationConstants.FALSE;
+    // this.buttonsFlag = true;
+    this.landFlag = applicationConstants.FALSE;
     this.updateData();
     const index = this.dt.value.indexOf(this.newRow);
 
@@ -212,9 +231,9 @@ export class InstitutionBankDetailsComponent {
     rowData.memberId = this.memberId;
     rowData.memberType = this.institutionModel.memberTypeId;
     rowData.admissionNumber = this.institutionModel.admissionNumber;
-    this.addButton = false;
-    this.editDeleteDisable = false;
-
+    this.addButton = applicationConstants.FALSE;
+    this.editDeleteDisable = applicationConstants.FALSE;
+    this.editDeleteDisable = applicationConstants.FALSE;
     if (rowData.id != null) {
       this.membershipBankDetailsService.updateMembershipBankDetails(rowData).subscribe((response: any) => {
         this.responseModel = response;

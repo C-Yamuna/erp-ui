@@ -32,4 +32,6 @@ export class Products {
     productType?: any;
     
     subProductStatusName?: any;
+
+    isAclass:any;
 }

@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { GroupPromoterDetails, InstitutionPromoterDetails, MembershipBasicDetails, MembershipGroupDetails, MemInstitutionDetails } from '../ci-membership-details/shared/membership-details.model';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Responsemodel } from 'src/app/shared/responsemodel';
 import { CiLoanApplication } from '../ci-product-details/shared/ci-loan-application.model';
 import { Table } from 'primeng/table';
@@ -17,7 +17,7 @@ import { FileUpload } from 'primeng/fileupload';
 import { FileUploadModel } from 'src/app/layout/mainmenu/shared/file-upload-model.model';
 import { MembershipServiceService } from 'src/app/transcations/savings-bank-transcation/savings-bank-account-creation-stepper/membership-basic-required-details/shared/membership-service.service';
 import { CommunityService } from 'src/app/configurations/common-config/community/shared/community.service';
-import { CommonStatusData, MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
+import { CommonStatusData, MemberShipTypesData, membershipProductName } from 'src/app/transcations/common-status-data.json';
 import { savingsbanktransactionconstant } from 'src/app/transcations/savings-bank-transcation/savingsbank-transaction-constant';
 
 
@@ -123,6 +123,8 @@ export class CiLoanNewMembershipComponent {
   groupedCasteSubCaste: any[]=[];
   subCasteList: any[]=[];
   today :any;
+  subProductList: any[]=[];
+
   
   constructor(private router: Router,
     private formBuilder: FormBuilder,
@@ -134,70 +136,83 @@ export class CiLoanNewMembershipComponent {
     private datePipe: DatePipe,
     private membershipServiceService: MembershipServiceService , private fileUploadService :FileUploadService,private communityService: CommunityService) {
       this.memberCreationForm = this.formBuilder.group({
-        surName: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS)]],
-        name: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
-        gender: ['', Validators.required],
-        dateOfBirth: ['', Validators.required],
-        age: ['', [Validators.pattern(applicationConstants.ALLOW_NUMBERS_ONLY), Validators.compose([Validators.required])]],
-        maritalStatus: ['', Validators.required],
-        relationWithMember: ['',Validators.compose([Validators.required])],
-        relationName: ['', Validators.compose([Validators.required])],
-        aadharNumber: ['', [Validators.pattern(applicationConstants.AADHAR_PATTERN), Validators.compose([Validators.required])]],
-        panNumber: ['', [Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN), Validators.compose([Validators.required])]],
-        mobileNumber: ['', [Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.compose([Validators.required])]],
-        occupation: ['',Validators.compose([Validators.required])],
-        community: ['',Validators.compose([Validators.required])],
-        quslification: ['',Validators.compose([Validators.required])],
-        caste:  ['',Validators.compose([Validators.required])],
-        email: ['', [Validators.pattern(applicationConstants.EMAIL_PATTERN)]],
-        admissionDate: ['',Validators.compose([Validators.required])],
-        isStaff: ['',Validators.compose([Validators.required])],
-        fileUpload:[''],
-        admissionFee:['']
+        "subProductId": new FormControl('', Validators.required),
+        "surName":  new FormControl('', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
+        "name":  new FormControl('', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
+        "gender": new FormControl('', Validators.required),
+        "dateOfBirth": new FormControl('', Validators.required),
+        "age":  new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
+        "maritalStatus": new FormControl('', Validators.required),
+        "relationWithMember": ['', [Validators.pattern(applicationConstants.ALPHA_NAME_PATTERN), Validators.compose([Validators.required])]],
+        "relationName": new FormControl('', Validators.required),
+        "aadharNumber":  new FormControl('', [Validators.pattern(applicationConstants.AADHAR_PATTERN), Validators.maxLength(40)]),
+        "panNumber":  new FormControl('', [Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN), Validators.maxLength(40)]),
+        "mobileNumber":  new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
+        "occupation": new FormControl('', Validators.required),
+        "community": new FormControl('', Validators.required),
+        "quslification": new FormControl('', Validators.required),
+        "caste": new FormControl('', Validators.required),
+        "email":  new FormControl('', [Validators.pattern(applicationConstants.EMAIL_PATTERN), Validators.maxLength(40)]),
+        "admissionDate": new FormControl('', Validators.required),
+        "isStaff": new FormControl('', Validators.required),
+        "fileUpload" : new FormControl('',),
+        "admissionFee":  new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
+        "societyAdmissionNumber":  new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
+        "mcrNumber":  new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
       })
       this.groupForm = this.formBuilder.group({
-        name: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
-        registrationNumber: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
-        registrationDate: ['', Validators.required],
-        admissionDate: ['', Validators.required],
+        "subProductId": new FormControl('', Validators.required),
+        "name":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
+        "registrationNumber":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
+        "registrationDate": new FormControl('', Validators.required),
+        "admissionDate": new FormControl('', Validators.required),
         // pocNumber: ['', Validators.required],
-        mobileNumber: ['', [Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.compose([Validators.required])]],
-        panNumber: ['', [Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN), Validators.compose([Validators.required])]],
-        tanNumber: ['', [Validators.pattern(applicationConstants.TAN_NUMBER)]],
-        gstNumber: ['', [Validators.pattern(applicationConstants.GST_NUMBER_PATTERN)]],
-        pocName:['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
+        // "mobileNumber":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.maxLength(40)]),
+        "panNumber":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN), Validators.maxLength(40)]),
+        "tanNumber":  new FormControl('', [Validators.pattern(applicationConstants.TAN_NUMBER), Validators.maxLength(40)]),
+        "gstNumber":  new FormControl('', [Validators.pattern(applicationConstants.GST_NUMBER_PATTERN), Validators.maxLength(40)]),
+        // "pocName":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
+        "groupType": new FormControl('', Validators.required),
+        "societyAdmissionNumber":  new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
+        "operatorTypeId":new FormControl('', Validators.required),
   
       })
       this.institutionForm = this.formBuilder.group({
-        name: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
-        registrationNumber: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
-        registrationDate: ['', Validators.required],
-        admissionDate: ['', Validators.required],
+        "subProductId": new FormControl('', Validators.required),
+        "name":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
+        "registrationNumber":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
+        "registrationDate": new FormControl('', Validators.required),
+        "admissionDate": new FormControl('', Validators.required),
         // pocName: ['', Validators.required],
-        mobileNumber: ['', [Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.compose([Validators.required])]],
-        panNumber: ['', [Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN), Validators.compose([Validators.required])]],
-        tanNumber: ['', [Validators.pattern(applicationConstants.TAN_NUMBER)]],
-        gstNumber: ['', [Validators.pattern(applicationConstants.GST_NUMBER_PATTERN)]],
-        pocName:['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
+        // "mobileNumber": new FormControl('', [Validators.required,Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.maxLength(40)]),
+        "panNumber": new FormControl('', [Validators.required,Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN), Validators.maxLength(40)]),
+        "tanNumber": new FormControl('', [Validators.pattern(applicationConstants.TAN_NUMBER), Validators.maxLength(40)]),
+        "gstNumber": new FormControl('', [Validators.pattern(applicationConstants.GST_NUMBER_PATTERN), Validators.maxLength(40)]),
+        // "pocName": new FormControl('', [Validators.required,Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
+        "institutionType": new FormControl('',Validators.required),
+        "societyAdmissionNumber": new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NEW_NUMBERS), Validators.maxLength(40)]),
+        "operatorTypeId":new FormControl('', Validators.required),
       })
       this.promoterDetailsForm = this.formBuilder.group({
-        "surname": ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
-        "name": ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
-        "operatorTypeId": ['',],
-        "dob": ['', Validators.required],
-        "age": ['', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.compose([Validators.required])]],
-        "genderId": ['', Validators.required],
-        "martialId": ['', Validators.required],
-        "mobileNumber": ['', [Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.compose([Validators.required])]],
-        "aadharNumber": ['', [Validators.pattern(applicationConstants.AADHAR_PATTERN), Validators.compose([Validators.required])]],
-        "emailId": ['', [Validators.pattern(applicationConstants.EMAIL_PATTERN)]],
-        "startDate": ['', Validators.required],
-        "promterType": ['',],
-        "isGroupLeader" :['', Validators.required],
-        "admissionNumber" :['',],
-        "photoUpload" :['',],
-        "ignatureUpload" :['',],
-        "authorizedSignatory":['', Validators.required],
+        "surname":  new FormControl('', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
+        "name": new FormControl('', [Validators.required,Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
+        // "operatorTypeId": new FormControl('',),
+        "dob": new FormControl('', Validators.required),
+        "age": new FormControl('', Validators.required),
+        "genderId": new FormControl('', Validators.required),
+        "martialId": new FormControl('', Validators.required),
+        "mobileNumber": new FormControl('', [Validators.required,Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.maxLength(40)]),
+        "aadharNumber": new FormControl('', [Validators.required,Validators.pattern(applicationConstants.AADHAR_PATTERN), Validators.maxLength(40)]),
+        "emailId": new FormControl('', [Validators.pattern(applicationConstants.EMAIL_PATTERN), Validators.maxLength(40)]),
+        "startDate": new FormControl('', Validators.required),
+        "promterType": new FormControl('',),
+        "isGroupLeader" : new FormControl('', Validators.required),
+        "admissionNumber" : new FormControl('',),
+        "photoUpload" : new FormControl('',),
+        "ignatureUpload" : new FormControl('',),
+        "authorizedSignatory": new FormControl('', Validators.required),
+        "isPoc":new FormControl('',Validators.required),
+        'endDate': new FormControl(''),
       })
       this.today = new Date();//for future date set to disable
     }
@@ -213,6 +228,15 @@ export class CiLoanNewMembershipComponent {
       this.statusList = this.commonComponent.requiredlist();
       this.trueFalseList = this.commonComponent.requiredlist();
     
+      this.groupTypes  = [
+        { label: "Self Help Group", value:1 },
+        { label: "Rythu Mitra", value:2 }
+      ]
+      
+      this.institutionTypes= [
+        { label: "Self Help Group", value:1 },
+        { label: "Rythu Mitra", value:2 }
+      ]
       this.genderList = [
         { label: 'Male', value: 1 },
         { label: 'Female', value: 2 },
@@ -230,7 +254,7 @@ export class CiLoanNewMembershipComponent {
       this.getAllQualificationType();
       this.getCastesList();
       this.getAllCommunityTypes();
-  
+      this.getAllSubProducts();
       this.getAllTypeOfMembershipDetails(this.pacsId , this.branchId);
       this.activateRoute.queryParams.subscribe(params => {
         if (params['id'] != undefined) {
@@ -268,10 +292,48 @@ export class CiLoanNewMembershipComponent {
           this.save();
         }
       });
-  
-  
     }
   
+    /**
+   * @implements get all subproducts details
+   * @author jyothi.naidana
+   */
+  getAllSubProducts() {
+    this.commonComponent.startSpinner();
+    this.ciLoanApplicationService.getAllSubProduct().subscribe((res: any) => {
+      this.responseModel = res;
+      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+        this.subProductList = this.responseModel.data;
+        if (this.subProductList == null || (this.subProductList != null && this.subProductList.length == 0)) {
+          this.msgs = [];
+          this.msgs = [{ severity: 'error', detail: applicationConstants.SUB_PRODUCTS_NO_DATA_MESSAGE }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        }
+        this.subProductList = this.subProductList.filter((customertype: any) => customertype.status == applicationConstants.ACTIVE && customertype.name != membershipProductName.ACLASS_VOTING_MEMBER && customertype.name != membershipProductName.ACLASS_MEMBER).map((count: any) => {
+          return { label: count.name, value: count.id }
+        });
+          
+        this.commonComponent.stopSpinner();
+      } else {
+        this.commonComponent.stopSpinner();
+        this.msgs = [];
+        this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
+    },
+      error => {
+        this.msgs = [];
+        this.commonComponent.stopSpinner();
+        this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      });
+  }
     /**
      * @implements get all community Types
      * @author jyothi.naidana
@@ -363,11 +425,20 @@ export class CiLoanNewMembershipComponent {
                       if(groupPromoters.startDate != null && groupPromoters.startDate != undefined){
                         groupPromoters.startDateVal = this.datePipe.transform(groupPromoters.startDate, this.orgnizationSetting.datePipe);
                       }
+                      if(groupPromoters.endDate != null && groupPromoters.endDate != undefined){
+                        groupPromoters.endDateVal  = this.datePipe.transform(groupPromoters.endDate, this.orgnizationSetting.datePipe);
+                      }
                       if(groupPromoters.genderId != null && groupPromoters.genderId != undefined){
                         let Obj = this.genderList.filter(obj => obj.value == groupPromoters.genderId);
                         if(Obj != null && Obj != undefined ){
                           groupPromoters.genderName = Obj[0].label ;
                         }
+                      }
+                      if(groupPromoters.authorizedSignatory != null && groupPromoters.authorizedSignatory != undefined && groupPromoters.authorizedSignatory){
+                        groupPromoters.authorizedSignatoryName = applicationConstants.YES;
+                      }
+                      else {
+                        groupPromoters.authorizedSignatoryName = applicationConstants.YES;
                       }
                     }
                   }
@@ -395,11 +466,20 @@ export class CiLoanNewMembershipComponent {
                       if(institution.startDate != null && institution.startDate != undefined){
                         institution.startDateVal = this.datePipe.transform(institution.startDate, this.orgnizationSetting.datePipe);
                       }
+                      if(institution.endDate != null && institution.endDate != undefined){
+                        institution.endDateVal  = this.datePipe.transform(institution.endDate, this.orgnizationSetting.datePipe);
+                      }
                       if(institution.genderId != null && institution.genderId != undefined){
                         let Obj = this.genderList.filter(obj => obj.value == institution.genderId);
                         if(Obj != null && Obj != undefined ){
                           institution.genderName = Obj[0].label ;
                         }
+                      }
+                      if(institution.authorizedSignatory != null && institution.authorizedSignatory != undefined && institution.authorizedSignatory){
+                        institution.authorizedSignatoryName = applicationConstants.YES;
+                      }
+                      else {
+                        institution.authorizedSignatoryName = applicationConstants.YES;
                       }
                     }
                   }
@@ -802,8 +882,8 @@ export class CiLoanNewMembershipComponent {
         this.ciLoanApplicationModel.memberTypeId = 1;
 
         this.ciLoanApplicationModel.memberGroupDetailsDTO = null;
-        // this.memberGroupDetailsModel = new MemberGroupDetailsModel();
-        // this.membershipInstitutionDetailsModel = new MembershipInstitutionDetailsModel();
+        this.membershipGroupDetailsModel = new MembershipGroupDetails();
+        this.membershipInstitutionDetailsModel = new MemInstitutionDetails();
         this.ciLoanApplicationModel.memberInstitutionDTO = null;
         this.groupForm.reset();
         this.institutionForm.reset();
@@ -822,8 +902,8 @@ export class CiLoanNewMembershipComponent {
         this.ciLoanApplicationModel.memberInstitutionDTO = null;
         this.memberCreationForm.reset();
         this.institutionForm.reset();
-        // this.membershipBasicRequiredDetails = new MembershipBasicRequiredDetails();
-        // this.membershipInstitutionDetailsModel = new MembershipInstitutionDetailsModel();
+        this.membershipBasicDetailsModel = new MembershipBasicDetails();
+        this.membershipInstitutionDetailsModel = new MemInstitutionDetails();
       }
       else if (event.value == 3) {
         this.addButton = false;
@@ -836,9 +916,8 @@ export class CiLoanNewMembershipComponent {
 
         this.ciLoanApplicationModel.memberInstitutionDTO = null;
         this.ciLoanApplicationModel.individualMemberDetailsDTO = null;
-        // this.membershipBasicRequiredDetails = new MembershipBasicRequiredDetails();;
-        
-        // this.memberGroupDetailsModel = new MemberGroupDetailsModel();
+        this.membershipBasicDetailsModel = new MembershipBasicDetails();;
+        this.membershipGroupDetailsModel = new MembershipGroupDetails();
         this.groupForm.reset();
         this.memberCreationForm.reset();
       }
@@ -852,7 +931,6 @@ export class CiLoanNewMembershipComponent {
     * @author jyothi.naidana
     */
     savePromoterDetails(rowData: any) {
-      rowData.isExistingMember = 
       rowData.pacsId = 1;
       rowData.status = applicationConstants.ACTIVE;
       this.addButton = false;
@@ -866,6 +944,9 @@ export class CiLoanNewMembershipComponent {
       if(rowData.startDateVal != null && rowData.startDateVal != undefined){
         rowData.startDate = this.commonFunctionsService.getUTCEpoch(new Date(rowData.startDateVal) );
       }
+      if(rowData.endDateVal != null && rowData.endDateVal != undefined){
+        rowData.endDate = this.commonFunctionsService.getUTCEpoch(new Date(rowData.endDateVal) );
+      }
       if(rowData.authorizedSignatory != null && rowData.authorizedSignatory != undefined && rowData.authorizedSignatory){
         rowData.authorizedSignatoryName = applicationConstants.YES;
       }
@@ -874,6 +955,9 @@ export class CiLoanNewMembershipComponent {
       }
       if (rowData.startDate != null && rowData.startDate != undefined) {
         rowData.startDateVal  = this.datePipe.transform(rowData.startDate, this.orgnizationSetting.datePipe);
+      }
+      if(rowData.endDate != null && rowData.endDate != undefined){
+        rowData.endDateVal  = this.datePipe.transform(rowData.endDate, this.orgnizationSetting.datePipe);
       }
       if (!this.  membershipGroupDetailsModel.groupPromotersDTOList) {
         this.  membershipGroupDetailsModel.groupPromotersDTOList = []; // Initialize it as an empty array
@@ -938,11 +1022,10 @@ export class CiLoanNewMembershipComponent {
     // Then, disable the fields
     if (rowData.isExistingMember) {
       setTimeout(() => { // Ensure Angular updates the UI before disabling
-        this.admissionNumberDropDown = true;
         this.promoterDetailsForm.get('surname')?.disable();
         this.promoterDetailsForm.get('name')?.disable();
         this.promoterDetailsForm.get('dob')?.disable();
-        this.promoterDetailsForm.get('operatorTypeId')?.disable();
+        // this.promoterDetailsForm.get('operatorTypeId')?.disable();
         this.promoterDetailsForm.get('dob')?.disable();
         this.promoterDetailsForm.get('age')?.disable();
         this.promoterDetailsForm.get('genderId')?.disable();
@@ -955,10 +1038,9 @@ export class CiLoanNewMembershipComponent {
       }, 100);
     }
     else {
-      this.admissionNumberDropDown = false;
       this.promoterDetailsForm.get('surname')?.enable();
       this.promoterDetailsForm.get('name')?.enable();
-      this.promoterDetailsForm.get('operatorTypeId')?.enable();
+      // this.promoterDetailsForm.get('operatorTypeId')?.enable();
       this.promoterDetailsForm.get('dob')?.enable();
       this.promoterDetailsForm.get('age')?.enable();
       this.promoterDetailsForm.get('genderId')?.enable();
@@ -969,18 +1051,18 @@ export class CiLoanNewMembershipComponent {
       this.promoterDetailsForm.get('startDate')?.enable();
       this.promoterDetailsForm.get('admissionNumber')?.setValidators(null); 
       this.promoterDetailsForm.get('admissionNumber')?.updateValueAndValidity();
-      
+      this.admissionNumberDropDown = false;
     }
     // this.promoterDetailsModel = this.promoterDetails.find((obj:any) => (obj != null && obj != undefined) && obj.uniqueId === rowData.uniqueId );
     if(this.promoterDetailsModel.isExistingMember ){
       this.admissionNumberDropDown = true;
-      this.promoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadImage  );
-      this.promoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadSignature  );
+      this.promoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadImage);
+      this.promoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadSignature);
     }
     else{
       this.admissionNumberDropDown = false;
-      this.promoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadImage  );
-      this.promoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadSignature  );
+      this.promoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadImage );
+      this.promoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadSignature);
     }
     this.isFileUploadedPromoterPhoto = applicationConstants.TRUE;
     this.isFileUploadedPromoterSignature = applicationConstants.TRUE;
@@ -1069,6 +1151,9 @@ export class CiLoanNewMembershipComponent {
       if(rowData.startDateVal != null && rowData.startDateVal != undefined){
         rowData.startDate = this.commonFunctionsService.getUTCEpoch(new Date(rowData.startDateVal) );
       }
+      if(rowData.endDateVal != null && rowData.endDateVal != undefined){
+        rowData.endDate = this.commonFunctionsService.getUTCEpoch(new Date(rowData.endDateVal) );
+      }
       if(rowData.authorizedSignatory != null && rowData.authorizedSignatory != undefined && rowData.authorizedSignatory){
         rowData.authorizedSignatoryName = applicationConstants.YES;
       }
@@ -1077,6 +1162,9 @@ export class CiLoanNewMembershipComponent {
       }
       if (rowData.startDate != null && rowData.startDate != undefined) {
         rowData.startDateVal  = this.datePipe.transform(rowData.startDate, this.orgnizationSetting.datePipe);
+      }
+      if(rowData.endDate != null && rowData.endDate != undefined){
+        rowData.endDateVal = this.commonFunctionsService.getUTCEpoch(new Date(rowData.endDate) );
       }
       let Object = this.operatorTypeList.find((obj:any)=>obj.value == rowData.operatorTypeId);
       if(Object != null && Object != undefined && Object.label != null && Object.label != undefined) {
@@ -1147,7 +1235,7 @@ export class CiLoanNewMembershipComponent {
         this.promoterDetailsForm.get('surname')?.disable();
         this.promoterDetailsForm.get('name')?.disable();
         this.promoterDetailsForm.get('dob')?.disable();
-        this.promoterDetailsForm.get('operatorTypeId')?.disable();
+        // this.promoterDetailsForm.get('operatorTypeId')?.disable();
         this.promoterDetailsForm.get('dob')?.disable();
         this.promoterDetailsForm.get('age')?.disable();
         this.promoterDetailsForm.get('genderId')?.disable();
@@ -1163,7 +1251,7 @@ export class CiLoanNewMembershipComponent {
       this.admissionNumberDropDown = false;
       this.promoterDetailsForm.get('surname')?.enable();
       this.promoterDetailsForm.get('name')?.enable();
-      this.promoterDetailsForm.get('operatorTypeId')?.enable();
+      // this.promoterDetailsForm.get('operatorTypeId')?.enable();
       this.promoterDetailsForm.get('dob')?.enable();
       this.promoterDetailsForm.get('age')?.enable();
       this.promoterDetailsForm.get('genderId')?.enable();
@@ -1186,8 +1274,8 @@ export class CiLoanNewMembershipComponent {
     }
     else{
       this.admissionNumberDropDown = false;
-      this.institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionPromoterDetailsModel.uploadImage  );
-      this.institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionPromoterDetailsModel.uploadSignature  );
+      this.institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionPromoterDetailsModel.uploadImage  );
+      this.institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionPromoterDetailsModel.uploadSignature  );
     }
    
     this.isFileUploadedPromoterPhoto = applicationConstants.TRUE;
@@ -1288,17 +1376,18 @@ export class CiLoanNewMembershipComponent {
         let timeStamp = this.commonComponent.getTimeStamp();
         let files = new FileUploadModel();
         this.uploadFileData = e.currentTarget;
-        files.fileName = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
+        // files.fileName = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
         files.fileType = file.type.split('/')[1];
         files.value = this.uploadFileData.result.split(',')[1];
         files.imageValue = this.uploadFileData.result;
         this.multipleFilesList.push(files);
          // Add to filesDTOList array
         if (filePathName === "individualPhotoCopy") {
+          files.fileName = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
           this.isFileUploadedPhoto = applicationConstants.TRUE;
           this.membershipBasicDetailsModel.filesDTOList.push(files);
-          this.membershipBasicDetailsModel.photoCopyPath = null;
           this.membershipBasicDetailsModel.multipartFileListForPhotoCopy.push(files);
+          this.membershipBasicDetailsModel.photoCopyPath = null;
           this.membershipBasicDetailsModel.filesDTOList[this.membershipBasicDetailsModel.filesDTOList.length - 1].fileName = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
           this.membershipBasicDetailsModel.photoCopyPath = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
         }
@@ -1309,30 +1398,6 @@ export class CiLoanNewMembershipComponent {
           this.membershipBasicDetailsModel.signatureCopyPath = null;
           this.membershipBasicDetailsModel.filesDTOList[this.membershipBasicDetailsModel.filesDTOList.length - 1].fileName = "Individual_Member_signed_copy" + "_" + timeStamp + "_" + file.name;
           this.membershipBasicDetailsModel.signatureCopyPath = "Individual_Member_signed_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
-        }
-        if (filePathName === "groupPhotoCopy") {
-          this.membershipGroupDetailsModel.filesDTOList.push(files);
-          this.membershipGroupDetailsModel.photoCopyPath = null;
-          this.membershipGroupDetailsModel.filesDTOList[this.membershipGroupDetailsModel.filesDTOList.length - 1].fileName = "Group_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
-          this.membershipGroupDetailsModel.photoCopyPath = "Group_Member_Photo_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
-        }
-        if (filePathName === "groupSignatureCopy") {
-          this.membershipGroupDetailsModel.filesDTOList.push(files);
-          this.membershipGroupDetailsModel.signatureCopyPath = null;
-          this.membershipGroupDetailsModel.filesDTOList[this.membershipGroupDetailsModel.filesDTOList.length - 1].fileName = "Group_Member_signed_copy" + "_" + timeStamp + "_" + file.name;
-          this.membershipGroupDetailsModel.signatureCopyPath = "Group_Member_signed_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
-        }
-        if (filePathName === "intistutionPhotoCopy") {
-          this.membershipInstitutionDetailsModel.filesDTOList.push(files);
-          this.membershipInstitutionDetailsModel.photoCopyPath = null;
-          this.membershipInstitutionDetailsModel.filesDTOList[this.membershipInstitutionDetailsModel.filesDTOList.length - 1].fileName = "Institution_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
-          this.membershipInstitutionDetailsModel.photoCopyPath = "Institution_Member_Photo_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
-        }
-        if (filePathName === "institutionSignature") {
-          this.membershipInstitutionDetailsModel.filesDTOList.push(files);
-          this.membershipInstitutionDetailsModel.signatureCopyPath = null;
-          this.membershipInstitutionDetailsModel.filesDTOList[this.membershipInstitutionDetailsModel.filesDTOList.length - 1].fileName = "Institution_Member_signed_copy" + "_" + timeStamp + "_" + file.name;
-          this.membershipInstitutionDetailsModel.signatureCopyPath = "Institution_Member_signed_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
         }
         this.updateData();
       }
@@ -1486,16 +1551,18 @@ export class CiLoanNewMembershipComponent {
    * @author jyothi.naidana
    */
   onChangeExistedPrmoter(isExistingMember :any ,flag :boolean){
+    this.resetFields();
     if(flag){
-      this.resetFields();
       this.promoterDetailsModel = new GroupPromoterDetails();
+      this.promoterDetailsModel.isExistingMember = isExistingMember;
       this.institutionPromoterDetailsModel = new InstitutionPromoterDetails();
+      this.institutionPromoterDetailsModel.isExistingMember = isExistingMember;
     }
     if(isExistingMember){
         this.admissionNumberDropDown = true;
         this.promoterDetailsForm.get('surname')?.disable();
         this.promoterDetailsForm.get('name')?.disable();
-        this.promoterDetailsForm.get('operatorTypeId')?.disable();
+        // this.promoterDetailsForm.get('operatorTypeId')?.disable();
         this.promoterDetailsForm.get('dob')?.disable();
         this.promoterDetailsForm.get('age')?.disable();
         this.promoterDetailsForm.get('genderId')?.disable();
@@ -1510,7 +1577,7 @@ export class CiLoanNewMembershipComponent {
     else {
         this.promoterDetailsForm.get('surname')?.enable();
         this.promoterDetailsForm.get('name')?.enable();
-        this.promoterDetailsForm.get('operatorTypeId')?.enable();
+        // this.promoterDetailsForm.get('operatorTypeId')?.enable();
         this.promoterDetailsForm.get('dob')?.enable();
         this.promoterDetailsForm.get('age')?.enable();
         this.promoterDetailsForm.get('genderId')?.enable();
@@ -1531,7 +1598,7 @@ export class CiLoanNewMembershipComponent {
     resetFields(){
       this.promoterDetailsForm.get('surname').reset();
       this.promoterDetailsForm.get('name').reset();
-      this.promoterDetailsForm.get('operatorTypeId').reset();
+      // this.promoterDetailsForm.get('operatorTypeId').reset();
       this.promoterDetailsForm.get('dob').reset();
       this.promoterDetailsForm.get('age').reset();
       this.promoterDetailsForm.get('genderId').reset();
@@ -1618,7 +1685,6 @@ export class CiLoanNewMembershipComponent {
 
           this.isFileUploadedPromoterSignature = applicationConstants.TRUE;
         }
-         this.promoterDetailsModel.operatorTypeId  = this.  membershipBasicDetailsModel.occupationId;
          
         }
       }
@@ -1796,7 +1862,7 @@ export class CiLoanNewMembershipComponent {
       this.ciLoanApplicationModel.branchId = this.branchId;
       if (this.ciLoanApplicationId != null && this.  ciLoanApplicationId != undefined) {
         this.ciLoanApplicationModel.statusName = applicationConstants.IS_ACTIVE;
-        this.ciLoanApplicationService.updateCiLoanApplications(this.  ciLoanApplicationModel).subscribe((response: any) => {
+        this.ciLoanApplicationService.updateCiLoanApplications(this.ciLoanApplicationModel).subscribe((response: any) => {
           this.responseModel = response;
           if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
             if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
@@ -1913,7 +1979,7 @@ export class CiLoanNewMembershipComponent {
      */
     saveGropPromotersDetails(rowData:any){
       if (rowData.id != null && rowData.id != undefined) {
-        this.  ciLoanApplicationService.updateGropDetails(rowData).subscribe((response: any) => {
+        this.  ciLoanApplicationService.updateGroupPromoterDetails(rowData).subscribe((response: any) => {
           this.responseModel = response;
           if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
             this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
@@ -1937,6 +2003,7 @@ export class CiLoanNewMembershipComponent {
         });
       }
       else {
+        rowData.statusName == applicationConstants.ACTIVE;
         this.ciLoanApplicationService.addGroupPromoterDetails(rowData).subscribe((response: any) => {
           this.responseModel = response;
           if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
@@ -2174,6 +2241,79 @@ export class CiLoanNewMembershipComponent {
     let institution = this.institutionTypes.find((data: any) => null != data && this.membershipInstitutionDetailsModel.institutionType != null && data.value == this.membershipInstitutionDetailsModel.institutionType);
     if (institution != null && undefined != institution)
       this.membershipInstitutionDetailsModel.institutionTypeName = institution.label;
+  }
+
+  /**
+   * @implements isPoc Check for promoters
+   * @param isPoc 
+   * @returns 
+   */
+  isPosCheck(isPoc: any , isGroup:any) {
+    if(isGroup){
+      if (this.promoterDetails && this.promoterDetails.length > 0) {
+        let duplicate = this.promoterDetails.find(
+          (obj: any) =>
+            obj && obj.status === applicationConstants.ACTIVE && obj.isPoc === applicationConstants.TRUE
+        );
+        if (isPoc === applicationConstants.TRUE && duplicate) {
+          this.promoterDetailsForm.get("isPoc").reset();
+          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.POC_ALREADY_EXIST }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 3000);
+          return;
+        }
+      }
+    }
+    else {
+      if (this.institutionPromoter && this.institutionPromoter.length > 0) {
+        let duplicate = this.institutionPromoter.find(
+          (obj: any) =>
+            obj && obj.status === applicationConstants.ACTIVE && obj.isPoc === applicationConstants.TRUE
+        );
+        if (isPoc === applicationConstants.TRUE && duplicate) {
+          this.promoterDetailsForm.get("isPoc").reset();
+          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.POC_ALREADY_EXIST }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 3000);
+          return;
+        }
+      }
+    }
+    
+  }
+
+  /**
+   * @implements on Change of gender Type gender Type nam mapping
+   * @author jyothi.naidana
+   */
+  onGenderChange(genderId :any){
+    this.membershipBasicDetailsModel.genderName =this.genderList.find((obj:any) => obj.value == genderId)?.label;
+  }
+
+   /**
+   * @implements on Change of marital status gender Type nam marital status
+   * @author jyothi.naidana
+   */
+  maritalStatusChange(maritalStatusId :any){
+    this.membershipBasicDetailsModel.maritalStatusName =this.maritalStatusList.find((obj:any) => obj.value == maritalStatusId)?.label;
+  }
+
+  /**
+   * @implements onChange operation Type
+   * @param oprationType 
+   * @param isGroup 
+   * @author jyothi.naidana
+   */
+  onChangeOperationType(oprationType:any,isGroup:any){
+    if(isGroup){
+      this.membershipGroupDetailsModel.operatorTypeName= this.operatorTypeList.find((obj:any) => obj.value == oprationType)?.label;
+    }
+    else {
+      this.membershipInstitutionDetailsModel.operatorTypeName= this.operatorTypeList.find((obj:any) => obj.value == oprationType)?.label;
+    }
+   
   }
 
 }

@@ -125,11 +125,11 @@ export class SaoNomineeComponent {
   }
 
   onChange(event: any, flag: boolean) {
-    this.nomineeForm.get('relationTypeName').reset();
-    this.nomineeForm.get('nomineeName').reset();
-    this.nomineeForm.get('nomineeAadharNumber').reset();
-    this.nomineeForm.get('nomineeMobileNumber').reset();
-    this.nomineeForm.get('nomineeEmailId').reset();
+    // this.nomineeForm.get('relationTypeName').reset();
+    // this.nomineeForm.get('nomineeName').reset();
+    // this.nomineeForm.get('nomineeAadharNumber').reset();
+    // this.nomineeForm.get('nomineeMobileNumber').reset();
+    // this.nomineeForm.get('nomineeEmailId').reset();
 
     if (event == 1) {//new nominee
       this.newNomineeType(flag);
@@ -522,11 +522,11 @@ export class SaoNomineeComponent {
             //   this.sameAsMembershipNominee = false;
             // }
           }
-          // if(this.saoNomineeModel != null && this.saoNomineeModel != undefined){
-          //   if(this.saoNomineeModel.nomineeFilePath != null && this.saoNomineeModel.nomineeFilePath != undefined){
-          //     this.saoNomineeModel.nomineeFilePathList =  this.fileUploadService.getFile(this.saoNomineeModel.nomineeFilePath , ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.saoNomineeModel.nomineeFilePath);
-          //   }
-          // }
+          if(this.saoNomineeModel != null && this.saoNomineeModel != undefined){
+            if(this.saoNomineeModel.nomineeFilePath != null && this.saoNomineeModel.nomineeFilePath != undefined){
+              this.saoNomineeModel.nomineeFilePathList =  this.fileUploadService.getFile(this.saoNomineeModel.nomineeFilePath , ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.saoNomineeModel.nomineeFilePath);
+            }
+          }
 
         }
         this.updateData();

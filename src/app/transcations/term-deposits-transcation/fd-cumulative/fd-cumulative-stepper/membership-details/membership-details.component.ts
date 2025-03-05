@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonComponent } from 'src/app/shared/common.component';
@@ -132,7 +132,7 @@ export class MembershipDetailComponent {
   tempKycList: any[] =[];
   promotersList: any[] =[];
   kycPhotoCopyZoom: boolean = false;
-
+  isMaximized: boolean = false;
 
 
   constructor(private router: Router,
@@ -497,7 +497,6 @@ ngOnInit(): void {
           this.membershipBasicRequiredDetails.isNewMember = this.showForm;
           this.fdCumulativeApplicationModel.memberShipBasicDetailsDTO = this.membershipBasicRequiredDetails;
           this.updateData();
-          // this.savingCommuncationDetailsSet(this.membershipBasicRequiredDetails.memberShipCommunicationDetailsDTOList[0]);
         }
       }
     }, error => {
@@ -553,43 +552,58 @@ ngOnInit(): void {
    * @author bhargavi
    */
   imageUploader(event: any, fileUpload: FileUpload) {
+    let fileSizeFlag = false;
     this.isFileUploaded = applicationConstants.FALSE;
     this.multipleFilesList = [];
     this.fdCumulativeKycModel.filesDTOList = [];
-    this.fdCumulativeKycModel.multipartFileList =[];
     this.fdCumulativeKycModel.kycFilePath = null;
-    let files: FileUploadModel = new FileUploadModel();
+    this.fdCumulativeKycModel.multipartFileList = [];
+    
     let selectedFiles = [...event.files];
-    fileUpload.clear();
-    for (let file of selectedFiles) {
-      let reader = new FileReader();
-      reader.onloadend = (e) => {
-        let files = new FileUploadModel();
-        this.uploadFileData = e.currentTarget;
-        files.fileName = file.name;
-        files.fileType = file.type.split('/')[1];
-        files.value = this.uploadFileData.result.split(',')[1];
-        files.imageValue = this.uploadFileData.result;
+    if (selectedFiles[0].size / 1024 / 1024 > 2) {
+      this.msgs = [{ severity: "warning", summary: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_2MB }];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 2000);
+      fileSizeFlag = true;
+    }
 
-        let index = this.multipleFilesList.findIndex(x => x.fileName == files.fileName);
-        if (index === -1) {
-          this.multipleFilesList.push(files);
-          this.fdCumulativeKycModel.filesDTOList.push(files); // Add to filesDTOList array
-          this.fdCumulativeKycModel.multipartFileList.push(files);
-        }
-        let timeStamp = this.commonComponent.getTimeStamp();
-        this.fdCumulativeKycModel.filesDTOList[0].fileName = "FD_NON_CUM_KYC_" + this.fdCummulativeAccId + "_" +timeStamp+ "_"+ file.name ;
-        this.fdCumulativeKycModel.kycFilePath = "FD_NON_CUM_KYC_" + this.fdCummulativeAccId + "_" +timeStamp+"_"+ file.name; // This will set the last file's name as docPath
-        this.fdCumulativeKycModel.multipartFileList = this.fdCumulativeKycModel.filesDTOList;
-        let index1 = event.files.findIndex((x: any) => x === file);
-        // this.addOrEditKycTempList(this.fdCumulativeKycModel);
-        fileUpload.remove(event, index1);
-        fileUpload.clear();
+    fileUpload.clear();
+    if (!fileSizeFlag) {
+      for (let file of selectedFiles) {
+        let reader = new FileReader();
+        reader.onloadend = (e) => {
+          this.isFileUploaded = applicationConstants.TRUE;
+          let files = new FileUploadModel();
+          this.uploadFileData = e.currentTarget;
+          files.fileName = file.name;
+          files.fileType = file.type.split("/")[1];
+          files.value = this.uploadFileData.result.split(",")[1];
+          files.imageValue = this.uploadFileData.result;
+
+          let index = this.multipleFilesList.findIndex((x) => x.fileName === files.fileName);
+          if (index === -1) {
+            this.multipleFilesList.push(files);
+            this.fdCumulativeKycModel.filesDTOList.push(files);
+            this.fdCumulativeKycModel.multipartFileList.push(files);
+          }
+
+          let timeStamp = this.commonComponent.getTimeStamp();
+          this.fdCumulativeKycModel.filesDTOList[0].fileName = "FD_CUM_KYC_" + this.fdCummulativeAccId + "_" + timeStamp + "_" + file.name;
+          this.fdCumulativeKycModel.kycFilePath = "FD_NON_CUM_KYC_" + this.fdCummulativeAccId + "_" + timeStamp + "_" + file.name;
+
+          let index1 = event.files.findIndex((x: any) => x === file);
+          fileUpload.remove(event, index1);
+          fileUpload.clear();
+        };
+        reader.readAsDataURL(file);
       }
-      reader.readAsDataURL(file);
+    } else {
+      setTimeout(() => {
+        this.msgs = [];
+      }, 2000);
     }
   }
-
   /**
    * @implements delete kyc
    * @param rowData 
@@ -847,8 +861,10 @@ ngOnInit(): void {
     return duplicate;
   }
 
-  onClickkycPhotoCopy() {
+  onClickkycPhotoCopy(rowData :any){
+    this.multipleFilesList = [];
     this.kycPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
   }
 
   kycclosePhoto() {
@@ -859,4 +875,25 @@ ngOnInit(): void {
     this.kycPhotoCopyZoom = false;
   }
   
+  // Popup Maximize
+          @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+        
+          onDialogResize(event: any) {
+            this.isMaximized = event.maximized;
+        
+            if (this.isMaximized) {
+              // Restore original image size when maximized
+              this.imageElement.nativeElement.style.width = 'auto';
+              this.imageElement.nativeElement.style.height = 'auto';
+              this.imageElement.nativeElement.style.maxWidth = '100%';
+              this.imageElement.nativeElement.style.maxHeight = '100vh';
+            } else {
+              // Fit image inside the dialog without scrollbars
+              this.imageElement.nativeElement.style.width = '100%';
+              this.imageElement.nativeElement.style.height = '100%';
+              this.imageElement.nativeElement.style.maxWidth = '100%';
+              this.imageElement.nativeElement.style.maxHeight = '100%';
+              this.imageElement.nativeElement.style.objectFit = 'contain';
+            }
+          }
 }

@@ -2,13 +2,14 @@
     <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
         [hideTransitionOptions]="'500ms'"></p-messages>
 
-    <h6 class="sub-heading">{{'ERP.KYC' | translate}}<span class="admission-text">(Admission
-            number:&nbsp;{{admissionNumber}})</span></h6>
+    <h6 class="sub-heading">{{'ERP.KYC' | translate}}</h6>
     <div class="col-12 px-0">     
     <form [formGroup]="kycForm" id="exit_types_form">
         <p-button icon="fa fa-plus" label="{{'ADD ANOTHER DOCUMENT' | translate}}" (click)="addKyc($event)"
             [disabled]="buttonDisabled" class="kyc-btnm-0"></p-button>
-            <p class="label-input-text text-danger mt-2" *ngIf="mandatoryDoxsTextShow">Note : {{requiredDocumentsNamesText}}</p>
+            <div class="mt-2">
+            <p class="label-input-text text-danger" *ngIf="mandatoryDoxsTextShow">Note : {{requiredDocumentsNamesText}}</p>
+        </div>
             <div class="col-12 p-0 pt-2">
             <div class="row g-3">
                 <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mt-2" *ngFor="let document of kycModelList ; let i = index">
@@ -72,7 +73,7 @@
                             </div>
 
                         <!-- Edit form -->
-                        <div class="col-12 global-border bg-label-colorfull p-3" *ngIf="editIndex === i  && !editDocumentOfKycFalg">
+                        <div class="col-12 global-border bg-label-colorfull p-3 py-2" *ngIf="editIndex === i  && !editDocumentOfKycFalg">
                         <div class="row g-3 mt-n1">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf ="!individualFlag">
                                 <div class="form-label">
@@ -101,6 +102,7 @@
                                 *ngIf="!kycForm.controls['docNumber'].valid && kycForm.controls['docNumber'].dirty">
                             </p-message>
                             </div>
+                            </div>
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
                                     <label><span class="red">*</span>{{'ERP.NAME_AS_PER_DOCUMENT' | translate}}</label>
@@ -111,21 +113,20 @@
                                     </p-message>
                                 </div>
                             </div>
-                        </div>
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
-                                <div class="ml-2"><span class="red">*</span> {{ 'DEMANDDEPOSITS.DOCUMENT_COPY' | translate }} </div>
+                                <div class="ml-2"><span class="red">*</span> {{ 'DEMANDDEPOSITS.DOCUMENT_COPY' | translate }} {{ 'DEMANDDEPOSITS.IMAGE_SIZE' | translate }} </div>
                                 <div class="uplodad-style align-items-center">
                                     <!-- Upload Button Column -->
 
                                     <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
                                         chooseLabel=" " id="apply-leave_fileUp_attach" name="file" (onRemove)="fileRemoeEvent()"
-                                        accept=".png,.jpg,.jpeg,.pdf" [customUpload]="true" formContralName="fileUpload"
+                                        accept=".png,.jpg,.jpeg" [customUpload]="true" formContralName="fileUpload"
                                         (onSelect)="imageUploader($event,fileUpload)">
                                     </p-fileUpload>
 
                                     <!-- Uploaded Files Display Column -->
-
+                                    <span class="red"> {{fileSizeMsgForImage}}</span>
                                     <div class="col-12 d-flex p-1 contant-body" *ngFor="let img of savingsBankKycModel.multipartFileList">
                                         <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                                                     <a href="{{img.imageValue}}">
@@ -156,7 +157,7 @@
                 </div>
                 <!-- add form -->
                 <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mt-2" *ngIf="addDocumentOfKycFalg">
-                    <div class="col-12  p-3 global-border bg-label-colorfull">
+                    <div class="col-12 p-3 py-2 global-border bg-label-colorfull">
                         
                     <div class="row g-3 mt-n1">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf ="!individualFlag">
@@ -204,18 +205,18 @@
                                                                                                                 </div> -->
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="form-label">
-                            <div class="ml-2"><span class="red">*</span> {{ 'DEMANDDEPOSITS.DOCUMENT_COPY' | translate }}{{ 'DEMANDDEPOSITS.FILE_SIZE_FOR_BOTH' | translate }} </div>
+                            <div class="ml-2"><span class="red">*</span> {{ 'DEMANDDEPOSITS.DOCUMENT_COPY' | translate }} {{ 'DEMANDDEPOSITS.IMAGE_SIZE' | translate }} </div>
                             <div class="uplodad-style align-items-center">
                                 <!-- Upload Button Column -->
 
                                 <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
                                     chooseLabel=" " id="apply-leave_fileUp_attach" name="file" (onRemove)="fileRemoeEvent()"
-                                    accept=".png,.jpg,.jpeg,.pdf" [customUpload]="true" formContralName="fileUpload"
+                                    accept=".png,.jpg,.jpeg" [customUpload]="true" formContralName="fileUpload"
                                     (onSelect)="imageUploader($event,fileUpload)">
                                 </p-fileUpload>
 
                                 <!-- Uploaded Files Display Column -->
-
+                                <span class="red"> {{fileSizeMsgForImage}}</span>
                                 <div class="col-12 d-flex p-1 contant-body" *ngFor="let img of savingsBankKycModel.multipartFileList">
                                     <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                         <a href="{{img.imageValue}}">
@@ -266,7 +267,7 @@
 </p-dialog>
 
 <!-- KYC Photo Copy -->
-<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="kycPhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
+<p-dialog header="{{'ERP.DOCUMENT_COPY' | translate}}" [(visible)]="kycPhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
     <div class="col-12">
         <div *ngFor="let img of multipleFilesList">
             <div class="mb-3 imgcustom-class" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">

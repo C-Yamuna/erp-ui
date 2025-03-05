@@ -3,11 +3,10 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { HttpClient,HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 export function httpLoaderFactory(httpClient: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(httpClient, './assets/i18n/', '.json');
 }
-import { CommonFunctionsService } from 'src/app/shared/commonfunction.service';
 import { PrimengMaterialUiModule } from 'src/app/shared/primeng.material.module';
 import { CashCounterTransactionRoutingModule } from './cash-counter-transaction-routing.module';
 import { CashCounterTransactionComponent } from './cash-counter-transaction.component';
@@ -41,6 +40,9 @@ import { VaultCashComponent } from './vault-cash/vault-cash.component';
 import { ViewVaultCashComponent } from './vault-cash/view-vault-cash/view-vault-cash.component';
 import { CounterDenominationComponent } from './counter-denomination/counter-denomination.component';
 import { CashierScrollComponent } from './cashier-scroll/cashier-scroll.component';
+import { CashManagementComponent } from './cash-management/cash-management.component';
+import { CashTransactionsComponent } from './cash-management/cash-transactions/cash-transactions.component';
+import { CreateCashDenominationsComponent } from './cash-management/cash-transactions/create-cash-denominations/create-cash-denominations.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +73,10 @@ import { CashierScrollComponent } from './cashier-scroll/cashier-scroll.componen
     VaultCashComponent,
     ViewVaultCashComponent,
     CounterDenominationComponent,
-    CashierScrollComponent
+    CashierScrollComponent,
+    CashManagementComponent,
+    CashTransactionsComponent,
+    CreateCashDenominationsComponent
   ],
   imports: [
     CommonModule,
@@ -80,21 +85,21 @@ import { CashierScrollComponent } from './cashier-scroll/cashier-scroll.componen
     FormsModule,
     TranslateModule.forRoot({
       loader: {
-          provide: TranslateLoader,
-          useFactory: httpLoaderFactory,
-          deps: [HttpClient]
+        provide: TranslateLoader,
+        useFactory: httpLoaderFactory,
+        deps: [HttpClient]
       },
       isolate: true
-  }),
-   TranslateModule,
-   HttpClientModule
+    }),
+    TranslateModule,
+    HttpClientModule
   ],
-  providers:[
+  providers: [
     CommonHttpService,
     EncryptDecryptService,
     CommonComponent,
     DatePipe
   ]
-  
+
 })
 export class CashCounterTransactionModule { }

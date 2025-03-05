@@ -1016,7 +1016,7 @@ export class SiLoanNewMembershipComponent {
     this.siLoanCommunicationModel.subDistrictId = obj.permanentSubDistrictId;
     this.siLoanCommunicationModel.villageId = obj.permanentVillageId;
     this.siLoanCommunicationModel.address1 = obj.permanentAddress1;
-    this.siLoanCommunicationModel.pinCode = obj.permanentPinCode;
+    this.siLoanCommunicationModel.pincode = obj.permanentPinCode;
 
     this.siLoanCommunicationModel.permanentStateId = obj.stateId;
     this.siLoanCommunicationModel.permanentDistrictId = obj.districtId;

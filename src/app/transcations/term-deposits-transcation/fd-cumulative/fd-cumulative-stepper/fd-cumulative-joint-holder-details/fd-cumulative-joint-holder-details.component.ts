@@ -132,6 +132,9 @@ export class FdCumulativeJointHolderDetailsComponent implements OnInit {
             if (this.fdCumulativeApplicationModel.accountNumber != null && this.fdCumulativeApplicationModel.accountNumber != undefined) {
               this.accountNumber = this.fdCumulativeApplicationModel.accountNumber;
             }
+            if (this.fdCumulativeApplicationModel.admissionNumber != null && this.fdCumulativeApplicationModel.admissionNumber != undefined) {
+              this.admissionNumber = this.fdCumulativeApplicationModel.admissionNumber;
+            }
             if (this.fdCumulativeApplicationModel.fdCummulativeJointAccHolderDetailsDTOList != null && this.fdCumulativeApplicationModel.fdCummulativeJointAccHolderDetailsDTOList != undefined) {
               this.jointHolderDetailsList = this.fdCumulativeApplicationModel.fdCummulativeJointAccHolderDetailsDTOList;
               if (this.jointHolderDetailsList != null && this.jointHolderDetailsList != undefined && this.jointHolderDetailsList.length > 0) {
@@ -184,13 +187,6 @@ export class FdCumulativeJointHolderDetailsComponent implements OnInit {
   }
 
   onClear(admissionNumber: any) {
-    // const index = this.admissionNumberList.indexOf(admissionNumber);
-    // if (index >= 0) {
-    //   this.admissionNumberList.splice(index, 1);
-    //   this.jointHolderDetailsList.push(this.responseModel.data);
-    //   const existingIndex = this.jointHolderDetailsList.findIndex(
-    //     promoter => promoter.admissionNumber === admissionNumber);
-    //   this.jointHolderDetailsList[existingIndex] = null;
     this.jointHolderDetailsList = [];
     this.numberOfJointHolders = 0;
     this.selectedAdmissionNumberList = [];
@@ -208,9 +204,9 @@ export class FdCumulativeJointHolderDetailsComponent implements OnInit {
             this.admissionNumberList = this.membershipList.filter((obj: any) => obj != null  && obj.statusName == CommonStatusData.APPROVED && obj.memberTypeId == 1).map((relationType: { id: any; name: any; admissionNumber: any; memberTypeName: any }) => {
               return {
                 label: relationType.admissionNumber
-
               };
             });
+            this.admissionNumberList= this.admissionNumberList.filter((obj:any) => obj != null && obj.label != this.admissionNumber);
           }
           else {
             this.msgs = [];

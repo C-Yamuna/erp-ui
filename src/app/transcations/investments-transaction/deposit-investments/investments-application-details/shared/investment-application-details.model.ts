@@ -45,17 +45,18 @@ export class InvestmentApplicationDetails {
     systemMaturityAmount: any;
     systemMaturityDate: any;
     depositType: any;
-    
     bankName:any;
     depositName:any;
     investmentAccountDocumentsDTO:any;
     interestOrInstallmentFrequencyName:any;
-    
     filesDTOList: any;
-
     multipartFileList : any;
-
     accountStatus: any;
     accountStatusName: any;
+    foreClosureDate: any;
+    closureReqSignedCopy: any;
+    resolutionDate: any;
+    resolutionCopyPath: any;
+    transactionMode: any;
     
 }

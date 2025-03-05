@@ -46,42 +46,31 @@
                         <div class="row">
                             <div class="col-lg-7 col-md-7 col-sm-7 col-xs-6 d-flex align-items-center">
                                 <div class="card-leftbody">
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                         <h6 class="label-view">Document TypeName</h6>
                                         <p class="label-input-text">{{document.requiredDocTypeName}}
                                         </p>
                                     </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                         <h6 class="label-view">Document Number</h6>
                                         <p class="label-input-text">{{document.requiredDocNumber}}</p>
                                     </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                         <h6 class="label-view">Name As Per Document</h6>
                                         <p class="label-input-text docname-texteclipse">{{document.nameAsPerDocument}}
                                         </p>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end">
-                                <div class="text-right">
+                            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end d-flex right-actions">
+                                <div class="cardview-icon icon-size text-right cursor-pointer -mt-1" (click)="onClickdocPhotoCopy(document)"><i
+                                    class="fa fa-eye mr-3" aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}" tooltipPosition="top"></i></div>
                                     <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn"
                                         (click)="toggleEditForm(i ,document)"
-                                        [disabled]="editButtonDisable"></p-button>
+                                        [disabled]="editButtonDisable" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                     <p-button icon="fa fa-trash" class="kyc-edit-btn ml-3"
                                         (click)="deletDilogBox(document)"
-                                        [disabled]="editButtonDisable"></p-button>
-                                </div>
-
-                                <div class="col-12 px-0">
-                                    <div class="col-12 px-0" *ngFor="let img of document.multipleFilesList">
-                                        <div class="col-12 p-0"
-                                            *ngIf="img.fileType=='pdf'">
-                                            <a href="{{img.imageValue}}"> 
-                                                <img src="assets\images\pdf.png" class="upload-img img-fluid" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
+                                        [disabled]="editButtonDisable" pTooltip="{{'ERP.DELETE' | translate}}" tooltipPosition="top"></p-button>
 
                             </div>
                         </div>
@@ -251,3 +240,15 @@
             (click)="cancelForDialogBox()"></p-button>
     </div>
 </p-dialog>
+
+<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="docPhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
+    <div class="col-12">
+    <div *ngFor="let img of multipleFilesList">
+        <div class="mb-3" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                <img src="{{img.imageValue}}" class="doc-photocopy">
+        </div>
+        <div class="mb-3" *ngIf=" img.fileType =='pdf'">
+                <img src="assets\images\pdf.png" class="doc-photocopy">
+        </div>
+    </div>
+</div>

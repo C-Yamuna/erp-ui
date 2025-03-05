@@ -135,7 +135,14 @@ export class FdNonCumulativeRenewalComponent {
   renewalTypeList: any[] = [];
   selectedRenewalType = null;
   renewalFLag: boolean = false;
-
+  //flags for application details
+  yearFlag: boolean = false;
+  monthFlag: boolean = false;
+  daysFlag: boolean = false;
+  interestPayoutFlag: boolean = false;
+  renewalTypeFlag: boolean = false;
+  interestFrequencyFlag: boolean = false;
+  maturityFlag: boolean = false;
 
   constructor(private router: Router,
     private fdNonCumulativeApplicationService: FdNonCumulativeApplicationService,
@@ -243,9 +250,16 @@ export class FdNonCumulativeRenewalComponent {
       if (this.responseModel.status != null && this.responseModel.status != undefined && this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
           this.fdNonCumulativeApplicationModel = this.responseModel.data[0];
+          this.tenureCheck();
+          this.interestFrequencyCheck();
+          this.interestPayoutCheck();
+          this.renewalCheck();
           this.fdNonCummulativeTransactionModel.transactionDate = new Date();
           if (this.fdNonCumulativeApplicationModel.depositDate != null && this.fdNonCumulativeApplicationModel.depositDate != undefined) {
             this.fdNonCumulativeApplicationModel.depositDate = this.datePipe.transform(this.fdNonCumulativeApplicationModel.depositDate, this.orgnizationSetting.datePipe);
+          }
+          if (this.fdNonCumulativeApplicationModel.maturityDate != null && this.fdNonCumulativeApplicationModel.maturityDate != undefined) {
+            this.fdNonCumulativeApplicationModel.maturityDate = this.datePipe.transform(this.fdNonCumulativeApplicationModel.maturityDate, this.orgnizationSetting.datePipe);
           }
           if (this.fdNonCumulativeApplicationModel.admissionNumber != null && this.fdNonCumulativeApplicationModel.admissionNumber != undefined) {
             this.admissionNumber = this.fdNonCumulativeApplicationModel.admissionNumber;
@@ -710,6 +724,44 @@ export class FdNonCumulativeRenewalComponent {
     }
   }
 
- 
+     /**
+ * @implements check for years,months,days to show and hide based on tenuretype
+ * @author bhargavi
+ */
+     tenureCheck() {
+      const tenureType = this.fdNonCumulativeApplicationModel.tenureType;
+      this.yearFlag = tenureType === 2 || tenureType === 5 || tenureType === 6 || tenureType === 7 ? true : false;
+      this.monthFlag = tenureType === 3 || tenureType === 4 || tenureType === 6 || tenureType === 7 ? true : false;
+      this.daysFlag = tenureType === 1 || tenureType === 4 || tenureType === 5 || tenureType === 7 ? true : false;
+    }
+  
+    /**
+     * @implements check for paymenttype show and hide based on interestPayoutType
+     * @author bhargavi
+     */
+    interestPayoutCheck() {
+      const interestPayoutType = this.fdNonCumulativeApplicationModel.interestPayoutType;
+      this.interestPayoutFlag = interestPayoutType === 3 ? true : false;
+    }
+  
+    /**
+     * @implements check for renewalType show and hide based on autorenewal
+     * @author bhargavi
+     */
+    renewalCheck() {
+      const renewalType = this.fdNonCumulativeApplicationModel.isAutoRenewal;
+      this.renewalTypeFlag = renewalType === true ? true : false;
+    }
+  
+    /**
+  * @implements check for interest payment to show and hide based on interestPaymentFrequency
+  * @author bhargavi
+  */
+    interestFrequencyCheck() {
+      const interestPaymentFrequency = this.fdNonCumulativeApplicationModel.interestPaymentFrequencyId;
+      this.interestFrequencyFlag = interestPaymentFrequency === 1 || interestPaymentFrequency === 2 || interestPaymentFrequency === 3 || 
+      interestPaymentFrequency === 4 || interestPaymentFrequency === 5 ? true : false;
+      this.maturityFlag =  interestPaymentFrequency === 6 ? true : false;
+    }
   
 }

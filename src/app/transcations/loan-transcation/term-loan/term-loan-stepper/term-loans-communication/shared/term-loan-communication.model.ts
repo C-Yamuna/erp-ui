@@ -87,4 +87,6 @@ export class TermLoanCommunication {
         permanentDivisionName?: any;
 
         permanentBlockName?: any;
+
+        accountNumber?: any;
 }

@@ -221,7 +221,7 @@
                 <form [formGroup]="institutepromoterDetailsForm" id="proj_stakeholder_form">
                     <div class="flex row justify-content-between py-2">
                         <div class="col-xl-7 col-lg-7 col-md-7 col-sm-7">
-                            <h6 class="sub-heading mt-1">{{'MEMBERSHIPCONFIG.PROMOTER_DETAILS' | translate}}</h6> 
+                            <h6 class="sub-heading mt-1">{{'MEMBERSHIPCONFIG.OPERATOR_DETAILS' | translate}}</h6> 
                         </div>
                         <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5">
                             <div class="col-12 p-0">
@@ -258,7 +258,6 @@
             [globalFilterFields]="['surname', 'name', 'operatorTypeName', 'dob', 'age', 'genderTypeName', 'maritalStatusName', 'mobileNumber', 'aadharNumber', 'emailId', 'startDateVal']">
             <ng-template pTemplate="header">
                 <tr>
-                    <th>{{'MEMBERSHIP_TRANSACTION.IS_POC' | translate}}</th>
                     <th>{{'ERP.SURNAME' | translate}}</th>
                     <th>{{'ERP.NAME' | translate}}</th>
                     <!-- <th>{{'ERP.TYPE_OF_OPERATOR' | translate}}</th> -->
@@ -268,18 +267,13 @@
                     <th>{{'ERP.AADHAR_NUMBER' | translate}}</th>
                     <th> {{'MEMBERSHIP_TRANSACTION.JOINING_DATE' | translate}}</th>
                     <th> {{'MEMBERSHIP_TRANSACTION.EXIT_DATE' | translate}}</th>
-
-
+                    <th>{{'MEMBERSHIP_TRANSACTION.IS_POC' | translate}}</th>
                     <th class="width-15em">{{'ERP.ACTION' | translate}}</th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-row let-ri="rowIndex">
                 <tr [pEditableRow]="row">
-                    <td>
-                        <p-cellEditor>
-                            <ng-template pTemplate="output">{{row.isPocName}}</ng-template>
-                        </p-cellEditor>
-                    </td>
+                   
                     <td>
                         <p-cellEditor>
                             <ng-template pTemplate="output">{{row.surname}}</ng-template>
@@ -352,6 +346,11 @@
                         </p-cellEditor>
                     </td>
                     <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="output">{{row.isPocName}}</ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td>
                         <div class="global-action-btn flex align-items-center justify-content-start">
                             <p-button label="{{'ERP.EDIT' | translate}}" id="prj_stakehlder_bt_edit" class="action-view"
                                 [disabled]="EditDeleteDisable" (click)="editPromoter(row)"></p-button>
@@ -365,8 +364,8 @@
     </form>
 </div>
 
-<!-- group promoters details dialog -->
-<p-dialog header="Institution Promoter" [(visible)]="promoterDisplayFlag" styleClass="moredetails-style" [closable]="false">
+<!-- institution promoters details dialog -->
+<p-dialog header="{{'ERP.INSTITUTION_OPERATORS' | translate}}" [modal]="true" [(visible)]="promoterDisplayFlag" styleClass="moredetails-style" [closable]="false">
     <div class="popup-basic-details">
         <form [formGroup]="institutepromoterDetailsForm" id="proj_stakeholder_form">
             <div class="col-12 px-0">
@@ -391,18 +390,11 @@
                         </p-dropdown>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                    <div class="form-label">
-                        <label>{{'MEMBERSHIP_TRANSACTION.IS_POC' | translate}}</label>
-                        <p-dropdown [filter]="true" [options]="requiredlist" placeholder="Select"
-                            [(ngModel)]="institutePromoterDetails.isPoc"  formControlName="isPoc"
-                            [appendTo]="'body'" (onChange)="isPosCheck(institutePromoterDetails.isPoc)"></p-dropdown>
-                    </div>
-                </div>
+              
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
                         <label><span class="red">*</span>{{'ERP.SURNAME' | translate}}</label>
-                        <input pInputText type="text" [(ngModel)]="institutePromoterDetails.surname" formControlName="surName">
+                        <input pInputText type="text" [(ngModel)]="institutePromoterDetails.surname" formControlName="surName" placeholder="Enter Surname">
                         <p-message severity="error" text="Enter Valid Name"
                             *ngIf="!institutepromoterDetailsForm.controls['surName'].valid && institutepromoterDetailsForm.controls['surName'].dirty">
                         </p-message>
@@ -411,7 +403,7 @@
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
                         <label><span class="red">*</span>{{'ERP.NAME' | translate}}</label>
-                        <input pInputText type="text" [(ngModel)]="institutePromoterDetails.name" formControlName="name">
+                        <input pInputText type="text" [(ngModel)]="institutePromoterDetails.name" formControlName="name" placeholder="Enter Name">
                         <p-message severity="error" text="Enter Valid Name"
                             *ngIf="!institutepromoterDetailsForm.controls['name'].valid && institutepromoterDetailsForm.controls['name'].dirty">
                         </p-message>
@@ -451,7 +443,7 @@
                     <div class="form-label">
                         <label><span class="red">*</span>{{'ERP.AGE' | translate}}</label>
                         <input pInputText type="text" formControlName="age" [(ngModel)]="institutePromoterDetails.age"
-                            minlength="1" maxlength="3" (focusout)="datesValidationCheckAgeAndDob(institutePromoterDetails,1)">
+                            minlength="1" maxlength="3" (focusout)="datesValidationCheckAgeAndDob(institutePromoterDetails,1)" placeholder="Enter Age">
                         <p-message severity="error" text="Enter Valid Age"
                             *ngIf="!institutepromoterDetailsForm.controls['age'].valid && institutepromoterDetailsForm.controls['age'].dirty">
                         </p-message>
@@ -478,7 +470,7 @@
                     <div class="form-label">
                         <label><span class="red">*</span>{{'ERP.MOBILE_NUMBER' | translate}}</label>
                         <input pInputText type="text" [(ngModel)]="institutePromoterDetails.mobileNumber" minlength="10"
-                            maxlength="10" formControlName="mobileNumber">
+                            maxlength="10" formControlName="mobileNumber" placeholder="Enter Mobile Number">
                         <p-message severity="error" text="Enter Valid Mobile Number"
                             *ngIf="!institutepromoterDetailsForm.controls['mobileNumber'].valid && institutepromoterDetailsForm.controls['mobileNumber'].dirty">
                         </p-message>
@@ -488,7 +480,7 @@
                     <div class="form-label">
                         <label>{{'ERP.EMAIL' | translate}}</label>
                         <input pInputText type="text" [(ngModel)]="institutePromoterDetails.emailId"
-                            formControlName="emailId">
+                            formControlName="emailId" placeholder="Enter Email">
                         <p-message severity="error" text="Enter Valid Email. Id"
                             *ngIf="!institutepromoterDetailsForm.controls['emailId'].valid && institutepromoterDetailsForm.controls['emailId'].dirty">
                         </p-message>
@@ -499,7 +491,7 @@
                     <div class="form-label">
                         <label><span class="red">*</span>{{'ERP.AADHAR_NUMBER' | translate}}</label>
                         <input pInputText type="text" [(ngModel)]="institutePromoterDetails.aadharNumber" minlength="12"
-                            maxlength="12" formControlName="aadharNumber">
+                            maxlength="12" formControlName="aadharNumber" placeholder="Enter Aadhar Number">
                         <p-message severity="error" text="Enter Valid Aadhar Number"
                             *ngIf="!institutepromoterDetailsForm.controls['aadharNumber'].valid && institutepromoterDetailsForm.controls['aadharNumber'].dirty">
                         </p-message>
@@ -537,7 +529,7 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
-                        <span><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.PHOTO_COPY' | translate}}</span>
+                        <span><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.PHOTO_COPY' | translate}}{{'MEMBERSHIP_TRANSACTION.IMAGE_SIZE' | translate}}</span>
                         <div class="uplodad-style align-items-center">
                             <p-fileUpload #fileUploadIndividualPhoto class="qua-upld file-attach semi-bold" name="myfile[]"
                             id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".png,.jpg,.jpeg"
@@ -560,7 +552,7 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
-                        <span><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.SIGNATURE_COPY' | translate}}</span>
+                        <span><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.SIGNATURE_COPY' | translate}}{{'MEMBERSHIP_TRANSACTION.IMAGE_SIZE' | translate}}</span>
                         <div class="uplodad-style align-items-center">
                             <p-fileUpload #fileUploadIndividualSign class="qua-upld file-attach semi-bold" name="myfile[]"
                                 id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".png,.jpg,.jpeg"
@@ -579,6 +571,14 @@
                                     {{img.fileName}}</span>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label>{{'MEMBERSHIP_TRANSACTION.IS_POC' | translate}}</label>
+                        <p-dropdown [filter]="true" [options]="requiredlist" placeholder="Select"
+                            [(ngModel)]="institutePromoterDetails.isPoc"  formControlName="isPoc"
+                            [appendTo]="'body'" (onChange)="isPosCheck(institutePromoterDetails.isPoc)"></p-dropdown>
                     </div>
                 </div>
 

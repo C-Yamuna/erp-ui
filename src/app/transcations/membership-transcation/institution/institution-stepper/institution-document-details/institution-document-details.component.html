@@ -35,12 +35,12 @@
                     <p class="mb-0">{{institutionModel.admissionDateVal}}</p>
                 </div>
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+            <!-- <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
                 <div class="form-group">
                     <span>{{'ERP.POC_NAME' | translate}}</span>
                     <p class="mb-0">{{institutionModel.pocName}}</p>
                 </div>
-            </div>
+            </div> -->
             <!-- <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
                 <div class="form-group">
                     <span>{{'ERP.POC_MOBILE_NUMBER' | translate}}</span>
@@ -59,7 +59,9 @@
             <form [formGroup]="documentForm" id="exit_types_form">
                 <p-button icon="fa fa-plus" label="{{'ADD ANOTHER DOCUMENT' | translate}}" (click)="addRequired($event)"
                     [disabled]="buttonDisabled" *ngIf="showAddButton" class="kyc-btnm-0"></p-button>
-                    <p class="label-input-text text-danger mt-2" *ngIf="mandatoryDoxsTextShow">Note : {{requiredDocumentsNames}}</p>
+                    <div class="mt-2">
+                    <p class="label-input-text text-danger" *ngIf="mandatoryDoxsTextShow">Note : {{requiredDocumentsNames}}</p>
+                    </div>
                     <div class="col-12 p-0 pt-2">
                     <div class="row g-3">
                         <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 mt-2"
@@ -115,7 +117,7 @@
                                 </div>
                             </div>
                             <!-- Edit form -->
-                            <div class="col-12 global-border bg-label-colorfull p-3"
+                            <div class="col-12 global-border bg-label-colorfull p-3 py-2"
                                 *ngIf="editIndex === i  && !editDocumentOfKycFalg">
                                 <div class="row g-3 mt-n1">
                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -143,7 +145,7 @@
                                     </div>
                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <div class="form-label">
-                                            <div class="ml-2"><span class="red">*</span>{{ 'MEMBERSHIP_TRANSACTION.DOCUMENT_COPY' | translate }} </div>
+                                            <div class="ml-2"><span class="red">*</span>{{ 'MEMBERSHIP_TRANSACTION.DOCUMENT_COPY' | translate }}{{'MEMBERSHIP_TRANSACTION.PDF_SIZE' | translate}} </div>
                                             <div class="uplodad-style align-items-center">
                                                 <!-- Upload Button Column -->
     
@@ -181,7 +183,7 @@
                         </div>
                         <!-- add form -->
                         <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2" *ngIf="addDocumentOfKycFalg">
-                            <div class="col-12 p-3 global-border bg-label-colorfull">
+                            <div class="col-12 p-3 py-2 global-border bg-label-colorfull">
                                 <div class="row g-3 mt-n1">
                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <div class="form-label">
@@ -208,7 +210,7 @@
                                     </div>
                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <div class="form-label">
-                                            <div class="ml-2"><span class="red">*</span>{{'ERP.UPLOAD_DOCUMENT' |translate}}</div>
+                                            <div class="ml-2"><span class="red">*</span>{{'ERP.UPLOAD_DOCUMENT' |translate}}{{'MEMBERSHIP_TRANSACTION.PDF_SIZE' | translate}}</div>
                                             <div class="uplodad-style align-items-center">
     
                                                 <p-fileUpload #fileUpload name="myfile[]" id="apply-leave_fileUp_attach"
@@ -250,7 +252,7 @@
         </div>
     </p-dialog>
     <!-- Document Photo Copy -->
-<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="docPhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
+<p-dialog header="{{'ERP.DOCUMENT_COPY' | translate}}" [(visible)]="docPhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
     <div class="col-12">
     <div *ngFor="let img of multipleFilesList">
         <div class="mb-3 imgcustom-class" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">

@@ -1,4 +1,4 @@
-import { Component, KeyValueDiffers, OnInit } from '@angular/core';
+import { Component, HostListener, KeyValueDiffers, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SavingsBankStepperModel } from '../shared/savings-bank-stepper-model';
@@ -385,4 +385,41 @@ export class SavingsBankJointAccountComponent implements OnInit {
   onPanelClick(event: any) {
     console.log("Dropdown Panel Clicked:", event);
   }
+
+
+  // Joint Holders Scroll 
+
+// Function to determine max visible items before scroll
+getMaxVisibleItems(): number {
+  return window.innerWidth <= 1024 ? 2 : 3; 
+  // 1024px → Scroll after 2 items, 1440px → Scroll after 3 items
+}
+
+// Function to get dynamic height based on screen width
+getDynamicHeight(): string {
+  const itemCount = this.jointHolderDetailsList.length;
+  const maxItems = this.getMaxVisibleItems();
+
+  if (window.innerWidth <= 1024) {
+    return itemCount === 1 ? '25vh' : '47vh';
+  }
+
+  return itemCount <= maxItems ? `${itemCount * 18}vh` : `${maxItems * 18}vh`;
+}
+
+// Function to enable scrolling after max visible items
+shouldEnableScroll(): boolean {
+  const itemCount = this.jointHolderDetailsList.length;
+  const maxItems = this.getMaxVisibleItems();
+
+  return itemCount > maxItems; 
+  // Ensures scroll is enabled correctly after max items
+}
+
+// Ensure updates when window resizes
+@HostListener('window:resize', ['$event'])
+onResize() {
+  // Forces Angular to detect changes when window resizes
+}
+  
 }

@@ -13,6 +13,7 @@ import { EncryptDecryptService } from 'src/app/shared/encrypt-decrypt.service';
 import { ChargesTypesService } from 'src/app/configurations/loan-config/charges-types/shared/charges-types.service';
 import { SimpleInterestProductDefinitionService } from '../../shared/simple-interest-product-definition.service';
 import { SiChargesService } from './shared/si-charges.service';
+import { BoxNumber } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-si-charges',
@@ -338,16 +339,23 @@ getPreviewDetailsByProductId(id: any) {
         // Otherwise, proceed with the new charges type
         return  applicationConstants.FALSE;
       }
-      checkForSlabAmount(): void {
+      checkForSlabAmount(box : any): void {
         const minSlabAmount = this.chargesForm.get('minSlabAmount')?.value;
         const maxSlabAmount = this.chargesForm.get('maxSlabAmount')?.value;
     
-        if (minSlabAmount && maxSlabAmount &&  minSlabAmount >=maxSlabAmount) {
-          this.amountAndTenureFlag = applicationConstants.FALSE;
-          this.msgs = [{ severity: 'error', detail: applicationConstants.MIN_SLAB_AMOUNT_ERROR }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 1500);
+        if (minSlabAmount != null && minSlabAmount !='' &&  maxSlabAmount  != null &&  maxSlabAmount !='' && 
+           Number(minSlabAmount) > Number(maxSlabAmount)) {
+           this.msgs = [];
+            if(box == BoxNumber.BOX_ONE){
+                this.msgs.push({ severity: 'warning', detail: applicationConstants.MINIMUM_SLAB_AMOUNT_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAXIMUM_SLAB_AMOUNT });
+                this.chargesForm.get('minSlabAmount')?.reset();
+            }else if (box == BoxNumber.BOX_TWO) {
+              this.msgs.push({ severity: 'warning', detail: applicationConstants.MAXIMUM_SLAB_AMOUNT_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MINIMUM_SLAB_AMOUNT});
+              this.chargesForm.get('maxSlabAmount')?.reset();
+              }
+            setTimeout(() => {
+                 this.msgs = [];
+               }, 1500);
         } else {
           this.msgs = [];
           this.amountAndTenureFlag = applicationConstants.TRUE;
@@ -356,16 +364,22 @@ getPreviewDetailsByProductId(id: any) {
        
         this.updateData();
       }
-      checkForCharges(){
+      checkForCharges(box : any){
         const minCharges = this.chargesForm.get('minCharges')?.value;
         const maxChrges = this.chargesForm.get('maxChrges')?.value;
     
-        if (minCharges && maxChrges &&  minCharges >=maxChrges) {
-          this.amountAndTenureFlag = applicationConstants.FALSE;
-          this.msgs = [{ severity: 'error', detail: applicationConstants.MIN_CHARGES_ERROR }];
-          setTimeout(() => {
+        if (minCharges != null && minCharges !='' && maxChrges != null && maxChrges != '' &&
+           Number(minCharges) > Number(maxChrges)) {
             this.msgs = [];
-          }, 1500);
+        if (box == BoxNumber.BOX_ONE) {
+          this.msgs.push({ severity: 'warning', detail: applicationConstants.MINIMUM_CHARGES_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAXIMUM_CHARGES });
+          this.chargesForm.get('minCharges')?.reset();
+        } else if (box == BoxNumber.BOX_TWO) {
+          this.msgs.push({ severity: 'warning', detail: applicationConstants.MAXIMUM_CHARGES_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MINIMUM_CHARGES});
+          this.chargesForm.get('maxChrges')?.reset();
+        setTimeout(() => {
+          this.msgs = [];
+        }, 1500);
         } else {
           this.msgs = [];
           this.amountAndTenureFlag = applicationConstants.TRUE;
@@ -374,4 +388,5 @@ getPreviewDetailsByProductId(id: any) {
        
         this.updateData();
       }
+  }
 }

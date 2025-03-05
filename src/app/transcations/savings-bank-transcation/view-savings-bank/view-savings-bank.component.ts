@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { savingsbanktransactionconstant } from '../savingsbank-transaction-constant';
 import { SavingsAccountService } from '../shared/savings-account.service';
@@ -18,6 +18,7 @@ import { FileUploadService } from 'src/app/shared/file-upload.service';
 import { TranslateService } from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
 import { MemberShipTypesData } from '../../common-status-data.json';
+import { SavingsBankCommunicationModel } from '../savings-bank-account-creation-stepper/savings-bank-communication/shared/savings-bank-communication-model';
 
 @Component({
   selector: 'app-view-savings-bank',
@@ -29,7 +30,7 @@ export class ViewSavingsBankComponent {
   admissionNumber: any;
   id: any;
   viewSavingBankModel : ViewSavingBankModel = new ViewSavingBankModel();
-  communicationDetailsModel : CommunicationDetailsModel = new CommunicationDetailsModel();
+  communicationDetailsModel : SavingsBankCommunicationModel = new SavingsBankCommunicationModel();
   kycDetailsModel : KycDetailsModel = new KycDetailsModel();
   membershipBasicRequiredDetails: MembershipBasicRequiredDetails = new MembershipBasicRequiredDetails();
   memberGuardianDetailsModelDetails: MemberGuardianDetailsModelDetaila = new MemberGuardianDetailsModelDetaila();
@@ -97,6 +98,8 @@ export class ViewSavingsBankComponent {
   guardianPhotoCopyZoom:boolean = false;
   submitForApprovalMessage: any;
   submitForApprovalValidation: boolean = true;
+  fileSizeMsgForImage: any;
+  requiredDocumentsEnable: boolean = false;
 ;
   constructor(private router: Router, private formBuilder:FormBuilder , private savingsAccountService: SavingsAccountService ,private commonComponent : CommonComponent  ,private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService , private commonFunctionsService :CommonFunctionsService ,private datePipe: DatePipe ,private fileUploadService :FileUploadService , private translate: TranslateService) { 
     this.amountblock = [
@@ -121,7 +124,7 @@ export class ViewSavingsBankComponent {
     this.columns = [
       { field: 'surname', header: 'Surname' },
       { field: 'name', header: 'Name' },
-      { field: 'operatorTypeName', header: 'Operation Type' },
+      // { field: 'operatorTypeName', header: 'Operation Type' },
       { field: 'memDobVal', header: 'Date of Birth' },
       { field: 'age', header: 'Age' },
       { field: 'genderName', header: 'Gender' },
@@ -134,7 +137,7 @@ export class ViewSavingsBankComponent {
     this.groupPrmoters = [
       { field: 'surname', header: 'Surname' },
       { field: 'name', header: 'Name' },
-      { field: 'operatorTypeName', header: 'Operation Type' },
+      // { field: 'operatorTypeName', header: 'Operation Type' },
       { field: 'memDobVal', header: 'Date of Birth' },
       { field: 'age', header: 'Age' },
       { field: 'genderTypeName', header: 'Gender' },
@@ -275,6 +278,9 @@ export class ViewSavingsBankComponent {
                 }
               }
             }
+            if(this.viewSavingBankModel.requiredDocumentsConfigDetailsDTOList != null && this.viewSavingBankModel.requiredDocumentsConfigDetailsDTOList != undefined){
+              this.requiredDocumentsEnable = true;
+            }
             //kyc list
             if (this.viewSavingBankModel.kycList != null && this.viewSavingBankModel.kycList != undefined) {
               this.kycGridList = this.viewSavingBankModel.kycList;
@@ -315,6 +321,8 @@ export class ViewSavingsBankComponent {
                 else {
                   this.nomineeDetailsModel.nomineeSighnedFormMultiPartList =  this.fileUploadService.getFile(this.nomineeDetailsModel.signedNomineeForm , ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.nomineeDetailsModel.signedNomineeForm);
                 }
+                if(this.nomineeDetailsModel.dateOfBirth != null && this.nomineeDetailsModel.dateOfBirth != undefined)
+                 this.nomineeDetailsModel.dateOfBirthVal = this.datePipe.transform(this.nomineeDetailsModel.dateOfBirth, this.orgnizationSetting.datePipe);
               }
             }
             //guardina details
@@ -652,35 +660,44 @@ export class ViewSavingsBankComponent {
 
   pdfUploader(event:any,fileUpload:any){
     this.isFileUploaded = applicationConstants.TRUE;
+    this.fileSizeMsgForImage = null;
+    let fileSizeFalg = false;
     this.multipleFilesList = [];
     this.viewSavingBankModel.filesDTOList = [];
     this.viewSavingBankModel.multipartFileList = [];
     this.viewSavingBankModel.applicationSignedForm = null;
     let files: FileUploadModel = new FileUploadModel();
-    for (let file of event.files) {
-      let reader = new FileReader();
-      reader.onloadend = (e) => {
-        let files = new FileUploadModel();
-        this.uploadFileData = e.currentTarget;
-        files.fileName = file.name;
-        files.fileType = file.type.split('/')[1];
-        files.value = this.uploadFileData.result.split(',')[1];
-        files.imageValue = this.uploadFileData.result;
-
-        let index = this.multipleFilesList.findIndex(x => x.fileName == files.fileName);
-        if (index === -1) {
-          this.multipleFilesList.push(files);
-          this.viewSavingBankModel.filesDTOList.push(files); // Add to filesDTOList array
+    if (event.files[0].size/1024/1024 > 5) {
+      this.fileSizeMsgForImage= "file is bigger than 5MB";
+      fileSizeFalg = true;
+     }
+     if(!fileSizeFalg){
+      for (let file of event.files) {
+        let reader = new FileReader();
+        reader.onloadend = (e) => {
+          let files = new FileUploadModel();
+          this.uploadFileData = e.currentTarget;
+          files.fileName = file.name;
+          files.fileType = file.type.split('/')[1];
+          files.value = this.uploadFileData.result.split(',')[1];
+          files.imageValue = this.uploadFileData.result;
+  
+          let index = this.multipleFilesList.findIndex(x => x.fileName == files.fileName);
+          if (index === -1) {
+            this.multipleFilesList.push(files);
+            this.viewSavingBankModel.filesDTOList.push(files); // Add to filesDTOList array
+          }
+          let timeStamp = this.commonComponent.getTimeStamp();
+          this.viewSavingBankModel.filesDTOList[0].fileName = "Sb_Application_signed_copy" + this.sbAccId + "_" +timeStamp+ "_"+ file.name ;
+          this.viewSavingBankModel.applicationSignedForm = "Sb_Application_signed_copy" + this.sbAccId + "_" +timeStamp+"_"+ file.name; // This will set the last file's name as docPath
+          let index1 = event.files.findIndex((x: any) => x === file);
+          fileUpload.remove(event, index1);
+          fileUpload.clear();
         }
-        let timeStamp = this.commonComponent.getTimeStamp();
-        this.viewSavingBankModel.filesDTOList[0].fileName = "Sb_Application_signed_copy" + this.sbAccId + "_" +timeStamp+ "_"+ file.name ;
-        this.viewSavingBankModel.applicationSignedForm = "Sb_Application_signed_copy" + this.sbAccId + "_" +timeStamp+"_"+ file.name; // This will set the last file's name as docPath
-        let index1 = event.files.findIndex((x: any) => x === file);
-        fileUpload.remove(event, index1);
-        fileUpload.clear();
+        reader.readAsDataURL(file);
       }
-      reader.readAsDataURL(file);
-    }
+     }
+  
   }
 
   /**
@@ -753,4 +770,39 @@ export class ViewSavingsBankComponent {
                     this.imageElement.nativeElement.style.objectFit = 'contain';
                   }
                 }
+
+      // Joint Holders Scroll 
+    
+    // Function to determine max visible items before scroll
+    getMaxVisibleItems(): number {
+      return window.innerWidth <= 1024 ? 2 : 3; 
+      // 1024px → Scroll after 2 items, 1440px → Scroll after 3 items
+    }
+    
+    // Function to get dynamic height based on screen width
+    getDynamicHeight(): string {
+      const itemCount = this.jointHolderDetailsList.length;
+      const maxItems = this.getMaxVisibleItems();
+    
+      if (window.innerWidth <= 1024) {
+        return itemCount === 1 ? '25vh' : '47vh';
+      }
+    
+      return itemCount <= maxItems ? `${itemCount * 18}vh` : `${maxItems * 18}vh`;
+    }
+    
+    // Function to enable scrolling after max visible items
+    shouldEnableScroll(): boolean {
+      const itemCount = this.jointHolderDetailsList.length;
+      const maxItems = this.getMaxVisibleItems();
+    
+      return itemCount > maxItems; 
+      // Ensures scroll is enabled correctly after max items
+    }
+    
+    // Ensure updates when window resizes
+    @HostListener('window:resize', ['$event'])
+    onResize() {
+      // Forces Angular to detect changes when window resizes
+    }
 }

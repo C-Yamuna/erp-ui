@@ -304,9 +304,13 @@ export class ViewMembershipComponent {
           }
           if(this.memberNomineeDetailsModel.nomineeFilePath != null && this.memberNomineeDetailsModel.nomineeFilePath != undefined)
             this.memberNomineeDetailsModel.multipartFileList = this.fileUploadService.getFile(this.memberNomineeDetailsModel.nomineeFilePath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.memberNomineeDetailsModel.nomineeFilePath);
-
+         
+          if (this.memberNomineeDetailsModel.nomineeDob != null) {
+            this.memberNomineeDetailsModel.nomineeDobVal = this.datePipe.transform(this.memberNomineeDetailsModel.nomineeDob, this.orgnizationSetting.datePipe);
+          }
         }
-        if (this.memberBasicDetailsModel.age != null && this.memberBasicDetailsModel.age != undefined && this.memberBasicDetailsModel.age < 18) {
+        if ((this.memberBasicDetailsModel.age != null && this.memberBasicDetailsModel.age != undefined && this.memberBasicDetailsModel.age < 18) ||
+        this.memberNomineeDetailsModel.nomineeAge != null && this.memberNomineeDetailsModel.nomineeAge < 18) {
           this.guardainEnableFlag = true;
         }
         if (this.memberBasicDetailsModel.memberShipGuadianDetailsDTOList != null && this.memberBasicDetailsModel.memberShipGuadianDetailsDTOList != undefined && this.memberBasicDetailsModel.memberShipGuadianDetailsDTOList.length > 0 && this.memberBasicDetailsModel.memberShipGuadianDetailsDTOList[0] != null && this.memberBasicDetailsModel.memberShipGuadianDetailsDTOList[0] != undefined) {
@@ -324,7 +328,9 @@ export class ViewMembershipComponent {
           this.memberGuardianDetailsDetailsModel = this.memberBasicDetailsModel.memberShipGuadianDetailsDTOList[0];
           if(this.memberGuardianDetailsDetailsModel.uploadFilePath != null && this.memberGuardianDetailsDetailsModel.uploadFilePath != undefined)
             this.memberGuardianDetailsDetailsModel.multipartsFileList = this.fileUploadService.getFile(this.memberGuardianDetailsDetailsModel.uploadFilePath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.memberGuardianDetailsDetailsModel.uploadFilePath);
-
+          if (this.memberGuardianDetailsDetailsModel.guardianDob != null) {
+            this.memberGuardianDetailsDetailsModel.guardianDobVal = this.datePipe.transform(this.memberGuardianDetailsDetailsModel.guardianDob, this.orgnizationSetting.datePipe);
+          }
         }
 
           this.memberLandDetails = this.memberBasicDetailsModel.memberShipLandDetailsDTO;

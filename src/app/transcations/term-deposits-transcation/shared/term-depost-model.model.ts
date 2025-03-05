@@ -196,6 +196,12 @@ export class RdAccountsModel {
     staffRoi: any;
 
     seniorCitizenRoi: any;
+
+    tenureTypeName : any;
+
+    renewalTypeName: any;
+
+    interestPayoutTypeName: any;
 }
 
 export class RdAccountCommunication {

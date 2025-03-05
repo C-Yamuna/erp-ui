@@ -98,7 +98,7 @@
                                         <label><span class="red">*</span>{{'ERP.VILLAGES' | translate}} </label>
                 
                                         <p-dropdown [options]="pervillageList" placeholder="Select " formControlName="permanentVillageId"
-                                            [(ngModel)]="memberCommunicationDetailsModel.permanentVillageId" (onChange)='getPerVillage(memberCommunicationDetailsModel.permanentVillageId)'></p-dropdown>
+                                            [(ngModel)]="memberCommunicationDetailsModel.permanentVillageId" (onChange)='getPerVillage(memberCommunicationDetailsModel.permanentVillageId,true)'></p-dropdown>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -206,7 +206,7 @@
                                             <label><span class="red">*</span>{{'ERP.VILLAGES' | translate}} </label>
                             
                                             <p-dropdown [filter]="true" [options]="villageList" placeholder="Select" formControlName="villageId"
-                                                [(ngModel)]="memberCommunicationDetailsModel.villageId" (onChange)='getVillage(memberCommunicationDetailsModel.villageId)'></p-dropdown>
+                                                [(ngModel)]="memberCommunicationDetailsModel.villageId" (onChange)='getVillage(memberCommunicationDetailsModel.villageId,false)'></p-dropdown>
                                         </div>
                                     </div>
                                     <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -252,7 +252,7 @@
                                             </label>
                             
                                             <input pInputText id="bunit_txt_name" minlength="6" maxlength="6" type="text" formControlName="pinCode"  placeholder="Enter Pincode"
-                                            [(ngModel)]="memberCommunicationDetailsModel.pinCode">
+                                            [(ngModel)]="memberCommunicationDetailsModel.pincode">
                                             <p-message severity="error" text="Enter Valid PinCode"
                                             *ngIf="!communicationform.controls['pinCode'].valid && communicationform.controls['pinCode'].dirty">
                                         </p-message>

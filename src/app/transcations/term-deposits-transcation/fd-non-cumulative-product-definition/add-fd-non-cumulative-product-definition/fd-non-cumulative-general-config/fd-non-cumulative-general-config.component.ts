@@ -28,6 +28,8 @@ export class FdNonCumulativeGeneralConfigComponent {
   isSpecialSchemelist: any[] = [];
   amountAndTenureFlag: boolean = applicationConstants.TRUE;
   tenureTypeList: any[] = [];
+  productDefinitionList: any[] = [];
+  tempProductDefinitionList: any[] = [];
 
   constructor(private formBuilder: FormBuilder,private commonComponent: CommonComponent,private activateRoute: ActivatedRoute,
     private datePipe: DatePipe,private encryptService: EncryptDecryptService,
@@ -39,8 +41,8 @@ export class FdNonCumulativeGeneralConfigComponent {
       'isSpecialScheme': new FormControl('', Validators.required),
       'minDepositAmount': new FormControl('', [Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS),Validators.required]),
       'maxDepositAmount': new FormControl('', [Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS),Validators.required]),
-      'minTenure': new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NEW_NUMBERS),Validators.required]),
-      'maxTenure': new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NEW_NUMBERS),Validators.required]),
+      'minTenure': new FormControl('', [Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS),Validators.required]),
+      'maxTenure': new FormControl('', [Validators.pattern(applicationConstants.ALLOW_TWO_DECIMALS),Validators.required]),
       // 'isAutoRenewal': new FormControl('', Validators.required),
       'tenureType': new FormControl('', Validators.required),
       'effectiveStartDate': new FormControl('', Validators.required),
@@ -102,6 +104,7 @@ export class FdNonCumulativeGeneralConfigComponent {
          this.save();
        }
      });
+     this. getAllProductDefinitions();
    }
  
    /**
@@ -196,6 +199,63 @@ this.updateData();
   }
 }
 this.updateData();
+  }
+
+  /**
+      @author Dileep_Kumar_G
+      @implements get All Product Definitions
+    */
+  getAllProductDefinitions() {
+    this.fdNonCumulativeProductDefinitionService.getAllFdNonCumulativeProductDefinition().subscribe((data: any) => {
+      this.responseModel = data;
+      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+        if (null != this.responseModel.data && undefined != this.responseModel.data) {
+          this.productDefinitionList = this.responseModel.data;
+          this.tempProductDefinitionList = this.productDefinitionList;
+        }
+        this.commonComponent.stopSpinner();
+      } else {
+        this.commonComponent.stopSpinner();
+        this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
+    }, error => {
+      this.msgs = [];
+      this.msgs = [{ severity: "error", summary: 'Failed', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST }];
+      this.commonComponent.stopSpinner();
+    });
+  }
+
+  /**
+      @author Dileep_Kumar_G
+      @implements product Name Duplicate Check
+    */
+  productNameDuplicateCheck() {
+    let isFlag = applicationConstants.TRUE;
+    if (this.isEdit) {
+      if (null != this.tempProductDefinitionList && undefined != this.tempProductDefinitionList && this.tempProductDefinitionList.length > 0) {
+        const user = this.tempProductDefinitionList.find(user => user.name === this.fdNonCumulativeProductDefinitionModel.name);
+        if (user != null && user != undefined) {
+          if (user.id === this.fdNonCumulativeProductDefinitionModel.id) {
+            isFlag = applicationConstants.FALSE;
+          }
+        }
+      }
+    }
+    if (null != this.tempProductDefinitionList && undefined != this.tempProductDefinitionList && this.tempProductDefinitionList.length > 0) {
+      this.tempProductDefinitionList.filter((data: any) => null != data.name).map(product => {
+        if (isFlag && product.name === this.fdNonCumulativeProductDefinitionModel.name) {
+          this.msgs = [];
+          this.msgs.push({ severity: 'warning', detail: applicationConstants.PRODUCT_NAME_ALREADY_EXIST });
+          this.generalconfigform.get('name')?.reset();
+          setTimeout(() => {
+            this.msgs = [];
+          }, 1500);
+        }
+      });
+    }
   }
 
 }

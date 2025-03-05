@@ -2,7 +2,6 @@
     <!-- <h6 class="sub-heading">{{'TERMDEPOSITSTRANSACTION.NOMINEE_DETAILS' | translate}}<span
             class="admission-text">(Admission
             Number:&nbsp;{{admissionNumber}})</span></h6> -->
-    <h6 class="sub-heading">{{'TERMDEPOSITSTRANSACTION.NOMINEE_DETAILS' | translate}}</h6>
     <div class="stepper-top-section-strip">
         <div class="row">
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 stepper-top-product-name-background">
@@ -32,6 +31,7 @@
         </div>
     </div>
     <div class="col-12"></div>
+    <h6 class="sub-heading">{{'TERMDEPOSITSTRANSACTION.NOMINEE_DETAIL' | translate}}</h6>
     <form [formGroup]="nomineeForm" id="exit_types_form">
         <div class="col-12 p-0">
             <div class="col-12 p-0 bg-label-colorfull">
@@ -52,11 +52,11 @@
                         <!-- Add new Nominee -->
                         <div class="row" *ngIf="newNominee">
                             <div class="col-12 mt-4 py-0">
-                                <h6 class="sub-heading">{{'TERMDEPOSITSTRANSACTION.NEW_NOMINEE_DETAILS' | translate}}
+                                <h6 class="sub-heading">{{'TERMDEPOSITSTRANSACTION.REQUIRED_DETAILS' | translate}}
                                 </h6>
                             </div>
                             <div class="col-12">
-                                <div class="col-12 global-border p-3">
+                                <div class="col-12 global-border p-3 pt-2">
                                     <div class="row g-3 mt-n1">
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
@@ -81,6 +81,25 @@
                                                     [(ngModel)]="fdNonCumulativeNomineeModel.nomineeName" />
                                                 <p-message severity="error" text="Enter Valid nominee Name"
                                                     *ngIf="!nomineeForm.controls['nomineeName'].valid && nomineeForm.controls['nomineeName'].dirty">
+                                                </p-message>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="form-label">
+                                                <label><span class="red">*</span>{{'ERP.DATE_OF_BIRTH' | translate}}</label>
+                                                <p-calendar formControlName="dateOfBirth" [showIcon]="true" [dateFormat]="orgnizationSetting.calendar"
+                                                    [(ngModel)]="fdNonCumulativeNomineeModel.nomineeDobVal" [appendTo]="'body'" placeholder="DD/MM/YYYY"
+                                                    [maxDate]="today" (onSelect)="ageCalculation(false)">
+                                                </p-calendar>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="form-label">
+                                                <label><span class="red">*</span>{{'ERP.AGE' | translate}}</label>
+                                                <input pInputText type="text" [(ngModel)]="fdNonCumulativeNomineeModel.nomineeAge" minlength="1" maxlength="3"
+                                                    formControlName="nomineeAge" placeholder="Enter Aadhar Number" (focusout)="ageCalculation(true)">
+                                                <p-message severity="error" text="Enter Valid Aadhar Number"
+                                                    *ngIf="!nomineeForm.controls['nomineeAge'].valid && nomineeForm.controls['nomineeAge'].dirty">
                                                 </p-message>
                                             </div>
                                         </div>
@@ -124,30 +143,27 @@
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
                                                 <span><span class="red">*</span>{{
-                                                    'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate }}</span>
+                                                    'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate }} {{ 'TERMDEPOSITSTRANSACTION.PDF_SIZE' | translate }}</span>
                                                 <div class="uplodad-style align-items-center">
                                                     <!-- Upload Button Column -->
 
                                                     <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold"
-                                                        name="myfile[]" chooseLabel=" " id="apply-leave_fileUp_attach"
-                                                        name="file" accept=".png,.jpg,.jpeg,.pdf"
-                                                        (onRemove)="fileRemoeEvent('Nominee')"
-                                                        (onSelect)="fileUploader($event,fileUpload,'Nominee')">
-                                                    </p-fileUpload>
-
-                                                    <!-- Uploaded Files Display Column -->
-
-                                                    <div class="col-12 d-flex p-1 contant-body"
-                                                        *ngFor="let img of fdNonCumulativeNomineeModel.nomineeSighnedFormMultiPartList">
-                                                        <div
-                                                            *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                            <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}"
-                                                                    width="22" height="22"></a>
-                                                        </div>
-                                                        <div class="docname-texteclipse" pTooltip="{{img.fileName}}"
-                                                            tooltipPosition="bottom">
-                                                            {{img.fileName}}</div>
+                                                    name="myfile[]" chooseLabel=" " id="apply-leave_fileUp_attach"
+                                                    name="file" accept=".pdf" [customUpload]="true"
+                                                    (onRemove)="fileRemoeEvent('Nominee')" (onSelect)="fileUploader($event,fileUpload,'Nominee')">
+                                                </p-fileUpload>
+                                                <div class="col-12  d-flex p-1 contant-body"
+                                                    *ngFor="let img of fdNonCumulativeNomineeModel.nomineeSighnedFormMultiPartList">
+                                                    <div *ngIf="img.fileType=='pdf'">
+                                                        <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22"
+                                                                height="22"></a>
                                                     </div>
+                                                    <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
+                                                        tooltipPosition="bottom">
+                                                        {{img.fileName}}
+                                                    </div>
+            
+                                                </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -163,7 +179,7 @@
                             </div>
                             <div class="col-12">
                                 <div class="col-12 global-border p-3">
-                                    <div class="row g-3 mt-n1">
+                                    <div class="row g-3 mt-n1 mb-3">
                                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                                             <div class="mt-2 form-label">
                                                 <p-button icon="fa fa-download p-2" label="unsigned letter format"
@@ -171,30 +187,32 @@
 
                                             </div>
                                         </div>
+                                        </div>
+                                        <div class="row">
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
-                                                <span class=""><span class="red">*</span> {{
+                                                <div class="ml-2"><span class="red">*</span> {{
                                                     'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate
-                                                    }} </span>
+                                                    }} {{ 'TERMDEPOSITSTRANSACTION.PDF_SIZE' | translate }} </div>
                                                 <div class="uplodad-style align-items-center">
                                                     <!-- Upload Button Column -->
                                                     <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold"
-                                                        name="myfile[]" id="apply-leave_fileUp_attach" chooseLabel=" "
-                                                        name="file" accept=".png,.jpg,.jpeg"
-                                                        (onRemove)="fileRemoeEvent('Nominee')"
-                                                        (onSelect)="fileUploader($event,fileUpload,'Nominee')">
-                                                    </p-fileUpload>
-                                                    <div class="col-12  d-flex p-1 contant-body"
-                                                        *ngFor="let img of fdNonCumulativeNomineeModel.nomineeSighnedFormMultiPartList">
-                                                        <div
-                                                            *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                            <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}"
-                                                                    width="22" height="22"></a>
-                                                        </div>
-                                                        <div class="docname-texteclipse" pTooltip="{{img.fileName}}"
-                                                            tooltipPosition="bottom">
-                                                            {{img.fileName}}</div>
+                                                    name="myfile[]" chooseLabel=" " id="apply-leave_fileUp_attach"
+                                                    name="file" accept=".pdf" [customUpload]="true"
+                                                    (onRemove)="fileRemoeEvent('Nominee')" (onSelect)="fileUploader($event,fileUpload,'Nominee')">
+                                                </p-fileUpload>
+                                                <div class="col-12  d-flex p-1 contant-body"
+                                                    *ngFor="let img of fdNonCumulativeNomineeModel.nomineeSighnedFormMultiPartList">
+                                                    <div *ngIf="img.fileType=='pdf'">
+                                                        <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22"
+                                                                height="22"></a>
                                                     </div>
+                                                    <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
+                                                        tooltipPosition="bottom">
+                                                        {{img.fileName}}
+                                                    </div>
+            
+                                                </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -212,6 +230,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <!-- Gaurdian section -->
                     <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12" *ngIf='guarntorDetailsFalg'>
                         <div class="row">
@@ -228,12 +247,11 @@
                         <!-- same as membership guardian details -->
                         <div class="row" *ngIf="sameAsMemberGuardain">
                             <div class="col-12 mt-4 py-0">
-                                <h6 class="sub-heading">{{'TERMDEPOSITSTRANSACTION.GUARDIAN_DETAILS' |
-                                    translate}}&nbsp;(In case The sole Holder is
-                                    a Minor)</h6>
+                                <h6 class="sub-heading">{{'TERMDEPOSITSTRANSACTION.REQUIRED_DETAILS' |
+                                    translate}}</h6>
                             </div>
                             <div class="col-12">
-                                <div class="col-12 global-border p-3">
+                                <div class="col-12 global-border p-3 pt-2">
                                     <div class="row g-3 mt-n1">
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
@@ -298,31 +316,28 @@
                                                 </p-message>
                                             </div>
                                         </div>
-
-
-
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
-                                                <span>{{ 'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate }}</span>
+                                                <span>{{ 'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate }} {{ 'TERMDEPOSITSTRANSACTION.PDF_SIZE' | translate }}</span>
                                                 <div class="uplodad-style align-items-center">
                                                     <!-- Upload Button Column -->
-                                                    <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold"
-                                                        name="myfile[]" id="apply-leave_fileUp_attach" chooseLabel=" "
-                                                        name="file" accept=".png,.jpg,.jpeg"
-                                                        (onRemove)="fileRemoeEvent('Guardain')"
-                                                        (onSelect)="fileUploader($event,fileUpload,'Guardain')">
-                                                    </p-fileUpload>
-                                                    <div class="col-12 d-flex p-1 contant-body"
-                                                        *ngFor="let img of memberGuardianDetailsModelDetails.guardainSighnedMultipartFiles">
-                                                        <div
-                                                            *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                            <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}"
-                                                                    width="22" height="22"></a>
-                                                        </div>
-                                                        <div class="docname-texteclipse" pTooltip="{{img.fileName}}"
-                                                            tooltipPosition="bottom">
-                                                            {{img.fileName}}</div>
+                                                    <p-fileUpload #fileUpload1 class="qua-upld file-attach semi-bold"
+                                                    name="myfile[]" chooseLabel=" " id="apply-leave_fileUp_attach"
+                                                    name="file" accept=".pdf" [customUpload]="true"
+                                                    (onRemove)="fileRemoeEvent('Guardain')" (onSelect)="fileUploader($event,fileUpload1,'Guardain')">
+                                                </p-fileUpload>
+                                                <div class="col-12  d-flex p-1 contant-body"
+                                                    *ngFor="let img of memberGuardianDetailsModelDetails.guardainSighnedMultipartFiles">
+                                                    <div *ngIf="img.fileType=='pdf'">
+                                                        <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22"
+                                                                height="22"></a>
                                                     </div>
+                                                    <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
+                                                        tooltipPosition="bottom">
+                                                        {{img.fileName}}
+                                                    </div>
+            
+                                                </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -337,37 +352,37 @@
                             </div>
                             <div class="col-12">
                                 <div class="col-12 global-border p-3">
-                                    <div class="row g-3 mt-n1">
+                                    <div class="row g-3 mt-n1 mb-3">
                                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                                             <div class="mt-2 form-label">
                                                 <p-button icon="fa fa-download p-2" label="unsigned letter format"
                                                     class="kyc-btnm-0"></p-button>
                                             </div>
                                         </div>
-
+                                    </div>
+                                    <div class="row">
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
-                                                <span><span class="red">*</span> {{
-                                                    'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate }}</span>
+                                                <div class="ml-2"><span class="red">*</span> {{ 'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate }} {{ 'TERMDEPOSITSTRANSACTION.PDF_SIZE' | translate }}</div>
                                                 <div class="uplodad-style align-items-center">
                                                     <!-- Upload Button Column -->
-                                                    <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold"
-                                                        name="myfile[]" id="apply-leave_fileUp_attach" chooseLabel=" "
-                                                        name="file" accept=".png,.jpg,.jpeg"
-                                                        (onRemove)="fileRemoeEvent('Guardain')"
-                                                        (onSelect)="fileUploader($event,fileUpload,'Guardain')">
-                                                    </p-fileUpload>
-                                                    <div class="col-12 d-flex p-1 contant-body"
-                                                        *ngFor="let img of memberGuardianDetailsModelDetails.guardainSighnedMultipartFiles">
-                                                        <div
-                                                            *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                            <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}"
-                                                                    width="22" height="22"></a>
-                                                        </div>
-                                                        <div class="docname-texteclipse" pTooltip="{{img.fileName}}"
-                                                            tooltipPosition="bottom">
-                                                            {{img.fileName}}</div>
+                                                    <p-fileUpload #fileUpload1 class="qua-upld file-attach semi-bold"
+                                                    name="myfile[]" chooseLabel=" " id="apply-leave_fileUp_attach"
+                                                    name="file" accept=".pdf" [customUpload]="true"
+                                                    (onRemove)="fileRemoeEvent('Guardain')" (onSelect)="fileUploader($event,fileUpload1,'Guardain')">
+                                                </p-fileUpload>
+                                                <div class="col-12  d-flex p-1 contant-body"
+                                                    *ngFor="let img of memberGuardianDetailsModelDetails.guardainSighnedMultipartFiles">
+                                                    <div *ngIf="img.fileType=='pdf'">
+                                                        <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22"
+                                                                height="22"></a>
                                                     </div>
+                                                    <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
+                                                        tooltipPosition="bottom">
+                                                        {{img.fileName}}
+                                                    </div>
+            
+                                                </div>
                                                 </div>
                                             </div>
                                         </div>

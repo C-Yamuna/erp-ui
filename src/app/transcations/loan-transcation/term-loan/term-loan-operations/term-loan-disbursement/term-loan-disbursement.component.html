@@ -598,7 +598,7 @@
 
 <!-- Individual details dialog -->
 <div class="view-moredetails-popup">
-    <p-dialog header="Basic Details" [modal]="true" [(visible)]="membreIndividualFlag" [style]="{ width: '55vw' }">
+    <p-dialog header="Basic Details" [modal]="true" [(visible)]="membreIndividualFlag" styleClass="moredetails-style">
         <div class="col-12 view-morepopup">
             <div class="d-flex justify-content-center px-3 py-0 mb-2">
                 <div *ngIf="!this.membershipBasicRequiredDetailsModel.photoCopyPath">
@@ -1102,7 +1102,7 @@
                                 </label>
                                 <p-calendar [showIcon]="true" [dateFormat]="orgnizationSetting.calendar"
                                     id="calendar" name="calendar" formControlName="disbursementDate"
-                                    [(ngModel)]="termLoanDisbursementModel.disbursementDate"
+                                    [(ngModel)]="termLoanDisbursementModel.disbursementDateVal"
                                     placeholder="DD/MM/YYYY"></p-calendar>
 
                             </div>
@@ -1129,6 +1129,33 @@
                                 formControlName="isPhotoSignatureVerified"
                                 [(ngModel)]="termLoanDisbursementModel.isPhotoSignVerfied" [appendTo]="'body'">
                             </p-dropdown>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                        <div class="form-label">
+                            <label><span class="red">*</span>{{'ERP.DISBURSEMENT_TYPE' | translate}}</label>
+
+                            <input pInputText formControlName="type" 
+                            id="bunit_txt_name" maxlength="40" type="text"
+                            [(ngModel)]="termLoanDisbursementModel.typeName">
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
+                        <div class="form-label">
+                            <label><span class="red">*</span>{{'ERP.PAYMENT_MODE' | translate}}</label>
+                            <p-dropdown id="bunit_txt_status" placeholder="Select" [filter]="true"
+                                [options]="paymentOptions" formControlName="paymentModeName"
+                                [(ngModel)]="termLoanDisbursementModel.paymentMode">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6" *ngIf="termLoanDisbursementModel.paymentMode === 2">
+                        <div class="form-label">
+                            <label for="sbAccountNumber">{{'ERP.SB_ACCOUNT_NUMBER' | translate}}</label>
+                            <input pInputText id="sbAccountNumber" formControlName="sbAccountNumber" maxlength="40"
+                                [(ngModel)]="termLoanDisbursementModel.sbAccountNumber" type="text"
+                                placeholder="Enter SB Account Number">
                         </div>
                     </div>
                     <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 btn-footer mt-4">

@@ -108,6 +108,8 @@ export class SiLoanApplicationDetailsComponent {
   insurenceFlag: boolean = false;
   saveAndNextButton:boolean = false;
   temprepaymentList: any[]=[];
+  purposeTypeList:any[]=[];
+  tempPurposeTypeList: any[]=[];
 
 
   constructor(private router: Router, private formBuilder: FormBuilder,
@@ -185,6 +187,7 @@ export class SiLoanApplicationDetailsComponent {
       { label: 'Percentage', value: '2' },
     ];
     this.getAllProducts();
+    this.getAllPurposeTypes();
     // this.getAllRepaymentFrequency();
     // this.getAllLoanPurpose();
     this.getAllAccountTypes();
@@ -286,23 +289,7 @@ export class SiLoanApplicationDetailsComponent {
       })
   }
 
-  getAllLoanPurpose() {
-    this.commonComponent.startSpinner();
-     this.siTransactionDetailsService.getAllLoanPurpose().subscribe(response => {
-      this.responseModel = response;
-      if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-        this.commonComponent.stopSpinner();
-        this.loanPurposeList = this.responseModel.data.filter((loanPurpose: { status: number; }) => loanPurpose.status == 1).map((loanPurpose: any) => {
-          return { label: loanPurpose.name, value: loanPurpose.id };
-        });
-      }
-    },
-      error => {
-        this.msgs = [];
-        this.commonComponent.stopSpinner();
-        this.msgs.push({ severity: 'error', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST });
-      })
-  }
+
 
   getAllAccountTypes() {
     this.siTransactionDetailsService.getAllAccountTypes().subscribe((res: any) => {
@@ -428,7 +415,7 @@ export class SiLoanApplicationDetailsComponent {
     this.displayDialog = true;
     this.productInfoFalg = true;
     if (event.value != null && event.value != undefined) {
-      this.getProductDefinitionByProductIdAndApplicationDate(event.value);
+      this.getProductDefinitionByProductIdAndApplicationDate(event.value,true);
     }
   }
 
@@ -521,8 +508,24 @@ export class SiLoanApplicationDetailsComponent {
 
             if (this.siLoanApplicationModel.memberTypeName != null && this.siLoanApplicationModel.memberTypeName != undefined) {
               this.memberTypeName = this.siLoanApplicationModel.memberTypeName;
-              if (this.siLoanApplicationModel.memberTypeName == MemberShipTypesData.INDIVIDUAL)
-                this.isIndividual = true;
+              if (this.siLoanApplicationModel.memberTypeName == MemberShipTypesData.INDIVIDUAL){
+                this.isIndividual = applicationConstants.TRUE;
+                const controlName = this.siLoanapplicationForm.get('operationTypeId');
+                  if (controlName) {
+                    controlName.setValidators([
+                      Validators.required,
+                    ]);
+                    controlName.updateValueAndValidity();
+              }
+            }
+              else{
+                this.isIndividual = applicationConstants.FALSE;
+                const controlName = this.siLoanapplicationForm.get('operationTypeId');
+                if (controlName) {
+                  controlName.setValidators(null);
+                  controlName.updateValueAndValidity();
+              }
+            }
             }
             if (this.siLoanApplicationModel.admissionNo != null && this.siLoanApplicationModel.admissionNo != undefined)
               this.admissionNumber = this.siLoanApplicationModel.admissionNo;
@@ -535,14 +538,14 @@ export class SiLoanApplicationDetailsComponent {
 
             if (this.siLoanApplicationModel.siLoanInsuranceDetailsDTO != null && this.siLoanApplicationModel.siLoanInsuranceDetailsDTO != undefined){
               this.siLoanInsuranceDetailsModel = this.siLoanApplicationModel.siLoanInsuranceDetailsDTO;
-              this.insurenceFlag = true;
+              // this.insurenceFlag = true;
             } 
-            else{
-              this.insurenceFlag = false;
-            }
+            // else{
+            //   this.insurenceFlag = false;
+            // }
            
                   
-            this.getProductDefinitionByProductIdAndApplicationDate(this.siLoanApplicationModel.siProductId); 
+            this.getProductDefinitionByProductIdAndApplicationDate(this.siLoanApplicationModel.siProductId,true); 
 
             if (this.siLoanApplicationModel.siDisbursementDTOList != null)
               this.siLoanDisbursementScheduleList = this.siLoanApplicationModel.siDisbursementDTOList;
@@ -599,7 +602,7 @@ export class SiLoanApplicationDetailsComponent {
         flag = true;
         this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.APPLICATION_DATE_SHOULD_NOT_GREATER_THAN_DUE_DATE }];
       } else {
-        this.getProductDefinitionByProductIdAndApplicationDate(this.siLoanApplicationModel.siProductId);
+        this.getProductDefinitionByProductIdAndApplicationDate(this.siLoanApplicationModel.siProductId,true);
       }
 
       if(flag){
@@ -748,22 +751,27 @@ export class SiLoanApplicationDetailsComponent {
       }
     }
   }
-
-  getProductDefinitionByProductIdAndApplicationDate(productId: any) {
-    // this.siLoanapplicationForm.get('applicationNumber').reset();
-    // this.siLoanapplicationForm.get('operationTypeId').reset();
-    // this.siLoanapplicationForm.get('roi').reset();
-    // this.siLoanapplicationForm.get('penalRoi').reset();
-    // this.siLoanapplicationForm.get('iod').reset();
-    // this.siLoanapplicationForm.get('repaymentFrequency').reset();
-    // this.siLoanapplicationForm.get('monthlyIncome').reset();
-    // this.siLoanapplicationForm.get('purposeId').reset();
-    // this.siLoanapplicationForm.get('requestedAmount').reset();
-    // this.siLoanapplicationForm.get('sanctionAmount').reset();
-    // this.siLoanapplicationForm.get('sanctionDate').reset();
-    // this.siLoanapplicationForm.get('plannedDisbursements').reset();
-    // this.siLoanapplicationForm.get('loanPeriod').reset();
-    // this.siLoanapplicationForm.get('loanDueDate').reset();
+  /**
+   * @implements get product details
+   * @param productId 
+   * @author k.yamuna
+   */
+  getProductDefinitionByProductIdAndApplicationDate(productId: any,flag:any) {
+    if(!flag){
+      this.siLoanapplicationForm.get('applicationNumber').reset();
+      this.siLoanapplicationForm.get('operationTypeId').reset();
+      this.siLoanapplicationForm.get('roi').reset();
+      this.siLoanapplicationForm.get('penalRoi').reset();
+      this.siLoanapplicationForm.get('iod').reset();
+      this.siLoanapplicationForm.get('repaymentFrequency').reset();
+      this.siLoanapplicationForm.get('monthlyIncome').reset();
+      this.siLoanapplicationForm.get('purposeId').reset();
+      this.siLoanapplicationForm.get('requestedAmount').reset();
+      this.siLoanapplicationForm.get('sanctionAmount').reset();
+      this.siLoanapplicationForm.get('sanctionDate').reset();
+      this.siLoanapplicationForm.get('loanPeriod').reset();
+      this.siLoanapplicationForm.get('loanDueDate').reset();
+    }
 
 
     if (this.siLoanApplicationModel.applicationDateVal != undefined && this.siLoanApplicationModel.applicationDateVal != null)
@@ -773,25 +781,35 @@ export class SiLoanApplicationDetailsComponent {
       this.responseModel = data;
       if (this.responseModel != null && this.responseModel != undefined) {
         if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined && this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
-          this.siLoanProductDefinitionModel = this.responseModel.data[0];
+          this.simpleInterestProductDefinitionModel = this.responseModel.data[0];
 
-          if (this.siLoanProductDefinitionModel.siInterestPolicyConfigDTOList != undefined && this.siLoanProductDefinitionModel.siInterestPolicyConfigDTOList != null) {
-            this.siLoanInterestPolicyModel = this.siLoanProductDefinitionModel.siInterestPolicyConfigDTOList[0];
+          if (this.simpleInterestProductDefinitionModel.siInterestPolicyConfigDTOList != undefined && this.simpleInterestProductDefinitionModel.siInterestPolicyConfigDTOList != null) {
+            this.siLoanInterestPolicyModel = this.simpleInterestProductDefinitionModel.siInterestPolicyConfigDTOList[0];
           }
-          if(this.siLoanProductDefinitionModel.isInsuranceAppicable != null && this.siLoanProductDefinitionModel.isInsuranceAppicable ==applicationConstants.TRUE){
-            this.insurenceFlag = true;
-            this.updateData();
-          }
-          else{
-            this.insurenceFlag = false;
+          // if(this.siLoanProductDefinitionModel.isInsuranceAppicable != null && this.siLoanProductDefinitionModel.isInsuranceAppicable ==applicationConstants.TRUE){
+          //   this.insurenceFlag = true;
+          //   this.updateData();
+          // }
+          // else{
+          //   this.insurenceFlag = false;
+          // }
+          this.insurenceFlag = this.simpleInterestProductDefinitionModel.isInsuranceAppicable;
+          if(this.insurenceFlag){
+            if(this.siLoanApplicationModel.siLoanInsuranceDetailsDTO != null && this.siLoanApplicationModel.siLoanInsuranceDetailsDTO != undefined)
+              this.siLoanInsuranceDetailsModel= this.siLoanApplicationModel.siLoanInsuranceDetailsDTO;
           }
           this.updateData();
-          this.loanPurposeList = this.siLoanProductDefinitionModel.siProdPurposeConfigDTOList;
-          if(this.loanPurposeList != null && this.loanPurposeList != undefined){
-            this.loanPurposeList =this.loanPurposeList.filter((loanPurpose: { status: number; }) => loanPurpose!= null).map((loanPurpose: any) => {
-              return { label:loanPurpose.loanPurposeName, value: loanPurpose.purposeId };
-            });
-          }
+          // this.loanPurposeList = this.siLoanProductDefinitionModel.siProdPurposeConfigDTOList;
+          // if(this.loanPurposeList != null && this.loanPurposeList != undefined){
+          //   this.loanPurposeList =this.loanPurposeList.filter((loanPurpose: { status: number; }) => loanPurpose!= null).map((loanPurpose: any) => {
+          //     return { label:loanPurpose.loanPurposeName, value: loanPurpose.purposeId };
+          //   });
+          // }
+          let loanPurposeList = this.simpleInterestProductDefinitionModel.purposeTypeIds;
+          const valueArray = loanPurposeList
+           .split(',').map((value:any) => Number(value.trim()));
+          this.purposeTypeList = this.tempPurposeTypeList.filter(item => valueArray.includes(item.value));
+
   
             if (this.siLoanInterestPolicyModel.roi != undefined && this.siLoanInterestPolicyModel.roi != null)
             this.siLoanApplicationModel.effectiveRoi = this.siLoanInterestPolicyModel.roi;
@@ -805,8 +823,13 @@ export class SiLoanApplicationDetailsComponent {
             // if (this.siLoanProductDefinitionModel.interestPostingFrequencyName != undefined && this.siLoanProductDefinitionModel.interestPostingFrequencyName != null)
             //   this.siLoanApplicationModel.repaymentFrequency = this.siLoanProductDefinitionModel.interestPostingFrequency;
 
-            this.repaymentFrequencyList = this.interestPostingFrequencyList.filter(obj => obj != null && obj.value == this.siLoanProductDefinitionModel.interestPostingFrequency);
-          
+            this.repaymentFrequencyList = this.interestPostingFrequencyList.filter(obj => obj != null && obj.value == this.simpleInterestProductDefinitionModel.interestPostingFrequency);
+            if(this.simpleInterestProductDefinitionModel.siRequiredDocumentsConfigDTOList != null && this.simpleInterestProductDefinitionModel.siRequiredDocumentsConfigDTOList != undefined &&
+              this.simpleInterestProductDefinitionModel.siRequiredDocumentsConfigDTOList.length > 0
+            ){
+              this.siLoanApplicationModel.requiredDocumentsConfigDetailsDTOList = this.simpleInterestProductDefinitionModel.siRequiredDocumentsConfigDTOList;
+
+            }
         }
       }
       this.onChangeQualificationChange();
@@ -1254,15 +1277,15 @@ export class SiLoanApplicationDetailsComponent {
   onSelectSanctionAmountCailculation(sanctionAmount:any) {
     let flag = false;
     if (sanctionAmount != undefined) {
-      if ( sanctionAmount != undefined && this.siLoanApplicationModel.sanctionAmount >= this.siLoanProductDefinitionModel.eligibleMInAmount && 
-        sanctionAmount <= this.siLoanProductDefinitionModel.eligibleMaxAmount) {
+      if ( sanctionAmount != undefined && this.siLoanApplicationModel.sanctionAmount >= this.simpleInterestProductDefinitionModel.eligibleMInAmount && 
+        sanctionAmount <= this.simpleInterestProductDefinitionModel.eligibleMaxAmount) {
           flag = true;
       } 
       else{
         flag = false;
       }
       if(!flag){
-        this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: "Sanction amount should be in between eligible min and max amount" + this.siLoanProductDefinitionModel.eligibleMInAmount+ "," + this.siLoanProductDefinitionModel.eligibleMaxAmount}];
+        this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: "Sanction amount should be in between eligible min and max amount" + this.simpleInterestProductDefinitionModel.eligibleMInAmount+ "," + this.simpleInterestProductDefinitionModel.eligibleMaxAmount}];
         this.siLoanapplicationForm.get('sanctionAmount')?.reset();
         this.siLoanApplicationModel.sanctionAmount = null;
         setTimeout(() => {
@@ -1279,16 +1302,16 @@ export class SiLoanApplicationDetailsComponent {
   onSelectPeriodInMonths(months:any) {
     let flag = false;
     if (months != undefined) {
-      if ( months != undefined && months >= this.siLoanProductDefinitionModel.minLoanPeriod && 
-        months <= this.siLoanProductDefinitionModel.maxLoanPeriod) {
+      if ( months != undefined && months >= this.simpleInterestProductDefinitionModel.minLoanPeriod && 
+        months <= this.simpleInterestProductDefinitionModel.maxLoanPeriod) {
           flag = true;
       } 
       else{
         flag = false;
       }
       if(!flag){
-        this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: "Loan period in months should be in between minLoanPeriod and maxLoanPeriod" + this.siLoanProductDefinitionModel.minLoanPeriod
-          + "," + this.siLoanProductDefinitionModel.maxLoanPeriod
+        this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: "Loan period in months should be in between minLoanPeriod and maxLoanPeriod" + this.simpleInterestProductDefinitionModel.minLoanPeriod
+          + "," + this.simpleInterestProductDefinitionModel.maxLoanPeriod
         }];
         this.siLoanapplicationForm.get('loanPeriod')?.reset();
         this.siLoanApplicationModel.loanPeriod = null;
@@ -1314,6 +1337,41 @@ export class SiLoanApplicationDetailsComponent {
         this.siLoanApplicationModel.loanDueDateVal = new Date(sanctionDate);
       }
     }
+  }
+  /**
+   * @implements  get all purpose types
+   * @author k.yamuna
+   */
+  getAllPurposeTypes() {
+    this.commonComponent.startSpinner();
+    this.purposeTypeList = [];
+    this.simpleInterestProductDefinitionService.getAllLoanPurpose().subscribe((res: any) => {
+      this.responseModel = res;
+      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS && this.responseModel.data[0] != null) {
+        if (this.responseModel.data == null || (this.responseModel.data != null && this.responseModel.data.length == 0)) {
+          this.commonComponent.stopSpinner();
+          this.msgs = [];
+          this.msgs = [{ severity: 'error', detail: applicationConstants.RELATIONSHIP_TYPE_NO_DATA_MESSAGE }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        } else {
+          this.purposeTypeList = this.responseModel.data.filter((documenttype: any) => documenttype.status == applicationConstants.ACTIVE).map((count: any) => {
+            return { label: count.name, value: count.id }
+          });
+          this.tempPurposeTypeList = this.purposeTypeList;
+          this.commonComponent.stopSpinner();
+        }
+      }
+    },
+      error => {
+        this.msgs = [];
+        this.commonComponent.stopSpinner();
+        this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      });
   }
 
  

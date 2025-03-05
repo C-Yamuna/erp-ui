@@ -56,4 +56,6 @@ export class RecurringDepositProductDefinition {
     tenureType?: any;
 
     tenureTypeName?: any;
+
+    penaltyAmount? : any;
 }

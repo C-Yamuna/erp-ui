@@ -298,7 +298,7 @@ export class CommunicationsComponent {
             if(mandal != null && undefined != mandal)
             this.memberCommunicationDetailsModel.subDistrictName = mandal.label;
             if(this.memberCommunicationDetailsModel.villageId != null && this.memberCommunicationDetailsModel.villageId != undefined){
-              this.getVillage(this.memberCommunicationDetailsModel.villageId);
+              this.getVillage(this.memberCommunicationDetailsModel.villageId,true);
             }
           }
           else {
@@ -384,7 +384,10 @@ export class CommunicationsComponent {
         }, 2000);
       });
   }
-  getVillage(id:any){
+  getVillage(id:any,isResetIds:any){
+    if(!isResetIds){
+      this.communicationform.get('address1').reset();
+    }
     this.memberCommunicationDetailsModel.divisionId = null;;
     this.memberCommunicationDetailsModel.divisionName = null;
     this.memberCommunicationDetailsModel.blockId = null;;
@@ -574,10 +577,13 @@ export class CommunicationsComponent {
       }, 2000);
     });
   }
-  getPerVillage(id:any){
-    this.memberCommunicationDetailsModel.permanentBlockId = null;;
+  getPerVillage(id:any,isResetIds:any){
+    if(isResetIds){
+      this.communicationform.get('permanentAddress1').reset();
+    }
+    this.memberCommunicationDetailsModel.permanentBlockId = null;
     this.memberCommunicationDetailsModel.permanentDivisionId = null;
-    this.memberCommunicationDetailsModel.permanentBlockName = null;;
+    this.memberCommunicationDetailsModel.permanentBlockName = null;
     this.memberCommunicationDetailsModel.permanentDivisionName = null;
     let village= this.pervillageList.find((obj:any) => null != obj && id != null && obj.value === id);
     if(village != null && undefined != village)
@@ -641,7 +647,7 @@ export class CommunicationsComponent {
       }
       this.memberCommunicationDetailsModel.address1 = this.memberCommunicationDetailsModel.permanentAddress1;
       // this.memberCommunicationDetailsModel.permanentAddress2 = this.memberCommunicationDetailsModel.address2;
-      this.memberCommunicationDetailsModel.pinCode = this.memberCommunicationDetailsModel.permanentPinCode;
+      this.memberCommunicationDetailsModel.pincode = this.memberCommunicationDetailsModel.permanentPinCode;
       this.memberCommunicationDetailsModel.blockId = this.memberCommunicationDetailsModel.permanentBlockId;
       this.memberCommunicationDetailsModel.blockName = this.memberCommunicationDetailsModel.permanentBlockName;
 
@@ -677,7 +683,7 @@ export class CommunicationsComponent {
       this.memberCommunicationDetailsModel.subDistrictId = null;
       this.memberCommunicationDetailsModel.villageId = null;
       this.memberCommunicationDetailsModel.address1 = null;
-      this.memberCommunicationDetailsModel.pinCode = null;
+      this.memberCommunicationDetailsModel.pincode = null;
       this.memberCommunicationDetailsModel.blockId = null;
       this.memberCommunicationDetailsModel.divisionId = null;
 
@@ -688,7 +694,7 @@ export class CommunicationsComponent {
   RegAddressToComAddress() {
     if (this.memberCommunicationDetailsModel.isSameAddress == applicationConstants.TRUE) {
       this.memberCommunicationDetailsModel.address1 = this.memberCommunicationDetailsModel.permanentAddress1;
-      this.memberCommunicationDetailsModel.pinCode = this.memberCommunicationDetailsModel.permanentPinCode;
+      this.memberCommunicationDetailsModel.pincode = this.memberCommunicationDetailsModel.permanentPinCode;
     }
   }
   sameAsRegisterAddress() {
@@ -714,9 +720,9 @@ export class CommunicationsComponent {
         this.memberCommunicationDetailsModel.address1 = null;
         this.memberCommunicationDetailsModel.address1 = this.memberCommunicationDetailsModel.permanentAddress1;
       }
-      if (this.memberCommunicationDetailsModel.pinCode != this.memberCommunicationDetailsModel.permanentPinCode) {
-        this.memberCommunicationDetailsModel.pinCode = null;
-        this.memberCommunicationDetailsModel.pinCode = this.memberCommunicationDetailsModel.permanentPinCode;
+      if (this.memberCommunicationDetailsModel.pincode != this.memberCommunicationDetailsModel.permanentPinCode) {
+        this.memberCommunicationDetailsModel.pincode = null;
+        this.memberCommunicationDetailsModel.pincode = this.memberCommunicationDetailsModel.permanentPinCode;
       }
 
       if (this.memberCommunicationDetailsModel.divisionId != this.memberCommunicationDetailsModel.permanentDivisionId) {
@@ -727,7 +733,7 @@ export class CommunicationsComponent {
         this.memberCommunicationDetailsModel.blockId = null;
         this.memberCommunicationDetailsModel.blockId = this.memberCommunicationDetailsModel.permanentBlockId;
       }
-       this.getVillage(this.memberCommunicationDetailsModel.villageId);
+       this.getVillage(this.memberCommunicationDetailsModel.villageId,true);
     }
   }
 }

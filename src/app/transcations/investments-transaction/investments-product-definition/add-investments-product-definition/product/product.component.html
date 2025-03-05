@@ -11,7 +11,7 @@
                             translate}}
                         </label>
                         <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="name"
-                            [(ngModel)]="investmentsProductDefinitionModel.name">
+                            [(ngModel)]="investmentsProductDefinitionModel.name" (focusout)="productNameDuplicateCheck()">
                         <p-message severity="error" text="Enter Valid Name"
                             *ngIf="!productform.controls['name'].valid && productform.controls['name'].dirty">
                         </p-message>

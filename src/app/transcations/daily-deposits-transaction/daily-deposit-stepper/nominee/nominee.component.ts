@@ -16,6 +16,7 @@ import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-
 import { DailyDepositsAccountsService } from '../../shared/daily-deposits-accounts.service';
 import { FileUpload } from 'primeng/fileupload';
 import { FileUploadModel } from 'src/app/layout/mainmenu/shared/file-upload-model.model';
+import { MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-nominee',
@@ -90,6 +91,10 @@ export class NomineeComponent {
   guardianEmailId: any;
   memberFilePath: any;
   depositDate: any;
+  today: any;
+  enableFlag : boolean = false;
+  isFileUploadedNominee: boolean = false;
+  isFileUploadedGuardina: boolean = false;
 
   constructor(private router: Router, private formBuilder: FormBuilder,
     private commonComponent: CommonComponent,
@@ -101,14 +106,15 @@ export class NomineeComponent {
     private dailyDepositsAccountsService:DailyDepositsAccountsService
   ) {
     this.nomineeForm = this.formBuilder.group({
-      relationName: ['',],
-      nomineeName: ['',],
-      aadhaar: ['',],
-      mobileNumber: ['',],
-      email: ['',],
-      dateOfBirth: new FormControl('',),
-      // remarks: new FormControl('',),
-      nomineeType: ['', Validators.required],
+      "relationName": new FormControl(''),
+      "nomineeName": new FormControl('',),
+      "aadhaar": new FormControl('',),
+      "mobileNumber": new FormControl('',),
+      "email": new FormControl('',),
+      "dateOfBirth": new FormControl('', ),
+      "age": new FormControl('', ),
+      "remarks": new FormControl('', ),
+      "nomineeType": ['', Validators.required],
 
       //guardian form fields
       relationNameOfGuardian: ['',],
@@ -137,36 +143,13 @@ export class NomineeComponent {
   ngOnInit(): void {
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
     this.showForm = this.commonFunctionsService.getStorageValue(applicationConstants.B_CLASS_MEMBER_CREATION);
-    if (this.showForm) {
-      this.nomineeList = [
-        { label: 'New Nominee', value: 1 },
-        { label: 'No Nominee', value: 3 },
-      ]
-    }
-    else {
-      this.nomineeList = [
-        { label: 'New Nominee', value: 1 },
-        { label: 'Same As Membership Nominee', value: 2 },
-        { label: 'No Nominee', value: 3 },
-      ]
-    }
-    if (this.showForm) {
-      this.guadianTypesList = [
-        { label: 'New Guardain', value: 1 },
-        { label: 'No Guardain', value: 3 },
-      ]
-    } else {
-      this.guadianTypesList = [
-        { label: 'New Guardain', value: 1 },
-        { label: 'Same as Member Guardain', value: 2 },
-        { label: 'No Guardain', value: 3 },
-      ];
-    }
+    this.today = new Date();
+    
     this.activateRoute.queryParams.subscribe(params => {
       if (params['id'] != undefined || params['preview'] != undefined) {
         if (params['preview'] != undefined && params['preview'] != null) {
           let edit = this.encryptDecryptService.decrypt(params['preview']);
-          this.historyFLag = true;
+          // this.historyFLag = true;
         }
         if (params['id'] != undefined && params['id'] != null) {
           let queryParams = this.encryptDecryptService.decrypt(params['id']);
@@ -187,28 +170,43 @@ export class NomineeComponent {
     this.getAllRelationTypes();
   }
   updateData() {
-    if(this.relationTypesList != null && this.relationTypesList != undefined && this.relationTypesList.length > 0){
-      let nominee = this.relationTypesList.find((data: any) => null != data && this.accountNomineeModel.relationType != null && data.value == this.accountNomineeModel.relationType);
-      if (nominee != null && undefined != nominee && nominee.label != null && nominee.label != undefined) {
-        this.accountNomineeModel.relationTypeName = nominee.label;
-      }
-      let guardain = this.relationTypesList.find((data: any) => null != data && this.accountGuardianModel.relationshipTypeId != null && data.value == this.accountGuardianModel.relationshipTypeId);
-      if (guardain != null && undefined != guardain && nominee.label != null && guardain.label != undefined) {
-        this.accountGuardianModel.relationshipTypeName = guardain.label;
+
+    if(this.relationTypesList != null && this.relationTypesList != undefined && this.relationTypesList.length > 0 ){
+      if (this.accountNomineeModel.relationType != null) {
+        let nominee = this.relationTypesList.find((data: any) => null != data && data.label == this.accountNomineeModel.relationType);
+        if (nominee != null && undefined != nominee && nominee.label != null && nominee.label != undefined) {
+          this.accountNomineeModel.relationType = nominee.value;
+          this.accountNomineeModel.relationTypeName = nominee.label;
+
+        }
+      } if (this.accountGuardianModel.relationshipTypeName != null) {
+        let guardain = this.relationTypesList.find((data: any) => null != data && data.value == this.accountGuardianModel.relationshipTypeName);
+        if (guardain != null && undefined != guardain && guardain.label != null && guardain.label != undefined) {
+          this.accountGuardianModel.relationshipTypeName = guardain.label;
+          this.accountGuardianModel.relationshipTypeId = guardain.value;
+        }
       }
     }
-    if (this.age <= 18) {
+    if (this.age <= 18 || this.accountNomineeModel.age <= 18 && this.accountNomineeModel.nomineeType != 3 && this.accountNomineeModel != null && this.accountNomineeModel.nomineeType != undefined ) {
       this.accountGuardianModel.accId = this.accId ;
       this.accountGuardianModel.accountNumber = this.accountNumber;
-      // this.accountNomineeModel.accountGuardian = this.accountGuardianModel;
+      this.accountNomineeModel.accountGuardian = this.accountGuardianModel;
+      this.enableFlag = (!this.nomineeForm.valid) || !(this.isFileUploadedNominee && this.isFileUploadedGuardina)
+    }
+    else if(this.accountNomineeModel != null && this.accountNomineeModel.nomineeType != undefined && this.accountNomineeModel.nomineeType === 3 && this.accountNomineeModel.signedCopyPath !=null ) {
+      this.accountGuardianModel = new AccountGuardian();
+      this.enableFlag = false;
+    }
+    else{
+      this.enableFlag = (!this.nomineeForm.valid) || !(this.isFileUploadedNominee);
     }
     this.accountNomineeModel.accountNumber = this.accountNumber;
     this.accountNomineeModel.accId = this.accId;
+    this.accountNomineeModel.productId = this.accountsModel.productId;
     this.dailyDepositsAccountsService.changeData({
       formValid: !this.nomineeForm.valid ? true : false,
       data: this.accountNomineeModel,
-      isDisable: (!this.nomineeForm.valid),
-      // isDisable:false,
+      isDisable: this.enableFlag,
       stepperIndex: 5,
     });
   }
@@ -217,6 +215,7 @@ export class NomineeComponent {
   }
   //on change nominee type need to update validation
   onChange(event: any ,flag :boolean) {
+    
     if (event == 1) {//new nominee
       this.newNomineeType(flag);
     }
@@ -224,7 +223,7 @@ export class NomineeComponent {
       this.samAsMemberNomineeType(flag);
     }
     else if (event == 3) {//no nominee
-      this.noNomineeType(flag);
+      this.noNomineeType(event,flag);
     } 
   }
 
@@ -233,11 +232,16 @@ export class NomineeComponent {
    * @param event guardain Type
    */
   onChangeGuardain(event: any , flag :boolean) {
+    if(flag){
+      this.accountGuardianModel.guardainMultipartList = [];
+      this.isFileUploadedGuardina = false;
+      this.resetGuardain();
+    }
     if (event == 1) {//new guardain
       this.newGuardainType(flag);
     }
    else if (event == 2) {//same as member guardain
-      this.sameAsMemberGuardianType(flag);
+      this.sameAsMembergaurdianType(flag);
     }
     else if (event == 3) {//no guardain
       this.noGuardainaType(flag);
@@ -251,62 +255,99 @@ export class NomineeComponent {
       if (this.responseModel != null && this.responseModel != undefined) {
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+            this.accountsModel = this.responseModel.data[0];
+            if (this.responseModel.data[0].accountOpenDate != null && this.responseModel.data[0].accountOpenDate != undefined) {
+              this.accountOpeningDateVal = this.datePipe.transform(this.responseModel.data[0].accountOpenDate, this.orgnizationSetting.datePipe);
+            }
+            if (this.responseModel.data[0].productName != null && this.responseModel.data[0].productName != undefined) {
+              this.productName = this.responseModel.data[0].productName;
+            }
+            if (this.responseModel.data[0].accountTypeName != null && this.responseModel.data[0].accountTypeName != undefined) {
+              this.accountType = this.responseModel.data[0].accountTypeName;
+            }
+            if (this.responseModel.data[0].minBalance != null && this.responseModel.data[0].minBalance != undefined) {
+              this.minBalence = this.responseModel.data[0].minBalance
+            }
+            if(this.responseModel.data[0].memberTypeName != null && this.responseModel.data[0].memberTypeName != undefined){
+              this.memberTypeName = this.responseModel.data[0].memberTypeName;
+              this.memberTypeCheck(this.responseModel.data[0]);
+            }
+            if(this.responseModel.data[0].adminssionNumber != null && this.responseModel.data[0].adminssionNumber != undefined){
+              this.admissionNumber = this.responseModel.data[0].adminssionNumber;
+            }
             if (this.responseModel.data[0].depositDate != null && this.responseModel.data[0].depositDate != undefined) {
               this.depositDate = this.datePipe.transform(this.responseModel.data[0].depositDate, this.orgnizationSetting.datePipe);
             }
-            if (this.responseModel.data[0].memberTypeName != null && this.responseModel.data[0].memberTypeName != undefined) {
-              this.memberTypeName = this.responseModel.data[0].memberTypeName;
-            }
-            if (this.responseModel.data[0].adminssionNumber != null && this.responseModel.data[0].adminssionNumber != undefined) {
-              this.admissionNumber = this.responseModel.data[0].adminssionNumber;
-            }
-
             if (this.responseModel.data[0].depositAmount != null && this.responseModel.data[0].depositAmount != undefined) {
               this.depositAmount = this.responseModel.data[0].depositAmount;
             }
-            if (this.responseModel.data[0].accountNumber != null && this.responseModel.data[0].accountNumber != undefined) {
+            if(this.responseModel.data[0].accountNumber != null && this.responseModel.data[0].accountNumber != undefined){
               this.accountNumber = this.responseModel.data[0].accountNumber;
-              if (this.historyFLag) {
-                this.getNomineeHistoryByRdAccountNumber(this.accountNumber);
-              }
+              // if(this.historyFLag){
+              //   this.getNomineeHistoryBysbAccountNumber(this.accountNumber);
+              // }
             }
-            if (this.responseModel.data[0].memberShipBasicDetailsDTO.age != null && this.responseModel.data[0].memberShipBasicDetailsDTO.age != undefined) {
+            if(this.responseModel.data[0].age != null && this.responseModel.data[0].age != undefined){
               this.age = this.responseModel.data[0].memberShipBasicDetailsDTO.age;
-              if (this.age < 18) {
+              if(this.age < 18){
                 this.guarntorDetailsFalg = true;
               }
             }
-            this.accountsModel = this.responseModel.data[0];
-            if (this.accountsModel != null && this.accountsModel != undefined) {
-              if (this.accountsModel.accountNomineeList != null && this.accountsModel.accountNomineeList != undefined &&
-                this.accountsModel.accountNomineeList[0] != null && this.accountsModel.accountNomineeList[0] != undefined)
-                this.accountNomineeModel = this.accountsModel.accountNomineeList[0];
-              if (this.accountNomineeModel.identityProofDocPath != null && this.accountNomineeModel.identityProofDocPath != undefined) {
-                this.accountNomineeModel.nomineeMultiPartList = this.fileUploadService.getFile(this.accountNomineeModel.identityProofDocPath, ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.accountNomineeModel.identityProofDocPath);
+            if(this.responseModel.data[0].accountNomineeList != null && this.responseModel.data[0].accountNomineeList != undefined && this.responseModel.data[0].accountNomineeList.length>0){
+             let nomineeList = this.responseModel.data[0].accountNomineeList;
+              this.accountNomineeModel = nomineeList[0];
+              if(this.accountNomineeModel.dateOfBirth != null && this.accountNomineeModel.dateOfBirth != undefined){
+                this.accountNomineeModel.dateOfBirthVal = this.datePipe.transform(this.accountNomineeModel.dateOfBirth, this.orgnizationSetting.datePipe);
               }
-              if (this.accountsModel.termAccountGaurdianList != null && this.accountsModel.termAccountGaurdianList != undefined &&
-                this.accountsModel.termAccountGaurdianList[0] != null && this.accountsModel.termAccountGaurdianList[0] != undefined)
-                this.accountGuardianModel = this.accountsModel.termAccountGaurdianList[0];
-
-              if (this.accountGuardianModel.identityProofDocPath != null && this.accountGuardianModel.identityProofDocPath != undefined) {
-                this.accountGuardianModel.guardainMultipartList = this.fileUploadService.getFile(this.accountGuardianModel.identityProofDocPath, ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.accountGuardianModel.identityProofDocPath);
+              if(this.accountNomineeModel.signedCopyPath != null && this.accountNomineeModel.signedCopyPath != undefined){
+                if(this.accountNomineeModel.nomineeType != null && this.accountNomineeModel.nomineeType != undefined){
+                  if(this.accountNomineeModel.nomineeType != 2){
+                    this.accountNomineeModel.nomineeSighnedFormMultiPartList =  this.fileUploadService.getFile(this.accountNomineeModel.signedCopyPath , ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.accountNomineeModel.signedCopyPath);
+                  }
+                  else {
+                    this.accountNomineeModel.nomineeSighnedFormMultiPartList =  this.fileUploadService.getFile(this.accountNomineeModel.signedCopyPath , ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.accountNomineeModel.signedCopyPath);
+                  }
+                  this.isFileUploadedNominee = applicationConstants.TRUE;
+                }
               }
-
-              if (this.accountNomineeModel.nomineeType != null && this.accountNomineeModel.nomineeType != undefined) {
-                this.onChange(this.accountNomineeModel.nomineeType, this.flag);
+              if(this.accountNomineeModel.age < 18){
+                this.guarntorDetailsFalg = true;
               }
-              if (this.guarntorDetailsFalg && this.accountGuardianModel.gaurdianType != null && this.accountGuardianModel.gaurdianType != undefined) {
-                this.onChangeGuardain(this.accountGuardianModel.gaurdianType, this.flag);
-              }
-
             }
-            else if (this.guarntorDetailsFalg) {
-              const controlName = this.nomineeForm.get('guardainType');
-              if (controlName) {
-                controlName.setValidators([
-                  Validators.required,
-                ]);
-                controlName.updateValueAndValidity();
+            else {
+              this.isFileUploadedNominee = applicationConstants.FALSE;
+            }
+            if(this.responseModel.data[0].sbGuardianDetailsDTO != null && this.responseModel.data[0].sbGuardianDetailsDTO != undefined){
+              this.accountGuardianModel = this.responseModel.data[0].sbGuardianDetailsDTO;
+              if(this.accountGuardianModel.identityProofDocPath != null && this.accountGuardianModel.identityProofDocPath != undefined){
+                if(this.accountGuardianModel.gaurdianType != null && this.accountGuardianModel.gaurdianType != undefined){
+                  if(this.accountGuardianModel.gaurdianType != 2){
+                    this.accountGuardianModel.guardainMultipartList =  this.fileUploadService.getFile(this.accountGuardianModel.identityProofDocPath , ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.accountGuardianModel.identityProofDocPath);
+                  }
+                  else {
+                    this.accountGuardianModel.guardainMultipartList =  this.fileUploadService.getFile(this.accountGuardianModel.identityProofDocPath , ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.accountGuardianModel.identityProofDocPath);
+                  }
+                  this.isFileUploadedGuardina = applicationConstants.TRUE;
+                }
+              }
+            }
+            else{
+              this.isFileUploadedGuardina = applicationConstants.FALSE;
+            }
+            if(this.accountNomineeModel.nomineeType != null && this.accountNomineeModel.nomineeType != undefined){
+              this.onChange(this.accountNomineeModel.nomineeType, this.flag);
+              
+            }
+            if( this.guarntorDetailsFalg && this.accountGuardianModel.gaurdianType != null && this.accountGuardianModel.gaurdianType != undefined){
+              this.onChangeGuardain(this.accountGuardianModel.gaurdianType , this.flag);
+            }
+            else if(this.guarntorDetailsFalg){
+                const controlName = this.nomineeForm.get('guardainType');
+                if (controlName) {
+                  controlName.setValidators([
+                    Validators.required,
+                  ]);
+                  controlName.updateValueAndValidity();
               }
             }
           }
@@ -397,7 +438,7 @@ export class NomineeComponent {
             }
             if(this.responseModel.data[0].memberShipNomineeDetailsDTOList[0].relationTypeId != null && this.responseModel.data[0].memberShipNomineeDetailsDTOList[0].relationTypeId != undefined){
               this.accountNomineeModel.relationType = this.responseModel.data[0].memberShipNomineeDetailsDTOList[0].relationTypeId;
-              // this.getAllRelationTypes();
+              this.getAllRelationTypes();
             }
             if (this.responseModel.data[0].memberShipNomineeDetailsDTOList[0].relationTypeName != null && this.responseModel.data[0].memberShipNomineeDetailsDTOList[0].relationTypeName != undefined) {
               this.accountNomineeModel.relationTypeName = this.responseModel.data[0].memberShipNomineeDetailsDTOList[0].relationTypeName;
@@ -507,7 +548,6 @@ export class NomineeComponent {
    * @param filePathName 
    */
   fileUploader(event: any, fileUpload: FileUpload , filePathName:any) {
-    this.isFileUploaded = applicationConstants.FALSE;
     this.multipleFilesList = [];
     if(this.accountNomineeModel != null && this.accountNomineeModel != undefined && this.isEdit && this.accountNomineeModel.filesDTOList == null || this.accountNomineeModel.filesDTOList == undefined){
         this.accountNomineeModel.filesDTOList = [];
@@ -515,8 +555,20 @@ export class NomineeComponent {
     if(this.isEdit && this.accountGuardianModel != null && this.accountGuardianModel != undefined && this.accountGuardianModel.filesDTOList == null || this.accountGuardianModel.filesDTOList == undefined){
       this.accountGuardianModel.filesDTOList = [];
     }
+    let selectedFiles = [...event.files];
+    fileUpload.clear();
+    
+    if (filePathName === "Nominee") {
+      this.isFileUploadedNominee = applicationConstants.FALSE;
+      this.accountNomineeModel.nomineeSighnedFormMultiPartList = [];
+    }
+    if (filePathName === "Guardain") {
+      this.isFileUploadedGuardina = applicationConstants.FALSE;
+      this.accountGuardianModel.guardainMultipartList = [];
+    }
     let files: FileUploadModel = new FileUploadModel();
-    for (let file of event.files) {
+    for (let file of selectedFiles) {
+     
       let reader = new FileReader();
       reader.onloadend = (e) => {
         let files = new FileUploadModel();
@@ -530,16 +582,20 @@ export class NomineeComponent {
           // Add to filesDTOList array
         let timeStamp = this.commonComponent.getTimeStamp();
         if (filePathName === "Nominee") {
+          this.isFileUploadedNominee = applicationConstants.TRUE;
           this.accountNomineeModel.filesDTOList.push(files); 
-          this.accountNomineeModel.identityProofDocPath = null;
-          this.accountNomineeModel.filesDTOList[this.accountNomineeModel.filesDTOList.length-1].fileName = "NOMINEE" + this.accId + "_" + timeStamp + "_" + file.name;
-          this.accountNomineeModel.identityProofDocPath = "NOMINEE" + this.accId + "_" +timeStamp+"_"+ file.name; 
+          this.accountNomineeModel.nomineeSighnedFormMultiPartList.push(files);
+          this.accountNomineeModel.signedCopyPath = null;
+          this.accountNomineeModel.filesDTOList[this.accountNomineeModel.filesDTOList.length-1].fileName = "DD_NOMINEE" + this.accId + "_" + timeStamp + "_" + file.name;
+          this.accountNomineeModel.signedCopyPath = "DD_NOMINEE" + this.accId + "_" +timeStamp+"_"+ file.name; 
         }
         if (filePathName === "Guardain") {
+          this.isFileUploadedGuardina = applicationConstants.TRUE;
           this.accountGuardianModel.filesDTOList.push(files); 
+          this.accountGuardianModel.guardainMultipartList.push(files);
           this.accountGuardianModel.identityProofDocPath = null;
-          this.accountGuardianModel.filesDTOList[this.accountGuardianModel.filesDTOList.length-1].fileName = "GUARDAIN" + "_" + timeStamp + "_" + file.name;
-          this.accountGuardianModel.identityProofDocPath = "GUARDAIN" + "_" + timeStamp + "_" + file.name; 
+          this.accountGuardianModel.filesDTOList[this.accountGuardianModel.filesDTOList.length-1].fileName = "DD_GUARDAIN" + "_" + timeStamp + "_" + file.name;
+          this.accountGuardianModel.identityProofDocPath = "DD_GUARDAIN" + "_" + timeStamp + "_" + file.name; 
         }
         this.updateData();
       }
@@ -558,7 +614,7 @@ export class NomineeComponent {
  * @implements gurdaind from validation
  */
   guardainFormValidation() {
-    if (this.age <= 18) {
+    if (this.accountNomineeModel.age <= 18) {
     this.nomineeForm.get('relationNameOfGuardian')?.enable();
     this.nomineeForm.get('guardianName')?.enable();
     this.nomineeForm.get('guardianAadhar')?.enable();
@@ -650,24 +706,45 @@ export class NomineeComponent {
    * @implements nominee form validation
    */
   nomineeFormValidation() {
+    this.nomineeForm.get('relationName')?.reset();
+    this.nomineeForm.get('nomineeName')?.reset();
+    this.nomineeForm.get('aadhaar')?.reset();
+    this.nomineeForm.get('mobileNumber')?.reset();
+    this.nomineeForm.get('email')?.reset();
+    this.nomineeForm.get('fileUpload')?.reset();
+    this.nomineeForm.get('age')?.reset();
+    this.nomineeForm.get('dateOfBirth')?.reset();
+
     this.nomineeForm.get('relationName')?.disable();
     this.nomineeForm.get('nomineeName')?.disable();
     this.nomineeForm.get('aadhaar')?.disable();
     this.nomineeForm.get('mobileNumber')?.disable();
     this.nomineeForm.get('email')?.disable();
-    this.nomineeForm.get('fileUpload')?.disable();
+    this.nomineeForm.get('age')?.disable();
+    this.nomineeForm.get('dateOfBirth')?.disable();
     this.updateData();
   }
   /**
    * @implements nominee required valdation
    */
   nomineeValidatorsRequired(){
+    this.nomineeForm.get('relationName')?.reset();
+    this.nomineeForm.get('nomineeName')?.reset();
+    this.nomineeForm.get('aadhaar')?.reset();
+    this.nomineeForm.get('mobileNumber')?.reset();
+    this.nomineeForm.get('email')?.reset();
+    this.nomineeForm.get('fileUpload')?.reset();
+    this.nomineeForm.get('age')?.reset();
+    this.nomineeForm.get('dateOfBirth')?.reset();
+
     this.nomineeForm.get('relationName')?.enable();
     this.nomineeForm.get('nomineeName')?.enable();
     this.nomineeForm.get('aadhaar')?.enable();
     this.nomineeForm.get('mobileNumber')?.enable();
     this.nomineeForm.get('email')?.enable();
     this.nomineeForm.get('fileUpload')?.enable();
+    this.nomineeForm.get('age')?.enable();
+    this.nomineeForm.get('dateOfBirth')?.enable();
     const controlName = this.nomineeForm.get('relationName');
     if (controlName) {
       controlName.setValidators([
@@ -688,7 +765,6 @@ export class NomineeComponent {
     if (controlFour) {
       controlFour.setValidators([
         Validators.required,
-        Validators.pattern(applicationConstants.AADHAR_PATTERN)
       ]);
       controlFour.updateValueAndValidity();
     }
@@ -699,6 +775,28 @@ export class NomineeComponent {
         Validators.pattern(applicationConstants.MOBILE_PATTERN)
       ]);
       controlFive.updateValueAndValidity();
+    }
+    const controlSix = this.nomineeForm.get('email');
+    if (controlSix) {
+      controlSix.setValidators([
+        Validators.pattern(applicationConstants.EMAIL_PATTERN)
+      ]);
+      controlSix.updateValueAndValidity();
+    }
+    const controlSeven = this.nomineeForm.get('age');
+    if (controlSeven) {
+      controlSeven.setValidators([
+        Validators.required,
+      ]); 
+      controlSeven.updateValueAndValidity();
+    }
+    const controlEight = this.nomineeForm.get('dateOfBirth');
+    if (controlEight) {
+      controlEight.setValidators([
+        Validators.required
+        
+      ]); 
+      controlEight.updateValueAndValidity();
     }
     this.updateData();
   }
@@ -780,6 +878,9 @@ export class NomineeComponent {
   samAsMemberNomineeType(flag:boolean){
     this.newNominee = true;
     this.noNominee = false;
+    if(this.accountNomineeModel.age < 18 ){
+      this.guarntorDetailsFalg = false; 
+    }
     //onchange on update
     if(flag){
       let nomineeId = null;
@@ -802,32 +903,42 @@ export class NomineeComponent {
    * @implements noNomineeType OnChange
    * @param flag 
    */
-  noNomineeType(flag : boolean){
+  noNomineeType(nomineeType:any,flag : boolean){
     this.noNominee = true;
     this.newNominee = false;
     this.sameAsMembershipNominee = false;
+    
+    if(this.accountNomineeModel != null&& this.accountNomineeModel != undefined && this.accountNomineeModel.age < 18){
+      this.guarntorDetailsFalg = false; 
+    }
     if(flag){
       let nomineeId = null;//onchange on update
-
-      let signedCopyPath = null;
+      let remarks = null;
+      let signedcopy = null;
       if(this.accountNomineeModel != null && this.accountNomineeModel != undefined){
         if(this.accountNomineeModel.id  != null && this.accountNomineeModel.id  != undefined){
           nomineeId = this.accountNomineeModel.id ;
         }
-        if(this.accountNomineeModel.identityProofDocPath  != null && this.accountNomineeModel.identityProofDocPath  != undefined){
-          signedCopyPath = this.accountNomineeModel.identityProofDocPath ;
-          this.accountNomineeModel.identityProofDocPath = this.fileUploadService.getFile(this.accountNomineeModel.identityProofDocPath , ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.accountNomineeModel.identityProofDocPath);
+        if(this.accountNomineeModel.remarks  != null && this.accountNomineeModel.remarks  != undefined){
+          remarks = this.accountNomineeModel.remarks ;
+        }
+        if(this.accountNomineeModel.signedCopyPath  != null && this.accountNomineeModel.signedCopyPath  != undefined){
+          signedcopy = this.accountNomineeModel.signedCopyPath ;
+          this.accountNomineeModel.signedCopyPath = this.fileUploadService.getFile(this.accountNomineeModel.signedCopyPath , ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.accountNomineeModel.signedCopyPath);
         }
       }
       this.accountNomineeModel = new AccountNominee();
       if(nomineeId != null && nomineeId != undefined){
         this.accountNomineeModel.id = nomineeId;
       }
-      this.accountNomineeModel.nomineeType = 3;
-      if(signedCopyPath != null && signedCopyPath != undefined){
-      this.accountNomineeModel.signedCopyPath = signedCopyPath;
+      if(remarks != null && remarks != undefined){
+        this.accountNomineeModel.remarks = remarks;
+      }
+      if(signedcopy != null && signedcopy != undefined){
+      this.accountNomineeModel.signedCopyPath = signedcopy;
       }
     }
+    this.accountNomineeModel.nomineeType = nomineeType;
     this.nomineeValidatorsFormNotRequired();
     // this.newNominee = false;
   }
@@ -856,7 +967,7 @@ export class NomineeComponent {
  * @implements sameAsMember gurdain Onchage
  * @param flag 
  */
-  sameAsMemberGuardianType(flag:boolean){
+  sameAsMembergaurdianType(flag:boolean){
     this.sameAsMemberGuardain = true;
     this.courtAppointedGuardain = false;
     this.noGuardain  = false;
@@ -900,5 +1011,117 @@ export class NomineeComponent {
     }
     this.accountGuardianModel.gaurdianType = 3;
     this.guardaindisable();
+  }
+  ageCaluculation(flag: any) {
+    if (flag) {
+      if (this.accountNomineeModel.age != null && this.accountNomineeModel.age != undefined) {
+        if (this.accountNomineeModel.age > 0) {
+
+          const currentDate = new Date(); 
+          const birthYear = currentDate.getFullYear() - this.accountNomineeModel.age; 
+          const birthMonth = currentDate.getMonth();  
+          const birthDate = currentDate.getDate();  
+
+          const dob = new Date(birthYear, birthMonth, birthDate);
+
+          const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+          const formattedDob = `${dob.getDate() < 10 ? '0' + dob.getDate() : dob.getDate()}/${monthNames[dob.getMonth()]}/${dob.getFullYear()}`;
+
+          
+          this.accountNomineeModel.dateOfBirth = null;
+          this.accountNomineeModel.dateOfBirthVal = formattedDob;
+        }
+        else {
+          this.nomineeForm.get('age')?.reset();
+          this.nomineeForm.get("dateOfBirth")?.reset();
+          this.msgs = [{ severity: 'error',  detail: applicationConstants.AGE_SHOULD_NOT_BE_ZERO }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 3000);
+        }
+      }
+    }
+    else {
+      this.accountNomineeModel.dateOfBirthVal = this.datePipe.transform(this.accountNomineeModel.dateOfBirthVal, this.orgnizationSetting.datePipe);
+      if (this.accountNomineeModel.dateOfBirthVal) {
+        const dob = new Date(this.accountNomineeModel.dateOfBirthVal); 
+        const currentDate = new Date();  
+        let age = currentDate.getFullYear() - dob.getFullYear();  
+        const m = currentDate.getMonth() - dob.getMonth(); 
+        if (m < 0 || (m === 0 && currentDate.getDate() < dob.getDate())) {
+          age--;  
+        }
+        this.accountNomineeModel.age = age; 
+      }
+    }
+    if(this.age >= 18 && this.accountNomineeModel.age != null && this.accountNomineeModel.age != undefined){
+      if(this.accountNomineeModel.age < 18){
+        this.guarntorDetailsFalg = true;
+        this.updateData();
+      }  
+      else {
+        this.guarntorDetailsFalg = false;
+      }
+    }
+    else if(this.age < 18 && this.accountNomineeModel.age <18){
+      this.msgs = [];
+      this.accountNomineeModel.age = null;
+      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "Minors Member Account Should Take Major Nominee Only" }];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    }
+  }
+
+  resetGuardain(){
+    this.nomineeForm.get('relationNameOfGuardian')?.reset();
+    this.nomineeForm.get('guardianName')?.reset();
+    this.nomineeForm.get('guardianAadhar')?.reset();
+    this.nomineeForm.get('guardianMobile')?.reset();
+    this.nomineeForm.get('guardianEmail')?.reset();
+    this.nomineeForm.get('relationNameOfGuardian')?.setValidators(null);
+    this.nomineeForm.get('guardianName')?.setValidators(null);
+    this.nomineeForm.get('guardianAadhar')?.setValidators(null);
+    this.nomineeForm.get('guardianMobile')?.setValidators(null);
+    this.nomineeForm.get('guardianEmail')?.setValidators(null);
+  }
+  
+  memberTypeCheck(obj: any) {
+    if (obj.memberTypeName != MemberShipTypesData.INDIVIDUAL) {
+      this.nomineeList = [
+        { label: 'New Nominee', value: 1 },
+        { label: 'No Nominee', value: 3 },
+      ]
+      this.guadianTypesList = [
+        { label: 'New Guardain', value: 1 },
+        { label: 'No Guardain', value: 3 },
+      ]
+      this.accountType = applicationConstants.SINGLE_ACCOUNT_TYPE;
+    }
+    else {
+      if (obj.memberShipBasicDetailsDTO != null && obj.memberShipBasicDetailsDTO != undefined && !obj.memberShipBasicDetailsDTO.isNewMember) {
+        this.nomineeList = [
+          { label: 'New Nominee', value: 1 },
+          { label: 'Same As Membership Nominee', value: 2 },
+          { label: 'No Nominee', value: 3 },
+        ]
+        this.guadianTypesList = [
+          { label: 'New Guardain', value: 1 },
+          { label: 'Same as Member Guardain', value: 2 },
+          { label: 'No Guardain', value: 3 },
+        ];
+      }
+      else {
+        this.nomineeList = [
+          { label: 'New Nominee', value: 1 },
+          { label: 'No Nominee', value: 3 },
+        ]
+        this.guadianTypesList = [
+          { label: 'New Guardain', value: 1 },
+          { label: 'No Guardain', value: 3 },
+        ];
+      }
+    }
   }
 }

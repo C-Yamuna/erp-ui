@@ -70,7 +70,7 @@ export class TermLoanComponent {
       { field: 'applicationDateVal', header: 'ERP.APPLICATION_DATE' },
       { field: 'sanctionDateVal', header: 'ERP.SANCTION_DATE' },
       // { field: 'effectiveRoi', header: 'ERP.ROI' },
-      { field: 'accountStatusName', header: 'ERP.STATUS' }
+      { field: 'statusName', header: 'ERP.STATUS' }
     ];
     this.operationslist = [
       { label: "Disbursement", value: 1 },
@@ -93,7 +93,7 @@ export class TermLoanComponent {
             if (termLoan != null && termLoan != undefined && termLoan.sanctionDate != null && termLoan.sanctionDate != undefined) {
               termLoan.sanctionDateVal = this.datePipe.transform(termLoan.sanctionDate, this.orgnizationSetting.datePipe);
             }
-            if((termLoan.accountStatusName == applicationConstants.SUBMISSION_FOR_APPROVAL) ||  (termLoan.accountStatusName == applicationConstants.APPROVED)){
+            if((termLoan.statusName == applicationConstants.SUBMISSION_FOR_APPROVAL) ||  (termLoan.statusName == applicationConstants.APPROVED)){
               termLoan.viewButton = true;
               termLoan.actionButton = false;
             }
@@ -101,16 +101,16 @@ export class TermLoanComponent {
               termLoan.actionButton = true;
               termLoan.viewButton = false;
             }
-            if(termLoan.accountStatusName == applicationConstants.APPROVED){
+            if(termLoan.statusName == applicationConstants.APPROVED){
               termLoan.approved = true;
             }
-            else if(termLoan.accountStatusName == applicationConstants.REJECTED){
+            else if(termLoan.statusName == applicationConstants.REJECTED){
               termLoan.rejected = true;
             }
-            else if(termLoan.accountStatusName == applicationConstants.SUBMISSION_FOR_APPROVAL){
+            else if(termLoan.statusName == applicationConstants.SUBMISSION_FOR_APPROVAL){
               termLoan.submissionForApproval = true; 
             }
-            else if(termLoan.accountStatusName == applicationConstants.CREATED || termLoan.accountStatusName == applicationConstants.IN_PROGRESS){
+            else if(termLoan.statusName == applicationConstants.CREATED || termLoan.statusName == applicationConstants.IN_PROGRESS){
               termLoan.created = true; 
             }
             if(termLoan.memberPhotoCopyPath != null && termLoan.memberPhotoCopyPath != undefined && termLoan.isNewMember){

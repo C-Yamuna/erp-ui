@@ -150,6 +150,12 @@ export class NewMembershipAdd {
 
     multipartFileListForResolutionCopyPath: any;
 
+    subProductId: any;
+
+    subProductName: any; 
+    
+    societyAdmissionNumber: any;
+
 }
 
 export class MemberGroupDetailsModel{
@@ -249,6 +255,18 @@ export class MemberGroupDetailsModel{
     multipartFileListForPhotoCopy?: any;
 
     multipartFileListForsignatureCopyPath?: any;
+
+    subProductId: any;
+
+    subProductName: any; 
+    
+    societyAdmissionNumber: any;
+
+    operatorTypeId: any;
+
+    operatorTypeName: any;
+
+    authorizedSignatoryName: any;
 }
 
 export class MembershipInstitutionDetailsModel {
@@ -338,6 +356,20 @@ export class MembershipInstitutionDetailsModel {
     resolutionDate: any;
 
     resolutionCopy:any;
+
+    subProductId: any;
+
+    subProductName: any; 
+    
+    societyAdmissionNumber: any;
+
+    operatorTypeId: any;
+
+    operatorTypeName: any;
+
+    institutionTypeName: any;
+
+    institutionType: any;
 }
 
 export class GroupPromoterDetailsModel {
@@ -410,6 +442,12 @@ export class GroupPromoterDetailsModel {
     admissionNumber:any;
 
     filesDTOList:any;
+
+    isPoc: any;
+
+    isPocName: any;
+
+    endDateVal: any;
   }
 
   export class InstitutionPromoterDetailsModel{
@@ -480,4 +518,12 @@ export class GroupPromoterDetailsModel {
      admissionNumber:any;
 
      filesDTOList:any;
+
+     isPoc: any;
+
+     isPocName: any;
+
+     endDateVal: any;
+
+     isGroupLeader: any;
 }

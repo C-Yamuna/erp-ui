@@ -67,6 +67,10 @@ export class SaoProductDetails {
 
     saoInterestPolicyConfigDtoList:any;
 
+    purposeName: any;
+
+    purposeId: any;
+
 }
 export class SaoInterestPolicyConfigModel{
     id: any;

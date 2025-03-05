@@ -23,6 +23,7 @@ export class AddProductsComponent {
   responseModel!: Responsemodel;
   buttonDisabled: any;
   isEdit: any;
+  requiredlist: any[] = [];
 
   constructor(private router: Router,
     private formBuilder: FormBuilder,
@@ -35,13 +36,16 @@ export class AddProductsComponent {
       'name': new FormControl('', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS),Validators.required]),
       'code': new FormControl('',[Validators.pattern(applicationConstants.ALLOW_NUMBERS)]), 
       'nameInLocalLang' :new FormControl(''), 
-      'isCustomization': new FormControl('',[Validators.required]),
+      'isCustomization': new FormControl(''),
       'statusName': new FormControl('',[Validators.required]),
+      'isAclass': new FormControl('',[Validators.required]),
+
     })
   }
   ngOnInit() {
     this.statusList = this.commonComponent.status();
     this.productList = this.commonComponent.products();
+    this.requiredlist = this.commonComponent.requiredlist();
     this.activateRoute.queryParams.subscribe(params => {
       if (params['id'] != undefined) {
         this.commonComponent.startSpinner();

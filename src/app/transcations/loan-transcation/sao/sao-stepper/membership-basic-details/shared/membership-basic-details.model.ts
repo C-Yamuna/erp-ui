@@ -401,4 +401,10 @@ export class InstitutionPromoterDetailsModel{
 
     uniqueId:any;
 
+    endDateVal:any;
+
+    isPoc:any;
+
+    isPocName:any;
+
 }

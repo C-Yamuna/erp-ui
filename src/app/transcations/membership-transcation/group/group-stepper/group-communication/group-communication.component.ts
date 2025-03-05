@@ -398,7 +398,10 @@ export class GroupCommunicationComponent {
           }, 2000);
         });
     }
-    getVillage(id:any){
+    getVillage(id:any,isResetIds:any){
+      if(!isResetIds){
+        this.groupCommunicationForm.get('address1').reset();
+      }
       this.groupCommunicationModel.divisionId = null;;
       this.groupCommunicationModel.divisionName = null;
       this.groupCommunicationModel.blockId = null;;
@@ -583,7 +586,10 @@ export class GroupCommunicationComponent {
       }, 2000);
     });
   }
-  getPerVillage(id:any){
+  getPerVillage(id:any,isResetIds:any){
+    if(isResetIds){
+      this.groupCommunicationForm.get('permanentAddress1').reset();
+    }
     this.groupCommunicationModel.permanentBlockId = null;;
     this.groupCommunicationModel.permanentDivisionId = null;
     this.groupCommunicationModel.permanentBlockName = null;;
@@ -779,7 +785,7 @@ export class GroupCommunicationComponent {
         this.groupCommunicationModel.blockId = null;
         this.groupCommunicationModel.blockId = this.groupCommunicationModel.permanentBlockId;
       }
-      this.getVillage(this.groupCommunicationModel.villageId);
+      this.getVillage(this.groupCommunicationModel.villageId,true);
        
     }
   }

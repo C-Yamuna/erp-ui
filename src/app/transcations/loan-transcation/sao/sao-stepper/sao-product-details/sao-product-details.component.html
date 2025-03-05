@@ -1,10 +1,8 @@
 <div class="col-12">
-    <!-- <h6 class="sub-heading">{{'ERP.APPLICATION_DETAILS' | translate}}<span class="admission-text">(Application
-            Number:&nbsp;{{savedId}})</span></h6> -->
+   
     <div class="row">
         <div class="col-6">
-            <h6 class="sub-heading">{{'ERP.APPLICATION_DETAILS' | translate}}<span class="admission-text">(Application
-                Number:&nbsp;{{savedId}})</span></h6>
+            <h6 class="sub-heading">{{'ERP.APPLICATION_DETAILS' | translate}}</h6>
         </div>
 
         <div class="col-6 text-end">
@@ -51,6 +49,14 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
+                        <label for="username"><span class="red">*</span>{{'ERP.APPLICATION_NUMBER' | translate}}
+                        </label>
+                        <input pInputText id="bunit_txt_name" type="text" formControlName="applicationNumber"
+                            [(ngModel)]="saoLoanApplicatonModel.applicationNumber" placeholder="Enter Application Number">
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
                         <label for="username"><span class="red">*</span>{{'ERP.APPLICATION_DATE' | translate}}
                         </label>
 
@@ -76,7 +82,7 @@
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label for="code">
-                            {{'ERP.LOAN_PURPOSES' | translate}}
+                            <span class="red">*</span>{{'ERP.LOAN_PURPOSES' | translate}}
                         </label>
 
                         <!-- <p-dropdown placeholder="{{'ERP.SELECT' | translate}}" [options]="loanpurposeList"
@@ -107,47 +113,53 @@
                 
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
-                        <label>
+                        <label for="username">
                             <span class="red">*</span>{{'ERP.SANCTION_AMOUNT' | translate}}
                         </label>
-                
                         <p-inputNumber id="bunit_txt_name" formControlName="sanctionAmount"
                             [(ngModel)]="saoLoanApplicatonModel.sanctionAmount" mode="currency" inputId="currency-india"
-                            currency="INR" locale="en-IN" placeholder="Enter Amount"
-                            (onSelect)="onSelectSanctionAmountCaliculation()"> 
+                            currency="INR" locale="en-IN"  (focusout)="onSelectSanctionAmountCailculation(saoLoanApplicatonModel.sanctionAmount)">
                         </p-inputNumber>
-                        
-                        <!-- Display error message only if the field is touched and invalid -->
-                        <p-message severity="error" text="Enter Valid Amount"
-                            *ngIf="!apllicationdetailsform.controls['sanctionAmount'].valid && apllicationdetailsform.controls['sanctionAmount'].touched">
-                        </p-message>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
-                        <label for="Email">{{'ERP.LOAN_PERIOD_IN_MONTHS' | translate}}
+                        <label for="code">
+                            <span class="red">*</span>{{'ERP.SANCTION_DATE' | translate}}
+                        </label>
+                        <p-calendar formControlName="sanctionDate" [showIcon]="true"
+                            [dateFormat]="orgnizationSetting.calendar"
+                            [(ngModel)]="saoLoanApplicatonModel.sanctionDateVal" placeholder="DD/MM/YYYY"
+                            (onSelect)="onSelectSanctionDate()">
+                        </p-calendar>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                        <label for="Email"><span class="red">*</span>{{'ERP.LOAN_PERIOD_IN_MONTHS' | translate}}
                         </label>
 
                         <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="loanPeriod"
-                            [(ngModel)]="saoLoanApplicatonModel.loanPeriod" placeholder="Enter Loan Period in Months">
+                            [(ngModel)]="saoLoanApplicatonModel.loanPeriod" placeholder="Enter Loan Period in Months"
+                            (focusout)="onSelectPeriodInMonths(saoLoanApplicatonModel.loanPeriod)">
                     </div>
 
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
-                        <label for="username">{{'ERP.REPAYMENT_FREQUENCY' | translate}}
+                        <label for="username"><span class="red">*</span>{{'ERP.REPAYMENT_FREQUENCY' | translate}}
                         </label>
 
-                        <input pInputText id="bunit_txt_name" maxlength="40" type="text"
-                            formControlName="repaymentFrequencyName"
-                            [(ngModel)]="saoLoanApplicatonModel.repaymentFrequencyName"
-                            placeholder="Enter Repayment Frequency">
+                            <p-dropdown placeholder="Select" [options]="repaymentFrequencyList"
+                            formControlName="repaymentFrequency" 
+                            [(ngModel)]="saoLoanApplicatonModel.repaymentFrequency">
+                        </p-dropdown>
                     </div>
                 </div>
 
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
-                        <label for="username">{{'ERP.ROI' | translate}}
+                        <label for="username"><span class="red">*</span>{{'ERP.ROI' | translate}}
                         </label>
 
                         <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="effectiveRoi"
@@ -157,7 +169,7 @@
                
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
-                        <label for="username">{{'ERP.PENAL_ROI' | translate}}
+                        <label for="username"><span class="red">*</span>{{'ERP.PENAL_ROI' | translate}}
                         </label>
 
                         <input pInputText id="bunit_txt_ame" maxlength="40" type="text" formControlName="penalInterest"
@@ -166,41 +178,18 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
-                        <label for="username">{{'ERP.IOD' | translate}}
+                        <label for="username"><span class="red">*</span>{{'ERP.IOD' | translate}}
                         </label>
 
                         <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="iod"
                             [(ngModel)]="saoLoanApplicatonModel.iod" placeholder="Enter IOD">
                     </div>
                 </div>
-                
-                <!-- <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                    <div class="form-label">
-                        <label for="username">{{'ERP.MAX_LOAN_PERIOD_IN_MONTHS' | translate}} <div class="bor-top">
-                            </div>
-                        </label>
-
-                        <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="maxLoanPeriod"
-                            [(ngModel)]="saoLoanApplicatonModel.maxLoanPeriod"
-                            placeholder="Enter Maximum Loan Period in Months">
-                    </div>
-                </div>
-               
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                    <div class="form-label">
-                        <label for="username">{{'ERP.MIN_LOAN_PERIOD_IN_MONTHS' | translate}} <div class="bor-top">
-                            </div>
-                        </label>
-
-                        <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="minLoanPeriod"
-                            [(ngModel)]="saoLoanApplicatonModel.minLoanPeriod"
-                            placeholder="Enter Minimum Loan Period in Months">
-                    </div>
-                </div> -->
+              
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
                         <label>
-                            <span class="red">*</span>{{'ERP.ANNUAL_INCOME' | translate}}
+                            <span class="red">*</span>{{'AGENT_DETAILS_TRANSACTION.ANNUAL_INCOME' | translate}}
                         </label>
 
                         <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="annualIncome"
@@ -208,11 +197,10 @@
                     </div>
 
                 </div>
-                
 
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
-                        <label>{{'ERP.LOAN_DUE_DATE' | translate}}
+                        <label><span class="red">*</span>{{'ERP.LOAN_DUE_DATE' | translate}}
                         </label>
 
                         <p-calendar [showIcon]="true" formControlName="loanDueDate" [showIcon]="true"
@@ -222,45 +210,6 @@
                     </div>
 
                 </div>
-               
-                  
-                <!-- <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                    <div class="form-label">
-                        <label for="Email">{{'ERP.TOTAL_DISBURSEMENTS_UNITS' | translate}}
-                        </label>
-
-                        <input pInputText id="bunit_txt_name" maxlength="40" type="text"
-                            formControlName="plannedDisbursements"
-                            [(ngModel)]="saoLoanApplicatonModel.plannedDisbursements"
-                            placeholder="Enter Total Disbursements Units"
-                            (ngModelChange)="onDisbursementChange()"
-                            [disabled]="isSaved" >
-                    </div>
-
-                </div> -->
-                <!-- <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                    <div class="form-label">
-                        <label for="Email"><span class="red">*</span>{{'ERP.TOTAL_DISBURSEMENTS_UNITS' |
-                            translate}}</label>
-
-                        <input pInputText id="bunit_txt_name" maxlength="40" type="text"
-                            formControlName="plannedDisbursements"
-                            [(ngModel)]="saoLoanApplicatonModel.plannedDisbursements"
-                            placeholder="Enter Total Disbursements Units" (ngModelChange)="onDisbursementChange()">
-
-                    </div>
-                </div> -->
-
-
-                <!-- <div class="col-3">
-                    <div class="field-row">
-                        <label for="Email">{{'ERP.DISBURSEMENT_DUE_AMOUNT' | translate}}
-                        </label>
-                    </div>
-                    <input pInputText id="bunit_txt_name" maxlength="40" type="text">
-
-                </div> -->
-
             </div>
            
         </div>
@@ -319,10 +268,7 @@
 
         </form>
     </div>
-    <!-- <div class="col-12 justify-content-end d-flex">
-        <p-button (click)="updateApplication()" label="{{ 'SAVE' | translate }}" iconPos="left"
-            id="bunit_bt_submit"></p-button>
-    </div> -->
+    
 
         <form [formGroup]="schedulerForm" id="exit_types_form" *ngIf = disbursmentFlag>
             <div class="flex justify-content-between py-2">

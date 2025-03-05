@@ -106,7 +106,7 @@
                                         </p>
                                     </div>
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card">
-                                        <p class="label-view text-fontwt">{{'LOAN_TRANSACTION.PAN' | translate}}</p>
+                                        <p class="label-view text-fontwt">{{'ERP.PAN_NO' | translate}}</p>
                                         <p class="label-input-text">{{membershipBasicDetailsModel.panNumber}}
                                         </p>
                                     </div>
@@ -181,15 +181,12 @@
                                         <p class="label-input-text">{{membershipGroupDetailsModel.registrationDateVal}}</p>
                                     </div>
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card">
-                                        <p class="label-view text-fontwt">{{'LOAN_TRANSACTION.POC_NAME' | translate}}</p>
-                                        <p class="label-input-text">{{membershipGroupDetailsModel.pocName}}</p>
+                                        <p class="label-view text-fontwt">{{'LOAN_TRANSACTION.OPERATION_TYPE' | translate}}</p>
+                                        <p class="label-input-text">{{membershipGroupDetailsModel.operatorTypeName}}</p>
                                     </div>
-                                    <div class="ccol-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card">
-                                        <p class="label-view text-fontwt">{{'LOAN_TRANSACTION.POC_MOBILE_NO' | translate}}</p>
-                                        <p class="label-input-text">{{membershipGroupDetailsModel.pocNumber}}</p>
-                                    </div>
+                                   
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card">
-                                        <p class="label-view text-fontwt">{{'LOAN_TRANSACTION.PAN' | translate}}</p>
+                                        <p class="label-view text-fontwt">{{'ERP.PAN_NO' | translate}}</p>
                                         <p class="label-input-text">{{membershipGroupDetailsModel.panNumber}}</p>
                                     </div>
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card">
@@ -264,15 +261,19 @@
                                         <p class="label-input-text">{{membershipInstitutionDetailsModel.registrationDateVal}}</p>
                                     </div>
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card">
+                                        <p class="label-view text-fontwt">{{'LOAN_TRANSACTION.OPERATION_TYPE' | translate}}</p>
+                                        <p class="label-input-text">{{membershipInstitutionDetailsModel.operatorTypeName}}</p>
+                                    </div>
+                                    <!-- <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card">
                                         <p class="label-view text-fontwt">{{'LOAN_TRANSACTION.POC_NAME' | translate}}</p>
                                         <p class="label-input-text">{{membershipInstitutionDetailsModel.pocName}}</p>
                                     </div>
                                     <div class="ccol-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card">
                                         <p class="label-view text-fontwt">{{'LOAN_TRANSACTION.POC_MOBILE_NO' | translate}}</p>
                                         <p class="label-input-text">{{membershipInstitutionDetailsModel.pocNumber}}</p>
-                                    </div>
+                                    </div> -->
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card">
-                                        <p class="label-view text-fontwt">{{'LOAN_TRANSACTION.PAN' | translate}}</p>
+                                        <p class="label-view text-fontwt">{{'ERP.PAN_NO' | translate}}</p>
                                         <p class="label-input-text">{{membershipInstitutionDetailsModel.panNumber}}</p>
                                     </div>
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card">
@@ -359,7 +360,7 @@
 
 <!-- Individual details dialog -->
 <div class="view-moredetails-popup">
-    <p-dialog header="Basic Details" [modal]="true" [(visible)]="membreIndividualFlag" [style]="{ width: '55vw' }">
+    <p-dialog header="Basic Details" [modal]="true" [(visible)]="membreIndividualFlag" styleClass="moredetails-style">
         <div class="col-12 view-morepopup">
             <div class="d-flex justify-content-center px-3 py-0 mb-2">
                 <div *ngIf="!membershipBasicDetailsModel.photoCopyPath">

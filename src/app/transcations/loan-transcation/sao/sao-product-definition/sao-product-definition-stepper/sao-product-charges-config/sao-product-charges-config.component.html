@@ -108,7 +108,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="saoProductChargesModel.minSlabAmount"
-                                    formControlName="minSlabAmount"  (focusout)="checkForSlabAmount(1)">
+                                    formControlName="minSlabAmount" pKeyFilter="num" (focusout)="checkForSlabAmount(1)">
 
                             </ng-template>
                             <ng-template pTemplate="output">{{saoProductChargesModel.minSlabAmount}}</ng-template>
@@ -118,7 +118,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="saoProductChargesModel.maxSlabAmount"
-                                    formControlName="maxSlabAmount"  (focusout)="checkForSlabAmount(2)">
+                                    formControlName="maxSlabAmount" pKeyFilter="num" (focusout)="checkForSlabAmount(2)">
 
                             </ng-template>
                             <ng-template pTemplate="output">{{saoProductChargesModel.maxSlabAmount}}</ng-template>
@@ -140,7 +140,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="saoProductChargesModel.minCharges"
-                                    formControlName="minCharges"   (focusout)="checkForCharges(1)">
+                                    formControlName="minCharges"  pKeyFilter="num" (focusout)="checkForCharges(1)">
                             </ng-template>
                             <ng-template pTemplate="output">{{saoProductChargesModel.minCharges}}</ng-template>
                         </p-cellEditor>
@@ -149,7 +149,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="saoProductChargesModel.maxChrges"
-                                    formControlName="maxChrges"   (focusout)="checkForCharges(2)">
+                                    formControlName="maxChrges" pKeyFilter="num"  (focusout)="checkForCharges(2)">
                             </ng-template>
                             <ng-template pTemplate="output">{{saoProductChargesModel.maxChrges}}</ng-template>
                         </p-cellEditor>
@@ -158,7 +158,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="saoProductChargesModel.cgst"
-                                    formControlName="cgst">
+                                    formControlName="cgst" pKeyFilter="num">
                             </ng-template>
                             <ng-template pTemplate="output">{{saoProductChargesModel.cgst}}</ng-template>
                         </p-cellEditor>
@@ -167,7 +167,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="saoProductChargesModel.sgst"
-                                    formControlName="sgst">
+                                    formControlName="sgst" pKeyFilter="num">
 
                             </ng-template>
                             <ng-template pTemplate="output">{{saoProductChargesModel.sgst}}</ng-template>
@@ -177,7 +177,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="saoProductChargesModel.igst"
-                                    formControlName="igst">
+                                    formControlName="igst" pKeyFilter="num">
 
                             </ng-template>
                             <ng-template pTemplate="output">{{saoProductChargesModel.igst}}</ng-template>

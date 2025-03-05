@@ -12,6 +12,7 @@ import { EncryptDecryptService } from 'src/app/shared/encrypt-decrypt.service';
 import { DatePipe } from '@angular/common';
 import { CompoundInterestProductDefinitionService } from '../../shared/compound-interest-product-definition.service';
 import { CiLinkedShareCapitalService } from './shared/ci-linked-share-capital.service';
+import { BoxNumber } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-ci-linked-share-capital',
@@ -53,7 +54,7 @@ export class CiLinkedShareCapitalComponent {
       'igstPercentage': new FormControl('',),
       'minSlabAmount':new FormControl('', Validators.required),
       'gstApplicable': new FormControl('', Validators.required),
-      'maxSlabAmount':new FormControl('', ),
+      'maxSlabAmount':new FormControl('', Validators.required ),
     });
   }
   ngOnInit() {
@@ -287,22 +288,30 @@ getPreviewDetailsByProductId(id: any) {
   
       return applicationConstants.FALSE;
     }
-     checkForAmount(): void {
+
+    checkForAmount(box : any): void {
       const minSlabAmount = this.linkedShareCapitalForm.get('minSlabAmount')?.value;
       const maxSlabAmount = this.linkedShareCapitalForm.get('maxSlabAmount')?.value;
-  
-      if (minSlabAmount && maxSlabAmount &&  minSlabAmount >=maxSlabAmount) {
-        this.amountAndTenureFlag = applicationConstants.FALSE;
-        this.msgs = [{ severity: 'error', detail: applicationConstants.MIN_SLAB_AMOUNT_ERROR }];
-        setTimeout(() => {
+            
+      if (minSlabAmount != null && minSlabAmount !='' && maxSlabAmount != null && maxSlabAmount !='' &&
+          Number(minSlabAmount) > Number(maxSlabAmount)) {
           this.msgs = [];
-        }, 1500);
-      } else {
-        this.msgs = [];
-        this.amountAndTenureFlag = applicationConstants.TRUE;
+          if (box == BoxNumber.BOX_ONE) {
+              this.msgs.push({ severity: 'warning', detail: applicationConstants.MINIMUM_SLAB_AMOUNT_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAXIMUM_SLAB_AMOUNT });
+              this.linkedShareCapitalForm.get('minSlabAmount')?.reset();
+            } else if (box == BoxNumber.BOX_TWO) {
+              this.msgs.push({ severity: 'warning', detail: applicationConstants.MAXIMUM_SLAB_AMOUNT_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MINIMUM_SLAB_AMOUNT });
+              this.linkedShareCapitalForm.get('maxSlabAmount')?.reset();
+              setTimeout(() => {
+                this.msgs = [];
+              }, 1500);
+            } else {
+                this.msgs = [];
+                this.amountAndTenureFlag = applicationConstants.TRUE;
+            }
+              this.updateData();
+        }
+       
       }
-  
-
-      this.updateData();
-    }
+ 
 }

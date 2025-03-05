@@ -130,6 +130,9 @@ export class RecurringDepositJointHolderDetailsComponent implements OnInit {
             if (this.rdAccountModel.accountNumber != null && this.rdAccountModel.accountNumber != undefined) {
               this.accountNumber = this.rdAccountModel.accountNumber;
             }
+            if (this.rdAccountModel.adminssionNumber != null && this.rdAccountModel.adminssionNumber != undefined) {
+              this.admissionNumber = this.rdAccountModel.adminssionNumber;
+            }
             if (this.rdAccountModel.tdJointAccHolderDetailsDTOList != null && this.rdAccountModel.tdJointAccHolderDetailsDTOList != undefined) {
               this.jointHolderDetailsList = this.rdAccountModel.tdJointAccHolderDetailsDTOList;
               if (this.jointHolderDetailsList != null && this.jointHolderDetailsList != undefined && this.jointHolderDetailsList.length > 0) {
@@ -182,13 +185,6 @@ export class RecurringDepositJointHolderDetailsComponent implements OnInit {
   }
 
   onClear(admissionNumber: any) {
-    // const index = this.admissionNumberList.indexOf(admissionNumber);
-    // if (index >= 0) {
-    //   this.admissionNumberList.splice(index, 1);
-    //   this.jointHolderDetailsList.push(this.responseModel.data);
-    //   const existingIndex = this.jointHolderDetailsList.findIndex(
-    //     promoter => promoter.admissionNumber === admissionNumber);
-    //   this.jointHolderDetailsList[existingIndex] = null;
     this.jointHolderDetailsList = [];
     this.numberOfJointHolders = 0;
     this.selectedAdmissionNumberList = [];
@@ -206,9 +202,9 @@ export class RecurringDepositJointHolderDetailsComponent implements OnInit {
             this.admissionNumberList = this.membershipList.filter((obj: any) => obj != null  && obj.statusName == CommonStatusData.APPROVED && obj.memberTypeId == 1).map((relationType: { id: any; name: any; admissionNumber: any; memberTypeName: any }) => {
               return {
                 label: relationType.admissionNumber
-
               };
             });
+            this.admissionNumberList= this.admissionNumberList.filter((obj:any) => obj != null && obj.label != this.admissionNumber);
           }
           else {
             this.msgs = [];

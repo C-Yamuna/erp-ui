@@ -91,7 +91,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="siPurposeModel.minGesitationPeriod"
-                                    formControlName="minGesitationPeriod" (keyup)="checkForGestationPeriod()">
+                                    formControlName="minGesitationPeriod" (focusout)="checkForGestationPeriod(1)">
 
                             </ng-template>
                             <ng-template pTemplate="output">{{siPurposeModel.minGesitationPeriod}}</ng-template>
@@ -101,7 +101,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="siPurposeModel.maxGesitationPeriod"
-                                    formControlName="maxGesitationPeriod" (keyup)="checkForGestationPeriod()">
+                                    formControlName="maxGesitationPeriod" (focusout)="checkForGestationPeriod(2)">
 
                             </ng-template>
                             <ng-template pTemplate="output">{{siPurposeModel.maxGesitationPeriod}}</ng-template>

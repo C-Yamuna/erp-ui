@@ -1,379 +1,186 @@
-<!-- <div class="col-12">
+<div class="col-12">
     <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"></p-messages>
     <form [formGroup]="communicationForm" id="exit_types_form">
-        <h6 class="sub-heading">{{'ERP.COMMUNICATION' | translate}}<span class="admission-text">(Admission
-                number:&nbsp;{{admissionNumber}})</span></h6>
-
+        <h6 class="sub-heading">{{'LOAN_TRANSACTION.COMMUNICATION' | translate}}<span class="admission-text"></span></h6>
         <div class="col-12 bg-label-colorfull p-0">
             <div class="row g-3">
-
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-
-                    <h6 class="super-sub-heading">Registered</h6>
-
-                    <div class="col-12 global-border">
-                        <div class="col-12">
-                        <div class="row g-3 mt-n1">
-                            <div class="col-lg-6 col-md-6 col-sm-12">
-                                <div class="form-label">
-                                    <label><span class="red">*</span>{{'ERP.STATES' | translate}}</label>
-                                    <p-dropdown placeholder="{{'ERP.SELECT' | translate}}" formControlName="stateName"
-                                        [options]="statesList" [(ngModel)]="saoCommunicationModel.stateId"
-                                        (onChange)="onChangeState(saoCommunicationModel.stateId)"></p-dropdown>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-12">
-                                <div class="form-label">
-                                    <label><span class="red">*</span>{{'ERP.DISTRICTS' | translate}}</label>
-                                    <p-dropdown placeholder="{{'ERP.SELECT' | translate}}" formControlName="districtName"
-                                        [options]="districtsList" [(ngModel)]="saoCommunicationModel.districtId"
-                                        (onChange)='onChangeDistrict(saoCommunicationModel.districtId)'></p-dropdown>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-12">
-                                <div class="form-label">
-                                    <label><span class="red">*</span>{{'ERP.MANDAL/TESHIL' | translate}}</label>
-                                    <p-dropdown placeholder="{{'ERP.SELECT' | translate}}" formControlName="subDistrictName"
-                                        [options]="mandalsList" [(ngModel)]="saoCommunicationModel.subDistrictId"
-                                        (onChange)='onChangeMandal(saoCommunicationModel.subDistrictId)'></p-dropdown>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-12">
-                                <div class="form-label">
-                                    <label><span class="red">*</span>{{'ERP.VILLAGES' | translate}}</label>
-                                    <p-dropdown placeholder="{{'ERP.SELECT' | translate}}" formControlName="villageName"
-                                        [options]="villageList" [(ngModel)]="saoCommunicationModel.villageId"
-                                        (onChange)='onChangeVillage(saoCommunicationModel.villageId)'></p-dropdown>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-12">
-                                <div class="form-label">
-                                    <label>{{'ERP.ADDRESS' | translate}}</label>
-                                    <textarea  pInputTextarea formControlName="address1" type="text" class="form-control"
-                                        (keyup)="appendPinCodeToPermanent()"
-                                        [(ngModel)]="saoCommunicationModel.address1" placeholder="House No., Door No., Landmark..etc"></textarea>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-12">
-                                <div class="form-label">
-                                    <label><span class="red">*</span>{{'ERP.PINCODE' | translate}}</label>
-                                    <input pInputText type="text" formControlName="pinCode"
-                                        (keyup)="appendPinCodeToPermanent()"
-                                        [(ngModel)]="saoCommunicationModel.pinCode"
-                                        [disabled]="sameAsPermanentAddress" placeholder="Enter PinCode">
-                                        <p-message severity="error" text="Enter Valid pinCode"
-                                        *ngIf="!communicationForm.controls['pinCode'].valid && communicationForm.controls['pinCode'].dirty">
-                                    </p-message>
-                                </div>
-                            </div>
-                            
-                        </div>
-                        </div>
-                    </div>
-                </div>
-
+                
                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
                     <div class="d-flex justify-content-between mt-xl-0 mt-lg-0 mt-4">
-                        <h6 class="super-sub-heading">{{'ERP.PERMANENT' | translate}}</h6>
-                        <div class="grid mr-3 d-flex">
-                            <p-inputSwitch formControlName="isSameAddress"
-                                [(ngModel)]="saoCommunicationModel.isSameAddress"
-                                (click)="sameAsPerAddr(true)"></p-inputSwitch>
-                            <p class="pl-1 m-0">{{'ERP.SAME_AS_REGISTERED_ADDRESS' | translate}}</p>
-                        </div>
-                    </div>
-
-                    <div class="col-12 global-border">
-                        <div class="col-12">
-                        <div class="row g-3 mt-n1">
-                            <div class="col-lg-6 col-md-6 col-sm-12">
-                                <div class="form-label">
-                                    <label><span class="red">*</span>{{'ERP.STATES' | translate}}</label>
-                                    <p-dropdown placeholder="{{'ERP.SELECT' | translate}}"
-                                        formControlName="permanentStateName" [options]="statesList"
-                                        [(ngModel)]="saoCommunicationModel.permanentStateId"
-                                        (onChange)='onChangePermanentState(saoCommunicationModel.permanentStateId)'></p-dropdown>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-12">
-                                <div class="form-label">
-                                    <label><span class="red">*</span>{{'ERP.DISTRICTS' | translate}}</label>
-                                    <p-dropdown placeholder="{{'ERP.SELECT' | translate}}"
-                                        formControlName="permanentDistrictName" [options]="permenentDistrictList"
-                                        [(ngModel)]="saoCommunicationModel.permanentDistrictId"
-                                        (onChange)='onChangePermanentDistrict(saoCommunicationModel.permanentDistrictId)'></p-dropdown>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-12">
-                                <div class="form-label">
-                                    <label><span class="red">*</span>{{'ERP.MANDAL/TESHIL' | translate}}</label>
-                                    <p-dropdown placeholder="{{'ERP.SELECT' | translate}}"
-                                        formControlName="permanentSubDistrictName" [options]="permenentMandalsList"
-                                        [(ngModel)]="saoCommunicationModel.permanentSubDistrictId"
-                                        (onChange)='onChangePermanentSubDistrict(saoCommunicationModel.permanentSubDistrictId)'></p-dropdown>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-12">
-                                <div class="form-label">
-                                    <label><span class="red">*</span>{{'ERP.VILLAGES' | translate}}</label>
-                                    <p-dropdown placeholder="{{'ERP.SELECT' | translate}}"
-                                        formControlName="permanentVillageName" [options]="permenentVillagesList"
-                                        [(ngModel)]="saoCommunicationModel.permanentVillageId"
-                                        (onChange)='onChangePermanentVillage(saoCommunicationModel.permanentVillageId)'></p-dropdown>
-                                </div>
-                            </div>
-                            
-                            <div class="col-lg-6 col-md-6 col-sm-12">
-                                <div class="form-label">
-                                    <label>{{'ERP.ADDRESS' | translate}}</label>
-                                    <textarea pInputTextarea formControlName="permanentAddress1" type="text" class="form-control"
-                                        [(ngModel)]="saoCommunicationModel.permanentAddress1" placeholder="House No., Door No., Landmark..etc"></textarea>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-12">
-                                <div class="form-label">
-                                    <label><span class="red">*</span>{{'ERP.PINCODE' | translate}}</label>
-                                    <input pInputText type="text" formControlName="permanentPinCode"
-                                        [disabled]="sameAsPermanentAddress"
-                                        [(ngModel)]="saoCommunicationModel.permanentPinCode" placeholder="Enter Pincode">
-                                        <p-message severity="error" text="Enter Valid pinCode"
-                                            *ngIf="!communicationForm.controls['permanentPinCode'].valid && communicationForm.controls['permanentPinCode'].dirty">
-                                        </p-message>
-                                </div>
-                            </div>
-
-                        </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
-</div> -->
-
-<div class="col-12">
-    <form [formGroup]="communicationForm">
-        <h6 class="sub-heading">{{'ERP.COMMUNICATION' | translate}}</h6>
-        <!-- <h6 class="sub-heading">{{'TERMDEPOSITSTRANSACTION.COMMUNICATION' | translate}}<span class="admission-text">(Admission
-                number:&nbsp;{{admissionNumber}})</span></h6> -->
-        <div class="col-12 bg-label-colorfull p-0">
-            <div class="row g-3">
-                <div class="col-lg-6 col-md-12 col-sm-12">
-                    <!-- <div class="col-12"> -->
-                    <div class="d-flex justify-content-between mt-xl-0 mt-lg-0 mt-4">
-                        <h6 class="super-sub-heading">{{'ERP.PERMANENT' | translate}}</h6>
-
+                        <h6 class="super-sub-heading"><span class="red">*</span>{{'LOAN_TRANSACTION.PERMANENT' | translate}}</h6>
+                        
                     </div>
                     <div class="col-12 global-border">
                         <div class="col-12">
                             <div class="row g-3 mt-n1">
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label><span class="red">*</span>{{'ERP.STATE' |
-                                            translate}}</label>
-                                        <p-dropdown [options]="permanentStatesList" placeholder="Select"  [(ngModel)]="saoCommunicationModel.permanentStateId"
-                                            formControlName="permanentStateId" (onChange)='getAllPermanentDistrictsByStateId(saoCommunicationModel.permanentStateId,true)'
-                                           ></p-dropdown>
+                                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.STATE' | translate}}</label>
+                                        <p-dropdown placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}"
+                                            [options]="permanentStatesList" formControlName="permanentStateName"
+                                            [(ngModel)]="saoCommunicationModel.permanentStateId"
+                                            (onChange)='getAllPermanentDistrictsByStateId(saoCommunicationModel.permanentStateId,true)'></p-dropdown>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label><span class="red">*</span>{{'ERP.DISTRICT' |
-                                            translate}}</label>
-
-                                        <p-dropdown [options]="permenentDistrictList" placeholder="Select "
-                                            formControlName="permanentDistrictId"
-                                            [(ngModel)]="saoCommunicationModel.permanentDistrictId" (onChange)='getAllPermanentMandalsByDistrictId(saoCommunicationModel.permanentDistrictId,true)'
-                                            ></p-dropdown>
+                                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.DISTRICT' | translate}}</label>
+                                        <p-dropdown placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}"
+                                            [options]="permanentDistrictList" formControlName="permanentDistrictName"
+                                            [(ngModel)]="saoCommunicationModel.permanentDistrictId"
+                                            (onChange)='getAllPermanentSubDistrictByDistrictId(saoCommunicationModel.permanentDistrictId,true)'></p-dropdown>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label><span class="red">*</span> {{'ERP.MANDAL/TESHIL' |
-                                            translate}}</label>
-
-                                        <p-dropdown [options]="permenentSubDistrictList"
-                                            placeholder="{{'TERMDEPOSITSTRANSACTION.SELECT' | translate}}"
-                                            formControlName="permanentSubDistrictId"
-                                            [(ngModel)]="saoCommunicationModel.permanentSubDistrictId"  (onChange)='getAllPermanentVillagesByMandalId(saoCommunicationModel.permanentSubDistrictId,true)' 
-                                           ></p-dropdown>
+                                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.SUB_DISTRICT' | translate}}</label>
+                                        <p-dropdown placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}"
+                                            [options]="permanentSubDistrictList" formControlName="permanentSubDistrictName"
+                                            [(ngModel)]="saoCommunicationModel.permanentSubDistrictId"
+                                            (onChange)='getAllPermanentVillagesBySubDistrictId(saoCommunicationModel.permanentSubDistrictId,true)'></p-dropdown>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
-                                    <div class="form-label">
-                                        <label><span class="red">*</span>{{'ERP.VILLAGE' |
-                                            translate}} </label>
-
-                                        <p-dropdown [options]="permenentVillageList" placeholder="Select "
-                                            formControlName="permanentVillageId"
-                                            [(ngModel)]="saoCommunicationModel.permanentVillageId" (onChange)='getPermanentVillage(saoCommunicationModel.permanentVillageId,true)'
-                                            ></p-dropdown>
-                                            <!-- (onChange)='getPermanentVillage(fdNonCumulativeCommunicationModel.permanentVillageId)' -->
+                                    <label><span class="red">*</span>{{'LOAN_TRANSACTION.VILLAGE' | translate}}</label>
+                                    <div>
+                                        <p-dropdown placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}"
+                                            [options]="permanentVillageList" formControlName="permanentVillageName"
+                                            (onChange)='getPermanentVillage(saoCommunicationModel.permanentVillageId)'
+                                            [(ngModel)]="saoCommunicationModel.permanentVillageId"></p-dropdown>
                                     </div>
                                 </div>
-                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                                <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
                                         <label for="username">
-                                            {{'TERMDEPOSITSTRANSACTION.DIVISION' | translate}}
+                                            {{'DEMANDDEPOSITS.DIVISION' | translate}}
                                         </label>
-                                        <input pInputText id="bunit_txt_name" type="text" formControlName="permanentDivision"
-                                            [(ngModel)]="this.saoCommunicationModel.permanentDivisionName">
+                                        <p-dropdown placeholder="{{'ERP.SELECT' | translate}}" formControlName="permanentDivisionName" [options]="divisionList"
+                                        [(ngModel)]="saoCommunicationModel.permanentDivisionId" ></p-dropdown>
                                     </div>
                                 </div>
-                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                                <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
                                         <label for="username">
-                                            {{'TERMDEPOSITSTRANSACTION.BLOCK' | translate}}
+                                            {{'DEMANDDEPOSITS.BLOCK' | translate}}
                                         </label>
-                                        <input pInputText id="bunit_txt_name" type="text" formControlName="permanentBlock"
-                                            [(ngModel)]="this.saoCommunicationModel.permanentBlockName">
+                                        <p-dropdown placeholder="{{'ERP.SELECT' | translate}}"  formControlName="permanentBlockName" [options]="blockList"
+                                         [(ngModel)]="saoCommunicationModel.permanentBlockId"></p-dropdown>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label for="code"><span class="red">*</span>
-                                            {{'TERMDEPOSITSTRANSACTION.ADDRESS' | translate}}
-                                        </label>
-
-                                        <textarea type="text" class="form-control" pInputTextarea
-                                            formControlName="permanentAddress1"
-                                            placeholder="House No., Door No., Landmark..etc"
-                                            [(ngModel)]="saoCommunicationModel.permanentAddress1"
-                                            (keyup)="RegAddressToComAddress()" [disabled]="sameAsPermanentAddress"
-                                            ></textarea>
+                                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.ADDRESS' | translate}}</label>
+                                        <textarea class="form-control" type="text" pInputTextarea formControlName="permanentAddress1"
+                                            [(ngModel)]="saoCommunicationModel.permanentAddress1" [disabled]="sameAsPermanentAddress"
+                                            placeholder="House No., Door No., Landmark..etc" (keyup)="RegAddressToComAddress()"></textarea>
+                                        <p-message severity="error" text="Enter Valid permanent Address"
+                                            *ngIf="!communicationForm.controls['permanentAddress1'].valid && communicationForm.controls['permanentAddress1'].dirty"></p-message>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label for="username"><span
-                                                class="red">*</span>{{'TERMDEPOSITSTRANSACTION.PINCODE' | translate}}
-                                        </label>
-
-                                        <input pInputText id="bunit_txt_name" maxlength="40" type="text"
-                                            placeholder="Enter Pincode" formControlName="permanentPinCode"
-                                            (keyup)="RegAddressToComAddress()"
-                                            [(ngModel)]="saoCommunicationModel.permanentPinCode">
-                                        <p-message severity="error" text="Enter Valid pinCode"
-                                            *ngIf="!communicationForm.controls['permanentPinCode'].valid && communicationForm.controls['permanentPinCode'].dirty">
-                                        </p-message>
+                                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.PINCODE' | translate}}</label>
+                                        <input pInputText id="bunit_txt_name" type="text" formControlName="permanentPinCode"
+                                            placeholder="Enter Your Pincode" minlength="6" maxlength="6" pKeyFilter="pnum"
+                                            [(ngModel)]="saoCommunicationModel.permanentPinCode"  (keyup)="RegAddressToComAddress()">
+                                        <p-message severity="error" text="Enter Valid Pin Code"
+                                            *ngIf="!communicationForm.controls['permanentPinCode'].valid && communicationForm.controls['permanentPinCode'].dirty"></p-message>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-12 col-sm-12">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
                     <div class="d-flex justify-content-between mt-xl-0 mt-lg-0 mt-4">
-                        <h6 class="super-sub-heading">{{'TERMDEPOSITSTRANSACTION.COMMUNICATION_ADDRESS' | translate}}</h6>
-                        <div class="grid mr-3 d-flex">
-                            <p-inputSwitch formControlName="isSameAddress"
-                                [(ngModel)]="saoCommunicationModel.isSameAddress"
-                                (click)="sameAsPerAddr(saoCommunicationModel.isSameAddress)" ></p-inputSwitch>
-                                <!-- (click)="sameAsPerAddr(saoCommunicationModel.isSameAddress)" -->
-                             <p class="pl-1 m-0">{{'TERMDEPOSITSTRANSACTION.SAME_AS_PERMANENT_ADDRESS' | translate}}</p>
-
-                        </div>
-
+                        <h6 class="super-sub-heading">{{'ERP.REGISTERED' | translate}}
+                        </h6>
+                    <div class="grid mr-3 d-flex">
+                        <p-inputSwitch formControlName="isSameAddress" [(ngModel)]="saoCommunicationModel.isSameAddress"
+                            (click)="sameAsPerAddr(saoCommunicationModel.isSameAddress)"></p-inputSwitch>
+                        <p class="pl-1 m-0">{{'ERP.SAME_AS_REGISTERED_ADDRESS' | translate}}</p>
                     </div>
-
+                </div>
                     <div class="col-12 global-border">
                         <div class="col-12">
                             <div class="row g-3 mt-n1">
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.STATE' |
-                                            translate}}</label>
-
-                                        <p-dropdown [filter]="true" [options]="statesList" placeholder="Select"
-                                            formControlName="stateName"  (onChange)="getAllDistrictsByStateId(saoCommunicationModel.stateId,true)"
-                                            [(ngModel)]="saoCommunicationModel.stateId"
-                                            ></p-dropdown>
-
+                                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.STATE' | translate}}</label>
+                                        <p-dropdown placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}" [options]="statesList"
+                                            formControlName="stateName" [(ngModel)]="saoCommunicationModel.stateId"
+                                            (onChange)="getAllDistrictsByStateId(saoCommunicationModel.stateId,true)"></p-dropdown>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.DISTRICT' |
-                                            translate}}</label>
-
-                                        <p-dropdown [filter]="true" [options]="districtsList" placeholder="Select"
-                                            formControlName="districtId"  (onChange)="getAllMandalsByDistrictId(saoCommunicationModel.districtId,true)"
-                                            [(ngModel)]="saoCommunicationModel.districtId"
-                                            ></p-dropdown>
-
+                                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.DISTRICT' | translate}}</label>
+                                        <p-dropdown placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}" [options]="districtsList"
+                                            formControlName="districtName" [(ngModel)]="saoCommunicationModel.districtId"
+                                            (onChange)='getAllSubDistrictByDistrictId(saoCommunicationModel.districtId,true)'></p-dropdown>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.MANDAL/TESHIL' |
-                                            translate}} </label>
-
-                                        <p-dropdown [filter]="true" [options]="mandalsList" placeholder="Select"
-                                            formControlName="subDistrictId"  (onChange)="getAllVillagesByMandalId(saoCommunicationModel.subDistrictId,true)"
-                                            [(ngModel)]="saoCommunicationModel.subDistrictId"
-                                            ></p-dropdown>
+                                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.SUB_DISTRICT' | translate}}</label>
+                                        <p-dropdown placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}" [options]="subDistrictList"
+                                            formControlName="subDistrictName" [(ngModel)]="saoCommunicationModel.subDistrictId"
+                                            (onChange)='getAllVillagesBySubDistrictId(saoCommunicationModel.subDistrictId,true)'></p-dropdown>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.VILLAGE' |
-                                            translate}} </label>
-
-                                        <p-dropdown [filter]="true" [options]="villageList" placeholder="Select"
-                                            formControlName="villageId"
-                                            (onChange)='getVillage(saoCommunicationModel.villageId,true)'
+                                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.VILLAGE' | translate}}</label>
+                                        <p-dropdown placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}" [options]="villageList"
+                                            formControlName="villageName" (onChange)='getVillage(saoCommunicationModel.villageId)'
                                             [(ngModel)]="saoCommunicationModel.villageId"></p-dropdown>
                                     </div>
                                 </div>
-                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                                <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
                                         <label for="username">
-                                            {{'TERMDEPOSITSTRANSACTION.DIVISION' | translate}}
+                                            {{'DEMANDDEPOSITS.DIVISION' | translate}}
                                         </label>
-                                        <input pInputText id="bunit_txt_name" type="text" formControlName="division"
-                                            [(ngModel)]="this.saoCommunicationModel.divisionName">
-                                    </div>
-                                </div>
-                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                                    <div class="form-label">
-                                        <label for="username">
-                                            {{'TERMDEPOSITSTRANSACTION.BLOCK' | translate}}
-                                        </label>
-                                        <input pInputText id="bunit_txt_name" type="text" formControlName="block"
-                                            [(ngModel)]="this.saoCommunicationModel.blockName">
+                                        <p-dropdown placeholder="{{'ERP.SELECT' | translate}}" formControlName="divisionName" [options]="divisionList"
+                                        [(ngModel)]="saoCommunicationModel.divisionId" ></p-dropdown>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.ADDRESS' |
-                                            translate}}</label>
-                                        <textarea type="text" class="form-control" pInputTextarea
-                                            placeholder="House No., Door No., Landmark..etc" formControlName="address1"
-                                            [(ngModel)]="saoCommunicationModel.address1"></textarea>
+                                        <label for="username">
+                                            {{'DEMANDDEPOSITS.BLOCK' | translate}}
+                                        </label>
+                                        <p-dropdown placeholder="{{'ERP.SELECT' | translate}}"  formControlName="blockName" [options]="blockList"
+                                         [(ngModel)]="saoCommunicationModel.blockId"></p-dropdown>
                                     </div>
                                 </div>
-
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
-                                        <label for="username"><span
-                                                class="red">*</span>{{'TERMDEPOSITSTRANSACTION.PINCODE' | translate}}
-                                        </label>
-
-                                        <input pInputText id="bunit_txt_name" maxlength="40" type="text"
-                                            formControlName="pinCode" placeholder="Enter Pincode"
-                                            [(ngModel)]="saoCommunicationModel.pinCode">
-                                        <p-message severity="error" text="Enter Valid pinCode"
-                                            *ngIf="!communicationForm.controls['pinCode'].valid && communicationForm.controls['pinCode'].dirty">
-                                        </p-message>
+                                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.ADDRESS' | translate}}</label>
+                                        <textarea type="text" class="form-control" pInputTextarea formControlName="address1"
+                                             [(ngModel)]="saoCommunicationModel.address1"
+                                            placeholder="House No., Door No., Landmark..etc"></textarea>
+                                        <p-message severity="error" text="Enter Valid address"
+                                            *ngIf="!communicationForm.controls['address1'].valid && communicationForm.controls['address1'].dirty"></p-message>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12">
+                                    <div class="form-label">
+                                        <label><span class="red">*</span>{{'LOAN_TRANSACTION.PINCODE' | translate}}</label>
+                                        <input pInputText id="bunit_txt_name" type="text" formControlName="pincode"
+                                            placeholder="Enter Your Pincode" minlength="6" maxlength="6" pKeyFilter="pnum"
+                                            [(ngModel)]="saoCommunicationModel.pincode">
+                                        <p-message severity="error" text="Enter Valid Pin Code"
+                                            *ngIf="!communicationForm.controls['pincode'].valid && communicationForm.controls['pincode'].dirty"></p-message>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-            </div>
+                
+               
+        </div>
         </div>
     </form>
-
 </div>

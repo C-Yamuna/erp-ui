@@ -77,6 +77,11 @@ export class FdCumulativeApplicationComponent {
   tenureTypeList: any[] = [];
   renewalTypeList: any[] = [];
   paymentTypeList: any[] = [];
+  yearFlag: boolean = false;
+  monthFlag: boolean = false;
+  daysFlag: boolean = false;
+  interestPayoutFlag: boolean = false;
+  renewalFlag: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -100,15 +105,15 @@ export class FdCumulativeApplicationComponent {
       'depositAmount': ['', [Validators.required]],
       'accountType': ['', [Validators.required]],
       'isRenewal': ['',],
-      'renewalType':['',],
+      'renewalType': ['',],
       'maturityDate': [{ value: '', disabled: true }],
       'maturityAmount': [{ value: '', disabled: true }],
       'tenureType': ['',],
       'interestPayoutType': ['',],
       'interestPayoutTransferAccount': ['',],
-      'staffRoi':[{ value: '', disabled: true }],
-      'seniorCitizenRoi':[{ value: '', disabled: true }]
-      
+      'staffRoi': [{ value: '', disabled: true }],
+      'seniorCitizenRoi': [{ value: '', disabled: true }]
+
     })
   }
 
@@ -121,15 +126,21 @@ export class FdCumulativeApplicationComponent {
     this.renewalList = this.commonComponent.requiredlist();
     this.interestPaymentFrequencyList = this.commonComponent.interestPaymentFrequency();
     this.tenureTypeList = this.commonComponent.tenureType();
-    this.renewalTypeList =  [
-      { label: "Deposit", value: 1 },
-      { label: "Maturity Amount", value: 2 },
-    ]
+    this.paymentTypeList = this.commonComponent.transactionModeType().filter((obj: any) => obj != null).map((tenure: { label: any; value: any }) => {
+      return { label: tenure.label, value: tenure.value };
+    });
+    this.renewalTypeList = this.commonComponent.renewalType().filter((obj: any) => obj != null && obj.label != "Manual Renewal Amount").map((tenure: { label: any; value: any }) => {
+      return { label: tenure.label, value: tenure.value };
+    });
+    // this.renewalTypeList =  [
+    //   { label: "Deposit", value: 1 },
+    //   { label: "Maturity Amount", value: 2 },
+    // ]
 
-    this.paymentTypeList = [
-      { label: "Cash", value: 1 },
-      { label: "To SB", value: 2 }
-    ]
+    // this.paymentTypeList = [
+    //   { label: "Cash", value: 1 },
+    //   { label: "To SB", value: 2 }
+    // ]
     this.getAllAccountTypes();
 
 
@@ -155,6 +166,8 @@ export class FdCumulativeApplicationComponent {
     });
 
     this.getAllProducts();
+    // this.tenureCheck();
+
   }
 
   save() {
@@ -250,7 +263,9 @@ export class FdCumulativeApplicationComponent {
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.fdCumulativeApplicationModel = this.responseModel.data[0];
-
+            this.interestPayoutCheck();
+            this.renewalCheck();
+            this.tenureCheck();
             if (this.fdCumulativeApplicationModel.depositDate == null || this.fdCumulativeApplicationModel.depositDate == undefined) {
               this.fdCumulativeApplicationModel.depositDateVal = this.commonFunctionsService.currentDate();
 
@@ -265,7 +280,7 @@ export class FdCumulativeApplicationComponent {
             //   this.isProductDisable = applicationConstants.TRUE;
 
             if (this.fdCumulativeApplicationModel.maturityDate != null && this.fdCumulativeApplicationModel.maturityDate != undefined) {
-              this.fdCumulativeApplicationModel.maturityDate = this.datePipe.transform(this.fdCumulativeApplicationModel.maturityDate, this.orgnizationSetting.datePipe);
+              this.fdCumulativeApplicationModel.maturityDate = this.commonFunctionsService.dateConvertionIntoFormate(this.fdCumulativeApplicationModel.maturityDate);
             }
             if (this.fdCumulativeApplicationModel.memberShipBasicDetailsDTO != undefined) {
               this.membershipBasicRequiredDetails = this.fdCumulativeApplicationModel.memberShipBasicDetailsDTO;
@@ -289,7 +304,7 @@ export class FdCumulativeApplicationComponent {
               this.memberTypeName = this.fdCumulativeApplicationModel.memberTypeName;
               if (this.fdCumulativeApplicationModel.memberTypeName == "Individual")
                 this.isIndividual = true;
-              if (this.memberTypeName != MemberShipTypesData.INDIVIDUAL) { 
+              if (this.memberTypeName != MemberShipTypesData.INDIVIDUAL) {
                 this.accountTypeDropDownHide = true;
                 const controlName = this.applicationForm.get('accountType');
                 if (controlName) {
@@ -362,7 +377,7 @@ export class FdCumulativeApplicationComponent {
 
             if (this.productDefinitionModel.intestPolicyConfigList[0].penaltyRoi != undefined && this.productDefinitionModel.intestPolicyConfigList[0].penaltyRoi != null)
               this.fdCumulativeApplicationModel.penalRoi = this.productDefinitionModel.intestPolicyConfigList[0].penaltyRoi;
-            
+
             if (this.productDefinitionModel.intestPolicyConfigList[0].staffRoi != undefined && this.productDefinitionModel.intestPolicyConfigList[0].staffRoi != null)
               this.fdCumulativeApplicationModel.staffRoi = this.productDefinitionModel.intestPolicyConfigList[0].staffRoi;
 
@@ -378,7 +393,7 @@ export class FdCumulativeApplicationComponent {
           if (this.productDefinitionModel.tenureType != null && this.productDefinitionModel.tenureType != undefined) {
             this.fdCumulativeApplicationModel.tenureType = this.productDefinitionModel.tenureType;
           }
-
+          this.tenureCheck();
         }
       }
     });
@@ -425,5 +440,34 @@ export class FdCumulativeApplicationComponent {
         this.applicationForm.get('maturityDate')?.setValue(maturityDateFormatted);
       }
     }
+  }
+
+  /**
+   * @implements check for years,months,days to show and hide based on tenuretype
+   * @author bhargavi
+   */
+  tenureCheck() {
+    const tenureType = this.fdCumulativeApplicationModel.tenureType;
+    this.yearFlag = tenureType === 2 || tenureType === 5 || tenureType === 6 || tenureType === 7 ? true : false;
+    this.monthFlag = tenureType === 3 || tenureType === 4 || tenureType === 6 || tenureType === 7 ? true : false;
+    this.daysFlag = tenureType === 1 || tenureType === 4 || tenureType === 5 || tenureType === 7 ? true : false;
+  }
+
+  /**
+   * @implements check for paymenttype show and hide based on interestPayoutType
+   * @author bhargavi
+   */
+  interestPayoutCheck() {
+    const interestPayoutType = this.fdCumulativeApplicationModel.interestPayoutType;
+    this.interestPayoutFlag = interestPayoutType === 3 ? true : false;
+  }
+  
+  /**
+   * @implements check for autorenewal show and hide based on renewalType
+   * @author bhargavi
+   */
+  renewalCheck() {
+    const renewalType = this.fdCumulativeApplicationModel.isAutoRenewal;
+    this.renewalFlag = renewalType === true ? true : false;
   }
 }

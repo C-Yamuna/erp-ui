@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { applicationConstants } from 'src/app/shared/applicationConstants';
@@ -112,6 +112,7 @@ export class TermLoansKycComponent {
   mandatoryDoxsTextShow: boolean = false;
   saveAndNextEnable : boolean = false;
   kycPhotoCopyZoom: boolean = false;
+  isMaximized: any;
   constructor(private formBuilder: FormBuilder,
     private commonComponent: CommonComponent, private activateRoute: ActivatedRoute,
     private encryptDecryptService: EncryptDecryptService,
@@ -856,7 +857,9 @@ export class TermLoansKycComponent {
        }
       }
      }
-     onClickkycPhotoCopy(){
+     onClickkycPhotoCopy(rowData:any){
+      this.multipleFilesList = [];
+      this.multipleFilesList =rowData.multipartFileList;
       this.kycPhotoCopyZoom = true;
     }
     kycclosePhoto(){
@@ -865,4 +868,26 @@ export class TermLoansKycComponent {
     kycclosePhotoCopy() {
       this.kycPhotoCopyZoom = false;
     }
+
+    // Popup Maximize
+                  @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+                
+                  onDialogResize(event: any) {
+                    this.isMaximized = event.maximized;
+                
+                    if (this.isMaximized) {
+                      // Restore original image size when maximized
+                      this.imageElement.nativeElement.style.width = 'auto';
+                      this.imageElement.nativeElement.style.height = 'auto';
+                      this.imageElement.nativeElement.style.maxWidth = '100%';
+                      this.imageElement.nativeElement.style.maxHeight = '100vh';
+                    } else {
+                      // Fit image inside the dialog without scrollbars
+                      this.imageElement.nativeElement.style.width = '100%';
+                      this.imageElement.nativeElement.style.height = '100%';
+                      this.imageElement.nativeElement.style.maxWidth = '100%';
+                      this.imageElement.nativeElement.style.maxHeight = '100%';
+                      this.imageElement.nativeElement.style.objectFit = 'contain';
+                    }
+                  }
 }

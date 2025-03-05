@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonComponent } from 'src/app/shared/common.component';
@@ -67,6 +67,7 @@ export class FdRequiredDocumentsComponent implements OnInit {
   saveAndPreview : boolean = false;
   productId: any;
   docPhotoCopyZoom: boolean = false;
+  isMaximized: boolean = false;
 
   constructor(private router: Router,
     private formBuilder: FormBuilder,
@@ -158,40 +159,52 @@ export class FdRequiredDocumentsComponent implements OnInit {
      */
   imageUploader(event: any, fileUpload: FileUpload) {
     this.isFileUploaded = applicationConstants.FALSE;
+    this.fdRequiredDocumentModel.multipartFileList = [];
     this.multipleFilesList = [];
     this.fdRequiredDocumentModel.filesDTOList = [];
-    this.fdRequiredDocumentModel.multipartFileList =[];
     this.fdRequiredDocumentModel.requiredDocumentFilePath = null;
-    let files: FileUploadModel = new FileUploadModel();
+
     for (let file of event.files) {
+      let fileSizeMB = file.size / (1024 * 1024);
+
+      if (fileSizeMB > 5) {
+        this.msgs = [{
+          severity: 'warning',
+          summary: applicationConstants.STATUS_WARN,
+          detail: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_5MB
+        }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+        continue;
+      }
+
       let reader = new FileReader();
       reader.onloadend = (e) => {
         this.isFileUploaded = applicationConstants.TRUE;
-        let files = new FileUploadModel();
-        this.uploadFileData = e.currentTarget;
-        files.fileName = file.name;
-        files.fileType = file.type.split('/')[1];
-        files.value = this.uploadFileData.result.split(',')[1];
-        files.imageValue = this.uploadFileData.result;
-
-        let index = this.multipleFilesList.findIndex(x => x.fileName == files.fileName);
-        if (index === -1) {
-          this.multipleFilesList.push(files);
-          this.fdRequiredDocumentModel.filesDTOList.push(files); // Add to filesDTOList array
+        if (!e.target || !e.target.result) {
+          return;
         }
-        let timeStamp = this.commonComponent.getTimeStamp();
-        this.fdRequiredDocumentModel.filesDTOList[0].fileName = "FD_CUMM_DOC_" + this.fdCummulativeAccountId + "_" +timeStamp+ "_"+ file.name ;
-        this.fdRequiredDocumentModel.requiredDocumentFilePath = "FD_CUMM_DOC_" + this.fdCummulativeAccountId + "_" +timeStamp+"_"+ file.name; // This will set the last file's name as docPath
-        this.fdRequiredDocumentModel.multipartFileList = this.fdRequiredDocumentModel.filesDTOList;
-        let index1 = event.files.findIndex((x: any) => x === file);
-        // this.addOrEditKycTempList(this.fdRequiredDocumentModel);
-        fileUpload.remove(event, index1);
+        let filesDTO = new FileUploadModel();
+        this.uploadFileData = e.target as FileReader;
+        filesDTO.fileName = `FD_NON_CUM_REQUIRED_DOCUMENT_${this.memberId}_${this.commonComponent.getTimeStamp()}_${file.name}`;
+        filesDTO.fileType = file.type.split('/')[1];
+        filesDTO.value = (this.uploadFileData.result as string).split(',')[1];
+        filesDTO.imageValue = this.uploadFileData.result as string;
+
+        this.fdRequiredDocumentModel.filesDTOList.push(filesDTO);
+        this.fdRequiredDocumentModel.requiredDocumentFilePath = filesDTO.fileName;
+
+        let index1 = event.files.indexOf(file);
+        if (index1 > -1) {
+          fileUpload.remove(event, index1);
+        }
         fileUpload.clear();
-      }
+      };
+
       reader.readAsDataURL(file);
     }
   }
-
   /**
    * @author bhargavi
    * @implements from data updation to stepper component
@@ -633,8 +646,10 @@ export class FdRequiredDocumentsComponent implements OnInit {
     }
   }
 
-  onClickdocPhotoCopy(){
+  onClickdocPhotoCopy(rowData :any){
+    this.multipleFilesList = [];
     this.docPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
   }
   docclosePhoto(){
     this.docPhotoCopyZoom = false;
@@ -642,4 +657,26 @@ export class FdRequiredDocumentsComponent implements OnInit {
   docclosePhotoCopy() {
     this.docPhotoCopyZoom = false;
   }
+
+  // Popup Maximize
+          @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+        
+          onDialogResize(event: any) {
+            this.isMaximized = event.maximized;
+        
+            if (this.isMaximized) {
+              // Restore original image size when maximized
+              this.imageElement.nativeElement.style.width = 'auto';
+              this.imageElement.nativeElement.style.height = 'auto';
+              this.imageElement.nativeElement.style.maxWidth = '100%';
+              this.imageElement.nativeElement.style.maxHeight = '100vh';
+            } else {
+              // Fit image inside the dialog without scrollbars
+              this.imageElement.nativeElement.style.width = '100%';
+              this.imageElement.nativeElement.style.height = '100%';
+              this.imageElement.nativeElement.style.maxWidth = '100%';
+              this.imageElement.nativeElement.style.maxHeight = '100%';
+              this.imageElement.nativeElement.style.objectFit = 'contain';
+            }
+          }
 }

@@ -482,7 +482,7 @@ export class MemberCommunicationDeatilsModel {
 ;
   addressType:any
 
-  pinCode: any;
+  pincode: any;
 
   isSameAddress:boolean = false;
 

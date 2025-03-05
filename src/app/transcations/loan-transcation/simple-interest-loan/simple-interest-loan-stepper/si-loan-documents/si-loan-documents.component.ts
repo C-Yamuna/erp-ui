@@ -1,7 +1,7 @@
 import { SiLoanDocumentsDetailsService } from './../../../shared/si-loans/si-loan-documents-details.service';
 import { SiLoanDocuments } from './../../../shared/si-loans/si-loan-documents.model';
 import { DatePipe } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { applicationConstants } from 'src/app/shared/applicationConstants';
@@ -40,9 +40,9 @@ export class SiLoanDocumentsComponent {
     deleteId: any;
     requiredDocumentsNamesText: any;
     mandatoryDoxsTextShow: boolean = false;
-  siproductId: any;
-  requiredDocumentList: any;
-  ;
+    siproductId: any;
+    requiredDocumentList: any;
+    isMaximized: boolean = false;
     kyc: any;
     checked: any;
     accountType: any;
@@ -261,11 +261,11 @@ export class SiLoanDocumentsComponent {
       const allMandatoryUploaded = mandatoryDocuments.every((doc:any) =>
           this.documentModelList?.some(uploadedDoc => uploadedDoc.documentType === doc.documentType)
       );
+  
       if (mandatoryDocuments.length > 0) {
-          this.requiredDocumentsNamesText = "Please Upload Mandatory Documents (";
-          this.requiredDocumentsNamesText += mandatoryDocuments.map((doc:any) => `'${doc.documentTypeName}'`).join(", ");
-          this.requiredDocumentsNamesText += ")";
-          this.mandatoryDoxsTextShow = true;
+        const documentNames = mandatoryDocuments.map((doc:any) => doc.documentTypeName).join(",");
+        this.requiredDocumentsNamesText = `Please Upload Mandatory Required Documents: "${documentNames}"`;
+        this.mandatoryDoxsTextShow = true;
       } else {
           this.mandatoryDoxsTextShow = false;
       }
@@ -438,8 +438,8 @@ export class SiLoanDocumentsComponent {
               }
               // this.getAllDocumentTypesByProductId();
               //required documents
-              if(this.responseModel.data[0].siLoanDocumentsDetailsDTOList != null && this.responseModel.data[0].siLoanDocumentsDetailsDTOList != undefined){
-                this.documentNameList = this.responseModel.data[0].siLoanDocumentsDetailsDTOList.filter((docs: any) => docs.status == applicationConstants.ACTIVE).map((count: any) => {
+              if(this.responseModel.data[0].requiredDocumentsConfigDetailsDTOList != null && this.responseModel.data[0].requiredDocumentsConfigDetailsDTOList != undefined && this.responseModel.data[0].requiredDocumentsConfigDetailsDTOList.length > 0){
+                this.documentNameList = this.responseModel.data[0].requiredDocumentsConfigDetailsDTOList.filter((docs: any) => docs.status == applicationConstants.ACTIVE).map((count: any) => {
                   return { label: count.documentTypeName, value: count.documentType }
                 });
               }
@@ -660,9 +660,11 @@ export class SiLoanDocumentsComponent {
       }
      }
     }
-    onClickdocPhotoCopy(){
-      this.docPhotoCopyZoom = true;
-    }
+    onClickdocPhotoCopy(rowData: any) {
+    this.multipleFilesList = [];
+    this.docPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
+  }
     docclosePhoto(){
       this.docPhotoCopyZoom = false;
     }
@@ -689,5 +691,25 @@ export class SiLoanDocumentsComponent {
           }
         }
       }
-
+      // Popup Maximize
+        @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+      
+        onDialogResize(event: any) {
+          this.isMaximized = event.maximized;
+      
+          if (this.isMaximized) {
+            // Restore original image size when maximized
+            this.imageElement.nativeElement.style.width = 'auto';
+            this.imageElement.nativeElement.style.height = 'auto';
+            this.imageElement.nativeElement.style.maxWidth = '100%';
+            this.imageElement.nativeElement.style.maxHeight = '100vh';
+          } else {
+            // Fit image inside the dialog without scrollbars
+            this.imageElement.nativeElement.style.width = '100%';
+            this.imageElement.nativeElement.style.height = '100%';
+            this.imageElement.nativeElement.style.maxWidth = '100%';
+            this.imageElement.nativeElement.style.maxHeight = '100%';
+            this.imageElement.nativeElement.style.objectFit = 'contain';
+          }
+        }
 }

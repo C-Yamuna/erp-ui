@@ -51,7 +51,7 @@
 
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div class="form-label">
-                    <label><span class="red">*</span>{{'ERP.ACCOUNT_TYPE' | translate}}</label>
+                    <label><span class="red">*</span>{{'ERP.OPERATION_TYPE' | translate}}</label>
                         <p-dropdown [options]="accountList" placeholder="{{'ERP.SELECT' | translate}}"
                             formControlName="accountType" [disabled]="applicationType" (onChange)="onChangeAccountType($event)"
                             [(ngModel)]="accountModel.accountType">
@@ -99,7 +99,15 @@
                                 [(ngModel)]=" accountModel.tenureInYears" placeholder="Enter Tenure (In Years)">
                     </div>
                 </div>
-              
+                     
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                    <div class="form-label">
+                    <label><span class="red">*</span>{{'DAILYDEPOSITS.INTODUCER_AGENT' | translate}}</label>
+                        <p-dropdown [options]="agentList" placeholder="{{'ERP.SELECT' | translate}}"
+                            formControlName="agent" [(ngModel)]="accountModel.introducerAgentId">
+                        </p-dropdown>
+                    </div>
+                </div>
             </div>
         </div>
     </form>

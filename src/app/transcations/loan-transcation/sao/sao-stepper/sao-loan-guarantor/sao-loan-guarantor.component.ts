@@ -53,21 +53,19 @@ export class SaoLoanGuarantorComponent {
     })
   }
   ngOnInit() {
-   
     this.pacsId = 1;
     this.branchId = 1;
     this.getAllTypeOfMembershipDetails(this.pacsId, this.branchId);
     this.activateRoute.queryParams.subscribe(params => {
-      if (params['id'] != undefined ||  params['admissionNumber'] != undefined) {
-        if (params['admissionNumber'] != undefined) {
-          this.admissionNumber = this.encryptDecryptService.decrypt(params['admissionNumber']);
-        }
+      if (params['id'] != undefined ) {
+        
         this.commonComponent.startSpinner();
-       // if(params['id'] != undefined && params['id'] != null){
+       if(params['id'] != undefined && params['id'] != null){
         this.loanId = Number(this.encryptDecryptService.decrypt(params['id']));
         this.isEdit = true;
+        this.getSaoLoanApplicationDetailsById(this.loanId);
         this.getSaoLoanGuarantorDetailsByApplicationId(this.loanId);
-       // }
+       }
       } else {
         this.isEdit = false;
       }
@@ -79,15 +77,22 @@ export class SaoLoanGuarantorComponent {
         this.save();
       }
     });
-    this.getSaoLoanApplicationDetailsById(this.loanId);
     
   }
   updateData() {
     if(this.selectedList != null && this.selectedList != undefined && this.selectedList.length > 0){
       this.isDisableFlag = false;
     }else{
+
       this.isDisableFlag = true;
     }
+    // if( this.selectedList == null ||  this.selectedList.length == 0){
+    //   this.isDisableFlag = false;
+    //   this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "Guarantors Not Avilable"}];
+    //   setTimeout(() => {
+    //     this.msgs = [];
+    //   }, 3000);
+    // }
     this.saoLoanGuarantorModel.saoLoanApplicationId = this.loanId;
     this.saoLoanGuarantorModel.admissionNo = this.admissionNumber;
     this.saoLoanGuarantorModel.gurantorList = this.selectedList;
@@ -98,7 +103,7 @@ export class SaoLoanGuarantorComponent {
       data: this.saoLoanGuarantorModel,
       // isDisable: (!this.guarantorform.valid),
       isDisable: this.isDisableFlag,
-      stepperIndex: 6,
+      stepperIndex: 5,
     });
   }
   save() {
@@ -148,9 +153,13 @@ export class SaoLoanGuarantorComponent {
   
     this.guarantorform.get('admissionNo')?.setValue(this.selectedMembers);
   }
-  //@akhila
-  // get all members from membership module data 
   
+  /**
+   * @implements get all type of memberdetails
+   * @param pacsId 
+   * @param branchId 
+   * @author akhila.M
+   */
   getAllTypeOfMembershipDetails (pacsId: any, branchId: any) {
     this.membershipBasicDetailsService.getAllTypeOfMemberDetailsListFromMemberModule(this.pacsId, this.branchId).subscribe((response: any) => {
       this.responseModel = response;
@@ -165,6 +174,7 @@ export class SaoLoanGuarantorComponent {
                 data: relationType // Optional: Include entire data object for further details
               };
             });
+            
           }
         } 
       }
@@ -183,7 +193,7 @@ export class SaoLoanGuarantorComponent {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         this.saoLoanApplicatonModel = this.responseModel.data[0];
-       
+        this.admissionNumber = this.saoLoanApplicatonModel.admissionNo;
       }
       else {
         this.msgs = [];
@@ -200,6 +210,8 @@ export class SaoLoanGuarantorComponent {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         this.selectedList = this.responseModel.data;
+        // .filter((data: any) =>  this.admissionNumber != data.admissionNumber);
+        
         this.initializeFormWithadmissionNumber(this.selectedList);
       }
       else {

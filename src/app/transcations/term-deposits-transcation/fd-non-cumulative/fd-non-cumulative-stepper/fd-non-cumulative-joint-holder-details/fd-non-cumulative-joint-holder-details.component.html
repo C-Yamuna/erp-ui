@@ -1,5 +1,4 @@
 <div class="col-12">
-    <h6 class="sub-heading">{{'ERP.ADD_JOINT_HOLDERS_SECONDARY' | translate}}</h6>
     <div class="stepper-top-section-strip">
         <div class="row">
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 stepper-top-product-name-background">
@@ -30,7 +29,7 @@
     </div>
 
     <div class="col-12"></div>
-
+    <h6 class="sub-heading">{{'ERP.ADD_JOINT_HOLDERS_SECONDARY' | translate}}</h6>
     <form [formGroup]="jointAccountForm" id="exit_types_form">
         <div class="mt-n1 bg-label-colorfull">
             <div class="row g-3">
@@ -53,14 +52,14 @@
 
         <h6 class="sub-heading">{{'ERP.SECONDARY_ACCOUNT_HOLDER_DETAILS' | translate}} </h6>
 
-        <div class="col-12 p-3 mem-details-stripbox">
-            <div class="col-auto rounded bg-white" *ngFor="let jointHolderDetails of jointHolderDetailsList">
+        <div class="col-12 p-3 mem-details-stripbox" *ngIf="jointHolderDetailsList && jointHolderDetailsList.length > 0"
+            [ngStyle]="{'max-height': getDynamicHeight(),'overflow-y': shouldEnableScroll() ? 'auto' : 'hidden'}">
+            <div class="col-auto rounded bg-white" *ngFor="let jointHolderDetails of jointHolderDetailsList; let last = last" [ngClass]="{'mb-2': !last}">
                 <div class="d-flex">
-                    <div class="col">
+                    <div class="d-flex align-items-center justify-content-center px-3">
                         <img class="mem-details-stripimage" src="assets/images/avata2r-table.png"
                             alt="secondaryholder-image" />
                     </div>
-                    <div class="col"></div>
                     <div class="w-100 mt-1 mb-2 h-90p">
                         <div class="row">
                             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
@@ -101,7 +100,7 @@
                             </div>
                             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                 <div class="col">
-                                    <span class="label-view">{{'ERP.PAN_NUMBER' | translate}}</span>
+                                    <span class="label-view">{{'ERP.PAN_NO' | translate}}</span>
                                     <p class="label-input-text text-break m-0">{{jointHolderDetails.panNumber}}</p>
                                 </div>
                             </div>
@@ -111,12 +110,12 @@
                                     <p class="label-input-text text-break m-0">{{jointHolderDetails.mobileNumber}}</p>
                                 </div>
                             </div>
-                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+                            <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
                                 <div class="col">
                                     <span class="label-view">{{'ERP.KYC' | translate}}</span>
                                     <p class="label-input-text text-break m-0">{{jointHolderDetails.isKycApproved}}</p>
                                 </div>
-                            </div>
+                            </div> -->
                             <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                 <div class="col">
                                     <span class="label-view">{{'ERP.EMAIL' | translate}}</span>
@@ -127,10 +126,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
-
     </form>
-
-
 </div>

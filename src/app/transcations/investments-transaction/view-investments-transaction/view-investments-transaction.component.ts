@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Responsemodel } from 'src/app/shared/responsemodel';
 import { InvestmentApplicationDetails } from '../deposit-investments/investments-application-details/shared/investment-application-details.model';
 import { InvestmentAccountDocuments } from '../deposit-investments/investment-account-documents/shared/investment-account-documents.model';
@@ -44,6 +44,10 @@ export class ViewInvestmentsTransactionComponent implements OnInit {
   uploadFileData: any;
   depostiBondFile: any[] = [];
   fileFlag: boolean = false;
+  resolutionCopyFileList: any[] = [];
+  isMaximized: boolean = false;
+  docPhotoCopyZoom: boolean = false;
+  multipleFilesList: any[] = [];
   constructor(private router: Router,
     private formBuilder: FormBuilder,
     private datePipe: DatePipe,
@@ -102,6 +106,9 @@ export class ViewInvestmentsTransactionComponent implements OnInit {
                 this.depositTypeName = count.label;
               });
             }
+            if (this.investmentApplicationDetailsModel.resolutionDate != null) {
+              this.investmentApplicationDetailsModel.resolutionDate = this.datePipe.transform(this.investmentApplicationDetailsModel.resolutionDate, this.orgnizationSetting.datePipe);
+            }
             if (this.investmentApplicationDetailsModel.isAutoRenewal != null && this.investmentApplicationDetailsModel.isAutoRenewal != undefined) {
               if(this.investmentApplicationDetailsModel.isAutoRenewal)
                 this.investmentApplicationDetailsModel.isAutoRenewal = applicationConstants.YES;
@@ -124,6 +131,10 @@ export class ViewInvestmentsTransactionComponent implements OnInit {
             if(this.investmentApplicationDetailsModel.depositBondCopyPath != null && this.investmentApplicationDetailsModel.depositBondCopyPath != undefined){
               this.investmentApplicationDetailsModel.multipartFileList = this.fileUploadService.getFile(this.investmentApplicationDetailsModel.depositBondCopyPath ,
               ERP_TRANSACTION_CONSTANTS.INVESTMENTS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.investmentApplicationDetailsModel.depositBondCopyPath);
+            }
+            if (this.investmentApplicationDetailsModel.resolutionCopyPath != null && this.investmentApplicationDetailsModel.resolutionCopyPath != undefined) {
+              this.resolutionCopyFileList = this.fileUploadService.getFile(this.investmentApplicationDetailsModel.resolutionCopyPath,
+                ERP_TRANSACTION_CONSTANTS.INVESTMENTS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.investmentApplicationDetailsModel.resolutionCopyPath);
             }
             if(this.investmentApplicationDetailsModel.depositType != undefined && this.investmentApplicationDetailsModel.depositType != null)
               this.onChangeDepositType(this.investmentApplicationDetailsModel.depositType);
@@ -165,6 +176,9 @@ export class ViewInvestmentsTransactionComponent implements OnInit {
       if (this.investmentApplicationDetailsModel.maturityDate)
         this.investmentApplicationDetailsModel.maturityDate = this.commonFunctionsService.getUTCEpoch(new Date(this.investmentApplicationDetailsModel.maturityDate));
 
+      if (this.investmentApplicationDetailsModel.resolutionDate != null)
+        this.investmentApplicationDetailsModel.resolutionDate = this.commonFunctionsService.getUTCEpoch(new Date(this.investmentApplicationDetailsModel.resolutionDate));
+      
       if(this.investmentApplicationDetailsModel.isAutoRenewal == applicationConstants.YES)
         this.investmentApplicationDetailsModel.isAutoRenewal = applicationConstants.TRUE;
       else
@@ -262,5 +276,30 @@ export class ViewInvestmentsTransactionComponent implements OnInit {
         this.signedCopyFile = [];
       }
     }
-
+    onClickdoccPhotoCopy(rowData :any){
+      this.multipleFilesList = [];
+      this.docPhotoCopyZoom = true;
+      this.multipleFilesList = rowData.multipartFileList;
+    }
+    // Popup Maximize
+        @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+        
+          onDialogResize(event: any) {
+            this.isMaximized = event.maximized;
+        
+            if (this.isMaximized) {
+              // Restore original image size when maximized
+              this.imageElement.nativeElement.style.width = 'auto';
+              this.imageElement.nativeElement.style.height = 'auto';
+              this.imageElement.nativeElement.style.maxWidth = '100%';
+              this.imageElement.nativeElement.style.maxHeight = '100vh';
+            } else {
+              // Fit image inside the dialog without scrollbars
+              this.imageElement.nativeElement.style.width = '100%';
+              this.imageElement.nativeElement.style.height = '100%';
+              this.imageElement.nativeElement.style.maxWidth = '100%';
+              this.imageElement.nativeElement.style.maxHeight = '100%';
+              this.imageElement.nativeElement.style.objectFit = 'contain';
+            }
+          }
 }

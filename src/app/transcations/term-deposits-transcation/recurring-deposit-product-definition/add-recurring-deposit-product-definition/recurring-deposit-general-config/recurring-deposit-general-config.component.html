@@ -9,7 +9,7 @@
                     <label for="username"><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.PRODUCT_NAME' | translate}}
                     </label>
                 <input pInputText id="bunit_txt_name" maxlength="40" type="text" 
-                         formControlName="name" [(ngModel)]="recurringDepositProductDefinitionModel.name">
+                         formControlName="name" [(ngModel)]="recurringDepositProductDefinitionModel.name" (focusout)="productNameDuplicateCheck()">
                          <p-message severity="error" text="Enter Valid Name"
                                         *ngIf="!generalconfigform.controls['name'].valid && generalconfigform.controls['name'].dirty">
                                       </p-message>
@@ -84,6 +84,17 @@
                 formControlName="isAutoRenewal" [(ngModel)]="recurringDepositProductDefinitionModel.isAutoRenewal"></p-dropdown>
             </div>
         </div>  -->
+        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            <div class="form-label">
+                <label for="username"><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.PENALITY_AMOUNT' | translate}}
+                </label>
+            <input pInputText id="bunit_txt_name" maxlength="40" type="text" 
+                     formControlName="penaltyAmount" [(ngModel)]="recurringDepositProductDefinitionModel.penaltyAmount" pKeyFilter="int">
+                     <p-message severity="error" text="Enter Valid Amount"
+                     *ngIf="!generalconfigform.controls['penaltyAmount'].valid && generalconfigform.controls['penaltyAmount'].dirty">
+                   </p-message>
+            </div>
+        </div>
         <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <div class="form-label">
             <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.TENURE_TYPE' | translate}}</label>

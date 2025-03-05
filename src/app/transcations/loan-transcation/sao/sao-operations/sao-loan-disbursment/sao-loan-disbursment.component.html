@@ -253,6 +253,8 @@
                                 </div>
                                 <p-button (click)="addDisbursment()" label="{{ 'ADD' | translate }}" icon="fa fa-plus"
                                 iconPos="left" [disabled]="addOrEdit" id="bunit_bt_submit"></p-button>
+                                <p-button label="{{'ERP.BACK' | translate}}"  [disabled]="addOrEdit" (click)="back()"></p-button>
+
                             </div>
                         </div>
                     </div>
@@ -294,6 +296,7 @@
                 <p class="font-bold m-0">{{'ERP.TOTAL_DISBURSEMENT_AMOUNT' | translate}} : {{
                     totalDisbursement }}</p>
             </div>
+
         </div>
 
     </div>

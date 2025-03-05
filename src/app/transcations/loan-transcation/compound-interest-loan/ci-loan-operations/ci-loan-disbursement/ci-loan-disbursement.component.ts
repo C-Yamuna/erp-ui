@@ -70,6 +70,7 @@ export class CiLoanDisbursementComponent {
   addOrEdit:boolean = false;
   disbursementScheduleList :any []=[];
   indvidualFalg: boolean = false;
+  loanPurposeList: any;
   constructor(private router: Router,
     private formBuilder: FormBuilder,
     private commonFunctionsService: CommonFunctionsService,
@@ -119,6 +120,7 @@ export class CiLoanDisbursementComponent {
     this.pacsId = this.commonFunctionsService.getStorageValue(applicationConstants.PACS_ID);
     this.branchId = this.commonFunctionsService.getStorageValue(applicationConstants.BRANCH_ID);
     this.trueFalseList = this.commonComponent.requiredlist();
+    this.getAllLoanPurpose();
     this.activateRoute.queryParams.subscribe(params => {
       if (params['id'] != undefined) {
         this.loanAccId = Number(this.encryptDecryptService.decrypt(params['id']));
@@ -250,6 +252,11 @@ export class CiLoanDisbursementComponent {
               if(this.ciLoanApplicationModel.loanApprovedDate != null && this. ciLoanApplicationModel.loanApprovedDate){
                 this.ciLoanApplicationModel.loanApprovedDateVal = this.datePipe.transform(this.ciLoanApplicationModel.loanApprovedDate, this.orgnizationSetting.datePipe);
               }
+               //purpose name
+           if(this.loanPurposeList != null && this.loanPurposeList != undefined && this.loanPurposeList.length >0 && this.ciLoanApplicationModel.purposeId != null && this.ciLoanApplicationModel.purposeId != undefined){
+            let purposeName = this.loanPurposeList.filter((obj:any)=>obj.value == this.ciLoanApplicationModel.purposeId);//set purpose name 
+            this.ciLoanApplicationModel.purposeName = purposeName[0].label;
+           } 
             }
           }
           else {
@@ -581,6 +588,28 @@ export class CiLoanDisbursementComponent {
   canclePopUp(){
     this.addOrEdit = false;
     this.editDisable = false;
+  }
+
+  /**
+ * @implements get all loan purpose
+ * @author jyothi.naidana
+ */
+  getAllLoanPurpose() {
+    this.commonComponent.startSpinner();
+    this.ciLoanApplicationService.getAllLoanPurpose().subscribe(response => {
+      this.responseModel = response;
+      if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+        this.commonComponent.stopSpinner();
+        this.loanPurposeList = this.responseModel.data.filter((loanPurpose: { status: number; }) => loanPurpose.status == 1).map((loanPurpose: any) => {
+          return { label: loanPurpose.name, value: loanPurpose.id };
+        });
+      }
+    },
+      error => {
+        this.msgs = [];
+        this.commonComponent.stopSpinner();
+        this.msgs.push({ severity: 'error', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST });
+      })
   }
 
 

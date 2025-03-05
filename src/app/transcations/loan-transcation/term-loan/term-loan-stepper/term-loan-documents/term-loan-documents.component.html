@@ -33,12 +33,12 @@
     </div>
     <div class="col-12"></div>
     <form [formGroup]="termDocumentDetailsForm" id="exit_types_form">
-        <p-button icon="fa fa-plus" label="{{'ADD ANOTHER DOCUMENT' | translate}}" (click)="addDocument($event)"
+        <p-button icon="fa fa-plus" label="{{'ADD DOCUMENT' | translate}}" (click)="addDocument($event)"
             [disabled]="buttonDisabled" class="kyc-btnm-0"></p-button>
             <p class="label-input-text text-danger mt-2" *ngIf="mandatoryDoxsTextShow">Note : {{requiredDocumentsNamesText}}</p>
-        <div class="col-12 px-0">
+        <div class="col-12 p-0 pt-2">
             <div class="row g-3">
-                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12"
+                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12"
                     *ngFor="let document of documentModelList ; let i = index">
                     <div class="stepper-doc-card p-3 mb-2" *ngIf="editIndex != i || editDocumentOfKycFalg">
 
@@ -46,46 +46,30 @@
                         <div class="row">
                             <div class="col-lg-7 col-md-7 col-sm-7 col-xs-6 d-flex align-items-center">
                                 <div class="card-leftbody">
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                         <h6 class="label-view">Document Type</h6>
                                         <p class="label-input-text">{{document.documentTypeName}}</p>
                                     </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                         <h6 class="label-view">Document Number</h6>
                                         <p class="label-input-text">{{document.documentNo}}</p>
                                     </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                         <h6 class="label-view">Document Name</h6>
                                         <p class="label-input-text docname-texteclipse" pTooltip="{{document.filePath}}"
                                             tooltipPosition="bottom">{{document.filePath}} </p>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end">
-                                <div class="text-right">
-                                    <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn"
-                                        (click)="toggleEditForm(i ,document)" [disabled]="editButtonDisable"></p-button>
-                                    <p-button icon="fa fa-trash" class="kyc-edit-btn ml-3"
-                                        (click)="deletDilogBox(document)" [disabled]="editButtonDisable"></p-button>
+                            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end d-flex right-actions">
+                                <div class="cardview-icon icon-size text-right cursor-pointer -mt-1"
+                                    (click)="onClickdocPhotoCopy(document)"><i class="fa fa-eye mr-3" aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}" tooltipPosition="top"></i>
                                 </div>
+                                <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn"
+                                    (click)="toggleEditForm(i ,document)" [disabled]="editButtonDisable" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
+                                <p-button icon="fa fa-trash" class="kyc-edit-btn ml-3" (click)="deletDilogBox(document)"
+                                    [disabled]="editButtonDisable" pTooltip="{{'ERP.DELETE' | translate}}" tooltipPosition="top"></p-button>
 
-                                <div class="col-12 px-0">
-                                    <div class="col-12 px-0" *ngFor="let img of document.multipartFileList">
-                                        <div class="col-12 p-0"
-                                            *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
-                                            <a href="{{img.imageValue}}">
-                                                <img src="{{img.imageValue}}" class="upload-img img-fluid"
-                                                    pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                            </a>
-                                        </div>
-                                        <div class="col-12 p-0" *ngIf=" img.fileType =='pdf'">
-                                            <a href="{{img.imageValue}}">
-                                                <img src="assets\images\pdf.png" class="upload-img img-fluid"
-                                                    pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -114,7 +98,7 @@
                             
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
-                                    <label><span class="red">*</span>{{ 'LOAN_TRANSACTION.UPLOAD_DOCUMENT' | translate }} </label>
+                                    <div class="ml-2"><span class="red">*</span>{{ 'LOAN_TRANSACTION.UPLOAD_DOCUMENT' | translate }} </div>
                                     <div class="uplodad-style align-items-center">
                                         <!-- Upload Button Column -->
                                         <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
@@ -150,7 +134,7 @@
                 </div>
 
                 <!-- add form -->
-                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12" *ngIf="addDocumentOfKycFalg">
+                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12" *ngIf="addDocumentOfKycFalg">
                     <div class="col-12  p-3 global-border bg-label-colorfull">
                         <div class="row g-3 mt-n1">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -172,7 +156,7 @@
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
-                                    <label><span class="red">*</span>{{ 'LOAN_TRANSACTION.UPLOAD_DOCUMENT' | translate }} </label>
+                                    <div class="ml-2"><span class="red">*</span>{{ 'LOAN_TRANSACTION.UPLOAD_DOCUMENT' | translate }} </div>
                                     <div class="uplodad-style align-items-center">
                                         <!-- Upload Button Column -->
                                         <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
@@ -221,5 +205,23 @@
         <p-button pRipple class="yes-button" label="{{'LOAN_TRANSACTION.DELETE' | translate}}" (click)="submitDelete()"></p-button>
         <p-button pRipple class="no-button" label="{{'LOAN_TRANSACTION.CANCEL' | translate}}"
             (click)="cancelForDialogBox()"></p-button>
+    </div>
+</p-dialog>
+
+<!-- KYC Photo Copy -->
+<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="docPhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
+    <div class="col-12">
+            <div *ngFor="let img of multipleFilesList">
+                <div class="mb-3" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                    <!-- <a href="{{img.imageValue}}"> -->
+                    <img src="{{img.imageValue}}" class="doc-photocopy">
+                    <!-- </a> -->
+                </div>
+                <div class="mb-3" *ngIf=" img.fileType =='pdf'">
+                    <!-- <a href="{{img.imageValue}}"> -->
+                    <img src="assets\images\pdf.png" class="doc-photocopy">
+                    <!-- </a> -->
+                </div>
+            </div>
     </div>
 </p-dialog>

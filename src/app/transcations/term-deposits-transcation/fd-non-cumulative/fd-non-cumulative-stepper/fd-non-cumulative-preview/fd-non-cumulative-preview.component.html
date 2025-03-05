@@ -89,6 +89,7 @@
                                                 {{membershipBasicRequiredDetailsModel.tempAdmissionNumber}}</p>
                                         </div>
                                     </div>
+ 
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
                                         <span class="basicdata-icons icon-size"><i class="fa fa-id-card-o"></i></span>
                                         <div>
@@ -513,19 +514,18 @@
                                             <div class="col-6">
                                                 <p-button *ngIf="preveiwFalg" icon="fa fa-pencil-square-o"
                                                     class="kyc-edit-btn pull-right"
-                                                    (click)="kycEdit(fdNonCumulativeApplicationModel)"></p-button>
+                                                    (click)="kycEdit(fdNonCumulativeApplicationModel)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                             </div>
                                         </div>
 
-                                        <div class="col-12 p-0" *ngIf="!isKycEmpty">
+                                        <div class="col-12 px-0" *ngIf="!isKycEmpty">
                                             <div class="row g-3">
-                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12"
+                                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-6 mt-2"
                                                     *ngFor="let document of kycGridList ; let i = index">
                                                     <div class="stepper-kyc-card p-3 pb-1 mb-2">
                                                         <!-- view card -->
                                                         <div class="row">
-                                                            <div
-                                                                class="col-lg-7 col-md-7 col-sm-7 col-xs-6 d-flex align-items-center">
+                                                            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 d-flex align-items-center">
                                                                 <div class="card-leftbody">
                                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 "
                                                                         *ngIf="!individualFlag">
@@ -562,14 +562,14 @@
                                                                 </div>
                                                             </div>
                                                             <div
-                                                                class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end d-flex right-actions">
+                                                                class="col-lg-4 col-md-4 col-sm-4 col-xs-4 justify-content-end d-flex right-actions">
                                                                 <div class="cardview-icon icon-size text-right cursor-pointer"
                                                                     (click)="onClickKycPhotoCopy(document)"><i
-                                                                        class="fa fa-eye m-0" aria-hidden="true"></i>
+                                                                        class="fa fa-eye m-0" aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}" tooltipPosition="top"></i>
                                                                 </div>
                                                                 <div *ngIf="!preveiwFalg">
                                                                     <div class="carddownload-icon icon-size text-right"
-                                                                        *ngFor="let img of document.multipartFileList">
+                                                                        *ngFor="let img of document.multipartFileList" pTooltip="{{'ERP.DOC_DOWNLOAD' | translate}}" tooltipPosition="top">
                                                                         <div
                                                                             *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                                                             <a href="{{img.imageValue}}">
@@ -639,7 +639,7 @@
                                             <div class="col-6">
                                                 <p-button *ngIf="preveiwFalg" icon="fa fa-pencil-square-o"
                                                     class="kyc-edit-btn pull-right"
-                                                    (click)="communicationEdit(fdNonCumulativeApplicationModel)"></p-button>
+                                                    (click)="communicationEdit(fdNonCumulativeApplicationModel)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                             </div>
                                         </div>
                                         <div class="col-12 p-0">
@@ -873,7 +873,7 @@
                                             <div class="col-6">
                                                 <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
                                                     *ngIf="preveiwFalg"
-                                                    (click)="applicationEdit(fdNonCumulativeApplicationModel)"></p-button>
+                                                    (click)="applicationEdit(fdNonCumulativeApplicationModel)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                             </div>
                                         </div>
 
@@ -917,34 +917,22 @@
                                                         translate}}
                                                     </h6>
                                                     <p class="label-input-text">
-                                                        {{fdNonCumulativeApplicationModel.tenureType}}</p>
+                                                        {{fdNonCumulativeApplicationModel.tenureTypeName}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 "
-                                                *ngIf="fdNonCumulativeApplicationModel.tenureType == 2 || 
-                                                    fdNonCumulativeApplicationModel.tenureType == 5 || 
-                                                    fdNonCumulativeApplicationModel.tenureType == 6 ||
-                                                    fdNonCumulativeApplicationModel.tenureType == 7">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 " *ngIf="yearFlag" >
                                                     <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.TENURE_IN_YEARS' |
                                                         translate}}
                                                     </h6>
                                                     <p class="label-input-text">
                                                         {{fdNonCumulativeApplicationModel.tenureInYears}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 "
-                                                *ngIf="fdNonCumulativeApplicationModel.tenureType == 3 || 
-                                                    fdNonCumulativeApplicationModel.tenureType == 4 || 
-                                                    fdNonCumulativeApplicationModel.tenureType == 6 ||
-                                                    fdNonCumulativeApplicationModel.tenureType == 7">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 " *ngIf="monthFlag">
                                                     <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.TENURE_IN_MONTHS'
                                                         | translate}}</h6>
                                                     <p class="label-input-text">
                                                         {{fdNonCumulativeApplicationModel.tenureInMonths}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 "
-                                                *ngIf="fdNonCumulativeApplicationModel.tenureType == 1 || 
-                                                    fdNonCumulativeApplicationModel.tenureType == 4 || 
-                                                    fdNonCumulativeApplicationModel.tenureType == 5 ||
-                                                    fdNonCumulativeApplicationModel.tenureType == 7">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 " *ngIf="daysFlag">
                                                     <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.TENURE_IN_DAYS' |
                                                         translate}}</h6>
                                                     <p class="label-input-text">
@@ -988,12 +976,7 @@
                                                         {{fdNonCumulativeApplicationModel.interestPaymentFrequencyName}}
                                                     </p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 "
-                                                *ngIf="fdNonCumulativeApplicationModel.interestPaymentFrequencyId == 1  || 
-                                                        fdNonCumulativeApplicationModel.interestPaymentFrequencyId == 2 || 
-                                                        fdNonCumulativeApplicationModel.interestPaymentFrequencyId == 3 ||
-                                                        fdNonCumulativeApplicationModel.interestPaymentFrequencyId == 4 || 
-                                                        fdNonCumulativeApplicationModel.interestPaymentFrequencyId == 5">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 " *ngIf="interestFrequencyFlag">
                                                     <h6 class="label-view">
                                                         {{'TERMDEPOSITSTRANSACTION.INTEREST_PAYOUT_AMOUNT' |
                                                         translate}}
@@ -1011,8 +994,7 @@
                                                         {{fdNonCumulativeApplicationModel.totalInterestAmount}}
                                                     </p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 "
-                                                *ngIf="fdNonCumulativeApplicationModel.interestPaymentFrequencyId == 6">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 " *ngIf="maturityFlag">
                                                     <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.MATURITY_AMOUNT' |
                                                         translate}}
                                                     </h6>
@@ -1031,9 +1013,9 @@
                                                         translate}}
                                                     </h6>
                                                     <p class="label-input-text">
-                                                        {{fdNonCumulativeApplicationModel.interestPayoutType}}</p>
+                                                        {{fdNonCumulativeApplicationModel.interestPayoutTypeName}}</p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 " *ngIf="interestPayoutFlag">
                                                     <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.INTEREST_TRANSFER_ACCOUNT' |
                                                         translate}}
                                                     </h6>
@@ -1048,12 +1030,12 @@
                                                         {{fdNonCumulativeApplicationModel.isAutoRenewal? 'Yes':'No'}}
                                                     </p>
                                                 </div>
-                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 " *ngIf="renewalFlag">
                                                     <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.RENEWAL_TYPE' |
                                                         translate}}
                                                     </h6>
                                                     <p class="label-input-text">
-                                                        {{fdNonCumulativeApplicationModel.renewalType}}</p>
+                                                        {{fdNonCumulativeApplicationModel.renewalTypeName}}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -1078,7 +1060,7 @@
                                             <div class="col-6">
                                                 <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
                                                     *ngIf="preveiwFalg"
-                                                    (click)="editJointHolder(fdNonCumulativeApplicationModel)"></p-button>
+                                                    (click)="editJointHolder(fdNonCumulativeApplicationModel)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                             </div>
                                         </div>
                                         <div class="col-12 p-3 mem-details-stripbox mb-3">
@@ -1118,6 +1100,14 @@
                                                             </div>
                                                             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                                 <span
+                                                                    class="label-view">{{'TERMDEPOSITSTRANSACTION.CLASS'
+                                                                    | translate}}</span>
+                                                                <p
+                                                                    class="font-semibold text-break m-0 label-input-text">
+                                                                    {{jointHolderDetails.memberClass}}</p>
+                                                            </div> 
+                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
+                                                                <span
                                                                     class="label-view">{{'TERMDEPOSITSTRANSACTION.ADMISSION_DATE'
                                                                     | translate}}</span>
                                                                 <p
@@ -1142,20 +1132,20 @@
                                                             </div>
                                                             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                                 <span
-                                                                    class="label-view">{{'TERMDEPOSITSTRANSACTION.POC_MOBILE_NO'
+                                                                    class="label-view">{{'TERMDEPOSITSTRANSACTION.MOBILE_NUMBER'
                                                                     | translate}}</span>
                                                                 <p
                                                                     class="font-semibold text-break m-0 label-input-text">
                                                                     {{jointHolderDetails.mobileNumber}}</p>
                                                             </div>
-                                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
+                                                            <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 ">
                                                                 <span
                                                                     class="label-view">{{'TERMDEPOSITSTRANSACTION.EMAIL'
                                                                     | translate}}</span>
                                                                 <p
                                                                     class="font-semibold text-break m-0 label-input-text">
                                                                     {{jointHolderDetails.emailId}}</p>
-                                                            </div>
+                                                            </div> -->
                                                         </div>
 
                                                     </div>
@@ -1273,7 +1263,7 @@
                                             <div class="col-6">
                                                 <p-button *ngIf="preveiwFalg" icon="fa fa-pencil-square-o"
                                                     class="kyc-edit-btn pull-right"
-                                                    (click)="nomineeEdit(fdNonCumulativeApplicationModel)"></p-button>
+                                                    (click)="nomineeEdit(fdNonCumulativeApplicationModel)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                             </div>
                                         </div>
                                         <div class="col-12 p-0">
@@ -1314,6 +1304,24 @@
                                                                                         {{nomineeDetailsModel.nomineeName}}
                                                                                     </p>
                                                                                 </div>
+                                                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
+                                                                                *ngIf="nomineeDetailsModel.nomineeType != 3">
+                                                                                <h6 class="label-view">
+                                                                                    {{'TERMDEPOSITSTRANSACTION.DATE_OF_BIRTH'
+                                                                                    | translate}}</h6>
+                                                                                <p class="label-input-text">
+                                                                                    {{nomineeDetailsModel.nomineeDobVal}}
+                                                                                </p>
+                                                                            </div>
+                                                                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
+                                                                            *ngIf="nomineeDetailsModel.nomineeType != 3">
+                                                                            <h6 class="label-view">
+                                                                                {{'TERMDEPOSITSTRANSACTION.AGE'
+                                                                                | translate}}</h6>
+                                                                            <p class="label-input-text">
+                                                                                {{nomineeDetailsModel.nomineeAge}}
+                                                                            </p>
+                                                                        </div>
 
                                                                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
                                                                                     *ngIf="nomineeDetailsModel.nomineeType != 3">
@@ -1359,10 +1367,10 @@
                                                                         <div class="cardview-icon icon-size text-right cursor-pointer"
                                                                             (click)="onClickNomineePhotoCopy()"><i
                                                                                 class="fa fa-eye m-0"
-                                                                                aria-hidden="true"></i></div>
+                                                                                aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}" tooltipPosition="top"></i></div>
                                                                         <div *ngIf="!preveiwFalg">
                                                                             <div class="carddownload-icon icon-size text-right"
-                                                                                *ngFor="let img of nomineeDetailsModel.multipartFileList">
+                                                                                *ngFor="let img of nomineeDetailsModel.nomineeSighnedFormMultiPartList" pTooltip="{{'ERP.DOC_DOWNLOAD' | translate}}" tooltipPosition="top">
                                                                                 <!-- Image -->
                                                                                 <div
                                                                                     *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
@@ -1508,10 +1516,10 @@
                                                                         <div class="cardview-icon icon-size text-right cursor-pointer"
                                                                             (click)="onClickGuardianPhotoCopy()"><i
                                                                                 class="fa fa-eye m-0"
-                                                                                aria-hidden="true"></i></div>
+                                                                                aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}" tooltipPosition="top"></i></div>
                                                                         <div *ngIf="!preveiwFalg">
                                                                             <div class="carddownload-icon icon-size text-right"
-                                                                                *ngFor="let img of memberGuardianDetailsModel.multipartsFileList">
+                                                                                *ngFor="let img of memberGuardianDetailsModel.guardainSighnedMultipartFiles" pTooltip="{{'ERP.DOC_DOWNLOAD' | translate}}" tooltipPosition="top">
                                                                                 <!-- Image -->
                                                                                 <div
                                                                                     *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
@@ -1589,21 +1597,21 @@
                                             <div class="col-6">
                                                 <p-button *ngIf="preveiwFalg" icon="fa fa-pencil-square-o"
                                                     class="kyc-edit-btn pull-right"
-                                                    (click)="editRequiredDocuments(fdNonCumulativeApplicationModel)"></p-button>
+                                                    (click)="editRequiredDocuments(fdNonCumulativeApplicationModel)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                             </div>
                                         </div>
 
                                         <div class="col-12 p-0">
                                             <div class="row g-3">
 
-                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12"
+                                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6"
                                                     *ngFor="let document of requiredDocumentsList ; let i = index">
                                                     <div class="stepper-doc-card p-3 pb-1 mb-2">
                                                         <!-- view card -->
                                                         <div class="row">
 
                                                             <div
-                                                                class="col-lg-7 col-md-7 col-sm-7 d-flex align-items-center">
+                                                                class="col-xl-10 col-lg-10 col-md-10 col-sm-10 d-flex align-items-center">
                                                                 <div class="card-leftbody">
                                                                     <div
                                                                         class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
@@ -1631,11 +1639,11 @@
                                                                 class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2 justify-content-end d-flex right-actions">
                                                                 <div class="cardview-icon icon-size text-right cursor-pointer"
                                                                     (click)="onClickDocPhotoCopy(document)"><i
-                                                                        class="fa fa-eye m-0" aria-hidden="true"></i>
+                                                                        class="fa fa-eye m-0" aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}" tooltipPosition="top"></i>
                                                                 </div>
                                                                 <div *ngIf="!preveiwFalg">
                                                                     <div class="carddownload-icon icon-size text-right"
-                                                                        *ngFor="let img of document.multipartFileList">
+                                                                        *ngFor="let img of document.multipartFileList" pTooltip="{{'ERP.DOC_DOWNLOAD' | translate}}" tooltipPosition="top">
                                                                         <div
                                                                             *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                                                             <a href="{{img.imageValue}}">
@@ -1688,83 +1696,74 @@
                 </p-scrollPanel>
                 <div class="col-12 viewbottom-footer icon-size">
                     <div class="row">
-                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4" *ngIf="isShowSubmit">
-                            <div class="view-dow-upload">
-                                <p-button icon="fa fa-download" iconPos="left" pTooltip="Filename.pdf"
-                                    tooltipPosition="top" (click)="pdfDownload()"></p-button>
-                                <div class="form-label -mt-2">
-                                    <span class=""> {{ 'TERMDEPOSITSTRANSACTION.UPLOAD_DOCUMENT' | translate }} </span>
-                                    <div class="uplodad-style align-items-center">
-                                        <!-- Upload Button Column -->
-                                        <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
-                                            id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".pdf"
-                                            (onRemove)="fileRemoveEvent()"
-                                            (onSelect)="fileUploader($event, fileUpload)">
-                                        </p-fileUpload>
-                                        <div class="col-12  d-flex p-1 contant-body"
-                                            *ngFor="let img of fdNonCumulativeApplicationModel.multipartFileListsignedCopyPath">
-                                            <div *ngIf="img.fileType=='pdf'">
-                                                <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png"
-                                                        width="22" height="22"></a>
-                                            </div>
-                                            <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
-                                                tooltipPosition="bottom">
-                                                {{img.fileName}}
-                                            </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-4 mt-4" *ngIf="isShowSubmit">
+                            <p-button icon="fa fa-download" iconPos="left" pTooltip="Filename.pdf" tooltipPosition="top"
+                                (click)="pdfDownload()"></p-button>
+                            <!-- <p-button  icon="fa fa-print" iconPos="left" pTooltip="Print" tooltipPosition="top"></p-button> -->
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4" *ngIf="isShowSubmit">
+                            <div class="form-label">
+                                <span class=""> {{ 'TERMDEPOSITSTRANSACTION.UPLOAD_DOCUMENT' | translate }} </span>
+                                <div class="uplodad-style align-items-center">
+                                    <!-- Upload Button Column -->
+                                    <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                                        id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".pdf"
+                                        (onRemove)="fileRemoveEvent()" (onSelect)="fileUploader($event, fileUpload)">
+                                    </p-fileUpload>
+                                    <div class="col-12  d-flex p-1 contant-body"
+                                        *ngFor="let img of fdNonCumulativeApplicationModel.multipartFileListsignedCopyPath">
+                                        <div *ngIf="img.fileType=='pdf'">
+                                            <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22"
+                                                    height="22"></a>
+                                        </div>
+                                        <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
+                                            tooltipPosition="bottom">
+                                            {{img.fileName}}
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- <p-button  icon="fa fa-print" iconPos="left" pTooltip="Print" tooltipPosition="top"></p-button> -->
                         </div>
-                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4" *ngIf="viewButton">
-                            <div class="form-label">
-                                <h6 class="label-view"> {{ 'ERP.SCANNED COPY' | translate }} </h6>
-                                <div class="d-flex mt-2"
-                                    *ngFor="let img of fdNonCumulativeApplicationModel.multipartFileListsignedCopyPath">
-                                    <div *ngIf="img.fileType=='pdf'">
-                                        <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22"
-                                                height="22"></a>
-                                    </div>
-                                    <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
-                                        tooltipPosition="bottom">
-                                        {{img.fileName}}
+                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4" *ngIf="viewButton">
+                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.SCANNED_COPY' | translate}}</p>
+                            <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-xs-12 justify-content-end">
+                                <div class="col-12 px-0">
+                                    <div class="d-flex mt-2"
+                                        *ngFor="let img of fdNonCumulativeApplicationModel.multipartFileListsignedCopyPath">
+                                        <div *ngIf=" img.fileType =='pdf'">
+                                            <a href="{{img.imageValue}}">
+                                                <img src="assets\images\pdf.png" width="22" height="22">
+                                            </a>
+                                        </div>
+                                        <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
+                                            tooltipPosition="bottom">
+                                            {{img.fileName}}
+                                        </div>
                                     </div>
                                 </div>
-                                <!-- </div> -->
                             </div>
                         </div>
-                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4" *ngIf="editFlag">
+                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4" *ngIf="editFlag || viewButton">
                             <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.STATUS' | translate}}</p>
-                            <p class="label-input-text pending-text">{{fdNonCumulativeApplicationModel.statusName}}</p>
+                            <p class="label-input-text">{{fdNonCumulativeApplicationModel.statusName}}</p>
                         </div>
-                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4" *ngIf="viewButton">
-                            <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.STATUS' | translate}}</p>
-                            <p class="label-input-text active-text">{{fdNonCumulativeApplicationModel.statusName}}</p>
-                        </div>
-                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4">
+                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4" >
                             <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.REMARKS' | translate}}</p>
                             <p class="label-input-text">{{fdNonCumulativeApplicationModel.remarks}}</p>
                         </div>
-                        <div class="col-xl-5 col-lg-4 col-md-4 col-sm-4" *ngIf="isShowSubmit">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mt-4" *ngIf="isShowSubmit">
                             <div class="d-flex justify-content-end">
-                                <p-button (click)="backbutton()" label="BACK"></p-button>
-                                <p-button *ngIf="isShowSubmit" label="{{'TERMDEPOSITSTRANSACTION.SUBMIT' | translate}}"
-                                    (click)="submit()" [disabled]="isDisableSubmit"></p-button>
+                                <p-button (click)="backbutton()" label="{{'TERMDEPOSITSTRANSACTION.BACK' | translate}}"></p-button>
+                                <p-button *ngIf="isShowSubmit" label="{{'TERMDEPOSITSTRANSACTION.SUBMIT' | translate}}" (click)="submit()"
+                                    [disabled]="isDisableSubmit"></p-button>
                             </div>
                         </div>
-                        <!-- <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4" *ngIf="editFlag">
+                        
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mt-4" *ngIf="editFlag || viewButton">
                             <div class="d-flex justify-content-end">
-                                <p-button (click)="backbutton()" label="BACK"></p-button>
-                                <p-button *ngIf="isShowSubmit" label="{{'TERMDEPOSITSTRANSACTION.SUBMIT' | translate}}"
-                                    (click)="submit()" [disabled]="isDisableSubmit"></p-button>
-                            </div>
-                        </div> -->
-                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4" *ngIf="viewButton">
-                            <div class="d-flex justify-content-end">
-                                <p-button (click)="backbutton()" label="BACK"></p-button>
-                                <p-button *ngIf="isShowSubmit" label="{{'TERMDEPOSITSTRANSACTION.SUBMIT' | translate}}"
-                                    (click)="submit()" [disabled]="isDisableSubmit"></p-button>
+                                <p-button (click)="backbutton()" label="{{'TERMDEPOSITSTRANSACTION.BACK' | translate}}"></p-button>
+                                <!-- <p-button *ngIf="isShowSubmit" label="{{'TERMDEPOSITSTRANSACTION.SUBMIT' | translate}}" (click)="submit()"
+                                    [disabled]="isDisableSubmit"></p-button> -->
                             </div>
                         </div>
                     </div>
@@ -1774,185 +1773,312 @@
     </div>
 </div>
 <!-- Individual details dialog -->
-<p-dialog header="More Basic Details" [(visible)]="membreIndividualFlag" styleClass="moredetails-style">
-    <!-- <h6 class="super-sub-heading">{{'TERMDEPOSITSTRANSACTION.MEMBERSHIP_CREATION' | translate}}</h6> -->
-    <div class="popup-basic-details">
-        <div class="row">
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="d-flex justify-content-start px-3 py-0 mb-2" *ngIf="photoCopyFlag">
-                    <div *ngFor="let img of membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy">
-
-                        <span class="{{img.imageValue}}" (click)="onClickMemberPhotoCopy()"
-                            *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                            <!-- <a href="{{img.imageValue}}" (clicl)="onClickMemberPhotoCopy()"></a> -->
-                            <img src="{{img.imageValue}}" class="image-user">
-                        </span>
-
-                    </div>
-                    <p class="active-status"></p>
-                    <div *ngFor="let img of membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath">
-                        <span class="{{img.imageValue}}" (click)="onClickMemberPhotoCopy()"
-                            *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                            <!-- <a href="{{img.imageValue}}" (clicl)="onClickMemberPhotoCopy()"></a> -->
-                            <img src="{{img.imageValue}}" class="image-user">
-                        </span>
-
-
-                    </div>
+<div class="view-moredetails-popup">
+<p-dialog header="Basic Details" [modal]="true" [(visible)]="membreIndividualFlag" styleClass="moredetails-style">
+    <div class="col-12 view-morepopup">
+        <div class="d-flex justify-content-center px-3 py-0 mb-2">
+            <div *ngIf="!this.membershipBasicRequiredDetailsModel.photoPath">
+                <img src="assets/images/no-image.jpg" class="image-user">
+            </div>
+            <div class="px-0" *ngFor="let img of membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy">
+                <div class="col-12 p-0" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                    <!-- <a href="{{img.imageValue}}"> -->
+                    <img src="{{img.imageValue}}" class="image-user">
+                    <!-- </a> -->
                 </div>
-                <div class="d-flex justify-content-start px-3 py-0 mb-2" *ngIf="!photoCopyFlag">
-                    <div>
-                        <img src="assets/images/no-image.jpg" (click)="onClickMemberPhotoCopy()" class="image-user">
-                    </div>
-                    <p class="active-status"></p>
-                    <div>
-                        <img src="assets/images/no-image.jpg" (click)="onClickMemberPhotoCopy()" class="image-sign">
-                    </div>
+                <div class="col-12 p-0" *ngIf=" img.fileType =='pdf'">
+                    <!-- <a href="{{img.imageValue}}"> -->
+                    <img src="assets\images\pdf.png" class="image-user">
+                    <!-- </a> -->
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.GROUP_NAAME' | translate}}</span>
-                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.name }}</p>
-                </div>
+            <!-- <p class="active-status"></p> -->
+            <div *ngIf="!this.membershipBasicRequiredDetailsModel.signaturePath">
+                <img src="assets/images/no-image.jpg" class="image-sign">
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' | translate}}</span>
-                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.admissionNumber}}</p>
+            <div class="px-0"
+                *ngFor="let img of membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath">
+                <div class="col-12 p-0" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                    <!-- <a href="{{img.imageValue}}"> -->
+                    <img src="{{img.imageValue}}" class="image-sign">
+                    <!-- </a> -->
                 </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.MEMBER_TYPE' | translate}}</span>
-                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.memberTypeName }}</p>
-                </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.ADMISSION_DATE' | translate}}</span>
-                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.admissionDateVal }}</p>
-                </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.DATE_OF_BIRTH' | translate}}</span>
-                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.dobVal }}</p>
-                </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.AGE' | translate}}</span>
-                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.age }}</p>
-                </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.RELATION_WITH_APPLICANT' | translate}}</span>
-                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.relationName }}</p>
-                </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.RELATIVE_NAME' | translate}}</span>
-                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.relativeName }}</p>
-                </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.MARITAL_STATUS' | translate}}</span>
-                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.maritalStatusName }}</p>
-                </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.CONTACT' | translate}}</span>
-                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.mobileNumber }}</p>
-                </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.EMAIL' | translate}}</span>
-                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.emailId }}</p>
-                </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.AADHAR' | translate}}</span>
-                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.aadharNumber }}</p>
-                </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.PAN' | translate}}</span>
-                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.panNumber }}</p>
-                </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
-                <div class="form-group">
-                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.KYC' | translate}}</span>
-                    <p class="label-input-text">{{isKycApproved}}</p>
+                <div class="col-12 p-0" *ngIf=" img.fileType =='pdf'">
+                    <!-- <a href="{{img.imageValue}}"> -->
+                    <img src="assets\images\pdf.png" class="image-sign">
+                    <!-- </a> -->
                 </div>
             </div>
         </div>
-        <!-- <p-button class="pull-right" label="{{'TERMDEPOSITSTRANSACTION.CLOSE' | translate}}" (click)="close()"></p-button> -->
+
+    </div>
+    <div class="col-12 text-center popup-basic-details mt-5 pt-3">
+        <span class="fw-semibold">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
+        <p class="fw-bold">{{membershipBasicRequiredDetailsModel.admissionNumber}}</p>
+    </div>
+    <div class="col-12 popup-basic-details">
+        <div class="row">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                <div class="form-group">
+                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.MEMBERSHIP_TYPE' | translate}}</span>
+                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.subProductName}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                <div class="form-group">
+                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.SOCIETY_ADMISSION_NUMBER' | translate}}</span>
+                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.societyAdmissionNumber}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.MEMBER_TYPE' |
+                    translate}}</p>
+                <p class="label-input-text">
+                    {{membershipBasicRequiredDetailsModel.memberTypeName}}</p>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <span class="fw-light">{{'ERP.SURNAME' | translate}}</span>
+                    <p class="fw-semibold">{{ membershipBasicRequiredDetailsModel.surname}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <span class="fw-light">{{'ERP.NAME' | translate}}</span>
+                    <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.name}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <span class="fw-light">{{'ERP.DATE_OF_BIRTH' | translate}}</span>
+                    <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.dobVal}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <span class="fw-light">{{'ERP.AGE' | translate}}</span>
+                    <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.age}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <span class="fw-light">{{'ERP.GENDER' | translate}}</span>
+                    <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.genderName }}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <span class="fw-light">{{'ERP.MARITAL_STATUS' | translate}}</span>
+                    <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.maritalStatusName}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <span class="fw-light">{{'ERP.RELATION_WITH_MEMBER' | translate}}</span>
+                    <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.relationTypeName}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <span class="fw-light">{{'ERP.RELATION_NAME' | translate}}</span>
+                    <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.relativeName }}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <span class="fw-light">{{'ERP.QUALIFICATION' | translate}}</span>
+                    <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.qualificationName }}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <span class="fw-light">{{'ERP.OCCUPATION' | translate}}</span>
+                    <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.occupationName }}</p>
+                </div>
+            </div>
+            <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 "> -->
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <span class="fw-light">{{'ERP.AADHAR_NO' | translate}}</span>
+                    <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.aadharNumber }}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <span class="fw-light">{{'ERP.PAN_NO' | translate}}</span>
+                    <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.panNumber }}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <span class="fw-light">{{'ERP.MOBILE_NUMBER' | translate}}</span>
+                    <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.mobileNumber }}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <span class="fw-light">{{'ERP.EMAIL' | translate}}</span>
+                    <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.emailId }}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <span class="fw-light">{{'ERP.CASTE' | translate}}</span>
+                    <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.casteName }}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <span class="fw-light">{{'TERMDEPOSITSTRANSACTION.RELIGION' | translate}}</span>
+                    <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.communityName }}</p>
+                </div>
+            </div>
+            <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <span class="fw-light">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
+                    <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.admissionNumber}}</p>
+                </div>
+            </div> -->
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <span class="fw-light">{{'ERP.ADMISSION_DATE' | translate}}</span>
+                    <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.admissionDateVal}}</p>
+                </div>
+            </div>
+            <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <span class="fw-light">{{'ERP.ADMISSION_FEE' | translate}}</span>
+                    <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.admissionFee}}</p>
+                </div>
+            </div> -->
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <span class="label-view">{{'MEMBERSHIP_TRANSACTION.RESOLUTION_DATE' | translate}}</span>
+                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.resolutionDateVal}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <span class="label-view">{{'MEMBERSHIP_TRANSACTION.RESOLUTION_NUMBER' | translate}}</span>
+                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.mcrNumber}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-label">
+                    <span class="label-view">{{'MEMBERSHIP_TRANSACTION.RESOLUTION_COPY' | translate}}</span>
+                    <div class="col-12 d-flex p-0" *ngFor="let img of membershipBasicRequiredDetailsModel.multipartFileListForResolutionCopyPath">
+                        <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                            <img src="{{img.imageValue}}" width="22" height="22">
+                        </div>
+                        <div *ngIf=" img.fileType =='pdf'">
+                            <img src="assets\images\pdf.png" width="22" height="22">
+                        </div>
+                        <div class="docname-texteclipse pl-2 label-input-text" pTooltip="{{img.fileName}}" tooltipPosition="bottom">{{img.fileName}}</div>
+                    </div>
+                </div>
+                    
+            </div>
+        </div>
     </div>
 </p-dialog>
+</div>
 
 <!-- institution Promoter details dialog -->
-<p-dialog header="More Basic Details" [(visible)]="institutionPromoterFlag" styleClass="moredetails-style">
+<div class="view-moredetails-popup">
+<p-dialog header="Basic Details" [modal]="true" [(visible)]="institutionPromoterFlag" styleClass="moredetails-style">
     <!-- <h6 class="super-sub-heading">{{'TERMDEPOSITSTRANSACTION.BASIC_DETAILS' | translate}}</h6> -->
-    <div class="popup-basic-details">
+    <div class="col-12 view-morepopup">
+        <div class="d-flex justify-content-center px-3 py-0 mb-2">
+            <img src="assets/images/no-image.jpg" class="image-user">
+            <!-- <p class="active-status"></p> -->
+            <img src="assets/images/no-image.jpg" class="image-sign">
+        </div>
+    </div>
+    <div class="col-12 text-center popup-basic-details mt-5 pt-3">
+        <span class="fw-semibold">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
+        <p class="fw-bold">{{membershipInstitutionDetailsModel.tempAdmissionNumber}}</p>
+    </div>
+    <div class="col-12 popup-basic-details">
         <div class="row">
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                <div class="form-group">
+                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.MEMBERSHIP_TYPE' | translate}}</span>
+                    <p class="label-input-text">{{membershipInstitutionDetailsModel.subProductName}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                <div class="form-group">
+                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.INSTITUTION_TYPE' | translate}}</span>
+                    <p class="label-input-text">{{membershipInstitutionDetailsModel.institutionName}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                <div class="form-group">
+                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.SOCIETY_ADMISSION_NUMBER' | translate}}</span>
+                    <p class="label-input-text">{{membershipInstitutionDetailsModel.societyAdmissionNumber}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.INSTITUTION_NAME' | translate}}</span>
                     <p class="label-input-text">{{membershipInstitutionDetailsModel.name}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' | translate}}</span>
                     <p class="label-input-text">{{membershipInstitutionDetailsModel.admissionNumber}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.MEMBER_TYPE' | translate}}</span>
                     <p class="label-input-text">{{membershipInstitutionDetailsModel.memberTypeName}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.ADMISSION_DATE' | translate}}</span>
                     <p class="label-input-text">{{membershipInstitutionDetailsModel.admissionDateVal}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                <div class="form-group">
+                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.REGISTERED_NO' | translate}}</span>
+                    <p class="label-input-text">{{membershipInstitutionDetailsModel.registrationNumber}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.REGISTERED_DATE' | translate}}</span>
                     <p class="label-input-text">{{membershipInstitutionDetailsModel.registrationDateVal}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                <div class="form-group">
+                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.TYPE_OF_OPERATION' | translate}}</span>
+                    <p class="label-input-text">{{membershipInstitutionDetailsModel.operatorTypeName}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.POC_NAME' | translate}}</span>
                     <p class="label-input-text">{{membershipInstitutionDetailsModel.pocName}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.POC_MOBILE_NO' | translate}}</span>
                     <p class="label-input-text">{{membershipInstitutionDetailsModel.pocNumber}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.PAN' | translate}}</span>
                     <p class="label-input-text">{{membershipInstitutionDetailsModel.panNumber}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.KYC' | translate}}</span>
                     <p class="label-input-text">{{isKycApproved}}</p>
@@ -1989,73 +2115,116 @@
 
 
 </p-dialog>
+</div>
 
 <!-- group prmoter details dialog -->
-<p-dialog header="More Basic Details" [(visible)]="groupPromotersPopUpFlag" styleClass="moredetails-style">
+<div class="view-moredetails-popup">
+<p-dialog header="Basic Details" [modal]="true" [(visible)]="groupPromotersPopUpFlag" styleClass="moredetails-style">
     <!-- <h6 class="super-sub-heading">{{'TERMDEPOSITSTRANSACTION.BASIC_DETAILS' | translate}}</h6> -->
-    <div class="popup-basic-details">
+    <div class="col-12 view-morepopup">
+        <div class="d-flex justify-content-center px-3 py-0 mb-2">
+            <img src="assets/images/no-image.jpg" class="image-user">
+            <!-- <p class="active-status"></p> -->
+            <img src="assets/images/no-image.jpg" class="image-sign">
+        </div>
+    </div>
+    <div class="col-12 text-center popup-basic-details mt-5 pt-3">
+        <span class="fw-semibold">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
+        <p class="fw-bold">{{memberGroupDetailsModel.tempAdmissionNumber}}</p>
+    </div>
+    <div class="col-12 popup-basic-details">
         <div class="row">
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                <div class="form-group">
+                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.MEMBERSHIP_TYPE' | translate}}</span>
+                    <p class="label-input-text">{{memberGroupDetailsModel.subProductName}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                <div class="form-group">
+                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.GROUP_TYPES' | translate}}</span>
+                    <p class="label-input-text">{{memberGroupDetailsModel.groupName}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                <div class="form-group">
+                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.SOCIETY_ADMISSION_NUMBER' | translate}}</span>
+                    <p class="label-input-text">{{memberGroupDetailsModel.societyAdmissionNumber}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.MEMBER_TYPE' | translate}}</span>
                     <p class="label-input-text">{{memberGroupDetailsModel.memberTypeName}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' | translate}}</span>
                     <p class="label-input-text">{{memberGroupDetailsModel.admissionNumber}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.NAME' | translate}}</span>
                     <p class="label-input-text">{{memberGroupDetailsModel.name}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.ADMISSION_DATE' | translate}}</span>
                     <p class="label-input-text">{{memberGroupDetailsModel.admissionDateVal}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                <div class="form-group">
+                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.REGISTERED_NO' | translate}}</span>
+                    <p class="label-input-text">{{memberGroupDetailsModel.registrationNumber}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.REGISTERED_DATE' | translate}}</span>
                     <p class="label-input-text">{{memberGroupDetailsModel.registrationDateVal}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                <div class="form-group">
+                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.TYPE_OF_OPERATION' | translate}}</span>
+                    <p class="label-input-text">{{memberGroupDetailsModel.operatorTypeName}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.POC_NAME' | translate}}</span>
                     <p class="label-input-text">{{memberGroupDetailsModel.pocName}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.POC_MOBILE_NO' | translate}}</span>
-                    <p class="label-input-text">{{memberGroupDetailsModel.pocNumber</p>
+                    <p class="label-input-text">{{memberGroupDetailsModel.pocNumber}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.TAN_NUMBER' | translate}}</span>
                     <p class="label-input-text">{{memberGroupDetailsModel.tanNumber}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.PAN' | translate}}</span>
                     <p class="label-input-text">{{memberGroupDetailsModel.panNumber}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.GST' | translate}}</span>
                     <p class="label-input-text">{{memberGroupDetailsModel.gstNumber}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.KYC' | translate}}</span>
                     <p class="label-input-text">{{isKycApproved}}</p>
@@ -2089,6 +2258,7 @@
 
 
 </p-dialog>
+</div>
 
 <!--photo Copy dialog -->
 <p-dialog header="{{'TERMDEPOSITSTRANSACTION.PHOTO_COPY' | translate}}" [(visible)]="memberPhotoCopyZoom">
@@ -2157,7 +2327,7 @@
 <p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="nomineePhotoCopyZoom" [modal]="true"
     [maximizable]="true" styleClass="doc-photo-dialog">
     <div class="col-12">
-        <div *ngFor="let img of nomineeDetailsModel.multipartFileList">
+        <div *ngFor="let img of nomineeDetailsModel.nomineeSighnedFormMultiPartList">
             <!-- Image -->
             <div class="mb-3 imgcustom-class"
                 *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
@@ -2179,7 +2349,7 @@
 <p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="guardianPhotoCopyZoom" [modal]="true"
     [maximizable]="true" styleClass="doc-photo-dialog">
     <div class="col-12">
-        <div *ngFor="let img of memberGuardianDetailsModel.multipartsFileList">
+        <div *ngFor="let img of memberGuardianDetailsModel.guardainSighnedMultipartFiles">
             <!-- Image -->
             <div class="mb-3 imgcustom-class"
                 *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">

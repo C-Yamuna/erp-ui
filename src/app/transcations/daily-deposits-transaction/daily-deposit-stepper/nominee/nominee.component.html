@@ -1,28 +1,40 @@
 <div class="col-12">
-    <h6 class="sub-heading">{{'ERP.NOMINEE_DETAILS' | translate}}<span
-            class="admission-text">(Admission
-            Number:&nbsp;{{admissionNumber}})</span></h6>
+    <h6 class="sub-heading">{{'ERP.NOMINEE_DETAILS' | translate}}</h6>
+        <!-- <span class="admission-text">(Admission
+            Number:&nbsp;{{admissionNumber}})</span> -->
     <div class="stepper-top-section-strip">
         <div class="row">
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 stepper-top-product-name-background">
+            <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12 stepper-top-product-name-background">
                 <div class="form-group">
                     <span>{{'ERP.PRODUCT_NAME' | translate}}</span>
                     <p class="mb-0">{{accountsModel.productName}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
+                <div class="form-group ml-2">
+                    <span>{{'ERP.ACCOUNT_NUMBER' | translate}}</span>
+                    <p class="mb-0">{{accountsModel.accountNumber}}</p>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
                 <div class="form-group ml-2">
                     <span>{{'ERP.ACCOUNT_TYPE' | translate}}</span>
                     <p class="mb-0">{{accountsModel.accountTypeName}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
                 <div class="form-group">
                     <span>{{'ERP.DEPOSIT_AMOUNT' | translate}}</span>
                     <p class="mb-0">{{depositAmount}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
+                <div class="form-group">
+                    <span>{{'ERP.ADMISSION_NUMBER' | translate}}</span>
+                    <p class="mb-0">{{admissionNumber}}</p>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
                 <div class="form-group">
                     <span>{{'ERP.DEPOSIT_DATE' | translate}}</span>
                     <p class="mb-0">{{depositDate}}</p>
@@ -75,7 +87,7 @@
                                                     translate}}</label>
                                                 <input type="text" formControlName="nomineeName" pInputText
                                                     placeholder="Enter Name" [(ngModel)]="accountNomineeModel.name" />
-                                                <p-message severity="error" text="Enter Valid nomineeName"
+                                                <p-message severity="error" text="Enter Valid Nominee Name"
                                                     *ngIf="!nomineeForm.controls['nomineeName'].valid && nomineeForm.controls['nomineeName'].dirty">
                                                 </p-message>
                                             </div>
@@ -88,8 +100,27 @@
                                                 <input type="text" formControlName="aadhaar" pInputText
                                                     placeholder="Enter Aadhar Number"
                                                     [(ngModel)]="accountNomineeModel.aadharNumber" />
-                                                <p-message severity="error" text="Enter Valid aadhaar"
+                                                <p-message severity="error" text="Enter Valid Aadhaar No"
                                                     *ngIf="!nomineeForm.controls['aadhaar'].valid && nomineeForm.controls['aadhaar'].dirty">
+                                                </p-message>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="form-label">
+                                                <label><span class="red">*</span>{{'ERP.DATE_OF_BIRTH' | translate}}</label>
+                                                <p-calendar formControlName="dateOfBirth" [showIcon]="true" [dateFormat]="orgnizationSetting.calendar"
+                                                    [(ngModel)]="accountNomineeModel.dateOfBirthVal" [appendTo]="'body'" placeholder="DD/MM/YYYY"
+                                                    [maxDate]="today" (onSelect)="ageCaluculation(false)">
+                                                </p-calendar>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="form-label">
+                                                <label><span class="red">*</span>{{'ERP.AGE' | translate}}</label>
+                                                <input pInputText type="text" [(ngModel)]="accountNomineeModel.age" minlength="1" maxlength="3"
+                                                    formControlName="age" placeholder="Enter Age" (focusout)="ageCaluculation(true)">
+                                                <p-message severity="error" text="Enter age"
+                                                    *ngIf="!nomineeForm.controls['age'].valid && nomineeForm.controls['age'].dirty">
                                                 </p-message>
                                             </div>
                                         </div>
@@ -101,7 +132,7 @@
                                                 <input type="text" formControlName="mobileNumber" pInputText
                                                     placeholder="Enter Mobile Number"
                                                     [(ngModel)]="accountNomineeModel.mobileNumber" />
-                                                <p-message severity="error" text="Enter Valid mobileNumber"
+                                                <p-message severity="error" text="Enter Valid Mobile Number"
                                                     *ngIf="!nomineeForm.controls['mobileNumber'].valid && nomineeForm.controls['mobileNumber'].dirty">
                                                 </p-message>
                                             </div>
@@ -112,35 +143,37 @@
                                                 <input type="text" formControlName="email" pInputText
                                                     placeholder="Enter Email"
                                                     [(ngModel)]="accountNomineeModel.nomineeEmail" />
-                                                <p-message severity="error" text="Enter Valid email"
+                                                <p-message severity="error" text="Enter Valid Email"
                                                     *ngIf="!nomineeForm.controls['email'].valid && nomineeForm.controls['email'].dirty">
                                                 </p-message>
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
-                                                <span>{{ 'ERP.SIGNED_DOCUMENT' | translate }}</span>
-                                                <div class="uplodad-style align-items-center">
-                                                    <!-- Upload Button Column -->
-
-                                                    <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold"
-                                                        name="myfile[]" chooseLabel=" " id="apply-leave_fileUp_attach"
-                                                        name="file" accept=".png,.jpg,.jpeg,.pdf"
-                                                        (onRemove)="fileRemoeEvent('Nominee')"
-                                                        (onSelect)="fileUploader($event,fileUpload,'Nominee')">
-                                                    </p-fileUpload>
-
-                                                    <!-- Uploaded Files Display Column -->
-
-                                                    <div class="col-12  d-flex p-1 contant-body" *ngFor="let img of accountNomineeModel.nomineeMultiPartList">
-                                                        <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                            <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22" height="22"></a>
-                                                        </div>
-                                                        <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                                            {{img.fileName}}</div>
-                                                    </div>
-                                                    
+                                            <div class="ml-2"><span class="red">*</span> {{ 'ERP.SIGNED_DOCUMENT' | translate }}{{ 'DAILYDEPOSITS.PDF_SIZE' | translate }}</div>
+                                            <div class="uplodad-style align-items-center">
+                                                <!-- Upload Button Column -->
+                                        
+                                                <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]" chooseLabel=" "
+                                                    id="apply-leave_fileUp_attach" name="file" accept=".pdf" (onRemove)="fileRemoeEvent('Nominee')"
+                                                    (onSelect)="fileUploader($event,fileUpload,'Nominee')">
+                                                </p-fileUpload>
+                                        
+                                                <!-- Uploaded Files Display Column -->
+                                        
+                                                <div class="col-12 d-flex p-1 contant-body" *ngFor="let img of accountNomineeModel.nomineeSighnedFormMultiPartList">
+                                                    <!-- <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                        <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22"
+                                                                height="22"></a>
+                                                    </span>  -->
+                                                    <span *ngIf="img.fileType=='pdf'">
+                                                        <a href="{{img.imageValue}}"> <img src="assets/images/pdficon-img.png" width="22"
+                                                                height="22"></a>
+                                                    </span>  
+                                                    <span class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                                        {{img.fileName}}</span>
                                                 </div>
+                                            </div>
                                             </div>
                                         </div>
                                     </div>
@@ -152,51 +185,47 @@
                         <div class="row" *ngIf="noNominee">
                             <div class="col-12 mt-4 py-0">
                                 <h6 class="sub-heading">{{'ERP.REQUIRED_DETAILS' | translate}}</h6>
-                            </div>
-                            <div class="col-12">
-                                <div class="col-12 global-border p-3">
+                                </div>
+                                <div class="col-12">
+                                    <div class="col-12 global-border p-3">
                                     <div class="row g-3 mt-n1 mb-3">
-                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mt-4 pt-2">
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
-                                                <p-button icon="fa fa-download p-2" label="unsigned letter format"
-                                                    class="kyc-btnm-0"></p-button>
-
+                                                <p-button icon="fa fa-download p-2" label="{{'DAILYDEPOSITS.DOWNLOAD_LETTER_FORMATE' | translate}}" class="kyc-btnm-0"></p-button>
+            
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
-                                                <span class=""> {{ 'ERP.SIGNED_DOCUMENT' | translate
-                                                    }}
-                                                </span>
-                                                <div class="uplodad-style align-items-center">
-                                                    <!-- Upload Button Column -->
-                                                    <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold"
-                                                        name="myfile[]" id="apply-leave_fileUp_attach" chooseLabel=" "
-                                                        name="file" accept=".png,.jpg,.jpeg"
-                                                        (onRemove)="fileRemoeEvent('Nominee')"
-                                                        (onSelect)="fileUploader($event,fileUpload,'Nominee')">
-                                                    </p-fileUpload>
-                                                    <div class="col-12  d-flex p-1 contant-body" *ngFor="let img of accountNomineeModel.nomineeMultiPartList">
-                                                        <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                            <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22" height="22"></a>
-                                                        </div>
-                                                        <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                                            {{img.fileName}}</div>
-                                                    </div>
+                                            <div class="ml-2"><span class="red">*</span> {{ 'ERP.SIGNED_DOCUMENT' | translate }}{{ 'DAILYDEPOSITS.PDF_SIZE' | translate }} </div>
+                                            <div class="uplodad-style align-items-center">
+                                                <!-- Upload Button Column -->
+                                                <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                                                    id="apply-leave_fileUp_attach" chooseLabel=" " name="file"
+                                                    accept=".pdf" (onRemove)="fileRemoeEvent('Nominee')"
+                                                    (onSelect)="fileUploader($event,fileUpload,'Nominee')">
+                                                </p-fileUpload>
+                                                <div class="col-12  d-flex p-1 contant-body" *ngFor="let img of accountNomineeModel.nomineeSighnedFormMultiPartList">
+                                                    <span *ngIf="img.fileType=='pdf'">
+                                                        <a href="{{img.imageValue}}"> <img src="assets/images/pdficon-img.png" width="22"
+                                                                height="22"></a>
+                                                    </span>   
+                                                    <span class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                                        {{img.fileName}}</span>
                                                 </div>
                                             </div>
+                                            </div>
                                         </div>
-
-                                        <!-- <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
+                                        
+                                        <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
-                                                <label>{{'ERP.REMARKS' | translate}}</label>
-                                                <textarea type="text" class="form-control" formControlName="remarks"
-                                                    pInputTextarea placeholder="Enter Remarks Here"
+                                            <label>{{'ERP.REMARKS' | translate}}</label>
+                                                <textarea type="text" class="form-control" formControlName="remarks" pInputTextarea placeholder="Enter Remarks Here"
                                                     [(ngModel)]="accountNomineeModel.remarks"></textarea>
                                             </div>
-                                        </div> -->
+                                        </div>
                                     </div>
                                 </div>
                             </div>

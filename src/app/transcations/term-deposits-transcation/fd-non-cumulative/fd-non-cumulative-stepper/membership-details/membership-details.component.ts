@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonComponent } from 'src/app/shared/common.component';
@@ -69,7 +69,7 @@ export class MembershipDetailsComponent {
   EditDeleteDisable: boolean = false;
   newRow: any;
   promoterDetails: any[] = [];
-  memberTypeId : any;
+  memberTypeId: any;
   msgs: any[] = [];
   operatorTypeList: any[] = [];
   admisionNumber: any;
@@ -132,8 +132,8 @@ export class MembershipDetailsComponent {
   kycDuplicate: boolean = false;
   tempKycList: any[] = [];
   promotersList: any[] = [];
-  kycPhotoCopyZoom: boolean =  false;
-
+  kycPhotoCopyZoom: boolean = false;
+  isMaximized: boolean = false;
 
 
   constructor(private router: Router,
@@ -145,18 +145,18 @@ export class MembershipDetailsComponent {
     private commonFunctionsService: CommonFunctionsService,
     private datePipe: DatePipe,
     private membershipServiceService: NewMembershipAddService,
-    private fdNonCumulativeKycService:FdNonCumulativeKycService,
-    private fileUploadService : FileUploadService) {
-      this.kycForm = this.formBuilder.group({
-        'docNumber': [{ value: '', disabled: true }],
-        'docTypeName':[{ value: '', disabled: true }],
-        'promoter':['', ],
-        'fileUpload': new FormControl({ value: '', disabled: true }),
-        'nameAsPerDocument':['',[Validators.pattern(applicationConstants.ALPHA_NAME_PATTERN),Validators.compose([Validators.required])]],
-      });
+    private fdNonCumulativeKycService: FdNonCumulativeKycService,
+    private fileUploadService: FileUploadService) {
+    this.kycForm = this.formBuilder.group({
+      'docNumber': [{ value: '', disabled: true }],
+      'docTypeName': [{ value: '', disabled: true }],
+      'promoter': ['',],
+      'fileUpload': new FormControl({ value: '', disabled: true }),
+      'nameAsPerDocument': ['', [Validators.pattern(applicationConstants.ALPHA_NAME_PATTERN), Validators.compose([Validators.required])]],
+    });
   }
-  
-ngOnInit(): void {
+
+  ngOnInit(): void {
     this.kycModelList = [];
     this.pacsId = 1;
     this.branchId = 1;
@@ -324,8 +324,8 @@ ngOnInit(): void {
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
           this.membershipInstitutionDetailsModel = this.responseModel.data[0];
-          this.membershipInstitutionDetailsModel.photoPath = this.responseModel.data[0].photoCopyPath; 
-          this.membershipInstitutionDetailsModel.signaturePath = this.responseModel.data[0].signatureCopyPath; 
+          this.membershipInstitutionDetailsModel.photoPath = this.responseModel.data[0].photoCopyPath;
+          this.membershipInstitutionDetailsModel.signaturePath = this.responseModel.data[0].signatureCopyPath;
           this.memberTypeName = this.membershipInstitutionDetailsModel.memberTypeName;
           this.fdNonCumulativeApplicationModel.memberTypeName = this.membershipInstitutionDetailsModel.memberTypeName;
           this.fdNonCumulativeApplicationModel.memInstitutionDTO = this.membershipInstitutionDetailsModel;
@@ -376,8 +376,8 @@ ngOnInit(): void {
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
           this.memberGroupDetailsModel = this.responseModel.data[0];
-          this.memberGroupDetailsModel.photoPath = this.responseModel.data[0].photoCopyPath; 
-          this.memberGroupDetailsModel.signaturePath = this.responseModel.data[0].signatureCopyPath; 
+          this.memberGroupDetailsModel.photoPath = this.responseModel.data[0].photoCopyPath;
+          this.memberGroupDetailsModel.signaturePath = this.responseModel.data[0].signatureCopyPath;
           this.memberTypeName = this.responseModel.data[0].memberTypeName;
           if (this.memberGroupDetailsModel.registrationDate != null && this.memberGroupDetailsModel.registrationDate != undefined) {
             this.memberGroupDetailsModel.registrationDateVal = this.datePipe.transform(this.memberGroupDetailsModel.registrationDate, this.orgnizationSetting.datePipe);
@@ -457,11 +457,17 @@ ngOnInit(): void {
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
           this.membershipBasicRequiredDetails = this.responseModel.data[0];
-          this.membershipBasicRequiredDetails.fdNonCummCommunicationDto = this.responseModel.data[0].memberShipCommunicationDetailsDTOList;
-          this.membershipBasicRequiredDetails.fdNonCummkycDetailsList = this.responseModel.data[0].memberShipKycDetailsDTOList;
-          this.membershipBasicRequiredDetails.photoPath = this.responseModel.data[0].photoCopyPath; 
-          this.membershipBasicRequiredDetails.signaturePath = this.responseModel.data[0].signatureCopyPath; 
-
+          this.membershipBasicRequiredDetails.fdNonCummCommunicationDto = this.responseModel.data[0].memberShipCommunicationDetailsDTO;
+          this.membershipBasicRequiredDetails.photoPath = this.responseModel.data[0].photoCopyPath;
+          this.membershipBasicRequiredDetails.signaturePath = this.responseModel.data[0].signatureCopyPath;
+          this.membershipBasicRequiredDetails.subProductName = this.responseModel.data[0].subProductName;
+          this.memberTypeName = this.responseModel.data[0].memberTypeName;
+          this.membershipBasicRequiredDetails.resolutionCopy = this.responseModel.data[0].mcrDocumentCopy;
+          this.membershipBasicRequiredDetails.mcrNumber = this.responseModel.data[0].mcrNumber;
+          this.membershipBasicRequiredDetails.resolutionDate = this.responseModel.data[0].resolutionDate;
+          if (this.membershipBasicRequiredDetails.resolutionDate != null && this.membershipBasicRequiredDetails.resolutionDate != undefined) {
+            this.membershipBasicRequiredDetails.resolutionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetails.resolutionDate, this.orgnizationSetting.datePipe);
+          }
           if (this.membershipBasicRequiredDetails.dob != null && this.membershipBasicRequiredDetails.dob != undefined) {
             this.membershipBasicRequiredDetails.dobVal = this.datePipe.transform(this.membershipBasicRequiredDetails.dob, this.orgnizationSetting.datePipe);
           }
@@ -486,6 +492,9 @@ ngOnInit(): void {
           }
           if (this.membershipBasicRequiredDetails.signaturePath != null && this.membershipBasicRequiredDetails.signaturePath != undefined) {
             this.membershipBasicRequiredDetails.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetails.signaturePath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetails.signaturePath);
+          }
+          if (this.membershipBasicRequiredDetails.resolutionCopy != null && this.membershipBasicRequiredDetails.resolutionCopy != undefined) {
+            this.membershipBasicRequiredDetails.multipartFileListForResolutionCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetails.resolutionCopy, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetails.resolutionCopy);
           }
           if (this.membershipBasicRequiredDetails.memberShipKycDetailsDTOList != null && this.membershipBasicRequiredDetails.memberShipKycDetailsDTOList != undefined && this.membershipBasicRequiredDetails.memberShipKycDetailsDTOList.length > 0) {
             this.kycModelList = this.membershipBasicRequiredDetails.memberShipKycDetailsDTOList;
@@ -546,51 +555,65 @@ ngOnInit(): void {
       }
     });
   }
-
-
-  /**
+    /**
    * @implements image uploader
    * @param event 
    * @param fileUpload 
    * @author bhargavi
    */
-  imageUploader(event: any, fileUpload: FileUpload) {
-    this.isFileUploaded = applicationConstants.FALSE;
-    this.multipleFilesList = [];
-    this.fdNonCumulativeKycModel.filesDTOList = [];
-    this.fdNonCumulativeKycModel.multipartFileList =[];
-    this.fdNonCumulativeKycModel.kycFilePath = null;
-    let files: FileUploadModel = new FileUploadModel();
-    let selectedFiles = [...event.files];
-    fileUpload.clear();
-    for (let file of selectedFiles) {
-      let reader = new FileReader();
-      reader.onloadend = (e) => {
-        let files = new FileUploadModel();
-        this.uploadFileData = e.currentTarget;
-        files.fileName = file.name;
-        files.fileType = file.type.split('/')[1];
-        files.value = this.uploadFileData.result.split(',')[1];
-        files.imageValue = this.uploadFileData.result;
-
-        let index = this.multipleFilesList.findIndex(x => x.fileName == files.fileName);
-        if (index === -1) {
-          this.multipleFilesList.push(files);
-          this.fdNonCumulativeKycModel.filesDTOList.push(files); // Add to filesDTOList array
-          this.fdNonCumulativeKycModel.multipartFileList.push(files);
-        }
-        let timeStamp = this.commonComponent.getTimeStamp();
-        this.fdNonCumulativeKycModel.filesDTOList[0].fileName = "FD_NON_CUM_KYC_" + this.fdNonCummulativeAccId + "_" +timeStamp+ "_"+ file.name ;
-        this.fdNonCumulativeKycModel.kycFilePath = "FD_NON_CUM_KYC_" + this.fdNonCummulativeAccId + "_" +timeStamp+"_"+ file.name; // This will set the last file's name as docPath
-        this.fdNonCumulativeKycModel.multipartFileList = this.fdNonCumulativeKycModel.filesDTOList;
-        let index1 = event.files.findIndex((x: any) => x === file);
-        // this.addOrEditKycTempList(this.fdNonCumulativeKycModel);
-        fileUpload.remove(event, index1);
-        fileUpload.clear();
+    imageUploader(event: any, fileUpload: FileUpload) {
+      let fileSizeFlag = false;
+      this.isFileUploaded = applicationConstants.FALSE;
+      this.multipleFilesList = [];
+      this.fdNonCumulativeKycModel.filesDTOList = [];
+      this.fdNonCumulativeKycModel.kycFilePath = null;
+      this.fdNonCumulativeKycModel.multipartFileList = [];
+      
+      let selectedFiles = [...event.files];
+      if (selectedFiles[0].size / 1024 / 1024 > 2) {
+        this.msgs = [{ severity: "warning", summary: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_2MB }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+        fileSizeFlag = true;
       }
-      reader.readAsDataURL(file);
+      fileUpload.clear();
+      if (!fileSizeFlag) {
+        for (let file of selectedFiles) {
+          let reader = new FileReader();
+          reader.onloadend = (e) => {
+            this.isFileUploaded = applicationConstants.TRUE;
+            let files = new FileUploadModel();
+            this.uploadFileData = e.currentTarget;
+            files.fileName = file.name;
+            files.fileType = file.type.split("/")[1];
+            files.value = this.uploadFileData.result.split(",")[1];
+            files.imageValue = this.uploadFileData.result;
+  
+            let index = this.multipleFilesList.findIndex((x) => x.fileName === files.fileName);
+            if (index === -1) {
+              this.multipleFilesList.push(files);
+              this.fdNonCumulativeKycModel.filesDTOList.push(files);
+              this.fdNonCumulativeKycModel.multipartFileList.push(files);
+            }
+  
+            let timeStamp = this.commonComponent.getTimeStamp();
+            this.fdNonCumulativeKycModel.filesDTOList[0].fileName = "FD_NON_CUM_KYC_" + this.fdNonCummulativeAccId + "_" + timeStamp + "_" + file.name;
+            this.fdNonCumulativeKycModel.kycFilePath = "FD_NON_CUM_KYC_" + this.fdNonCummulativeAccId + "_" + timeStamp + "_" + file.name;
+  
+            let index1 = event.files.findIndex((x: any) => x === file);
+            fileUpload.remove(event, index1);
+            fileUpload.clear();
+          };
+          reader.readAsDataURL(file);
+        }
+      } else {
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
     }
-  }
+
   /**
    * @implements delete kyc
    * @param rowData 
@@ -848,8 +871,10 @@ ngOnInit(): void {
     return duplicate;
   }
 
-  onClickkycPhotoCopy() {
+  onClickkycPhotoCopy(rowData: any) {
+    this.multipleFilesList = [];
     this.kycPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
   }
 
   kycclosePhoto() {
@@ -858,5 +883,27 @@ ngOnInit(): void {
 
   kycclosePhotoCopy() {
     this.kycPhotoCopyZoom = false;
+  }
+
+  // Popup Maximize
+  @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+
+  onDialogResize(event: any) {
+    this.isMaximized = event.maximized;
+
+    if (this.isMaximized) {
+      // Restore original image size when maximized
+      this.imageElement.nativeElement.style.width = 'auto';
+      this.imageElement.nativeElement.style.height = 'auto';
+      this.imageElement.nativeElement.style.maxWidth = '100%';
+      this.imageElement.nativeElement.style.maxHeight = '100vh';
+    } else {
+      // Fit image inside the dialog without scrollbars
+      this.imageElement.nativeElement.style.width = '100%';
+      this.imageElement.nativeElement.style.height = '100%';
+      this.imageElement.nativeElement.style.maxWidth = '100%';
+      this.imageElement.nativeElement.style.maxHeight = '100%';
+      this.imageElement.nativeElement.style.objectFit = 'contain';
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { SiBorrowingAccountDetails } from '../si-borrowing-stepper/shared/siborrowing.model';
 import { SiBorrowingAccountMapping } from '../si-borrowing-stepper/si-borrowing-account-mapping/shared/si-borrowing-account-mapping.model';
 import { SiBorrowingDocument } from '../si-borrowing-stepper/si-borrowing-document/shared/si-borrowing-document.model';
@@ -55,6 +55,8 @@ export class SiViewBorrowingComponent {
   viewButton: boolean = false;
   editFlag: boolean = false;
   multipartFileList: any[] = [];
+  isMaximized: boolean = false;
+  docPhotoCopyZoom: boolean = false;
   constructor(private router:Router, 
     private commonFunctionsService: CommonFunctionsService,private activateRoute: ActivatedRoute,
     private encryptService: EncryptDecryptService,private commonComponent: CommonComponent,
@@ -294,4 +296,30 @@ pdfDownload() {
  
 }
 
+onClickdoccPhotoCopy(rowData :any){
+  this.multipleFilesList = [];
+  this.docPhotoCopyZoom = true;
+  this.multipleFilesList = rowData.multipartFileList;
+}
+// Popup Maximize
+    @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+    
+      onDialogResize(event: any) {
+        this.isMaximized = event.maximized;
+    
+        if (this.isMaximized) {
+          // Restore original image size when maximized
+          this.imageElement.nativeElement.style.width = 'auto';
+          this.imageElement.nativeElement.style.height = 'auto';
+          this.imageElement.nativeElement.style.maxWidth = '100%';
+          this.imageElement.nativeElement.style.maxHeight = '100vh';
+        } else {
+          // Fit image inside the dialog without scrollbars
+          this.imageElement.nativeElement.style.width = '100%';
+          this.imageElement.nativeElement.style.height = '100%';
+          this.imageElement.nativeElement.style.maxWidth = '100%';
+          this.imageElement.nativeElement.style.maxHeight = '100%';
+          this.imageElement.nativeElement.style.objectFit = 'contain';
+        }
+      }
 }

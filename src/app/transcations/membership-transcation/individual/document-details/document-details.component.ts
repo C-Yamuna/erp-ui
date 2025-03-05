@@ -63,8 +63,6 @@ export class DocumentDetailsComponent {
   saveButtonDisable: boolean= false;
   isMaximized: boolean = false;
 
-
-
   constructor(private formBuilder: FormBuilder,
     private requiredDocumentDetailsService: RequiredDocumentDetailsService,
     private commonComponent: CommonComponent,
@@ -376,18 +374,24 @@ export class DocumentDetailsComponent {
     this.submitFlag = false;
     this.updateData();
   }
+ 
   fileUploader(event: any, fileUpload: FileUpload) {
     this.saveButtonDisable = true;
     this.isFileUploaded = applicationConstants.FALSE;
     this.requiredDocumentModel.multipleFilesList = [];
     this.multipleFilesList = [];
-    this.requiredDocumentModel.filesDTO = null; // Initialize as a single object
+    this.requiredDocumentModel.filesDTO = null;
     this.requiredDocumentModel.requiredDocumentFilePath = null;
-    if (event.files.length !== 1) {
-      console.error('Exactly one file must be selected.');
-      return;
+
+    let file = event.files[0];
+    let fileSizeMB = file.size / (1024 * 1024);
+   
+    if (fileSizeMB > 5) {
+      this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_5MB}];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
     }
-    let file = event.files[0]; // Only one file
     let reader = new FileReader();
     reader.onloadend = (e) => {
       if (!e.target || !e.target.result) {
@@ -396,12 +400,14 @@ export class DocumentDetailsComponent {
       }
       let filesDTO = new FileUploadModel();
       this.uploadFileData = e.target as FileReader;
-      filesDTO.fileName = "MEMBER_KYC_" + this.memberId + "_" + this.commonComponent.getTimeStamp() + "_" + file.name;
+      filesDTO.fileName = `MEMBER_KYC_${this.memberId}_${this.commonComponent.getTimeStamp()}_${file.name}`;
       filesDTO.fileType = file.type.split('/')[1];
       filesDTO.value = (this.uploadFileData.result as string).split(',')[1];
       filesDTO.imageValue = this.uploadFileData.result as string;
+
       this.requiredDocumentModel.filesDTO = filesDTO;
       this.requiredDocumentModel.requiredDocumentFilePath = filesDTO.fileName;
+
       let index1 = event.files.indexOf(file);
       if (index1 > -1) {
         fileUpload.remove(event, index1);
@@ -411,6 +417,7 @@ export class DocumentDetailsComponent {
 
     reader.readAsDataURL(file);
   }
+
 
   RemoveEvent() {
     this.saveButtonDisable = false;

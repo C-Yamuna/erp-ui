@@ -15,18 +15,30 @@
         </div>
     </div>
     <!-- Individual Form start -->
-    <div class="col-12 p-0 mt-4" *ngIf="individualFlag">
+    <div class="col-12 p-0" *ngIf="individualFlag">
         <form [formGroup]="memberCreationForm">
-            <h6 class="sub-heading">{{'ERP.REQUIRED_BASIC_DETAILS' | translate}}</h6>
-            <div class="mt-n1 bg-label-colorfull">
+            <h6 class="sub-heading pt-3 mb-0">{{'ERP.REQUIRED_DETAILS' | translate}}</h6>
+            <div class="bg-label-colorfull -mt-1">
                 <div class="row g-3 mt-0">
+                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.MEMBERSHIP_TYPE' | translate}}</label>
+
+                        <p-dropdown id="bunit_txt_status" placeholder="Select" [filter]="true"
+                            [options]="subProductList" formControlName="subProductId"
+                            [(ngModel)]="membershipBasicRequiredDetails.subProductId" >
+                        </p-dropdown>
+
+                    </div>
+                </div>
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-label">
-                            <label><span class="red">*</span>{{'ERP.SOCIETY_ADMISSION_NUMBER' | translate}}</label>
+                            <label>{{'ERP.SOCIETY_ADMISSION_NUMBER' | translate}}</label>
 
                             <input pInputText type="text" formControlName="societyAdmissionNumber"
                                 [(ngModel)]="membershipBasicRequiredDetails.societyAdmissionNumber"
-                                placeholder="Enter Name">
+                                placeholder="Enter Society Admission Number">
                             <p-message severity="error" text="Enter Valid society Admission Number"
                                 *ngIf="!memberCreationForm.controls['societyAdmissionNumber'].valid && memberCreationForm.controls['societyAdmissionNumber'].dirty">
                             </p-message>
@@ -77,6 +89,8 @@
                             </p-message>
                         </div>
                     </div>
+                </div>
+                <div class="row g-3 mt-0">
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.GENDER' | translate}}</label>
@@ -86,8 +100,6 @@
                                 [(ngModel)]="membershipBasicRequiredDetails.genderId"></p-dropdown>
                         </div>
                     </div>
-                </div>
-                <div class="row g-3 mt-0">
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.MARITAL_STATUS' | translate}}</label>
@@ -291,7 +303,7 @@
                     </div> -->
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
                         <div class="form-label">
-                            <span class=""><span class="red">*</span> {{ 'ERP.PHOTO_COPY' | translate }} </span>
+                            <span class=""><span class="red">*</span> {{ 'ERP.PHOTO_COPY' | translate }} {{'DEMANDDEPOSITS.IMAGE_SIZE' | translate}}</span>
                             <div class="uplodad-style align-items-center">
                                 <!-- Upload Button Column -->
 
@@ -319,7 +331,7 @@
                     </div>
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
                         <div class="form-label">
-                            <span class=""> <span class="red">*</span>{{ 'ERP.SIGNATURE_COPY' | translate }} </span>
+                            <span class=""> <span class="red">*</span>{{ 'ERP.SIGNATURE_COPY' | translate }} {{'DEMANDDEPOSITS.IMAGE_SIZE' | translate}} </span>
                             <div class="uplodad-style align-items-center">
                                 <!-- Upload Button Column -->
                                 <p-fileUpload #fileUploadIndividualSign class="qua-upld file-attach semi-bold"
@@ -353,11 +365,23 @@
     </div>
     <!-- Individual Form end -->
     <!-- Group form start -->
-    <div class="col-12 p-0 mt-4" *ngIf="groupFlag">
+    <div class="col-12 p-0" *ngIf="groupFlag">
         <form [formGroup]="groupForm">
-            <h6 class=" sub-heading">{{'ERP.GROUP_DETAILS' | translate}}</h6>
-            <div class="mt-n1  bg-label-colorfull">
+            <h6 class=" sub-heading pt-3 mb-0">{{'ERP.REQUIRED_DETAILS' | translate}}</h6>
+            <div class="bg-label-colorfull -mt-1">
                 <div class="row g-3 mt-0">
+                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.MEMBERSHIP_TYPE' | translate}}</label>
+                        <p-dropdown id="bunit_txt_status" placeholder="Select" [filter]="true"
+                            [options]="subProductList" formControlName="subProductId"
+                            [(ngModel)]="memberGroupDetailsModel.subProductId" >
+                        </p-dropdown>
+
+                    </div>
+                </div>
+            <!-- </div>
+                <div class="row g-3 mt-0"> -->
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.GROUP_TYPES' | translate}}</label>
@@ -370,10 +394,10 @@
                     </div>
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-label">
-                            <label><span class="red">*</span>{{'ERP.SOCIETY_ADMISSION_NUMBER' | translate}}</label>
+                            <label>{{'ERP.SOCIETY_ADMISSION_NUMBER' | translate}}</label>
 
                             <input pInputText type="text" formControlName="societyAdmissionNumber"
-                                [(ngModel)]="memberGroupDetailsModel.societyAdmissionNumber" placeholder="Enter Name">
+                                [(ngModel)]="memberGroupDetailsModel.societyAdmissionNumber" placeholder="Enter Society Admission Number">
                             <p-message severity="error" text="Enter Valid society Admission Number"
                                 *ngIf="!groupForm.controls['societyAdmissionNumber'].valid && groupForm.controls['societyAdmissionNumber'].dirty">
                             </p-message>
@@ -417,8 +441,8 @@
                             </p-dropdown>
                         </div>
                     </div>
-                </div>
-                <div class="row g-3 mt-0">
+                <!-- </div>
+                <div class="row g-3 mt-0"> -->
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.ADMISSION_DATE' | translate}}</label>
@@ -428,7 +452,7 @@
                                 [maxDate]="today"></p-calendar>
                         </div>
                     </div>
-                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
+                    <!-- <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
                         <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.POC_NAME' | translate}}</label>
                             <input pInputText id="bunit_txt_name" type="text" formControlName="pocName"
@@ -448,7 +472,7 @@
                                 *ngIf="!groupForm.controls['mobileNumber'].valid && groupForm.controls['mobileNumber'].dirty">
                             </p-message>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.PAN_NUMBER' | translate}}</label>
@@ -496,11 +520,11 @@
 
             <!-- <div class="border-top pb-2" *ngIf="groupFlag"></div> -->
 
-            <div class="flex justify-content-between">
-                <div class="xl:col-5 lg:col-5 md:col-5 sm:col-6 pl-0">
+            <div class="flex justify-content-between py-2">
+                <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5">
                     <div class="sub-heading mt-1">{{'ERP.GROUP_PROMOTER_DETAILS' | translate}} </div>
                 </div>
-                <div class="xl:col-7 lg:col-7 md:col-7 sm:col-6 pr-0">
+                <div class="col-xl-7 col-lg-7 col-md-7 col-sm-7">
                     <div class="col-12 p-0">
                         <div class="d-flex justify-content-end search-input-style">
                             <div class="input-group search-box d-flex justify-content-end">
@@ -602,11 +626,22 @@
     </div>
     <!-- Group form end -->
     <!-- Instution Form start -->
-    <div class="col-12 p-0 mt-4" *ngIf="institutionFlag">
+    <div class="col-12 p-0" *ngIf="institutionFlag">
         <form [formGroup]="institutionForm">
-            <h6 class="sub-heading">{{'ERP.INSTITUTION_DETAILS' | translate}}</h6>
-            <div class="mt-n1  bg-label-colorfull">
+            <h6 class="sub-heading pt-3 mb-0">{{'ERP.REQUIRED_DETAILS' | translate}}</h6>
+            <div class="bg-label-colorfull -mt-1">
                 <div class="row g-3 mt-0">
+                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                    <div class="form-label">
+                        <label><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.MEMBERSHIP_TYPE' | translate}}</label>
+                        <p-dropdown id="bunit_txt_status" placeholder="Select" [filter]="true"
+                            [options]="subProductList" formControlName="subProductId"
+                            [(ngModel)]="membershipInstitutionDetailsModel.subProductId" >
+                        </p-dropdown>
+                    </div>
+                    </div>
+                <!-- </div>
+                <div class="row g-3 mt-0"> -->
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.INSTITUTION_TYPE' | translate}}</label>
@@ -619,11 +654,11 @@
                     </div>
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-label">
-                            <label><span class="red">*</span>{{'ERP.SOCIETY_ADMISSION_NUMBER' | translate}}</label>
+                            <label>{{'ERP.SOCIETY_ADMISSION_NUMBER' | translate}}</label>
 
                             <input pInputText type="text" formControlName="societyAdmissionNumber"
                                 [(ngModel)]="membershipInstitutionDetailsModel.societyAdmissionNumber"
-                                placeholder="Enter Name">
+                                placeholder="Enter Society Admission Number">
                             <p-message severity="error" text="Enter Valid society Admission Number"
                                 *ngIf="!institutionForm.controls['societyAdmissionNumber'].valid && institutionForm.controls['societyAdmissionNumber'].dirty">
                             </p-message>
@@ -669,7 +704,7 @@
                         </div>
                     </div>
                     
-                </div>
+                <!-- </div> -->
                 <!-- <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                             <label>{{'ERP.POC_NAME' | translate}}</label>
                             <div>
@@ -681,7 +716,7 @@
                                 </p-message>
                             </div>
                         </div> -->
-                <div class="row g-3 mt-0">
+                <!-- <div class="row g-3 mt-0"> -->
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.ADMISSION_DATE' | translate}}</label>
@@ -691,7 +726,7 @@
                                 (onSelect)="dateConverstion()" [maxDate]="today"></p-calendar>
                         </div>
                     </div>
-                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
+                    <!-- <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
                         <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.POC_NAME' | translate}}</label>
                             <input pInputText id="bunit_txt_name" type="text" formControlName="pocName"
@@ -711,7 +746,7 @@
                                 *ngIf="!institutionForm.controls['mobileNumber'].valid && institutionForm.controls['mobileNumber'].dirty">
                             </p-message>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.PAN_NUMBER' | translate}}</label>
@@ -757,11 +792,11 @@
             </div>
             <div class="col-12 p-0 my-2 border-bottom"></div>
 
-            <div class="flex justify-content-between">
-                <div class="xl:col-5 lg:col-5 md:col-5 sm:col-6 pl-0">
+            <div class="flex justify-content-between py-2">
+                <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5">
                     <div class="sub-heading mt-1">{{'ERP.OPERATOR_DETAILS' | translate}}</div>
                 </div>
-                <div class="xl:col-7 lg:col-7 md:col-7 sm:col-6 pr-0">
+                <div class="col-xl-7 col-lg-7 col-md-7 col-sm-7">
                     <div class="col-12 p-0">
                         <div class="d-flex justify-content-end search-input-style">
                             <div class="input-group search-box d-flex justify-content-end">
@@ -867,7 +902,7 @@
 </div>
 
 <!-- group promoters details dialog -->
-<p-dialog header="Group Promoter" [modal]="true" [(visible)]="groupPromoters" styleClass="moredetails-style" [closable]="false">
+<p-dialog header="{{'ERP.GROUP_PROMOTORS' | translate}}" [modal]="true" [(visible)]="groupPromoters" styleClass="moredetails-style" [closable]="false">
     <div class="popup-basic-details">
         <form [formGroup]="promoterDetailsForm" id="proj_stakeholder_form">
             <div class="col-12 px-0">
@@ -895,7 +930,7 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
-                        <label><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.IS_POC' | translate}}</label>
+                        <label><span class="red">*</span>{{'DEMANDDEPOSITS.IS_POC' | translate}}</label>
                         <p-dropdown [filter]="true" [options]="trueFalseList" placeholder="Select"
                             [(ngModel)]="promoterDetailsModel.isPoc"  formControlName="isPoc"
                             [appendTo]="'body'" (onChange)="isPosCheck(promoterDetailsModel.isPoc , true)"></p-dropdown>
@@ -1035,7 +1070,7 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
-                        <div class="ml-2"><span class="red">*</span>{{'ERP.PHOTO_COPY' | translate}}</div>
+                        <div class="ml-2"><span class="red">*</span>{{'ERP.PHOTO_COPY' | translate}} {{'DEMANDDEPOSITS.IMAGE_SIZE' | translate}}</div>
                         <div class="uplodad-style align-items-center">
                             <p-fileUpload #fileUploadPhotoPromoter class="qua-upld file-attach semi-bold"
                                 name="myfile[]" id="apply-leave_fileUp_attach" chooseLabel=" " name="file"
@@ -1059,7 +1094,7 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
-                        <div class="ml-2"><span class="red">*</span>{{'ERP.SIGNATURE_COPY' | translate}}</div>
+                        <div class="ml-2"><span class="red">*</span>{{'ERP.SIGNATURE_COPY' | translate}} {{'DEMANDDEPOSITS.IMAGE_SIZE' | translate}}</div>
                         <div class="uplodad-style align-items-center">
                             <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
                                 id="apply-leave_fileUp_attach" chooseLabel=" " formControlName="signatureUpload"
@@ -1111,7 +1146,7 @@
 </p-dialog>
 
 <!-- institution promoters details dialog -->
-<p-dialog header="Institution Promoter" [modal]="true" [(visible)]="institutionPromoterPopUp" styleClass="moredetails-style" [closable]="false">
+<p-dialog header="{{'ERP.INSTITUTION_OPERATORS' | translate}}" [modal]="true" [(visible)]="institutionPromoterPopUp" styleClass="moredetails-style" [closable]="false">
     <div class="popup-basic-details">
         <form [formGroup]="promoterDetailsForm" id="proj_stakeholder_form">
             <div class="col-12 px-0">
@@ -1282,7 +1317,7 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
-                        <div class="ml-2"><span class="red">*</span>{{'ERP.PHOTO_COPY' | translate}}</div>
+                        <div class="ml-2"><span class="red">*</span>{{'ERP.PHOTO_COPY' | translate}} {{'DEMANDDEPOSITS.IMAGE_SIZE' | translate}}</div>
                         <div class="uplodad-style align-items-center">
                             <p-fileUpload #fileUploadPromotePhoto class="qua-upld file-attach semi-bold" name="myfile[]"
                                 id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".png,.jpg,.jpeg"
@@ -1305,7 +1340,7 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
-                        <div class="ml-2"><span class="red">*</span>{{'ERP.UPLOAD_SIGNATURE' | translate}}</div>
+                        <div class="ml-2"><span class="red">*</span>{{'ERP.SIGNATURE_COPY' | translate}} {{'DEMANDDEPOSITS.IMAGE_SIZE' | translate}}</div>
                         <div class="uplodad-style align-items-center">
                             <p-fileUpload #fileUploadInstitutionPromoterSign class="qua-upld file-attach semi-bold"
                                 name="myfile[]" id="apply-leave_fileUp_attach" chooseLabel=" " name="file"

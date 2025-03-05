@@ -33,6 +33,8 @@ export class CiProductConfigComponent {
   borrowingTypeList: any[] = [];
   interestCalculationTypeList: any[] = [];
   linkShareCapitalList: any[] = [];
+  productDefinitionList: any[] = [];
+  tempProductDefinitionList: any[] = [];
 
   constructor(private formBuilder: FormBuilder,private commonComponent: CommonComponent,private activateRoute: ActivatedRoute,
     private datePipe: DatePipe,private encryptService: EncryptDecryptService,
@@ -97,6 +99,7 @@ export class CiProductConfigComponent {
         this.save();
       }
     });
+    this.getAllProductDefinitions();
   }
 
 
@@ -237,4 +240,60 @@ export class CiProductConfigComponent {
     }
     this.updateData();
 }
+/**
+        @author Dileep_Kumar_G
+        @implements get All Product Definitions
+      */
+        getAllProductDefinitions() {
+          this.ciBorrowingProductDefinitionService.getAllCiBorrowingProductDefinition().subscribe((data: any) => {
+            this.responseModel = data;
+            if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+              if (null != this.responseModel.data && undefined != this.responseModel.data) {
+                this.productDefinitionList = this.responseModel.data;
+                this.tempProductDefinitionList = this.productDefinitionList;
+              }
+              this.commonComponent.stopSpinner();
+            } else {
+              this.commonComponent.stopSpinner();
+              this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
+              setTimeout(() => {
+                this.msgs = [];
+              }, 2000);
+            }
+          }, error => {
+            this.msgs = [];
+            this.msgs = [{ severity: "error", summary: 'Failed', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST }];
+            this.commonComponent.stopSpinner();
+          });
+        }
+      
+        /**
+            @author Dileep_Kumar_G
+            @implements product Name Duplicate Check
+          */
+        productNameDuplicateCheck() {
+          let isFlag = applicationConstants.TRUE;
+          if (this.isEdit) {
+            if (null != this.tempProductDefinitionList && undefined != this.tempProductDefinitionList && this.tempProductDefinitionList.length > 0) {
+              const user = this.tempProductDefinitionList.find(user => user.name === this.ciProductDefinitionModel.name);
+              if (user != null && user != undefined) {
+                if (user.id === this.ciProductDefinitionModel.id) {
+                  isFlag = applicationConstants.FALSE;
+                }
+              }
+            }
+          }
+          if (null != this.tempProductDefinitionList && undefined != this.tempProductDefinitionList && this.tempProductDefinitionList.length > 0) {
+            this.tempProductDefinitionList.filter((data: any) => null != data.name).map(ciLoans => {
+              if (isFlag && ciLoans.name === this.ciProductDefinitionModel.name) {
+                this.msgs = [];
+                this.msgs.push({ severity: 'warning', detail: applicationConstants.PRODUCT_NAME_ALREADY_EXIST });
+                this.productionDefinitionForm.get('name')?.reset();
+                setTimeout(() => {
+                  this.msgs = [];
+                }, 1500);
+              }
+            });
+          }
+        }
 }

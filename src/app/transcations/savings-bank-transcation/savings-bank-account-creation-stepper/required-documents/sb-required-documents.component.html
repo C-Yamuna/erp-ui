@@ -9,6 +9,12 @@
                             <p class="mb-0">{{productName}}</p>
                         </div>
                     </div>
+                    <!-- <div class="col-lg-2 col-md-2 col-sm-12">
+                        <div class="form-group ml-2">
+                            <span>{{'ERP.ADMINSSION_NUMBER' | translate}}</span>
+                            <p class="mb-0">{{admissionNumber}}</p>
+                        </div>
+                    </div> -->
                     <div class="col-lg-2 col-md-2 col-sm-12">
                         <div class="form-group ml-2">
                             <span>{{'ERP.ACCOUNT_NUMBER' | translate}}</span>
@@ -40,9 +46,11 @@
                 Number:&nbsp;{{admissionNumber}})</span></h6> -->
                 <h6 class="sub-heading">{{'DEMANDDEPOSITS.DOCUMENTS' | translate}}</h6>
         <form [formGroup]="requiredForm" id="exit_types_form">
-            <p-button icon="fa fa-plus" label="{{'DEMANDDEPOSITS.ADD_ANOTHER_DOCUMENT' | translate}}"
+            <p-button icon="fa fa-plus" label="{{'ADD ANOTHER DOCUMENT' | translate}}"
                 (click)="addDocument($event)" [disabled]="buttonDisabled" class="kyc-btnm-0"></p-button>
-                <p class="label-input-text text-danger mt-2" *ngIf="mandatoryDoxsTextShow">Note : {{requiredDocumentsNamesText}}</p>
+                <div class="mt-2">
+                <p class="label-input-text text-danger" *ngIf="mandatoryDoxsTextShow">Note : {{requiredDocumentsNamesText}}</p>
+            </div>
             <div class="col-12 p-0 pt-2">
                 <div class="row g-3">
                     <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mt-2" *ngFor="let document of kycModelList ; let i = index">
@@ -59,10 +67,10 @@
                                         <h6 class="label-view">{{'ERP.DOCUMENT_NUMBER' | translate}}</h6>
                                         <p class="label-input-text">{{document.documentNumber}}</p>
                                     </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <!-- <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <h6 class="label-view">{{'ERP.NAME_AS_PER_DOCUMENT' | translate}}</h6>
                                         <p class="label-input-text docname-texteclipse" pTooltip="{{document.requiredDocumentFilePath}}" tooltipPosition="bottom">{{document.requiredDocumentFilePath}} </p>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                                 <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end d-flex right-actions">
@@ -98,14 +106,14 @@
                                 </div>
 
                             <!-- Edit form -->
-                            <div class="col-12 global-border bg-label-colorfull p-3" *ngIf="editIndex === i  && !editDocumentOfKycFalg">
+                            <div class="col-12 global-border bg-label-colorfull p-3 py-2" *ngIf="editIndex === i  && !editDocumentOfKycFalg">
                             <div class="row g-3 mt-n1">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="form-label">
                                         <label><span class="red">*</span>{{'ERP.DOCUMENT_TYPE' | translate}}</label>
                                     <p-dropdown placeholder="{{'ERP.SELECT'| translate}}"
                                         formControlName="docTypeName" [options]="documentNameList"  
-                                        id="docTypeId" [(ngModel)]="requiredDocumentsModel.requiredDocumentTypeId" >
+                                        id="docTypeId" [(ngModel)]="requiredDocumentsModel.requiredDocumentTypeId" (onChange)="requiredDocumentsDuplicateCheck(requiredDocumentsModel)">
                                     </p-dropdown>
                                 </div>
                             </div>
@@ -119,7 +127,7 @@
                             </div>
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="form-label">
-                                        <div class="ml-2"> <span class="red">*</span> {{ 'ERP.DOCUMENT_COPY' | translate }} {{ 'DEMANDDEPOSITS.PDF_SIZE_FOR_BOTH' | translate }}</div>
+                                        <div class="ml-2"> <span class="red">*</span> {{ 'ERP.DOCUMENT_COPY' | translate }} {{ 'DEMANDDEPOSITS.PDF_SIZE' | translate }}</div>
                                         <div class="uplodad-style align-items-center">
                                         <!-- Upload Button Column -->
                                     
@@ -157,14 +165,14 @@
                     </div>
                     <!-- add form -->
                     <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mt-2" *ngIf="addDocumentOfKycFalg">
-                        <div class="col-12  p-3 global-border bg-label-colorfull">
+                        <div class="col-12 p-3 py-2 global-border bg-label-colorfull">
                         <div class="row g-3 mt-n1" >
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
                                     <label><span class="red">*</span>{{'ERP.DOCUMENT_TYPE' | translate}}</label>
                                 <p-dropdown placeholder="{{'ERP.SELECT'| translate}}"
                                     formControlName="docTypeName" [options]="documentNameList"
-                                    id="docTypeId" [(ngModel)]="requiredDocumentsModel.requiredDocumentTypeId">
+                                    id="docTypeId" [(ngModel)]="requiredDocumentsModel.requiredDocumentTypeId" (onChange)="requiredDocumentsDuplicateCheck(requiredDocumentsModel)">
                                 </p-dropdown>
                             </div>
                         </div>
@@ -239,7 +247,7 @@
     </div>
   </p-dialog>
    <!-- KYC Photo Copy -->
- <p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="docPhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
+ <p-dialog header="{{'ERP.DOCUMENT_COPY' | translate}}" [(visible)]="docPhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
     <div class="col-12">
     <div *ngFor="let img of multipartFileList">
         <div class="mb-3 imgcustom-class" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">

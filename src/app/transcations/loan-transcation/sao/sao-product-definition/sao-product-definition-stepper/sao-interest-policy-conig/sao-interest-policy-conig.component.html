@@ -81,7 +81,7 @@
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
                                     <input pInputText type="text" [(ngModel)]="saoInterestPolicyConfigModel.minSlabAmount" 
-                                    (focusout)="checkForAmount(1)" formControlName="minSlabAmount">
+                                    (focusout)="checkForAmount(1)" formControlName="minSlabAmount" pKeyFilter="num">
                                     
                                 </ng-template>
                                 <ng-template pTemplate="output">{{saoInterestPolicyConfigModel.minSlabAmount}}</ng-template>
@@ -93,7 +93,7 @@
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
                                     <input pInputText type="text" [(ngModel)]="saoInterestPolicyConfigModel.maxSlabAmount" 
-                                    (focusout)="checkForAmount(2)" formControlName="maxSlabAmount">
+                                    (focusout)="checkForAmount(2)" formControlName="maxSlabAmount" pKeyFilter="num">
                                     
                                 </ng-template>
                                 <ng-template pTemplate="output">{{saoInterestPolicyConfigModel.maxSlabAmount}}</ng-template>

@@ -204,4 +204,6 @@ export class SiLoanApplication {
 
     siDisbursementDTOList?: any;
 
+    requiredDocumentsConfigDetailsDTOList:any;
+
 }

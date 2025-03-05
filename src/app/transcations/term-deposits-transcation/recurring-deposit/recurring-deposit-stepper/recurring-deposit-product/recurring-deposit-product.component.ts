@@ -78,6 +78,9 @@ export class RecurringDepositProductComponent implements OnInit {
   tenureTypeList: any[] = [];
   renewalTypeList: any[] = [];
   paymentTypeList: any[] = [];
+  interestPayoutFlag: boolean = false;
+  monthFlag: boolean = false;
+  yearFlag: boolean = false;
 
   
   constructor(private router: Router,private datePipe: DatePipe, private formBuilder: FormBuilder, 
@@ -117,11 +120,14 @@ export class RecurringDepositProductComponent implements OnInit {
       { label: 'Monthly', value: 1},
     ]
     
+    this.paymentTypeList = this.commonComponent.transactionModeType().filter((obj: any) => obj != null).map((tenure: { label: any; value: any }) => {
+      return { label: tenure.label, value: tenure.value };
+    });
   
-    this.paymentTypeList = [
-      { label: "Cash", value: 1 },
-      { label: "To SB", value: 2 }
-    ]
+    // this.paymentTypeList = [
+    //   { label: "Cash", value: 1 },
+    //   { label: "To SB", value: 2 }
+    // ]
 
     // this.renewalTypeList =  [
     //   { label: "Deposit", value: 1 },
@@ -134,6 +140,7 @@ export class RecurringDepositProductComponent implements OnInit {
     this.tenureTypeList = this.commonComponent.tenureType().filter((obj: any) => obj != null && obj.label === "Months").map((tenure: { label: any; value: any }) => {
       return { label: tenure.label, value: tenure.value };
     });
+
 
     this.getAllAccountTypes();
     this.activateRoute.queryParams.subscribe(params => {
@@ -179,7 +186,7 @@ export class RecurringDepositProductComponent implements OnInit {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.productsList = this.responseModel.data;
-            this.productsList = this.productsList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+            this.productsList = this.productsList.filter((obj: any) => obj != null && obj.statusName == applicationConstants.APPROVED).map((relationType: { name: any; id: any; }) => {
               return { label: relationType.name, value: relationType.id };
             });
           }
@@ -253,7 +260,8 @@ export class RecurringDepositProductComponent implements OnInit {
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.rdAccountModel = this.responseModel.data[0];
-
+            this.tenureCheck();
+            this.interestPayoutCheck();
             if(this.rdAccountModel.depositDate == null || this.rdAccountModel.depositDate == undefined){
               this.rdAccountModel.depositDateVal = this.commonFunctionsService.currentDate();
 
@@ -385,7 +393,7 @@ export class RecurringDepositProductComponent implements OnInit {
           if (this.recurringDepositProductDefinitionModel.tenureType != null && this.recurringDepositProductDefinitionModel.tenureType != undefined) {
             this.rdAccountModel.tenureType = this.recurringDepositProductDefinitionModel.tenureType;
           }
-
+          this.tenureCheck();
         }
       }
     });
@@ -440,5 +448,24 @@ export class RecurringDepositProductComponent implements OnInit {
       this.applicationForm.get('maturityDate')?.setValue(maturityDateFormatted);
     }
   }
+
+    /**
+ * @implements check for years,months,days to show and hide based on tenuretype
+ * @author bhargavi
+ */
+    tenureCheck() {
+      const tenureType = this.rdAccountModel.tenureType;
+      this.yearFlag = tenureType === 2 || tenureType === 5 || tenureType === 6 || tenureType === 7 ? true : false;
+      this.monthFlag = tenureType === 3 || tenureType === 4 || tenureType === 6 || tenureType === 7 ? true : false;
+    }
+
+    /**
+   * @implements check for paymenttype show and hide based on interestPayoutType
+   * @author bhargavi
+   */
+    interestPayoutCheck() {
+      const interestPayoutType = this.rdAccountModel.interestPayoutType;
+      this.interestPayoutFlag = interestPayoutType === 3 ? true : false;
+    }
   
 }

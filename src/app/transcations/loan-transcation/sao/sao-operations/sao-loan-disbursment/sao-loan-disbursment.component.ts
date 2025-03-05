@@ -83,9 +83,16 @@ export class SaoLoanDisbursmentComponent {
     this.translate.use(this.commonFunctionsService.getStorageValue('language'));
     this.trueFalseList = this.commonComponent.requiredlist();
     this.disbursement = [
+      // { field: 'disbursementOrder', header: 'ERP.DISBURSEMENT_ORDER' },
+      // { field: 'typeName', header: 'ERP.DISBURSEMENT_TYPE' },
+      // { field: 'disbursementDateVal', header: 'ERP.SCHEDULE_DATE' },
+      // { field: 'disbursementAmount', header: 'ERP.MIN_AMOUNT' },
+      // { field: 'transactionDateVal', header: 'ERP.TRANSACTION_DATE' },
+      // { field: 'statusName', header: 'ERP.STATUS' }
+      
       //{ field: 'Units',header:'UNITS'},
       { field: 'disbursementAmount', header: 'LOANS.DISBURSEMENT_AMOUNT' },
-      { field: 'accountNumber', header: 'LOANS.ACCOUNT_NUMBER' },
+      // { field: 'accountNumber', header: 'LOANS.ACCOUNT_NUMBER' },
       { field: 'disbursementDateVal', header: 'LOANS.DISBURSEMENT_DATE' },
       { field: 'transactionDateVal', header: 'LOANS.TRANSACTION_DATE' },
       { field: 'statusName', header: 'LOANS.STATUS' }
@@ -187,8 +194,8 @@ export class SaoLoanDisbursmentComponent {
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         this.saoProductDetailsModel = this.responseModel.data[0];
 
-        if (this.saoProductDetailsModel.minLoanPeriod != undefined && this.saoProductDetailsModel.minLoanPeriod != null)
-          this.saoLoanApplicationModel.minLoanPeriod = this.saoProductDetailsModel.minLoanPeriod;
+        if (this.saoProductDetailsModel.purposeName != undefined && this.saoProductDetailsModel.purposeName != null)
+          this.saoLoanApplicationModel.purposeName = this.saoProductDetailsModel.purposeName;
 
         if (this.saoProductDetailsModel.maxLoanPeriod != undefined && this.saoProductDetailsModel.maxLoanPeriod != null)
           this.saoLoanApplicationModel.maxLoanPeriod = this.saoProductDetailsModel.maxLoanPeriod;
@@ -359,6 +366,26 @@ export class SaoLoanDisbursmentComponent {
         if (this.responseModel != null && this.responseModel != undefined) {
           if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
             this.disbursementScheduleList = this.responseModel.data;
+            const currentDate = new Date();
+          
+            this.disbursementScheduleList = this.disbursementScheduleList.map((schedule: { visitNumber: any; tenureTypeName: any;disbursementPercentage: number; visitTenure: number; }) => {
+             
+        
+              const percentage = (schedule.disbursementPercentage / 100) * this.saoLoanApplicationModel.requestedAmount;;
+            
+              const visitTenure = schedule.visitTenure ?? 0;
+          
+              const disbursementDate = new Date(currentDate);
+              disbursementDate.setDate(disbursementDate.getDate() + visitTenure);
+              const formattedDate = `${String(disbursementDate.getDate()).padStart(2, '0')}/${String(disbursementDate.getMonth() + 1).padStart(2, '0')}/${disbursementDate.getFullYear()}`;
+          
+              return {
+                disbursementOrder: schedule.visitNumber,
+                typeName: schedule.tenureTypeName,
+                disbursementAmount: percentage,
+                disbursementDateVal: formattedDate
+              };
+            });
           }
           else {
             this.addOrEdit = false;

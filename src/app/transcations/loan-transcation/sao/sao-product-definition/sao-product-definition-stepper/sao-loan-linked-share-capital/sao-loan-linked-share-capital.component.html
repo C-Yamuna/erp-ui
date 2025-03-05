@@ -101,7 +101,7 @@
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
                                     <input pInputText type="text" [(ngModel)]="saoLoanLinkedShareCapitalModel.minSlabAmount"
-                                    (focusout)="checkForAmount(1)" formControlName="minSlabAmount">
+                                    (focusout)="checkForAmount(1,saoLoanLinkedShareCapitalModel)" formControlName="minSlabAmount">
                                     
                                 </ng-template>
                                 <ng-template pTemplate="output">{{saoLoanLinkedShareCapitalModel.minSlabAmount}}</ng-template>
@@ -111,7 +111,7 @@
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
                                     <input pInputText type="text" [(ngModel)]="saoLoanLinkedShareCapitalModel.maxSlabAmount" 
-                                    (focusout)="checkForAmount(2)" formControlName="maxSlabAmount" >
+                                    (focusout)="checkForAmount(2, saoLoanLinkedShareCapitalModel)" formControlName="maxSlabAmount" >
                                     
                                 </ng-template>
                                 <ng-template pTemplate="output">{{saoLoanLinkedShareCapitalModel.maxSlabAmount}}</ng-template>

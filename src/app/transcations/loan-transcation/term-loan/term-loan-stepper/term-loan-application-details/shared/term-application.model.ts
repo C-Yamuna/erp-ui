@@ -233,7 +233,8 @@ export class TermApplication {
 
     totalCollectionAmount: any;
 
-    graceperiod: any;
+    gracePeriod: any;
+    termLoanExistingDetailsDTOList: any;
 
 }
 export class TermLoanProductDefinition {

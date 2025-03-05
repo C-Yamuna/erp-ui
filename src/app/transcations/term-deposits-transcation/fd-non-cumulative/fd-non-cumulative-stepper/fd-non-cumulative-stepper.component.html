@@ -1,12 +1,12 @@
 <div class="col-12">
     <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
         [hideTransitionOptions]="'500ms'"></p-messages>
-    <div class="row justify-content-between top-header-section px-0">
-        <div class="col-lg-6 col-md-5 col-sm-12 col-xs-12 main-heading mt-1 mb-2 justify-content-start">
+    <div class="row justify-content-between top-header-section">
+        <div class="col-lg-6 col-md-4 col-sm-12 col-xs-12 main-heading mt-1 mb-2 justify-content-start px-0">
             {{'TERMDEPOSITSTRANSACTION.FD_NON_CUMMULATIVE' | translate}} <i
                 class="fa fa-angle-right font-bold mr-3 ml-3"></i>{{'TERMDEPOSITSTRANSACTION.CREATE_ACCOUNT' |
             translate}}</div>
-        <div class="col-lg-6 col-md-7 col-sm-12 col-xs-12 justify-content-end view-popup-top">
+        <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12 justify-content-end view-popup-top px-0">
             <div class="d-flex pull-right">
                 <div class="col-auto">
                     <!-- <p-inputSwitch [(ngModel)]="showForm" (onChange)="onChange()"
@@ -18,7 +18,7 @@
                 <div class="col-auto">
                     <p class="mt-1 px-2">{{'TERMDEPOSITSTRANSACTION.ADD_B_CLASS_MEMBERSHIP' | translate}}</p>
                 </div>
-                <p-button class="ml-3" icon="fa fa-download" label="Application"></p-button>
+                <p-button class="ml-3" icon="fa fa-download" label="{{'ERP.TEMPLATE' | translate}}"></p-button>
             </div>
         </div>
     </div>
@@ -28,7 +28,7 @@
             <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 left-sidecard"
                 *ngIf="(showForm && activeIndex>0) || !showForm">
                 <div class="col-12 membership-side-card">
-                    <div class="col-12">
+                    <div class="col-12 pb-1">
                         <h5 class="transaction-side-card-header">{{'TERMDEPOSITSTRANSACTION.BASIC_DETAILS' | translate}}
                         </h5>
                     </div>
@@ -45,7 +45,7 @@
                         <div class="row">
                             <div class="col-xl-12 col-lg-12 col-md-3 col-sm-4 col-xs-4">
                                 <div class="col-12 pic-sig-status">
-                                    <div class="d-flex justify-content-center mb-3">
+                                    <div class="d-flex justify-content-center mb-1">
                                         <div
                                             *ngFor="let img of membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy">
                                             <span class="{{img.imageValue}}" (click)="onClickMemberPhotoCopy()"
@@ -59,7 +59,7 @@
                                             <img src="assets/images/no-image.jpg" (click)="onClickMemberPhotoCopy()"
                                                 class="image-user cursor-pointer">
                                         </div>
-                                        <p class="active-status"></p>
+                                        <!-- <p class="active-status"></p> -->
                                         <div
                                             *ngFor="let img of membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath">
                                             <span class="{{img.imageValue}}" (click)="onClickMemberPhotoCopy()"
@@ -77,22 +77,23 @@
                                     </div>
 
                                 </div>
-                                <div class="text-center min-h-50px">
-                                    <span class="text-fontwt">{{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' | translate}}</span>
-                                    <p class="font-semibold text-break"><span
-                                            class="border-bottom">{{membershipBasicRequiredDetailsModel.admissionNumber}}</span>
-                                    </p>
-                                </div>
 
                                 <div class="text-center min-h-50px">
-                                    <span class="text-fontwt">{{'TERMDEPOSITSTRANSACTION.NAME' | translate}}</span>
-                                    <p class="font-semibold text-break"><span
-                                            class="border-bottom">{{membershipBasicRequiredDetailsModel.name}}</span>
+                                    <p class="text-break view-member-name">{{membershipBasicRequiredDetailsModel.name}}
                                     </p>
+                                    <div class="d-flex justify-content-center">
+                                        <div class="member-name-border"></div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
                                 <div class="row">
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card">
+                                        <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' |
+                                            translate}}</p>
+                                        <p class="label-input-text">
+                                            {{membershipBasicRequiredDetailsModel.admissionNumber}}</p>
+                                    </div>
                                     <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card">
                                         <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.MEMBER_TYPE' |
                                             translate}}</p>
@@ -140,7 +141,7 @@
                                         *ngIf="membershipBasicRequiredDetailsModel.isKycApproved">
                                         <div class="col-10 d-flex p-0">
                                             <div>
-                                                <p class="label-view text-fontwt">{{'ERP.ISKYC' | translate}}</p>
+                                                <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                                 <p class="label-input-text">{{isKycApproved}}</p>
                                             </div>
                                         </div>
@@ -151,7 +152,7 @@
                                         *ngIf="!membershipBasicRequiredDetailsModel.isKycApproved">
                                         <div class="col-12 d-flex p-0">
                                             <div>
-                                                <p class="label-view text-fontwt">{{'ERP.ISKYC' | translate}}</p>
+                                                <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                                 <p class="label-input-text">{{isKycApproved}}</p>
                                             </div>
                                         </div>
@@ -350,13 +351,14 @@
                     </div>
                 </div>
             </div>
+             <!--if new member creation-->
             <div class="col-12 m-0" *ngIf="showForm && activeIndex<1">
                 <!-- <p-steps [model]="items" styleClass="steper-style" [readonly]="false" [activeIndex]="activeIndex"></p-steps> -->
                 <p-tabMenu [model]="items" [activeItem]="items[activeIndex]" [class.disabled]="menuDisabled"
-                styleClass="tab-menu-style"></p-tabMenu>
-            <div class="col-12 p-2 bg-card min-hight65">
-                <router-outlet></router-outlet>
-            </div>
+                    styleClass="tab-menu-style"></p-tabMenu>
+                <div class="col-12 p-2 bg-card min-hight65">
+                    <router-outlet></router-outlet>
+                </div>
                 <div class="col-12 btn-footer px-0">
                     <div class="col-12 d-flex justify-content-end px-0 mt-1 group-button-bottom">
                         <p-button *ngIf="activeIndex==0" label="{{'TERMDEPOSITSTRANSACTION.BACK'|translate }}"
@@ -378,7 +380,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Right side menu -->
+             <!--if existed member creation-->
             <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10 right-sidecard"
                 *ngIf="(showForm && activeIndex>0) || !showForm">
                 <p-tabMenu [model]="items" [activeItem]="items[activeIndex]"
@@ -404,8 +406,9 @@
     </div>
 </div>
 
-<p-dialog header="Basic Details" [modal]="true" [(visible)]="membreIndividualFlag" [style]="{ width: '55vw' }">
-    <div class="col-12 popup-basic-details">
+<div class="view-moredetails-popup">
+<p-dialog header="Basic Details" [modal]="true" [(visible)]="membreIndividualFlag" styleClass="moredetails-style">
+    <div class="col-12 view-morepopup">
         <div class="d-flex justify-content-center px-3 py-0 mb-2">
             <div *ngIf="!this.membershipBasicRequiredDetailsModel.photoPath">
                 <img src="assets/images/no-image.jpg" class="image-user">
@@ -448,11 +451,25 @@
     </div>
     <div class="col-12 popup-basic-details">
         <div class="row">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                <div class="form-group">
+                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.MEMBERSHIP_TYPE' | translate}}</span>
+                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.subProductName}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                <div class="form-group">
+                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.SOCIETY_ADMISSION_NUMBER' | translate}}</span>
+                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.societyAdmissionNumber}}</p>
+                </div>
+            </div>
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                <p class="label-view text-fontwt">{{'TERMDEPOSITSTRANSACTION.MEMBER_TYPE' |
-                    translate}}</p>
+                <div class="form-group">
+                <span class="label-view">{{'TERMDEPOSITSTRANSACTION.MEMBER_TYPE' |
+                    translate}}</span>
                 <p class="label-input-text">
                     {{membershipBasicRequiredDetailsModel.memberTypeName}}</p>
+                </div>
             </div>
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="form-group">
@@ -514,7 +531,7 @@
                     <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.occupationName }}</p>
                 </div>
             </div>
-            <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px"> -->
+            <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 "> -->
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="form-group">
                     <span class="fw-light">{{'ERP.AADHAR_NO' | translate}}</span>
@@ -547,7 +564,7 @@
             </div>
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="form-group">
-                    <span class="fw-light">{{'ERP.COMMUNITYS' | translate}}</span>
+                    <span class="fw-light">{{'TERMDEPOSITSTRANSACTION.RELIGION' | translate}}</span>
                     <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.communityName }}</p>
                 </div>
             </div>
@@ -563,43 +580,50 @@
                     <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.admissionDateVal}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+            <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="form-group">
                     <span class="fw-light">{{'ERP.ADMISSION_FEE' | translate}}</span>
                     <p class="fw-semibold">{{membershipBasicRequiredDetailsModel.admissionFee}}</p>
                 </div>
-            </div>
+            </div> -->
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="form-group">
                     <span class="label-view">{{'MEMBERSHIP_TRANSACTION.RESOLUTION_DATE' | translate}}</span>
-                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.resolutionDate}}</p>
+                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.resolutionDateVal}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <span class="label-view">{{'MEMBERSHIP_TRANSACTION.RESOLUTION_NUMBER' | translate}}</span>
+                    <p class="label-input-text">{{membershipBasicRequiredDetailsModel.mcrNumber}}</p>
                 </div>
             </div>
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="form-label">
                     <span class="label-view">{{'MEMBERSHIP_TRANSACTION.RESOLUTION_COPY' | translate}}</span>
-                    <div *ngIf="!this.membershipBasicRequiredDetailsModel.resolutionCopy">
-                        <img src="assets/images/no-image.jpg" class="image-user">
-                    </div>
-                    <div class="px-0" *ngFor="let img of membershipBasicRequiredDetailsModel.multipartFileListForResolutionCopyPath">
-                        <div class="col-12 p-0" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
-                            <img src="{{img.imageValue}}" class="image-user">
+                    <div class="col-12 d-flex p-0"
+                        *ngFor="let img of membershipBasicRequiredDetailsModel.multipartFileListForResolutionCopyPath">
+                        <div  *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                            <img src="{{img.imageValue}}" width="22" height="22">
                         </div>
-                        <div class="col-12 p-0" *ngIf=" img.fileType =='pdf'">
-                            <img src="assets\images\pdf.png" class="image-user">
+                        <div *ngIf=" img.fileType =='pdf'">
+                            <img src="assets\images\pdf.png" width="22" height="22">
                         </div>
-                        <div class="docname-texteclipse pl-2 label-input-text" pTooltip="{{img.fileName}}" tooltipPosition="bottom">{{img.fileName}}</div>
+                        <div class="docname-texteclipse pl-2 label-input-text" pTooltip="{{img.fileName}}"
+                            tooltipPosition="bottom">{{img.fileName}}</div>
                     </div>
                 </div>
-                    
+
             </div>
         </div>
     </div>
 </p-dialog>
+</div>
 
 <!-- institution Promoter details dialog -->
-<p-dialog header="Basic Details" [modal]="true" [(visible)]="institutionPromoterFlag" [style]="{ width: '55vw' }">
-    <div class="col-12 popup-basic-details">
+<div class="view-moredetails-popup">
+<p-dialog header="Basic Details" [modal]="true" [(visible)]="institutionPromoterFlag" styleClass="moredetails-style">
+    <div class="col-12 view-morepopup">
         <div class="d-flex justify-content-center px-3 py-0 mb-2">
             <img src="assets/images/no-image.jpg" class="image-user">
             <!-- <p class="active-status"></p> -->
@@ -612,55 +636,85 @@
     </div>
     <div class="popup-basic-details">
         <div class="row">
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                <div class="form-group">
+                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.MEMBERSHIP_TYPE' | translate}}</span>
+                    <p class="label-input-text">{{membershipInstitutionDetailsModel.subProductName}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                <div class="form-group">
+                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.INSTITUTION_TYPE' | translate}}</span>
+                    <p class="label-input-text">{{membershipInstitutionDetailsModel.institutionName}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                <div class="form-group">
+                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.SOCIETY_ADMISSION_NUMBER' | translate}}</span>
+                    <p class="label-input-text">{{membershipInstitutionDetailsModel.societyAdmissionNumber}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.INSTITUTION_NAME' | translate}}</span>
                     <p class="label-input-text">{{membershipInstitutionDetailsModel.name}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' | translate}}</span>
                     <p class="label-input-text">{{membershipInstitutionDetailsModel.admissionNumber}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.MEMBER_TYPE' | translate}}</span>
                     <p class="label-input-text">{{membershipInstitutionDetailsModel.memberTypeName}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.ADMISSION_DATE' | translate}}</span>
                     <p class="label-input-text">{{membershipInstitutionDetailsModel.admissionDateVal}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                <div class="form-group">
+                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.REGISTERED_NO' | translate}}</span>
+                    <p class="label-input-text">{{membershipInstitutionDetailsModel.registrationNumber}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.REGISTERED_DATE' | translate}}</span>
                     <p class="label-input-text">{{membershipInstitutionDetailsModel.registrationDateVal}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                <div class="form-group">
+                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.TYPE_OF_OPERATION' | translate}}</span>
+                    <p class="label-input-text">{{membershipInstitutionDetailsModel.operatorTypeName}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.POC_NAME' | translate}}</span>
                     <p class="label-input-text">{{membershipInstitutionDetailsModel.pocName}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.POC_MOBILE_NO' | translate}}</span>
                     <p class="label-input-text">{{membershipInstitutionDetailsModel.pocNumber}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.PAN' | translate}}</span>
                     <p class="label-input-text">{{membershipInstitutionDetailsModel.panNumber}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.KYC' | translate}}</span>
                     <p class="label-input-text">{{isKycApproved}}</p>
@@ -691,10 +745,12 @@
     </ng-template>
     <div class="col-12"></div>
 </p-dialog>
+</div>
 
 <!-- group prmoter details dialog -->
-<p-dialog header="Basic Details" [modal]="true" [(visible)]="groupPromotersPopUpFlag" [style]="{ width: '55vw' }">
-    <div class="col-12 popup-basic-details">
+<div class="view-moredetails-popup">
+<p-dialog header="Basic Details" [modal]="true" [(visible)]="groupPromotersPopUpFlag" styleClass="moredetails-style">
+    <div class="col-12 view-morepopup">
         <div class="d-flex justify-content-center px-3 py-0 mb-2">
             <img src="assets/images/no-image.jpg" class="image-user">
             <!-- <p class="active-status"></p> -->
@@ -708,67 +764,85 @@
     <div class="col-12 popup-basic-details">
 
         <div class="row">
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
-                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.MEMBER_TYPE' | translate}}</span>
-                    <p class="label-input-text">{{memberGroupDetailsModel.memberTypeName}}</p>
+                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.MEMBERSHIP_TYPE' | translate}}</span>
+                    <p class="label-input-text">{{memberGroupDetailsModel.subProductName}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
-                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.ADMISSION_NUMBER' | translate}}</span>
-                    <p class="label-input-text">{{memberGroupDetailsModel.admissionNumber}}</p>
+                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.GROUP_TYPES' | translate}}</span>
+                    <p class="label-input-text">{{memberGroupDetailsModel.groupName}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                <div class="form-group">
+                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.SOCIETY_ADMISSION_NUMBER' | translate}}</span>
+                    <p class="label-input-text">{{memberGroupDetailsModel.societyAdmissionNumber}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.NAME' | translate}}</span>
                     <p class="label-input-text">{{memberGroupDetailsModel.name}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
-                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.ADMISSION_DATE' | translate}}</span>
-                    <p class="label-input-text">{{memberGroupDetailsModel.admissionDateVal}}</p>
+                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.REGISTERED_NO' | translate}}</span>
+                    <p class="label-input-text">{{memberGroupDetailsModel.registrationNumber}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.REGISTERED_DATE' | translate}}</span>
                     <p class="label-input-text">{{memberGroupDetailsModel.registrationDateVal}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                <div class="form-group">
+                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.TYPE_OF_OPERATION' | translate}}</span>
+                    <p class="label-input-text">{{memberGroupDetailsModel.operatorTypeName}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                <div class="form-group">
+                    <span class="label-view">{{'TERMDEPOSITSTRANSACTION.ADMISSION_DATE' | translate}}</span>
+                    <p class="label-input-text">{{memberGroupDetailsModel.admissionDateVal}}</p>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.POC_NAME' | translate}}</span>
                     <p class="label-input-text">{{memberGroupDetailsModel.pocName}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.POC_MOBILE_NO' | translate}}</span>
                     <p class="label-input-text">{{memberGroupDetailsModel.pocNumber}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.TAN_NUMBER' | translate}}</span>
                     <p class="label-input-text">{{memberGroupDetailsModel.tanNumber}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.PAN' | translate}}</span>
                     <p class="label-input-text">{{memberGroupDetailsModel.panNumber}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.GST' | translate}}</span>
                     <p class="label-input-text">{{memberGroupDetailsModel.gstNumber}}</p>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'TERMDEPOSITSTRANSACTION.KYC' | translate}}</span>
                     <p class="label-input-text">{{isKycApproved}}</p>
@@ -802,6 +876,8 @@
 
 
 </p-dialog>
+</div>
+
 <!--photo Copy dialog -->
 <p-dialog header="{{'TERMDEPOSITSTRANSACTION.PHOTO_COPY' | translate}}" [(visible)]="memberPhotoCopyZoom">
     <div class="col-12">

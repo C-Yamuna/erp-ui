@@ -10,19 +10,28 @@ export class CiLoanCommunication {
 
     stateId: any;
 
+    stateName: any;
+
     districtId: any;
+
+    districtName: any;
+
+    subDistrictId: any;
+
+    subDistrictName: any;
 
     villageId: any;
 
-    subDistrictId: any;
+    villageName: any;
 
     address1: any;
 
     address2: any;
 
-    pinCode: any;
+    pincode: any;
 
     isSameAddress: any;
+
 
     permanentStateId: any;
 
@@ -38,20 +47,6 @@ export class CiLoanCommunication {
 
     permanentPinCode: any;
 
-    pacsId: any;
-
-    pacsCode: any;
-
-    branchId: any;
-
-    stateName: any;
-
-    districtName: any;
-
-    subDistrictName: any;
-
-    villageName: any;
-
     permanentStateName: any;
 
     permanentDistrictName: any;
@@ -59,6 +54,28 @@ export class CiLoanCommunication {
     permanentSubDistrictName: any;
 
     permanentVillageName: any;
+
+    divisionId: any;
+
+    blockId: any;
+
+    divisionName: any;
+
+    blockName: any;
+
+    permanentDivisionId: any;
+
+    permanentBlockId: any;
+
+    permanentDivisionName: any;
+
+    permanentBlockName: any;
+
+    pacsId: any;
+
+    pacsCode: any;
+
+    branchId: any;
 
     status: any;
 
@@ -71,4 +88,5 @@ export class CiLoanCommunication {
     accountNumber:any;
 
     memberShipId:any;
+
 }

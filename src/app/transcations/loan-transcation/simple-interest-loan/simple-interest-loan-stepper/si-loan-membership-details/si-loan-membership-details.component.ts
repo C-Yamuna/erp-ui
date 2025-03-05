@@ -27,6 +27,7 @@ import { MembershipBasicDetailsService } from 'src/app/transcations/membership-t
 import { SelectItemGroup } from 'primeng/api';
 import { GroupPromotersService } from '../../../shared/si-loans/group-promoters.service';
 import { MemberGroupDetailsModel, MembershipBasicRequiredDetails, MembershipInstitutionDetailsModel } from '../../../shared/si-loans/si-loan-membership-details.model';
+import { GroupPromoterDetails, InstitutionPromoterDetails } from '../../../compound-interest-loan/compound-interest-loan-stepper/ci-membership-details/shared/membership-details.model';
 
 @Component({
   selector: 'app-si-loan-membership-details',
@@ -46,8 +47,8 @@ export class SiLoanMembershipDetailsComponent {
   membershipBasicRequiredDetailsModel: MembershipBasicRequiredDetails = new MembershipBasicRequiredDetails();
   memberGroupDetailsModel: MemberGroupDetailsModel = new MemberGroupDetailsModel();
   membershipInstitutionDetailsModel: MembershipInstitutionDetailsModel = new MembershipInstitutionDetailsModel();
-  promoterDetailsModel: promoterDetailsModel = new promoterDetailsModel();
-  institutionPromoterDetailsModel: InstitutionPromoterDetailsModel = new InstitutionPromoterDetailsModel();
+  promoterDetailsModel: GroupPromoterDetails = new GroupPromoterDetails();
+  institutionPromoterDetailsModel: InstitutionPromoterDetails = new InstitutionPromoterDetails();
   siLoanApplicationModel: SiLoanApplication = new SiLoanApplication();
 
   communityList: any[] = [];
@@ -104,6 +105,7 @@ export class SiLoanMembershipDetailsComponent {
   accountNumber: any;
   admissionNumber: any;
   operationTypeName: any;
+  institutionTypes: any[] = [];
   ;
 
   ageMaxValue: any;
@@ -169,7 +171,7 @@ export class SiLoanMembershipDetailsComponent {
       // 'admissionFee': new FormControl(''),
       'isStaff': new FormControl('', Validators.required),
       'societyAdmissionNo': new FormControl('', Validators.required),
-      'resolutionDate': new FormControl('',Validators.required),
+      'resolutionDate': new FormControl(''),
     })
 
     this.groupForm = this.formBuilder.group({
@@ -178,13 +180,16 @@ export class SiLoanMembershipDetailsComponent {
       registrationDate: ['', Validators.required],
       admissionDate: ['', Validators.required],
       // pocNumber: ['', Validators.required],
-      mobileNumber: ['', [Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.compose([Validators.required])]],
+      // mobileNumber: ['', [Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.compose([Validators.required])]],
       panNumber: ['', [Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN), Validators.compose([Validators.required])]],
       tanNumber: ['', [Validators.pattern(applicationConstants.TAN_NUMBER)]],
       gstNumber: ['', [Validators.pattern(applicationConstants.GST_NUMBER_PATTERN)]],
-      pocName: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
+      // pocName: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
       subProductId: ['', Validators.compose([Validators.required])],
       groupTypeId:['', Validators.compose([Validators.required])],
+      societyAdmissionNo: [new FormControl('', Validators.required)],
+      operatorTypeId:['', Validators.compose([Validators.required])],
+     
 
 
 
@@ -195,18 +200,21 @@ export class SiLoanMembershipDetailsComponent {
       registrationNumber: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
       registrationDate: ['', Validators.required],
       admissionDate: ['', Validators.required],
-      mobileNumber: ['', [Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.compose([Validators.required])]],
+      // mobileNumber: ['', [Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.compose([Validators.required])]],
       panNumber: ['', [Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN), Validators.compose([Validators.required])]],
       tanNumber: ['', [Validators.pattern(applicationConstants.TAN_NUMBER)]],
       gstNumber: ['', [Validators.pattern(applicationConstants.GST_NUMBER_PATTERN)]],
-      pocName: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
+      // pocName: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
       subProductId: ['', Validators.compose([Validators.required])],
+      societyAdmissionNo: [new FormControl('')],
+      operatorTypeId:['', Validators.compose([Validators.required])],
+      institutionType:['', Validators.compose([Validators.required])],
 
     })
     this.promoterDetailsForm = this.formBuilder.group({
       surname: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
       name: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
-      operatorTypeId: ['', Validators.required],
+      // operatorTypeId: ['', Validators.required],
       dob: ['', Validators.required],
       age: ['', Validators.required],
       genderId: ['', Validators.required],
@@ -218,6 +226,8 @@ export class SiLoanMembershipDetailsComponent {
       promterType: ['',],
       admissionNumber: [''],
       authorizedSignatory:['', Validators.required],
+      isPoc:['', Validators.required],
+      endDate:[''],
     })
   }
 
@@ -243,6 +253,11 @@ export class SiLoanMembershipDetailsComponent {
       { label: "Self Help Group", value:1 },
       { label: "Rythu Mitra", value:2 }
     ]
+    this.institutionTypes= [
+      { label: "Self Help Group", value:1 },
+      { label: "Rythu Mitra", value:2 }
+    ]
+
 
     this.getAllMemberType();
     this.getAllRelationshipType();
@@ -251,6 +266,7 @@ export class SiLoanMembershipDetailsComponent {
     this.getOccupationTypes();
     this.getAllSubProducts();
     this.getAllCommunityTypes();
+    this.getAllOperatorTypes();
 
     this.activateRoute.queryParams.subscribe(params => {
       if (params['id'] != undefined) {
@@ -289,6 +305,11 @@ export class SiLoanMembershipDetailsComponent {
     });
 
   }
+  /**
+   * @implements getting si loan application details
+   * @param id
+   * @author yamuna.k
+   */
   getSILoanApplicationById(id: any) {
     this.siLoanApplicationService.getSILoanApplicationById(id).subscribe((data: any) => {
       this.responseModel = data;
@@ -310,6 +331,10 @@ export class SiLoanMembershipDetailsComponent {
       }
     });
   }
+   /**
+   * @implements getting member module date by admission Number
+   * @author yamuna.k
+   */
   membershipDataFromSbModule() {
     if (this.memberTypeName == "Individual") {
       this.individualFlag = true;
@@ -325,86 +350,6 @@ export class SiLoanMembershipDetailsComponent {
     }
   }
 
-  // getSILoanApplicationById(id: any) {
-  //   this.siLoanApplicationService.getSILoanApplicationById(id).subscribe((data: any) => {
-  //     this.responseModel = data;
-  //     if (this.responseModel != null && this.responseModel != undefined) {
-  //       if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
-  //         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
-  //           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
-  //             this.siLoanApplicationModel = this.responseModel.data[0];
-
-  //             this.admisionNumber = this.siLoanApplicationModel.admissionNo;
-  //             this.memberTypeId = this.siLoanApplicationModel.memberTypeId;
-  //             this.memberTypeName = this.siLoanApplicationModel.memberTypeName;
-  //             this.age = this.siLoanApplicationModel.individualMemberDetailsDTO.age;
-
-  //             if (this.siLoanApplicationModel.individualMemberDetailsDTO != null && this.siLoanApplicationModel.individualMemberDetailsDTO != undefined) {
-  //               this.membershipBasicRequiredDetailsModel = this.siLoanApplicationModel.individualMemberDetailsDTO;
-
-  //               if (this.membershipBasicRequiredDetailsModel.dob != null && this.membershipBasicRequiredDetailsModel.dob != undefined)
-  //                 this.membershipBasicRequiredDetailsModel.dobVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.dob, this.orgnizationSetting.datePipe);
-
-  //               if (this.membershipBasicRequiredDetailsModel.admissionDate != null && this.membershipBasicRequiredDetailsModel.admissionDate != undefined)
-  //                 this.membershipBasicRequiredDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
-
-  //               if (this.membershipBasicRequiredDetailsModel.photoCopyPath != null && this.membershipBasicRequiredDetailsModel.photoCopyPath != undefined) {
-  //                 this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.photoCopyPath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.photoCopyPath);
-  //               }
-  //               if (this.membershipBasicRequiredDetailsModel.signatureCopyPath != null && this.membershipBasicRequiredDetailsModel.signatureCopyPath != undefined) {
-  //                 this.membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.signatureCopyPath, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.signatureCopyPath);
-  //               }
-
-  //               this.individualFlag = true;
-  //               this.groupFlag = false;
-  //               this.institutionFlag = false;
-  //               this.isMemberCreation = this.membershipBasicRequiredDetailsModel.isNewMember;
-  //               this.admisionNumber = this.siLoanApplicationModel.admissionNo;
-  //             }
-  //             if (this.siLoanApplicationModel.memberGroupDetailsDTO != null && this.siLoanApplicationModel.memberGroupDetailsDTO != undefined) {
-  //               this.memberGroupDetailsModel = this.siLoanApplicationModel.memberGroupDetailsDTO;
-
-  //               if (this.memberGroupDetailsModel.registrationDate != null && this.memberGroupDetailsModel.registrationDate != undefined)
-  //                 this.memberGroupDetailsModel.registrationDateVal = this.datePipe.transform(this.memberGroupDetailsModel.registrationDate, this.orgnizationSetting.datePipe);
-
-  //               if (this.memberGroupDetailsModel.admissionDate != null && this.memberGroupDetailsModel.admissionDate != undefined)
-  //                 this.memberGroupDetailsModel.admissionDateVal = this.datePipe.transform(this.memberGroupDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
-
-  //               this.individualFlag = false;
-  //               this.groupFlag = true;
-  //               this.institutionFlag = false;
-  //               this.isMemberCreation = this.memberGroupDetailsModel.isNewMember;
-  //               this.admisionNumber = this.siLoanApplicationModel.admissionNo;
-  //             }
-  //             if (this.siLoanApplicationModel.memberInstitutionDTO != null && this.siLoanApplicationModel.memberInstitutionDTO != undefined) {
-  //               this.membershipInstitutionDetailsModel = this.siLoanApplicationModel.memberInstitutionDTO;
-
-  //               if (this.membershipInstitutionDetailsModel.registrationDate != null && this.membershipInstitutionDetailsModel.registrationDate != undefined)
-  //                 this.membershipInstitutionDetailsModel.registrationDateVal = this.datePipe.transform(this.membershipInstitutionDetailsModel.registrationDate, this.orgnizationSetting.datePipe);
-
-  //               if (this.membershipInstitutionDetailsModel.admissionDate != null && this.membershipInstitutionDetailsModel.admissionDate != undefined)
-  //                 this.membershipInstitutionDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipInstitutionDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
-
-  //               this.individualFlag = false;
-  //               this.groupFlag = false;
-  //               this.institutionFlag = true;
-  //               this.isMemberCreation = this.membershipInstitutionDetailsModel.isNewMember;
-  //               this.admisionNumber = this.siLoanApplicationModel.admissionNo;
-  //             }
-  //             this.updateData();
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }, error => {
-  //     this.commonComponent.stopSpinner();
-  //     this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
-  //     setTimeout(() => {
-  //       this.msgs = [];
-  //     }, 3000);
-  //   });
-  // }
-
   memberFormReset(flag: any) {
     if (flag) {
       this.memberCreationForm.reset();
@@ -414,6 +359,11 @@ export class SiLoanMembershipDetailsComponent {
       this.isMemberCreation = flag;
     }
   }
+  
+   /**
+   * @implements updateData
+   * @author yamuna.k
+   */
   updateData() {
     this.siLoanApplicationModel.memberTypeId = this.memberTypeId;
     if (this.memberTypeName == MemberShipTypesData.INDIVIDUAL) {
@@ -431,8 +381,6 @@ export class SiLoanMembershipDetailsComponent {
       } else {
         this.isDisableFlag = false;
       }
-
-      
     }
     if (this.memberTypeName == MemberShipTypesData.GROUP) {
       this.groupFlag = true;
@@ -468,6 +416,10 @@ export class SiLoanMembershipDetailsComponent {
     this.updateData();
   }
 
+     /**
+   * @implements get all member types from masters
+   * @author yamuna.k
+   */
   getAllMemberType() {
     this.membershipServiceService.getAllMemberTypes().subscribe((data: any) => {
       this.responseModel = data;
@@ -492,7 +444,11 @@ export class SiLoanMembershipDetailsComponent {
     });
   }
 
-  //for relation Types
+
+   /**
+   * @implements for relation Types list
+   * @author yamuna.k
+   */
   getAllRelationTypes() {
     this.siLoanApplicationService.getAllRelationTypes().subscribe((res: any) => {
       this.responseModel = res;
@@ -505,7 +461,11 @@ export class SiLoanMembershipDetailsComponent {
     });
   }
 
-  //Occupations List
+ 
+     /**
+   * @implements Occupations List
+   * @author yamuna.k
+   */
   getAllOccupationTypes() {
     this.siLoanApplicationService.getAllOccupationTypes().subscribe((res: any) => {
       this.responseModel = res;
@@ -518,7 +478,10 @@ export class SiLoanMembershipDetailsComponent {
     });
   }
 
-  //qualifications List
+     /**
+   * @implements qualifications List
+   * @author yamuna.k
+   */
   getAllQualificationType() {
 
     this.siLoanApplicationService.getQualificationTypes().subscribe((res: any) => {
@@ -531,8 +494,10 @@ export class SiLoanMembershipDetailsComponent {
       }
     });
   }
-
-  // Community List
+  /**
+   * @implements Community List
+   * @author yamuna.k
+   */
   getAllCommunityTypes() {
 
     this.siLoanApplicationService.getAllCommunityTypes().subscribe((res: any) => {
@@ -545,20 +510,10 @@ export class SiLoanMembershipDetailsComponent {
       }
     });
   }
-
-  //castes List
-  // getCastesList() {
-  //   this.siLoanApplicationService.getCastes().subscribe((res: any) => {
-  //     this.responseModel = res;
-  //     if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-  //       this.groupedCasteSubCaste = this.responseModel.data;
-  //       this.groupedCasteSubCaste = this.groupedCasteSubCaste.filter((obj: any) => obj != null).map((caste: { name: any; id: any; }) => {
-  //         return { label: caste.name, value: caste.id };
-  //       });
-  //     }
-  //   });
-  // }
-
+ /**
+   * @implements get all operation types List from masters
+   * @author yamuna.k
+   */
   getAllOperatorTypes() {
     this.commonComponent.startSpinner();
     this.siLoanApplicationService.getAllOperationTypes().subscribe((res: any) => {
@@ -574,9 +529,9 @@ export class SiLoanMembershipDetailsComponent {
         this.operatorTypeList = this.responseModel.data.filter((operationType: any) => operationType.status == applicationConstants.ACTIVE).map((count: any) => {
           return { label: count.name, value: count.id }
         });
-        let operationType = this.operatorTypeList.find((data: any) => null != data && data.value == this.promoterDetailsModel.operatorTypeId);
-        if (operationType != null && undefined != operationType)
-          this.promoterDetailsModel.operatorTypeName = operationType.label;
+        // let operationType = this.operatorTypeList.find((data: any) => null != data && data.value == this.promoterDetailsModel.operatorTypeId);
+        // if (operationType != null && undefined != operationType)
+        //   this.promoterDetailsModel.operatorTypeName = operationType.label;
         this.commonComponent.stopSpinner();
       } else {
         this.commonComponent.stopSpinner();
@@ -596,7 +551,15 @@ export class SiLoanMembershipDetailsComponent {
         }, 2000);
       });
   }
-
+  onChangeOperatorChange() {
+    let operator = this.operatorTypeList.find((data: any) => null != data && this.memberGroupDetailsModel.operatorTypeId != null && data.value == this.memberGroupDetailsModel.operatorTypeId);
+    if (operator != null && undefined != operator)
+    this.memberGroupDetailsModel.operatorTypeName = operator.label;
+  }
+/**
+   * @implements get member basic details by admissionNumber
+   * @author yamuna.k
+   */
   getMemberDetailsByAdmissionNumber(admisionNumber: any) {
     this.siLoanApplicationService.getMemberByAdmissionNumber(admisionNumber).subscribe((response: any) => {
       this.responseModel = response;
@@ -647,7 +610,10 @@ export class SiLoanMembershipDetailsComponent {
         }, 2000);
       });
   }
-
+/**
+   * @implements get group basic details by admissionNumber
+   * @author yamuna.k
+   */
   getGroupByAdmissionNumber(admissionNumber: any) {
     this.siLoanApplicationService.getGroupByAdmissionNumber(admissionNumber).subscribe((response: any) => {
       this.responseModel = response;
@@ -674,6 +640,9 @@ export class SiLoanMembershipDetailsComponent {
 
                   if (member.startDate != null && member.startDate != undefined)
                     member.startDateVal = this.datePipe.transform(member.startDate, this.orgnizationSetting.datePipe);
+
+                  if (member.endDate != null && member.endDate != undefined)
+                    member.endDateVal = this.datePipe.transform(member.endDate, this.orgnizationSetting.datePipe);
 
                   if (member.authorizedSignatory != null && member.authorizedSignatory != undefined && member.authorizedSignatory) {
                     member.authorizedSignatoryName = applicationConstants.YES;
@@ -734,7 +703,10 @@ export class SiLoanMembershipDetailsComponent {
         }, 2000);
       });
   }
-
+/**
+   * @implements get institution basic details by admissionNumber
+   * @author yamuna.k
+   */
   getInstitutionByAdmissionNumber(admissionNumber: any) {
     this.siLoanApplicationService.getInstitutionDetailsByAdmissionNumber(admissionNumber).subscribe((response: any) => {
       this.responseModel = response;
@@ -753,7 +725,7 @@ export class SiLoanMembershipDetailsComponent {
             if (this.membershipInstitutionDetailsModel.memberTypeId != null && this.membershipInstitutionDetailsModel.memberTypeId != undefined)
               this.memberTypeId = this.memberTypeId;
 
-            if (this.membershipInstitutionDetailsModel.institutionPromoterList.length > 0)
+            if (this.membershipInstitutionDetailsModel.institutionPromoterList != null && this.membershipInstitutionDetailsModel.institutionPromoterList.length > 0)
               this.institutionPromoter = this.membershipInstitutionDetailsModel.institutionPromoterList;
              this.institutionPromoter = this.institutionPromoter.map((member: any) => {
               if (member != null && member != undefined) {
@@ -762,6 +734,9 @@ export class SiLoanMembershipDetailsComponent {
 
                 if (member.startDate != null && member.startDate != undefined)
                   member.startDateVal = this.datePipe.transform(member.startDate, this.orgnizationSetting.datePipe);
+
+                if (member.endDate != null && member.endDate != undefined)
+                  member.endDateVal = this.datePipe.transform(member.endDate, this.orgnizationSetting.datePipe);
 
                 if (member.authorizedSignatory != null && member.authorizedSignatory != undefined && member.authorizedSignatory) {
                   member.authorizedSignatoryName = applicationConstants.YES;
@@ -817,7 +792,10 @@ export class SiLoanMembershipDetailsComponent {
         }, 2000);
       });
   }
-
+/**
+   * @implements on changes memberType
+   * @author yamuna.k
+   */
   OnChangeMemberType(event: any) {
     const filteredItem = this.memberTypeList.find((item: { value: any; }) => item.value === event.value);
     this.memberTypeName = filteredItem.label;
@@ -846,7 +824,12 @@ export class SiLoanMembershipDetailsComponent {
     }
     this.updateData();
   }
+  
  
+  /**
+   * @implements edit promoters by id
+   * @author yamuna.k
+   */
   editPromoter(rowData: any) {
    this.promoterDetailsForm.reset();
     this.commonComponent.startSpinner();
@@ -855,11 +838,20 @@ export class SiLoanMembershipDetailsComponent {
     this.EditDeleteDisable = true;
     if (rowData.id != null) {
       this.groupPromoters = true;
+      if (rowData.isExistingMember) {
+        this.admissionNumberDropDown = true;
+        this.getAllTypeOfMembershipDetails(this.pacsId, this.branchId);
+        this.disableFormFields();
+      } else {
+        this.admissionNumberDropDown = false;
+        this.enableFormFields();
+      }
       this.groupPromotersService.getGroupPromoters(rowData.id).subscribe((response: any) => {
         this.responseModel = response;
         this.promoterDetailsModel = this.responseModel.data[0];
         this.promoterDetailsModel.memDobVal = this.datePipe.transform(this.promoterDetailsModel.dob, this.orgnizationSetting.datePipe);
         this.promoterDetailsModel.startDateVal = this.datePipe.transform(this.promoterDetailsModel.startDate, this.orgnizationSetting.datePipe);
+        this.promoterDetailsModel.endDateVal = this.datePipe.transform(this.promoterDetailsModel.endDate, this.orgnizationSetting.datePipe);
         if (this.promoterDetailsModel.uploadImage != null && this.promoterDetailsModel.uploadImage != undefined) {
           this.promoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadImage, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadImage);
           this.submitDisableForImage = true;
@@ -876,14 +868,7 @@ export class SiLoanMembershipDetailsComponent {
         else{
           this.isFileUploadedPromoterSignature = applicationConstants.FALSE;
         }
-        if (this.promoterDetailsModel.isExistingMember) {
-          this.admissionNumberDropDown = true;
-          this.getAllTypeOfMembershipDetails(this.pacsId, this.branchId);
-          this.disableFormFields();
-        } else {
-          this.admissionNumberDropDown = false;
-          this.enableFormFields();
-        }
+       
         this.getAllOperatorTypes();
         this.commonComponent.stopSpinner();
       },
@@ -896,19 +881,29 @@ export class SiLoanMembershipDetailsComponent {
     }
     this.updateData();
   }
+  
 
+  /**
+   * @implements edit institution promoters by id
+   * @author yamuna.k
+   */
   editInstitutionPromoter(rowData: any) {
-    this.promoterDetailsForm.reset();    this.commonComponent.startSpinner();
+    this.promoterDetailsForm.reset();    
+    this.commonComponent.startSpinner();
     this.cancleButtonFlag = true;
     this.addButton = true;
     this.EditDeleteDisable = true;
     if (rowData.id != null) {
       this.institutionPromoterPopUp = true;
+    
+
       this.groupPromotersService.getInstitutionPromoters(rowData.id).subscribe((response: any) => {
         this.responseModel = response;
         this.institutionPromoterDetailsModel = this.responseModel.data[0];
         this.institutionPromoterDetailsModel.memDobVal = this.datePipe.transform(this.institutionPromoterDetailsModel.dob, this.orgnizationSetting.datePipe);
         this.institutionPromoterDetailsModel.startDateVal = this.datePipe.transform(this.institutionPromoterDetailsModel.startDate, this.orgnizationSetting.datePipe);
+        this.institutionPromoterDetailsModel.endDateVal = this.datePipe.transform(this.institutionPromoterDetailsModel.endDate, this.orgnizationSetting.datePipe);
+
         if (this.institutionPromoterDetailsModel.uploadImage != null && this.institutionPromoterDetailsModel.uploadImage != undefined) {
           this.institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadImage, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionPromoterDetailsModel.uploadImage);
           this.submitDisableForImage = true;
@@ -933,7 +928,7 @@ export class SiLoanMembershipDetailsComponent {
           this.admissionNumberDropDown = false;
           this.enableFormFields();
         }
-
+       
         this.getAllOperatorTypes();
         this.commonComponent.stopSpinner();
       },
@@ -947,7 +942,10 @@ export class SiLoanMembershipDetailsComponent {
     this.updateData();
   }
  
-
+ /**
+   * @implements add institution promoter method
+   * @author yamuna.k
+   */
   onRowAddInstitution() {
     this.isFileUploadedPromoterPhoto = applicationConstants.FALSE;
     this.isFileUploadedPromoterSignature = applicationConstants.FALSE;
@@ -955,7 +953,7 @@ export class SiLoanMembershipDetailsComponent {
     this.addButton = applicationConstants.TRUE;
     this.institutionPromoterPopUp = true;
     this.cancleButtonFlag = false;
-    this.institutionPromoterDetailsModel = new InstitutionPromoterDetailsModel();
+    this.institutionPromoterDetailsModel = new InstitutionPromoterDetails();
     this.institutionPromoterDetailsModel.uniqueId = this.institutionPromoter.length + 1
     this.promoterDetailsForm.reset();
     this.onChangeExistedPrmoter(false);
@@ -963,15 +961,42 @@ export class SiLoanMembershipDetailsComponent {
     this.getAllOperatorTypes();
     this.updateData();
   }
-
-  fileUploader(event: any, fileUpload: FileUpload, filePathName: any) {
+/**
+   * @implements image uploader
+   * @param event ,fileUpload,filePathName
+   * @param fileUpload 
+   * @author yamuna.k
+   */
+  fileUploader(event: any, fileUploadPhoto: FileUpload, fileUploadSign: FileUpload, filePathName: any) {
     this.isFileUploaded = applicationConstants.FALSE;
     this.multipleFilesList = [];
     if (this.isEdit && this.membershipBasicRequiredDetailsModel.filesDTOList == null || this.membershipBasicRequiredDetailsModel.filesDTOList == undefined) {
       this.membershipBasicRequiredDetailsModel.filesDTOList = [];
     }
-    let files: FileUploadModel = new FileUploadModel();
-    for (let file of event.files) {
+    let selectedFiles = [...event.files];
+    
+   
+    if (filePathName === "photoCopyPath") {
+      this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy = [];
+      if (selectedFiles[0].size/1024/1024 > 2) {
+        this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail:applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_2MB}];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+       }
+       fileUploadPhoto.clear();
+    }
+    if (filePathName === "signatureCopyPath") {
+      this.membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath = [];
+      if (selectedFiles[0].size/1024/1024 > 2) {
+        this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail:applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_2MB}];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+       }
+       fileUploadSign.clear();
+    }
+    for (let file of selectedFiles) {
       let reader = new FileReader();
       reader.onloadend = (e) => {
         let files = new FileUploadModel();
@@ -983,14 +1008,14 @@ export class SiLoanMembershipDetailsComponent {
         this.multipleFilesList.push(files);
         let timeStamp = this.commonComponent.getTimeStamp();
         if (filePathName === "photoCopyPath") {
-          this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy = [];
+          this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy.push(files);
           this.membershipBasicRequiredDetailsModel.filesDTOList.push(files);
           this.membershipBasicRequiredDetailsModel.photoCopyPath = null;
           this.membershipBasicRequiredDetailsModel.filesDTOList[this.membershipBasicRequiredDetailsModel.filesDTOList.length - 1].fileName = "Member_Photo_Copy" + "_" + timeStamp + "_" + file.name;
           this.membershipBasicRequiredDetailsModel.photoCopyPath = "Member_Photo_Copy" + "_" + timeStamp + "_" + file.name;
         }
         if (filePathName === "signatureCopyPath") {
-          this.membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath = [];
+          this.membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath.push(files);
           this.membershipBasicRequiredDetailsModel.filesDTOList.push(files);
           this.membershipBasicRequiredDetailsModel.signatureCopyPath = null;
           this.membershipBasicRequiredDetailsModel.filesDTOList[this.membershipBasicRequiredDetailsModel.filesDTOList.length - 1].fileName = "Member_Signature_Copy" + "_" + timeStamp + "_" + file.name;
@@ -1001,7 +1026,10 @@ export class SiLoanMembershipDetailsComponent {
       reader.readAsDataURL(file);
     }
   }
-
+ /**
+   * @implements remove file 
+   * @author yamuna.k
+   */
   fileRemoveEvent(fileName: any) {
     if (this.membershipBasicRequiredDetailsModel.filesDTOList != null && this.membershipBasicRequiredDetailsModel.filesDTOList != undefined && this.membershipBasicRequiredDetailsModel.filesDTOList.length > 0) {
       if (fileName == "photoCopyPath") {
@@ -1020,6 +1048,10 @@ export class SiLoanMembershipDetailsComponent {
     }
   }
 
+   /**
+   * @implements all dates coverstions
+   * @author yamuna.k
+   */
   dateConverstion() {
     if (this.memberGroupDetailsModel != null && this.memberGroupDetailsModel != undefined) {
       if (this.memberGroupDetailsModel.admissionDateVal != null && this.memberGroupDetailsModel.admissionDateVal != undefined)
@@ -1053,42 +1085,70 @@ export class SiLoanMembershipDetailsComponent {
     this.updateData();
   }
 
+     /**
+   * @implements gender name setting
+   * @author yamuna.k
+   */
   onChangeGender(event: any) {
     let filteredObj = this.genderList.find((data: any) => null != data && event != null && data.value == event);
     if (filteredObj != null && undefined != filteredObj)
       this.membershipBasicRequiredDetailsModel.genderName = filteredObj.label;
   }
 
+  /**
+   * @implements qualification name setting while onchanges qualification
+   * @author yamuna.k
+   */
   onChangeQualification(event: any) {
     let filteredObj = this.qualificationTypesList.find((data: any) => null != data && event != null && data.value == event);
     if (filteredObj != null && undefined != filteredObj)
       this.membershipBasicRequiredDetailsModel.qualificationName = filteredObj.label;
   }
 
+   /**
+   * @implements occupation name setting while onchanges occupation
+   * @author yamuna.k
+   */
   onChangeOccupation(event: any) {
     let filteredObj = this.occupationList.find((data: any) => null != data && event != null && data.value == event);
     if (filteredObj != null && undefined != filteredObj)
       this.membershipBasicRequiredDetailsModel.occupationName = filteredObj.label;
   }
 
+     /**
+   * @implements Caste name setting while onchanges Caste
+   * @author yamuna.k
+   */
   onChangeCaste(event: any) {
     let filteredObj = this.groupedCasteSubCaste.find((data: any) => null != data && event != null && data.value == event);
     if (filteredObj != null && undefined != filteredObj)
       this.membershipBasicRequiredDetailsModel.casteName = filteredObj.label;
   }
 
+      /**
+   * @implements Rlation name setting while onchanges Rlation
+   * @author yamuna.k
+   */
   onChangeRlationWithMember(event: any) {
     let filteredObj = this.relationshipTypeList.find((data: any) => null != data && event != null && data.value == event);
     if (filteredObj != null && undefined != filteredObj)
       this.membershipBasicRequiredDetailsModel.relationTypeName = filteredObj.label;
   }
 
+      /**
+   * @implements community name setting while onchanges community
+   * @author yamuna.k
+   */
   onChangeCommunity(event: any) {
     let filteredObj = this.communityList.find((data: any) => null != data && event != null && data.value == event);
     if (filteredObj != null && undefined != filteredObj)
       this.membershipBasicRequiredDetailsModel.communityName = filteredObj.label;
   }
 
+      /**
+   * @implements age calculation
+   * @author yamuna.k
+   */
   calculateAge(dateOfBirth: Date): number {
     if (!dateOfBirth) return 0;
     const today = new Date();
@@ -1101,20 +1161,19 @@ export class SiLoanMembershipDetailsComponent {
     return age;
   }
 
-  // Method to calculate date of birth from age
+  /**
+   * @implements Method to calculate date of birth from age
+   * @author k.yamuna
+   */
   calculateDobFromAge(age: number): Date {
     if (isNaN(age) || age <= 0) {
       return new Date(0);
     }
     const today = new Date();
     const birthYear = today.getFullYear() - age;
-    const dob = new Date(today);
-    dob.setFullYear(birthYear);
-    dob.setMonth(0);
-    dob.setDate(1);
-
+    const dob = new Date(birthYear, today.getMonth(), today.getDate());
     return dob;
-  }
+}
 
   onChangeCommunityChange() {
     let community = this.communityList.find((data: any) => null != data && this.membershipBasicRequiredDetailsModel.communityId != null && data.value == this.membershipBasicRequiredDetailsModel.communityId);
@@ -1128,6 +1187,10 @@ export class SiLoanMembershipDetailsComponent {
       this.membershipBasicRequiredDetailsModel.casteName = caste.label;
   }
 
+   /**
+   * @implements get all relationship types list from masters
+   * @author yamuna.k
+   */
   getAllRelationshipType() {
     this.commonComponent.startSpinner();
     this.relationshipTypeService.getAllRelationshipType().subscribe((res: any) => {
@@ -1165,6 +1228,10 @@ export class SiLoanMembershipDetailsComponent {
       });
   }
 
+     /**
+   * @implements get all Grouped Qualification And SubQualification
+   * @author yamuna.k
+   */
   getAllGroupedQualificationAndSubQualification() {
     this.qualificationService.getAllQualificationSubQualification().subscribe((res: any) => {
       this.responseModel = res;
@@ -1204,6 +1271,10 @@ export class SiLoanMembershipDetailsComponent {
       });
   }
 
+    /**
+   * @implements get all OccupationTypes
+   * @author yamuna.k
+   */
   getOccupationTypes() {
     this.commonComponent.startSpinner();
     this.occupationTypesService.getAllOccupationTypes().subscribe((res: any) => {
@@ -1240,7 +1311,10 @@ export class SiLoanMembershipDetailsComponent {
       });
   }
 
-
+  /**
+   * @implements get all SubProducts
+   * @author yamuna.k
+   */
   getAllSubProducts() {
     this.commonComponent.startSpinner();
     this.membershipBasicDetailsService.getAllSubProduct().subscribe((res: any) => {
@@ -1254,7 +1328,8 @@ export class SiLoanMembershipDetailsComponent {
             this.msgs = [];
           }, 2000);
         }
-        this.subProductList = this.subProductList.filter((customertype: any) => customertype.status == applicationConstants.ACTIVE).map((count: any) => {
+        this.subProductList = this.subProductList.filter((customertype: any) => customertype.status == applicationConstants.ACTIVE
+        && customertype.isAclass != applicationConstants.TRUE).map((count: any) => {
           return { label: count.name, value: count.id }
         });
 
@@ -1278,6 +1353,10 @@ export class SiLoanMembershipDetailsComponent {
       });
   }
 
+   /**
+   * @implements get all caste and sunCaste
+   * @author yamuna.k
+   */
   getAllGroupedCasteAndSubCaste() {
     this.casteService.getAllCasteSubCaste().subscribe((res: any) => {
       this.responseModel = res;
@@ -1335,11 +1414,24 @@ export class SiLoanMembershipDetailsComponent {
       this.membershipBasicRequiredDetailsModel.relationTypeName = relationshiptype.label;
   }
 
+     /**
+   * @implements dates Validation Check Age And Dob
+   * @author yamuna.k
+   */
   datesValidationCheckAgeAndDob(model: any, type: number): void {
     if (type === 2) {
       if (model.dobVal) {
         const calculatedAge = this.calculateAge(model.dobVal);
         model.age = calculatedAge;
+        if (model.age != null && model.age <= 0) {
+          this.memberCreationForm.get('age')?.reset();
+          this.memberCreationForm.get('dob')?.reset();
+          this.msgs = [{ severity: 'warning', detail:applicationConstants.AGE_SHOULD_NOT_BE_ZERO_OR_NEGATIVE }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+  
+        }
       }
     } else if (type === 1) {
       if (model.age && model.age > 0) {
@@ -1348,7 +1440,8 @@ export class SiLoanMembershipDetailsComponent {
         this.membershipBasicRequiredDetailsModel.dob = this.commonFunctionsService.getUTCEpoch(new Date(model.dobVal));
       } else if (model.age != null && model.age <= 0) {
         this.memberCreationForm.get('age')?.reset();
-        this.msgs = [{ severity: 'error', detail: "Age should not be zero or negative" }];
+        this.memberCreationForm.get('dob')?.reset();
+        this.msgs = [{ severity: 'warning', detail:applicationConstants.AGE_SHOULD_NOT_BE_ZERO_OR_NEGATIVE }];
         setTimeout(() => {
           this.msgs = [];
         }, 2000);
@@ -1383,7 +1476,10 @@ export class SiLoanMembershipDetailsComponent {
       this.show = false
     }
   }
-  // save and update application details
+      /**
+   * @implements save and update application details
+   * @author yamuna.k
+   */
   submitGropOrInstitution() {
     this.siLoanApplicationModel.pacsId = this.pacsId;
     this.siLoanApplicationModel.branchId = this.branchId;
@@ -1398,6 +1494,8 @@ export class SiLoanMembershipDetailsComponent {
 
     if (this.siLoanApplicationModel.loanDueDateVal != null && this.siLoanApplicationModel.loanDueDateVal != undefined)
       this.siLoanApplicationModel.loanDueDate = this.commonFunctionsService.getUTCEpoch(new Date(this.siLoanApplicationModel.loanDueDateVal));
+
+
 
     if (this.siLoanApplicationModel.id != null && this.siLoanApplicationModel.id != undefined) {
       this.siLoanApplicationService.updateSILoanApplication(this.siLoanApplicationModel).subscribe((response: any) => {
@@ -1476,6 +1574,9 @@ export class SiLoanMembershipDetailsComponent {
             }
             this.siLoanApplicationModel.siLoanKycDetailsDTOList = this.siLoanApplicationModel.memberGroupDetailsDTO.groupKycList;
           }
+          let operator = this.operatorTypeList.find((data: any) => null != data && this.memberGroupDetailsModel.operatorTypeId != null && data.value == this.memberGroupDetailsModel.operatorTypeId);
+          if (operator != null && undefined != operator)
+          this.memberGroupDetailsModel.operatorTypeName = operator.label;
         }
       } else if (this.memberTypeName == MemberShipTypesData.INSTITUTION) {
         this.siLoanApplicationModel.memberInstitutionDTO.institutionStatusName = CommonStatusData.IN_PROGRESS;
@@ -1533,6 +1634,10 @@ export class SiLoanMembershipDetailsComponent {
       });
     }
   }
+  /**
+   * @implements add group promoter
+   * @author yamuna.k
+   */
   onRowAddSave() {
     // this.promoterDetailsForm.get("photoUpload").reset();
     // this.promoterDetailsForm.get("signatureUpload").reset();
@@ -1542,7 +1647,7 @@ export class SiLoanMembershipDetailsComponent {
     this.isFileUploadedPromoterSignature = applicationConstants.FALSE;
     this.groupPromoters = true;
     this.cancleButtonFlag = false;
-    this.promoterDetailsModel = new promoterDetailsModel();
+    this.promoterDetailsModel = new GroupPromoterDetails();
     this.promoterDetailsModel.uniqueId = this.promoterDetails.length + 1
     this.promoterDetailsForm.reset();
     this.onChangeExistedPrmoter(false);
@@ -1551,6 +1656,10 @@ export class SiLoanMembershipDetailsComponent {
     this.updateData();
 
   }
+    /**
+   * @implements existed members from individul for promoter
+   * @author yamuna.k
+   */
   onChangeExistedPrmoter(isExistingMember: any) {
   //  if(flag){
   //       this.resetFields();
@@ -1558,18 +1667,22 @@ export class SiLoanMembershipDetailsComponent {
         // this.institutionPromoterDetailsModel = new InstitutionPromoterDetailsModel();
   //     }
     if (isExistingMember) {
+      this.resetFields();
       this.admissionNumberDropDown = true;
       this.getAllTypeOfMembershipDetails(this.pacsId, this.branchId);
-      this.resetFields();
+     
     }
     else {
       this.resetFields();
       this.admissionNumberDropDown = false;
-      this.promoterDetailsForm.get('admissionNumber').reset();
+      // this.promoterDetailsForm.get('admissionNumber').reset();
       this.enableFormFields();
-      // this.promoterDetailsForm.get('admissionNumber').setValidators(null);
     }
   }
+    /**
+   * @implements all members data from member module
+   * @author yamuna.k
+   */
   getAllTypeOfMembershipDetails(pacsId: any, branchId: any) {
     this.admissionNumbersList = [];
     this.membershipBasicDetailsService.getAllGridList(pacsId, branchId).subscribe((response: any) => {
@@ -1580,7 +1693,7 @@ export class SiLoanMembershipDetailsComponent {
             this.allTypesOfmembershipList = this.responseModel.data;
             this.admissionNumbersList = this.allTypesOfmembershipList.filter((obj: any) => (obj != null) && obj.memberTypeName == MemberShipTypesData.INDIVIDUAL && obj.statusName == CommonStatusData.APPROVED)
               .map((relationType: any) => {
-                return relationType.admissionNumber
+                return relationType.admissionNumber;
               });
           }
           else {
@@ -1601,7 +1714,7 @@ export class SiLoanMembershipDetailsComponent {
   resetFields() {
     this.promoterDetailsForm.get('surname').reset();
     this.promoterDetailsForm.get('name').reset();
-    this.promoterDetailsForm.get('operatorTypeId').reset();
+    // this.promoterDetailsForm.get('operatorTypeId').reset();
     this.promoterDetailsForm.get('dob').reset();
     this.promoterDetailsForm.get('age').reset();
     this.promoterDetailsForm.get('genderId').reset();
@@ -1611,23 +1724,47 @@ export class SiLoanMembershipDetailsComponent {
     this.promoterDetailsForm.get('emailId').reset();
     this.promoterDetailsForm.get('startDate').reset();
     this.promoterDetailsForm.get('authorizedSignatory').reset();
+    this.promoterDetailsForm.get('isPoc').reset();
+    this.promoterDetailsForm.get('endDate').reset();
+    // this.promoterDetailsModel = new promoterDetailsModel();
+    // this.institutionPromoterDetailsModel = new InstitutionPromoterDetailsModel();
+    this.promoterDetailsModel.multipartFileListForPhotoCopyPath =[];
+    this.promoterDetailsModel.multipartFileListForsignatureCopyPath =[];
+
+    this.institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath =[];
+    this.institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath =[];
+
+    this.isFileUploadedPromoterPhoto = applicationConstants.FALSE;
+    this.isFileUploadedPromoterSignature = applicationConstants.FALSE;
     
   }
+    /**
+   * @implements disable all fields
+   * @author yamuna.k
+   */
   disableFormFields() {
     const fieldsToDisable = [
       'surname', 'name', 'dob', 'age', 'genderId', 'martialId',
       'mobileNumber', 'aadharNumber', 'emailId', 'startDate'
     ];
-    fieldsToDisable.forEach(field => this.promoterDetailsForm.get(field).disable());
+    fieldsToDisable.forEach(field => this.promoterDetailsForm.get(field)?.disable());
   }
-
+    /**
+   * @implements enable all fields
+   * @author yamuna.k
+   */
   enableFormFields() {
     const fieldsToEnable = [
-      'surname', 'name', 'operatorTypeId', 'dob', 'age', 'genderId',
+      'surname', 'name', 'dob', 'age', 'genderId',
       'martialId', 'mobileNumber', 'aadharNumber', 'emailId', 'startDate'
     ];
-    fieldsToEnable.forEach(field => this.promoterDetailsForm.get(field).enable());
+    fieldsToEnable.forEach(field => this.promoterDetailsForm.get(field)?.enable());
   }
+
+    /**
+   * @implements getMemberDetailsByAdmissionNumber
+   * @author yamuna.k
+   */
   getMemberDetailsByAdmissionNUmber(admissionNumber: any) {
     this.membershipBasicDetailsService.getMembershipBasicDetailsByAdmissionNumber(admissionNumber).subscribe((data: any) => {
       this.responseModel = data;
@@ -1651,6 +1788,9 @@ export class SiLoanMembershipDetailsComponent {
             if (this.promoterDetailsModel.startDate != null && this.promoterDetailsModel.startDate != undefined)
               this.promoterDetailsModel.startDateVal = this.datePipe.transform(this.promoterDetailsModel.startDate, this.orgnizationSetting.datePipe);
 
+            if (this.promoterDetailsModel.endDate != null && this.promoterDetailsModel.endDate != undefined)
+              this.promoterDetailsModel.endDateVal = this.datePipe.transform(this.promoterDetailsModel.endDate, this.orgnizationSetting.datePipe);
+
            
             this.promoterDetailsModel.uploadImage = this.membershipBasicRequiredDetailsModel.photoCopyPath;
             this.promoterDetailsModel.uploadSignature = this.membershipBasicRequiredDetailsModel.signatureCopyPath;
@@ -1664,9 +1804,9 @@ export class SiLoanMembershipDetailsComponent {
               this.promoterDetailsModel.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadSignature, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadSignature);
               this.isFileUploadedPromoterSignature = applicationConstants.TRUE;
             }
-            
-            this.duplicateForPromoter(this.promoterDetailsModel);
             this.disableFormFields();
+            this.duplicateForPromoter(this.promoterDetailsModel);
+           
           }
         }
       }
@@ -1686,8 +1826,12 @@ export class SiLoanMembershipDetailsComponent {
       }, 3000);
     });
   }
+
+     /**
+   * @implements getMemberDetailsByAdmissionNumber for institution promoter while select existed member
+   * @author yamuna.k
+   */
   getMemberDetailsByAdmissionNUmberForInstitutionPromoter(admissionNumber: any) {
-    this.institutionPromoterDetailsModel = new InstitutionPromoterDetailsModel();
     this.membershipBasicDetailsService.getMembershipBasicDetailsByAdmissionNumber(admissionNumber).subscribe((data: any) => {
       this.responseModel = data;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
@@ -1710,15 +1854,18 @@ export class SiLoanMembershipDetailsComponent {
             if (this.institutionPromoterDetailsModel.startDate != null && this.institutionPromoterDetailsModel.startDate != undefined)
               this.institutionPromoterDetailsModel.startDateVal = this.datePipe.transform(this.institutionPromoterDetailsModel.startDate, this.orgnizationSetting.datePipe);
 
+            if (this.institutionPromoterDetailsModel.endDate != null && this.institutionPromoterDetailsModel.endDate != undefined)
+              this.institutionPromoterDetailsModel.endDateVal = this.datePipe.transform(this.institutionPromoterDetailsModel.endDate, this.orgnizationSetting.datePipe);
+
             this.institutionPromoterDetailsModel.uploadImage = this.membershipBasicRequiredDetailsModel.photoCopyPath;
             this.institutionPromoterDetailsModel.uploadSignature = this.membershipBasicRequiredDetailsModel.signatureCopyPath;
 
             if (this.institutionPromoterDetailsModel.uploadImage != null && this.institutionPromoterDetailsModel.uploadImage != undefined) {
-              this.institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadImage, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadImage);
+              this.institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadImage, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionPromoterDetailsModel.uploadImage);
               this.isFileUploadedPromoterPhoto = applicationConstants.TRUE;
             }
             if (this.institutionPromoterDetailsModel.uploadSignature != null && this.institutionPromoterDetailsModel.uploadSignature != undefined) {
-              this.institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadSignature, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadSignature);
+              this.institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadSignature, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionPromoterDetailsModel.uploadSignature);
               this.isFileUploadedPromoterSignature = applicationConstants.TRUE;
             }
             
@@ -1744,6 +1891,10 @@ export class SiLoanMembershipDetailsComponent {
       }, 3000);
     });
   }
+       /**
+   * @implements save group promoter
+   * @author yamuna.k
+   */
   saveGropPromotersDetails(promoterDetailsModel: any) {
     this.groupPromoters = false;
     this.promoterDetailsModel.pacsId = 1;
@@ -1754,11 +1905,16 @@ export class SiLoanMembershipDetailsComponent {
     this.EditDeleteDisable = false;
     promoterDetailsModel.pacsId = 1;
     this.EditDeleteDisable = false;
+    this.promoterDetailsModel.status = applicationConstants.ACTIVE;
     if (promoterDetailsModel.memDobVal != null && promoterDetailsModel.memDobVal != undefined) {
       promoterDetailsModel.dob = this.commonFunctionsService.getUTCEpoch(new Date(promoterDetailsModel.memDobVal));
     }
     if (promoterDetailsModel.startDateVal != null && promoterDetailsModel.startDateVal != undefined) {
       promoterDetailsModel.startDate = this.commonFunctionsService.getUTCEpoch(new Date(promoterDetailsModel.startDateVal));
+    }
+
+    if (promoterDetailsModel.endDateVal != null && promoterDetailsModel.endDateVal != undefined) {
+      promoterDetailsModel.endDate = this.commonFunctionsService.getUTCEpoch(new Date(promoterDetailsModel.endDateVal));
     }
     if (promoterDetailsModel.authorizedSignatory != null && promoterDetailsModel.authorizedSignatory != undefined && promoterDetailsModel.authorizedSignatory) {
       promoterDetailsModel.authorizedSignatoryName = applicationConstants.YES;
@@ -1834,6 +1990,10 @@ export class SiLoanMembershipDetailsComponent {
       });
     }
   }
+  /**
+   * @implements save institution promoter
+   * @author yamuna.k
+   */
   saveInstitutionPromotersDetails(institutionPromoterDetailsModel: any) {
     this.institutionPromoterPopUp = false;
     institutionPromoterDetailsModel.pacsId = 1;
@@ -1844,6 +2004,7 @@ export class SiLoanMembershipDetailsComponent {
     this.EditDeleteDisable = false;
     institutionPromoterDetailsModel.pacsId = 1;
     this.EditDeleteDisable = false;
+    this.institutionPromoterDetailsModel.status = applicationConstants.ACTIVE;
     if (institutionPromoterDetailsModel.memDobVal != null && institutionPromoterDetailsModel.memDobVal != undefined) {
       institutionPromoterDetailsModel.dob = this.commonFunctionsService.getUTCEpoch(new Date(institutionPromoterDetailsModel.memDobVal));
     }
@@ -1853,6 +2014,10 @@ export class SiLoanMembershipDetailsComponent {
     if (institutionPromoterDetailsModel.startDateVal != null && institutionPromoterDetailsModel.startDateVal != undefined) {
       institutionPromoterDetailsModel.startDate = this.commonFunctionsService.getUTCEpoch(new Date(institutionPromoterDetailsModel.startDateVal));
     }
+
+    if (institutionPromoterDetailsModel.endDateVal != null && institutionPromoterDetailsModel.endDateVal != undefined) {
+      institutionPromoterDetailsModel.endDate = this.commonFunctionsService.getUTCEpoch(new Date(institutionPromoterDetailsModel.endDateVal));
+    }
     if (institutionPromoterDetailsModel.authorizedSignatory != null && institutionPromoterDetailsModel.authorizedSignatory != undefined && institutionPromoterDetailsModel.authorizedSignatory) {
       institutionPromoterDetailsModel.authorizedSignatoryName = applicationConstants.YES;
     }
@@ -1861,6 +2026,10 @@ export class SiLoanMembershipDetailsComponent {
     }
     if (institutionPromoterDetailsModel.startDate != null && institutionPromoterDetailsModel.startDate != undefined) {
       institutionPromoterDetailsModel.startDateVal = this.datePipe.transform(institutionPromoterDetailsModel.startDate, this.orgnizationSetting.datePipe);
+    }
+
+    if (institutionPromoterDetailsModel.endDate != null && institutionPromoterDetailsModel.endDate != undefined) {
+      institutionPromoterDetailsModel.endDateVal = this.datePipe.transform(institutionPromoterDetailsModel.endDate, this.orgnizationSetting.datePipe);
     }
     let Object = this.operatorTypeList.find((obj: any) => obj.value == institutionPromoterDetailsModel.operatorTypeId);
     if (Object != null && Object != undefined && Object.label != null && Object.label != undefined) {
@@ -1928,6 +2097,10 @@ export class SiLoanMembershipDetailsComponent {
       });
     }
   }
+    /**
+   * @implements get all promoters by group id
+   * @author yamuna.k
+   */
   getAllPromotersByGroupId() {
     this.commonComponent.startSpinner();
     this.groupPromotersService.getGroupPromoterDetailsByGroupId(this.groupId).subscribe((data: any) => {
@@ -1943,6 +2116,9 @@ export class SiLoanMembershipDetailsComponent {
           }
           if (groupPromoters.startDate != null && groupPromoters.startDate != undefined) {
             groupPromoters.startDateVal = this.datePipe.transform(groupPromoters.startDate, this.orgnizationSetting.datePipe);
+          }
+          if (groupPromoters.endDate != null && groupPromoters.endDate != undefined) {
+            groupPromoters.endDateVal = this.datePipe.transform(groupPromoters.endDate, this.orgnizationSetting.datePipe);
           }
           if (groupPromoters.genderId != null && groupPromoters.genderId != undefined) {
             let Obj = this.genderList.filter(obj => obj.value == groupPromoters.genderId);
@@ -1975,6 +2151,10 @@ export class SiLoanMembershipDetailsComponent {
     });
 
   }
+    /**
+   * @implements get all promoters by institution id
+   * @author yamuna.k
+   */
   getAllPromotersByInstitutionId() {
     this.commonComponent.startSpinner();
     this.groupPromotersService.getInstitutionPromoterDetailsByInstitutionId(this.institutionId, this.pacsId).subscribe((data: any) => {
@@ -1990,6 +2170,9 @@ export class SiLoanMembershipDetailsComponent {
           }
           if (groupPromoters.startDate != null && groupPromoters.startDate != undefined) {
             groupPromoters.startDateVal = this.datePipe.transform(groupPromoters.startDate, this.orgnizationSetting.datePipe);
+          }
+          if (groupPromoters.endDate != null && groupPromoters.endDate != undefined) {
+            groupPromoters.endDateVal = this.datePipe.transform(groupPromoters.endDate, this.orgnizationSetting.datePipe);
           }
           if (groupPromoters.genderId != null && groupPromoters.genderId != undefined) {
             let Obj = this.genderList.filter(obj => obj.value == groupPromoters.genderId);
@@ -2038,11 +2221,24 @@ export class SiLoanMembershipDetailsComponent {
     if (filePathName === "groupPromoterImage") {
       this.isFileUploadedPromoterPhoto = applicationConstants.FALSE;
       this.promoterDetailsModel.multipartFileListForPhotoCopyPath =[];
+      if (selectedFiles[0].size/1024/1024 > 2) {
+        this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_2MB}];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      }
       fileUploadPhoto.clear();
     }
     if (filePathName === "groupPromoterSignature") {
       this.isFileUploadedPromoterSignature = applicationConstants.FALSE;
       this.promoterDetailsModel.multipartFileListForsignatureCopyPath =[];
+      if (selectedFiles[0].size/1024/1024 > 2) {
+        this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_2MB}];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      }
+      
       fileUploadSign.clear();
     }
     let files: FileUploadModel = new FileUploadModel();
@@ -2081,6 +2277,10 @@ export class SiLoanMembershipDetailsComponent {
     }
   }
   
+     /**
+   * @implements cancle promoter
+   * @author yamuna.k
+   */
   cancelPromoter() {
     this.addButton = false;
     this.groupPromoters = false;
@@ -2089,6 +2289,11 @@ export class SiLoanMembershipDetailsComponent {
     this.updateData();
   }
 
+
+     /**
+   * @implements file upload for institution promoter
+   * @author yamuna.k
+   */
   fileUploaderForInstitutionPromoters(event: any, fileUploadPhotos: FileUpload,fileUploadSigna: FileUpload, filePathName: any) {
     this.multipleFilesList = [];
     if (this.isEdit && this.institutionPromoterDetailsModel.filesDTOList == null || this.institutionPromoterDetailsModel.filesDTOList == undefined) {
@@ -2098,11 +2303,23 @@ export class SiLoanMembershipDetailsComponent {
     if (filePathName === "institutionPromoterImage") {
       this.isFileUploadedPromoterPhoto = applicationConstants.FALSE;
       this.institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath =[];
+      if (selectedFiles[0].size/1024/1024 > 2) {
+        this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_2MB}];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      }
       fileUploadPhotos.clear();
     }
     if (filePathName === "insitutionPromoterSignature") {
       this.isFileUploadedPromoterSignature = applicationConstants.FALSE;
       this.institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath =[];
+      if (selectedFiles[0].size/1024/1024 > 2) {
+        this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_2MB}];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      }
       fileUploadSigna.clear();
     }
     for (let file of selectedFiles) {
@@ -2139,6 +2356,10 @@ export class SiLoanMembershipDetailsComponent {
       reader.readAsDataURL(file);
     }
   }
+  /**
+   * @implements cancle institution promoter
+   * @author yamuna.k
+   */
   cancelInstitutionPromoter() {
     this.addButton = false;
     this.EditDeleteDisable = false;
@@ -2146,6 +2367,11 @@ export class SiLoanMembershipDetailsComponent {
     this.institutionPromoter;
     this.updateData();
   }
+
+    /**
+   * @implements admission date check while on select
+   * @author yamuna.k
+   */
   admissionDateOnSelect(){
     if(this.memberGroupDetailsModel != null && this.memberGroupDetailsModel != undefined){
     if(this.memberGroupDetailsModel.admissionDateVal != undefined && this.memberGroupDetailsModel.registrationDateVal != undefined){
@@ -2163,6 +2389,10 @@ export class SiLoanMembershipDetailsComponent {
 
   }
 
+     /**
+   * @implements registrationDate date check while on select
+   * @author yamuna.k
+   */
   institutiobnAdmissionDateOnSelect(){
     if(this.membershipInstitutionDetailsModel != null && this.membershipInstitutionDetailsModel != undefined){
     if(this.membershipInstitutionDetailsModel.admissionDateVal != undefined && this.membershipInstitutionDetailsModel.registrationDateVal != undefined){
@@ -2180,6 +2410,10 @@ export class SiLoanMembershipDetailsComponent {
 
   }
 
+      /**
+   * @implements duplicate check for promoter
+   * @author yamuna.k
+   */
   duplicateForPromoter(rowData: any) {
     if (rowData != null && rowData != undefined) {
       if (this.promoterDetails != null && this.promoterDetails != undefined && this.promoterDetails.length > 0) {
@@ -2188,6 +2422,10 @@ export class SiLoanMembershipDetailsComponent {
             item.groupId != null && item.groupId === this.groupId) {
             // this.promoterDetailsModel = new promoterDetailsModel();
             this.promoterDetailsForm.reset();
+            this.promoterDetailsModel.multipartFileListForPhotoCopyPath =[];
+            this.promoterDetailsModel.multipartFileListForsignatureCopyPath =[];
+            this.admissionNumberDropDown = applicationConstants.FALSE;
+            this.enableFormFields();
             this.msgs = [];
             this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "promoter details already exists" }];
             setTimeout(() => {
@@ -2198,6 +2436,10 @@ export class SiLoanMembershipDetailsComponent {
       }
     }
   }
+     /**
+   * @implements duplicate check for institution promoter
+   * @author yamuna.k
+   */
   duplicateInsitutionForPromoter(rowData: any) {
     if (rowData != null && rowData != undefined) {
       if (this.institutionPromoter != null && this.institutionPromoter != undefined && this.institutionPromoter.length > 0) {
@@ -2206,6 +2448,8 @@ export class SiLoanMembershipDetailsComponent {
             item.institutionId != null && item.institutionId === this.institutionId) {
             // this.promoterDetailsModel = new promoterDetailsModel();
             this.promoterDetailsForm.reset();
+            this.institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath =[];
+            this.institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath =[];
             this.msgs = [];
             this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "promoter details already exists" }];
             setTimeout(() => {
@@ -2217,11 +2461,23 @@ export class SiLoanMembershipDetailsComponent {
     }
   }
 
+   /**
+   * @implements dates ValidationCheck Age And Dob For GroupPromoter
+   * @author yamuna.k
+   */
   datesValidationCheckAgeAndDobForGroupPromoter(model: any, type: number): void {
     if (type === 2) {
       if (model.memDobVal) {
         const calculatedAge = this.calculateAge(model.memDobVal);
         model.age = calculatedAge;
+        if (model.age != null && model.age <= 0) {
+          this.promoterDetailsForm.get('age')?.reset();
+          this.promoterDetailsForm.get('dob')?.reset();
+          this.msgs = [{ severity: 'warning', detail:applicationConstants.AGE_SHOULD_NOT_BE_ZERO_OR_NEGATIVE }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        }
       }
     } else if (type === 1) {
       if (model.age && model.age > 0) {
@@ -2229,8 +2485,9 @@ export class SiLoanMembershipDetailsComponent {
         model.memDobVal = calculatedDob;
         this.promoterDetailsModel.dob = this.commonFunctionsService.getUTCEpoch(new Date(model.memDobVal));
       } else if (model.age != null && model.age <= 0) {
-        this.memberCreationForm.get('age')?.reset();
-        this.msgs = [{ severity: 'error', detail: "Age should not be zero or negative" }];
+        this.promoterDetailsForm.get('age')?.reset();
+        this.promoterDetailsForm.get('dob')?.reset();
+        this.msgs = [{ severity: 'warning', detail:applicationConstants.AGE_SHOULD_NOT_BE_ZERO_OR_NEGATIVE }];
         setTimeout(() => {
           this.msgs = [];
         }, 2000);
@@ -2238,12 +2495,24 @@ export class SiLoanMembershipDetailsComponent {
       }
     }
   }
+  /**
+   * @implements dates ValidationCheck Age And Dob For institution promoter
+   * @author yamuna.k
+   */
   datesValidationCheckAgeAndDobForInstitutionPromoter(model: any, type: number): void {
-   
     if (type === 2) {
       if (model.memDobVal) {
         const calculatedAge = this.calculateAge(model.memDobVal);
         model.age = calculatedAge;
+        if (model.age != null && model.age <= 0) {
+          this.promoterDetailsForm.get('age')?.reset();
+          this.promoterDetailsForm.get('dob')?.reset();
+          this.msgs = [{ severity: 'warning', detail:applicationConstants.AGE_SHOULD_NOT_BE_ZERO_OR_NEGATIVE }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+  
+        }
       }
     } else if (type === 1) {
       if (model.age && model.age > 0) {
@@ -2251,8 +2520,9 @@ export class SiLoanMembershipDetailsComponent {
         model.memDobVal = calculatedDob;
         this.institutionPromoterDetailsModel.dob = this.commonFunctionsService.getUTCEpoch(new Date(model.memDobVal));
       } else if (model.age != null && model.age <= 0) {
-        this.memberCreationForm.get('age')?.reset();
-        this.msgs = [{ severity: 'error', detail: "Age should not be zero or negative" }];
+        this.promoterDetailsForm.get('age')?.reset();
+        this.promoterDetailsForm.get('dob')?.reset();
+        this.msgs = [{ severity: 'warning', detail:applicationConstants.AGE_SHOULD_NOT_BE_ZERO_OR_NEGATIVE }];
         setTimeout(() => {
           this.msgs = [];
         }, 2000);
@@ -2260,6 +2530,52 @@ export class SiLoanMembershipDetailsComponent {
       }
     }
   }
+
+  isPosCheck(isPoc: any , isGroup:any) {
+    if(isGroup){
+      if (this.promoterDetails && this.promoterDetails.length > 0) {
+        let duplicate = this.promoterDetails.find(
+          (obj: any) =>
+            obj && obj.status === applicationConstants.ACTIVE && obj.isPoc === applicationConstants.TRUE
+        );
+        if (isPoc === applicationConstants.TRUE && duplicate) {
+          this.promoterDetailsForm.get("isPoc").reset();
+          this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.POC_ALREADY_EXIST }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 3000);
+          return;
+        }
+      }
+    }
+    else {
+      if (this.institutionPromoter && this.institutionPromoter.length > 0) {
+        let duplicate = this.institutionPromoter.find(
+          (obj: any) =>
+            obj && obj.status === applicationConstants.ACTIVE && obj.isPoc === applicationConstants.TRUE
+        );
+        if (isPoc === applicationConstants.TRUE && duplicate) {
+          this.promoterDetailsForm.get("isPoc").reset();
+          this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.POC_ALREADY_EXIST }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 3000);
+          return;
+        }
+      }
+    }
+    
+  }
+   
+     /**
+   * @implements onChange institution tye name
+   * @author k.yamuna
+   */
+     institutionTypeOnChange(){
+      let institution = this.institutionTypes.find((data: any) => null != data && this.membershipInstitutionDetailsModel.institutionType != null && data.value == this.membershipInstitutionDetailsModel.institutionType);
+      if (institution != null && undefined != institution)
+        this.membershipInstitutionDetailsModel.institutionTypeName = institution.label;
+    }
 
 }
 

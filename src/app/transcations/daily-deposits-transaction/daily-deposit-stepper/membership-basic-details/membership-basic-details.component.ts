@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Accounts } from '../../shared/accounts.model';
 import { AccountKYC } from '../../shared/account-kyc.model';
 import { MemberGroupDetailsModel, MembershipBasicDetail, MembershipInstitutionDetailsModel } from 'src/app/transcations/term-deposits-transcation/shared/membership-basic-detail.model';
@@ -63,6 +63,7 @@ export class MembershipBasicDetailsComponent {
   displayDialog: boolean  = false;
   deleteId: any;
   saveButtonDisable: boolean= false;
+  isMaximized: any;
 
   constructor(private router: Router,
     private formBuilder: FormBuilder,
@@ -75,8 +76,8 @@ export class MembershipBasicDetailsComponent {
     private dailyDepositsAccountsService: DailyDepositsAccountsService
   ) {
     this.kycForm = this.formBuilder.group({
-      'docNumber': new FormControl({ value: '', disabled: true }),
-      'requiredDocTypeName': new FormControl({ value: '', disabled: true }),
+      'docNumber': new FormControl('', [Validators.required, Validators.pattern(/^[^\s]+(\s.*)?$/)]),
+      'requiredDocTypeName': new FormControl({ value: '', disabled: true }, Validators.required),
       'nameAsPerDocument': new FormControl('',[Validators.required,Validators.pattern(applicationConstants.NEW_NAME_PATTERN), Validators.maxLength(40), Validators.pattern(/^[^\s]+(\s.*)?$/)]),
       'fileUpload': new FormControl('')
     });
@@ -177,10 +178,9 @@ export class MembershipBasicDetailsComponent {
   }
 
   updateData() {
-    debugger
     if (this.kycModelList != null && this.kycModelList != undefined && this.kycModelList.length > 0) {
       this.kycDuplicate = this.kycModelDuplicateCheck(this.kycModelList);
-      if (this.kycDuplicate|| this.buttonDisabled) {
+      if (this.kycDuplicate || this.buttonDisabled) {
         this.isDisableFlag = true;
       }
       else {
@@ -433,7 +433,7 @@ export class MembershipBasicDetailsComponent {
               for (let kyc of this.kycModelList) {
                 let multipleFilesList = [];
                 let file = new FileUploadModel();
-                file.imageValue = ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath;
+                file.imageValue = ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath;
                 let objects = kyc.kycFilePath.split('.');
                 file.fileType = objects[objects.length - 1];
                 let name = kyc.kycFilePath.replace(/ /g, "_");
@@ -459,7 +459,6 @@ export class MembershipBasicDetailsComponent {
   cancelKyc() {
     this.kycModelList = [];
     // this.addKycButton = false;
-    this.buttonDisabled = false;
     this.editButtonDisable = false;
     this.getAllKycsDetailsRdKycDetails(this.admissionNumber);
   }
@@ -596,10 +595,14 @@ export class MembershipBasicDetailsComponent {
         }
       }
     }
+    if(!duplicate && this.editDocumentOfKycFalg)
+      duplicate=false;
     return duplicate;
   }
-  onClickkycPhotoCopy(){
+  onClickkycPhotoCopy(rowData :any){
+    this.multipleFilesList = [];
     this.kycPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
   }
   kycclosePhoto(){
     this.kycPhotoCopyZoom = false;
@@ -623,5 +626,25 @@ export class MembershipBasicDetailsComponent {
     
     this.displayDialog = false;
   }
-  
+  // Popup Maximize
+        @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+      
+        onDialogResize(event: any) {
+          this.isMaximized = event.maximized;
+      
+          if (this.isMaximized) {
+            // Restore original image size when maximized
+            this.imageElement.nativeElement.style.width = 'auto';
+            this.imageElement.nativeElement.style.height = 'auto';
+            this.imageElement.nativeElement.style.maxWidth = '100%';
+            this.imageElement.nativeElement.style.maxHeight = '100vh';
+          } else {
+            // Fit image inside the dialog without scrollbars
+            this.imageElement.nativeElement.style.width = '100%';
+            this.imageElement.nativeElement.style.height = '100%';
+            this.imageElement.nativeElement.style.maxWidth = '100%';
+            this.imageElement.nativeElement.style.maxHeight = '100%';
+            this.imageElement.nativeElement.style.objectFit = 'contain';
+          }
+        }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { applicationConstants } from 'src/app/shared/applicationConstants';
 import { Responsemodel } from 'src/app/shared/responsemodel';
@@ -75,16 +75,20 @@ export class TermLoanDisbursementComponent {
   indvidualFalg: boolean = false;
   termProductId: any;
   requestedAmount:any;
+  finalDisbursementList:any []=[];
+  paymentOptions:any;
+  unsavedSchedules: any;
+  disbursementType: any;
   constructor(private router: Router, private formBuilder: FormBuilder, private termLoanDisbursementService: TermLoanDisbursementService,  private termLoanApplicationsService: TermApplicationService,
     private encryptService: EncryptDecryptService, private commonComponent: CommonComponent, private commonFunctionsService: CommonFunctionsService, private translate: TranslateService,
-     private activateRoute: ActivatedRoute, private datePipe: DatePipe,private fileUploadService: FileUploadService,
+     private activateRoute: ActivatedRoute, private datePipe: DatePipe,private fileUploadService: FileUploadService,private cdr: ChangeDetectorRef,
      private termLoanDisbursementScheduleService: TermLoanDisbursementScheduleService
   ) {
     this.termLoanDisbursementColumns = [
       { field: 'disbursementOrder', header: 'ERP.DISBURSEMENT_ORDER' },
       { field: 'typeName', header: 'ERP.DISBURSEMENT_TYPE' },
-      { field: 'disbursementDateVal', header: 'ERP.SCHEDULE_DATE' },
-      { field: 'disbursementAmount', header: 'ERP.MIN_AMOUNT' },
+      { field: 'disbursementDateVal', header: 'ERP.DISBURSEMENT_DATE' },
+      { field: 'disbursementAmount', header: 'ERP.DISBURSEMENT_AMOUNT' },
       { field: 'transactionDateVal', header: 'ERP.TRANSACTION_DATE' },
       { field: 'statusName', header: 'ERP.STATUS' }
     ];
@@ -94,19 +98,29 @@ export class TermLoanDisbursementComponent {
       'disbursementAmount': new FormControl('', [Validators.required, Validators.pattern(applicationConstants.AMOUNT_PATTERN_VALIDATION)]),
       'transactionDate': new FormControl({ value: '', disabled: true }),
       'isPhotoSignatureVerified': new FormControl('',  Validators.compose([Validators.required])),
+      'paymentModeName':new FormControl('',  Validators.compose([Validators.required])),
+      'type': new FormControl({ value: '', disabled: true }, [Validators.required]),
     });
     this.groupPrmoters = [
-      { field: 'surname', header: 'Surname' },
-      { field: 'name', header: 'Name' },
-      { field: 'operatorTypeName', header: 'Operation Type' },
-      { field: 'memDobVal', header: 'Date of Birth' },
-      { field: 'age', header: 'Age' },
-      { field: 'genderTypeName', header: 'Gender' },
-      { field: 'maritalStatusName', header: 'Marital Status' },
-      { field: 'mobileNumber', header: 'Mobile Number' },
-      { field: 'emailId', header: 'Email' },
-      { field: 'aadharNumber', header: 'Aadhar Number' },
-      { field: 'startDateVal', header: 'Start Date' },
+      { field: 'surname', header: 'ERP.SURNAME' },
+      { field: 'name', header: 'ERP.NAME' },
+      { field: 'operatorTypeName', header: 'ERP.OPERATION_TYPE' },
+      { field: 'memDobVal', header: 'ERP.DOB' },
+      { field: 'age', header: 'ERP.AGE' },
+      { field: 'genderTypeName', header: 'ERP.GENDER' },
+      { field: 'maritalStatusName', header: 'ERP.MARITAL_STATUS' },
+      { field: 'mobileNumber', header: 'ERP.MOBILE_NUMBER' },
+      { field: 'emailId', header: 'ERP.EMAIL' },
+      { field: 'aadharNumber', header: 'ERP.AADHAR_NUMBER' },
+      { field: 'startDateVal', header: 'ERP.START_DATE' },
+    ];
+    this.paymentOptions = [
+      { label: 'Cash', value: 1 },
+      { label: 'Transfer', value: 2},
+    ];
+    this.disbursementType = [
+      { label: 'Daily', value: 1 },
+      { label: 'Monthly', value: 2},
     ];
   }
   ngOnInit() {
@@ -144,15 +158,10 @@ export class TermLoanDisbursementComponent {
           if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
             if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
               this.admisionNumber = this.responseModel.data[0].admissionNumber;
-              this.memberTypeName = this.responseModel.data[0].memberTypeName;;
-              this.getTermDisbursmentDetailsByLoanApplicationId();
-             
-              // this.getSchedulesByApplicationId(this.termProductId);
+              this.memberTypeName = this.responseModel.data[0].memberTypeName;
+ 
               this.termLoanApplicationModel = this.responseModel.data[0];
 
-              if (this.termLoanApplicationModel.termProductId) {
-                this.getSchedulesByApplicationId(this.termLoanApplicationModel.termProductId);
-              }
                 if (this.termLoanApplicationModel.applicationDate != null && this.termLoanApplicationModel.applicationDate != undefined)
                   this.termLoanApplicationModel.applicationDateVal = this.datePipe.transform(this.termLoanApplicationModel.applicationDate, this.orgnizationSetting.datePipe);
       
@@ -250,7 +259,16 @@ export class TermLoanDisbursementComponent {
               if(this.termLoanApplicationModel.loanApprovedDate != null && this. termLoanApplicationModel.loanApprovedDate){
                 this.termLoanApplicationModel.loanApprovedDateVal = this.datePipe.transform(this.termLoanApplicationModel.loanApprovedDate, this.orgnizationSetting.datePipe);
               }
-            }
+              if (this.termLoanApplicationModel.sanctionDate != null && this.termLoanApplicationModel.sanctionDate != undefined)
+                this.termLoanApplicationModel.sanctionDateVal = this.datePipe.transform(this.termLoanApplicationModel.sanctionDate, this.orgnizationSetting.datePipe);
+          
+           
+            
+            this.termLoanDisbursementList = this.termLoanApplicationModel.termLoanDisbursementDTOList ;
+        
+              this.getSchedulesByApplicationId(this.termLoanApplicationModel.termProductId);
+          
+          }
           }
           else {
             this.groupOrInstitutionDisable = true;
@@ -268,7 +286,7 @@ export class TermLoanDisbursementComponent {
     this.dueAmount = 0;
     this.disburmentAmount  = 0;
     this.isEditDeleteButtonEnable =false;
-    this.termLoanDisbursementService.getTermDisbursmentDetailsByLoanApplicationId(this.termLoanApplicationId).subscribe((data: any) => {
+    this.termLoanDisbursementService.getTermDisbursmentListByApplicationId(this.termLoanApplicationId).subscribe((data: any) => {
       this.responseModel = data;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel != null && this.responseModel != undefined) {
@@ -331,17 +349,23 @@ export class TermLoanDisbursementComponent {
    * @author vinitha
    */
   addOrUpdate() {
-   
-   
       this.commonComponent.startSpinner();
       this.termLoanDisbursementModel.pacsId = this.pacsId;
       this.termLoanDisbursementModel.branchId = this.branchId;
       this.termLoanDisbursementModel.termLoanApplicationId = this.termLoanApplicationId;
       this.termLoanDisbursementModel.accountNumber = this.termLoanApplicationModel.accountNumber;
       this.termLoanDisbursementModel.termProductId = this.termLoanApplicationModel.termProductId;
-      if (this.termLoanDisbursementModel.disbursementDateVal != null && this.termLoanDisbursementModel.disbursementDateVal != undefined) {
-        this.termLoanDisbursementModel.disbursementDate = this.commonFunctionsService.getUTCEpoch(new Date(this.termLoanDisbursementModel.disbursementDateVal));
+      const selectedDisbursement = this.termLoanDisbursementList.find((item: any) => item.id === this.termLoanApplicationModel.id);
+  
+      if (selectedDisbursement) {
+        this.termLoanDisbursementModel.disbursementOrder = selectedDisbursement.disbursementOrder;
+        this.termLoanDisbursementModel.disbursementAmount = selectedDisbursement.disbursementAmount;
+        this.termLoanDisbursementModel.typeName = selectedDisbursement.typeName;
+        this.termLoanDisbursementModel.disbursementDate = this.datePipe.transform(selectedDisbursement.disbursementDateVal, this.orgnizationSetting.datePipe);
       }
+      // if (this.termLoanDisbursementModel.disbursementDateVal != null && this.termLoanDisbursementModel.disbursementDateVal != undefined) {
+      //   this.termLoanDisbursementModel.disbursementDate = this.commonFunctionsService.getUTCEpoch(new Date(this.termLoanDisbursementModel.disbursementDateVal));
+      // }
       if (this.termLoanDisbursementModel.transactionDateVal != null && this.termLoanDisbursementModel.transactionDateVal != undefined) {
         this.termLoanDisbursementModel.transactionDate = this.commonFunctionsService.getUTCEpoch(new Date(this.termLoanDisbursementModel.transactionDateVal));
       }
@@ -356,7 +380,7 @@ export class TermLoanDisbursementComponent {
             this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
             setTimeout(() => {
               this.msgs = [];
-              this.getTermDisbursmentDetailsByLoanApplicationId();
+              this.getTermApplicationByTermAccId(this.termLoanApplicationId);
               this.cancelOrRefresh();
             }, 2000);
           } else {
@@ -384,7 +408,7 @@ export class TermLoanDisbursementComponent {
           }, 2000);
         }
         else {
-          this.termLoanDisbursementModel.statusName = CommonStatusData.SCHEDULED;
+          this.termLoanDisbursementModel.statusName = CommonStatusData.APPROVED;
           this.termLoanDisbursementService.addTermDisbursement(this.termLoanDisbursementModel).subscribe((response: any) => {
             this.responseModel = response;
             if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
@@ -394,9 +418,9 @@ export class TermLoanDisbursementComponent {
               this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
               setTimeout(() => {
                 this.msgs = [];
-                this.getTermDisbursmentDetailsByLoanApplicationId();
+                this.getTermApplicationByTermAccId(this.termLoanApplicationId);
                 this.cancelOrRefresh();
-              }, 1000);
+              }, 2000);
             } else {
               this.commonComponent.stopSpinner();
               this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
@@ -409,7 +433,7 @@ export class TermLoanDisbursementComponent {
             this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
             setTimeout(() => {
               this.msgs = [];
-            }, 1000);
+            }, 2000);
           });
         }
       }
@@ -474,7 +498,6 @@ export class TermLoanDisbursementComponent {
    * @author vinitha
    */
   editDisbursements(rowData: any) {
-
     this.isEditDeleteButtonEnable = true;
     this.addOrEdit = true;
     this.editDisable = true;
@@ -482,38 +505,40 @@ export class TermLoanDisbursementComponent {
     const selectedDisbursement = this.termLoanDisbursementList.find((item: any) => item.id === rowData.id);
   
     if (selectedDisbursement) {
+      
+      this.termLoanDisbursementModel.disbursementOrder = selectedDisbursement.disbursementOrder;
       this.termLoanDisbursementModel.disbursementAmount = selectedDisbursement.disbursementAmount;
-      this.termLoanDisbursementModel.disbursementDate = this.datePipe.transform(selectedDisbursement.disbursementDateVal, this.orgnizationSetting.datePipe);
+      this.termLoanDisbursementModel.typeName = selectedDisbursement.typeName;
+      this.termLoanDisbursementModel.disbursementDateVal = this.datePipe.transform(selectedDisbursement.disbursementDateVal, this.orgnizationSetting.datePipe);
+    //     this.termLoanDisbursementService.getTermDisbursementById(rowData.id).subscribe(
+    //   (response: any) => {
+    //     this.responseModel = response;
+    //     if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+    //       if (this.responseModel.data && this.responseModel.data.length > 0) {
+    //         this.commonComponent.stopSpinner();
+    //         this.termLoanDisbursementModel = this.responseModel.data[0];
+  
+    //         // Ensure date transformation
+    //         this.termLoanDisbursementModel.disbursementDateVal = this.datePipe.transform(this.termLoanDisbursementModel.disbursementDate, this.orgnizationSetting.datePipe);
+    //         this.termLoanDisbursementModel.transactionDateVal = this.datePipe.transform(this.termLoanDisbursementModel.transactionDate, this.orgnizationSetting.datePipe);
+    //       }
+    //     } else {
+    //       this.commonComponent.stopSpinner();
+    //       this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+    //       setTimeout(() => {
+    //         this.msgs = [];
+    //       }, 2000);
+    //     }
+    //   },
+    //   (error) => {
+    //     this.commonComponent.stopSpinner();
+    //     this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+    //     setTimeout(() => {
+    //       this.msgs = [];
+    //     }, 1000);
+    //   }
+    // );
     }
-  
-    this.termLoanDisbursementService.getTermDisbursementById(rowData.id).subscribe(
-      (response: any) => {
-        this.responseModel = response;
-        if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
-          if (this.responseModel.data && this.responseModel.data.length > 0) {
-            this.commonComponent.stopSpinner();
-            this.termLoanDisbursementModel = this.responseModel.data[0];
-  
-            // Ensure date transformation
-            this.termLoanDisbursementModel.disbursementDateVal = this.datePipe.transform(this.termLoanDisbursementModel.disbursementDate, this.orgnizationSetting.datePipe);
-            this.termLoanDisbursementModel.transactionDateVal = this.datePipe.transform(this.termLoanDisbursementModel.transactionDate, this.orgnizationSetting.datePipe);
-          }
-        } else {
-          this.commonComponent.stopSpinner();
-          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 2000);
-        }
-      },
-      (error) => {
-        this.commonComponent.stopSpinner();
-        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-        setTimeout(() => {
-          this.msgs = [];
-        }, 1000);
-      }
-    );
   }
   
 
@@ -523,7 +548,7 @@ export class TermLoanDisbursementComponent {
    */
   addDisbursment(){
     this.termLoanDisbursementModel.disbursementAmount = null;
-    this.termLoanDisbursementModel.disbursementDateVal = this.commonFunctionsService.currentDate();
+    // this.termLoanDisbursementModel.disbursementDateVal = this.commonFunctionsService.currentDate();
     this.termLoanDisbursementModel.transactionDateVal = this.commonFunctionsService.currentDate();
     this.termLoanDisbursementModel.isPhotoSignVerfied = null;
     this.termLoanDisbursementModel.id = null;
@@ -556,16 +581,13 @@ export class TermLoanDisbursementComponent {
             const currentDate = new Date();
           
             this.termLoanDisbursementList = this.termLoanDisbursementList.map((schedule: { visitNumber: any; tenureTypeName: any;disbursementPercentage: number; visitTenure: number; }) => {
-             
-        
               const percentage = (schedule.disbursementPercentage / 100) * this.termLoanApplicationModel.requestedAmount;;
             
               const visitTenure = schedule.visitTenure ?? 0;
           
               const disbursementDate = new Date(currentDate);
               disbursementDate.setDate(disbursementDate.getDate() + visitTenure);
-              const formattedDate = `${String(disbursementDate.getDate()).padStart(2, '0')}/${String(disbursementDate.getMonth() + 1).padStart(2, '0')}/${disbursementDate.getFullYear()}`;
-          
+              const formattedDate = `${String(disbursementDate.getDate()).padStart(2, '0')}/${String(disbursementDate.getMonth() + 1).padStart(2, '0')}/${disbursementDate.getFullYear()}`;            
               return {
                 disbursementOrder: schedule.visitNumber,
                 typeName: schedule.tenureTypeName,
@@ -573,6 +595,7 @@ export class TermLoanDisbursementComponent {
                 disbursementDateVal: formattedDate
               };
             });
+            this.updateDisbursementTable(this.unsavedSchedules);
             
           }
           else {
@@ -595,6 +618,42 @@ export class TermLoanDisbursementComponent {
     });
   }
 
+  updateDisbursementTable(unsavedSchedules: any) {
+   
+    const updatedRecord = this.termLoanApplicationModel.termLoanDisbursementDTOList.filter((obj:any) => obj != null).map((disbursement :any)=>{
+      disbursement.transactionDateVal = this.datePipe.transform( disbursement.transactionDate , this.orgnizationSetting.datePipe);
+      disbursement.disbursementDateVal = this.datePipe.transform( disbursement.disbursementDate , this.orgnizationSetting.datePipe);
+      const updatedRecord = this.termLoanApplicationModel.termLoanDisbursementDTOList.find(
+        (updated: { disbursementOrder: any }) => updated.disbursementOrder === disbursement.disbursementOrder
+      );
+      if (disbursement.statusName == applicationConstants.APPROVED) {
+        disbursement.approved = true;
+        this.disburmentAmount = this.disburmentAmount + disbursement.disbursementAmount ;
+      }
+      this.totalDisbursement = this.totalDisbursement + disbursement.disbursementAmount;
+      if(disbursement.statusName == CommonStatusData.SCHEDULED){
+        disbursement.scheduled = true;
+        this.dueAmount = this.dueAmount + disbursement.disbursementAmount ;
+        this.editDisable = false;
+      }
+      if (updatedRecord) {
+     
+        const index = this.termLoanDisbursementList.findIndex(
+          (saved: { disbursementOrder: any } ) => saved.disbursementOrder === disbursement.disbursementOrder
+        );
+        if (index !== -1) {       
+          this.termLoanDisbursementList[index] = updatedRecord;
+        }
+      } else {
+        
+        this.termLoanDisbursementList.push(disbursement);
+      }
+    });
+  
+   
+    this.termLoanDisbursementList = [...this.termLoanDisbursementList];
+  }
+  
   /**
    * @implements cancle pop up
    * @author vinitha

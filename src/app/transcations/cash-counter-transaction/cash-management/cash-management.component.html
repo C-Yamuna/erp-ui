@@ -1,0 +1,23 @@
+<div class="col-12">
+    <div class="row">
+        <div class="d-flex justify-content-between top-header-section">
+            <div class="main-heading mt-1 mb-3 justify-content-start">{{'CASH_COUNTER_TRANSACTIONS.CASH_MANAGEMENT' |
+                translate}}</div>
+        </div>
+    </div>
+
+    <div class="card-container">
+        <p-card *ngFor="let card of cardsList" [header]="card.cardTitle" [styleClass]="'ui-card-shadow'"
+            (click)="onCardClick(card)">
+            <ng-template pTemplate="content">
+                <p>{{'CASH_COUNTER_TRANSACTIONS.RECEIPT_AMOUNT' | translate}}: {{ card.totalReceiptAmount }}</p>
+                <p>{{'CASH_COUNTER_TRANSACTIONS.PAYMENT_AMOUNT' | translate}}: {{ card.totalPaymentAmount }}</p>
+                <p>{{'CASH_COUNTER_TRANSACTIONS.TOTAL_AMOUNT' | translate}}: {{ card.totalAmount }}</p>
+                <p>{{'CASH_COUNTER_TRANSACTIONS.PENDING_TRANSACTIONS' | translate}}: {{ card.noOfPendingTransactions }}</p>
+                <p>{{'CASH_COUNTER_TRANSACTIONS.COMPLETED_TRANSACTIONS' | translate}}: {{ card.noOfCompletedTransactions}}</p>
+                <p>{{'CASH_COUNTER_TRANSACTIONS.TOTAL_TRANSACTIONS' | translate}}: {{ card.totalTransactions }}</p>
+            </ng-template>
+        </p-card>
+    </div>
+
+</div>

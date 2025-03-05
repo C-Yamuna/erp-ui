@@ -1,0 +1,15 @@
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.ui-card-shadow {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin: 1rem;
+}
+
+p-card {
+    width: 300px;
+    margin: 1rem;
+}

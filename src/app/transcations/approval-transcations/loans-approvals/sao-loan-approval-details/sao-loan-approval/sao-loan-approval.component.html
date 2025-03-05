@@ -521,7 +521,7 @@
                                                                                 class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 min-h-50px">
                                                                                 <h6 class="label-view">Pincode</h6>
                                                                                 <p class="label-input-text">
-                                                                                    {{saoLoanCommunicationModel.pinCode}}
+                                                                                    {{saoLoanCommunicationModel.pincode}}
                                                                                 </p>
                                                                             </div>
                                                                         </div>
@@ -962,7 +962,7 @@
                         </div>
                         <div class="col-12 p-1"></div>
                         <!-- Nominee  -->
-                        <div class="col-lg-12 col-md-12 col-sm-12">
+                        <!-- <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
                                 <div class="global-card-bg-color view-carddata icon-size pb-1">
                                     <div class="col-12">
@@ -1061,20 +1061,7 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                <!-- <div
-                                                                    class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-xs-12 justify-content-end">
-                                                                    <div class="col-12 px-0">
-                                                                        <div class="col-12 px-0">
-                                                                            <div class="col-12 p-0">
-                                                                                <a>
-                                                                                    <img src="assets/images/aadhar.png"
-                                                                                        class="upload-img img-fluid"  pTooltip="Download"
-                                                                                        tooltipPosition="top">
-                                                                                </a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div> -->
+                                                               
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1085,7 +1072,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="col-12 p-1"></div>
                         <!-- Gurantor Details  -->
                         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -1220,33 +1207,33 @@
                                             <div class="col-6">
                                                 <div class="d-flex">
                                                     <span class="card-icon"><i class="fa fa-sitemap"></i></span>
-                                                    <h6 class="sub-heading">{{'ERP.LOAN_GENEALOGY_TREE' |
+                                                    <h6 class="sub-heading">{{'ERP.LOAN_HISTORY' |
                                                         translate}}</h6>
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <p-button *ngIf="preveiwFalg" icon="fa fa-pencil-square-o"
                                                     class="kyc-edit-btn pull-right"
-                                                    (click)="loanGenologyEdit(viewSaoLoanApplicatonModel)"></p-button>
+                                                    (click)="loanHistoryEdit(viewSaoLoanApplicatonModel)"></p-button>
                                             </div>
                                         </div>
                                         <div class="globel-border-top-color"></div>
-                                        <p-table [columns]="loanGeneologyTree" [value]="saoLoanGeneologyTreeList"
+                                        <p-table [columns]="historyColumns" [value]="saoLoanHistoryList"
                                             dataKey="id" selectionMode="single" styleClass="p-datatable-striped"
                                             [showJumpToPageDropdown]="true" [showPageLinks]="false" [rows]="5"
                                             [paginator]="false" [pageLinks]="1" [responsive]="true"
                                             rowExpandMode="single">
                                             <ng-template pTemplate="header">
                                                 <tr>
-                                                    <th *ngFor="let col of loanGeneologyTree">
+                                                    <th *ngFor="let col of historyColumns">
                                                         {{col.header | translate}}
                                                     </th>
                                                 </tr>
                                             </ng-template>
-                                            <ng-template pTemplate="body" let-saoLoanGeneologyTreeList
+                                            <ng-template pTemplate="body" let-saoLoanHistoryList
                                                 let-expanded="expanded" let-rowData>
                                                 <tr>
-                                                    <td *ngFor="let col of loanGeneologyTree">
+                                                    <td *ngFor="let col of historyColumns">
                                                         {{rowData[col.field]}}
                                                     </td>
                                                 </tr>

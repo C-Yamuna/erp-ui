@@ -281,18 +281,18 @@ export class CiLoanMortgageComponent {
       { label: 'Used', value: 'Used' },
       { label: 'Un-Used', value: 'Used' },
     ];
-    this.collateraltypeOptionsList = [
-      { label: 'Gold', value: 1 },
-      { label: 'Land', value: 2 },
-      { label: 'Bond', value: 3 },
-      { label: 'Vehicle', value: 4 },
-      { label: 'Storage', value: 5 },
-      { label: 'Property', value: 6 },
-      { label: 'Other', value: 7 }
-      // { label: 'Surety /Guarantor', value: 8 },
-      // { label: 'Staff', value: 9 },
-      // { label: 'Agreement', value: 10 },
-    ];
+    // this.collateraltypeOptionsList = [
+    //   { label: 'Gold', value: 1 },
+    //   { label: 'Land', value: 2 },
+    //   { label: 'Bond', value: 3 },
+    //   { label: 'Vehicle', value: 4 },
+    //   { label: 'Storage', value: 5 },
+    //   { label: 'Property', value: 6 },
+    //   { label: 'Other', value: 7 }
+    //   // { label: 'Surety /Guarantor', value: 8 },
+    //   // { label: 'Staff', value: 9 },
+    //   // { label: 'Agreement', value: 10 },
+    // ];
 
     //gold
     this.goldLoanMortgageColumns = [
@@ -642,7 +642,6 @@ export class CiLoanMortgageComponent {
             if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
               if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
                 this.ciLoanApplicationModel = this.responseModel.data[0];
-
                 // strip date
                 if(this.ciLoanApplicationModel.operationTypeName != null &&  this.ciLoanApplicationModel.operationTypeName != undefined &&  this.ciLoanApplicationModel.memberTypeName != MemberShipTypesData.INDIVIDUAL){
                   this.operationTypeName = applicationConstants.SINGLE_ACCOUNT_TYPE;
@@ -707,12 +706,12 @@ export class CiLoanMortgageComponent {
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
             if (this.responseModel.data[0].ciProdCollateralsConfigDTOList) {
-              // this.collateraltypeOptionsList = this.responseModel.data[0].ciProdCollateralsConfigDTOList
-              //   .filter((item: any) => item != null && item.status === applicationConstants.ACTIVE)
-              //   .map((item: { collateralTypeName: string, collateralType: any }) => ({
-              //     label: item.collateralTypeName,
-              //     value: item.collateralType
-              //   }));
+              this.collateraltypeOptionsList = this.responseModel.data[0].ciProdCollateralsConfigDTOList
+                .filter((item: any) => item != null && item.status === applicationConstants.ACTIVE)
+                .map((item: { collateralTypeName: string, collateralType: any }) => ({
+                  label: item.collateralTypeName,
+                  value: item.collateralType
+                }));
             }
           }
         }
@@ -944,9 +943,8 @@ export class CiLoanMortgageComponent {
         if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
           if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
             this.ciLandLoanMortgageList = this.responseModel.data.map((obj: any) => {
-              if(obj.villageId != null && obj.villageId != undefined){
-                let villageName  = this.villagesList.filter((village:any) => village.value == obj.villageId);
-                obj.villageName = villageName[0].label;
+              if(obj.villageId != null && obj.villageId != undefined && this.villagesList != null && this.villagesList != undefined && this.villagesList.length >0){
+                obj.villageName  = this.villagesList.find((village:any) => village.value == obj.villageId)?.label;
               }
               return obj;
             });

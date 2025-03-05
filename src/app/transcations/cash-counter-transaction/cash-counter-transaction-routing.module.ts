@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { TransactionsComponent } from '../transactions/transactions.component';
 import { CashCounterTransactionComponent } from './cash-counter-transaction.component';
@@ -14,7 +13,6 @@ import { ViewBranchToBranchTransactionComponent } from './branch-to-branch-trans
 import { VaultTransactionAndUserAssignmentComponent } from './vault-transaction-and-user-assignment/vault-transaction-and-user-assignment.component';
 import { AddVaultTransactionAndUserAssignmentComponent } from './vault-transaction-and-user-assignment/add-vault-transaction-and-user-assignment/add-vault-transaction-and-user-assignment.component';
 import { ViewVaultTransactionAndUserAssignmentComponent } from './vault-transaction-and-user-assignment/view-vault-transaction-and-user-assignment/view-vault-transaction-and-user-assignment.component';
-
 import { VaultToDccbTransactionComponent } from './vault-to-dccb-transaction/vault-to-dccb-transaction.component';
 import { AddVaultToDccbTransactionComponent } from './vault-to-dccb-transaction/add-vault-to-dccb-transaction/add-vault-to-dccb-transaction.component';
 import { ViewVaultToDccbTransactionComponent } from './vault-to-dccb-transaction/view-vault-to-dccb-transaction/view-vault-to-dccb-transaction.component';
@@ -31,45 +29,50 @@ import { VaultCashComponent } from './vault-cash/vault-cash.component';
 import { ViewVaultCashComponent } from './vault-cash/view-vault-cash/view-vault-cash.component';
 import { CounterDenominationComponent } from './counter-denomination/counter-denomination.component';
 import { CashierScrollComponent } from './cashier-scroll/cashier-scroll.component';
+import { CashManagementComponent } from './cash-management/cash-management.component';
+import { CreateCashDenominationsComponent } from './cash-management/cash-transactions/create-cash-denominations/create-cash-denominations.component';
+import { CashTransactionsComponent } from './cash-management/cash-transactions/cash-transactions.component';
 const routes: Routes = [
   {
-    path: '', component:TransactionsComponent,
+    path: '', component: TransactionsComponent,
     children: [
-      {path: 'cash_counter_transactions', component:CashCounterTransactionComponent},
-      {path: 'add_cash_counter_transactions', component:AddCashCounterTransactionComponent},
-      {path: 'view_cash_counter', component:ViewCashCounterComponent},
-      {path: 'vault_creation_transaction', component:VaultCreationTransactionComponent},
-      {path: 'add_vault_creation', component:AddVaultCreationComponent},
-      {path: 'view_vault_creation', component:ViewVaultCreationComponent},
-      {path: 'branch_to_branch_transaction', component:BranchToBranchTransationComponent},
-      {path: 'add_branch_to_branch_transaction', component:AddBranchToBranchTransactionComponent},
-      {path: 'view_branch_to_branch_transaction', component:ViewBranchToBranchTransactionComponent},
-      {path: 'vault_transaction_and_user_assignment', component:VaultTransactionAndUserAssignmentComponent},
-      {path: 'add_vault_transaction_and_user_assignment', component:AddVaultTransactionAndUserAssignmentComponent},
-      {path: 'view_vault_transaction_and_user_assignment', component:ViewVaultTransactionAndUserAssignmentComponent},
+      { path: 'cash_counter_transactions', component: CashCounterTransactionComponent },
+      { path: 'add_cash_counter_transactions', component: AddCashCounterTransactionComponent },
+      { path: 'view_cash_counter', component: ViewCashCounterComponent },
+      { path: 'vault_creation_transaction', component: VaultCreationTransactionComponent },
+      { path: 'add_vault_creation', component: AddVaultCreationComponent },
+      { path: 'view_vault_creation', component: ViewVaultCreationComponent },
+      { path: 'branch_to_branch_transaction', component: BranchToBranchTransationComponent },
+      { path: 'add_branch_to_branch_transaction', component: AddBranchToBranchTransactionComponent },
+      { path: 'view_branch_to_branch_transaction', component: ViewBranchToBranchTransactionComponent },
+      { path: 'vault_transaction_and_user_assignment', component: VaultTransactionAndUserAssignmentComponent },
+      { path: 'add_vault_transaction_and_user_assignment', component: AddVaultTransactionAndUserAssignmentComponent },
+      { path: 'view_vault_transaction_and_user_assignment', component: ViewVaultTransactionAndUserAssignmentComponent },
 
-      {path: 'vault_to_dccb_transaction', component:VaultToDccbTransactionComponent},
-      {path: 'add_vault_to_dccb_transaction', component:AddVaultToDccbTransactionComponent},
-      {path: 'view_vault_to_dccb_transaction', component:ViewVaultToDccbTransactionComponent},
+      { path: 'vault_to_dccb_transaction', component: VaultToDccbTransactionComponent },
+      { path: 'add_vault_to_dccb_transaction', component: AddVaultToDccbTransactionComponent },
+      { path: 'view_vault_to_dccb_transaction', component: ViewVaultToDccbTransactionComponent },
 
-      {path: 'exchange', component:ExchangeComponent},
-      {path: 'add_exchange', component:AddExchangeComponent},
-      {path: 'view_exchange', component:ViewExchangeComponent},
+      { path: 'exchange', component: ExchangeComponent },
+      { path: 'add_exchange', component: AddExchangeComponent },
+      { path: 'view_exchange', component: ViewExchangeComponent },
 
-      {path: 'counterwise_difference_amount', component:CounterwiseDifferenceAmountComponent},
-      {path: 'add_counterwise_difference_amount', component:AddCounterwiseDifferenceAmountComponent},
-      {path: 'view_counterwise_difference_amount', component:ViewCounterwiseDifferenceAmountComponent},
-  
-      {path: 'damage_or_fake_notes', component:DamageOrFakeNotesComponent},
-      {path: 'add_damage_or_fake_notes', component:AddDamageOrFakeNotesComponent},
-      {path: 'view_damage_or_fake_notes', component:ViewDamageOrFakeNotesComponent},
+      { path: 'counterwise_difference_amount', component: CounterwiseDifferenceAmountComponent },
+      { path: 'add_counterwise_difference_amount', component: AddCounterwiseDifferenceAmountComponent },
+      { path: 'view_counterwise_difference_amount', component: ViewCounterwiseDifferenceAmountComponent },
 
+      { path: 'damage_or_fake_notes', component: DamageOrFakeNotesComponent },
+      { path: 'add_damage_or_fake_notes', component: AddDamageOrFakeNotesComponent },
+      { path: 'view_damage_or_fake_notes', component: ViewDamageOrFakeNotesComponent },
 
-      {path: 'vault_cash', component:VaultCashComponent},
-      {path: 'view_vault_cash', component:ViewVaultCashComponent},
-      {path: 'counter_denomination', component:CounterDenominationComponent},
-      {path: 'cashier_scroll', component:CashierScrollComponent},
-  
+      { path: 'vault_cash', component: VaultCashComponent },
+      { path: 'view_vault_cash', component: ViewVaultCashComponent },
+      { path: 'counter_denomination', component: CounterDenominationComponent },
+      { path: 'cashier_scroll', component: CashierScrollComponent },
+
+      { path: 'cash_management', component: CashManagementComponent },
+      { path: 'cash_transactions', component: CashTransactionsComponent },
+      { path: 'create_cash_denominations', component: CreateCashDenominationsComponent },
     ]
   }
 ];

@@ -114,15 +114,16 @@ export class SavingsBankKycComponent implements OnInit {
   kycPhotoCopyZoom: boolean = false;
   isPanNumber: boolean = false;
   isMaximized: boolean = false;
+  fileSizeMsgForImage: any;
 
 
   constructor(private router: Router, private formBuilder: FormBuilder, private savingBankApplicationService: SavingBankApplicationService, private commonComponent: CommonComponent, private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService, private savingsBankCommunicationService: SavingsBankCommunicationService, private savingsBankKycService: SavingsBankKycService, private commonFunctionsService: CommonFunctionsService, private datePipe: DatePipe , private fileUploadService :FileUploadService) {
     this.kycForm = this.formBuilder.group({
-      'docNumber': ['', [ Validators.compose([Validators.required])]],
-      'docTypeName': ['',  Validators.compose([Validators.required])],
-      'fileUpload': ['', ],
-      'nameAsPerDocument':['',[Validators.pattern(applicationConstants.ALPHA_NAME_PATTERN),Validators.compose([Validators.required])]],
-      'promoter': ['', ],
+     'docNumber': new FormControl('', Validators.required),
+        'docTypeName': new FormControl('', Validators.required),
+        'fileUpload': new FormControl('',),
+        'nameAsPerDocument':  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
+        'promoter': ['', ],
     });
   }
   ngOnInit(): void {
@@ -197,6 +198,8 @@ export class SavingsBankKycComponent implements OnInit {
  * @author jyothi.naidana
  */
   imageUploader(event: any, fileUpload: FileUpload) {
+    let fileSizeFalg= false;
+    this.fileSizeMsgForImage = null;
     this.isFileUploaded = applicationConstants.FALSE;
     this.multipleFilesList = [];
     this.savingsBankKycModel.filesDTOList = [];
@@ -205,35 +208,50 @@ export class SavingsBankKycComponent implements OnInit {
     let files: FileUploadModel = new FileUploadModel();
 
     let selectedFiles = [...event.files];
+    if(selectedFiles[0].fileType != ".pdf"){
+      if (selectedFiles[0].size/1024/1024 > 2) {
+        this.fileSizeMsgForImage= "file is bigger than 2MB";
+        fileSizeFalg = true;
+       }
+    }
+    else if(selectedFiles[0].fileType == ".pdf"){
+      if (selectedFiles[0].size/1024/1024 > 5) {
+        this.fileSizeMsgForImage= "file is bigger than 5MB";
+        fileSizeFalg = true;
+       }
+    }
+    
     // Clear file input before processing files
     fileUpload.clear();
-
-    for (let file of selectedFiles) {
-      let reader = new FileReader();
-      reader.onloadend = (e) => {
-        this.isFileUploaded = applicationConstants.TRUE;
-        let files = new FileUploadModel();
-        this.uploadFileData = e.currentTarget;
-        files.fileName = file.name;
-        files.fileType = file.type.split('/')[1];
-        files.value = this.uploadFileData.result.split(',')[1];
-        files.imageValue = this.uploadFileData.result;
-        let index = this.multipleFilesList.findIndex(x => x.fileName == files.fileName);
-        if (index === -1) {
-          this.multipleFilesList.push(files);
-          this.savingsBankKycModel.filesDTOList.push(files); // Add to filesDTOList array
-          this.savingsBankKycModel.multipartFileList.push(files);
+     if(!fileSizeFalg){
+      for (let file of selectedFiles) {
+        let reader = new FileReader();
+        reader.onloadend = (e) => {
+          this.isFileUploaded = applicationConstants.TRUE;
+          let files = new FileUploadModel();
+          this.uploadFileData = e.currentTarget;
+          files.fileName = file.name;
+          files.fileType = file.type.split('/')[1];
+          files.value = this.uploadFileData.result.split(',')[1];
+          files.imageValue = this.uploadFileData.result;
+          let index = this.multipleFilesList.findIndex(x => x.fileName == files.fileName);
+          if (index === -1) {
+            this.multipleFilesList.push(files);
+            this.savingsBankKycModel.filesDTOList.push(files); // Add to filesDTOList array
+            this.savingsBankKycModel.multipartFileList.push(files);
+          }
+          let timeStamp = this.commonComponent.getTimeStamp();
+          this.savingsBankKycModel.filesDTOList[0].fileName = "SB_KYC_" + this.sbAccId + "_" +timeStamp+ "_"+ file.name ;
+          this.savingsBankKycModel.kycFilePath = "SB_KYC_" + this.sbAccId + "_" +timeStamp+"_"+ file.name; // This will set the last file's name as docPath
+          let index1 = event.files.findIndex((x: any) => x === file);
+          fileUpload.remove(event, index1);
+          fileUpload.clear();
+          
         }
-        let timeStamp = this.commonComponent.getTimeStamp();
-        this.savingsBankKycModel.filesDTOList[0].fileName = "SB_KYC_" + this.sbAccId + "_" +timeStamp+ "_"+ file.name ;
-        this.savingsBankKycModel.kycFilePath = "SB_KYC_" + this.sbAccId + "_" +timeStamp+"_"+ file.name; // This will set the last file's name as docPath
-        let index1 = event.files.findIndex((x: any) => x === file);
-        fileUpload.remove(event, index1);
-        fileUpload.clear();
-        
+        reader.readAsDataURL(file);
       }
-      reader.readAsDataURL(file);
-    }
+     }
+  
   }
 
   

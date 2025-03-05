@@ -131,6 +131,35 @@
                                             <p class="label-input-text">
                                                 {{investmentApplicationDetailsModel.installmentAmount}}</p>
                                         </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 ">
+                                            <h6 class="label-view">{{'INVESTMENTS_TRANSACTIONS.RESOLUTION_NUMBER' |
+                                                translate}}</h6>
+                                            <p class="label-input-text">
+                                                {{investmentApplicationDetailsModel.resolutionNumber}}</p>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 ">
+                                            <h6 class="label-view">
+                                                {{'INVESTMENTS_TRANSACTIONS.RESOLUTION_DATE' |
+                                                translate}}</h6>
+                                            <p class="label-input-text">
+                                                {{investmentApplicationDetailsModel.resolutionDate}}
+                                            </p>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 ">
+                                            <div class="form-label">
+                                                <h6 class="label-view">{{ 'INVESTMENTS_TRANSACTIONS.RESOLUTION_COPY' | translate }}</h6>
+                                                <div class="uplodad-style align-items-center">
+                                                    <div class="col-12  d-flex p-0 pt-1" *ngFor="let img of resolutionCopyFileList">
+                                                        <div *ngIf="img.fileType=='pdf'">
+                                                            <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22" height="22"></a>
+                                                        </div>
+                                                        <div class="label-input-text docname-texteclipse mt-1 ml-2" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                                            {{img.fileName}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 min-h-50px"
                                             *ngIf="!installmentAmountFlag">
                                             <h6 class="label-view">{{'INVESTMENTS_TRANSACTIONS.AUTO_RENEWAL' |
@@ -271,19 +300,27 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4">
+            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4" *ngIf="isShowSubmit">
                 <div class="form-label">
                     <label>{{'ERP.REMARKS' | translate}}</label>
                     <textarea type="text" class="form-control" pInputTextarea placeholder="Enter Remarks Here"
-                        [(ngModel)]="remarks" [disabled]="!isShowSubmit"></textarea>
+                        [(ngModel)]="remarks"></textarea>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4">
+            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4" *ngIf="!isShowSubmit">
+                <h6 class="label-view">{{'ERP.REMARKS' | translate}}</h6>
+                <p class="label-input-text"> {{remarks}}</p>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4" *ngIf="isShowSubmit">
                 <div class="form-label">
                     <label> <span class="red">*</span> {{'ERP.STATUS' | translate}}</label>
-                    <p-dropdown [options]="statusList" placeholder="Select" [disabled]="!isShowSubmit"
+                    <p-dropdown [options]="statusList" placeholder="Select"
                         [(ngModel)]="status" (onChange)="onChangeStatus(status)"></p-dropdown>
                 </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4" *ngIf="!isShowSubmit">
+                <h6 class="label-view">{{'ERP.STATUS' | translate}}</h6>
+                <p class="label-input-text"> {{investmentApplicationDetailsModel.statusName}}</p>
             </div>
             <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4 pt-4">
                 <p-button class="pull-right" *ngIf="isShowSubmit" label="{{'TERMDEPOSITSTRANSACTION.SUBMIT' | translate}}"

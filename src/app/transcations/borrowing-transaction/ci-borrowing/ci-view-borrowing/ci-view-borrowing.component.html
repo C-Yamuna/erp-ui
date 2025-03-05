@@ -28,7 +28,7 @@
                                         </div>
                                         <div class="col-6" *ngIf="editbtn">
                                             <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
-                                            (click)="editCiBorrowingDetails(ciborrowingAccountDetailsModel,0)"></p-button>
+                                            (click)="editCiBorrowingDetails(ciborrowingAccountDetailsModel,0)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                         </div>
                                     </div>
                                     <div class="col-12 p-0">
@@ -163,7 +163,7 @@
                                 </div>
                                 <div class="col-3" *ngIf="editbtn">
                                     <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
-                                    (click)="editCiBorrowingDetails(ciborrowingAccountDetailsModel,1)"></p-button>
+                                    (click)="editCiBorrowingDetails(ciborrowingAccountDetailsModel,1)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                 </div>
                             </div>
                             <!-- <div class="row">
@@ -215,7 +215,7 @@
                                 </div>
                                 <div class="col-6" *ngIf="editbtn">
                                     <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
-                                    (click)="editCiBorrowingDetails(ciborrowingAccountDetailsModel,2)"></p-button>
+                                    (click)="editCiBorrowingDetails(ciborrowingAccountDetailsModel,2)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                 </div>
                             </div>
                             <div class="col-12 p-0">
@@ -240,20 +240,18 @@
                                                 </div>
                                                
                                                 </div>
-                                                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end">
-                                                    <div class="kycview-done icon-size text-right"><i class="fa fa-check-circle mr-0" aria-hidden="true"></i></div>
-                                                    <div class="col-12 px-0">
-                                                        <div class="col-12 px-0" *ngFor="let img of document.multipartFileList">
-                                                            <div class="col-12 p-0" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                                <a href="{{img.imageValue}}">
-                                                                    <img src="{{img.imageValue}}" class="upload-img img-fluid" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                                                </a>
-                                                            </div>
-                                                            <div class="col-12 p-0" *ngIf=" img.fileType =='pdf'">
-                                                                <a href="{{img.imageValue}}">
-                                                                    <img src="assets\images\pdf.png" class="pdf-img img-fluid" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                                                </a>
-                                                            </div>
+                                                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end d-flex right-actions">
+                                                    <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClickdoccPhotoCopy(document)">
+                                                        <i class="fa fa-eye m-0" aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}"
+                                                            tooltipPosition="top"></i></div>
+                                                    <div class="carddownload-icon icon-size text-right" *ngFor="let img of document.multipartFileList"
+                                                        pTooltip="{{'ERP.DOC_DOWNLOAD' | translate}}" tooltipPosition="top">
+                                                        <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                            <a href="{{img.imageValue}}">
+                                                                <i class="fa fa-download ml-3 mr-0" aria-hidden="true">
+                                                                    <!-- <img src="{{img.imageValue}}"> -->
+                                                                </i>
+                                                            </a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -327,19 +325,16 @@
                         </div>
                         </div>
                         <div class="col-xl-3 col-lg-4 col-md-4 col-sm-4 mt-4" *ngIf="viewButton">
-                            <p class="label-view text-fontwt">{{'BORROWINGSTRANSACTIONS.SIGNED_COPY_PATH' | translate}}</p>
-                        <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-xs-12 justify-content-end">
-                            <div class="col-12 px-0">
-                                <div class="px-0" *ngFor="let img of ciborrowingAccountDetailsModel.multipartFileListsignedCopyPath">
-                                    <div class="col-12 p-0" *ngIf=" img.fileType =='pdf'">
-                                        <a href="{{img.imageValue}}">
-                                            <img src="assets\images\pdf.png" class="pdf-img img-fluid" pTooltip="{{img.fileName}}"
-                                            tooltipPosition="bottom">
-                                        </a>
-                                    </div>
-                                    <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                        {{img.fileName}}
-                                    </div>
+                        <div class="form-label">
+                            <h6 class="label-view">{{'BORROWINGSTRANSACTIONS.SIGNED_COPY_PATH' | translate}}</h6>
+                            <div class="d-flex mt-2" *ngFor="let img of ciborrowingAccountDetailsModel.multipartFileListsignedCopyPath">
+                                <div *ngIf=" img.fileType =='pdf'">
+                                    <a href="{{img.imageValue}}">
+                                        <img src="assets\images\pdf.png" width="22" height="22">
+                                    </a>
+                                </div>
+                                <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                    {{img.fileName}}
                                 </div>
                             </div>
                         </div>
@@ -365,3 +360,16 @@
         </div>
     </div>
 </div>
+
+<!-- DOC Photo Copy -->
+<p-dialog header="{{'ERP.DOCUMENT_COPY' | translate}}" [(visible)]="docPhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
+    <div class="col-12">
+        <div *ngFor="let img of multipleFilesList">
+            <div class="mb-3 imgcustom-class" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                <!-- <a href="{{img.imageValue}}"> -->
+                        <img src="{{img.imageValue}}" class="doc-photocopy">
+                <!-- </a> -->
+            </div>
+        </div>
+    </div>
+</p-dialog>

@@ -63,12 +63,15 @@ export class SaoLoanApplicationService {
     let headers = new HttpHeaders({ 'pacsId': pacsId + '', 'branchId': branchId + '' })
     return this.commonHttpService.getById( headers, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.SAO_LOAN_APPLICATION + ERP_TRANSACTION_CONSTANTS.GET_SAO_LOAN_APPLICATION_DETAILS_BY_PACS_ID_AND_BRANCH_ID);
   }
-  getAllLoanPurposes(){
-    return this.commonHttpService.getAll(ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.LOAN_PURPOSES + ERP_TRANSACTION_CONSTANTS.GET_ALL);
-  }
-  getAllAccountTypes() {
+ 
+  getAllOperationTypes() {
     return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.ACCOUNTS_TYPES + ERP_TRANSACTION_CONSTANTS.GET_ALL);
   }
+
+  getAllRepaymentFrequency() {
+    return this.commonHttpService.getAll(Configuration.LOANS + Configuration.REPAYMENT_FREQUENCY + Configuration.GET_ALL);
+  }
+
   getInsurenceDetailsByApplicationId(id: any){
     let headers = new HttpHeaders({ 'id': id + '' })
     return this.commonHttpService.getById(headers,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.SAO_LOAN_INSURANCE_DETAILS + ERP_TRANSACTION_CONSTANTS.GET_INSURENCE_DETAILS_BY_APPLICATION_ID);

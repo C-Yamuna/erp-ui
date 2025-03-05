@@ -10,7 +10,7 @@
                         <label for="username"><span class="red">*</span>{{'LOANS.PRODUCT_NAME' | translate}}
                         </label>
                     <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="name"
-                        [(ngModel)]="saoProductDefinitionModel.name">
+                        [(ngModel)]="saoProductDefinitionModel.name" (focusout)="productNameDuplicateCheck()">
                     <p-message severity="error" text="Enter Valid Name"
                         *ngIf="!productionDefinitionForm.controls['name'].valid && productionDefinitionForm.controls['name'].dirty">
                     </p-message>

@@ -22,7 +22,7 @@ export class SiLoanCommunication {
 
     address2: any;
 
-    pinCode: any;
+    pincode: any;
 
     isSameAddress: any;
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { InstitutionPromoterDetailsModel, MemberGroupDetailsModel, MembershipBasicRequiredDetails, MembershipInstitutionDetailsModel, promoterDetailsModel } from '../term-loan-new-membership/shared/term-loan-new-membership.model';
 import { TermLoanKyc } from '../term-loans-kyc/shared/term-loan-kyc.model';
 import { TermLoanCommunication } from '../term-loans-communication/shared/term-loan-communication.model';
@@ -25,8 +25,10 @@ import { Loantransactionconstant } from '../../../loan-transaction-constant';
 import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-constants';
 import { FileUpload } from 'primeng/fileupload';
 import { FileUploadModel } from 'src/app/layout/mainmenu/shared/file-upload-model.model';
-import { CollateralTypes } from 'src/app/transcations/common-status-data.json';
+import { AccountTypes, CollateralTypes } from 'src/app/transcations/common-status-data.json';
 import { approvaltransactionsconstant } from 'src/app/transcations/approval-transcations/approval-transactions-constant';
+import { TermLoanHistoryService } from '../term-loan-history/shared/term-loan-history.service';
+import { TermLoanHistory } from '../term-loan-history/shared/term-loan-history.model';
 
 @Component({
   selector: 'app-term-loan-preview',
@@ -59,7 +61,7 @@ export class TermLoanPreviewComponent {
   termLoanGuardianDetailsModel: TermLoanGuardianDetails = new TermLoanGuardianDetails()
   termLoanProductDefinitionModel: TermLoanProductDefinition = new TermLoanProductDefinition();
   termLoanInterestPolicyModel: TermLoanInterestPolicy = new TermLoanInterestPolicy();
-
+  termLoanHistoryModel: TermLoanHistory = new TermLoanHistory();
   amountblock: any[] = [];
   admissionNumber: any;
   responseModel!: Responsemodel;
@@ -72,10 +74,15 @@ export class TermLoanPreviewComponent {
   termLoanDocumentsDetailsList: any[] = [];
   termLoanGenealogyTreeList: any[] = [];
   termGoldLoanMortgageDetailsList: any[] = [];
+  termLoanHistoryList: any[] = [];
   nomineeMemberFullName: any;
   editOption: boolean = false;
   memberTypeName: any;
-  editbtn: boolean = true;;
+  editbtn: boolean = true;
+  kycPhotoCopyZoom: boolean = false;
+  isMaximized: boolean = false;
+
+  moduleTypes: any[] = [];
   flag: boolean = false;
   addressOne: any;
   addressTwo: any;
@@ -126,12 +133,18 @@ export class TermLoanPreviewComponent {
   viewButton: boolean = false;
   editFlag: boolean = false;
   roleName: any;
+  historyColumns: { field: string; header: string; }[];
   propertyColumns: { field: string; header: string; }[];
+  nomineePhotoCopyZoom: boolean = false;
+  guardianPhotoCopyZoom: boolean = false;
+  docPhotoCopyZoom: boolean = false;
+  mastercollateralList: any[]=[];
   constructor(private router: Router, private formBuilder: FormBuilder,
     private commonComponent: CommonComponent, private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService,
     private datePipe: DatePipe, private termLoanApplicationsService: TermApplicationService,
     private fileUploadService: FileUploadService, private commonFunctionsService: CommonFunctionsService,
-    private translate: TranslateService, private termLoanKycService: TermLoanKycService) {
+    private translate: TranslateService, private termLoanKycService: TermLoanKycService,
+    private termLoanHistoryService: TermLoanHistoryService,) {
    
    
       this.amountblock = [
@@ -263,6 +276,17 @@ export class TermLoanPreviewComponent {
         // { field: 'remarks', header: 'LOAN_TRANSACTION.REMARKS' },
         // { field: 'Action', header: 'LOAN_TRANSACTION.ACTION' },
       ];
+      this.historyColumns = [
+        { field: 'accountNumber', header: 'LOANS.NAME' },
+        // { field: 'admissionNumber', header: 'ERP.ADMISSION_NUMBER' },
+        { field: 'bankName', header: 'LOANS.BANKNAME' },
+        { field: 'loanAmount', header: 'LOANS.LOAN_AMOUNT' },
+        { field: 'collateralTypeName', header: 'LOANS.COLLATERAL_TYPE' },
+        { field: 'openingDateVal', header: 'LOANS.OPENINGDATE' },
+        { field: 'closingDateVal', header: 'LOANS.CLOSINGDATE' },
+        { field: 'isNpaName', header: 'LOANS.ISNPA' },
+        { field: 'moduleTypeName', header: 'LOANS.MODULE_TYPE' },
+      ];
       this.admissionDetails = this.formBuilder.group({
         admissionNumber: ['', [Validators.required, Validators.minLength(3)]],
         templatepath: ['', [Validators.required, Validators.email]],
@@ -271,31 +295,31 @@ export class TermLoanPreviewComponent {
       });
   
       this.columns = [
-        { field: 'surname', header: 'surname' },
-        { field: 'name', header: 'name' },
-        { field: 'operatorTypeName', header: 'operation type name' },
-        { field: 'memDobVal', header: 'Date Of Birth' },
-        { field: 'age', header: 'age' },
-        { field: 'genderTypeName', header: 'gender Name' },
-        { field: 'maritalStatusName', header: 'marital status' },
-        { field: 'mobileNumber', header: 'mobile Number' },
-        { field: 'emailId', header: 'email' },
-        { field: 'aadharNumber', header: 'aadhar' },
-        { field: 'startDateVal', header: 'start date' },
+        { field: 'surname', header: 'ERP.SURNAME' },
+        { field: 'name', header: 'ERP.NAME' },
+        { field: 'operatorTypeName', header: 'ERP.OPERATION_TYPE' },
+        { field: 'memDobVal', header: 'ERP.DOB' },
+        { field: 'age', header: 'ERP.AGE' },
+        { field: 'genderTypeName', header: 'ERP.GENDER' },
+        { field: 'maritalStatusName', header: 'ERP.MARITAL_STATUS' },
+        { field: 'mobileNumber', header: 'ERP.MOBILE_NUMBER' },
+        { field: 'emailId', header: 'ERP.EMAIL' },
+        { field: 'aadharNumber', header: 'ERP.AADHAR_NUMBER' },
+        { field: 'startDateVal', header: 'ERP.START_DATE' },
       ];
   
       this.groupPrmoters = [
-        { field: 'surname', header: 'surname' },
-        { field: 'name', header: 'name' },
-        { field: 'operatorTypeName', header: 'operation type name' },
-        { field: 'memDobVal', header: 'member Date Of Birth' },
-        { field: 'age', header: 'age' },
-        { field: 'genderTypeName', header: 'gender name' },
-        { field: 'maritalStatusName', header: 'marital status' },
-        { field: 'mobileNumber', header: 'mobile number' },
-        { field: 'emailId', header: 'email' },
-        { field: 'aadharNumber', header: 'aadhar' },
-        { field: 'startDateVal', header: 'start date' },
+        { field: 'surname', header: 'ERP.SURNAME' },
+      { field: 'name', header: 'ERP.NAME' },
+      { field: 'operatorTypeName', header: 'ERP.OPERATION_TYPE' },
+      { field: 'memDobVal', header: 'ERP.DOB' },
+      { field: 'age', header: 'ERP.AGE' },
+      { field: 'genderTypeName', header: 'ERP.GENDER' },
+      { field: 'maritalStatusName', header: 'ERP.MARITAL_STATUS' },
+      { field: 'mobileNumber', header: 'ERP.MOBILE_NUMBER' },
+      { field: 'emailId', header: 'ERP.EMAIL' },
+      { field: 'aadharNumber', header: 'ERP.AADHAR_NUMBER' },
+      { field: 'startDateVal', header: 'ERP.START_DATE' },
       ];
   
   
@@ -411,7 +435,7 @@ export class TermLoanPreviewComponent {
     //   this.router.navigate([Loantransactionconstant.TERM_LOAN]);
     // }
     navigateToBack() {
-      if (this.roleName == "Manager") {
+      if (this.roleName == applicationConstants.MANAGER) {
         this.router.navigate([approvaltransactionsconstant.TERM_LOAN_APPROVAL_DETAILS]);
       } else {
         this.router.navigate([Loantransactionconstant.TERM_LOAN]);
@@ -488,7 +512,7 @@ export class TermLoanPreviewComponent {
             } 
   
             if (this.termLoanApplicationModel.operationTypeName != null && this.termLoanApplicationModel.operationTypeName != undefined ){
-              if(this.termLoanApplicationModel.operationTypeName === "Joint")
+              if(this.termLoanApplicationModel.operationTypeName === AccountTypes.JOINT)
                 this.jointHoldersFlag = true;
             }
             else {
@@ -639,17 +663,6 @@ export class TermLoanPreviewComponent {
               }
             }
   
-            if (this.termLoanApplicationModel.termLoanGenealogyTreeDTOList != null && this.termLoanApplicationModel.termLoanGenealogyTreeDTOList != undefined)
-              this.termLoanGenealogyTreeList = this.termLoanApplicationModel.termLoanGenealogyTreeDTOList;
-            for(let tree of this.termLoanGenealogyTreeList){
-               this.relationshipTypesList.filter((obj:any) =>(obj.value == tree.relationWithApplicant)).map((obj) => {
-                if (obj.label != null) {
-                  tree.relationWithApplicantName = obj.label;
-                }
-                return obj;
-              });
-            }
-  
             if (this.termLoanApplicationModel.termLoanGuarantorDetailsDTOList != null && this.termLoanApplicationModel.termLoanGuarantorDetailsDTOList != undefined) {
               this.termLoanGuarantorDetailsList = this.termLoanApplicationModel.termLoanGuarantorDetailsDTOList;
               this.termLoanGuarantorDetailsList = this.termLoanGuarantorDetailsList.map((model) => {
@@ -659,7 +672,7 @@ export class TermLoanPreviewComponent {
                 return model;
               });
             }
-           
+           this.getAllCollaterals();
             this.getProductDefinitionByProductId(this.termLoanApplicationModel.termProductId);
           }
           this.msgs = [];
@@ -780,7 +793,7 @@ export class TermLoanPreviewComponent {
     }
   
     editApplicationDetails(rowData: any) {
-      if (rowData.operationTypeName == "Joint") {
+      if (rowData.operationTypeName == AccountTypes.JOINT) {
         this.flag = true;
       }
       else {
@@ -825,10 +838,9 @@ export class TermLoanPreviewComponent {
       this.router.navigate([Loantransactionconstant.TERM_LOAN_DOCUMENTS], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id) } });
     }
   
-    editGenealogyTreeDetails(rowData: any) {
-      this.router.navigate([Loantransactionconstant.TERMLOANS_GENEALOGY_TREE], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id) } });
+    editHistroyDetails(rowData: any) {
+      this.router.navigate([Loantransactionconstant.TERM_LOAN_HISTORY], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id) } });
     }
-  
     onClickMemberIndividualMoreDetails() {
       this.membreIndividualFlag = true;
     }
@@ -885,13 +897,118 @@ export class TermLoanPreviewComponent {
         var file = new Blob([data], { type: 'application/pdf' });
         saveAs(file, "Loan_application_filled_Document.pdf");
         this.msgs = [];
-        this.msgs.push({ severity: "success", detail: 'Loan Application Downloaded Successfully' });
+        this.msgs.push({ severity: "success", detail: applicationConstants.TERM_LOAN_APPLICATION_DOWNLOAD_SECESSFULLY });
         this.commonComponent.stopSpinner();
       }, error => {
         this.msgs = [];
         this.commonComponent.stopSpinner();
-        this.msgs.push({ severity: "error", detail: 'Unable to Download Application' });
+        this.msgs.push({ severity: "error", detail: applicationConstants.UNABLE_TO_DOWNLOAD_TERM_LOAN_APPLICATION });
       })
        
+    }
+
+    onClickkycPhotoCopy(rowData :any){
+      this.multipleFilesList = [];
+      this.kycPhotoCopyZoom = true;
+      this.multipleFilesList = rowData.multipartFileList;
+    }
+    onClicknomineePhotoCopy(){
+      this.nomineePhotoCopyZoom = true;
+    }
+    onClickguardianPhotoCopy(){
+      this.guardianPhotoCopyZoom = true;
+    }
+    onClickdoccPhotoCopy(rowData :any){
+      this.multipleFilesList = [];
+      this.docPhotoCopyZoom = true;
+      this.multipleFilesList = rowData.multipartFileList;
+    }
+    // Popup Maximize
+      @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+    
+      onDialogResize(event: any) {
+        this.isMaximized = event.maximized;
+    
+        if (this.isMaximized) {
+          // Restore original image size when maximized
+          this.imageElement.nativeElement.style.width = 'auto';
+          this.imageElement.nativeElement.style.height = 'auto';
+          this.imageElement.nativeElement.style.maxWidth = '100%';
+          this.imageElement.nativeElement.style.maxHeight = '100vh';
+        } else {
+          // Fit image inside the dialog without scrollbars
+          this.imageElement.nativeElement.style.width = '100%';
+          this.imageElement.nativeElement.style.height = '100%';
+          this.imageElement.nativeElement.style.maxWidth = '100%';
+          this.imageElement.nativeElement.style.maxHeight = '100%';
+          this.imageElement.nativeElement.style.objectFit = 'contain';
+        }
+      }
+    getTermLoanExistedDetailsByApplicationId(ciLoanApplicationId: any) {
+      this.termLoanHistoryService.getTermLoanExistedDetailsByApplicationId(ciLoanApplicationId).subscribe((data: any) => {
+        this.responseModel = data;
+        if (this.responseModel != null && this.responseModel != undefined) {
+          if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+            if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
+              this.termLoanHistoryList = this.responseModel.data.filter((obj:any) => obj != null).map((history :any)=>{
+                history.closingDateVal = this.datePipe.transform( history.closingDate , this.orgnizationSetting.datePipe);
+                history.openingDateVal = this.datePipe.transform( history.openingDate , this.orgnizationSetting.datePipe);
+                if (history.isNPA != null && history.isNPA != undefined && history.isNPA)
+                  history.isNpaName = applicationConstants.YES;
+                else
+                  history.isNpaName = applicationConstants.NO;
+                  history.moduleTypeName = this.moduleTypes.find((obj: any) => obj.value == history.moduleType)?.label;
+                  history.collateralTypeName = this.mastercollateralList.find((obj: any) => obj.value == history.collateralType)?.label;
+                return history;
+              });
+            }
+          }
+          else {
+            this.msgs = [];
+            this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+            setTimeout(() => {
+              this.msgs = [];
+            }, 2000);
+          }
+        }
+      }, error => {
+        this.commonComponent.stopSpinner();
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      });
+    }
+  
+    /**
+     * @implements get all collateral
+     */
+    getAllCollaterals() {
+      this.msgs = [];
+      this.commonComponent.startSpinner();
+      this.termLoanHistoryService.getAllCollateralTypes().subscribe((response: any) => {
+        this.responseModel = response;
+        if (this.responseModel != null&& this.responseModel.data!= undefined) {
+          this.mastercollateralList = this.responseModel.data.filter((data: any) => data.status == applicationConstants.ACTIVE).map((collateral: any) => {
+            return { label: collateral.name, value: collateral.id }
+        });
+        this.getTermLoanExistedDetailsByApplicationId(this.id);
+        this.commonComponent.stopSpinner();
+      }
+      else {
+        this.msgs = [];
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
+      }, error => {
+        this.msgs = [];
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+        this.commonComponent.stopSpinner();
+      });
     }
 }

@@ -278,4 +278,22 @@ export class DailyDepositsAccountsService {
     let headers = new HttpHeaders({ 'productId': id + '' })
     return this.commonHttpService.getById(headers,ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.REQUIRED_DOCUMENTS_CONFIG + ERP_TRANSACTION_CONSTANTS.GER_REQUIRED_DOCUMENTS_CONFIG_BY_PRODUCT_ID);
   }
+  getAllCommunity(){
+    return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.COMMUNITY + Configuration.GET_ALL);
+  }
+  getAllQualificationSubQualification() {
+    return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.QUALIFICATION + Configuration.GET_ALL_QUALIFICATION_AND_SUB_QUALIFICATION)
+  }
+  getAllCasteSubCaste() {
+    return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.CASTE + Configuration.GET_ALL_CAST_AND_SUB_CASTE)
+  }
+  getBlockList(){
+    return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.BLOCKS + Configuration.GET_ALL);
+  }
+  getAllDivisionList(){
+    return this.commonHttpService.getAll(  Configuration.COMMON_MASTER + Configuration.DIVISION + Configuration.GET_ALL);
+  }
+  getAllAgentDetails(){
+    return this.commonHttpService.getAll(ERP_TRANSACTION_CONSTANTS.AGENTDETAILS + ERP_TRANSACTION_CONSTANTS.AGENT_DETAILS + ERP_TRANSACTION_CONSTANTS.GET_ALL);
+  }
 }

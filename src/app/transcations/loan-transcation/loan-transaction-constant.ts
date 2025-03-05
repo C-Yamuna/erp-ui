@@ -29,6 +29,7 @@ export const Loantransactionconstant = {
     SAO_LOAN_MORTAGAGE :"/menu/loan_transaction/sao_stepper/sao_loan_mortagage",
     SAO_LOAN_DOCUMENTS:"/menu/loan_transaction/sao_stepper/sao_loan_documents",
     SAO_LOAN_GENEALOGY_TREE:"/menu/loan_transaction/sao_stepper/sao_loan_genealogy_tree",
+    SAO_LOAN_HISTORY:"/menu/loan_transaction/sao_stepper/sao_loan_existing_details",
 
     VIEW_SAO_LOANS:"/menu/loan_transaction/view_sao_loans",
     SAO_LOAN_DISBURSMENT:"/menu/loan_transaction/sao_loan_disbursment",
@@ -46,6 +47,8 @@ export const Loantransactionconstant = {
     SIMPLE_INTEREST_LOANS_MORTAGAGE:"/menu/loan_transaction/simple_interest_loans_stepper/simple_interest_loans_mortagage",
     SIMPLE_INTEREST_LOANS_DOCUMENTS:"/menu/loan_transaction/simple_interest_loans_stepper/simple_interest_loans_documents",
     SIMPLE_INTEREST_LOANS_GENEALOGY_TREE:"/menu/loan_transaction/simple_interest_loans_stepper/simple_interest_loans_genealogy_tree",
+    SIMPLE_INTEREST_LOANS_HISTORY:"/menu/loan_transaction/simple_interest_loans_stepper/simple_interest_loan_history",
+
 
     PREVIEW_TERM_LOAN:"/menu/loan_transaction/preview_term_loan",
     TERMLOANS_PRODUCT_DETAILS:"/menu/loan_transaction/term_loans_stepper/term_loans_product_details",
@@ -62,8 +65,9 @@ export const Loantransactionconstant = {
     TERMLOANS_MEMBERSHIP:"/menu/loan_transaction/term_loans_stepper/term_loans_membership",
     TERM_LOAN_DISBURSMENT:"/menu/loan_transaction/term_loan_disbursment",
     TERM_LOAN_COLLECTION:"/menu/loan_transaction/term_loan_collection",
+    TERM_LOAN_HISTORY:"/menu/loan_transaction/term_loans_stepper/term_loans_loan_history",
     
-
+    
     COMPOUND_INTEREST_LOANS_MEMBERSHIP_DETAILS:"/menu/loan_transaction/compound_interest_loans_stepper/compound_interest_loans_membership_details",
     COMPOUND_INTEREST_LOANS_APPLICATIOIN_DETAILS:"/menu/loan_transaction/compound_interest_loans_stepper/compound_interest_loans_product_details",
     COMPOUND_INTEREST_LOANS_COMMUNICATON:"/menu/loan_transaction/compound_interest_loans_stepper/compound_interest_loans_communication",
@@ -82,6 +86,7 @@ export const Loantransactionconstant = {
     CI_LOAN_DISBURSEMENT:"/menu/loan_transaction/ci_loan_disbursement",
     CI_LOAN_COLLECTION:"/menu/loan_transaction/ci_loan_collection",
     CI_LOAN_CLOSURE:"/menu/loan_transaction/ci_loan_closure",
+    COMPOUND_INTEREST_LOANS_HISTORY:"/menu/loan_transaction/compound_interest_loans_stepper/compound_interest_loan_history",
 
     DEPOSITOR_LOANS_PRODUCT_DETAILS:"/menu/loan_transaction/depositor_loans_stepper/depositor_loans_product_details",
     DEPOSITOR_LOANS_COMMUNICATON:"/menu/loan_transaction/depositor_loans_stepper/depositor_loans_communication",

@@ -510,6 +510,9 @@ export class FdCumulativeStepperComponent implements OnInit {
       if (this.membershipBasicRequiredDetailsModel.admissionDate != null && this.membershipBasicRequiredDetailsModel.admissionDate != undefined) {
         this.membershipBasicRequiredDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
       }
+      if (this.membershipBasicRequiredDetailsModel.resolutionDate != null && this.membershipBasicRequiredDetailsModel.resolutionDate != undefined) {
+        this.membershipBasicRequiredDetailsModel.resolutionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.resolutionDate, this.orgnizationSetting.datePipe);
+      }
     }
     else if (memberType == MemberShipTypesData.GROUP) {
       this.groupFlag = true;
@@ -810,6 +813,13 @@ export class FdCumulativeStepperComponent implements OnInit {
               if (this.membershipBasicRequiredDetailsModel.admissionDate != null && this.membershipBasicRequiredDetailsModel.admissionDate != undefined) {
                 this.membershipBasicRequiredDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
               }
+              if (this.membershipBasicRequiredDetailsModel.resolutionDate != null && this.membershipBasicRequiredDetailsModel.resolutionDate != undefined) {
+                this.membershipBasicRequiredDetailsModel.resolutionDate = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.resolutionDate, this.orgnizationSetting.datePipe);
+              }
+              if (this.membershipBasicRequiredDetailsModel.resolutionCopy != null && this.membershipBasicRequiredDetailsModel.resolutionCopy != undefined) {
+                this.membershipBasicRequiredDetailsModel.multipartFileListForResolutionCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.resolutionCopy, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.resolutionCopy);
+                this.photoCopyFlag = true;
+              }
               if (this.membershipBasicRequiredDetailsModel.photoPath != null && this.membershipBasicRequiredDetailsModel.photoPath != undefined) {
                 this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.photoPath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.photoPath);
                 this.photoCopyFlag = true;
@@ -966,14 +976,22 @@ export class FdCumulativeStepperComponent implements OnInit {
           this.membershipBasicRequiredDetailsModel.fdCummCommunicationDto = this.responseModel.data[0].memberShipCommunicationDetailsDTO;
           this.membershipBasicRequiredDetailsModel.photoPath = this.responseModel.data[0].photoCopyPath;
           this.membershipBasicRequiredDetailsModel.signaturePath = this.responseModel.data[0].signatureCopyPath;
+          this.membershipBasicRequiredDetailsModel.resolutionCopy = this.responseModel.data[0].mcrDocumentCopy;
+
           if (this.membershipBasicRequiredDetailsModel.dob != null && this.membershipBasicRequiredDetailsModel.dob != undefined) {
             this.membershipBasicRequiredDetailsModel.dob = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.dob, this.orgnizationSetting.datePipe);
           }
           if (this.membershipBasicRequiredDetailsModel.admissionDate != null && this.membershipBasicRequiredDetailsModel.admissionDate != undefined) {
             this.membershipBasicRequiredDetailsModel.admissionDate = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
           }
+          if (this.membershipBasicRequiredDetailsModel.resolutionDate != null && this.membershipBasicRequiredDetailsModel.resolutionDate != undefined) {
+            this.membershipBasicRequiredDetailsModel.resolutionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.resolutionDate, this.orgnizationSetting.datePipe);
+          }
           if (this.membershipBasicRequiredDetailsModel.fdCummCommunicationDto != null && this.membershipBasicRequiredDetailsModel.fdCummCommunicationDto != undefined) {
             this.fdCumulativeCommunicationModel = this.membershipBasicRequiredDetailsModel.fdCummCommunicationDto;
+          }
+          if (this.membershipBasicRequiredDetailsModel.resolutionCopy != null && this.membershipBasicRequiredDetailsModel.resolutionCopy != undefined) {
+            this.membershipBasicRequiredDetailsModel.multipartFileListForResolutionCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.resolutionCopy, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.resolutionCopy);
           }
           if (this.membershipBasicRequiredDetailsModel.photoPath != null && this.membershipBasicRequiredDetailsModel.photoPath != undefined) {
             this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.photoPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.photoPath);
@@ -1018,7 +1036,7 @@ export class FdCumulativeStepperComponent implements OnInit {
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
           this.memberGroupDetailsModel = this.responseModel.data[0];
-          this.memberGroupDetailsModel.fdCummCommunicationDto = this.responseModel.data[0].groupCommunicationList;
+          this.memberGroupDetailsModel.fdCummCommunicationDto = this.responseModel.data[0].groupCommunicationList[0];
           this.memberGroupDetailsModel.photoPath = this.responseModel.data[0].photoCopyPath;
           this.memberGroupDetailsModel.signaturePath = this.responseModel.data[0].signatureCopyPath;
           this.memberTypeName = this.responseModel.data[0].memberTypeName;
@@ -1152,6 +1170,9 @@ export class FdCumulativeStepperComponent implements OnInit {
     }
     if (this.membershipBasicRequiredDetailsModel.admissionDate != null && this.membershipBasicRequiredDetailsModel.admissionDate != undefined) {
       this.membershipBasicRequiredDetailsModel.admissionDate = this.commonFunctionsService.getUTCEpoch(new Date(this.membershipBasicRequiredDetailsModel.admissionDate));
+    }
+    if (this.membershipBasicRequiredDetailsModel.resolutionDate != null && this.membershipBasicRequiredDetailsModel.resolutionDate != undefined) {
+      this.membershipBasicRequiredDetailsModel.resolutionDate = this.commonFunctionsService.getUTCEpoch(new Date(this.membershipBasicRequiredDetailsModel.resolutionDate));
     }
     // group dates convert
     if (this.memberGroupDetailsModel.registrationDate != null && this.memberGroupDetailsModel.registrationDate != undefined) {
@@ -1356,6 +1377,9 @@ export class FdCumulativeStepperComponent implements OnInit {
     }
     if (this.fdCumulativeApplicationModel.maturityDate != null && this.fdCumulativeApplicationModel.maturityDate != undefined) {
       this.fdCumulativeApplicationModel.maturityDate = this.commonFunctionsService.getUTCEpoch(new Date(this.fdCumulativeApplicationModel.maturityDate));
+    }
+    if (this.membershipBasicRequiredDetailsModel.resolutionDate != null && this.membershipBasicRequiredDetailsModel.resolutionDate != undefined) {
+      this.membershipBasicRequiredDetailsModel.resolutionDate = this.commonFunctionsService.getUTCEpoch(new Date(this.membershipBasicRequiredDetailsModel.resolutionDate));
     }
     if (this.isApplicationEdit) {
       this.fdCumulativeApplicationModel.statusName = applicationConstants.IS_ACTIVE;

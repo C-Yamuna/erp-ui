@@ -13,6 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonComponent } from 'src/app/shared/common.component';
 import { CommonFunctionsService } from 'src/app/shared/commonfunction.service';
 import { SimpleInterestProductDefinitionService } from '../../shared/simple-interest-product-definition.service';
+import { BoxNumber } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-si-purpose',
@@ -331,17 +332,23 @@ getPreviewDetailsByProductId(id: any) {
         // Otherwise, proceed with the new purposetypes
         return  applicationConstants.FALSE;
       }
-      checkForGestationPeriod(){
-        const gesitationPeriod = this.purposeForm.get('gesitationPeriod')?.value;
+      checkForGestationPeriod(box : any){
+        const gesitationPeriod = this.purposeForm.get('minGesitationPeriod')?.value;
         const maxGesitationPeriod = this.purposeForm.get('maxGesitationPeriod')?.value;
     
-        if (gesitationPeriod && maxGesitationPeriod &&  gesitationPeriod >=maxGesitationPeriod) {
-          this.amountAndTenureFlag = applicationConstants.FALSE;
-          this.msgs = [{ severity: 'error', detail: applicationConstants.MIN_CHARGES_ERROR }];
-          setTimeout(() => {
+        if (gesitationPeriod != null &&  gesitationPeriod !='' && maxGesitationPeriod !=null && maxGesitationPeriod !='' && 
+           Number(gesitationPeriod) > Number(maxGesitationPeriod)) {
             this.msgs = [];
-          }, 1500);
-        } else {
+            if (box == BoxNumber.BOX_ONE) {
+              this.msgs.push({ severity: 'warning', detail: applicationConstants.MINIMUM_GESTATION_PERIOD_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAXIMUM_GESTATION_PERIOD });
+              this.purposeForm.get('minGesitationPeriod')?.reset();
+            } else if (box == BoxNumber.BOX_TWO) {
+              this.msgs.push({ severity: 'warning', detail: applicationConstants.MAXIMUM_GESTATION_PERIOD_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MINIMUM_GESTATION_PERIOD });
+              this.purposeForm.get('maxGesitationPeriod')?.reset();
+            setTimeout(() => {
+              this.msgs = [];
+            }, 1500);
+          }  else {
           this.msgs = [];
           this.amountAndTenureFlag = applicationConstants.TRUE;
         }
@@ -349,4 +356,5 @@ getPreviewDetailsByProductId(id: any) {
        
         this.updateData();
       }
+    }
 }

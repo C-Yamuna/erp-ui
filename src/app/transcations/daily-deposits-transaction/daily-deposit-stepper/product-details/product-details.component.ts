@@ -65,6 +65,7 @@ export class ProductDetailsComponent {
   interestPolicyList: any[] = [];
   penalityConfigList: any[] = [];
   requiredDocumentsList: any[] = [];
+  agentList:any[]=[];
 
   constructor(private router: Router, private datePipe: DatePipe, private formBuilder: FormBuilder,
     private commonComponent: CommonComponent, private activateRoute: ActivatedRoute,
@@ -83,6 +84,7 @@ export class ProductDetailsComponent {
       'accountType': new FormControl('', Validators.required),
       'tenureInMonths':new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS)]),
       'tenureInYears':new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS)]),
+      'agent':new FormControl('', Validators.required),
     })
   }
   ngOnInit() {
@@ -92,6 +94,7 @@ export class ProductDetailsComponent {
     this.branchId = this.commonFunctionsService.getStorageValue(applicationConstants.BRANCH_ID);
     this.getAllProducts();
     this.getAllAccountTypes();
+    this.getAllAgentDetails();
     this.activateRoute.queryParams.subscribe(params => {
       if (params['id'] != undefined) {
         this.commonComponent.startSpinner();
@@ -134,6 +137,7 @@ export class ProductDetailsComponent {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.productsList = this.responseModel.data;
+            this.accountModel.requiredDocumentsConfigDTOList = this.responseModel.data[0].requiredDocumentsConfigList;
             this.productsList = this.productsList.filter((obj: any) => obj != null).map((product: { name: any; id: any; }) => {
               return { label: product.name, value: product.id };
             });
@@ -397,5 +401,26 @@ export class ProductDetailsComponent {
           }, 2000);
     }
     
+  }
+  getAllAgentDetails(){
+    this.commonComponent.startSpinner();
+    this.dailyDepositsAccountsService.getAllAgentDetails().subscribe((data: any) => {
+      this.responseModel = data;
+      if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+        this.agentList = this.responseModel.data;
+        this.agentList = this.agentList.filter((obj: any) => obj != null).map((product: { name: any; id: any; }) => {
+          return { label: product.name, value: product.id };
+        });
+        this.commonComponent.stopSpinner();
+      } else {
+        this.commonComponent.stopSpinner();
+        this.msgs = [];
+        this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
+      }
+    }, error => {
+      this.commonComponent.stopSpinner();
+      this.msgs = [];
+      this.msgs = [{ severity: "error", summary: 'Failed', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST }];
+    });
   }
 }

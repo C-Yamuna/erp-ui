@@ -5,13 +5,13 @@
                 number:&nbsp;{{admissionNumber}})</span></h6> -->
         <div class="col-12 bg-label-colorfull p-0">
             <div class="row g-3">
-                <div class="col-lg-6 col-md-12 col-sm-12">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
                     <!-- <div class="col-12"> -->
                     <div class="d-flex justify-content-between mt-xl-0 mt-lg-0 mt-4">
                         <h6 class="super-sub-heading">{{'TERMDEPOSITSTRANSACTION.PERMANENT' | translate}}</h6>
 
                     </div>
-                    <div class="col-12 global-border">
+                    <div class="col-12 global-border pt-0">
                         <div class="col-12">
                             <div class="row g-3 mt-n1">
                                 <div class="col-lg-6 col-md-6 col-sm-12">
@@ -59,7 +59,7 @@
                                             (onChange)='getPermanentVillage(fdNonCumulativeCommunicationModel.permanentVillageId)'></p-dropdown>
                                     </div>
                                 </div>
-                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                                <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
                                         <label for="username">
                                             {{'TERMDEPOSITSTRANSACTION.DIVISION' | translate}}
@@ -68,7 +68,7 @@
                                             [(ngModel)]="this.fdNonCumulativeCommunicationModel.permanentDivisionName">
                                     </div>
                                 </div>
-                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                                <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
                                         <label for="username">
                                             {{'TERMDEPOSITSTRANSACTION.BLOCK' | translate}}
@@ -110,7 +110,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-12 col-sm-12">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
                     <div class="d-flex justify-content-between mt-xl-0 mt-lg-0 mt-4">
                         <h6 class="super-sub-heading">{{'TERMDEPOSITSTRANSACTION.COMMUNICATION_ADDRESS' | translate}}</h6>
                         <div class="grid mr-3 d-flex">
@@ -120,10 +120,8 @@
                              <p class="pl-1 m-0">{{'TERMDEPOSITSTRANSACTION.SAME_AS_PERMANENT_ADDRESS' | translate}}</p>
 
                         </div>
-
                     </div>
-
-                    <div class="col-12 global-border">
+                    <div class="col-12 global-border pt-0">
                         <div class="col-12">
                             <div class="row g-3 mt-n1">
                                 <div class="col-lg-6 col-md-6 col-sm-12">
@@ -172,7 +170,7 @@
                                             [(ngModel)]="fdNonCumulativeCommunicationModel.villageId"></p-dropdown>
                                     </div>
                                 </div>
-                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                                <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
                                         <label for="username">
                                             {{'TERMDEPOSITSTRANSACTION.DIVISION' | translate}}
@@ -181,7 +179,7 @@
                                             [(ngModel)]="this.fdNonCumulativeCommunicationModel.divisionName">
                                     </div>
                                 </div>
-                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                                <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
                                         <label for="username">
                                             {{'TERMDEPOSITSTRANSACTION.BLOCK' | translate}}
@@ -199,7 +197,6 @@
                                             [(ngModel)]="fdNonCumulativeCommunicationModel.address1"></textarea>
                                     </div>
                                 </div>
-
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
                                         <label for="username"><span
@@ -218,9 +215,7 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </form>
-
 </div>

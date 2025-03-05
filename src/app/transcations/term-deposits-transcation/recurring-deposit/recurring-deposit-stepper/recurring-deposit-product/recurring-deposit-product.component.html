@@ -89,9 +89,7 @@
                         [(ngModel)]="rdAccountModel.tenureType"> </p-dropdown>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="rdAccountModel.tenureType == 2 || 
-                rdAccountModel.tenureType == 5 || rdAccountModel.tenureType == 6 ||
-                rdAccountModel.tenureType == 7"> 
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="yearFlag"> 
                     <div class="form-label">
                         <label>{{'TERMDEPOSITSTRANSACTION.TENURE_IN_YEARS' | translate}}</label>
                             <input pInputText id="state_txt_name" type="text" formControlName="tenureInYears"
@@ -99,9 +97,7 @@
                                 (focusout)="calculateMaturity()">
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="rdAccountModel.tenureType == 3 || 
-                rdAccountModel.tenureType == 4 || rdAccountModel.tenureType == 6 ||
-                rdAccountModel.tenureType == 7">
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="monthFlag">
                     <div class="form-label">
                         <label>{{'TERMDEPOSITSTRANSACTION.TENURE_IN_MONTHS' | translate}}</label>
                             <input pInputText id="state_txt_name" type="text" formControlName="tenureInMonths"
@@ -169,11 +165,11 @@
                         <label>{{'TERMDEPOSITSTRANSACTION.PAYMENT_TYPE' | translate}}</label>
                             <p-dropdown [options]="paymentTypeList" placeholder="{{'ERP.SELECT' | translate}}"
                                 formControlName="interestPayoutType"
-                                [(ngModel)]="rdAccountModel.interestPayoutType" (focusout)="calculateMaturity()">
+                                [(ngModel)]="rdAccountModel.interestPayoutType" (onChange)="interestPayoutCheck()">
                             </p-dropdown>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="rdAccountModel.interestPayoutType == 2">
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="interestPayoutFlag">
                     <div class="form-label">
                         <label>{{'TERMDEPOSITSTRANSACTION.INTEREST_TRANSFER_ACCOUNT' | translate}}</label>
                             <input pInputText id="state_txt_name" type="text" formControlName="interestPayoutTransferAccount"

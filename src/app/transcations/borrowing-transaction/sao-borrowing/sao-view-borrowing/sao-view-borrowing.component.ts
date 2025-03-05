@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { SaoAccountdetails } from '../sao-borrowing-stepper/sao-account-details/shared/sao-accountdetails.model';
 import { SaoBorrowingAccountMapping } from '../sao-borrowing-stepper/sao-borrowing-account-mapping/shared/sao-borrowing-account-mapping.model';
 import { SaoBorrowingDocuments } from '../sao-borrowing-stepper/sao-borrowing-documents/shared/sao-borrowing-documents.model';
@@ -57,6 +57,8 @@ export class SaoViewBorrowingComponent {
   viewButton: boolean = false;
   editFlag: boolean = false;
   multipartFileList: any[] = [];
+  docPhotoCopyZoom: boolean = false;
+  isMaximized: boolean = false;
   constructor(private commonComponent: CommonComponent, private formBuilder: FormBuilder,
     private saoAccountDetailsService : SaoAccountDetailsService, private translate: TranslateService,
 
@@ -282,4 +284,31 @@ pdfDownload() {
   })
  
 }
+
+onClickdoccPhotoCopy(rowData :any){
+    this.multipleFilesList = [];
+    this.docPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
+  }
+  // Popup Maximize
+      @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+      
+        onDialogResize(event: any) {
+          this.isMaximized = event.maximized;
+      
+          if (this.isMaximized) {
+            // Restore original image size when maximized
+            this.imageElement.nativeElement.style.width = 'auto';
+            this.imageElement.nativeElement.style.height = 'auto';
+            this.imageElement.nativeElement.style.maxWidth = '100%';
+            this.imageElement.nativeElement.style.maxHeight = '100vh';
+          } else {
+            // Fit image inside the dialog without scrollbars
+            this.imageElement.nativeElement.style.width = '100%';
+            this.imageElement.nativeElement.style.height = '100%';
+            this.imageElement.nativeElement.style.maxWidth = '100%';
+            this.imageElement.nativeElement.style.maxHeight = '100%';
+            this.imageElement.nativeElement.style.objectFit = 'contain';
+          }
+        }
 }

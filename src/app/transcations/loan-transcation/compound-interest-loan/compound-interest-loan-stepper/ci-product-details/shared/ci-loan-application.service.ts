@@ -201,5 +201,22 @@ export class CiLoanApplicationService {
   updateCiLoanApplication(loanapplication: any) {
     return this.commonHttpService.put(loanapplication,Headers, ERP_TRANSACTION_CONSTANTS.LOANS+ ERP_TRANSACTION_CONSTANTS.CI_LOAN_APPLICATION + ERP_TRANSACTION_CONSTANTS.UPDATE)
   }
+
+  getBlockList(){
+    return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.BLOCKS + Configuration.GET_ALL);
+  }
+
+  getAllDivisionList(){
+    return this.commonHttpService.getAll(  Configuration.COMMON_MASTER + Configuration.DIVISION + Configuration.GET_ALL);
+  }
+
+  /**
+   * @implements membership products
+   * @returns 
+   */
+  getAllSubProduct() {
+    return this.commonHttpService.getAll(ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.SUB_PRODUCT + ERP_TRANSACTION_CONSTANTS.GET_ALL);
+  }
+
  
 }

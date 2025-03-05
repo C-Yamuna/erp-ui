@@ -22,7 +22,7 @@ import { applicationConstants } from 'src/app/shared/applicationConstants';
 import { FdNonCumulativeJointHolderService } from './fd-non-cumulative-joint-holder-details/shared/fd-non-cumulative-joint-holder.service';
 import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-constants';
 import { FileUploadService } from 'src/app/shared/file-upload.service';
-import { AccountTypes, CommonStatusData, MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
+import { AccountTypes, CommonStatusData, membershipProductName, MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
 import { FdNonCummulativeTransactionRequiredDocuments } from './fd-non-cummulative-transaction-required-documents/shared/fd-non-cummulative-transaction-required-documents.model';
 
 @Component({
@@ -114,6 +114,9 @@ export class FdNonCumulativeStepperComponent implements OnInit {
   memberTypeList: any[] = [];
   jointHolderDetailsList: any[] = [];
   genderList: any[] = [];
+  maritalStatusList: any[] = [];
+  requiredlist: any[] = [];
+  subProductList: any[] = [];
 
 
   constructor(private router: Router,
@@ -129,9 +132,10 @@ export class FdNonCumulativeStepperComponent implements OnInit {
     private datePipe: DatePipe,
     private fdNonCumulativeJointHolderService: FdNonCumulativeJointHolderService, private fileUploadService: FileUploadService) {
       this.institutionPrmoters = [
+        { field: 'isPocName', header: 'TERMDEPOSITSTRANSACTION.POC' },
         { field: 'surname', header: 'TERMDEPOSITSTRANSACTION.SURNAME' },
         { field: 'name', header: 'TERMDEPOSITSTRANSACTION.NAME' },
-        { field: 'operatorTypeName', header: 'TERMDEPOSITSTRANSACTION.ACCOUNT_TYPE' },
+        { field: 'authorizedSignatoryName', header: 'TERMDEPOSITSTRANSACTION.AUTHORIZED_SIGNATORY' },
         { field: 'memDobVal', header: 'TERMDEPOSITSTRANSACTION.DATE_OF_BIRTH' },
         { field: 'age', header: 'TERMDEPOSITSTRANSACTION.AGE' },
         { field: 'genderTypeName', header: 'TERMDEPOSITSTRANSACTION.GENDER' },
@@ -140,11 +144,13 @@ export class FdNonCumulativeStepperComponent implements OnInit {
         { field: 'emailId', header: 'TERMDEPOSITSTRANSACTION.EMAIL' },
         { field: 'aadharNumber', header: 'TERMDEPOSITSTRANSACTION.AADHAR' },
         { field: 'startDateVal', header: 'TERMDEPOSITSTRANSACTION.START_DATE' },
+        { field: 'endDateVal', header: 'TERMDEPOSITSTRANSACTION.EXIT_DATE' },
       ];
       this.groupPrmoters = [
+        { field: 'isPocName', header: 'TERMDEPOSITSTRANSACTION.POC' },
         { field: 'surname', header: 'TERMDEPOSITSTRANSACTION.SURNAME' },
         { field: 'name', header: 'TERMDEPOSITSTRANSACTION.NAME' },
-        { field: 'operatorTypeName', header: 'TERMDEPOSITSTRANSACTION.ACCOUNT_TYPE' },
+        { field: 'authorizedSignatoryName', header: 'TERMDEPOSITSTRANSACTION.AUTHORIZED_SIGNATORY' },
         { field: 'memDobVal', header: 'TERMDEPOSITSTRANSACTION.DATE_OF_BIRTH' },
         { field: 'age', header: 'TERMDEPOSITSTRANSACTION.AGE' },
         { field: 'genderName', header: 'TERMDEPOSITSTRANSACTION.GENDER' },
@@ -153,6 +159,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
         { field: 'emailId', header: 'TERMDEPOSITSTRANSACTION.EMAIL' },
         { field: 'aadharNumber', header: 'TERMDEPOSITSTRANSACTION.AADHAR' },
         { field: 'startDateVal', header: 'TERMDEPOSITSTRANSACTION.START_DATE' },
+        { field: 'endDateVal', header: 'TERMDEPOSITSTRANSACTION.EXIT_DATE' },
       ];
   
   }
@@ -163,13 +170,14 @@ export class FdNonCumulativeStepperComponent implements OnInit {
     this.branchId = this.commonFunctionsService.getStorageValue(applicationConstants.BRANCH_ID);
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
     this.genderList = this.commonComponent.genderList();
+    this.maritalStatusList = this.commonComponent.maritalStatusList();
+    this.requiredlist = this.commonComponent.requiredlist();
     this.showForm = this.commonFunctionsService.getStorageValue(applicationConstants.B_CLASS_MEMBER_CREATION);
     this.activateRoute.queryParams.subscribe(params => {
       if (params['id'] != undefined || params['admissionNo'] != undefined || params['falg'] != undefined || params['showForm'] != undefined) {
         if (params['id'] != undefined) {
           let queryParams = Number(this.encryptDecryptService.decrypt(params['id']));
-          let qParams = queryParams;
-          this.fdNonCummulativeAccId = qParams;
+          this.fdNonCummulativeAccId = queryParams;
           this.menuDisabled = false;
           this.getFdNonCumulativeApplicationById(this.fdNonCummulativeAccId);
         }
@@ -179,8 +187,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
 
         if (params['admissionNo'] != undefined) {
           let queryParams = Number(this.encryptDecryptService.decrypt(params['admissionNo']));
-          let qParams = queryParams;
-          this.admissionNumber = qParams;
+          this.admissionNumber = queryParams;
           this.getMemberDetailsByAdmissionNUmber(this.admissionNumber);
           this.getGroupDetailsByAdmissionNumber(this.admissionNumber);
           this.getInstitutionDetailsByAdmissionNumber(this.admissionNumber);
@@ -343,7 +350,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
                 }
               },
               {
-                label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
+                label: 'Application Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
                 disabled: this.menuDisabled,
                 command: (event: any) => {
                   this.activeIndex = 3;
@@ -357,7 +364,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
                 }
               },
               {
-                label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
+                label: 'Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
                 disabled: this.menuDisabled,
                 command: (event: any) => {
                   this.activeIndex = 6;
@@ -389,7 +396,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
                 }
               },
               {
-                label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
+                label: 'Application Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
                 disabled: this.menuDisabled,
                 command: (event: any) => {
                   this.activeIndex = 3;
@@ -410,7 +417,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
                 }
               },
               {
-                label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
+                label: 'Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
                 disabled: this.menuDisabled,
                 command: (event: any) => {
                   this.activeIndex = 6;
@@ -436,7 +443,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
                 }
               },
               {
-                label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
+                label: 'Application Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
                 disabled: this.menuDisabled,
                 command: (event: any) => {
                   this.activeIndex = 3;
@@ -450,7 +457,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
                 }
               },
               {
-                label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
+                label: 'Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
                 disabled: this.menuDisabled,
                 command: (event: any) => {
                   this.activeIndex = 6;
@@ -474,7 +481,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
                 }
               },
               {
-                label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
+                label: 'Application Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
                 disabled: this.menuDisabled,
                 command: (event: any) => {
                   this.activeIndex = 3;
@@ -495,7 +502,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
                 }
               },
               {
-                label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
+                label: 'Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
                 disabled: this.menuDisabled,
                 command: (event: any) => {
                   this.activeIndex = 6;
@@ -813,7 +820,11 @@ export class FdNonCumulativeStepperComponent implements OnInit {
                 this.membershipBasicRequiredDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
               }
               if (this.membershipBasicRequiredDetailsModel.resolutionDate != null && this.membershipBasicRequiredDetailsModel.resolutionDate != undefined) {
-                this.membershipBasicRequiredDetailsModel.resolutionDate = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.resolutionDate, this.orgnizationSetting.datePipe);
+                this.membershipBasicRequiredDetailsModel.resolutionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.resolutionDate, this.orgnizationSetting.datePipe);
+              }
+              if (this.membershipBasicRequiredDetailsModel.resolutionCopy != null && this.membershipBasicRequiredDetailsModel.resolutionCopy != undefined) {
+                this.membershipBasicRequiredDetailsModel.multipartFileListForResolutionCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.resolutionCopy, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.resolutionCopy);
+                this.photoCopyFlag = true;
               }
               if (this.membershipBasicRequiredDetailsModel.photoPath != null && this.membershipBasicRequiredDetailsModel.photoPath != undefined) {
                 this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.photoPath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.photoPath);
@@ -855,10 +866,28 @@ export class FdNonCumulativeStepperComponent implements OnInit {
                   if (promoter.startDate != null && promoter.startDate != undefined) {
                     promoter.startDateVal = this.datePipe.transform(promoter.startDate, this.orgnizationSetting.datePipe);
                   }
+                  if (promoter.endDate != null && promoter.endDate != undefined) {
+                    promoter.endDateVal = this.datePipe.transform(promoter.endDate, this.orgnizationSetting.datePipe);
+                  }
                   if (promoter.genderId != null && promoter.genderId != undefined) {
                     let gender = this.genderList.filter((obj: any) => obj.value == promoter.genderId);
                     if (gender != null && gender != undefined && gender.length > 0)
                       promoter.genderName = gender[0].label;
+                  }
+                  if (promoter.martialId != null && promoter.martialId != undefined) {
+                    let marital = this.maritalStatusList.filter((obj: any) => obj.value == promoter.martialId);
+                    if (marital != null && marital != undefined && marital.length > 0)
+                      promoter.maritalStatusName = marital[0].label;
+                  }
+                  if (promoter.isPoc != null && promoter.isPoc != undefined) {
+                    let poc = this.requiredlist.filter((obj: any) => obj.value == promoter.isPoc);
+                    if (poc != null && poc != undefined && poc.length > 0)
+                      promoter.isPocName = poc[0].label;
+                  }              
+                  if (promoter.authorizedSignatory != null && promoter.authorizedSignatory != undefined) {
+                    let author = this.requiredlist.filter((obj: any) => obj.value == promoter.authorizedSignatory);
+                    if (author != null && author != undefined && author.length > 0)
+                      promoter.authorizedSignatoryName = author[0].label;
                   }
                 }
 
@@ -897,10 +926,18 @@ export class FdNonCumulativeStepperComponent implements OnInit {
                   if (promoter.startDate != null && promoter.startDate != undefined) {
                     promoter.startDateVal = this.datePipe.transform(promoter.startDate, this.orgnizationSetting.datePipe);
                   }
+                  if (promoter.endDate != null && promoter.endDate != undefined) {
+                    promoter.endDateVal = this.datePipe.transform(promoter.endDate, this.orgnizationSetting.datePipe);
+                  }
                   if (promoter.genderId != null && promoter.genderId != undefined) {
                     let gender = this.genderList.filter((obj: any) => obj.value == promoter.genderId);
                     if (gender != null && gender != undefined && gender.length > 0)
                       promoter.genderName = gender[0].label;
+                  }
+                  if (promoter.authorizedSignatory != null && promoter.authorizedSignatory != undefined) {
+                    let author = this.requiredlist.filter((obj: any) => obj.value == promoter.authorizedSignatory);
+                    if (author != null && author != undefined && author.length > 0)
+                      promoter.authorizedSignatoryName = author[0].label;
                   }
                 }
                 if (this.memberGroupDetailsModel.memberTypeName != null && this.memberGroupDetailsModel.memberTypeName != undefined) {
@@ -966,17 +1003,19 @@ export class FdNonCumulativeStepperComponent implements OnInit {
   //get member module data by admissionNUmber
 
   getMemberDetailsByAdmissionNUmber(admissionNumber: any) {
-    debugger
     this.membershipServiceService.getMembershipBasicDetailsByAdmissionNumber(admissionNumber).subscribe((data: any) => {
       this.responseModel = data;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
-        if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+        if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {         
           this.membershipBasicRequiredDetailsModel = this.responseModel.data[0];
-          this.membershipBasicRequiredDetailsModel.fdNonCummCommunicationDto = this.responseModel.data[0].memberShipCommunicationDetailsDTOList;
+          this.membershipBasicRequiredDetailsModel.fdNonCummCommunicationDto = this.responseModel.data[0].memberShipCommunicationDetailsDTO;
           this.membershipBasicRequiredDetailsModel.photoPath = this.responseModel.data[0].photoCopyPath;
           this.membershipBasicRequiredDetailsModel.signaturePath = this.responseModel.data[0].signatureCopyPath;
-          this.membershipBasicRequiredDetailsModel.resolutionCopy = this.responseModel.data[0].mcrDocumentCopy;
+          this.membershipBasicRequiredDetailsModel.subProductName = this.responseModel.data[0].subProductName;
           this.memberTypeName = this.responseModel.data[0].memberTypeName;
+          this.membershipBasicRequiredDetailsModel.resolutionCopy = this.responseModel.data[0].mcrDocumentCopy;
+          this.membershipBasicRequiredDetailsModel.mcrNumber = this.responseModel.data[0].mcrNumber;
+          this.membershipBasicRequiredDetailsModel.resolutionDate = this.responseModel.data[0].resolutionDate;
           if (this.membershipBasicRequiredDetailsModel.dob != null && this.membershipBasicRequiredDetailsModel.dob != undefined) {
             this.membershipBasicRequiredDetailsModel.dobVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.dob, this.orgnizationSetting.datePipe);
           }
@@ -984,7 +1023,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
             this.membershipBasicRequiredDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
           }
           if (this.membershipBasicRequiredDetailsModel.resolutionDate != null && this.membershipBasicRequiredDetailsModel.resolutionDate != undefined) {
-            this.membershipBasicRequiredDetailsModel.resolutionDate = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.resolutionDate, this.orgnizationSetting.datePipe);
+            this.membershipBasicRequiredDetailsModel.resolutionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.resolutionDate, this.orgnizationSetting.datePipe);
           }
           if (this.membershipBasicRequiredDetailsModel.fdNonCummCommunicationDto != null && this.membershipBasicRequiredDetailsModel.fdNonCummCommunicationDto != undefined) {
             this.fdNonCumulativeCommunicationModel = this.membershipBasicRequiredDetailsModel.fdNonCummCommunicationDto;
@@ -1035,9 +1074,13 @@ export class FdNonCumulativeStepperComponent implements OnInit {
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
           this.memberGroupDetailsModel = this.responseModel.data[0];
-          this.memberGroupDetailsModel.fdNonCummCommunicationDto = this.responseModel.data[0].groupCommunicationList;
+          this.memberGroupDetailsModel.fdNonCummCommunicationDto = this.responseModel.data[0].groupCommunicationList[0];
+          this.memberGroupDetailsModel.groupName = this.responseModel.data[0].groupTypeName;
+          this.memberGroupDetailsModel.operatorTypeName =this.responseModel.data[0].operatorTypeName;
           this.memberGroupDetailsModel.photoPath = this.responseModel.data[0].photoCopyPath;
           this.memberGroupDetailsModel.signaturePath = this.responseModel.data[0].signatureCopyPath;
+          this.fdNonCumulativeCommunicationModel.pinCode = this.responseModel.data[0].groupCommunicationList[0].pincode;
+          this.fdNonCumulativeCommunicationModel.permanentPinCode = this.responseModel.data[0].groupCommunicationList[0].permanentPincode;
 
           this.memberTypeName = this.responseModel.data[0].memberTypeName;
           if (this.memberGroupDetailsModel.registrationDate != null && this.memberGroupDetailsModel.registrationDate != undefined) {
@@ -1048,7 +1091,38 @@ export class FdNonCumulativeStepperComponent implements OnInit {
           }
           if (this.memberGroupDetailsModel.groupPromoterList != null && this.memberGroupDetailsModel.groupPromoterList != undefined) {
             this.groupPrmotersList = this.memberGroupDetailsModel.groupPromoterList;
+            for (let promoter of this.groupPrmotersList) {
+              if (promoter.dob != null && promoter.dob != undefined) {
+                promoter.memDobVal = this.datePipe.transform(promoter.dob, this.orgnizationSetting.datePipe);
+              }
+              if (promoter.startDate != null && promoter.startDate != undefined) {
+                promoter.startDateVal = this.datePipe.transform(promoter.startDate, this.orgnizationSetting.datePipe);
+              }
+              if (promoter.endDate != null && promoter.endDate != undefined) {
+                promoter.endDateVal = this.datePipe.transform(promoter.endDate, this.orgnizationSetting.datePipe);
+              }
+              if (promoter.genderId != null && promoter.genderId != undefined) {
+                let gender = this.genderList.filter((obj: any) => obj.value == promoter.genderId);
+                if (gender != null && gender != undefined && gender.length > 0)
+                  promoter.genderName = gender[0].label;
+              }
+              if (promoter.martialId != null && promoter.martialId != undefined) {
+                let marital = this.maritalStatusList.filter((obj: any) => obj.value == promoter.martialId);
+                if (marital != null && marital != undefined && marital.length > 0)
+                  promoter.maritalStatusName = marital[0].label;
+              }
+              if (promoter.isPoc != null && promoter.isPoc != undefined) {
+                let poc = this.requiredlist.filter((obj: any) => obj.value == promoter.isPoc);
+                if (poc != null && poc != undefined && poc.length > 0)
+                  promoter.isPocName = poc[0].label;
+              }              
+              if (promoter.authorizedSignatory != null && promoter.authorizedSignatory != undefined) {
+                let author = this.requiredlist.filter((obj: any) => obj.value == promoter.authorizedSignatory);
+                if (author != null && author != undefined && author.length > 0)
+                  promoter.authorizedSignatoryName = author[0].label;
+              }
 
+            }
           }
 
           if (this.memberGroupDetailsModel.isKycApproved != null && this.memberGroupDetailsModel.isKycApproved != undefined) {
@@ -1107,10 +1181,18 @@ export class FdNonCumulativeStepperComponent implements OnInit {
               if (promoter.startDate != null && promoter.startDate != undefined) {
                 promoter.startDateVal = this.datePipe.transform(promoter.startDate, this.orgnizationSetting.datePipe);
               }
+              if (promoter.endDate != null && promoter.endDate != undefined) {
+                promoter.endDateVal = this.datePipe.transform(promoter.endDate, this.orgnizationSetting.datePipe);
+              }
               if (promoter.genderId != null && promoter.genderId != undefined) {
                 let gender = this.genderList.filter((obj: any) => obj.value == promoter.genderId);
                 if (gender != null && gender != undefined && gender.length > 0)
                   promoter.genderName = gender[0].label;
+              }
+              if (promoter.authorizedSignatory != null && promoter.authorizedSignatory != undefined) {
+                let author = this.requiredlist.filter((obj: any) => obj.value == promoter.authorizedSignatory);
+                if (author != null && author != undefined && author.length > 0)
+                  promoter.authorizedSignatoryName = author[0].label;
               }
             }
           }
@@ -1522,9 +1604,9 @@ export class FdNonCumulativeStepperComponent implements OnInit {
     else {
       this.isNomineeEdit = true;
     }
-    if (this.fdNonCumulativeNomineeModel.nomineeDobVal != null && this.fdNonCumulativeNomineeModel.nomineeDobVal != undefined) {
-      this.fdNonCumulativeNomineeModel.nomineeDob = this.commonFunctionsService.getUTCEpoch(this.fdNonCumulativeNomineeModel.nomineeDobVal);
-    }
+    // if (this.fdNonCumulativeNomineeModel.nomineeDobVal != null && this.fdNonCumulativeNomineeModel.nomineeDobVal != undefined) {
+    //   this.fdNonCumulativeNomineeModel.nomineeDob = this.commonFunctionsService.getUTCEpoch(this.fdNonCumulativeNomineeModel.nomineeDobVal);
+    // }
     if (this.isNomineeEdit) {
       this.fdNonCumulativeNomineeService.updateNomineeDetails(this.fdNonCumulativeNomineeModel).subscribe((response: any) => {
         this.responseModel = response;
@@ -1716,7 +1798,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
             }
           },
           {
-            label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION,
+            label: 'Application Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 3;
@@ -1730,7 +1812,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
             }
           },
           {
-            label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS,
+            label: 'Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 6;
@@ -1761,7 +1843,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
             }
           },
           {
-            label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION,
+            label: 'Application Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 3;
@@ -1782,7 +1864,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
             }
           },
           {
-            label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS,
+            label: 'Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 6;
@@ -1808,7 +1890,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
             }
           },
           {
-            label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION,
+            label: 'Application Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 3;
@@ -1822,7 +1904,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
             }
           },
           {
-            label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS,
+            label: 'Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 6;
@@ -1846,7 +1928,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
             }
           },
           {
-            label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION,
+            label: 'Application Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 3;
@@ -1867,7 +1949,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
             }
           },
           {
-            label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS,
+            label: 'Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 6;
@@ -1904,7 +1986,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
             }
           },
           {
-            label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION,
+            label: 'Application Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 3;
@@ -1918,7 +2000,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
           //   }
           // },
           {
-            label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS,
+            label: 'Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 6;
@@ -1949,7 +2031,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
             }
           },
           {
-            label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION,
+            label: 'Application Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 3;
@@ -1970,7 +2052,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
           //   }
           // },
           {
-            label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS,
+            label: 'Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 6;
@@ -1996,7 +2078,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
             }
           },
           {
-            label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION,
+            label: 'Application Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 3;
@@ -2010,7 +2092,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
           //   }
           // },
           {
-            label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS,
+            label: 'Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 6;
@@ -2034,7 +2116,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
             }
           },
           {
-            label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION,
+            label: 'Application Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 3;
@@ -2055,7 +2137,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
           //   }
           // },
           {
-            label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS,
+            label: 'Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 6;
@@ -2095,7 +2177,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
               }
             },
             {
-              label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
+              label: 'Application Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 3;
@@ -2109,7 +2191,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
             //   }
             // },
             {
-              label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
+              label: 'Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 6;
@@ -2140,7 +2222,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
               }
             },
             {
-              label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
+              label: 'Application Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 3;
@@ -2161,7 +2243,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
             //   }
             // },
             {
-              label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
+              label: 'Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 6;
@@ -2187,7 +2269,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
               }
             },
             {
-              label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
+              label: 'Application Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 3;
@@ -2201,7 +2283,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
             //   }
             // },
             {
-              label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
+              label: 'Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 6;
@@ -2225,7 +2307,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
               }
             },
             {
-              label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
+              label: 'Application Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.FD_NON_CUMM_APPLICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 3;
@@ -2246,7 +2328,7 @@ export class FdNonCumulativeStepperComponent implements OnInit {
             //   }
             // },
             {
-              label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
+              label: 'Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS, queryParams: { id: this.encryptDecryptService.encrypt(this.fdNonCummulativeAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 6;
@@ -2259,4 +2341,46 @@ export class FdNonCumulativeStepperComponent implements OnInit {
       this.itemListWithoutParamsForGroupInstitution();
     }
   }
+
+      /**
+     * @implements get all subproducts details
+     * @author bhargavi
+     */
+    getAllSubProducts() {
+      this.commonComponent.startSpinner();
+      this.fdNonCumulativeApplicationService.getAllSubProduct().subscribe((res: any) => {
+        this.responseModel = res;
+        if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+          this.subProductList = this.responseModel.data;
+          if (this.subProductList == null || (this.subProductList != null && this.subProductList.length == 0)) {
+            this.msgs = [];
+            this.msgs = [{ severity: 'error', detail: applicationConstants.SUB_PRODUCTS_NO_DATA_MESSAGE }];
+            setTimeout(() => {
+              this.msgs = [];
+            }, 2000);
+          }
+          this.subProductList = this.subProductList.filter((customertype: any) => customertype.status == applicationConstants.ACTIVE &&
+           customertype.name != membershipProductName.ACLASS_VOTING_MEMBER && customertype.name != membershipProductName.ACLASS_MEMBER).map((count: any) => {
+            return { label: count.name, value: count.id }
+          });
+            
+          this.commonComponent.stopSpinner();
+        } else {
+          this.commonComponent.stopSpinner();
+          this.msgs = [];
+          this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        }
+      },
+        error => {
+          this.msgs = [];
+          this.commonComponent.stopSpinner();
+          this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        });
+    }
 }

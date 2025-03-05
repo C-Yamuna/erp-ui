@@ -133,6 +133,10 @@ import { SaoDisbursmentConfigComponent } from './sao/sao-product-definition/sao-
 import { FileUploadModule } from 'primeng/fileupload';
 import { TermLoanFieldVisitConfigComponent } from './term-loan/term-loan-product-definition/term-loan-product-definition-stepper/term-loan-field-visit-config/term-loan-field-visit-config.component';
 import { TermLoanDisbursementScheduleComponent } from './term-loan/term-loan-product-definition/term-loan-product-definition-stepper/term-loan-disbursement-schedule/term-loan-disbursement-schedule.component';
+import { SaoLoanHistoryComponent } from './sao/sao-stepper/sao-loan-history/sao-loan-history.component';
+import { CiLoanHistoryComponent } from './compound-interest-loan/compound-interest-loan-stepper/ci-loan-history/ci-loan-history/ci-loan-history.component';
+import { SiLoanHistoryComponent } from './simple-interest-loan/simple-interest-loan-stepper/si-loan-history/si-loan-history.component';
+import { TermLoanHistoryComponent } from './term-loan/term-loan-stepper/term-loan-history/term-loan-history.component';
 @NgModule({
   declarations: [
     LoanTranscationComponent,
@@ -254,7 +258,13 @@ import { TermLoanDisbursementScheduleComponent } from './term-loan/term-loan-pro
     SaoFieldVisitConfigComponent,
     SaoDisbursmentConfigComponent,
     TermLoanFieldVisitConfigComponent,
-    TermLoanDisbursementScheduleComponent
+    TermLoanDisbursementScheduleComponent,
+    SaoLoanHistoryComponent,
+    CiLoanHistoryComponent,
+    CiLoanHistoryComponent,
+    SiLoanHistoryComponent,
+    CiLoanHistoryComponent,
+    TermLoanHistoryComponent
  
   ],
   imports: [

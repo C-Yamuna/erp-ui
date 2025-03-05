@@ -26,7 +26,7 @@ import { SbRequiredDocuments } from './required-documents/shared/sb-required-doc
 import { FileUploadModel } from 'src/app/layout/mainmenu/shared/file-upload-model.model';
 import { ERP_TRANSACTION_CONSTANTS } from '../../erp-transaction-constants';
 import { FileUploadService } from 'src/app/shared/file-upload.service';
-import { CommonStatusData, CommonStatusDataValue, MemberShipTypesData } from '../../common-status-data.json';
+import { AccountTypes, CommonStatusData, CommonStatusDataValue, MemberShipTypesData } from '../../common-status-data.json';
 
 
 @Component({
@@ -136,6 +136,13 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
   photoCopyFlag: boolean = false;
   memberSignatureCopyZoom: boolean = false;
   membreIndividualFlag: boolean = false;
+
+  jointVisible : boolean = false;
+  ExistedMember : boolean = false;
+  newMember :boolean = false;
+  kycVisible :boolean =false;
+  requiredDocumentsVisible :boolean = false;
+  
  
 
   constructor(private router: Router, private savingBankApplicationService: SavingBankApplicationService, private commonComponent: CommonComponent, private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService, private savingsBankCommunicationService: SavingsBankCommunicationService, private savingsBankNomineeService: SavingsBankNomineeService, private commonFunctionsService: CommonFunctionsService, private ref: ChangeDetectorRef,
@@ -143,7 +150,7 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
     this.columns = [
       { field: 'surname', header: 'Surname' },
       { field: 'name', header: 'Name' },
-      { field: 'operatorTypeName', header: 'Operation Type' },
+      // { field: 'operatorTypeName', header: 'Operation Type' },
       { field: 'memDobVal', header: 'Date of Birth' },
       { field: 'age', header: 'Age' },
       { field: 'genderTypeName', header: 'Gender' },
@@ -157,7 +164,7 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
     this.groupPrmoters = [
       { field: 'surname', header: 'Surname' },
       { field: 'name', header: 'Name' },
-      { field: 'operatorTypeName', header: 'Operation Type' },
+      // { field: 'operatorTypeName', header: 'Operation Type' },
       { field: 'memDobVal', header: 'Date of Birth' },
       { field: 'age', header: 'Age' },
       { field: 'genderTypeName', header: 'Gender' },
@@ -241,7 +248,7 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
         if (data.data != null && data.data != undefined) {
           if (this.activeIndex == 0) {//membership 
             this.memberTypeName = data.data.memberTypeName;
-            if(this.memberTypeName  != null && this.memberTypeName  != undefined){
+            if(this.memberTypeName  != null && this.memberTypeName  != undefined && !this.showForm && (data.data.id == null || data.data.id == undefined)){
               this.admissionNumberDropDownDisable = data.isDisable;
             }
             this.memberTypeCheck(this.memberTypeName, data.data);
@@ -472,6 +479,12 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
    * @implements item list(tabs item list)
    */
   itemList() {
+    if(this.savingBankApplicationModel.requiredDocumentsConfigDetailsDTOList != null && this.savingBankApplicationModel.requiredDocumentsConfigDetailsDTOList != undefined && this.savingBankApplicationModel.requiredDocumentsConfigDetailsDTOList.length >0){
+      this.requiredDocumentsVisible = true;
+    }  
+    else {
+      this.requiredDocumentsVisible = false;
+    }
     this.items = [];
     if(this.memberTypeName != MemberShipTypesData.INDIVIDUAL){
       this.itemListWithParamGroupInstitution();
@@ -505,18 +518,19 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
                 }
               },
               {
-                label: 'Application', icon: 'fa fa-id-badge', routerLink: savingsbanktransactionconstant.SB_APPLICATION, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
+                label: 'Application Details', icon: 'fa fa-id-badge', routerLink: savingsbanktransactionconstant.SB_APPLICATION, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
                 disabled: this.menuDisabled,
                 command: (event: any) => {
                   this.activeIndex = 3;
                 }
               },
               {
-                label: 'Document', icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
+                label: 'Documents', icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
                 disabled: this.menuDisabled,
                 command: (event: any) => {
                   this.activeIndex = 5;
-                }
+                },
+                visible: this.requiredDocumentsVisible 
               },
     
               {
@@ -559,7 +573,7 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
                 }
               },
               {
-                label: 'Application', icon: 'fa fa-id-badge', routerLink: savingsbanktransactionconstant.SB_APPLICATION, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
+                label: 'Application Details', icon: 'fa fa-id-badge', routerLink: savingsbanktransactionconstant.SB_APPLICATION, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
                 disabled: this.menuDisabled,
                 command: (event: any) => {
                   this.activeIndex = 3;
@@ -573,11 +587,12 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
                 }
               },
               {
-                label: 'Document',icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
+                label: 'Documents',icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
                 disabled: this.menuDisabled,
                 command: (event: any) => {
                   this.activeIndex = 5;
-                }
+                },
+                visible: this.requiredDocumentsVisible 
               },
               {
                 label: 'Nominee', icon: 'fa fa-user-o', routerLink: savingsbanktransactionconstant.SB_NOMINEE, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
@@ -614,18 +629,19 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
                 }
               },
               {
-                label: 'Application', icon: 'fa fa-id-badge', routerLink: savingsbanktransactionconstant.SB_APPLICATION, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
+                label: 'Application Details', icon: 'fa fa-id-badge', routerLink: savingsbanktransactionconstant.SB_APPLICATION, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
                 disabled: this.menuDisabled,
                 command: (event: any) => {
                   this.activeIndex = 3;
                 }
               },
               {
-                label: 'Document', icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
+                label: 'Documents', icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
                 disabled: this.menuDisabled,
                 command: (event: any) => {
                   this.activeIndex = 5;
-                }
+                },
+                visible: this.requiredDocumentsVisible 
               },
               {
                 label: 'Nominee', icon: 'fa fa-user-o', routerLink: savingsbanktransactionconstant.SB_NOMINEE, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
@@ -660,7 +676,7 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
                 }
               },
               {
-                label: 'Application', icon: 'fa fa-id-badge', routerLink: savingsbanktransactionconstant.SB_APPLICATION, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
+                label: 'Application Details', icon: 'fa fa-id-badge', routerLink: savingsbanktransactionconstant.SB_APPLICATION, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
                 disabled: this.menuDisabled,
                 command: (event: any) => {
                   this.activeIndex = 3;
@@ -674,11 +690,12 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
                 }
               },
               {
-                label: 'Document', icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
+                label: 'Documents', icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
                 disabled: this.menuDisabled,
                 command: (event: any) => {
                   this.activeIndex = 5;
-                }
+                },
+                visible: this.requiredDocumentsVisible 
               },
               {
                 label: 'Nominee', icon: 'fa fa-user-o', routerLink: savingsbanktransactionconstant.SB_NOMINEE, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
@@ -702,6 +719,7 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
         this.itemListWithoutParams();
       }
     }
+    this.items = this.items.filter(item => item.visible !== false);
     this.activeItem = this.items[this.activeIndex];
   }
    /**
@@ -801,21 +819,29 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
       this.navigateTo(this.activeIndex, this.sbAccId);
     }
     else if (activeIndex == 5) {
-      if (this.savingBankApplicationModel.accountTypeName != "Joint") {
+      if (this.savingBankApplicationModel.accountTypeName != AccountTypes.JOINT) {
         this.flag = false;
         this.activeIndex = this.activeIndex - 1;
       }
       this.navigateTo(this.activeIndex, this.sbAccId);
     }
     else if (activeIndex == 6) {
+      if (this.savingBankApplicationModel.accountTypeName == AccountTypes.JOINT && !this.requiredDocumentsVisible) {
+        this.activeIndex = this.activeIndex - 1;
+      }
+      else if(this.savingBankApplicationModel.accountTypeName != AccountTypes.JOINT && !this.requiredDocumentsVisible) {
+        this.activeIndex = this.activeIndex - 2;
+      }
       this.navigateTo(this.activeIndex, this.sbAccId);
     }
     else if (activeIndex == 7) {
-      if(this.memberTypeName != MemberShipTypesData.INDIVIDUAL){
+      if(this.memberTypeName != MemberShipTypesData.INDIVIDUAL && !this.requiredDocumentsVisible){
+        this.activeIndex = this.activeIndex - 2;
+      }
+      if(this.memberTypeName != MemberShipTypesData.INDIVIDUAL && this.requiredDocumentsVisible){
         this.activeIndex = this.activeIndex - 1;
       }
       this.navigateTo(this.activeIndex, this.savedId);
-     
     }
   }
 
@@ -865,6 +891,12 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
       }
     }
     else if (activeIndex == 4) {
+      if(this.savingBankApplicationModel.requiredDocumentsConfigDetailsDTOList != null && this.savingBankApplicationModel.requiredDocumentsConfigDetailsDTOList != undefined && this.savingBankApplicationModel.requiredDocumentsConfigDetailsDTOList.length >0){
+        this.requiredDocumentsVisible = true;
+      }
+      else {
+        this.requiredDocumentsVisible = false;
+      }
       this.saveOrUpdateJointHolder();
     }
     else if (activeIndex == 5) { // nominee guardain hide for group instituion
@@ -1049,10 +1081,13 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
    * @argument accountTypeName
    */
   accountTypeBasedActiveIndexInscrement(accountType: any) {
-    if (accountType.toLowerCase() === "joint") {
+    if (accountType.toLowerCase() === "joint" && this.requiredDocumentsVisible) {
       this.activeIndex = this.activeIndex + 1
     }
-    else {
+    else if(accountType.toLowerCase() !== "joint" && !this.requiredDocumentsVisible){
+      this.activeIndex = this.activeIndex + 3;
+    }
+    else if(accountType.toLowerCase() !== "joint" && this.requiredDocumentsVisible){
       this.activeIndex = this.activeIndex + 2;
     }
     return this.activeIndex;
@@ -1282,7 +1317,12 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
           setTimeout(() => {
             this.msgs = [];
           }, 1200);
-          this.activeIndex = this.activeIndex + 1;
+          if(this.requiredDocumentsVisible){
+            this.activeIndex = this.activeIndex + 1;
+          }
+          else {
+            this.activeIndex = this.activeIndex + 2;
+          }
           this.navigateTo(this.activeIndex, this.sbAccId);
           console.log("Navigation executed, activeIndex: ", this.activeIndex);
           this.completed = 1;
@@ -1420,6 +1460,7 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
       this.responseModel = data;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+          this.responseModel.data[0].id = null;
           this.membershipBasicRequiredDetails = this.responseModel.data[0];
           this.membershipBasicRequiredDetails.memberShipCommunicationDetailsDTOList = this.responseModel.data[0].memberShipCommunicationDetailsDTOList;
 
@@ -1446,8 +1487,10 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
             this.isKycApproved = applicationConstants.KYC_NOT_APPROVED_NAME;
           }
           this.admissionNumber = this.membershipBasicRequiredDetails.admissionNumber;
+          this.membershipBasicRequiredDetails.tempAdmissionNumber = this.membershipBasicRequiredDetails.admissionNumber;
           this.savingBankApplicationModel.memberTypeName = this.membershipBasicRequiredDetails.memberTypeName;
           this.savingBankApplicationModel.memberShipBasicDetailsDTO = this.membershipBasicRequiredDetails;
+          
         }
       }
       else {
@@ -1477,6 +1520,7 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
       this.responseModel = data;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length >0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+          this.responseModel.data[0].id = null;
           this.memberGroupDetailsModel = this.responseModel.data[0];
           this.memberGroupDetailsModel.groupCommunicationList = this.responseModel.data[0].groupCommunicationList;
           this.membershipBasicRequiredDetails.memberGroupDetailsModel = this.memberGroupDetailsModel;
@@ -1543,6 +1587,7 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
       this.responseModel = data;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+          this.responseModel.data[0].id = null;
           this.membershipInstitutionDetailsModel = this.responseModel.data[0];
           this.membershipInstitutionDetailsModel.institutionCommunicationDTOList = this.responseModel.data[0].institutionCommunicationDTOList;
           this.memberTypeName = this.membershipInstitutionDetailsModel.memberTypeName;
@@ -1801,14 +1846,14 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
           },
 
           {
-            label: 'KYC Details', icon: 'fa fa-podcast', routerLink: savingsbanktransactionconstant.SB_KYC,
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: savingsbanktransactionconstant.SB_KYC,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 1;
             }
           },
           {
-            label: 'Communication Details', icon: 'fa fa-map-marker', routerLink: savingsbanktransactionconstant.SB_COMMUNICATION,
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: savingsbanktransactionconstant.SB_COMMUNICATION,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 2;
@@ -1822,15 +1867,16 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
             }
           },
           {
-            label: 'Document Details', icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS,
+            label: 'Documents', icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 5;
-            }
+            },
+            visible: this.requiredDocumentsVisible 
           },
 
           {
-            label: 'Nominee Details', icon: 'fa fa-user-o', routerLink: savingsbanktransactionconstant.SB_NOMINEE,
+            label: 'Nominee', icon: 'fa fa-user-o', routerLink: savingsbanktransactionconstant.SB_NOMINEE,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 6;
@@ -1855,14 +1901,14 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
             }
           },
           {
-            label: 'KYC Details', icon: 'fa fa-podcast', routerLink: savingsbanktransactionconstant.SB_KYC,
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: savingsbanktransactionconstant.SB_KYC,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 1;
             }
           },
           {
-            label: 'Communication Details', icon: 'fa fa-map-marker', routerLink: savingsbanktransactionconstant.SB_COMMUNICATION,
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: savingsbanktransactionconstant.SB_COMMUNICATION,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 2;
@@ -1883,14 +1929,15 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
             }
           },
           {
-            label: 'Document Details',icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS,
+            label: 'Documents',icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 5;
-            }
+            },
+            visible: this.requiredDocumentsVisible 
           },
           {
-            label: 'Nominee Details', icon: 'fa fa-user-o', routerLink: savingsbanktransactionconstant.SB_NOMINEE,
+            label: 'Nominee', icon: 'fa fa-user-o', routerLink: savingsbanktransactionconstant.SB_NOMINEE,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 6;
@@ -1910,14 +1957,14 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
       if(this.savingBankApplicationModel.accountTypeName != "Joint") {        
         this.items = [
           {
-            label: 'KYC Details', icon: 'fa fa-podcast', routerLink: savingsbanktransactionconstant.MEMBERSHIP_BASIC_DETAILS,
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: savingsbanktransactionconstant.MEMBERSHIP_BASIC_DETAILS,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 0;
             }
           },
           {
-            label: 'Communication Details', icon: 'fa fa-map-marker', routerLink: savingsbanktransactionconstant.SB_COMMUNICATION,
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: savingsbanktransactionconstant.SB_COMMUNICATION,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 2;
@@ -1931,14 +1978,15 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
             }
           },
           {
-            label: 'Document Details', icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS,
+            label: 'Documents', icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 5;
-            }
+            },
+            visible: this.requiredDocumentsVisible 
           },
           {
-            label: 'Nominee Details', icon: 'fa fa-user-o', routerLink: savingsbanktransactionconstant.SB_NOMINEE, 
+            label: 'Nominee', icon: 'fa fa-user-o', routerLink: savingsbanktransactionconstant.SB_NOMINEE, 
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 6;
@@ -1956,14 +2004,14 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
       else {
         this.items = [
           {
-            label: 'KYC Details', icon: 'fa fa-podcast', routerLink: savingsbanktransactionconstant.MEMBERSHIP_BASIC_DETAILS,
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: savingsbanktransactionconstant.MEMBERSHIP_BASIC_DETAILS,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 0;
             }
           },
           {
-            label: 'Communication Details', icon: 'fa fa-map-marker', routerLink: savingsbanktransactionconstant.SB_COMMUNICATION,
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: savingsbanktransactionconstant.SB_COMMUNICATION,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 2;
@@ -1984,14 +2032,15 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
             }
           },
           {
-            label: 'Document Details', icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS,
+            label: 'Documents', icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 5;
-            }
+            },
+            visible: this.requiredDocumentsVisible 
           },
           {
-            label: 'Nominee Details', icon: 'fa fa-user-o', routerLink: savingsbanktransactionconstant.SB_NOMINEE, 
+            label: 'Nominee', icon: 'fa fa-user-o', routerLink: savingsbanktransactionconstant.SB_NOMINEE, 
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 6;
@@ -2023,14 +2072,14 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
           },
 
           {
-            label: 'KYC Details', icon: 'fa fa-podcast', routerLink: savingsbanktransactionconstant.SB_KYC,
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: savingsbanktransactionconstant.SB_KYC,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 1;
             }
           },
           {
-            label: 'Communication Details', icon: 'fa fa-map-marker', routerLink: savingsbanktransactionconstant.SB_COMMUNICATION,
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: savingsbanktransactionconstant.SB_COMMUNICATION,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 2;
@@ -2044,11 +2093,12 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
             }
           },
           {
-            label: 'Document Details', icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS,
+            label: 'Documents', icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 5;
-            }
+            },
+            visible: this.requiredDocumentsVisible 
           },
           {
             label: 'Services', icon: 'fa fa-wrench', routerLink: savingsbanktransactionconstant.SB_SERVICES,
@@ -2069,14 +2119,14 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
             }
           },
           {
-            label: 'KYC Details', icon: 'fa fa-podcast', routerLink: savingsbanktransactionconstant.SB_KYC,
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: savingsbanktransactionconstant.SB_KYC,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 1;
             }
           },
           {
-            label: 'Communication Details', icon: 'fa fa-map-marker', routerLink: savingsbanktransactionconstant.SB_COMMUNICATION,
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: savingsbanktransactionconstant.SB_COMMUNICATION,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 2;
@@ -2097,11 +2147,12 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
             }
           },
           {
-            label: 'Document Details',icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS,
+            label: 'Documents',icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 5;
-            }
+            },
+            visible: this.requiredDocumentsVisible 
           },
           {
             label: 'Services', icon: 'fa fa-wrench', routerLink: savingsbanktransactionconstant.SB_SERVICES,
@@ -2117,14 +2168,14 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
       if(this.savingBankApplicationModel.accountTypeName != "Joint") {        
         this.items = [
           {
-            label: 'KYC Details', icon: 'fa fa-podcast', routerLink: savingsbanktransactionconstant.MEMBERSHIP_BASIC_DETAILS,
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: savingsbanktransactionconstant.MEMBERSHIP_BASIC_DETAILS,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 0;
             }
           },
           {
-            label: 'Communication Details', icon: 'fa fa-map-marker', routerLink: savingsbanktransactionconstant.SB_COMMUNICATION,
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: savingsbanktransactionconstant.SB_COMMUNICATION,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 2;
@@ -2138,11 +2189,12 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
             }
           },
           {
-            label: 'Document Details', icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS,
+            label: 'Documents', icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 5;
-            }
+            },
+            visible: this.requiredDocumentsVisible 
           },
           {
             label: 'Services', icon: 'fa fa-wrench', routerLink: savingsbanktransactionconstant.SB_SERVICES,
@@ -2156,14 +2208,14 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
       else {
         this.items = [
           {
-            label: 'KYC Details', icon: 'fa fa-podcast', routerLink: savingsbanktransactionconstant.MEMBERSHIP_BASIC_DETAILS,
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: savingsbanktransactionconstant.MEMBERSHIP_BASIC_DETAILS,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 0;
             }
           },
           {
-            label: 'Communication Details', icon: 'fa fa-map-marker', routerLink: savingsbanktransactionconstant.SB_COMMUNICATION,
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: savingsbanktransactionconstant.SB_COMMUNICATION,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 2;
@@ -2184,11 +2236,12 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
             }
           },
           {
-            label: 'Document Details', icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS,
+            label: 'Documents', icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 5;
-            }
+            },
+            visible: this.requiredDocumentsVisible 
           },
           {
             label: 'Services', icon: 'fa fa-wrench', routerLink: savingsbanktransactionconstant.SB_SERVICES,
@@ -2218,14 +2271,14 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
             },
   
             {
-              label: 'KYC Details', icon: 'fa fa-podcast', routerLink: savingsbanktransactionconstant.SB_KYC, queryParams: { id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
+              label: 'KYC', icon: 'fa fa-podcast', routerLink: savingsbanktransactionconstant.SB_KYC, queryParams: { id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 1;
               }
             },
             {
-              label: 'Communication Details', icon: 'fa fa-map-marker', routerLink: savingsbanktransactionconstant.SB_COMMUNICATION, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
+              label: 'Communication', icon: 'fa fa-map-marker', routerLink: savingsbanktransactionconstant.SB_COMMUNICATION, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 2;
@@ -2239,11 +2292,12 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
               }
             },
             {
-              label: 'Document Details', icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
+              label: 'Documents', icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 5;
-              }
+              },
+              visible: this.requiredDocumentsVisible 
             },
             {
               label: 'Services', icon: 'fa fa-wrench', routerLink: savingsbanktransactionconstant.SB_SERVICES, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
@@ -2264,14 +2318,14 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
               }
             },
             {
-              label: 'KYC Details', icon: 'fa fa-podcast', routerLink: savingsbanktransactionconstant.SB_KYC, queryParams: { id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
+              label: 'KYC', icon: 'fa fa-podcast', routerLink: savingsbanktransactionconstant.SB_KYC, queryParams: { id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 1;
               }
             },
             {
-              label: 'Communication Details', icon: 'fa fa-map-marker', routerLink: savingsbanktransactionconstant.SB_COMMUNICATION, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
+              label: 'Communication', icon: 'fa fa-map-marker', routerLink: savingsbanktransactionconstant.SB_COMMUNICATION, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 2;
@@ -2292,11 +2346,12 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
               }
             },
             {
-              label: 'Document Details',icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
+              label: 'Documents',icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 5;
-              }
+              },
+              visible: this.requiredDocumentsVisible 
             },
             {
               label: 'Services', icon: 'fa fa-wrench', routerLink: savingsbanktransactionconstant.SB_SERVICES, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
@@ -2312,14 +2367,14 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
         if(this.savingBankApplicationModel.accountTypeName != "Joint") {        
           this.items = [
             {
-              label: 'KYC Details', icon: 'fa fa-podcast', routerLink: savingsbanktransactionconstant.MEMBERSHIP_BASIC_DETAILS, queryParams: { id: this.encryptDecryptService.encrypt(this.sbAccId)} ,
+              label: 'KYC', icon: 'fa fa-podcast', routerLink: savingsbanktransactionconstant.MEMBERSHIP_BASIC_DETAILS, queryParams: { id: this.encryptDecryptService.encrypt(this.sbAccId)} ,
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 0;
               }
             },
             {
-              label: 'Communication Details', icon: 'fa fa-map-marker', routerLink: savingsbanktransactionconstant.SB_COMMUNICATION, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
+              label: 'Communication', icon: 'fa fa-map-marker', routerLink: savingsbanktransactionconstant.SB_COMMUNICATION, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 2;
@@ -2333,11 +2388,12 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
               }
             },
             {
-              label: 'Document Details', icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
+              label: 'Documents', icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 5;
-              }
+              },
+              visible: this.requiredDocumentsVisible 
             },
             {
               label: 'Services', icon: 'fa fa-wrench', routerLink: savingsbanktransactionconstant.SB_SERVICES, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
@@ -2351,14 +2407,14 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
         else {
           this.items = [
             {
-              label: 'KYC Details', icon: 'fa fa-podcast', routerLink: savingsbanktransactionconstant.MEMBERSHIP_BASIC_DETAILS, queryParams: { id: this.encryptDecryptService.encrypt(this.sbAccId)} ,
+              label: 'KYC', icon: 'fa fa-podcast', routerLink: savingsbanktransactionconstant.MEMBERSHIP_BASIC_DETAILS, queryParams: { id: this.encryptDecryptService.encrypt(this.sbAccId)} ,
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 0;
               }
             },
             {
-              label: 'Communication Details', icon: 'fa fa-map-marker', routerLink: savingsbanktransactionconstant.SB_COMMUNICATION, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
+              label: 'Communication', icon: 'fa fa-map-marker', routerLink: savingsbanktransactionconstant.SB_COMMUNICATION, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 2;
@@ -2379,11 +2435,12 @@ export class SavingsBankAccountCreationStepperComponent implements OnInit {
               }
             },
             {
-              label: 'Document Details', icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
+              label: 'Documents', icon: 'fa fa-file-text', routerLink: savingsbanktransactionconstant.SB_REQUIRED_DOCUMENTS, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 5;
-              }
+              },
+              visible: this.requiredDocumentsVisible 
             },
             {
               label: 'Services', icon: 'fa fa-wrench', routerLink: savingsbanktransactionconstant.SB_SERVICES, queryParams: {id: this.encryptDecryptService.encrypt(this.sbAccId) } ,

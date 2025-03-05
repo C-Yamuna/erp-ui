@@ -21,6 +21,27 @@
                     <div class="row g-3 mt-0">
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                             <div class="form-label">
+                                <label><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.MEMBERSHIP_TYPE' | translate}}</label>
+                                <p-dropdown id="bunit_txt_status" placeholder="Select" [filter]="true"
+                                    [options]="subProductList" formControlName="subProductId"
+                                    [(ngModel)]="membershipBasicRequiredDetailsModel.subProductId" >
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="form-label">
+                                <label>{{'ERP.SOCIETY_ADMISSION_NUMBER' | translate}}</label>
+    
+                                <input pInputText type="text" formControlName="societyAdmissionNumber"
+                                    [(ngModel)]="membershipBasicRequiredDetailsModel.societyAdmissionNumber"
+                                    placeholder="Enter Name">
+                                <p-message severity="error" text="Enter Valid society Admission Number"
+                                    *ngIf="!memberCreationForm.controls['societyAdmissionNumber'].valid && memberCreationForm.controls['societyAdmissionNumber'].dirty">
+                                </p-message>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="form-label">
                             <label>{{'ERP.SURNAME' | translate}}</label>
                           
                                 <input pInputText type="text" formControlName="surName"
@@ -67,7 +88,7 @@
                             <label><span class="red">*</span>{{'ERP.GENDER' | translate}}</label>
                            
                                 <p-dropdown placeholder="{{'ERP.SELECT' | translate}}" [options]="genderList"
-                                    formControlName="gender"
+                                    formControlName="gender" (onChange)="onGenderChange(membershipBasicRequiredDetailsModel.genderId)"
                                     [(ngModel)]="membershipBasicRequiredDetailsModel.genderId"></p-dropdown>
                                 </div>
                         </div>
@@ -78,7 +99,7 @@
                                 <label><span class="red">*</span>{{'ERP.MARITAL_STATUS' | translate}}</label>
                                
                                     <p-dropdown placeholder="{{'ERP.SELECT' | translate}}" [options]="maritalstatusList"
-                                        formControlName="maritalStatus"
+                                        formControlName="maritalStatus" (onChange)="maritalStatusChange(membershipBasicRequiredDetailsModel.martialId)"
                                         [(ngModel)]="membershipBasicRequiredDetailsModel.martialId"></p-dropdown>
                                     </div>
                             </div>
@@ -126,7 +147,7 @@
                                 <label><span class="red">*</span>{{'ERP.OCCUPATION' | translate}}</label>
                               
                                     <p-dropdown placeholder="{{'ERP.SELECT' | translate}}"
-                                        [options]="occupationTypeList" formControlName="occupation"
+                                        [options]="occupationTypeList" formControlName="occupation" (onChange)="onChangeOccupationChange()"
                                         [(ngModel)]="  membershipBasicRequiredDetailsModel.occupationId"></p-dropdown>
 
                                     </div> 
@@ -155,7 +176,7 @@
                            
                             <p-dropdown placeholder="{{'ERP.SELECT' | translate}}" [options]="communityList"
                             formControlName="community"
-                            [(ngModel)]="  membershipBasicRequiredDetailsModel.communityId"></p-dropdown>
+                            [(ngModel)]="  membershipBasicRequiredDetailsModel.communityId" (onChange)="onChangeCommunityChange()"></p-dropdown>
 
                                 </div> 
                         </div>
@@ -237,7 +258,7 @@
                         </div>
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
                             <div class="form-label">
-                            <span class=""><span class="red">*</span> {{ 'ERP.UPLOAD_IMAGE' | translate }} </span>
+                            <span class=""><span class="red">*</span> {{ 'ERP.PHOTO_COPY' | translate }} {{'DEMANDDEPOSITS.IMAGE_SIZE' | translate}}</span>
                             <div class="uplodad-style align-items-center">
                                 <!-- Upload Button Column -->
                                 
@@ -262,7 +283,7 @@
                         </div>
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
                             <div class="form-label">
-                            <span class=""> <span class="red">*</span>{{ 'ERP.UPLOAD_SIGNATURE' | translate }} </span>
+                            <span class=""> <span class="red">*</span>{{ 'ERP.SIGNATURE_COPY' | translate }}{{'DEMANDDEPOSITS.IMAGE_SIZE' | translate}}</span>
                             <div class="uplodad-style align-items-center">
                                 <!-- Upload Button Column -->
                                 <p-fileUpload #fileUploadIndividualSign class="qua-upld file-attach semi-bold" name="myfile[]"
@@ -298,6 +319,37 @@
                     <div class="row g-3 mt-0">
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                             <div class="form-label">
+                                <label><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.MEMBERSHIP_TYPE' | translate}}</label>
+                                <p-dropdown id="bunit_txt_status" placeholder="Select" [filter]="true"
+                                    [options]="subProductList" formControlName="subProductId"
+                                    [(ngModel)]="memberGroupDetailsModel.subProductId" >
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="form-label">
+                                <label><span class="red">*</span>{{'ERP.GROUP_TYPES' | translate}}</label>
+                                <p-dropdown [options]="groupTypes" placeholder="Select" formControlName="groupType"
+                                    [(ngModel)]="memberGroupDetailsModel.groupTypeId" [appendTo]="'body'"
+                                    (onChange)="groupTypeOnChange()">
+                                </p-dropdown>
+    
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="form-label">
+                                <label>{{'ERP.SOCIETY_ADMISSION_NUMBER' | translate}}</label>
+    
+                                <input pInputText type="text" formControlName="societyAdmissionNumber"
+                                    [(ngModel)]="memberGroupDetailsModel.societyAdmissionNumber"
+                                    placeholder="Enter Name">
+                                <p-message severity="error" text="Enter Valid society Admission Number"
+                                    *ngIf="!memberCreationForm.controls['societyAdmissionNumber'].valid && memberCreationForm.controls['societyAdmissionNumber'].dirty">
+                                </p-message>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.GROUP_NAME' | translate}}</label>
                                 <input pInputText id="bunit_txt_name" maxlength="40" type="text"
                                     formControlName="name" [(ngModel)]="  memberGroupDetailsModel.name" placeholder="Enter Group Name">
@@ -327,6 +379,14 @@
                         </div>
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                             <div class="form-label">
+                                <label><span class="red">*</span>{{'DEMANDDEPOSITS.TYPE_OF_OPERATION' | translate}}</label>
+                                <p-dropdown [options]="operatorTypeList" placeholder="Select" formControlName="operatorTypeId"
+                                    [(ngModel)]="memberGroupDetailsModel.operatorTypeId" (onChange)="onChangeOperationType(memberGroupDetailsModel.operatorTypeId , true)" [appendTo]="'body'">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.ADMISSION_DATE' | translate}}</label>
                                 <p-calendar [showIcon]="true" formControlName="admissionDate" [showIcon]="true"
                                 dateFormat="{{orgnizationSetting.calendar}}" placeholder="DD/MM/YYYY"
@@ -335,28 +395,26 @@
                         </div>
                         </div>
                         <div class="row g-3 mt-0">
-                            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
+                            <!-- <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
                                 <div class="form-label">
-                                <label><span class="red">*</span>{{'ERP.POC_NAME' | translate}}</label>
-                                    <input pInputText id="bunit_txt_name"  type="text"
-                                        formControlName="pocName" placeholder="Enter POC Name" [(ngModel)]="  memberGroupDetailsModel.pocName"
-                                        >
+                                    <label><span class="red">*</span>{{'ERP.POC_NAME' | translate}}</label>
+                                    <input pInputText id="bunit_txt_name" type="text" formControlName="pocName" placeholder="Enter POC Name"
+                                        [(ngModel)]="  memberGroupDetailsModel.pocName">
                                     <p-message severity="error" text="Enter Valid poc name"
                                         *ngIf="!groupForm.controls['pocName'].valid && groupForm.controls['pocName'].dirty">
                                     </p-message>
                                 </div>
                             </div>
-                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
-                            <div class="form-label">
-                            <label><span class="red">*</span>{{'ERP.POC_MOBILE_NO' | translate}}</label>
-                                <input pInputText id="bunit_txt_name" minlength="10" maxlength="10" type="text"
-                                    formControlName="mobileNumber" placeholder="Enter POC Mobile Number"
-                                    [(ngModel)]="  memberGroupDetailsModel.pocNumber">
-                                <p-message severity="error" text="Enter Valid mobileNumber"
-                                    *ngIf="!groupForm.controls['mobileNumber'].valid && groupForm.controls['mobileNumber'].dirty">
-                                </p-message>
-                            </div>
-                        </div>
+                            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
+                                <div class="form-label">
+                                    <label><span class="red">*</span>{{'ERP.POC_MOBILE_NO' | translate}}</label>
+                                    <input pInputText id="bunit_txt_name" minlength="10" maxlength="10" type="text" formControlName="mobileNumber"
+                                        placeholder="Enter POC Mobile Number" [(ngModel)]="  memberGroupDetailsModel.pocNumber">
+                                    <p-message severity="error" text="Enter Valid mobileNumber"
+                                        *ngIf="!groupForm.controls['mobileNumber'].valid && groupForm.controls['mobileNumber'].dirty">
+                                    </p-message>
+                                </div>
+                            </div> -->
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                             <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.PAN_NUMBER' | translate}}</label>
@@ -436,7 +494,7 @@
                         <tr>
                             <th>{{'ERP.SURNAME' | translate}}</th>
                             <th>{{'ERP.NAME' | translate}}</th>
-                            <th>{{'ERP.TYPE_OF_OPERATOR' | translate}}</th>
+                            <!-- <th>{{'ERP.TYPE_OF_OPERATOR' | translate}}</th> -->
                             <th>{{'ERP.AUTHORIZED_SIGNATORY' | translate}}</th>
                             <th>{{'ERP.DATE_OF_BIRTH' | translate}}</th>
                             <th>{{'ERP.AGE' | translate}}</th>
@@ -457,9 +515,9 @@
                             <td>
                                 {{row.name}}
                             </td>
-                            <td>
+                            <!-- <td>
                                 {{row.operatorTypeName}}
-                            </td>
+                            </td> -->
                             <td>
                                 {{row.authorizedSignatoryName}}
                                     
@@ -508,6 +566,26 @@
                     <div class="row g-3 mt-0">
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                             <div class="form-label">
+                                <label><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.MEMBERSHIP_TYPE' | translate}}</label>
+                                <p-dropdown id="bunit_txt_status" placeholder="Select" [filter]="true"
+                                    [options]="subProductList" formControlName="subProductId"
+                                    [(ngModel)]="membershipInstitutionDetailsModel.subProductId" >
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="form-label">
+                                <label>{{'ERP.SOCIETY_ADMISSION_NUMBER' | translate}}</label>
+                                <input pInputText type="text" formControlName="societyAdmissionNumber"
+                                    [(ngModel)]="membershipInstitutionDetailsModel.societyAdmissionNumber"
+                                    placeholder="Enter Name">
+                                <p-message severity="error" text="Enter Valid society Admission Number"
+                                    *ngIf="!memberCreationForm.controls['societyAdmissionNumber'].valid && memberCreationForm.controls['societyAdmissionNumber'].dirty">
+                                </p-message>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.INSTITUTION_NAME' | translate}}</label>
                                 <input pInputText id="bunit_txt_name" maxlength="40" type="text"
                                     formControlName="name" [(ngModel)]="membershipInstitutionDetailsModel.name" placeholder="Enter Institution Name">
@@ -537,6 +615,14 @@
                         </div>
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                             <div class="form-label">
+                                <label><span class="red">*</span>{{'DEMANDDEPOSITS.TYPE_OF_OPERATION' | translate}}</label>
+                                <p-dropdown [options]="operatorTypeList" placeholder="Select" formControlName="operatorTypeId"
+                                    [(ngModel)]="membershipInstitutionDetailsModel.operatorTypeId" (onChange)="onChangeOperationType(membershipInstitutionDetailsModel.operatorTypeId,false)" [appendTo]="'body'">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.ADMISSION_DATE' | translate}}</label>
                                 <p-calendar [showIcon]="true" formControlName="admissionDate" [showIcon]="true"
                                 dateFormat="{{orgnizationSetting.calendar}}" placeholder="DD/MM/YYYY"
@@ -556,28 +642,27 @@
                             </div>
                         </div> -->
                         <div class="row g-3 mt-0">
-                            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
+                            <!-- <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
                                 <div class="form-label">
-                                <label><span class="red">*</span>{{'ERP.POC_NAME' | translate}}</label>
-                                    <input pInputText id="bunit_txt_name"  type="text"
-                                        formControlName="pocName" placeholder="Enter POC Name" [(ngModel)]="membershipInstitutionDetailsModel.pocName"
-                                        >
+                                    <label><span class="red">*</span>{{'ERP.POC_NAME' | translate}}</label>
+                                    <input pInputText id="bunit_txt_name" type="text" formControlName="pocName" placeholder="Enter POC Name"
+                                        [(ngModel)]="membershipInstitutionDetailsModel.pocName">
                                     <p-message severity="error" text="Enter Valid POC Name"
                                         *ngIf="!institutionForm.controls['pocName'].valid && institutionForm.controls['pocName'].dirty">
                                     </p-message>
                                 </div>
                             </div>
-                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
-                            <div class="form-label">
-                            <label><span class="red">*</span>{{'ERP.POC_MOBILE_NO' | translate}}</label>
-                                <input pInputText id="bunit_txt_name" minlength="10" maxlength="10" type="text"
-                                    formControlName="mobileNumber" placeholder="Enter POC Mobile Number"
-                                    [(ngModel)]="membershipInstitutionDetailsModel.pocNumber">
-                                <p-message severity="error" text="Enter Valid mobileNumber"
-                                    *ngIf="!institutionForm.controls['mobileNumber'].valid && institutionForm.controls['mobileNumber'].dirty">
-                                </p-message>
-                            </div>
-                        </div>
+                            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
+                                <div class="form-label">
+                                    <label><span class="red">*</span>{{'ERP.POC_MOBILE_NO' | translate}}</label>
+                                    <input pInputText id="bunit_txt_name" minlength="10" maxlength="10" type="text"
+                                        formControlName="mobileNumber" placeholder="Enter POC Mobile Number"
+                                        [(ngModel)]="membershipInstitutionDetailsModel.pocNumber">
+                                    <p-message severity="error" text="Enter Valid mobileNumber"
+                                        *ngIf="!institutionForm.controls['mobileNumber'].valid && institutionForm.controls['mobileNumber'].dirty">
+                                    </p-message>
+                                </div>
+                            </div> -->
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                             <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.PAN_NUMBER' | translate}}</label>
@@ -654,7 +739,7 @@
                         <tr>
                             <th>{{'ERP.SURNAME' | translate}}</th>
                             <th>{{'ERP.NAME' | translate}}</th>
-                            <th>{{'ERP.TYPE_OF_OPERATOR' | translate}}</th>
+                            <!-- <th>{{'ERP.TYPE_OF_OPERATOR' | translate}}</th> -->
                             <th>{{'ERP.AUTHORIZED_SIGNATORY' | translate}}</th>
                             <th>{{'ERP.DATE_OF_BIRTH' | translate}}</th>
                             <th>{{'ERP.AGE' | translate}}</th>
@@ -675,9 +760,9 @@
                             <td>
                                 {{row.name}}
                             </td>
-                            <td>
+                            <!-- <td>
                                 {{row.operatorTypeName}}
-                            </td>
+                            </td> -->
                             <td>
                                 {{row.authorizedSignatoryName}}
                                     
@@ -750,6 +835,14 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
+                        <label><span class="red">*</span>{{'DEMANDDEPOSITS.IS_POC' | translate}}</label>
+                        <p-dropdown [filter]="true" [options]="trueFalseList" placeholder="Select"
+                            [(ngModel)]="promoterDetailsModel.isPoc"  formControlName="isPoc"
+                            [appendTo]="'body'" (onChange)="isPosCheck(promoterDetailsModel.isPoc , true)"></p-dropdown>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
                         <label><span class="red">*</span>{{'ERP.NAME' | translate}}</label>
                         <input pInputText type="text" [(ngModel)]="promoterDetailsModel.name" formControlName="name" placeholder="Enter Name">
                         <p-message severity="error" text="Enter Valid Name"
@@ -767,15 +860,14 @@
                     </p-message>
                     </div>
                 </div>
-               
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
                         <label><span class="red">*</span>{{'ERP.OPERATOR_DETAILS' | translate}}</label>
                         <p-dropdown [options]="operatorTypeList" placeholder="Select" formControlName="operatorTypeId"
                             [(ngModel)]="promoterDetailsModel.operatorTypeId" [appendTo]="'body'">
                         </p-dropdown>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
                         <label><span class="red">*</span>{{'ERP.DATE_OF_BIRTH' | translate}}</label>
@@ -864,10 +956,25 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
-                        <div class="ml-2"><span class="red">*</span>{{'ERP.UPLOAD_IMAGE' | translate}}</div>
+                        <label for="username">
+                            {{'DEMANDDEPOSITS.EXIT_DATE' | translate}} 
+                        </label>
+                        <p-calendar formControlName="endDate" 
+                            [showIcon]="true" 
+                            [dateFormat]="orgnizationSetting.calendar"
+                            [(ngModel)]="promoterDetailsModel.endDateVal" 
+                            [appendTo]="'body'"
+                            placeholder="DD/MM/YYYY"
+                            [minDate]="today">
+                        </p-calendar>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <div class="ml-2"><span class="red">*</span>{{'ERP.PHOTO_COPY' | translate}}{{'DEMANDDEPOSITS.IMAGE_SIZE' | translate}}</div>
                         <div class="uplodad-style align-items-center">
                             <p-fileUpload #fileUploadPhotoPromoter class="qua-upld file-attach semi-bold" name="myfile[]"
-                                id="apply-leave_fileUp_attach" chooseLabel=" " name="file" formControlName="photoUpload" accept=".png,.jpg,.jpeg" (onRemove)="fileRemoeEvent('promoterPhot')" 
+                                id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".png,.jpg,.jpeg" (onRemove)="fileRemoeEvent('promoterPhot')" 
                                 (onSelect)="fileUploaderForPromoters($event,fileUploadPhotoPromoter, fileUpload,'groupPromoterImage')">
                             </p-fileUpload>
                             <div class="col-12  d-flex p-1 contant-body"
@@ -883,10 +990,10 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
-                        <div class="ml-2"><span class="red">*</span>{{'ERP.UPLOAD_SIGNATURE' | translate}}</div>
+                        <div class="ml-2"><span class="red">*</span>{{'ERP.SIGNATURE_COPY' | translate}}{{'DEMANDDEPOSITS.IMAGE_SIZE' | translate}}</div>
                         <div class="uplodad-style align-items-center">
                             <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
-                                id="apply-leave_fileUp_attach" chooseLabel=" " formControlName="signatureUpload" name="file" accept=".png,.jpg,.jpeg" (onRemove)="fileRemoeEvent('promoterSignature' )" 
+                                id="apply-leave_fileUp_attach" chooseLabel=" "  name="file" accept=".png,.jpg,.jpeg" (onRemove)="fileRemoeEvent('promoterSignature' )" 
                                 (onSelect)="fileUploaderForPromoters($event,fileUploadPhotoPromoter,fileUpload ,'groupPromoterSignature')" > 
                             </p-fileUpload>
                             <div class="col-12  d-flex p-1 contant-body"
@@ -954,6 +1061,14 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
+                        <label><span class="red">*</span>{{'DEMANDDEPOSITS.IS_POC' | translate}}</label>
+                        <p-dropdown [filter]="true" [options]="trueFalseList" placeholder="Select"
+                            [(ngModel)]="institutionPromoterDetailsModel.isPoc"  formControlName="isPoc"
+                            [appendTo]="'body'" (onChange)="isPosCheck(institutionPromoterDetailsModel.isPoc , true)"></p-dropdown>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
                         <label><span class="red">*</span>{{'ERP.NAME' | translate}}</label>
                         <input pInputText type="text" [(ngModel)]="institutionPromoterDetailsModel.name" formControlName="name" placeholder="Enter Name">
                         <p-message severity="error" text="Enter Valid Name"
@@ -972,14 +1087,14 @@
                     </div>
                 </div>
                 
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
                         <label><span class="red">*</span>{{'ERP.OPERATOR_DETAILS' | translate}}</label>
                         <p-dropdown [options]="operatorTypeList" placeholder="Select" formControlName="operatorTypeId"
                             [(ngModel)]="institutionPromoterDetailsModel.operatorTypeId" [appendTo]="'body'">
                         </p-dropdown>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
                         <label><span class="red">*</span>{{'ERP.DATE_OF_BIRTH' | translate}}</label>
@@ -1051,6 +1166,21 @@
                         <p-calendar formControlName="startDate" [showIcon]="true" placeholder="DD/MM/YYYY"
                             dateFormat="{{orgnizationSetting.calendar}}" [(ngModel)]="institutionPromoterDetailsModel.startDateVal"
                             [appendTo]="'body'">
+                        </p-calendar>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
+                        <label for="username">
+                            {{'DEMANDDEPOSITS.EXIT_DATE' | translate}} 
+                        </label>
+                        <p-calendar formControlName="endDate" 
+                            [showIcon]="true" 
+                            [dateFormat]="orgnizationSetting.calendar"
+                            [(ngModel)]="institutionPromoterDetailsModel.endDateVal" 
+                            [appendTo]="'body'"
+                            placeholder="DD/MM/YYYY"
+                            [minDate]="today">
                         </p-calendar>
                     </div>
                 </div>

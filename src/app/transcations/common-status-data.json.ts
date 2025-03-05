@@ -13,7 +13,8 @@ export const CommonStatusData = {
     CLOSURE_REQUEST:'Request for Closure',
     SCHEDULED:'Scheduled',
     FORECLOSURE: 'Foreclosure',
-    DUE: 'Due'
+    DUE: 'Due',
+    FORECLOSURE_REQUEST:'Request for Foreclosure',
 
 }
 export const MemberShipTypesData = {
@@ -41,7 +42,7 @@ export const BoxNumber = {
 
 export const CollateralTypes = {
     GOLD_MORTGAGE:1, LAND_MORTGAGE:2, BONDS_MORTGAGE:3,
-	VEHICLE_MORTGAGE:4, STORAGE_MORTGAGE:5, PROPERTY_MORTGAGE:6 , OTHER_MORTGAGE:7
+	VEHICLE_MORTGAGE:4, STORAGE_MORTGAGE:5, PROPERTY_MORTGAGE:6 , OTHER_MORTGAGE:10
 }
 
 export const CommonStatusDataValue = {
@@ -104,4 +105,21 @@ export const DOCUMENT_TYPES={
     CASH : "Cash",
     CHEQUE : "Cheque",
     TRANSFER:"Transfer"
+ }
+
+
+ export const membershipProductName ={
+    ACLASS_VOTING_MEMBER : "A-class / Voting member",
+    ACLASS_MEMBER : "A-class Member",
+ }
+
+
+ export const CardTitles = {
+    MEMBER_SHARES: "Member Shares",
+    DEMAND_DEPOSITS: "Demand Deposits",
+    DAILY_DEPOSITS: "Daily Deposits",
+    TERM_DEPOSITS: "Term Deposits",
+    LOANS: "Loans",
+    LOCKERS: "Lockers",
+    AGENTS: "Agents"
  }

@@ -271,4 +271,16 @@ export class AccountJointHolderDetailsComponent {
     });
   }
 
+  onHide(event: any) {
+    console.log("Dropdown Closed:", event);
+  }
+  
+  onShow(event: any) {
+    console.log("Dropdown Opened:", event);
+  }
+  
+  onPanelClick(event: any) {
+    console.log("Dropdown Panel Clicked:", event);
+  }
+
 }

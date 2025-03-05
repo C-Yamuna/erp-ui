@@ -19,6 +19,7 @@ import { VillagesService } from 'src/app/configurations/common-config/villages/s
 import { CollateralTypes, MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
 import { SiLoanVehicleMortgageDetailsService } from '../../../shared/si-loans/si-loan-vehicle-mortgage-details.service';
 import { SiOtherMortgageDetailsService } from '../../../shared/si-loans/si-other-mortgage-details.service';
+import { SimpleInterestProductDefinition } from '../../simple-interest-product-definition/shared/simple-interest-product-definition.model';
 
 @Component({
   selector: 'app-si-loan-mortgage',
@@ -82,6 +83,8 @@ export class SiLoanMortgageComponent {
   siStorageLoanMortgageModel: SiStorageLoanMortgage = new SiStorageLoanMortgage();
   siOtherLoanMortgageModel: SiOtherLoanMortgage = new SiOtherLoanMortgage();
   siLoanApplicationModel: SiLoanApplication = new SiLoanApplication();
+  simpleInterestProductDefinitionModel: SimpleInterestProductDefinition = new SimpleInterestProductDefinition();
+  
    
   
     memberTypeName: any;
@@ -178,6 +181,7 @@ export class SiLoanMortgageComponent {
     siProductName: any;
     accountNumber: any;
     requestedAmount: any;
+  tempCollateraltypeOptionsList: any[]=[];
   
   
     constructor(private formBuilder: FormBuilder,
@@ -281,23 +285,11 @@ export class SiLoanMortgageComponent {
       this.getAllVaillages();
       this.getAllLandOwnerShipTypes();
       this.getAllBondTypes();
+      this.getAllCollateralTypes();
   
       this.vehicleStatusList = [
         { label: 'Used', value: 'Used' },
         { label: 'Un-Used', value: 'Used' },
-      ];
-      this.collateraltypeOptionsList = [
-        { label: 'Gold', value: 1 },
-        { label: 'Land', value: 2 },
-        { label: 'Bond', value: 3 },
-        { label: 'Vehicle', value: 4 },
-        { label: 'Storage', value: 5 },
-        { label: 'Property', value: 6 },
-        { label: 'Other', value: 7 }
-        // { label: 'Surety /Guarantor', value: 8 },
-        // { label: 'Staff', value: 9 },
-        // { label: 'Agreement', value: 10 },
-        
       ];
   
       //gold
@@ -677,13 +669,13 @@ export class SiLoanMortgageComponent {
                     } else if (this.siLoanApplicationModel.collateralType == CollateralTypes.VEHICLE_MORTGAGE) {//vehicle
                       this.showVehicleform = true;
                       this.addButtonService = false;
-                      this.getCIVehicleLoanMortgageDetailsByciLoanApplicationId(siLoanApplicationId , false);
+                      this.getSIVehicleLoanMortgageDetailsByciLoanApplicationId(siLoanApplicationId , false);
                     } else if (this.siLoanApplicationModel.collateralType == CollateralTypes.STORAGE_MORTGAGE) {//storage
                       this.showStorageform = true;
                       this.getSIStorageLoanMortgageDetailsByLoanAccId(siLoanApplicationId,false) ;
                     } else if (this.siLoanApplicationModel.collateralType == CollateralTypes.PROPERTY_MORTGAGE) {//property
                       this.showpropertyForm = true;
-                      this.getCiLoanProperyDetailsByApplication(siLoanApplicationId ,false);
+                      this.getSiLoanProperyDetailsByApplication(siLoanApplicationId ,false);
                     }
                     else if (this.siLoanApplicationModel.collateralType == CollateralTypes.OTHER_MORTGAGE) {//other
                       this.showOtherform = true;
@@ -698,26 +690,44 @@ export class SiLoanMortgageComponent {
         }
       });
     }
-  
+    /**
+     * @implements get All colleteral types
+     * @param id 
+     * @author k.yamuna
+     */
+    getAllCollateralTypes() {
+      this.commonComponent.startSpinner();
+      this.siLoanMortagageDetailsService.getAllCollateralTypes().subscribe(response => {
+        this.responseModel = response;
+        if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+          this.commonComponent.stopSpinner();
+          this.collateraltypeOptionsList = this.responseModel.data.filter((landType: { status: number; }) => landType.status == 1).map((landType: any) => {
+            return { label: landType.name, value: landType.id };
+          });
+        }this.tempCollateraltypeOptionsList = this.collateraltypeOptionsList;
+      },
+        error => {
+          this.msgs = [];
+          this.commonComponent.stopSpinner();
+          this.msgs.push({ severity: 'error', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST });
+        })
+    }
      /**
      * @implements get product details by product id
      * @param id 
      * @author k.yamuna
      */
-     getProductDefinitionByProductId(id: any) {
+    getProductDefinitionByProductId(id: any) {
       this.siProductDefinitionService.getSIProductDefinitionById(id).subscribe((data: any) => {
         this.responseModel = data;
         if (this.responseModel != null && this.responseModel != undefined) {
           if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
             if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
-              if (this.responseModel.data[0].ciProdCollateralsConfigDTOList) {
-                // this.collateraltypeOptionsList = this.responseModel.data[0].ciProdCollateralsConfigDTOList
-                //   .filter((item: any) => item != null && item.status === applicationConstants.ACTIVE)
-                //   .map((item: { collateralTypeName: string, collateralType: any }) => ({
-                //     label: item.collateralTypeName,
-                //     value: item.collateralType
-                //   }));
-              }
+              this.simpleInterestProductDefinitionModel = this.responseModel.data[0];
+              let collateraltypeList = this.simpleInterestProductDefinitionModel.collateralTypeIds;
+              const valueArray = collateraltypeList
+               .split(',').map((value:any) => Number(value.trim()));
+              this.collateraltypeOptionsList = this.tempCollateraltypeOptionsList.filter(item => valueArray.includes(item.value));
             }
           }
           else {
@@ -728,6 +738,7 @@ export class SiLoanMortgageComponent {
         }
       });
     }
+    
   
     /**
      * @implements onChange of Collateral
@@ -1011,7 +1022,7 @@ export class SiLoanMortgageComponent {
      * @param flag 
      * @modification k.yamuna
      */
-    getCIVehicleLoanMortgageDetailsByciLoanApplicationId(siLoanApplicationId: any ,flag :boolean) {
+    getSIVehicleLoanMortgageDetailsByciLoanApplicationId(siLoanApplicationId: any ,flag :boolean) {
       this.commonFunctionsService
       this.siLoanVehicleMortgageDetailsService.getDetailsBySILoanApplicationId(siLoanApplicationId).subscribe((data: any) => {
         this.responseModel = data;
@@ -1136,7 +1147,7 @@ export class SiLoanMortgageComponent {
      * @param siLoanApplicationId 
      * @author k.yamuna
      */
-    getCiLoanProperyDetailsByApplication(siLoanApplicationId: any, flag: Boolean) {
+    getSiLoanProperyDetailsByApplication(siLoanApplicationId: any, flag: Boolean) {
       this.commonFunctionsService
       this.siPropertyMortgageList = [];
       this.siLoanMortagageDetailsService.getSiProperyMortgageLoanDetailsByApplicationId(siLoanApplicationId).subscribe((data: any) => {
@@ -1488,7 +1499,7 @@ export class SiLoanMortgageComponent {
               if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
                 this.siVehicleLoanMortgageModel = this.responseModel.data[0];
                 this.addButtonService = false;
-                this.getCIVehicleLoanMortgageDetailsByciLoanApplicationId(this.responseModel.data[0].siLoanApplicationId , false);
+                this.getSIVehicleLoanMortgageDetailsByciLoanApplicationId(this.responseModel.data[0].siLoanApplicationId , false);
               }
             }
             else {
@@ -1516,7 +1527,7 @@ export class SiLoanMortgageComponent {
                 this.siVehicleLoanMortgageModel = this.responseModel.data[0];
                 this.addButtonService = false;
                 if (this.responseModel.data[0].siLoanApplicationId != null && this.responseModel.data[0].siLoanApplicationId != undefined) {
-                  this.getCIVehicleLoanMortgageDetailsByciLoanApplicationId(this.responseModel.data[0].siLoanApplicationId , false);
+                  this.getSIVehicleLoanMortgageDetailsByciLoanApplicationId(this.responseModel.data[0].siLoanApplicationId , false);
                 }
               }
             }
@@ -1708,7 +1719,7 @@ export class SiLoanMortgageComponent {
                 this.siOtherLoanMortgageModel = this.responseModel.data;
                 this.addButtonService = false;
                 if (this.responseModel.data[0].siLoanApplicationId != null && this.responseModel.data[0].siLoanApplicationId != undefined) {
-                  this.getCiLoanProperyDetailsByApplication(this.responseModel.data[0].siLoanApplicationId ,false);
+                  this.getSiLoanProperyDetailsByApplication(this.responseModel.data[0].siLoanApplicationId ,false);
                 }
               }
             }
@@ -1737,7 +1748,7 @@ export class SiLoanMortgageComponent {
                 this.siOtherLoanMortgageModel = this.responseModel.data;
                 this.addButtonService = false;
                 if (this.responseModel.data[0].siLoanApplicationId != null && this.responseModel.data[0].siLoanApplicationId != undefined) {
-                  this.getCiLoanProperyDetailsByApplication(this.responseModel.data[0].siLoanApplicationId ,false);
+                  this.getSiLoanProperyDetailsByApplication(this.responseModel.data[0].siLoanApplicationId ,false);
                 }
               }
             }
@@ -1803,7 +1814,7 @@ export class SiLoanMortgageComponent {
       this.siVehicleLoanMortgageList = [];
       this.addButtonService = false;
       this.editDeleteDisable = false;
-      this.getCIVehicleLoanMortgageDetailsByciLoanApplicationId(this.siLoanApplicationId , false);
+      this.getSIVehicleLoanMortgageDetailsByciLoanApplicationId(this.siLoanApplicationId , false);
     }
   
     /**
@@ -1839,7 +1850,7 @@ export class SiLoanMortgageComponent {
       this.propertyPopUp = false;
       this.addButtonService = false;
       this.editDeleteDisable = false;
-      this.getCiLoanProperyDetailsByApplication(this.siLoanApplicationId ,false);
+      this.getSiLoanProperyDetailsByApplication(this.siLoanApplicationId ,false);
     }
   
   
@@ -2132,7 +2143,7 @@ export class SiLoanMortgageComponent {
         this.responseModel = response;
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           this.siVehicleLoanMortgageList = this.responseModel.data;
-          this.getCIVehicleLoanMortgageDetailsByciLoanApplicationId(this.siLoanApplicationId , false);
+          this.getSIVehicleLoanMortgageDetailsByciLoanApplicationId(this.siLoanApplicationId , false);
           this.msgs = [];
           this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
           setTimeout(() => {
@@ -2318,7 +2329,7 @@ export class SiLoanMortgageComponent {
         this.responseModel = response;
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           this.siPropertyMortgageList = this.responseModel.data;
-          this.getCiLoanProperyDetailsByApplication(this.siLoanApplicationId, false);
+          this.getSiLoanProperyDetailsByApplication(this.siLoanApplicationId, false);
           this.msgs = [];
           this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
           this.displayDialog = false;

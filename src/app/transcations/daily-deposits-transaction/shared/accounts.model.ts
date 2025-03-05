@@ -157,4 +157,12 @@ export class Accounts {
 
     renewalTypeName:any;
 
+    agentName:any;
+
+    requiredDocumentsConfigDTOList:any;
+
+    applicationSignedForm: any;
+
+    multipartFileList:any;
+
 }

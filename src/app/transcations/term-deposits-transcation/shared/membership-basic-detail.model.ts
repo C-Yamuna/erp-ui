@@ -1,804 +1,862 @@
-    export class MembershipBasicDetail {
+export class MembershipBasicDetail {
 
-        id: any;
+    id: any;
 
-        memberTypeId: any;
+    memberTypeId: any;
 
-        memberTypeName: any;
+    memberTypeName: any;
 
-        surname: any;
+    surname: any;
 
-        name: any;
+    name: any;
 
-        dob: any;
+    dob: any;
 
-        dobVal: any;
+    dobVal: any;
 
-        age: any;
+    age: any;
 
-        genderId: any;
+    genderId: any;
 
-        genderName: any;
+    genderName: any;
 
-        martialId: any;
+    martialId: any;
 
-        maritalStatusName: any;
+    maritalStatusName: any;
 
-        relationId: any;
+    relationId: any;
 
-        relationName: any;
+    relationName: any;
 
-        relativeName: any;
+    relativeName: any;
 
-        qualificationId: any;
+    qualificationId: any;
 
-        qualificationName: any;
+    qualificationName: any;
 
-        occupationId: any;
+    occupationId: any;
 
-        occupationName: any;
+    occupationName: any;
 
-        aadharNumber: any;
+    aadharNumber: any;
 
-        panNumber: any;
+    panNumber: any;
 
-        mobileNumber: any;
+    mobileNumber: any;
 
-        emailId: any;
+    emailId: any;
 
-        casteId: any;
+    casteId: any;
 
-        casteName: any;
+    casteName: any;
 
-        communityId: any;
+    communityId: any;
 
-        communityName: any;
+    communityName: any;
 
-        mcrNumber: any;
+    mcrNumber: any;
 
-        admissionDate: any;
+    admissionDate: any;
 
-        admissionDateVal: any;
+    admissionDateVal: any;
 
-        admissionNumber: any;
+    admissionNumber: any;
 
-        tempAdmissionNumber: any;
+    tempAdmissionNumber: any;
 
-        admissionFee: any;
+    admissionFee: any;
 
-        memStatus: any;
+    memStatus: any;
 
-        memStatusName: any;
+    memStatusName: any;
 
-        memStartDate: any;
+    memStartDate: any;
 
-        isMemClosed: any;
+    isMemClosed: any;
 
-        closureComments: any;
+    closureComments: any;
 
-        pacsId: any;
+    pacsId: any;
 
-        pacsCode: any;
+    pacsCode: any;
 
-        memClosingDate: any;
+    memClosingDate: any;
 
-        shareCapital: any;
+    shareCapital: any;
 
-        branchId: any;
+    branchId: any;
 
-        surnameLocalLang: any;
+    surnameLocalLang: any;
 
-        nameLocalLang: any;
+    nameLocalLang: any;
 
-        isMinor: any;
+    isMinor: any;
 
-        totalLandInUnits: any;
+    totalLandInUnits: any;
 
-        totalLandInSubUnits: any;
+    totalLandInSubUnits: any;
 
-        dependentsCount: any;
+    dependentsCount: any;
 
-        assetCount: any;
+    assetCount: any;
 
-        isNominee: any;
+    isNominee: any;
 
-        isStaff: any;
+    isStaff: any;
 
-        photoPath: any;
+    photoPath: any;
 
-        signaturePath: any;
+    signaturePath: any;
 
-        status: any;
+    status: any;
 
-        statusName: any;
+    statusName: any;
 
-        fdCummulativeAccountsDTOList: any;
+    fdCummulativeAccountsDTOList: any;
 
-        fdNonCummulativeAccountsDTOList: any;
+    fdNonCummulativeAccountsDTOList: any;
 
-        rdAccountsDTOList: any;
+    rdAccountsDTOList: any;
 
-        memberShipKycDetailsDTOList: any;
-
-        kycDetailsList: any;
-
-        fdNonCummkycDetailsList: any;
-
-        fdCummkycDetailsList: any;
-
-        fdNonCummCommunicationDto: any;
-
-        fdCummCommunicationDto: any;
-
-        rdAccountCommunicationDTO: any;
-
-        isNewMember: any;
-
-        filesDTOList: any;
-
-        isKycApproved: any;
-
-        photoCopyPath: any;
-
-        signatureCopyPath: any
-
-        multipartFileListForsignatureCopyPath: any;
-
-        multipartFileListForPhotoCopy: any;
-
-        relationTypeName?: any;
-         
-        accountCommunicationDTO:any;
-    }
-
-
-
-    export class MemberGroupDetailsModel {
-
-        id: any;
-
-        memberTypeId: any;
-      
-        groupName: any;
-      
-        registrationDate: any;
-      
-        registrationDateVal: any;
-      
-        registrationNumber: any;
-      
-        groupTypeId: any;
-      
-        admissionDate: any;
-      
-        admissionDateVal: any;
-      
-        admissionNumber: any;
-      
-        name: any;
-      
-        mobileNumber: any;
-      
-        emailId: any;
-      
-        panNumber: any;
-      
-        gstNumber: any;
-      
-        tanNumber: any;
-      
-        groupStatus: any;
-      
-        isGroupClosed: any;
-      
-        closureDate: any;
-      
-        closureComments: any;
+    memberShipKycDetailsDTOList: any;
 
-        tempAdmissionNumber: any;
-      
-        promoterCount: any;
-      
-        pacsId: any;
-      
-        pacsCode: any;
-      
-        branchId: any;
-      
-        groupCommunicationList: any;
-      
-        groupKycList: any;
-      
-        groupPromoterList: any;
-      
-        groupPromoterKycDetailsList: any;
-      
-        statusName: any;
-      
-        groupTypeName: any;
-      
-        memberTypeName: any;
-      
-        approvedComments: any;
-      
-        approvedBy: any;
-      
-        approvedOn: any;
-      
-        subProductId: any;
-      
-        subProductName: any;
-      
-        isKycCompleted: any;
-      
-        memStatusChangedDate: any;
-      
-        memberClassType:any;
-      
-        memberClassTypeName:any;
-      
-        status:any;
-          
-        pocNumber:any;
-          
-        pocName:any;
-      
-        applicationCopyPath :any;
-      
-        filesDTOList:any;
-        
-        multipartFileListForsignatureCopyPath:any;
-      
-        applicationCopyList:any;
-      
-        resolutionNumber:any;
-      
-        resolutionCopyPath:any;
+    kycDetailsList: any;
 
-        groupPromotersDTOList:any;
+    fdNonCummkycDetailsList: any;
 
-        isNewMember: any;
+    fdCummkycDetailsList: any;
 
-        isKycApproved?: any;
+    fdNonCummCommunicationDto: any;
 
-        signaturePath?: any;
+    fdCummCommunicationDto: any;
 
-        photoCopyPath?: any;
+    rdAccountCommunicationDTO: any;
 
+    isNewMember: any;
 
-    }
-    export class MembershipInstitutionDetailsModel {
+    filesDTOList: any;
 
-        id: any;
+    isKycApproved: any;
 
-        memberTypeId: any;
+    photoCopyPath: any;
 
-        institutionName: any;
+    signatureCopyPath: any
 
-        registrationDate: any;
+    multipartFileListForsignatureCopyPath: any;
 
-        registrationDateVal: any;
+    multipartFileListForPhotoCopy: any;
 
-        registrationNumber: any;
+    relationTypeName?: any;
 
-        admissionDate: any;
+    accountCommunicationDTO: any;
 
-        admissionDateVal: any;
+    societyAdmissionNumber: any;
 
-        admissionNumber: any;
+    resolutionDate: any;
 
-        tempAdmissionNumber: any;
+    resolutionCopy: any;
 
-        name: any;
+    resolutionDateVal: any;
 
-        mobileNumber: any;
+    multipartFileListForResolutionCopyPath: any;
 
-        panNumber: any;
+    subProductId: any;
 
-        pan: any;
-
-        gstNumber: any;
-
-        tanNumber: any;
-
-        institution: any;
-
-        status: any;
-
-        pacsId: any;
-
-        pacsCode: any;
-
-        isInstAccountClosed: any;
-
-        closureDate: any;
-
-        closureComments: any;
-
-        incorporationTypeId: any;
-
-        branchId: any;
-
-        emailId: any;
-
-        promoterCount: any;
-
-        memberTypeName: any;
-
-        statusName: any;
-
-        institutionPromoterDetailsDTOList: any;
-
-        isInstAccountClosedName: any;
-
-        fdCummkycDetailsList: any;
-
-        fdCummCommunicationDto: any;
-
-        isNewMember: any
-
-        institutionKycDetailsDTOList?: any;
-
-        isKycApproved?: any
-
-        filesDTOList?: any;
-
-        signaturePath?: any;
-
-        photoCopyPath?: any;
-
-        pocName:any;
-
-        pocNumber:any;
-
-        institutionPromoterList:any;
-
-    }
-    export class promoterDetailsModel {
-        id: any;
-
-        groupId: any;
-
-        operatorTypeId: any;
-
-        surname: any;
-
-        name: any;
-
-        dob: any;
-
-        memDobVal: any;
-
-        age: any;
-
-        aadharNumber: any;
-
-        mobileNumber: any;
-
-        emailId: any;
-
-        docFilePath: any;
-
-        pacsId: any;
-
-        pacsCode: any;
-
-        startDate: any;
-
-        startDateVal: any;
-
-        genderId: any;
-
-        martialId: any;
-
-        endDate: any;
-
-        branchId: any;
-
-        isGroupLeader: any;
-
-        operatorTypeName: any;
-
-        genderName: any;
-
-        maritalStatusName: any;
-
-        filesDTO: any;
-    }
-    export class InstitutionPromoterDetailsModel {
-        id: any;
-
-        uniqueId:any;
-
-        institutionId: any;
-
-        operatorTypeId: any;
-
-        surname: any;
-
-        name: any;
-
-        dob: any;
-
-        age: any;
-
-        genderId: any;
-
-        martialId: any;
-
-        aadharNumber: any;
-
-        mobileNumber: any;
-
-        emailId: any;
-
-        docFilePath: any;
-
-        pacsId: any;
-
-        pacsCode: any;
-
-        startDate: any;
-
-        endDate: any;
-
-        branchId: any;
-
-        operatorTypeName: any;
-
-        genderTypeName: any;
-
-        maritalStatusName: any;
-
-        filesDTO: any;
-
-        startDateVal: any;
-
-        uploadImage: any;
-   
-        uploadSignature: any;
-   
-        isExistingMember: any;
-   
-        multipartFileListForPhotoCopyPath: any;
-   
-        multipartFileListForSignatureCopyPath: any;
-   
-        authorizedSignatory: any;
-   
-        memDobVal: any;
-   
-        admissionNumber:any;
-
-        filesDTOList:any;
-
-    }
-
-    export class GroupPromoterDetailsModel {
-        id: any;
-
-        groupId: any;
-
-        operatorTypeId: any;
-
-        surname: any;
-
-        name: any;
-
-        dob: any;
-
-        memDobVal: any;
-
-        age: any;
-
-        aadharNumber: any;
-
-        mobileNumber: any;
-
-        emailId: any;
-
-        docFilePath: any;
-
-        pacsId: any;
-
-        pacsCode: any;
-
-        startDate: any;
-
-        startDateVal: any;
-
-        genderId: any;
-
-        martialId: any;
-
-        endDate: any;
-
-        branchId: any;
-
-        isGroupLeader: any;
-
-        operatorTypeName: any;
-
-        genderName: any;
-
-        maritalStatusName: any;
-
-        filesDTO: any;
-
-        isExistingMember: any;
-
-        uniqueId: any;
-
-        uploadImage: any;
+    subProductName: any; 
     
-        uploadSignature: any;
+}
+
+
+
+export class MemberGroupDetailsModel {
+
+    id: any;
+
+    memberTypeId: any;
+
+    groupName: any;
+
+    registrationDate: any;
+
+    registrationDateVal: any;
+
+    registrationNumber: any;
+
+    groupTypeId: any;
+
+    admissionDate: any;
+
+    admissionDateVal: any;
+
+    admissionNumber: any;
+
+    name: any;
+
+    mobileNumber: any;
+
+    emailId: any;
+
+    panNumber: any;
+
+    gstNumber: any;
+
+    tanNumber: any;
+
+    groupStatus: any;
+
+    isGroupClosed: any;
+
+    closureDate: any;
+
+    closureComments: any;
+
+    tempAdmissionNumber: any;
+
+    promoterCount: any;
+
+    pacsId: any;
+
+    pacsCode: any;
+
+    branchId: any;
+
+    groupCommunicationList: any;
+
+    groupKycList: any;
+
+    groupPromoterList: any;
+
+    groupPromoterKycDetailsList: any;
+
+    statusName: any;
+
+    groupTypeName: any;
+
+    memberTypeName: any;
+
+    approvedComments: any;
+
+    approvedBy: any;
+
+    approvedOn: any;
+
+    subProductId: any;
+
+    subProductName: any;
+
+    isKycCompleted: any;
+
+    memStatusChangedDate: any;
+
+    memberClassType: any;
+
+    memberClassTypeName: any;
+
+    status: any;
+
+    pocNumber: any;
+
+    pocName: any;
+
+    applicationCopyPath: any;
+
+    filesDTOList: any;
+
+    multipartFileListForsignatureCopyPath: any;
+
+    applicationCopyList: any;
+
+    resolutionNumber: any;
+
+    resolutionCopyPath: any;
+
+    groupPromotersDTOList: any;
+
+    isNewMember: any;
+
+    isKycApproved?: any;
+
+    signaturePath?: any;
+
+    photoCopyPath?: any;
     
-        multipartFileListForPhotoCopyPath: any;
+    societyAdmissionNumber: any;
+
+    operatorTypeId: any;
+
+    operatorTypeName: any;
+
+}
+export class MembershipInstitutionDetailsModel {
+
+    id: any;
+
+    memberTypeId: any;
+
+    institutionName: any;
+
+    registrationDate: any;
+
+    registrationDateVal: any;
+
+    registrationNumber: any;
+
+    admissionDate: any;
+
+    admissionDateVal: any;
+
+    admissionNumber: any;
+
+    tempAdmissionNumber: any;
+
+    name: any;
+
+    mobileNumber: any;
+
+    panNumber: any;
+
+    pan: any;
+
+    gstNumber: any;
+
+    tanNumber: any;
+
+    institution: any;
+
+    status: any;
+
+    pacsId: any;
+
+    pacsCode: any;
+
+    isInstAccountClosed: any;
+
+    closureDate: any;
+
+    closureComments: any;
+
+    incorporationTypeId: any;
+
+    branchId: any;
+
+    emailId: any;
+
+    promoterCount: any;
+
+    memberTypeName: any;
+
+    statusName: any;
+
+    institutionPromoterDetailsDTOList: any;
+
+    isInstAccountClosedName: any;
+
+    fdCummkycDetailsList: any;
+
+    fdCummCommunicationDto: any;
+
+    isNewMember: any
+
+    institutionKycDetailsDTOList?: any;
+
+    isKycApproved?: any
+
+    filesDTOList?: any;
+
+    signaturePath?: any;
+
+    photoCopyPath?: any;
+
+    pocName: any;
+
+    pocNumber: any;
+
+    institutionPromoterList: any;
+
+    subProductId: any;
+
+    subProductName: any; 
     
-        multipartFileListForSignatureCopyPath: any;
-    
-        authorizedSignatory: any;
-    
-        admissionNumber:any;
+    societyAdmissionNumber: any;
 
-        filesDTOList:any
-    }
+    operatorTypeId: any;
 
+    operatorTypeName: any;
 
+    institutionTypeName: any;
 
-    export class RdKycModel {
+    institutionType: any;
 
-        id: any;
+}
+export class promoterDetailsModel {
+    id: any;
 
-        rdAccId: any;
+    groupId: any;
 
-        accountNumber: any;
+    operatorTypeId: any;
 
-        operatorType: any;
+    surname: any;
 
-        kycDocumentTypeId: any;
+    name: any;
 
-        documentNumber: any;
+    dob: any;
 
-        kycFilePath: any;
+    memDobVal: any;
 
-        status: any;
+    age: any;
 
-        docTypeName: any;
+    aadharNumber: any;
 
-        filesDTOList: any;
+    mobileNumber: any;
 
-        statusName: any;
+    emailId: any;
 
-        admissionNumber: any;
+    docFilePath: any;
 
-        memberId: any;
+    pacsId: any;
 
-        memberType: any;
+    pacsCode: any;
 
-        effStartDate: any;
+    startDate: any;
 
-        effStartDateVal: any;
+    startDateVal: any;
 
-        effEndDate: any;
+    genderId: any;
 
-        effEndDateVal: any;
+    martialId: any;
 
-        multipartFileList: any;
+    endDate: any;
 
-        memberTypeName: any;
+    branchId: any;
 
-        kycDocumentTypeName: any;
+    isGroupLeader: any;
 
-        isNewMember: any;
+    operatorTypeName: any;
 
-        isKycApproved: any;
+    genderName: any;
 
-        isExistingMember: any;
+    maritalStatusName: any;
 
-        uniqueId: any;
-    
-        uploadImage: any;
-    
-        uploadSignature: any;
-    
-        multipartFileListForPhotoCopyPath: any;
-    
-        multipartFileListForSignatureCopyPath: any;
-    
-        authorizedSignatory: any;
+    filesDTO: any;
 
-        promoterId:any;
+    isPoc: any;
 
-        promoterName:any;
-    
-        nameAsPerDocument: any;
+    isPocName: any;
 
-    }
+    endDateVal: any;
+}
+export class InstitutionPromoterDetailsModel {
+    id: any;
 
-    export class RdAccountNominee {
-        id: any;
+    uniqueId: any;
 
-        rdProductId: any;
+    institutionId: any;
 
-        rdAccId: any;
+    operatorTypeId: any;
 
-        nomineeType: any;
+    surname: any;
 
-        nomineeTypeName:any;
+    name: any;
 
-        relationTypeId: any;
+    dob: any;
 
-        surName: any;
+    age: any;
 
-        nomineeName: any;
+    genderId: any;
 
-        gender: any;
+    martialId: any;
 
-        marritalStatus: any;
+    aadharNumber: any;
 
-        dateOfBirth: any;
+    mobileNumber: any;
 
-        age: any;
+    emailId: any;
 
-        identityProofDocType: any;
+    docFilePath: any;
 
-        identityProofDocNumber: any;
+    pacsId: any;
 
-        identityProofDocPath: any;
+    pacsCode: any;
 
-        addressProofDocType: any;
+    startDate: any;
 
-        addressProofDocNumber: any;
+    endDate: any;
 
-        addressProofDocPath: any;
+    branchId: any;
 
-        nomineeFilePath: any;
+    operatorTypeName: any;
 
-        status: any;
+    genderTypeName: any;
 
-        relationTypeName: any;
+    maritalStatusName: any;
 
-        identityProofDocTypeName: any;
+    filesDTO: any;
 
-        addressProofDocTypeName: any;
+    startDateVal: any;
 
-        accountNumber: any;
+    uploadImage: any;
 
-        nominatedDate: any;
+    uploadSignature: any;
 
-        nomineeEmailId: any;
+    isExistingMember: any;
 
-        address: any;
+    multipartFileListForPhotoCopyPath: any;
 
-        nomineeAadharNumber: any;
+    multipartFileListForSignatureCopyPath: any;
 
-        nomineeMobileNumber: any;
+    authorizedSignatory: any;
 
-        genderName: any;
+    memDobVal: any;
 
-        maritalStatusName: any;
+    admissionNumber: any;
 
-        effectiveStartDate: any;
-
-        effectiveEndDate: any;
-
-        statusName: any;
-
-        productName: any;
-
-        remarks: any;
-
-        nomineeMultiPartList: any;
-
-        filesDTOList: any;
-
-        signedNomineeForm:any;
-
-        RdAccountGuardian:any;
-
-        flagForNomineeTypeValue: any;
-
-        memberType:any;
-
-        memberTypeName:any;
-    }
-
-    export class RdAccountGuardian {
-
-        id:any;
-    
-        rdProductId:any;
-    
-        rdAccId:any;
-    
-        gaurdianType:any;
-
-        guardianTypeName:any;
-    
-        relationshipTypeId : any;
-    
-        surName:any;
-    
-        guardianName: any;
-    
-        gender:any;
-    
-        marritalStatus:any;
-    
-        dateOfBirth:any;
-    
-        age:any;
-    
-        identityProofDocType:any;
-    
-        identityProofDocNumber:any;
-    
-        identityProofDocPath:any;
-    
-        addressProofDocType:any;
-    
-        addressProofDocNumber:any;
-    
-        addressProofDocPath:any;
-    
-        uploadFilePath:any;
-    
-        status:any;
-    
-        relationshipTypeName:any;
-    
-        identityProofDocTypeName:any;
-    
-        addressProofDocTypeName:any;
-    
-        accountNumber:any;
-    
-        guardianAadharNumber:any;
-    
-        address:any;
-    
-        guardianEmailId: any;
-    
-        guardianMobileNumber : any;
-    
-        countryId:any;
-    
-        countryName:any;
-    
-        stateId:any;
-    
-        stateName:any;
-    
-        districtId:any;
-    
-        districtName:any;
-    
-        mandalId:any;
-    
-        mandalName:any;
-    
-        villageId:any;
-    
-        villageName:any;
-    
-        genderName:any;
-    
-        maritalStatusName:any;
-    
-        effectiveStartDate:any;
-    
-        effectiveEndDate:any;
-    
-        statusName:any;
-    
-        productName:any;
-    
-        guardainMultipartList: any;
-    
-        filesDTOList:any;
-
-        remarks:any;
-    }
-
-    
+    filesDTOList: any;
+
+    isPoc: any;
+
+    isPocName: any;
+
+    endDateVal: any;
+
+}
+
+export class GroupPromoterDetailsModel {
+    id: any;
+
+    groupId: any;
+
+    operatorTypeId: any;
+
+    surname: any;
+
+    name: any;
+
+    dob: any;
+
+    memDobVal: any;
+
+    age: any;
+
+    aadharNumber: any;
+
+    mobileNumber: any;
+
+    emailId: any;
+
+    docFilePath: any;
+
+    pacsId: any;
+
+    pacsCode: any;
+
+    startDate: any;
+
+    startDateVal: any;
+
+    genderId: any;
+
+    martialId: any;
+
+    endDate: any;
+
+    branchId: any;
+
+    isGroupLeader: any;
+
+    operatorTypeName: any;
+
+    genderName: any;
+
+    maritalStatusName: any;
+
+    filesDTO: any;
+
+    isExistingMember: any;
+
+    uniqueId: any;
+
+    uploadImage: any;
+
+    uploadSignature: any;
+
+    multipartFileListForPhotoCopyPath: any;
+
+    multipartFileListForSignatureCopyPath: any;
+
+    authorizedSignatory: any;
+
+    admissionNumber: any;
+
+    filesDTOList: any;
+
+    isPoc: any;
+
+    isPocName: any;
+
+    endDateVal: any;
+}
+
+
+
+export class RdKycModel {
+
+    id: any;
+
+    rdAccId: any;
+
+    accountNumber: any;
+
+    operatorType: any;
+
+    kycDocumentTypeId: any;
+
+    documentNumber: any;
+
+    kycFilePath: any;
+
+    status: any;
+
+    docTypeName: any;
+
+    filesDTOList: any;
+
+    statusName: any;
+
+    admissionNumber: any;
+
+    memberId: any;
+
+    memberType: any;
+
+    effStartDate: any;
+
+    effStartDateVal: any;
+
+    effEndDate: any;
+
+    effEndDateVal: any;
+
+    multipartFileList: any;
+
+    memberTypeName: any;
+
+    kycDocumentTypeName: any;
+
+    isNewMember: any;
+
+    isKycApproved: any;
+
+    isExistingMember: any;
+
+    uniqueId: any;
+
+    uploadImage: any;
+
+    uploadSignature: any;
+
+    multipartFileListForPhotoCopyPath: any;
+
+    multipartFileListForSignatureCopyPath: any;
+
+    authorizedSignatory: any;
+
+    promoterId: any;
+
+    promoterName: any;
+
+    nameAsPerDocument: any;
+
+}
+
+export class RdAccountNominee {
+    id: any;
+
+    rdProductId: any;
+
+    rdAccId: any;
+
+    nomineeType: any;
+
+    nomineeTypeName: any;
+
+    relationTypeId: any;
+
+    surName: any;
+
+    nomineeName: any;
+
+    gender: any;
+
+    marritalStatus: any;
+
+    dateOfBirth: any;
+
+    age: any;
+
+    identityProofDocType: any;
+
+    identityProofDocNumber: any;
+
+    identityProofDocPath: any;
+
+    addressProofDocType: any;
+
+    addressProofDocNumber: any;
+
+    addressProofDocPath: any;
+
+    nomineeFilePath: any;
+
+    status: any;
+
+    relationTypeName: any;
+
+    identityProofDocTypeName: any;
+
+    addressProofDocTypeName: any;
+
+    accountNumber: any;
+
+    nominatedDate: any;
+
+    nomineeEmailId: any;
+
+    address: any;
+
+    nomineeAadharNumber: any;
+
+    nomineeMobileNumber: any;
+
+    genderName: any;
+
+    maritalStatusName: any;
+
+    effectiveStartDate: any;
+
+    effectiveEndDate: any;
+
+    statusName: any;
+
+    productName: any;
+
+    remarks: any;
+
+    nomineeMultiPartList: any;
+
+    filesDTOList: any;
+
+    signedNomineeForm: any;
+
+    RdAccountGuardian: any;
+
+    flagForNomineeTypeValue: any;
+
+    memberType: any;
+
+    memberTypeName: any;
+
+    nomineeAge: any;
+
+    nomineeDob: any;
+
+    nomineeDobVal:any;
+}
+
+export class RdAccountGuardian {
+
+    id: any;
+
+    rdProductId: any;
+
+    rdAccId: any;
+
+    gaurdianType: any;
+
+    guardianTypeName: any;
+
+    relationshipTypeId: any;
+
+    surName: any;
+
+    guardianName: any;
+
+    gender: any;
+
+    marritalStatus: any;
+
+    dateOfBirth: any;
+
+    age: any;
+
+    identityProofDocType: any;
+
+    identityProofDocNumber: any;
+
+    identityProofDocPath: any;
+
+    addressProofDocType: any;
+
+    addressProofDocNumber: any;
+
+    addressProofDocPath: any;
+
+    uploadFilePath: any;
+
+    status: any;
+
+    relationshipTypeName: any;
+
+    identityProofDocTypeName: any;
+
+    addressProofDocTypeName: any;
+
+    accountNumber: any;
+
+    guardianAadharNumber: any;
+
+    address: any;
+
+    guardianEmailId: any;
+
+    guardianMobileNumber: any;
+
+    countryId: any;
+
+    countryName: any;
+
+    stateId: any;
+
+    stateName: any;
+
+    districtId: any;
+
+    districtName: any;
+
+    mandalId: any;
+
+    mandalName: any;
+
+    villageId: any;
+
+    villageName: any;
+
+    genderName: any;
+
+    maritalStatusName: any;
+
+    effectiveStartDate: any;
+
+    effectiveEndDate: any;
+
+    statusName: any;
+
+    productName: any;
+
+    guardainMultipartList: any;
+
+    filesDTOList: any;
+
+    remarks: any;
+}
+
+

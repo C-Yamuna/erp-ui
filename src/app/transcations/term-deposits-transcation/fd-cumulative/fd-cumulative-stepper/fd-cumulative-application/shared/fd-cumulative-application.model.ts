@@ -189,6 +189,10 @@ export class FdCumulativeApplication {
     staffRoi? : any;
 
     seniorCitizenRoi? : any;
+
+    renewalTypeName? : any;
+
+    interestPayoutTypeName? : any;
 }
 
 export class FdCummProductDefinitionModel {

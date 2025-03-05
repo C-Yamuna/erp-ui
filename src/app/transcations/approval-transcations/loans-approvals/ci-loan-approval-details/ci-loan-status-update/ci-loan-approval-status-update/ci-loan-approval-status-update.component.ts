@@ -17,6 +17,8 @@ import { CiLoanDocumentsDetails } from 'src/app/transcations/loan-transcation/co
 import { CiLoanGenealogyTree } from 'src/app/transcations/loan-transcation/compound-interest-loan/compound-interest-loan-stepper/ci-loan-genealogy-tree/shared/ci-loan-genealogy-tree.model';
 import { CiLoanGenealogyTreeService } from 'src/app/transcations/loan-transcation/compound-interest-loan/compound-interest-loan-stepper/ci-loan-genealogy-tree/shared/ci-loan-genealogy-tree.service';
 import { CiLoanGuarantor } from 'src/app/transcations/loan-transcation/compound-interest-loan/compound-interest-loan-stepper/ci-loan-guarantor/shared/ci-loan-guarantor.model';
+import { CiLoanHistoryService } from 'src/app/transcations/loan-transcation/compound-interest-loan/compound-interest-loan-stepper/ci-loan-history/shared/ci-loan-history.service';
+import { CiLoanMortgageService } from 'src/app/transcations/loan-transcation/compound-interest-loan/compound-interest-loan-stepper/ci-loan-mortgage/shared/ci-loan-mortgage.service';
 import { MembershipBasicDetails, MembershipGroupDetails, MemInstitutionDetails } from 'src/app/transcations/loan-transcation/compound-interest-loan/compound-interest-loan-stepper/ci-membership-details/shared/membership-details.model';
 import { CiLoanGuardian } from 'src/app/transcations/loan-transcation/compound-interest-loan/compound-interest-loan-stepper/ci-nominee/shared/ci-loan-guardian.model';
 import { CiLoanNominee } from 'src/app/transcations/loan-transcation/compound-interest-loan/compound-interest-loan-stepper/ci-nominee/shared/ci-loan-nominee.model';
@@ -87,6 +89,13 @@ export class CiLoanApprovalStatusUpdateComponent {
   repaymentFrequencyList: any [] =[];
   loanPurposeList: any [] =[];
 
+  individualFlag: boolean = false;
+  institutionFlag: boolean= false;
+  groupFlag: boolean= false;
+  landOwnershipTypesList: any;
+  villagesList: any []=[];
+  landTypesList: any[] =[];
+
   membershipBasicDetailsModel: MembershipBasicDetails = new MembershipBasicDetails();
   membershipGroupDetailsModel: MembershipGroupDetails = new MembershipGroupDetails();
   membershipInstitutionDetailsModel: MemInstitutionDetails = new MemInstitutionDetails();
@@ -109,6 +118,11 @@ export class CiLoanApprovalStatusUpdateComponent {
   relationshipTypesList: any [] = [];
   propertyColumns:any[] = [];
   indvidualFalg: boolean = true;
+  requiredDocumentsEnable: boolean = false;
+  ciLoanHistoryList: any[]=[];
+  moduleTypes: any[]=[];
+  mastercollateralList: any[]=[];
+  historyColumns: { field: string; header: string; }[];
   
 
   constructor(private router: Router, 
@@ -120,8 +134,8 @@ export class CiLoanApprovalStatusUpdateComponent {
      private fileUploadService: FileUploadService, 
      private commonFunctionsService: CommonFunctionsService,
      private translate: TranslateService,
-     private ciProductDefinitionService: CompoundInterestProductDefinitionService,
-     private ciLoanApplicationService: CiLoanApplicationService,
+     private ciProductDefinitionService: CompoundInterestProductDefinitionService,private ciLoanHistoryService :CiLoanHistoryService,
+     private ciLoanApplicationService: CiLoanApplicationService,private ciLoanMortgageService :CiLoanMortgageService,
      private ciKycService:CiKycService , private ciLoanGenealogyTreeService: CiLoanGenealogyTreeService) {
     this.amountblock = [
       { field: 'Service Type', header: 'SERVICE TYPE' },
@@ -282,15 +296,35 @@ export class CiLoanApprovalStatusUpdateComponent {
       { field: 'startDateVal', header: 'start date' },
     ];
 
+    this.historyColumns = [
+      { field: 'accountNumber', header: 'LOANS.NAME' },
+      // { field: 'admissionNumber', header: 'ERP.ADMISSION_NUMBER' },
+      { field: 'bankName', header: 'LOANS.BANKNAME' },
+      { field: 'loanAmount', header: 'LOANS.LOAN_AMOUNT' },
+      { field: 'collateralTypeName', header: 'LOANS.COLLATERAL_TYPE' },
+      { field: 'openingDateVal', header: 'LOANS.OPENINGDATE' },
+      { field: 'closingDateVal', header: 'LOANS.CLOSINGDATE' },
+      { field: 'isNpaName', header: 'LOANS.ISNPA' },
+      { field: 'moduleTypeName', header: 'LOANS.MODULE_TYPE' },
+    ];
+
   }
 
   ngOnInit() {
+    this.moduleTypes  = [
+      { label: "Compound Interest Loan", value:1 },
+      { label: "Simple Interest Loan", value:2 },
+      { label: "Term Loan", value:3 },
+      { label: "SAO Loan", value:4 }
+    ]
     this.translate.use(this.commonFunctionsService.getStorageValue('language'));
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
     this.statusList = this.commonComponent.approvalStatus();
     this.getAllRelationshipTypes();
     this.getAllRepaymentFrequency();
     this.getAllLoanPurpose();
+    this.getAllVaillages();
+    this.getAllLandOwnerShipTypes();
     this.activateRoute.queryParams.subscribe(params => {
       if (params['id'] != undefined || params['editbutton'] != undefined) {
         let id = this.encryptDecryptService.decrypt(params['id']);
@@ -342,6 +376,28 @@ export class CiLoanApprovalStatusUpdateComponent {
           this.msgs = [];
         }, 2000);
       }
+  }
+
+   /**
+   * @implements memberType Check
+   * @author jyothi.naidana
+   */
+   memberTypeCheck(memberTypeName: any) {
+    if (memberTypeName == MemberShipTypesData.INDIVIDUAL) {
+      this.individualFlag = true;
+      this.institutionFlag = false;
+      this.groupFlag = false;
+    } else if (memberTypeName == MemberShipTypesData.GROUP) {
+      this.individualFlag = false;
+      this.institutionFlag = false;
+      this.groupFlag = true;
+
+    } else if (memberTypeName == MemberShipTypesData.INSTITUTION) {
+      this.individualFlag = false;
+      this.institutionFlag = true;
+      this.groupFlag = false;
+
+    }
   }
   /**
    * @implements repayment frequency name
@@ -487,6 +543,7 @@ export class CiLoanApprovalStatusUpdateComponent {
             else {
               this.indvidualFalg = false;
             }
+            this.memberTypeCheck(this.ciLoanApplicationModel.memberTypeName);
             //frequency name
           if(this.repaymentFrequencyList != null && this.repaymentFrequencyList != undefined && this.repaymentFrequencyList.length >0 && this.ciLoanApplicationModel.repaymentFrequency != null && this.ciLoanApplicationModel.repaymentFrequency !+ undefined){
             let repaymentFrequencyName = this.repaymentFrequencyList.filter((obj:any)=>obj.value == this.ciLoanApplicationModel.repaymentFrequency);//set repayment frequency name 
@@ -665,8 +722,10 @@ export class CiLoanApprovalStatusUpdateComponent {
               return model;
             });
           }
-
-         
+          if (this.ciLoanApplicationModel.ciRequiredDocumentsConfigDTOList != null && this.ciLoanApplicationModel.ciRequiredDocumentsConfigDTOList != undefined && this.ciLoanApplicationModel.ciRequiredDocumentsConfigDTOList.length > 0) {
+            this.requiredDocumentsEnable = true;
+        }
+        this.getAllCollaterals();//collaterals with history list
           this.getProductDefinitionByProductId(this.ciLoanApplicationModel.ciProductId);
         }
         this.msgs = [];
@@ -706,8 +765,15 @@ export class CiLoanApprovalStatusUpdateComponent {
     }else if(obj.collateralType == CollateralTypes.GOLD_MORTGAGE){
       this.collateralList = obj.ciLoanGoldMortgageDetailsDTOList;
       this.goldLoanMortgageColumns = this.goldLoanMortgageColumns;
-    }else if(obj.collateralType == CollateralTypes.LAND_MORTGAGE){
-      this.collateralList = obj.ciLoanLandMortgageDetailsDTOList;
+    }else if(obj.collateralType == CollateralTypes.LAND_MORTGAGE){ // land
+      this.collateralList = obj.ciLoanLandMortgageDetailsDTOList.map((obj:any)=>{
+        if(this.villagesList != null && this.villagesList != undefined && this.villagesList.length >0)
+          obj.villageName = this.villagesList.find((village:any)=> obj.villageId == village.value)?.label;
+        if(this.landOwnershipTypesList != null && this.landOwnershipTypesList != undefined && this.landOwnershipTypesList.length >0) 
+          obj.landOwnershipName = this.landOwnershipTypesList.find((ownership:any)=> obj.landOwnership == ownership.value)?.label; 
+        obj.mortgageDeedDateVal = this.datePipe.transform(obj.mortgageDeedDate, this.orgnizationSetting.datePipe); 
+        return obj;
+      });
       this.goldLoanMortgageColumns = this.landLoanMortgageColumns;
     }else if(obj.collateralType == CollateralTypes.OTHER_MORTGAGE){
       this.collateralList = obj.ciOtherMortgageDetailsDTOList;
@@ -812,5 +878,129 @@ export class CiLoanApprovalStatusUpdateComponent {
 
   onClickOfInstitutionPromotes() {
     this.institutionPromoterFlag = true;
+  }
+
+
+    /**
+   * @implements get all land types
+   */
+    getAllLandOwnerShipTypes() {
+      this.commonComponent.startSpinner();
+      this.ciLoanMortgageService.getAllLandownershipTypes().subscribe(response => {
+        this.responseModel = response;
+        if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+          this.commonComponent.stopSpinner();
+          this.landOwnershipTypesList = this.responseModel.data.filter((landType: { status: number; }) => landType.status == 1).map((landType: any) => {
+            return { label: landType.name, value: landType.id };
+          });
+        }
+      },
+        error => {
+          this.msgs = [];
+          this.commonComponent.stopSpinner();
+          this.msgs.push({ severity: 'error', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST });
+        })
+    }
+
+     /**
+   * @implements get all villages
+   * @author jyothi.naidana
+   */
+  getAllVaillages(){
+    this.ciLoanMortgageService.getAllVillages().subscribe((data: any) => {
+      this.responseModel = data;
+      if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+        this.villagesList = this.responseModel.data.map((obj: any) => {
+          return { label: obj.name, value: obj.id };
+        });
+        this.collateralList = this.collateralList.map((obj:any)=>{
+          if(this.villagesList != null && this.villagesList != undefined && this.villagesList.length >0)
+            obj.villageName = this.villagesList.find((village:any)=> obj.villageId == village.value)?.label;
+          if(this.landOwnershipTypesList != null && this.landOwnershipTypesList != undefined && this.landOwnershipTypesList.length >0) 
+            obj.landOwnershipName = this.landOwnershipTypesList.find((ownership:any)=> obj.landOwnership == ownership.value)?.label; 
+          obj.mortgageDeedDateVal = this.datePipe.transform(obj.mortgageDeedDate, this.orgnizationSetting.datePipe); 
+          return obj;
+        });
+      } else {
+        this.msgs = [];
+        this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
+      }
+    });
+  }
+
+
+   /**
+   * @implements get ci Loan History by Application Id
+   * @param ciLoanApplicationId 
+   * @author jyothi.naidana
+   */
+   getCiLoanHistoryByApplicationId(ciLoanApplicationId: any) {
+    this.commonFunctionsService
+    this.ciLoanHistoryService.getCiLoanExistedDetailsByApplicationId(ciLoanApplicationId).subscribe((data: any) => {
+      this.responseModel = data;
+      if (this.responseModel != null && this.responseModel != undefined) {
+        if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+          if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
+            this.ciLoanHistoryList = this.responseModel.data.filter((obj:any) => obj != null).map((history :any)=>{
+              history.closingDateVal = this.datePipe.transform( history.closingDate , this.orgnizationSetting.datePipe);
+              history.openingDateVal = this.datePipe.transform( history.openingDate , this.orgnizationSetting.datePipe);
+              if (history.isNPA != null && history.isNPA != undefined && history.isNPA)
+                history.isNpaName = "Yes";
+              else
+                history.isNpaName = "No";
+                history.moduleTypeName = this.moduleTypes.find((obj: any) => obj.value == history.moduleType)?.label;
+                history.collateralTypeName = this.mastercollateralList.find((obj: any) => obj.value == history.collateralType)?.label;
+              return history;
+            });
+          }
+        }
+        else {
+          this.msgs = [];
+          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        }
+      }
+    }, error => {
+      this.commonComponent.stopSpinner();
+      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    });
+  }
+
+  /**
+   * @implements get all collateral
+   * @author jyothi.naidana
+   */
+  getAllCollaterals() {
+    this.msgs = [];
+    this.commonComponent.startSpinner();
+    this.ciLoanHistoryService.getAllCollateralTypes().subscribe((response: any) => {
+      this.responseModel = response;
+      if (this.responseModel != null&& this.responseModel.data!= undefined) {
+        this.mastercollateralList = this.responseModel.data.filter((data: any) => data.status == applicationConstants.ACTIVE).map((collateral: any) => {
+          return { label: collateral.name, value: collateral.id }
+      });
+      this.getCiLoanHistoryByApplicationId(this.id);
+      this.commonComponent.stopSpinner();
+    }
+    else {
+      this.msgs = [];
+      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 2000);
+    }
+    }, error => {
+      this.msgs = [];
+      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 2000);
+      this.commonComponent.stopSpinner();
+    });
   }
 }

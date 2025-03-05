@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SavingBankApplicationService } from './shared/saving-bank-application.service';
@@ -74,6 +74,7 @@ export class SavingsBankApplicationComponent implements OnInit {
   requireddocumentlist: any[] =[];
   isDisableSubmit: boolean = false;
   accountTypeDropDownHide: boolean = false;
+  isMaximized: any;
 ;
  
 
@@ -300,7 +301,7 @@ export class SavingsBankApplicationComponent implements OnInit {
                   this.savingBankApplicationModel.accountOpeningDateVal = this.commonFunctionsService.currentDate();
                   // this.savingBankApplicationModel.accountOpeningDateVal = this.datePipe.transform(this.currentDate, this.orgnizationSetting.datePipe);
                   if (this.savingBankApplicationModel.accountOpeningDateVal != null && this.savingBankApplicationModel.accountOpeningDateVal != undefined) {
-                    this.savingBankApplicationModel.accountOpenDate = this.commonFunctionsService.getUTCEpochWithTimedateConversionToLong(this.savingBankApplicationModel.accountOpeningDateVal);
+                    this.savingBankApplicationModel.accountOpenDate = this.commonFunctionsService.getUTCEpoch(new Date(this.savingBankApplicationModel.accountOpeningDateVal));
                   }
                 }
                 else if(this.savingBankApplicationModel.accountOpenDate != null && this.savingBankApplicationModel.accountOpenDate != undefined){
@@ -369,6 +370,29 @@ export class SavingsBankApplicationComponent implements OnInit {
           else {
             this.isDisableSubmit = true;
           }
+          if (this.productDefinitionModel.isInterestPostingAllowed) {
+            this.productDefinitionModel.isInterestPostingAllowedName = applicationConstants.YES;
+          }
+          else {
+            this.productDefinitionModel.isInterestPostingAllowedName = applicationConstants.NO;
+          }
+          if (this.productDefinitionModel.isCheckBookIssuingAllowed)
+            this.productDefinitionModel.isCheckBookIssuingAllowedName = applicationConstants.YES;
+          else
+            this.productDefinitionModel.isCheckBookIssuingAllowedName = applicationConstants.NO;
+
+          if (this.productDefinitionModel.isChequeBookOperationsAllowed)
+            this.productDefinitionModel.isChequeBookOperationsAllowedName = applicationConstants.YES;
+
+          else
+            this.productDefinitionModel.isChequeBookOperationsAllowedName = applicationConstants.NO;
+
+          if (this.productDefinitionModel.isDebitCardIssuingAllowed)
+            this.productDefinitionModel.isDebitCardIssuingAllowedName = applicationConstants.YES;
+
+          else
+            this.productDefinitionModel.isDebitCardIssuingAllowedName = applicationConstants.NO;
+       
 
           if (this.productDefinitionModel.interestPolicyConfigDto != null && this.productDefinitionModel.interestPolicyConfigDto != undefined)
             this.interestPolicyModel = this.productDefinitionModel.interestPolicyConfigDto;
@@ -395,10 +419,11 @@ export class SavingsBankApplicationComponent implements OnInit {
           if (this.productDefinitionModel.requiredDocumentsConfigList != null && this.productDefinitionModel.requiredDocumentsConfigList != undefined && this.productDefinitionModel.requiredDocumentsConfigList.length > 0) {
             this.requireddocumentlist = this.productDefinitionModel.requiredDocumentsConfigList;
             this.requireddocumentlist = this.requireddocumentlist.filter((data: any) => data != null && data.effectiveStartDate != null).map((object: any) => {
-              object.effectiveStartDate = this.datePipe.transform(object.effectiveStartDate, this.orgnizationSetting.datePipe);
+              object.effectiveStartDateVal = this.datePipe.transform(object.effectiveStartDate, this.orgnizationSetting.datePipe);
               return object;
             });
           }
+          this.savingBankApplicationModel.requiredDocumentsConfigDetailsDTOList = this.productDefinitionModel.requiredDocumentsConfigList;
 
         }
       }
@@ -551,4 +576,26 @@ export class SavingsBankApplicationComponent implements OnInit {
       this.getInstitutionByAdmissionNumber(this.admissionNumber);
     }
   }
+
+   // Popup Maximize
+                @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+                
+                  onDialogResize(event: any) {
+                    this.isMaximized = event.maximized;
+                
+                    if (this.isMaximized) {
+                      // Restore original image size when maximized
+                      this.imageElement.nativeElement.style.width = 'auto';
+                      this.imageElement.nativeElement.style.height = 'auto';
+                      this.imageElement.nativeElement.style.maxWidth = '100%';
+                      this.imageElement.nativeElement.style.maxHeight = '100vh';
+                    } else {
+                      // Fit image inside the dialog without scrollbars
+                      this.imageElement.nativeElement.style.width = '100%';
+                      this.imageElement.nativeElement.style.height = '100%';
+                      this.imageElement.nativeElement.style.maxWidth = '100%';
+                      this.imageElement.nativeElement.style.maxHeight = '100%';
+                      this.imageElement.nativeElement.style.objectFit = 'contain';
+                    }
+                  }
 }

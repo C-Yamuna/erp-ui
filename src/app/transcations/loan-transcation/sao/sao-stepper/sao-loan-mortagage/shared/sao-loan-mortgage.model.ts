@@ -3,66 +3,225 @@ export class SaoLoanLandMortageDetailsModel{
 
     saoLoanApplicationId: any;
 
-    admissionNo: any;
+    pacsId: any;
 
-    landUnits: any;
+    pacsCode: any;
 
-    landSubUnits: any;
+    branchId: any;
 
-    value: any;
+    memberId: any;
 
-    remarks: any;
+    admissionNumber: any;
+
+    districtId: any;
+
+    districtCode: any;
+
+    subDistrictId: any;
+
+    subDistrictCode: any;
+
+    villageId: any;
+
+    villageCode: any;
 
     passbookNumber: any;
 
-    surveyNo: any;
+    capturedOn: any;
 
-    documentPath: any;
+    capturedBy: any;
 
-    declaredLandUnits: any;
+    custLandSurveyDetails: any[] = [];
 
-    declaredLandSubUnits: any;
+    stateName: any;
 
-    landType: any;
+    districtName: any;
 
-    landTypeName: any;
-
-    filesDTOList: any;
-
-    requestedDocPathMultipartFileList : any;
-
-    status: any;
-
-    landOwnership:any;
-
-    villageId:any;
+    subDistrictName: any;
 
     villageName: any;
 
-    khataNumber:any;
+    stateId: any;
 
-    surveyNumber:any;
+    stateCode: any;
 
-    totalLandInSubUnits:any;
+    status: any;
 
-    mortgageLandValuePerUnit:any;
+    statusName: any;
 
-    totalLandInUnits:any;
+    fieldsData: any;
 
-    totalMortgageLandValue:any;
+    fields: any;
 
-    mortgageLandInUnits:any;
+    productId: any;
 
-    mortgageLandInSubUnits:any;
+    modificationCount: any;
 
-    mortgageDeedDate:any;
+    totalMemberLandDetailsCont: any;
 
-    mortgageDeedDateVal:any;
+    measuringHighestUnit: any;
 
-    mortgageDeedNumber:any;
+    measuringUnit: any;
 
-    landValuePerUnit:any;
+    measuringSubUnit: any;
 
-    totalLandValue:any;
+    uploadFilePath: any;
 
+    filesDTO: any;
+
+    preMemAdmissionNumber: any;
+
+    preMemAccountNumber: any;
+
+    preMemName: any;
+
+    preMemAdmissionDate: any;
+
+    memName: any;
+
+    branchName: any;
+
+    statusDisplayName: any;
+
+    totalLand: any;
+  
+    totalLandSubUnits: any;
+
+    surveyNumber: any;
+
+    khataNumber: any;
+  
+    masterVillageId: any;
+  
+    fatherOrSpousename: any;
+
+    admissionDate: any;
+
+    activeStatus: any;
+  
+    uniqueLandId: any;
+  
+    isNew: any;
+  
+    isLandMortgage: any;
+
+    concatinatedAdmissionNumber:any;
+
+    totalLandInAcres:any;
+
+    totalCultivableLandInAcres :any;
+    
+    totalUnderCultivationLandInAcres:any;
+
+}
+export class CustomerLandSurveyDetails{
+    id: any;
+
+    memberId: any;
+
+    pacsId: any;
+
+    pacsCode: any;
+
+    landDetailsId: any;
+
+    surveyNumber: any;
+
+    titleDeedNumber: any;
+
+    totalLand: any;
+
+    cultivableLand: any;
+
+    underCultivationLand: any;
+
+    soilType: any;
+
+    landType: any;
+
+    irrigationType: any;
+
+    landOwnership: any;
+  
+    waterSourceId: any;
+
+    eastBoundary: any;
+
+    westBoundary: any;
+
+    southBoundary: any;
+
+    northBoundary: any;
+
+    acerValue: any;
+
+    declaredLand: any;
+
+    declaredLandValue: any;
+
+    cropId: any;
+
+    societyName: any;
+
+    soilTypeName: any;
+
+    landTypeName: any;
+
+    irrigationTypeName: any;
+
+    cropName: any;
+
+    landOwnershipName: any;
+
+    status: any;
+
+    statusName: any;
+
+    passbookNumber: any;
+
+    villageName: any;
+
+    totalLandInSubUnits: any;
+
+    cultivableLandInSubUnits: any;
+
+    underCultivationLandInSubUnits: any;
+
+    caliculatedTotalLand: any;
+
+    caliculatedCultivableLand: any;
+
+    caliculatedUnderCultivationLand: any;
+
+    villageId: any;
+
+    coveredVillagename: any;
+
+    csvFileUploadId: any;
+
+    csvRowId: any;
+
+    statusDisplayName: any;
+
+    source: any;
+
+    loanId: any;
+
+    collateralId: any;
+
+    khataNumber: any;
+  
+    masterVillageId: any;
+  
+    analyzerCheck: any;
+  
+    applicationId: any;
+  
+    waterSourceName: any;
+  
+    loanType: any;
+  
+    loanTypeName: any;
+
+    rowId: any;
 }

@@ -13,6 +13,7 @@ import { CompoundInterestProductDefinitionService } from '../../shared/compound-
 import { CiInterestPolicyService } from './shared/ci-interest-policy.service';
 import { DatePipe } from '@angular/common';
 import { ApportionTypesService } from 'src/app/configurations/loan-config/apportion-types/shared/apportion-types.service';
+import { BoxNumber } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-ci-interest-policy',
@@ -505,7 +506,7 @@ export class CiInterestPolicyComponent {
       );
     
       if (isDuplicate) {
-        this.collectionApportionOrderForm.get('collectionComponentName')?.reset();
+        this.collectionApportionOrderForm.get('collectionComponentId')?.reset();
         this.msgs = [{ severity: 'error',  detail:applicationConstants.COLLECTION_TYPE_ALREADY_EXIST}];
         setTimeout(() => {
           this.msgs = [];
@@ -516,22 +517,42 @@ export class CiInterestPolicyComponent {
     
       return applicationConstants.FALSE;
     }
-     checkForAmount(): void {
+     checkForAmount(box : any): void {
       const minSlabAmount = this.interestPolicyForm.get('minSlabAmount')?.value;
       const maxSlabAmount = this.interestPolicyForm.get('maxSlabAmount')?.value;
-  
-      if (minSlabAmount && maxSlabAmount &&  minSlabAmount > maxSlabAmount) {
-        this.amountAndTenureFlag = applicationConstants.FALSE;
-        this.msgs = [{ severity: 'warning', detail: applicationConstants.MIN_SLAB_AMOUNT_ERROR }];
-        setTimeout(() => {
+      if (minSlabAmount != null && minSlabAmount !='' && maxSlabAmount != null &&  maxSlabAmount !='' &&
+        Number(minSlabAmount) > Number(maxSlabAmount)) {
           this.msgs = [];
-        }, 1500);
-      } else {
-        this.msgs = [];
-        this.amountAndTenureFlag = applicationConstants.TRUE;
-      }
-  
-
+          if (box == BoxNumber.BOX_ONE) {
+            this.msgs.push({ severity: 'warning', detail: applicationConstants.MINIMUM_SLAB_AMOUNT_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAXIMUM_SLAB_AMOUNT });
+            this.interestPolicyForm.get('minSlabAmount')?.reset();
+          } else if (box == BoxNumber.BOX_TWO) {
+            this.msgs.push({ severity: 'warning', detail: applicationConstants.MAXIMUM_SLAB_AMOUNT_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MINIMUM_SLAB_AMOUNT });
+            this.interestPolicyForm.get('maxSlabAmount')?.reset();
+          }
+          setTimeout(() => {
+            this.msgs = [];
+          }, 1500);
+        
       this.updateData();
     }
+  }
+
+  checkApportionOrder(apportionOrder: any){
+    const isDuplicate = this.apportionOrderList.some(row => 
+      row.apportionOrder === Number(apportionOrder)
+    );
+  
+    if (isDuplicate) {
+      this.collectionApportionOrderForm.get('apportionOrder')?.reset();
+      this.msgs = [{ severity: 'error',  detail:applicationConstants.APPORTION_ORDER_ALREADY_EXIST}];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 2000);
+      return applicationConstants.TRUE;
+    }
+  
+  
+    return applicationConstants.FALSE;
+  }
 }

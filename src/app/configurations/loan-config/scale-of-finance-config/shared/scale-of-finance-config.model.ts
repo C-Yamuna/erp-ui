@@ -16,4 +16,5 @@ export class ScaleOfFinanceConfig {
     financialYearVal?: any;
     status: any;
     statusName: any;
+    uomType:any;
 }

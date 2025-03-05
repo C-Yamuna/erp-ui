@@ -19,7 +19,7 @@ import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-
 import { FileUploadService } from 'src/app/shared/file-upload.service';
 import { SbTransaction } from '../../sb-transactions/shared/sb-transaction';
 import { CommunityService } from 'src/app/configurations/common-config/community/shared/community.service';
-import { CommonStatusData, MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
+import { CommonStatusData, MemberShipTypesData, membershipProductName } from 'src/app/transcations/common-status-data.json';
 import { savingsbanktransactionconstant } from '../../savingsbank-transaction-constant';
 
 @Component({
@@ -130,20 +130,22 @@ export class NewMembershipComponent {
   fileSizeMsgResulutionCopy :any;
   fileSizeMsgForImage:any;
   fileSizeMsgForSignature :any;
+  subProductList: any[] = [];;
 
   constructor(private router: Router, private formBuilder: FormBuilder, private savingBankApplicationService: SavingBankApplicationService, private commonComponent: CommonComponent, private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService, private commonFunctionsService: CommonFunctionsService, private datePipe: DatePipe, private savingsBankCommunicationService: SavingsBankCommunicationService, private membershipServiceService: MembershipServiceService , private fileUploadService :FileUploadService, private communityService: CommunityService) {
     this.memberCreationForm = this.formBuilder.group({
+      "subProductId": new FormControl('', Validators.required),
       "surName":  new FormControl('', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
-      "name":  new FormControl('', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
+      "name":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
       "gender": new FormControl('', Validators.required),
       "dateOfBirth": new FormControl('', Validators.required),
-      "age":  new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
+      "age":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
       "maritalStatus": new FormControl('', Validators.required),
-      "relationWithMember": ['', [Validators.pattern(applicationConstants.ALPHA_NAME_PATTERN), Validators.compose([Validators.required])]],
+      "relationWithMember": ['', [Validators.required,Validators.pattern(applicationConstants.ALPHA_NAME_PATTERN), Validators.compose([Validators.required])]],
       "relationName": new FormControl('', Validators.required),
-      "aadharNumber":  new FormControl('', [Validators.pattern(applicationConstants.AADHAR_PATTERN), Validators.maxLength(40)]),
-      "panNumber":  new FormControl('', [Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN), Validators.maxLength(40)]),
-      "mobileNumber":  new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
+      "aadharNumber":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.AADHAR_PATTERN), Validators.maxLength(40)]),
+      "panNumber":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN), Validators.maxLength(40)]),
+      "mobileNumber":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
       "occupation": new FormControl('', Validators.required),
       "community": new FormControl('', Validators.required),
       "quslification": new FormControl('', Validators.required),
@@ -157,34 +159,36 @@ export class NewMembershipComponent {
       "mcrNumber":  new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
     })
     this.groupForm = this.formBuilder.group({
+      "subProductId": new FormControl('', Validators.required),
       "name":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
       "registrationNumber":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
       "registrationDate": new FormControl('', Validators.required),
       "admissionDate": new FormControl('', Validators.required),
       // pocNumber: ['', Validators.required],
-      "mobileNumber":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.maxLength(40)]),
+      // "mobileNumber":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.maxLength(40)]),
       "panNumber":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN), Validators.maxLength(40)]),
       "tanNumber":  new FormControl('', [Validators.pattern(applicationConstants.TAN_NUMBER), Validators.maxLength(40)]),
       "gstNumber":  new FormControl('', [Validators.pattern(applicationConstants.GST_NUMBER_PATTERN), Validators.maxLength(40)]),
-      "pocName":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
+      // "pocName":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
       "groupType": new FormControl('', Validators.required),
-      "societyAdmissionNumber":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
+      "societyAdmissionNumber":  new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
       "operatorTypeId":new FormControl('', Validators.required),
 
     })
     this.institutionForm = this.formBuilder.group({
+      "subProductId": new FormControl('', Validators.required),
       "name":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
       "registrationNumber":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
       "registrationDate": new FormControl('', Validators.required),
       "admissionDate": new FormControl('', Validators.required),
       // pocName: ['', Validators.required],
-      "mobileNumber": new FormControl('', [Validators.required,Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.maxLength(40)]),
+      // "mobileNumber": new FormControl('', [Validators.required,Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.maxLength(40)]),
       "panNumber": new FormControl('', [Validators.required,Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN), Validators.maxLength(40)]),
       "tanNumber": new FormControl('', [Validators.pattern(applicationConstants.TAN_NUMBER), Validators.maxLength(40)]),
       "gstNumber": new FormControl('', [Validators.pattern(applicationConstants.GST_NUMBER_PATTERN), Validators.maxLength(40)]),
-      "pocName": new FormControl('', [Validators.required,Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
+      // "pocName": new FormControl('', [Validators.required,Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
       "institutionType": new FormControl('',Validators.required),
-      "societyAdmissionNumber": new FormControl('', [Validators.required,Validators.required,Validators.pattern(applicationConstants.ALLOW_NEW_NUMBERS), Validators.maxLength(40)]),
+      "societyAdmissionNumber": new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NEW_NUMBERS), Validators.maxLength(40)]),
       "operatorTypeId":new FormControl('', Validators.required),
     })
     this.promoterDetailsForm = this.formBuilder.group({
@@ -248,6 +252,7 @@ export class NewMembershipComponent {
     this.getAllQualificationType();
     this.getCastesList();
     this.getAllCommunityTypes();
+    this.getAllSubProducts();
 
     this.getAllTypeOfMembershipDetails(this.pacsId , this.branchId);
     this.activateRoute.queryParams.subscribe(params => {
@@ -288,6 +293,47 @@ export class NewMembershipComponent {
     });
 
 
+  }
+
+  /**
+   * @implements get all subproducts details
+   * @author jyothi.naidana
+   */
+  getAllSubProducts() {
+    this.commonComponent.startSpinner();
+    this.savingBankApplicationService.getAllSubProduct().subscribe((res: any) => {
+      this.responseModel = res;
+      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+        this.subProductList = this.responseModel.data;
+        if (this.subProductList == null || (this.subProductList != null && this.subProductList.length == 0)) {
+          this.msgs = [];
+          this.msgs = [{ severity: 'error', detail: applicationConstants.SUB_PRODUCTS_NO_DATA_MESSAGE }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        }
+        this.subProductList = this.subProductList.filter((customertype: any) => customertype.status == applicationConstants.ACTIVE && customertype.name != membershipProductName.ACLASS_VOTING_MEMBER && customertype.name != membershipProductName.ACLASS_MEMBER).map((count: any) => {
+          return { label: count.name, value: count.id }
+        });
+          
+        this.commonComponent.stopSpinner();
+      } else {
+        this.commonComponent.stopSpinner();
+        this.msgs = [];
+        this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
+    },
+      error => {
+        this.msgs = [];
+        this.commonComponent.stopSpinner();
+        this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      });
   }
 
   /**
@@ -1021,6 +1067,7 @@ export class NewMembershipComponent {
     this.promoterDetailsModel = { ...rowData };
     // Then, disable the fields
     if (rowData.isExistingMember) {
+      this.resetFields();
       setTimeout(() => { // Ensure Angular updates the UI before disabling
         this.promoterDetailsForm.get('surname')?.disable();
         this.promoterDetailsForm.get('name')?.disable();
@@ -1038,6 +1085,7 @@ export class NewMembershipComponent {
       }, 100);
     }
     else {
+      this.resetFields();
       this.promoterDetailsForm.get('surname')?.enable();
       this.promoterDetailsForm.get('name')?.enable();
       // this.promoterDetailsForm.get('operatorTypeId')?.enable();
@@ -1061,8 +1109,8 @@ export class NewMembershipComponent {
     }
     else{
       this.admissionNumberDropDown = false;
-      this.promoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadImage  );
-      this.promoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadSignature  );
+      this.promoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadImage  );
+      this.promoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadSignature  );
     }
     this.isFileUploadedPromoterPhoto = applicationConstants.TRUE;
     this.isFileUploadedPromoterSignature = applicationConstants.TRUE;
@@ -1232,6 +1280,7 @@ export class NewMembershipComponent {
     this.promoterDetailsModel = { ...rowData };
     // Then, disable the fields
     if (rowData.isExistingMember) {
+      this.resetFields();
       setTimeout(() => { // Ensure Angular updates the UI before disabling
         this.promoterDetailsForm.get('surname')?.disable();
         this.promoterDetailsForm.get('name')?.disable();
@@ -1249,6 +1298,7 @@ export class NewMembershipComponent {
       }, 100);
     }
     else {
+      this.resetFields();
       this.promoterDetailsForm.get('surname')?.enable();
       this.promoterDetailsForm.get('name')?.enable();
       // this.promoterDetailsForm.get('operatorTypeId')?.enable();
@@ -1274,8 +1324,8 @@ export class NewMembershipComponent {
     }
     else{
       this.admissionNumberDropDown = false;
-      this.institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionPromoterDetailsModel.uploadImage  );
-      this.institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionPromoterDetailsModel.uploadSignature  );
+      this.institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionPromoterDetailsModel.uploadImage  );
+      this.institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionPromoterDetailsModel.uploadSignature  );
     }
    
     this.isFileUploadedPromoterPhoto = applicationConstants.TRUE;

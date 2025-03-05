@@ -141,20 +141,16 @@ export class MembershipBasicDetails {
 	isNewMember : any;
 
 	memStatusName : any;
-
     multipartFileListForPhotoCopy: any;
-
     multipartFileListForsignatureCopyPath: any;
-
     ciLoanCommunicationDTOList:any;
-
     ciLoanKycDetailsList:any;
-
     isStaff:any;
-
     memberShipCommunicationDetailsDTO:any;
     admissionDateVal: any;
     dobVal: any;
+  ciLoanCommunicationDTO: any;
+  societyAdmissionNumber:any;
 }
 
 export class MembershipGroupDetails {
@@ -247,6 +243,11 @@ export class MembershipGroupDetails {
   groupPromoterList: any;
   photoCopyPath: any;
   groupTypeName: any;
+
+  societyAdmissionNumber:any;
+  operatorTypeId:any;
+
+  operatorTypeName:any;
 }
 
 export class MemInstitutionDetails {
@@ -334,6 +335,14 @@ export class MemInstitutionDetails {
   photoCopyPath: any;
   institutionTypeName: any;
   institutionType: any;
+
+  societyAdmissionNumber:any;
+
+  subProductId:any;
+
+  operatorTypeId:any;
+
+  operatorTypeName:any;
     
 }
 
@@ -405,6 +414,11 @@ export class GroupPromoterDetails {
 
     multipartFileListForPhotoCopyPath:any;
     
+    isPoc :any;
+
+    endDateVal:any;
+
+    multipartFileListForsignatureCopyPath:any;
 
 
 }
@@ -481,4 +495,6 @@ export class InstitutionPromoterDetails {
   multipartFileListForSignatureCopyPath:any;
 
   multipartFileListForPhotoCopyPath:any;
+
+  isPoc :any;
 }

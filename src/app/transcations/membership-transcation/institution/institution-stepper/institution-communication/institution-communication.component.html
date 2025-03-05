@@ -35,12 +35,12 @@
                     <p class="mb-0">{{institutionBasicDetailsModel.admissionDateVal}}</p>
                 </div>
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
+            <!-- <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
                 <div class="form-group">
                     <span>{{'ERP.POC_NAME' | translate}}</span>
                     <p class="mb-0">{{institutionBasicDetailsModel.pocName}}</p>
                 </div>
-            </div>
+            </div> -->
             <!-- <div class="col-lg-2 col-md-4 col-sm-4 col-xs-12">
                 <div class="form-group">
                     <span>{{'ERP.POC_MOBILE_NUMBER' | translate}}</span>
@@ -93,7 +93,7 @@
                                     <div class="form-label">
                                         <label><span class="red">*</span>{{'ERP.VILLAGES' | translate}} </label>
                                             <p-dropdown [options]="pervillageList" placeholder="Select " formControlName="permanentVillageId"
-                                        (onChange)='getPerVillage(instituteCommunicationModel.permanentVillageId)'
+                                        (onChange)='getPerVillage(instituteCommunicationModel.permanentVillageId,true)'
                                             [(ngModel)]="instituteCommunicationModel.permanentVillageId"></p-dropdown>
                                     </div>
                                 </div>
@@ -198,7 +198,7 @@
                                     <div class="form-label">
                                         <label><span class="red">*</span>{{'ERP.VILLAGES' | translate}} </label>
                                             <p-dropdown [filter]="true" [options]="villageList" placeholder="Select"
-                                            formControlName="villageId" (onChange)='getVillage(instituteCommunicationModel.villageId)' [(ngModel)]="instituteCommunicationModel.villageId"></p-dropdown>
+                                            formControlName="villageId" (onChange)='getVillage(instituteCommunicationModel.villageId,false)' [(ngModel)]="instituteCommunicationModel.villageId"></p-dropdown>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -233,7 +233,7 @@
                                         </label>
                 
                                         <input pInputText id="bunit_txt_name" minlength="6" maxlength="6" type="text" formControlName="pinCode"
-                                        [(ngModel)]="instituteCommunicationModel.pinCode" placeholder="Enter Pincode">
+                                        [(ngModel)]="instituteCommunicationModel.pincode" placeholder="Enter Pincode">
                                         <p-message severity="error" text="Enter Valid pinCode"
                                         *ngIf="!instituteCommunicationForm.controls['pinCode'].valid && instituteCommunicationForm.controls['pinCode'].dirty">
                                     </p-message>

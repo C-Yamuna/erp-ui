@@ -21,6 +21,23 @@
                     <div class="row g-3 mt-0">
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                             <div class="form-label">
+                                <label><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.MEMBERSHIP_TYPE' | translate}}</label>
+                                <p-dropdown id="bunit_txt_status" placeholder="Select" [filter]="true"
+                                    [options]="subProductList" formControlName="subProductId"
+                                    [(ngModel)]="membershipBasicRequiredDetails.subProductId">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="form-label">
+                                <label>{{'ERP.SOCIETY_ADMISSION_NUMBER' | translate}}</label>
+                                <input pInputText type="text" formControlName="societyAdmissionNumber"
+                                    [(ngModel)]="membershipBasicRequiredDetails.societyAdmissionNumber"
+                                    placeholder="Enter Society Admission Number">
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="form-label">
                             <label>{{'ERP.SURNAME' | translate}}</label>
                           
                                 <input pInputText type="text" formControlName="surName"
@@ -45,8 +62,8 @@
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                             <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.AGE' | translate}}</label>
-                                <input pInputText type="text" formControlName="age" (focusout)="datesValidationCheckAgeAndDob(membershipBasicRequiredDetails, 1)"
-                                    [(ngModel)]="membershipBasicRequiredDetails.age" placeholder="Enter Age" >
+                                <input pInputText type="text" formControlName="age"  (focusout)="ageCaluculation(true)"
+                                    [(ngModel)]="membershipBasicRequiredDetails.age" placeholder="Enter Age">
                                 <p-message severity="error" text="Enter Valid age"
                                     *ngIf="!memberCreationForm.controls['age'].valid && memberCreationForm.controls['age'].dirty">
                                 </p-message>
@@ -56,9 +73,9 @@
                             <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.DATE_OF_BIRTH' | translate}}</label>
                             
-                                <p-calendar formControlName="dateOfBirth" [showIcon]="true"
+                                <p-calendar formControlName="dateOfBirth" [showIcon]="true"  
                                     dateFormat="{{orgnizationSetting.calendar}}" placeholder="DD/MM/YYYY"
-                                    [(ngModel)]="membershipBasicRequiredDetails.dobVal" (focusout)="datesValidationCheckAgeAndDob(membershipBasicRequiredDetails, 2)">
+                                    [(ngModel)]="membershipBasicRequiredDetails.dobVal" (onSelect)="dateConverstion()">
                                 </p-calendar>
                             </div>
                         </div>
@@ -235,9 +252,54 @@
                                     [(ngModel)]="membershipBasicRequiredDetails.isStaff" placeholder="Select"></p-dropdown>
                             </div>
                         </div>
+                        <!-- <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="form-label">
+                                <label for="username">
+                                    <span class="red">*</span> {{'MEMBERSHIP_TRANSACTION.RESOLUTION_DATE' | translate}}
+                                </label>
+                                <p-calendar formControlName="resolutionDate" [showIcon]="true"
+                                    [dateFormat]="orgnizationSetting.calendar" [(ngModel)]="membershipBasicRequiredDetails.resolutionDateVal"
+                                    placeholder="Enter Admission Date" [maxDate]="today">
+                                </p-calendar>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="form-label">
+                                <label for="username">{{'MEMBERSHIP_TRANSACTION.RESOLUTION_NUMBER' | translate}}
+                                </label>
+                                <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="mcrNumber"
+                                    [(ngModel)]="membershipBasicRequiredDetails.mcrNumber">
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="form-label">
+                                <span class=""> {{ 'MEMBERSHIP_TRANSACTION.RESOLUTION_COPY' | translate }} </span>
+                                <div class="uplodad-style align-items-center">
+                                    Upload Button Column
+                                    <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                                        id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".pdf"
+                                        (onRemove)="fileRemoeEvent('individualResolutionCopy')"
+                                        (onSelect)="fileUploader($event,fileUpload ,'individualResolutionCopy')">
+                                    </p-fileUpload>
+                                    <div class="col-12  d-flex p-1 contant-body"
+                                        *ngFor="let img of membershipBasicRequiredDetails.multipartFileListForResolutionCopyPath">
+                                        <div *ngIf="img.fileType=='pdf'">
+                                            <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22"
+                                                    height="22"></a>
+                                        </div>
+                                        <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
+                                            tooltipPosition="bottom">
+                                            {{img.fileName}}
+                                        </div>
+        
+                                    </div>
+                                </div>
+                            </div>
+        
+                        </div> -->
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
                             <div class="form-label">
-                            <span class=""><span class="red">*</span> {{ 'ERP.UPLOAD_IMAGE' | translate }} </span>
+                            <span class=""><span class="red">*</span> {{ 'ERP.PHOTO_COPY' | translate }} </span>
                             <div class="uplodad-style align-items-center">
                                 <!-- Upload Button Column -->
                                 
@@ -262,12 +324,12 @@
                         </div>
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
                             <div class="form-label">
-                            <span class=""> <span class="red">*</span>{{ 'ERP.UPLOAD_SIGNATURE' | translate }} </span>
+                            <span class=""> <span class="red">*</span>{{ 'ERP.SIGNATURE_COPY' | translate }} </span>
                             <div class="uplodad-style align-items-center">
                                 <!-- Upload Button Column -->
-                                <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                                <p-fileUpload #fileUpload1 class="qua-upld file-attach semi-bold" name="myfile[]"
                                 id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".png,.jpg,.jpeg" (onRemove)="fileRemoeEvent('individualSighnedCopy')"
-                                (onSelect)="fileUploader($event,fileUpload ,'individualSighnedCopy')">
+                                (onSelect)="fileUploader($event,fileUpload1 ,'individualSighnedCopy')">
                                 </p-fileUpload>
                                 <div class="col-12  d-flex p-1 contant-body" *ngFor="let img of membershipBasicRequiredDetails.multipartFileListForsignatureCopyPath">
                                     <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
@@ -298,6 +360,33 @@
                     <div class="row g-3 mt-0">
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                             <div class="form-label">
+                                <label><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.MEMBERSHIP_TYPE' | translate}}</label>
+                                <p-dropdown id="bunit_txt_status" placeholder="Select" [filter]="true"
+                                    [options]="subProductList" formControlName="subProductId"
+                                    [(ngModel)]="memberGroupDetailsModel.subProductId">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="form-label">
+                                <label><span class="red">*</span>{{'ERP.GROUP_TYPES' | translate}}</label>
+                                <p-dropdown [options]="groupTypes" placeholder="Select" formControlName="groupTypeId"
+                                    [(ngModel)]="memberGroupDetailsModel.groupTypeId" [appendTo]="'body'"
+                                    (onChange)="groupTypeOnChange()">
+                                </p-dropdown>
+    
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="form-label">
+                                <label>{{'ERP.SOCIETY_ADMISSION_NUMBER' | translate}}</label>
+                                <input pInputText type="text" formControlName="societyAdmissionNumber"
+                                    [(ngModel)]="memberGroupDetailsModel.societyAdmissionNumber"
+                                    placeholder="Enter Society Admission Number">
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.GROUP_NAME' | translate}}</label>
                                 <input pInputText id="bunit_txt_name" maxlength="40" type="text"
                                     formControlName="name" [(ngModel)]="memberGroupDetailsModel.name" placeholder="Enter Group Name">
@@ -323,6 +412,14 @@
                                 <p-calendar [showIcon]="true" formControlName="registrationDate" [showIcon]="true"
                                 dateFormat="{{orgnizationSetting.calendar}}" placeholder="DD/MM/YYYY"
                                     [(ngModel)]="memberGroupDetailsModel.registrationDateVal" (onSelect)="dateConverstion()"></p-calendar>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="form-label">
+                                <label><span class="red">*</span>{{'ERP.TYPE_OF_OPERATION' | translate}}</label>
+                                <p-dropdown [options]="operatorTypeList" placeholder="Select" formControlName="operatorTypeId"
+                                    [(ngModel)]="memberGroupDetailsModel.operatorTypeId" [appendTo]="'body'">
+                                </p-dropdown>
                             </div>
                         </div>
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
@@ -432,6 +529,7 @@
                     [globalFilterFields]="['surname', 'name', 'operatorTypeName', 'dob', 'age', 'genderName', 'maritalStatusName', 'mobileNumber', 'aadharNumber', 'emailId', 'startDate']">
                     <ng-template pTemplate="header">
                         <tr>
+                            <th>{{'ERP.IS_POC' | translate}}</th>
                             <th>{{'ERP.SURNAME' | translate}}</th>
                             <th>{{'ERP.NAME' | translate}}</th>
                             <th>{{'ERP.TYPE_OF_OPERATOR' | translate}}</th>
@@ -449,6 +547,9 @@
                     </ng-template>
                     <ng-template pTemplate="body" let-row  let-ri="rowIndex">
                         <tr>
+                            <td>
+                                {{row.isPoc}}
+                            </td>
                             <td>
                                 {{row.surname}}
                             </td>
@@ -506,6 +607,33 @@
                     <div class="row g-3 mt-0">
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                             <div class="form-label">
+                                <label><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.MEMBERSHIP_TYPE' | translate}}</label>
+                                <p-dropdown id="bunit_txt_status" placeholder="Select" [filter]="true"
+                                    [options]="subProductList" formControlName="subProductId"
+                                    [(ngModel)]="membershipInstitutionDetailsModel.subProductId">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="form-label">
+                                <label><span class="red">*</span>{{'ERP.INSTITUTION_TYPES' | translate}}</label>
+                                <p-dropdown [options]="institutionTypes" placeholder="Select" formControlName="institutionType"
+                                    [(ngModel)]="membershipInstitutionDetailsModel.institutionType" [appendTo]="'body'"
+                                    (onChange)="institutionTypeOnChange()">
+                                </p-dropdown>
+    
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="form-label">
+                                <label>{{'ERP.SOCIETY_ADMISSION_NUMBER' | translate}}</label>
+                                <input pInputText type="text" formControlName="societyAdmissionNumber"
+                                    [(ngModel)]="membershipInstitutionDetailsModel.societyAdmissionNumber"
+                                    placeholder="Enter Society Admission Number">
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="form-label">
                             <label><span class="red">*</span>{{'ERP.INSTITUTION_NAME' | translate}}</label>
                                 <input pInputText id="bunit_txt_name" maxlength="40" type="text"
                                     formControlName="name" [(ngModel)]="membershipInstitutionDetailsModel.name" placeholder="Enter Institution Name">
@@ -531,6 +659,14 @@
                                 <p-calendar [showIcon]="true" formControlName="registrationDate" [showIcon]="true"
                                 dateFormat="{{orgnizationSetting.calendar}}" placeholder="DD/MM/YYYY"
                                     [(ngModel)]="membershipInstitutionDetailsModel.registrationDateVal" (onSelect)="dateConverstion()"></p-calendar>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="form-label">
+                                <label><span class="red">*</span>{{'ERP.TYPE_OF_OPERATION' | translate}}</label>
+                                <p-dropdown [options]="operatorTypeList" placeholder="Select" formControlName="operatorTypeId"
+                                    [(ngModel)]="membershipInstitutionDetailsModel.operatorTypeId" [appendTo]="'body'">
+                                </p-dropdown>
                             </div>
                         </div>
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
@@ -648,6 +784,7 @@
                     [globalFilterFields]="['surname', 'name', 'operatorTypeId', 'dob', 'age', 'genderName', 'maritalStatusName', 'mobileNumber','emailId', 'aadharNumber',  'startDate']">
                     <ng-template pTemplate="header">
                         <tr>
+                            <th>{{'ERP.IS_POC' | translate}}</th>
                             <th>{{'ERP.SURNAME' | translate}}</th>
                             <th>{{'ERP.NAME' | translate}}</th>
                             <th>{{'ERP.TYPE_OF_OPERATOR' | translate}}</th>
@@ -665,6 +802,9 @@
                     </ng-template>
                     <ng-template pTemplate="body" let-row let-editing="editing" let-ri="rowIndex">
                         <tr [pEditableRow]="row">
+                            <td>
+                                {{row.isPoc}}
+                            </td>
                             <td>
                                 {{row.surname}}
                             </td>
@@ -746,6 +886,14 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
+                        <label><span class="red">*</span>{{'ERP.IS_POC' | translate}}</label>
+                        <p-dropdown [filter]="true" [options]="requiredlist" placeholder="Select"
+                            [(ngModel)]="promoterDetailsModel.isPoc"  formControlName="isPoc"
+                            [appendTo]="'body'" (onChange)="isPosCheck(promoterDetailsModel.isPoc , true)"></p-dropdown>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
                         <label><span class="red">*</span>{{'ERP.NAME' | translate}}</label>
                         <input pInputText type="text" [(ngModel)]="promoterDetailsModel.name" formControlName="name" placeholder="Enter Name">
                         <p-message severity="error" text="Enter Valid Name"
@@ -764,7 +912,7 @@
                     </div>
                 </div>
                
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
                         <label><span class="red">*</span>{{'ERP.OPERATOR_DETAILS' | translate}}</label>
                         <p-dropdown [options]="operatorTypeList" placeholder="Select" formControlName="operatorTypeId"
@@ -772,7 +920,7 @@
                             (onSelect)="promoterageCaluculation(false , true)">
                         </p-dropdown>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
                         <label><span class="red">*</span>{{'ERP.DATE_OF_BIRTH' | translate}}</label>
@@ -857,6 +1005,15 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
+                        <label><span class="red">*</span>{{'ERP.END_DATE' | translate}}</label>
+                        <p-calendar formControlName="endDate" [showIcon]="true" placeholder="DD/MM/YYYY"
+                            dateFormat="{{orgnizationSetting.calendar}}" [(ngModel)]="promoterDetailsModel.endDateVal"
+                            [appendTo]="'body'">
+                        </p-calendar>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
                         <div class="ml-2"><span class="red">*</span>{{'ERP.UPLOAD_IMAGE' | translate}}</div>
                         <div class="uplodad-style align-items-center">
                             <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
@@ -895,11 +1052,14 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 pt-4">
                     <div class="form-label">
-                            <p-checkbox  [binary]="true" formControlName="isGroupLeader"
+                            <!-- <p-checkbox  [binary]="true" formControlName="isGroupLeader"
                             [(ngModel)]="promoterDetailsModel.isGroupLeader"
-                            inputId="binary" (onChange)="onGroupLeaderSelect(true)"></p-checkbox>
-                            <span class="mt-2" for="username">&nbsp;&nbsp;{{'DEMANDERPDEPOSITS.IS_GROUP_LEADER' | translate}}</span>
-                    </div>
+                            inputId="binary" (onChange)="onGroupLeaderSelect(true)"></p-checkbox> -->
+                            <span class="mt-2" for="username">&nbsp;&nbsp;{{'ERP.IS_GROUP_LEADER' | translate}}</span>
+                            <p-dropdown [filter]="true" [options]="requiredlist" placeholder="Select"
+                            [(ngModel)]="promoterDetailsModel.isGroupLeader" formControlName="isGroupLeader"
+                            [appendTo]="'body'"
+                            (onChange)="onGroupLeaderSelect(true,promoterDetailsModel.isGroupLeader)"></p-dropdown>                    </div>
                 </div>
 
                 <div class="col-12 btn-footer px-0">
@@ -943,6 +1103,14 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
+                        <label><span class="red">*</span>{{'ERP.IS_POC' | translate}}</label>
+                        <p-dropdown [filter]="true" [options]="requiredlist" placeholder="Select"
+                            [(ngModel)]="institutionPromoterDetailsModel.isPoc"  formControlName="isPoc"
+                            [appendTo]="'body'" (onChange)="isPosCheck(institutionPromoterDetailsModel.isPoc , false)"></p-dropdown>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <div class="form-label">
                         <label><span class="red">*</span>{{'ERP.NAME' | translate}}</label>
                         <input pInputText type="text" [(ngModel)]="institutionPromoterDetailsModel.name" formControlName="name" placeholder="Enter Name">
                         <p-message severity="error" text="Enter Valid Name"
@@ -961,14 +1129,14 @@
                     </div>
                 </div>
                 
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
                         <label><span class="red">*</span>{{'ERP.OPERATOR_DETAILS' | translate}}</label>
                         <p-dropdown [options]="operatorTypeList" placeholder="Select" formControlName="operatorTypeId"
                             [(ngModel)]="institutionPromoterDetailsModel.operatorTypeId" [appendTo]="'body'">
                         </p-dropdown>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-label">
                         <label><span class="red">*</span>{{'ERP.DATE_OF_BIRTH' | translate}}</label>
@@ -1092,11 +1260,14 @@
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 pt-4">
                     <div class="form-label">
-                            <p-checkbox  [binary]="true" formControlName="isGroupLeader"
+                            <!-- <p-checkbox  [binary]="true" formControlName="isGroupLeader"
                             [(ngModel)]="promoterDetailsModel.isGroupLeader"
-                            inputId="binary" (onChange)="onGroupLeaderSelect(true)"></p-checkbox>
+                            inputId="binary" (onChange)="onGroupLeaderSelect(true)"></p-checkbox> -->
                             <span class="mt-2" for="username">&nbsp;&nbsp;{{'ERP.IS_GROUP_LEADER' | translate}}</span>
-                    </div>
+                            <p-dropdown [filter]="true" [options]="requiredlist" placeholder="Select"
+                            [(ngModel)]="promoterDetailsModel.isGroupLeader" formControlName="isGroupLeader"
+                            [appendTo]="'body'"
+                            (onChange)="onGroupLeaderSelect(true,promoterDetailsModel.isGroupLeader)"></p-dropdown>                    </div>
                 </div>
 
                 <div class="col-12 btn-footer px-0">

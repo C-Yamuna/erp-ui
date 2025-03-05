@@ -335,10 +335,12 @@ getPreviewDetailsByProductId(id: any) {
         return  applicationConstants.FALSE;
       }
       checkForSlabAmount(box : any){
-        const minSlabAmount = Number(this.chargesForm.get('minSlabAmount')?.value);
-        const maxSlabAmount = Number(this.chargesForm.get('maxSlabAmount')?.value);
+
+        const minSlabAmount = this.chargesForm.get('minSlabAmount')?.value;
+        const maxSlabAmount = this.chargesForm.get('maxSlabAmount')?.value;
     
-        if (minSlabAmount && maxSlabAmount &&  minSlabAmount > maxSlabAmount) {
+        if (minSlabAmount != null && minSlabAmount != '' && maxSlabAmount != null && maxSlabAmount != '' && 
+          Number(minSlabAmount) > Number(maxSlabAmount)) {
           this.msgs = [];
           if(box == BoxNumber.BOX_ONE){
             this.msgs.push({ severity: 'warning', detail: applicationConstants.MINIMUM_SLAB_AMOUNT_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAXIMUM_SLAB_AMOUNT });
@@ -360,10 +362,10 @@ getPreviewDetailsByProductId(id: any) {
         this.updateData();
       }
       checkForCharges(box : any){
-        const minCharges = Number(this.chargesForm.get('minCharges')?.value);
-        const maxChrges = Number(this.chargesForm.get('maxChrges')?.value);
+        const minCharges = this.chargesForm.get('minCharges')?.value;
+        const maxChrges = this.chargesForm.get('maxChrges')?.value;
     
-        if (minCharges && maxChrges &&  minCharges > maxChrges) {
+        if (minCharges != null && minCharges != ''  && maxChrges  != null && maxChrges != '' &&  Number(minCharges) > Number(maxChrges)){
           this.msgs = [];
           if(box == BoxNumber.BOX_ONE){
             this.msgs.push({ severity: 'warning', detail: applicationConstants.MINIMUM_CHARGES_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAXIMUM_CHARGES });

@@ -203,4 +203,8 @@ export class SiLoanMortagageDetailsService {
     return this.commonHttpService.delete(headers, ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.SI_PROPERY_MORTGAGE_DETAILS + ERP_TRANSACTION_CONSTANTS.DELETE);
   }
 
+  getAllCollateralTypes(){
+    return this.commonHttpService.getAll(Configuration.LOANS + Configuration.COLLATERAL_TYPES + Configuration.GET_ALL);
+  }
+
 }

@@ -1,5 +1,5 @@
 <div class="col-12">
-    <h6 class="sub-heading">{{'LOAN_TRANSACTION.GUARANTOR_DETAILS' | translate}}</h6>
+    
     <div class="stepper-top-section-strip">
         <div class="row">
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 stepper-top-product-name-background">
@@ -29,11 +29,12 @@
         </div>
     </div>
     <div class="col-12"></div>
+    <h6 class="sub-heading">{{'LOAN_TRANSACTION.GUARANTOR_DETAILS' | translate}}</h6>
     <form [formGroup]="guarantorForm" id="exit_types_form">
         <div class="mt-n1 bg-label-colorfull">
             <div class="row g-3">
                 <div class="col-lg-3 col-md-4 col-sm-12">
-                    <label>{{'LOAN_TRANSACTION.ADMINSSION_NUMBER' | translate}}</label>
+                    <label><span class="red">*</span>{{'LOAN_TRANSACTION.ADMINSSION_NUMBER' | translate}}</label>
                     <p-multiSelect [options]="admissionNumberList" formControlName="admissionNumber" [(ngModel)]="selectedAdmissionNumberList"
                         placeholder="Select" optionLabel="label" [showClear]="true"
                         (onChange)="onSelectionChange($event)" (onClear)="onClear($event)" />

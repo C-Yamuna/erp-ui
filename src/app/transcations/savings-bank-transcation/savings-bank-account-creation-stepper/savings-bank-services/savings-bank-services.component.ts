@@ -71,6 +71,7 @@ export class SavingsBankServicesComponent implements OnInit{
   statusList: any[] = [];
   previousServiceTypeId: any;
   isChargeApplicapableList : any[]=[];
+  fileSizeMsgForImage: any;
 
   constructor(private router:Router, private formBuilder:FormBuilder , private savingsBankServicesService : SavingsBankServicesService,private commonComponent : CommonComponent  ,private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService ,private savingBankApplicationService : SavingBankApplicationService , private commonFunctionsService : CommonFunctionsService , private datePipe : DatePipe,private fileUploadService :FileUploadService ){
     this.serviceForm = this.formBuilder.group({
@@ -582,6 +583,8 @@ export class SavingsBankServicesComponent implements OnInit{
    */
   fileUploader(event:any ,fileUpload: FileUpload ,rowData:any ){
     this.multipleFilesList = [];
+    let fileSizeFalg = false;
+    this.fileSizeMsgForImage = null;
     this.savingsBankServiceModel.filesDTOList = [];
     this.savingsBankServiceModel.requestDocPath = null;
     this.savingsBankServiceModel.requestedDocPathMultipartFileList = [];
@@ -591,29 +594,35 @@ export class SavingsBankServicesComponent implements OnInit{
     let selectedFiles = [...event.files];
     // Clear file input before processing files
     fileUpload.clear();
-  
-    for (let file of selectedFiles) {
-      let reader = new FileReader();
-      reader.onloadend = (e) => {
-        let files = new FileUploadModel();
-        this.uploadFileData = e.currentTarget;
-        files.fileName = file.name;
-        files.fileType = file.type.split('/')[1];
-        files.value = this.uploadFileData.result.split(',')[1];
-        files.imageValue = this.uploadFileData.result;
-        let index = this.multipleFilesList.findIndex(x => x.fileName == files.fileName);
-        if (index === -1) {
-          this.multipleFilesList.push(files);
-          this.savingsBankServiceModel.requestedDocPathMultipartFileList.push(files);
-          this.savingsBankServiceModel.filesDTOList.push(files); // Add to filesDTOList array
-          rowData.requestedDocPathMultipartFileList.push(files);
+    if (selectedFiles[0].size/1024/1024 > 5) {
+      this.fileSizeMsgForImage= "file is bigger than 5MB";
+      fileSizeFalg = true;
+     }
+     if(!fileSizeFalg){
+      for (let file of selectedFiles) {
+        let reader = new FileReader();
+        reader.onloadend = (e) => {
+          let files = new FileUploadModel();
+          this.uploadFileData = e.currentTarget;
+          files.fileName = file.name;
+          files.fileType = file.type.split('/')[1];
+          files.value = this.uploadFileData.result.split(',')[1];
+          files.imageValue = this.uploadFileData.result;
+          let index = this.multipleFilesList.findIndex(x => x.fileName == files.fileName);
+          if (index === -1) {
+            this.multipleFilesList.push(files);
+            this.savingsBankServiceModel.requestedDocPathMultipartFileList.push(files);
+            this.savingsBankServiceModel.filesDTOList.push(files); // Add to filesDTOList array
+            rowData.requestedDocPathMultipartFileList.push(files);
+          }
+          let timeStamp = this.commonComponent.getTimeStamp();
+          this.savingsBankServiceModel.filesDTOList[0].fileName = "SB_SERVICE" + this.sbAccId + "_" +timeStamp+ "_"+ file.name ;
+          this.savingsBankServiceModel.requestDocPath = "SB_SERVICE" + this.sbAccId + "_" +timeStamp+"_"+ file.name; // This will set the last file's name as docPath
         }
-        let timeStamp = this.commonComponent.getTimeStamp();
-        this.savingsBankServiceModel.filesDTOList[0].fileName = "SB_SERVICE" + this.sbAccId + "_" +timeStamp+ "_"+ file.name ;
-        this.savingsBankServiceModel.requestDocPath = "SB_SERVICE" + this.sbAccId + "_" +timeStamp+"_"+ file.name; // This will set the last file's name as docPath
+        reader.readAsDataURL(file);
       }
-      reader.readAsDataURL(file);
-    }
+     }
+   
   }
 
   /**

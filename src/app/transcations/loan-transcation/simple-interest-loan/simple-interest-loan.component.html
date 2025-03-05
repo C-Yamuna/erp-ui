@@ -210,6 +210,12 @@
                 </td>
             </tr>
         </ng-template>
+        <ng-template pTemplate="summary">
+            <h3 class="NData" *ngIf="gridList.length == 0">
+                <i class="fa fa-meh-o" aria-hidden="true"></i>
+                {{'MEMBERSHIP_TRANSACTION.NO_DATA' | translate}}
+            </h3>
+        </ng-template>
     </p-table>
 
     <!-- <div class="status-counts">

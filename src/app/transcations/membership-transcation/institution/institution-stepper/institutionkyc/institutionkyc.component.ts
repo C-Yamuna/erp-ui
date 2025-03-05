@@ -437,11 +437,23 @@ export class InstitutionkycComponent implements OnInit{
       this.kycModel.multipleFilesList = [];
       this.kycModel.filesDTO = {}; // Initialize as a single object
       this.kycModel.kycFilePath = null;
-      if (event.files.length !== 1) {
-        console.error('Exactly one file must be selected.');
-        return;
+      let file = event.files[0];
+      let fileSizeMB = file.size / (1024 * 1024);
+      let fileType = file.type.toLowerCase();
+      
+      const allowedImageTypes = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"];
+      if (allowedImageTypes.includes(fileType) && fileSizeMB > 2) {
+        this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_2MB}];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      } 
+      else if (!allowedImageTypes.includes(fileType) && fileType !== "application/pdf") {
+        this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_2MB}];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
       }
-      let file = event.files[0]; // Only one file
       let reader = new FileReader();
       reader.onloadend = (e) => {
         if (!e.target || !e.target.result) {

@@ -153,16 +153,9 @@ export class MembershipBasicRequiredDetailsComponent {
   mandatoryDoxsTextShow: boolean = false;
   originalData: any;
   isMaximized: boolean = false;
+  fileSizeMsgForImage: any;
 
   constructor(private router: Router, private formBuilder: FormBuilder, private savingBankApplicationService: SavingBankApplicationService, private commonComponent: CommonComponent, private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService, private commonFunctionsService: CommonFunctionsService, private datePipe: DatePipe, private savingsBankCommunicationService: SavingsBankCommunicationService, private membershipServiceService: MembershipServiceService,private savingsBankKycService: SavingsBankKycService , private fileUploadService : FileUploadService) {
-    // this.kycForm = this.formBuilder.group({
-    //   'docNumber': ['', [Validators.required]],
-    //   'docTypeName': ['', [Validators.required]],
-    //   'promoter':['', ],
-    //   'fileUpload': new FormControl(''),
-    //   'nameAsPerDocument':['',[Validators.pattern(applicationConstants.ALPHA_NAME_PATTERN),Validators.compose([Validators.required])]],
-    // });
-
     this.kycForm = this.formBuilder.group({
       'docNumber': new FormControl({ value: '', disabled: true }),
       'docTypeName': new FormControl({ value: '', disabled: true }, Validators.required),
@@ -249,7 +242,7 @@ export class MembershipBasicRequiredDetailsComponent {
                 let i = 0;
                 for (let doc of this.documentNameList) {
                   if (i == 0)
-                    this.requiredDocumentsNamesText = "Please Upload Mandatory KYC Documents ("
+                    this.requiredDocumentsNamesText = "Please Upload Mandatory KYC Documents "
                   if (doc.isMandatory) {
                     i = i + 1;
                     this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + "'" + doc.label + "'";
@@ -361,7 +354,6 @@ export class MembershipBasicRequiredDetailsComponent {
             this.savingBankApplicationModel.institutionDTO  = this.membershipInstitutionDetailsModel;
             if(this.membershipInstitutionDetailsModel.institutionKycDetailsDTOList != null && this.membershipInstitutionDetailsModel.institutionKycDetailsDTOList != undefined && this.membershipInstitutionDetailsModel.institutionKycDetailsDTOList.length > 0){
               this.kycModelList = this.membershipInstitutionDetailsModel.institutionKycDetailsDTOList;
-              // this.kycModelDuplicateCheck(this.kycModelList);
               for(let kyc of this.kycModelList){
                 kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
                 kyc.promoterName = kyc.promoterName;
@@ -417,7 +409,6 @@ export class MembershipBasicRequiredDetailsComponent {
               this.memberTypeCheckForPromotersKyc(this.memberTypeName);
             if(this.memberGroupDetailsModel.groupKycList != null && this.memberGroupDetailsModel.groupKycList != undefined){
               this.kycModelList = this.memberGroupDetailsModel.groupKycList;
-              // this.kycModelDuplicateCheck(this.kycModelList);
               for(let kyc of this.kycModelList){
                 kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
               }              
@@ -511,7 +502,6 @@ membershipDataFromSbModule(obj :any){
           }
           if(this.membershipBasicRequiredDetails.memberShipKycDetailsDTOList != null && this.membershipBasicRequiredDetails.memberShipKycDetailsDTOList != undefined && this.membershipBasicRequiredDetails.memberShipKycDetailsDTOList.length > 0){
             this.kycModelList = this.membershipBasicRequiredDetails.memberShipKycDetailsDTOList;
-            // this.kycModelDuplicateCheck(this.kycModelList);
            for(let kyc of this.kycModelList){
               kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
             }
@@ -593,6 +583,8 @@ membershipDataFromSbModule(obj :any){
    * @author jyothi.naidana
    */
   imageUploader(event: any, fileUpload: FileUpload) {
+    let fileSizeFalg = false;
+    this.fileSizeMsgForImage =null;
     this.isFileUploaded = applicationConstants.FALSE;
     this.multipleFilesList = [];
     this.savingsBankKycModel.filesDTOList = [];
@@ -600,34 +592,49 @@ membershipDataFromSbModule(obj :any){
     this.savingsBankKycModel.kycFilePath = null;
     let files: FileUploadModel = new FileUploadModel();
     let selectedFiles = [...event.files];
-    fileUpload.clear();
-    for (let file of selectedFiles) {
-      let reader = new FileReader();
-      reader.onloadend = (e) => {
-        let files = new FileUploadModel();
-        this.uploadFileData = e.currentTarget;
-        files.fileName = file.name;
-        files.fileType = file.type.split('/')[1];
-        files.value = this.uploadFileData.result.split(',')[1];
-        files.imageValue = this.uploadFileData.result;
-
-        let index = this.multipleFilesList.findIndex(x => x.fileName == files.fileName);
-        if (index === -1) {
-          this.multipleFilesList.push(files);
-          this.savingsBankKycModel.filesDTOList.push(files); // Add to filesDTOList array
-          this.savingsBankKycModel.multipartFileList.push(files);
-        }
-        let timeStamp = this.commonComponent.getTimeStamp();
-        this.savingsBankKycModel.filesDTOList[0].fileName = "SB_KYC_" + this.sbAccId + "_" +timeStamp+ "_"+ file.name ;
-        this.savingsBankKycModel.kycFilePath = "SB_KYC_" + this.sbAccId + "_" +timeStamp+"_"+ file.name; // This will set the last file's name as docPath
-        this.savingsBankKycModel.multipartFileList = this.savingsBankKycModel.filesDTOList;
-        let index1 = event.files.findIndex((x: any) => x === file);
-        // this.addOrEditKycTempList(this.savingsBankKycModel);
-        fileUpload.remove(event, index1);
-        fileUpload.clear();
-      }
-      reader.readAsDataURL(file);
+    if(selectedFiles[0].fileType != ".jpg,.jpeg,.png"){
+      if (selectedFiles[0].size/1024/1024 > 2) {
+        this.fileSizeMsgForImage= "file is bigger than 2MB";
+        fileSizeFalg = true;
+       }
     }
+    else if(selectedFiles[0].fileType == ".pdf"){
+      if (selectedFiles[0].size/1024/1024 > 5) {
+        this.fileSizeMsgForImage= "file is bigger than 5MB";
+        fileSizeFalg = true;
+       }
+    }
+    fileUpload.clear();
+    if(!fileSizeFalg){
+      for (let file of selectedFiles) {
+        let reader = new FileReader();
+        reader.onloadend = (e) => {
+          let files = new FileUploadModel();
+          this.uploadFileData = e.currentTarget;
+          files.fileName = file.name;
+          files.fileType = file.type.split('/')[1];
+          files.value = this.uploadFileData.result.split(',')[1];
+          files.imageValue = this.uploadFileData.result;
+  
+          let index = this.multipleFilesList.findIndex(x => x.fileName == files.fileName);
+          if (index === -1) {
+            this.multipleFilesList.push(files);
+            this.savingsBankKycModel.filesDTOList.push(files); // Add to filesDTOList array
+            this.savingsBankKycModel.multipartFileList.push(files);
+          }
+          let timeStamp = this.commonComponent.getTimeStamp();
+          this.savingsBankKycModel.filesDTOList[0].fileName = "SB_KYC_" + this.sbAccId + "_" +timeStamp+ "_"+ file.name ;
+          this.savingsBankKycModel.kycFilePath = "SB_KYC_" + this.sbAccId + "_" +timeStamp+"_"+ file.name; // This will set the last file's name as docPath
+          this.savingsBankKycModel.multipartFileList = this.savingsBankKycModel.filesDTOList;
+          let index1 = event.files.findIndex((x: any) => x === file);
+          // this.addOrEditKycTempList(this.savingsBankKycModel);
+          fileUpload.remove(event, index1);
+          fileUpload.clear();
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+  
   }
 
 /**
@@ -895,7 +902,6 @@ membershipDataFromSbModule(obj :any){
         }
       }
     }
-
     return duplicate;
   }
 

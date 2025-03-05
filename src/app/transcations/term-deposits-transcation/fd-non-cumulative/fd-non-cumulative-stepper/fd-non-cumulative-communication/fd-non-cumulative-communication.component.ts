@@ -12,6 +12,7 @@ import { FdNonCumulativeApplicationService } from '../fd-non-cumulative-applicat
 import { NewMembershipAddService } from '../new-membership-add/shared/new-membership-add.service';
 import { applicationConstants } from 'src/app/shared/applicationConstants';
 import { MemberGroupDetailsModel, MembershipInstitutionDetailsModel, NewMembershipAdd } from '../new-membership-add/shared/new-membership-add.model';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-fd-non-cumulative-communication',
@@ -51,6 +52,7 @@ export class FdNonCumulativeCommunicationComponent {
 
   constructor(private router: Router,
     private formBuilder: FormBuilder,
+        private datePipe: DatePipe,
     private fdNonCumulativeApplicationService: FdNonCumulativeApplicationService,
     private commonComponent: CommonComponent,
     private activateRoute: ActivatedRoute,
@@ -124,7 +126,6 @@ export class FdNonCumulativeCommunicationComponent {
 
   // get call from fd non cummulative account by id
   getFdNonCummApplicationById(id: any) {
-    debugger
     this.fdNonCumulativeApplicationService.getFdNonCummApplicationById(id).subscribe((data: any) => {
       this.responseModel = data;
       if (this.responseModel != null && this.responseModel != undefined) {
@@ -167,7 +168,6 @@ export class FdNonCumulativeCommunicationComponent {
   }
 
   setAllFields() {
-    debugger
     if (this.fdNonCumulativeCommunicationModel.isSameAddress != null && this.fdNonCumulativeCommunicationModel.isSameAddress != undefined) {
       if (this.fdNonCumulativeCommunicationModel.isSameAddress == true) {
         this.communicationForm.get('stateName').disable();
@@ -201,6 +201,16 @@ export class FdNonCumulativeCommunicationComponent {
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
           this.membershipBasicRequiredDetails = this.responseModel.data[0];
+          this.membershipBasicRequiredDetails.photoPath = this.responseModel.data[0].photoCopyPath;
+          this.membershipBasicRequiredDetails.signaturePath = this.responseModel.data[0].signatureCopyPath;
+          this.membershipBasicRequiredDetails.subProductName = this.responseModel.data[0].subProductName;
+          this.memberTypeName = this.responseModel.data[0].memberTypeName;
+          this.membershipBasicRequiredDetails.resolutionCopy = this.responseModel.data[0].mcrDocumentCopy;
+          this.membershipBasicRequiredDetails.mcrNumber = this.responseModel.data[0].mcrNumber;
+          if (this.membershipBasicRequiredDetails.resolutionDate != null && this.membershipBasicRequiredDetails.resolutionDate != undefined) {
+            this.membershipBasicRequiredDetails.resolutionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetails.resolutionDate, this.orgnizationSetting.datePipe);
+          }
+          this.membershipBasicRequiredDetails.fdNonCummCommunicationDto = this.responseModel.data[0].memberShipCommunicationDetailsDTO;
           if (this.responseModel.data[0].memberShipCommunicationDetailsDTO != null && this.responseModel.data[0].memberShipCommunicationDetailsDTO != undefined &&
             this.responseModel.data[0].memberShipCommunicationDetailsDTO != null && this.responseModel.data[0].memberShipCommunicationDetailsDTO != undefined) {
             this.fdNonCumulativeCommunicationModel = this.responseModel.data[0].memberShipCommunicationDetailsDTO;
@@ -231,6 +241,7 @@ export class FdNonCumulativeCommunicationComponent {
             this.responseModel.data[0].groupCommunicationList[0] != null && this.responseModel.data[0].groupCommunicationList[0] != undefined) {
             this.fdNonCumulativeCommunicationModel = this.responseModel.data[0].groupCommunicationList[0];
             this.fdNonCumulativeCommunicationModel.pinCode = this.responseModel.data[0].groupCommunicationList[0].pincode;
+            this.fdNonCumulativeCommunicationModel.permanentPinCode = this.responseModel.data[0].groupCommunicationList[0].permanentPincode;
             if (this.fdNonCumulativeCommunicationModel.memberTypeName != null && this.fdNonCumulativeCommunicationModel.memberTypeName != undefined)
               this.memberTypeName = this.fdNonCumulativeCommunicationModel.memberTypeName;
             this.setAllFields();
@@ -512,7 +523,6 @@ export class FdNonCumulativeCommunicationComponent {
   }
 
   getAllPermanentDistrictsByStateId(id: any, isResetIds: any) {
-    debugger
     if (isResetIds) {
       this.communicationForm.get('permanentDistrictId').reset();
       this.communicationForm.get('permanentSubDistrictId').reset();
@@ -611,7 +621,6 @@ export class FdNonCumulativeCommunicationComponent {
     });
   }
   getPermanentVillage(id: any) {
-    debugger
     this.fdNonCumulativeCommunicationModel.permanentBlockId = null;;
     this.fdNonCumulativeCommunicationModel.permanentDivisionId = null;
     this.fdNonCumulativeCommunicationModel.permanentBlockName = null;;

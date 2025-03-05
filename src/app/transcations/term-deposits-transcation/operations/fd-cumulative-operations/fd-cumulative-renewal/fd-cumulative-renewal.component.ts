@@ -125,6 +125,13 @@ export class FdCumulativeRenewalComponent {
   renewalForm: FormGroup;
   renewalTypeList: any[] = [];
   renewalFLag: boolean = false;
+  //application fields show hide flags
+  yearFlag: boolean = false;
+  monthFlag: boolean = false;
+  daysFlag: boolean = false;
+  interestPayoutFlag: boolean = false;
+  renewalTypeFlag: boolean = false;
+
   constructor(private router: Router,
     private fdCumulativeApplicationService: FdCumulativeApplicationService,
     private commonComponent: CommonComponent,
@@ -168,7 +175,7 @@ export class FdCumulativeRenewalComponent {
       transactionAmount: new FormControl({ value: '', disabled: true }),
       transactionMode: new FormControl('', [Validators.required]),
       accountNumber: new FormControl(''),
-      isVerified: new FormControl('',[Validators.required]),
+      isVerified: new FormControl('', [Validators.required]),
       remarks: new FormControl(''),
     })
 
@@ -227,6 +234,9 @@ export class FdCumulativeRenewalComponent {
       if (this.responseModel.status != null && this.responseModel.status != undefined && this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
           this.fdCumulativeApplicationModel = this.responseModel.data[0];
+          this.tenureCheck();
+          this.interestPayoutCheck();
+          this.renewalCheck();
           this.fdCummulativeTransactionModel.transactionDate = new Date();
           if (this.fdCumulativeApplicationModel.depositDate != null && this.fdCumulativeApplicationModel.depositDate != undefined) {
             this.fdCumulativeApplicationModel.depositDate = this.datePipe.transform(this.fdCumulativeApplicationModel.depositDate, this.orgnizationSetting.datePipe);
@@ -542,8 +552,8 @@ export class FdCumulativeRenewalComponent {
     if (newFdCumulativeApplicationModel.depositDate != null && newFdCumulativeApplicationModel.depositDate != undefined) {
       newFdCumulativeApplicationModel.depositDate = this.commonFunctionsService.getUTCEpoch(new Date(newFdCumulativeApplicationModel.depositDate));
     }
-    if (newFdCumulativeApplicationModel.fdCummulativeAccountsTransactionDTO.transactionDate != null && newFdCumulativeApplicationModel.fdCummulativeAccountsTransactionDTO.transactionDate  != undefined) {
-      newFdCumulativeApplicationModel.fdCummulativeAccountsTransactionDTO.transactionDate  = this.commonFunctionsService.getUTCEpoch(new Date(newFdCumulativeApplicationModel.fdCummulativeAccountsTransactionDTO.transactionDate ));
+    if (newFdCumulativeApplicationModel.fdCummulativeAccountsTransactionDTO.transactionDate != null && newFdCumulativeApplicationModel.fdCummulativeAccountsTransactionDTO.transactionDate != undefined) {
+      newFdCumulativeApplicationModel.fdCummulativeAccountsTransactionDTO.transactionDate = this.commonFunctionsService.getUTCEpoch(new Date(newFdCumulativeApplicationModel.fdCummulativeAccountsTransactionDTO.transactionDate));
     }
     this.fdCumulativeApplicationService.saveAccountOnRenewal(this.newFdCumulativeApplicationModel).subscribe((response: any) => {
       this.responseModel = response;
@@ -627,15 +637,44 @@ export class FdCumulativeRenewalComponent {
   }
 
   onRenewalTypeChange(renewalType: any) {
-    if(renewalType.value == 1){
+    if (renewalType.value == 1) {
       this.renewalFLag = false;
-      this.fdCummulativeTransactionModel.transactionAmount = this.fdCumulativeApplicationModel.depositAmount; 
-    }else if(renewalType.value == 2){
+      this.fdCummulativeTransactionModel.transactionAmount = this.fdCumulativeApplicationModel.depositAmount;
+    } else if (renewalType.value == 2) {
       this.renewalFLag = false;
       this.fdCummulativeTransactionModel.transactionAmount = this.fdCumulativeApplicationModel.maturityAmount;
-    }else if(renewalType.value == 3){
-      this.fdCummulativeTransactionModel.transactionAmount = []; 
+    } else if (renewalType.value == 3) {
+      this.fdCummulativeTransactionModel.transactionAmount = [];
       this.renewalFLag = true;
     }
+  }
+
+  /**
+* @implements check for years,months,days to show and hide based on tenuretype
+* @author bhargavi
+*/
+  tenureCheck() {
+    const tenureType = this.fdCumulativeApplicationModel.tenureType;
+    this.yearFlag = tenureType === 2 || tenureType === 5 || tenureType === 6 || tenureType === 7 ? true : false;
+    this.monthFlag = tenureType === 3 || tenureType === 4 || tenureType === 6 || tenureType === 7 ? true : false;
+    this.daysFlag = tenureType === 1 || tenureType === 4 || tenureType === 5 || tenureType === 7 ? true : false;
+  }
+
+  /**
+   * @implements check for paymenttype show and hide based on interestPayoutType
+   * @author bhargavi
+   */
+  interestPayoutCheck() {
+    const interestPayoutType = this.fdCumulativeApplicationModel.interestPayoutType;
+    this.interestPayoutFlag = interestPayoutType === 3 ? true : false;
+  }
+
+  /**
+   * @implements check for autorenewal show and hide based on renewalType
+   * @author bhargavi
+   */
+  renewalCheck() {
+    const renewalType = this.fdCumulativeApplicationModel.renewalType;
+    this.renewalTypeFlag = renewalType === 'true' ? true : false;
   }
 }

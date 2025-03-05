@@ -1,17 +1,20 @@
 <div class="col-12">
+    <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
+    [hideTransitionOptions]="'500ms'">
+</p-messages>
+    <div class="col-12 p-0">
     <div class="row">
-        <div class="col-6">
+        <div class="col-6 py-0 justify-content-start">
             <h6 class="sub-heading">{{'ERP.APPLICATION_DETAILS' | translate}}</h6>
         </div>
 
-        <div class="col-6 text-end">
+        <div class="col-6 py-0 justify-content-end d-flex">
             <a (click)="productViewPopUp()" class="text-end cursor-pointer">View
                 Product Details</a>
         </div>
     </div>
-    <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
-        [hideTransitionOptions]="'500ms'">
-    </p-messages>
+</div>
+   
     <form [formGroup]="applicationForm">
         <div class="mt-n1  bg-label-colorfull">
             <div class="row g-3">
@@ -63,13 +66,11 @@
                     <div class="form-label">
                         <label>{{'TERMDEPOSITSTRANSACTION.TENURE_TYPE' | translate}}</label>
                         <p-dropdown [options]="tenureTypeList" placeholder="{{'ERP.SELECT' | translate}}"
-                        formControlName="tenureType"
+                        formControlName="tenureType" (onChange)="tenureCheck()"
                         [(ngModel)]="fdNonCumulativeApplicationModel.tenureType"> </p-dropdown>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="fdNonCumulativeApplicationModel.tenureType == 2 || 
-                fdNonCumulativeApplicationModel.tenureType == 5 || fdNonCumulativeApplicationModel.tenureType == 6 ||
-                fdNonCumulativeApplicationModel.tenureType == 7"> 
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="yearFlag" > 
                     <div class="form-label">
                         <label>{{'TERMDEPOSITSTRANSACTION.TENURE_IN_YEARS' | translate}}</label>
                             <input pInputText id="state_txt_name" type="text" formControlName="tenureInYears"
@@ -77,9 +78,7 @@
                                 (focusout)="maturityDateAndInterestAmountCalculation()">
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="fdNonCumulativeApplicationModel.tenureType == 3 || 
-                fdNonCumulativeApplicationModel.tenureType == 4 || fdNonCumulativeApplicationModel.tenureType == 6 ||
-                fdNonCumulativeApplicationModel.tenureType == 7">
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12"  *ngIf="monthFlag">
                     <div class="form-label">
                         <label>{{'TERMDEPOSITSTRANSACTION.TENURE_IN_MONTHS' | translate}}</label>
                             <input pInputText id="state_txt_name" type="text" formControlName="tenureInMonths"
@@ -87,9 +86,7 @@
                                 (focusout)="maturityDateAndInterestAmountCalculation()">
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="fdNonCumulativeApplicationModel.tenureType == 1 || 
-                fdNonCumulativeApplicationModel.tenureType == 4 || fdNonCumulativeApplicationModel.tenureType == 5 ||
-                fdNonCumulativeApplicationModel.tenureType == 7">
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12"  *ngIf="daysFlag">
                     <div class="form-label">
                         <label>{{'TERMDEPOSITSTRANSACTION.TENURE_IN_DAYS' | translate}}</label>
                             <input pInputText id="state_txt_name" type="text" formControlName="tenureInDays"
@@ -134,13 +131,12 @@
                         <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.INTEREST_PAYEMNET_FREQUENCY' | translate}}</label>
                         <p-dropdown [options]="interestPaymentFrequencyList" placeholder="{{'ERP.SELECT' | translate}}"
                         formControlName="interestPaymentFrequency"
-                        [(ngModel)]="fdNonCumulativeApplicationModel.interestPaymentFrequencyId" (onChange)="maturityDateAndInterestAmountCalculation()">
+                        [(ngModel)]="fdNonCumulativeApplicationModel.interestPaymentFrequencyId"
+                         (onChange)="interestFrequencyCheck();maturityDateAndInterestAmountCalculation()">
                     </p-dropdown>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="fdNonCumulativeApplicationModel.interestPaymentFrequencyId == 1  || 
-                fdNonCumulativeApplicationModel.interestPaymentFrequencyId == 2 || fdNonCumulativeApplicationModel.interestPaymentFrequencyId == 3 ||
-                fdNonCumulativeApplicationModel.interestPaymentFrequencyId == 4 || fdNonCumulativeApplicationModel.interestPaymentFrequencyId == 5">
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="interestFrequencyFlag">
                     <div class="form-label">
                         <label>{{'TERMDEPOSITSTRANSACTION.INTEREST_PAYOUT_AMOUNT' | translate}}</label>
                             <input pInputText id="state_txt_name" type="text" formControlName="interestPayoutAmount"
@@ -154,7 +150,7 @@
                                 [(ngModel)]=" fdNonCumulativeApplicationModel.totalInterestAmount" (focusout)="maturityDateAndInterestAmountCalculation()">
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12"  *ngIf="fdNonCumulativeApplicationModel.interestPaymentFrequencyId == 6">
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12"  *ngIf="maturityFlag">
                     <div class="form-label">
                         <label>{{'TERMDEPOSITSTRANSACTION.MATURITY_AMOUNT' | translate}}</label>
                             <input pInputText id="state_txt_name" type="text" formControlName="maturityAmount"
@@ -173,7 +169,8 @@
                         <label>{{'TERMDEPOSITSTRANSACTION.PAYMENT_TYPE' | translate}}</label>
                             <p-dropdown [options]="paymentTypeList" placeholder="{{'ERP.SELECT' | translate}}"
                                 formControlName="interestPayoutType"
-                                [(ngModel)]="fdNonCumulativeApplicationModel.interestPayoutType" (focusout)="maturityDateAndInterestAmountCalculation()">
+                                [(ngModel)]="fdNonCumulativeApplicationModel.interestPayoutType"
+                                 (onChange)="interestPayoutCheck()">
                             </p-dropdown>
                     </div>
                 </div>
@@ -186,7 +183,7 @@
                         </p-dropdown>
                     </div>
                 </div> -->
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="fdNonCumulativeApplicationModel.interestPayoutType == 2">
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="interestPayoutFlag">
                     <div class="form-label">
                         <label>{{'TERMDEPOSITSTRANSACTION.INTEREST_TRANSFER_ACCOUNT' | translate}}</label>
                             <input pInputText id="state_txt_name" type="text" formControlName="interestPayoutTransferAccount"
@@ -197,12 +194,12 @@
                     <div class="form-label">
                         <label>{{'TERMDEPOSITSTRANSACTION.IS_AUTO_RENEWAL' | translate}}</label>
                         <p-dropdown [options]="renewalList" placeholder="{{'ERP.SELECT' | translate}}"
-                        formControlName="isRenewal"
+                        formControlName="isRenewal"  (onChange)="renewalCheck()"
                         [(ngModel)]="fdNonCumulativeApplicationModel.isAutoRenewal">
                     </p-dropdown>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="fdNonCumulativeApplicationModel.isAutoRenewal == true">
+                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12" *ngIf="renewalFlag">
                     <div class="form-label">
                         <label>{{'TERMDEPOSITSTRANSACTION.RENEWAL_TYPE' | translate}}</label>
                         <p-dropdown [options]="renewalTypeList" placeholder="{{'ERP.SELECT' | translate}}"
@@ -215,7 +212,7 @@
         </div>
     </form>
 </div>
-<p-dialog header="Product Details" [modal]="true" [(visible)]="displayDialog" styleClass="moredetails-style">
+<p-dialog header="Product Details" [modal]="true" [(visible)]="displayDialog" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="moredetails-style">
     <div class="popup-basic-details">
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">

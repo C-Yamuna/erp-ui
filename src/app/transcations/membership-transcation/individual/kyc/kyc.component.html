@@ -56,7 +56,9 @@
        <form [formGroup]="kycForm" id="exit_types_form">
                 <p-button icon="fa fa-plus" label="{{'ADD ANOTHER DOCUMENT' | translate}}" (click)="addKyc($event)"
                     [disabled]="buttonDisabled" *ngIf="showAddButton" class="kyc-btnm-0"></p-button>
-                    <p class="label-input-text text-danger mt-2" *ngIf="mandatoryDoxsTextShow">Note : {{requiredDocumentsNames}}</p>
+                    <div class="mt-2">
+                    <p class="label-input-text text-danger" *ngIf="mandatoryDoxsTextShow">Note : {{requiredDocumentsNames}}</p>
+                    </div>
                     <div class="col-12 p-0 pt-2">
                         <div class="row g-3">
                             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 mt-2" *ngFor="let document of kycModelList ; let i = index">
@@ -107,7 +109,7 @@
                                             </div>
                                     </div>
                                     <!-- Edit form -->
-                                    <div class="col-12 global-border bg-label-colorfull p-3" *ngIf="editIndex === i  && !editDocumentOfKycFalg">
+                                    <div class="col-12 global-border bg-label-colorfull p-3 py-2" *ngIf="editIndex === i  && !editDocumentOfKycFalg">
                                     <div class="row g-3 mt-n1">
                                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                             <div class="form-label">
@@ -148,27 +150,25 @@
                                         </div>
                                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                             <div class="form-label">
-                                            <div class="ml-2"><span class="red">*</span>{{ 'MEMBERSHIP_TRANSACTION.DOCUMENT_COPY' | translate }} </div>
+                                            <div class="ml-2"><span class="red">*</span>{{ 'MEMBERSHIP_TRANSACTION.DOCUMENT_COPY' | translate }}{{ 'MEMBERSHIP_TRANSACTION.IMAGE_SIZE' | translate }} </div>
                                             <div class="uplodad-style align-items-center">
                                                 <!-- Upload Button Column -->
         
                                                 <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
                                                     chooseLabel=" " id="apply-leave_fileUp_attach" name="file"
-                                                    accept=".pdf" [customUpload]="true" (onRemove)="fileRemoveEvent()"
+                                                    accept=".png,.jpg,.jpeg" [customUpload]="true" (onRemove)="fileRemoveEvent()"
                                                     (onSelect)="imageUploader($event,fileUpload)"
                                                    >
                                                 </p-fileUpload>
-                                               
-                                                <div class="col-12  d-flex p-1 contant-body" *ngFor="let img of kycModel.multipleFilesList">
-                                                    <div *ngIf="img.fileType=='pdf'">
-                                                        <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22"
-                                                                height="22"></a>
-                                                    </div>
-                                                    <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
-                                                        tooltipPosition="bottom">
+                                                <div class="col-12 d-flex p-1 contant-body" *ngFor="let img of kycModel.multipleFilesList">
+                                                    <span *ngIf="img.fileType === 'jpg' || img.fileType === 'jpeg' || img.fileType === 'png'">
+                                                        <a href="{{img.imageValue}}">
+                                                            <img src="{{img.imageValue}}" width="22" height="22">
+                                                        </a>
+                                                    </span>
+                                                    <span class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
                                                         {{img.fileName}}
-                                                    </div>
-                                                    
+                                                    </span>
                                                 </div>
                                             </div>
                                             </div>
@@ -187,7 +187,7 @@
 
                         <!-- add form -->
                         <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 mt-2" *ngIf="addDocumentOfKycFalg">
-                            <div class="col-12 p-3 global-border bg-label-colorfull">
+                            <div class="col-12 p-3 py-2 global-border bg-label-colorfull">
                             <div class="row g-3 mt-n1">
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="form-label">
@@ -218,11 +218,11 @@
                             </div>
                                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="form-label">
-                                    <div class="ml-2"> <span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.DOCUMENT_COPY' |translate}}</div>
+                                    <div class="ml-2"> <span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.DOCUMENT_COPY' |translate}} {{ 'MEMBERSHIP_TRANSACTION.IMAGE_SIZE' | translate }}</div>
                                     <div class="uplodad-style align-items-center">
     
                                         <p-fileUpload #fileUpload name="myfile[]" id="apply-leave_fileUp_attach"
-                                            chooseLabel=" " name="file" accept=".pdf" [customUpload]="true"
+                                            chooseLabel=" " name="file" accept=".png,.jpg,.jpeg" [customUpload]="true"
                                             (onRemove)="fileRemoveEvent()" (onSelect)="imageUploader($event,fileUpload)" formContralName="fileUpload">
                                         </p-fileUpload>
                                     </div>
@@ -259,7 +259,7 @@
   </p-dialog>
 
   <!-- KYC Photo Copy -->
-<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="kycPhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
+<p-dialog header="{{'ERP.DOCUMENT_COPY' | translate}}" [(visible)]="kycPhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
     <div class="col-12">
     <div *ngFor="let img of multipleFilesList"> 
         <div class="mb-3 imgcustom-class" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">

@@ -31,4 +31,8 @@ export class ScaleOfFinanceConfigsService {
     let headers = new HttpHeaders({ 'id': id + '', })
     return this.commonHttpService.delete( headers, Configuration.LOANS + Configuration.SCALE_OF_FINANCE_CONFIGS + Configuration.DELETE);
   }
+
+  getAllUom(){
+    return this.commonHttpService.getAll(Configuration.MEMBERSHIP + Configuration.UOM + Configuration.GET_ALL);
+  }
 }

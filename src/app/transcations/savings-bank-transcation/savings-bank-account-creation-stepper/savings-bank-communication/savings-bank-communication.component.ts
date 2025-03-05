@@ -179,22 +179,28 @@ export class SavingsBankCommunicationComponent implements OnInit {
     
           if (this.savingsBankCommunicationModel.permanentStateId != null && this.savingsBankCommunicationModel.permanentStateId != undefined) {
             this.savingsBankCommunicationModel.stateId = this.savingsBankCommunicationModel.permanentStateId;
+            this.savingsBankCommunicationModel.stateName = this.savingsBankCommunicationModel.stateName;
             this.getDistrictByStateId(this.savingsBankCommunicationModel.stateId);
           }
           if (this.savingsBankCommunicationModel.permanentDistrictId != null && this.savingsBankCommunicationModel.permanentDistrictId != undefined) {
             this.savingsBankCommunicationModel.districtId = this.savingsBankCommunicationModel.permanentDistrictId;
+            this.savingsBankCommunicationModel.districtName = this.savingsBankCommunicationModel.permanentDistrictName;
             this.getMandalsByByDistrctId(this.savingsBankCommunicationModel.districtId);
           }
           if (this.savingsBankCommunicationModel.permanentSubDistrictId != null && this.savingsBankCommunicationModel.permanentSubDistrictId != undefined) {
             this.savingsBankCommunicationModel.subDistrictId = this.savingsBankCommunicationModel.permanentSubDistrictId;
+            this.savingsBankCommunicationModel.subDistrictName = this.savingsBankCommunicationModel.permanentSubDistrictName;
             this.getAllVilagesByMandalId(this.savingsBankCommunicationModel.subDistrictId);
           }
           if(this.savingsBankCommunicationModel.permanentVillageId != null && this.savingsBankCommunicationModel.permanentVillageId != undefined){
             this.savingsBankCommunicationModel.villageId = this.savingsBankCommunicationModel.permanentVillageId;
+            this.savingsBankCommunicationModel.villageName = this.savingsBankCommunicationModel.permanentVillageName;
             let object =  this.permenentVillagesList.find((obj:any)=> obj.value == this.savingsBankCommunicationModel.villageId);
             if(object != null && object != undefined){
               this.savingsBankCommunicationModel.divisionId = object.divisionId;
+              this.savingsBankCommunicationModel.divisionName = this.getDivisionName(this.savingsBankCommunicationModel.divisionId);
               this.savingsBankCommunicationModel.blockId = object.blockId ;
+              this.savingsBankCommunicationModel.blockName = this.getBlockName( this.savingsBankCommunicationModel.blockId );
             }
           }
           if (this.savingsBankCommunicationModel.permanentPinCode!= null && this.savingsBankCommunicationModel.permanentPinCode != undefined) {
@@ -213,7 +219,9 @@ export class SavingsBankCommunicationComponent implements OnInit {
       let object =  this.permenentVillagesList.find((obj:any)=> obj.value == this.savingsBankCommunicationModel.villageId);
       if(object != null && object != undefined){
         this.savingsBankCommunicationModel.divisionId = object.divisionId;
+        this.savingsBankCommunicationModel.divisionName = this.getDivisionName(this.savingsBankCommunicationModel.divisionId);
         this.savingsBankCommunicationModel.blockId = object.blockId ;
+        this.savingsBankCommunicationModel.blockName = this.getBlockName( this.savingsBankCommunicationModel.blockId );
       }
       if(flag){
         this.communicationForm.get('regesteredAddressOne')?.reset();
@@ -232,6 +240,35 @@ export class SavingsBankCommunicationComponent implements OnInit {
       }
       
     }
+  }
+
+  /**
+   * @implements filter division name
+   * @param divisionId 
+   * @returns 
+   */
+  getDivisionName(divisionId:any){
+    let divisionName ;
+    let obj = this.divisionList.find((obj:any)=>obj.value == divisionId);
+    if(obj != null && obj != undefined){
+      divisionName = obj.label;
+    }
+    return divisionName;
+  }
+
+  /**
+   * @implements filter block name
+   * @param blockId 
+   * @returns 
+   * @author jyothi.naidana
+   */
+  getBlockName(blockId :any){
+    let blockName ;
+    let obj = this.blockList.find((obj:any)=>obj.value == blockId);
+    if(obj != null && obj != undefined){
+      blockName = obj.label;
+    }
+    return blockName;
   }
  
   //member module data by member admission Number
@@ -411,6 +448,7 @@ export class SavingsBankCommunicationComponent implements OnInit {
           this.permenentDistrictList = this.permenentDistrictList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
             return { label: relationType.name, value: relationType.id };
           });
+          this.savingsBankCommunicationModel.permanentStateName = this.permenentStatesList.find((data: any) => null != data && this.savingsBankCommunicationModel.permanentStateId != null && data.value == this.savingsBankCommunicationModel.permanentStateId)?.label;
           let permenentdistrictName = this.permenentDistrictList.find((data: any) => null != data && this.savingsBankCommunicationModel.permanentDistrictId != null && data.value == this.savingsBankCommunicationModel.permanentDistrictId);
           if (permenentdistrictName != null && undefined != permenentdistrictName) {
             this.savingsBankCommunicationModel.permanentDistrictName = permenentdistrictName.label;
@@ -508,6 +546,7 @@ export class SavingsBankCommunicationComponent implements OnInit {
         this.permenentMandalsList = this.permenentMandalsList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
           return { label: relationType.name, value: relationType.id };
         });
+       
           let permenentdistrictName = this.permenentMandalsList.find((data: any) => null != data && this.savingsBankCommunicationModel.permanentSubDistrictId  != null && data.value == this.savingsBankCommunicationModel.permanentSubDistrictId);
           if (permenentdistrictName != null && undefined != permenentdistrictName)
               this.savingsBankCommunicationModel.permanentSubDistrictName = permenentdistrictName.label;
@@ -622,7 +661,9 @@ export class SavingsBankCommunicationComponent implements OnInit {
             let object = this.permenentVillagesList.find((obj: any) => obj.value == this.savingsBankCommunicationModel.permanentVillageId);
             if (object != null && object != undefined) {
               this.savingsBankCommunicationModel.permanentDivisionId = object.divisionId;
+              this.savingsBankCommunicationModel.permanentDivisionName = this.getDivisionName(this.savingsBankCommunicationModel.divisionId);
               this.savingsBankCommunicationModel.permanentBlockId = object.blockId;
+              this.savingsBankCommunicationModel.permanentBlockName = this.getBlockName( this.savingsBankCommunicationModel.blockId );
             }
             this.sameAsPerAddr(this.flag);
           }
@@ -710,8 +751,8 @@ export class SavingsBankCommunicationComponent implements OnInit {
                 this.savingsBankCommunicationModel = this.savingBankApplicationModel.sbCommunicationDTO;
               if(this.savingsBankCommunicationModel.isSameAddress != null && this.savingsBankCommunicationModel.isSameAddress != undefined){
                  this.sameAsPerAddr(this.flag);
-                 this.loadMasterAddressDetails(this.savingsBankCommunicationModel);
               }
+              this.loadMasterAddressDetails(this.savingsBankCommunicationModel);
                 this.updateData();
               }
               else{
@@ -752,6 +793,7 @@ export class SavingsBankCommunicationComponent implements OnInit {
    * @author jyothi.naidana
    */
   onChangeDistricts(districtId: any) {
+    this.savingsBankCommunicationModel.permanentDistrictName = this.permenentDistrictList.find((data: any) => null != data && this.savingsBankCommunicationModel.permanentDistrictId  != null && data.value == this.savingsBankCommunicationModel.permanentDistrictId)?.label;
     if(this.savingsBankCommunicationModel.districtId != null && this.savingsBankCommunicationModel.districtId != undefined && this.districtsList != null && this.districtsList != undefined && this.districtsList.length > 0){
       let relationshiptype = this.districtsList.find((data: any) => null != data && this.savingsBankCommunicationModel.districtId != null && data.value == this.savingsBankCommunicationModel.districtId);
       if (relationshiptype != null && undefined != relationshiptype)
@@ -776,6 +818,9 @@ export class SavingsBankCommunicationComponent implements OnInit {
       let relationshiptype = this.mandalsList.find((data: any) => null != data && this.savingsBankCommunicationModel.subDistrictId != null && data.value == this.savingsBankCommunicationModel.subDistrictId);
       if (relationshiptype != null && undefined != relationshiptype)
           this.savingsBankCommunicationModel.subDistrictName = relationshiptype.label;
+    }
+    if(this.savingsBankCommunicationModel.permanentSubDistrictId != null && this.savingsBankCommunicationModel.permanentSubDistrictId != undefined && this.permenentMandalsList != null && this.permenentMandalsList != undefined && this.permenentMandalsList.length > 0){
+      this.savingsBankCommunicationModel.permanentSubDistrictName = this.permenentMandalsList.find((data: any) => null != data && this.savingsBankCommunicationModel.permanentSubDistrictId != null && data.value == this.savingsBankCommunicationModel.permanentSubDistrictId)?.label;
     }
     this.getAllVilagesByMandalId(mandalId);
     this.savingsBankCommunicationModel.villageId = null;
@@ -911,27 +956,27 @@ export class SavingsBankCommunicationComponent implements OnInit {
       }
     }
   }
-/**
-   *@author jyothi.naidana
-   * @implements on change Villages 
-   * @param villageId
-   */
-  onChangeVillageId(villageId:any){
-    if(this.savingsBankCommunicationModel.villageId != null && this.savingsBankCommunicationModel.villageId != undefined && this.villageList != null && this.villageList != undefined && this.villageList.length > 0){
+  /**
+     *@author jyothi.naidana
+     * @implements on change Villages 
+     * @param villageId
+     */
+  onChangeVillageId(villageId: any) {
+    if (this.savingsBankCommunicationModel.villageId != null && this.savingsBankCommunicationModel.villageId != undefined && this.villageList != null && this.villageList != undefined && this.villageList.length > 0) {
       let relationshiptype = this.villageList.find((data: any) => null != data && this.savingsBankCommunicationModel.villageId != null && data.value == this.savingsBankCommunicationModel.villageId);
-      if (relationshiptype != null && undefined != relationshiptype){
+      if(this.savingsBankCommunicationModel.isSameAddress){
+        if (relationshiptype != null && undefined != relationshiptype) {
           this.savingsBankCommunicationModel.villageName = relationshiptype.label;
           this.savingsBankCommunicationModel.permanentDivisionId = relationshiptype.division;
-          this.savingsBankCommunicationModel.permanentBlockId = relationshiptype.block; 
+          this.savingsBankCommunicationModel.permanentBlockId = relationshiptype.block;
+        }
       }
-      let object =  this.permenentVillagesList.find((obj:any)=> obj.value == this.savingsBankCommunicationModel.villageId);
-      if(object != null && object != undefined){
+      let object = this.permenentVillagesList.find((obj: any) => obj.value == this.savingsBankCommunicationModel.villageId);
+      if (object != null && object != undefined) {
         this.savingsBankCommunicationModel.divisionId = object.divisionId;
-        this.savingsBankCommunicationModel.blockId = object.blockId ;
+        this.savingsBankCommunicationModel.blockId = object.blockId;
       }
-
     }
-    
   }
 
   /**
@@ -946,10 +991,13 @@ export class SavingsBankCommunicationComponent implements OnInit {
       if (relationshiptype != null && undefined != relationshiptype){
           this.savingsBankCommunicationModel.permanentVillageName = relationshiptype.label;
           this.savingsBankCommunicationModel.permanentDivisionId = relationshiptype.division;
+          if(this.divisionList != null && this.divisionList != undefined && this.divisionList.length >0)
+            this.savingsBankCommunicationModel.permanentDivisionName  = this.divisionList.find((obj:any) => this.savingsBankCommunicationModel.permanentDivisionId == obj.value)?.label;
           this.savingsBankCommunicationModel.permanentBlockId = relationshiptype.block; 
+          if(this.blockList != null && this.blockList != undefined && this.blockList.length >0)
+            this.savingsBankCommunicationModel.permanentBlockName  = this.blockList.find((obj:any) => this.savingsBankCommunicationModel.permanentBlockId == obj.value)?.label;
       }          
     }
-    
     if (this.savingsBankCommunicationModel != null && this.savingsBankCommunicationModel != undefined && this.savingsBankCommunicationModel.isSameAddress != null && this.savingsBankCommunicationModel.isSameAddress != undefined &&  this.savingsBankCommunicationModel.isSameAddress) {
       this.savingsBankCommunicationModel.villageId = PermVillageId;
       if(this.savingsBankCommunicationModel.subDistrictId != null && this.savingsBankCommunicationModel.subDistrictId != undefined){

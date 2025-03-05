@@ -107,8 +107,8 @@ export class RecurringDepositStepperComponent implements OnInit {
   isKycApproved: any;
   jointAccountHolderList: any[] = [];
   memberTypeList: any[] = [];
-  institutionPrmotersList: any[] =[];
-  genderList: any[]=[];
+  institutionPrmotersList: any[] = [];
+  genderList: any[] = [];
   constructor(private router: Router,
     private rdAccountsService: RdAccountsService,
     private commonComponent: CommonComponent,
@@ -123,33 +123,33 @@ export class RecurringDepositStepperComponent implements OnInit {
     private ref: ChangeDetectorRef,
     // private fdCumulativeJointHolderService: FdCumulativeJointHolderService,
     private fileUploadService: FileUploadService) {
-      this.columns = [
-        { field: 'surname', header: 'TERMDEPOSITSTRANSACTION.SURNAME' },
-        { field: 'name', header: 'TERMDEPOSITSTRANSACTION.NAME' },
-        { field: 'operatorTypeName', header: 'TERMDEPOSITSTRANSACTION.ACCOUNT_TYPE' },
-        { field: 'memDobVal', header: 'TERMDEPOSITSTRANSACTION.DATE_OF_BIRTH' },
-        { field: 'age', header: 'TERMDEPOSITSTRANSACTION.AGE' },
-        { field: 'genderTypeName', header: 'TERMDEPOSITSTRANSACTION.GENDER' },
-        { field: 'maritalStatusName', header: 'TERMDEPOSITSTRANSACTION.MARITAL_STATUS' },
-        { field: 'mobileNumber', header: 'TERMDEPOSITSTRANSACTION.CONTACT' },
-        { field: 'emailId', header: 'TERMDEPOSITSTRANSACTION.EMAIL' },
-        { field: 'aadharNumber', header: 'TERMDEPOSITSTRANSACTION.AADHAR' },
-        { field: 'startDateVal', header: 'TERMDEPOSITSTRANSACTION.START_DATE' },
-      ];
-      this.groupPrmoters = [
-        { field: 'surname', header: 'TERMDEPOSITSTRANSACTION.SURNAME' },
-        { field: 'name', header: 'TERMDEPOSITSTRANSACTION.NAME' },
-        { field: 'operatorTypeName', header: 'TERMDEPOSITSTRANSACTION.ACCOUNT_TYPE' },
-        { field: 'memDobVal', header: 'TERMDEPOSITSTRANSACTION.DATE_OF_BIRTH' },
-        { field: 'age', header: 'TERMDEPOSITSTRANSACTION.AGE' },
-        { field: 'genderName', header: 'TERMDEPOSITSTRANSACTION.GENDER' },
-        { field: 'maritalStatusName', header: 'TERMDEPOSITSTRANSACTION.MARITAL_STATUS' },
-        { field: 'mobileNumber', header: 'TERMDEPOSITSTRANSACTION.CONTACT' },
-        { field: 'emailId', header: 'TERMDEPOSITSTRANSACTION.EMAIL' },
-        { field: 'aadharNumber', header: 'TERMDEPOSITSTRANSACTION.AADHAR' },
-        { field: 'startDateVal', header: 'TERMDEPOSITSTRANSACTION.START_DATE' },
-      ];
-  
+    this.columns = [
+      { field: 'surname', header: 'TERMDEPOSITSTRANSACTION.SURNAME' },
+      { field: 'name', header: 'TERMDEPOSITSTRANSACTION.NAME' },
+      { field: 'operatorTypeName', header: 'TERMDEPOSITSTRANSACTION.ACCOUNT_TYPE' },
+      { field: 'memDobVal', header: 'TERMDEPOSITSTRANSACTION.DATE_OF_BIRTH' },
+      { field: 'age', header: 'TERMDEPOSITSTRANSACTION.AGE' },
+      { field: 'genderTypeName', header: 'TERMDEPOSITSTRANSACTION.GENDER' },
+      { field: 'maritalStatusName', header: 'TERMDEPOSITSTRANSACTION.MARITAL_STATUS' },
+      { field: 'mobileNumber', header: 'TERMDEPOSITSTRANSACTION.CONTACT' },
+      { field: 'emailId', header: 'TERMDEPOSITSTRANSACTION.EMAIL' },
+      { field: 'aadharNumber', header: 'TERMDEPOSITSTRANSACTION.AADHAR' },
+      { field: 'startDateVal', header: 'TERMDEPOSITSTRANSACTION.START_DATE' },
+    ];
+    this.groupPrmoters = [
+      { field: 'surname', header: 'TERMDEPOSITSTRANSACTION.SURNAME' },
+      { field: 'name', header: 'TERMDEPOSITSTRANSACTION.NAME' },
+      { field: 'operatorTypeName', header: 'TERMDEPOSITSTRANSACTION.ACCOUNT_TYPE' },
+      { field: 'memDobVal', header: 'TERMDEPOSITSTRANSACTION.DATE_OF_BIRTH' },
+      { field: 'age', header: 'TERMDEPOSITSTRANSACTION.AGE' },
+      { field: 'genderName', header: 'TERMDEPOSITSTRANSACTION.GENDER' },
+      { field: 'maritalStatusName', header: 'TERMDEPOSITSTRANSACTION.MARITAL_STATUS' },
+      { field: 'mobileNumber', header: 'TERMDEPOSITSTRANSACTION.CONTACT' },
+      { field: 'emailId', header: 'TERMDEPOSITSTRANSACTION.EMAIL' },
+      { field: 'aadharNumber', header: 'TERMDEPOSITSTRANSACTION.AADHAR' },
+      { field: 'startDateVal', header: 'TERMDEPOSITSTRANSACTION.START_DATE' },
+    ];
+
   }
 
   ngOnInit() {
@@ -175,9 +175,9 @@ export class RecurringDepositStepperComponent implements OnInit {
           let queryParams = Number(this.encryptDecryptService.decrypt(params['admissionNo']));
           let qParams = queryParams;
           this.admissionNumber = qParams;
-          this.getMemberDetailsByAdmissionNUmber(this.admissionNumber);
-          this.getGroupDetailsByAdmissionNumber(this.admissionNumber);
-          this.getInstitutionDetailsByAdmissionNumber(this.admissionNumber);
+          // this.getMemberDetailsByAdmissionNUmber(this.admissionNumber);
+          // this.getGroupDetailsByAdmissionNumber(this.admissionNumber);
+          // this.getInstitutionDetailsByAdmissionNumber(this.admissionNumber);
         }
         this.isEditCheck(this.activeIndex);
       } else {
@@ -215,7 +215,7 @@ export class RecurringDepositStepperComponent implements OnInit {
       }
 
       if (data != undefined) {
-        if(data.data.memberTypeName != null && data.data.memberTypeName != undefined){
+        if (data.data.memberTypeName != null && data.data.memberTypeName != undefined) {
           this.memberTypeName = data.data.memberTypeName;
         }
         this.itemList();
@@ -272,7 +272,7 @@ export class RecurringDepositStepperComponent implements OnInit {
           else if (this.activeIndex == 5) {
             if (data.data != null && data.data != undefined) {
               this.rdAccountNomineeModel = data.data;
-              if(data.data.memberTypeName != null && data.data.memberTypeName != undefined){
+              if (data.data.memberTypeName != null && data.data.memberTypeName != undefined) {
                 this.memberTypeName = data.data.memberTypeName;
               }
               if (this.rdAccountNomineeModel != null && this.rdAccountNomineeModel != undefined) {
@@ -284,7 +284,7 @@ export class RecurringDepositStepperComponent implements OnInit {
           } else if (this.activeIndex == 6) {
             if (data.data != null && data.data != undefined) {
               this.requiredDocumentDetails = data.data;
-              if(data.data.memberTypeName != null && data.data.memberTypeName != undefined){
+              if (data.data.memberTypeName != null && data.data.memberTypeName != undefined) {
                 this.memberTypeName = data.data.memberTypeName;
               }
             }
@@ -296,10 +296,10 @@ export class RecurringDepositStepperComponent implements OnInit {
 
   itemList() {
     this.items = [];
-    if(this.memberTypeName != MemberShipTypesData.INDIVIDUAL){
+    if (this.memberTypeName != MemberShipTypesData.INDIVIDUAL) {
       this.itemListWithParamsForGroupInstitution();
-    }else {
-      if(this.rdAccId != null && this.rdAccId != undefined ){
+    } else {
+      if (this.rdAccId != null && this.rdAccId != undefined) {
         if (this.showForm) {
           if (this.rdAccountsModel.accountTypeName != AccountTypes.JOINT) {
 
@@ -506,6 +506,9 @@ export class RecurringDepositStepperComponent implements OnInit {
       if (this.membershipBasicRequiredDetailsModel.admissionDate != null && this.membershipBasicRequiredDetailsModel.admissionDate != undefined) {
         this.membershipBasicRequiredDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
       }
+      if (this.membershipBasicRequiredDetailsModel.resolutionDate != null && this.membershipBasicRequiredDetailsModel.resolutionDate != undefined) {
+        this.membershipBasicRequiredDetailsModel.resolutionDate = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.resolutionDate, this.orgnizationSetting.datePipe);
+      }
     }
     else if (memberType == "Group") {
       this.groupFlag = true;
@@ -519,20 +522,20 @@ export class RecurringDepositStepperComponent implements OnInit {
         this.memberGroupDetailsModel.admissionDateVal = this.datePipe.transform(this.memberGroupDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
       }
       if (this.memberGroupDetailsModel.groupPromoterList != null && this.memberGroupDetailsModel.groupPromoterList != undefined && this.memberGroupDetailsModel.groupPromoterList.length > 0) {
-            this.groupPrmotersList=this.memberGroupDetailsModel.groupPromoterList ;
-            for (let promoter of this.groupPrmotersList) {
-              if (promoter.dob != null && promoter.dob != undefined) {
-                promoter.memDobVal = this.datePipe.transform(promoter.dob, this.orgnizationSetting.datePipe);
-              }
-              if (promoter.startDate != null && promoter.startDate != undefined) {
-                promoter.startDateVal = this.datePipe.transform(promoter.startDate, this.orgnizationSetting.datePipe);
-              }
-              if (promoter.genderId != null && promoter.genderId != undefined) {
-                let gender = this.genderList.filter((obj: any) => obj.value == promoter.genderId);
-                if (gender != null && gender != undefined && gender.length > 0)
-                  promoter.genderName = gender[0].label;
-              }
-            }
+        this.groupPrmotersList = this.memberGroupDetailsModel.groupPromoterList;
+        for (let promoter of this.groupPrmotersList) {
+          if (promoter.dob != null && promoter.dob != undefined) {
+            promoter.memDobVal = this.datePipe.transform(promoter.dob, this.orgnizationSetting.datePipe);
+          }
+          if (promoter.startDate != null && promoter.startDate != undefined) {
+            promoter.startDateVal = this.datePipe.transform(promoter.startDate, this.orgnizationSetting.datePipe);
+          }
+          if (promoter.genderId != null && promoter.genderId != undefined) {
+            let gender = this.genderList.filter((obj: any) => obj.value == promoter.genderId);
+            if (gender != null && gender != undefined && gender.length > 0)
+              promoter.genderName = gender[0].label;
+          }
+        }
       }
     }
     else if (memberType == "Institution") {
@@ -547,7 +550,7 @@ export class RecurringDepositStepperComponent implements OnInit {
         this.membershipInstitutionDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipInstitutionDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
       }
       if (this.membershipInstitutionDetailsModel.institutionPromoterList != null && this.membershipInstitutionDetailsModel.institutionPromoterList != undefined && this.membershipInstitutionDetailsModel.institutionPromoterList.length > 0) {
-        this.institutionPrmotersList=this.membershipInstitutionDetailsModel.institutionPromoterList ;
+        this.institutionPrmotersList = this.membershipInstitutionDetailsModel.institutionPromoterList;
         for (let promoter of this.institutionPrmotersList) {
           if (promoter.dob != null && promoter.dob != undefined) {
             promoter.memDobVal = this.datePipe.transform(promoter.dob, this.orgnizationSetting.datePipe);
@@ -561,7 +564,7 @@ export class RecurringDepositStepperComponent implements OnInit {
               promoter.genderName = gender[0].label;
           }
         }
-  }
+      }
     }
   }
   isEditCheck(activeIndex: any) {
@@ -697,14 +700,14 @@ export class RecurringDepositStepperComponent implements OnInit {
     }
     else if (activeIndex == 6) {
       // this.navigateTo(this.activeIndex, this.rdAccId);
-      if(this.memberTypeName == MemberShipTypesData.INDIVIDUAL){
+      if (this.memberTypeName == MemberShipTypesData.INDIVIDUAL) {
         this.activeIndex = activeIndex - 1;
         this.navigateTo(this.activeIndex, this.rdAccId);
-      }else{
+      } else {
         if (this.rdAccountsModel.accountTypeName == AccountTypes.JOINT) {
           this.flag = false;
           this.activeIndex = this.activeIndex - 1;
-        }else{
+        } else {
           this.activeIndex = this.activeIndex - 2;
         }
         this.navigateTo(this.activeIndex, this.rdAccId);
@@ -742,7 +745,7 @@ export class RecurringDepositStepperComponent implements OnInit {
         this.addAOrUpdateRdApplicationDetails(activeIndex, "next");
         this.navigateTo(this.activeIndex, this.rdAccId);
       }
-  
+
     } else if (activeIndex == 4) {
       this.saveJointHolder();
     } else if (activeIndex == 5) {
@@ -758,7 +761,7 @@ export class RecurringDepositStepperComponent implements OnInit {
       } else {
         this.activeIndex += 1;
         this.navigateTo(this.activeIndex, this.rdAccId);
-      } 
+      }
     } else {
       this.activeIndex = activeIndex + 1;
       this.navigateTo(this.activeIndex, this.rdAccId);
@@ -816,6 +819,13 @@ export class RecurringDepositStepperComponent implements OnInit {
               if (this.membershipBasicRequiredDetailsModel.admissionDate != null && this.membershipBasicRequiredDetailsModel.admissionDate != undefined) {
                 this.membershipBasicRequiredDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
               }
+              if (this.membershipBasicRequiredDetailsModel.resolutionDate != null && this.membershipBasicRequiredDetailsModel.resolutionDate != undefined) {
+                this.membershipBasicRequiredDetailsModel.resolutionDate = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.resolutionDate, this.orgnizationSetting.datePipe);
+              }
+              if (this.membershipBasicRequiredDetailsModel.resolutionCopy != null && this.membershipBasicRequiredDetailsModel.resolutionCopy != undefined) {
+                this.membershipBasicRequiredDetailsModel.multipartFileListForResolutionCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.resolutionCopy, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.resolutionCopy);
+                this.photoCopyFlag = true;
+              }
               if (this.membershipBasicRequiredDetailsModel.photoPath != null && this.membershipBasicRequiredDetailsModel.photoPath != undefined) {
                 this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.photoPath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.photoPath);
                 this.photoCopyFlag = true;
@@ -849,19 +859,19 @@ export class RecurringDepositStepperComponent implements OnInit {
               }
               if (this.memberGroupDetailsModel.groupPromoterList != null && this.memberGroupDetailsModel.groupPromoterList != undefined && this.memberGroupDetailsModel.groupPromoterList.length > 0) {
                 this.groupPrmotersList = this.memberGroupDetailsModel.groupPromoterList;
-                  for (let promoter of this.groupPrmotersList) {
-                    if (promoter.dob != null && promoter.dob != undefined) {
-                      promoter.memDobVal = this.datePipe.transform(promoter.dob, this.orgnizationSetting.datePipe);
-                    }
-                    if (promoter.startDate != null && promoter.startDate != undefined) {
-                      promoter.startDateVal = this.datePipe.transform(promoter.startDate, this.orgnizationSetting.datePipe);
-                    }
-                    if (promoter.genderId != null && promoter.genderId != undefined) {
-                      let gender = this.genderList.filter((obj: any) => obj.value == promoter.genderId);
-                      if (gender != null && gender != undefined && gender.length > 0)
-                        promoter.genderName = gender[0].label;
-                    }
+                for (let promoter of this.groupPrmotersList) {
+                  if (promoter.dob != null && promoter.dob != undefined) {
+                    promoter.memDobVal = this.datePipe.transform(promoter.dob, this.orgnizationSetting.datePipe);
                   }
+                  if (promoter.startDate != null && promoter.startDate != undefined) {
+                    promoter.startDateVal = this.datePipe.transform(promoter.startDate, this.orgnizationSetting.datePipe);
+                  }
+                  if (promoter.genderId != null && promoter.genderId != undefined) {
+                    let gender = this.genderList.filter((obj: any) => obj.value == promoter.genderId);
+                    if (gender != null && gender != undefined && gender.length > 0)
+                      promoter.genderName = gender[0].label;
+                  }
+                }
                 if (this.memberGroupDetailsModel.memberTypeName != null && this.memberGroupDetailsModel.memberTypeName != undefined) {
                   this.rdAccountsModel.memberTypeName = this.memberGroupDetailsModel.memberTypeName;
                 }
@@ -890,19 +900,19 @@ export class RecurringDepositStepperComponent implements OnInit {
               }
               if (this.membershipInstitutionDetailsModel.institutionPromoterList != null && this.membershipInstitutionDetailsModel.institutionPromoterList != undefined && this.membershipInstitutionDetailsModel.institutionPromoterList.length > 0) {
                 this.institutionPrmotersList = this.membershipInstitutionDetailsModel.institutionPromoterList;
-                  for (let promoter of this.institutionPrmotersList) {
-                    if (promoter.dob != null && promoter.dob != undefined) {
-                      promoter.memDobVal = this.datePipe.transform(promoter.dob, this.orgnizationSetting.datePipe);
-                    }
-                    if (promoter.startDate != null && promoter.startDate != undefined) {
-                      promoter.startDateVal = this.datePipe.transform(promoter.startDate, this.orgnizationSetting.datePipe);
-                    }
-                    if (promoter.genderId != null && promoter.genderId != undefined) {
-                      let gender = this.genderList.filter((obj: any) => obj.value == promoter.genderId);
-                      if (gender != null && gender != undefined && gender.length > 0)
-                        promoter.genderName = gender[0].label;
-                    }
+                for (let promoter of this.institutionPrmotersList) {
+                  if (promoter.dob != null && promoter.dob != undefined) {
+                    promoter.memDobVal = this.datePipe.transform(promoter.dob, this.orgnizationSetting.datePipe);
                   }
+                  if (promoter.startDate != null && promoter.startDate != undefined) {
+                    promoter.startDateVal = this.datePipe.transform(promoter.startDate, this.orgnizationSetting.datePipe);
+                  }
+                  if (promoter.genderId != null && promoter.genderId != undefined) {
+                    let gender = this.genderList.filter((obj: any) => obj.value == promoter.genderId);
+                    if (gender != null && gender != undefined && gender.length > 0)
+                      promoter.genderName = gender[0].label;
+                  }
+                }
                 if (this.memberGroupDetailsModel.memberTypeName != null && this.memberGroupDetailsModel.memberTypeName != undefined) {
                   this.rdAccountsModel.memberTypeName = this.memberGroupDetailsModel.memberTypeName;
                 }
@@ -970,8 +980,9 @@ export class RecurringDepositStepperComponent implements OnInit {
         if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
           this.membershipBasicRequiredDetailsModel = this.responseModel.data[0];
           this.membershipBasicRequiredDetailsModel.fdNonCummCommunicationDto = this.responseModel.data[0].memberShipCommunicationDetailsDTOList;
-          this.membershipBasicRequiredDetailsModel.photoPath = this.responseModel.data[0].photoCopyPath; 
-          this.membershipBasicRequiredDetailsModel.signaturePath = this.responseModel.data[0].signatureCopyPath; 
+          this.membershipBasicRequiredDetailsModel.photoPath = this.responseModel.data[0].photoCopyPath;
+          this.membershipBasicRequiredDetailsModel.signaturePath = this.responseModel.data[0].signatureCopyPath;
+          this.membershipBasicRequiredDetailsModel.resolutionCopy = this.responseModel.data[0].mcrDocumentCopy;
           this.memberTypeName = this.responseModel.data[0].memberTypeName;
           if (this.membershipBasicRequiredDetailsModel.dob != null && this.membershipBasicRequiredDetailsModel.dob != undefined) {
             this.membershipBasicRequiredDetailsModel.dobVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.dob, this.orgnizationSetting.datePipe);
@@ -979,15 +990,21 @@ export class RecurringDepositStepperComponent implements OnInit {
           if (this.membershipBasicRequiredDetailsModel.admissionDate != null && this.membershipBasicRequiredDetailsModel.admissionDate != undefined) {
             this.membershipBasicRequiredDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
           }
+          if (this.membershipBasicRequiredDetailsModel.resolutionDate != null && this.membershipBasicRequiredDetailsModel.resolutionDate != undefined) {
+            this.membershipBasicRequiredDetailsModel.resolutionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.resolutionDate, this.orgnizationSetting.datePipe);
+          }
           if (this.membershipBasicRequiredDetailsModel.fdNonCummCommunicationDto != null && this.membershipBasicRequiredDetailsModel.fdNonCummCommunicationDto != undefined) {
             this.rdAccountCommunicationModel = this.membershipBasicRequiredDetailsModel.fdNonCummCommunicationDto;
           }
+          if (this.membershipBasicRequiredDetailsModel.resolutionCopy != null && this.membershipBasicRequiredDetailsModel.resolutionCopy != undefined) {
+            this.membershipBasicRequiredDetailsModel.multipartFileListForResolutionCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.resolutionCopy, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.resolutionCopy);
+          }
           if (this.membershipBasicRequiredDetailsModel.photoPath != null && this.membershipBasicRequiredDetailsModel.photoPath != undefined) {
-              this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.photoPath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.photoPath  );
-              this.photoCopyFlag = true;
-            }
+            this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.photoPath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.photoPath);
+            this.photoCopyFlag = true;
+          }
           if (this.membershipBasicRequiredDetailsModel.signaturePath != null && this.membershipBasicRequiredDetailsModel.signaturePath != undefined) {
-              this.membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.signaturePath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.signaturePath  );
+            this.membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.signaturePath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.signaturePath);
           }
           if (this.membershipBasicRequiredDetailsModel.isKycApproved != null && this.membershipBasicRequiredDetailsModel.isKycApproved != undefined && this.membershipBasicRequiredDetailsModel.isKycApproved) {
             this.isKycApproved = applicationConstants.KYC_APPROVED_NAME;
@@ -1007,7 +1024,7 @@ export class RecurringDepositStepperComponent implements OnInit {
           this.msgs = [];
         }, 3000);
       }
-    
+
     }, error => {
       this.commonComponent.stopSpinner();
       this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
@@ -1024,8 +1041,8 @@ export class RecurringDepositStepperComponent implements OnInit {
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
           this.memberGroupDetailsModel = this.responseModel.data[0];
-          this.memberGroupDetailsModel.photoCopyPath = this.responseModel.data[0].photoCopyPath; 
-          this.memberGroupDetailsModel.signaturePath = this.responseModel.data[0].signatureCopyPath; 
+          this.memberGroupDetailsModel.photoCopyPath = this.responseModel.data[0].photoCopyPath;
+          this.memberGroupDetailsModel.signaturePath = this.responseModel.data[0].signatureCopyPath;
 
           this.memberTypeName = this.responseModel.data[0].memberTypeName;
           if (this.memberGroupDetailsModel.registrationDate != null && this.memberGroupDetailsModel.registrationDate != undefined) {
@@ -1072,11 +1089,11 @@ export class RecurringDepositStepperComponent implements OnInit {
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
           this.membershipInstitutionDetailsModel = this.responseModel.data[0];
-          this.membershipInstitutionDetailsModel.photoCopyPath = this.responseModel.data[0].photoCopyPath; 
-          this.membershipInstitutionDetailsModel.signaturePath = this.responseModel.data[0].signatureCopyPath; 
+          this.membershipInstitutionDetailsModel.photoCopyPath = this.responseModel.data[0].photoCopyPath;
+          this.membershipInstitutionDetailsModel.signaturePath = this.responseModel.data[0].signatureCopyPath;
           this.memberTypeName = this.membershipInstitutionDetailsModel.memberTypeName;
           this.rdAccountsModel.memberTypeName = this.membershipInstitutionDetailsModel.memberTypeName;
-          
+
 
           if (this.membershipInstitutionDetailsModel.registrationDate != null && this.membershipInstitutionDetailsModel.registrationDate != undefined) {
             this.membershipInstitutionDetailsModel.registrationDateVal = this.datePipe.transform(this.membershipInstitutionDetailsModel.registrationDate, this.orgnizationSetting.datePipe);
@@ -1099,7 +1116,7 @@ export class RecurringDepositStepperComponent implements OnInit {
                   promoter.genderName = gender[0].label;
               }
             }
-            
+
           }
           if (this.membershipInstitutionDetailsModel.isKycApproved != null && this.membershipInstitutionDetailsModel.isKycApproved != undefined) {
             this.isKycApproved = applicationConstants.KYC_APPROVED_NAME;
@@ -1154,6 +1171,9 @@ export class RecurringDepositStepperComponent implements OnInit {
     }
     if (this.membershipBasicRequiredDetailsModel.admissionDate != null && this.membershipBasicRequiredDetailsModel.admissionDate != undefined) {
       this.membershipBasicRequiredDetailsModel.admissionDateVal = this.commonFunctionsService.getUTCEpoch(new Date(this.membershipBasicRequiredDetailsModel.admissionDate));
+    }
+    if (this.membershipBasicRequiredDetailsModel.resolutionDate != null && this.membershipBasicRequiredDetailsModel.resolutionDate != undefined) {
+      this.membershipBasicRequiredDetailsModel.resolutionDate = this.commonFunctionsService.getUTCEpoch(new Date(this.membershipBasicRequiredDetailsModel.resolutionDate));
     }
     // group dates convert
     if (this.memberGroupDetailsModel.registrationDate != null && this.memberGroupDetailsModel.registrationDate != undefined) {
@@ -1363,6 +1383,9 @@ export class RecurringDepositStepperComponent implements OnInit {
     if (this.rdAccountsModel.installmentDate != null && this.rdAccountsModel.installmentDate != undefined) {
       this.rdAccountsModel.installmentDate = this.commonFunctionsService.getUTCEpoch(new Date(this.rdAccountsModel.installmentDate));
     }
+    if (this.membershipBasicRequiredDetailsModel.resolutionDate != null && this.membershipBasicRequiredDetailsModel.resolutionDate != undefined) {
+      this.membershipBasicRequiredDetailsModel.resolutionDate = this.commonFunctionsService.getUTCEpoch(new Date(this.membershipBasicRequiredDetailsModel.resolutionDate));
+    }
     if (this.isApplicationEdit) {
       this.rdAccountsModel.statusName = applicationConstants.IS_ACTIVE;
       this.rdAccountsService.updateRbAccounts(this.rdAccountsModel).subscribe((response: any) => {
@@ -1454,7 +1477,7 @@ export class RecurringDepositStepperComponent implements OnInit {
 
   saveJointHolder() {
     this.rdAccountsService.addJointHolders(this.jointAccountHolderList).subscribe((response: any) => {
-    this.responseModel = response;
+      this.responseModel = response;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != null) {
           this.rdAccId = this.responseModel.data[0].rdAccId;
@@ -1463,11 +1486,11 @@ export class RecurringDepositStepperComponent implements OnInit {
         setTimeout(() => {
           this.msgs = [];
         }, 1200);
-        if(this.activeIndex == 4){
-          if(this.memberTypeName == MemberShipTypesData.INDIVIDUAL){
+        if (this.activeIndex == 4) {
+          if (this.memberTypeName == MemberShipTypesData.INDIVIDUAL) {
             this.activeIndex = this.activeIndex + 1;
             this.navigateTo(this.activeIndex, this.rdAccId);
-          }else{
+          } else {
             this.activeIndex = this.activeIndex + 2;
             this.navigateTo(this.activeIndex, this.rdAccId);
           }
@@ -1496,8 +1519,8 @@ export class RecurringDepositStepperComponent implements OnInit {
   addOrUpdateNomineeDetails() {
     this.rdAccountNomineeModel.rdAccId = this.rdAccId;
     this.rdAccountNomineeModel.accountNumber = this.accountNumber;
-    this. rdAccountNomineeModel.memberType = this.memberTypeId;
-    this. rdAccountNomineeModel.memberTypeName = this.memberTypeName;
+    this.rdAccountNomineeModel.memberType = this.memberTypeId;
+    this.rdAccountNomineeModel.memberTypeName = this.memberTypeName;
     // this. fdCumulativeNominee.isNewMember = this.showForm;
     if (this.rdAccountNomineeModel.id == null) {
       this.isNomineeEdit = false;
@@ -1505,6 +1528,9 @@ export class RecurringDepositStepperComponent implements OnInit {
     else {
       this.isNomineeEdit = true;
     }
+    // if (this.rdAccountNomineeModel.nomineeDobVal != null && this.rdAccountNomineeModel.nomineeDobVal != undefined) {
+    //   this.rdAccountNomineeModel.nomineeDob = this.commonFunctionsService.getUTCEpoch(new Date(this.rdAccountNomineeModel.nomineeDobVal));
+    // }
     if (this.isNomineeEdit) {
       this.rdAccountNomineeService.updateRdAccountNominees(this.rdAccountNomineeModel).subscribe((response: any) => {
         this.responseModel = response;
@@ -1668,47 +1694,426 @@ export class RecurringDepositStepperComponent implements OnInit {
     this.memberPhotoCopyZoom = false;
   }
 
-    itemListWithoutParams(){
+  itemListWithoutParams() {
+    if (this.showForm) {
+      if (this.rdAccountsModel.accountTypeName != AccountTypes.JOINT) {
+        this.items = [
+          {
+            label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_NEW_MEMBER,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 0;
+            }
+          },
+          {
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_KYC,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 1;
+            }
+          },
+          {
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_COMMUNICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 2;
+            }
+          },
+          {
+            label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_PRODUCT,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 3;
+            }
+          },
+          {
+            label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_NOMINEE,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 5;
+            }
+          },
+          {
+            label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_REQUIRED_DOCUMENTS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 6;
+            }
+          }
+        ];
+      } else {
+        this.items = [
+          {
+            label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_NEW_MEMBER,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 0;
+            }
+          },
+          {
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_KYC,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 1;
+            }
+          },
+          {
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_COMMUNICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 2;
+            }
+          },
+          {
+            label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_PRODUCT,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 3;
+            }
+          },
+          {
+            label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_JOINTHOLDERDETAILS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 4;
+            }
+          },
+          {
+            label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_NOMINEE,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 5;
+            }
+          },
+          {
+            label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_REQUIRED_DOCUMENTS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 6;
+            }
+          }
+        ];
+      }
+    } else {
+      if (this.rdAccountsModel.accountTypeName != AccountTypes.JOINT) {
+        this.items = [
+          {
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_MEMBERSHIP_DETAILS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 0;
+            }
+          },
+          {
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_COMMUNICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 2;
+            }
+          },
+          {
+            label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_PRODUCT,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 3;
+            }
+          },
+          {
+            label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_NOMINEE,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 5;
+            }
+          },
+          {
+            label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_REQUIRED_DOCUMENTS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 6;
+            }
+          }
+        ];
+      } else {
+        this.items = [
+          {
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_MEMBERSHIP_DETAILS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 0;
+            }
+          },
+          {
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_COMMUNICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 2;
+            }
+          },
+          {
+            label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_PRODUCT,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 3;
+            }
+          },
+          {
+            label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_JOINTHOLDERDETAILS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 4;
+            }
+          },
+          {
+            label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_NOMINEE,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 5;
+            }
+          },
+          {
+            label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_REQUIRED_DOCUMENTS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 6;
+            }
+          }
+        ];
+      }
+    }
+  }
+
+  itemListWithoutParamsForGroupInstitution() {
+    if (this.showForm) {
+      if (this.rdAccountsModel.accountTypeName != AccountTypes.JOINT) {
+        this.items = [
+          {
+            label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_NEW_MEMBER,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 0;
+            }
+          },
+          {
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_KYC,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 1;
+            }
+          },
+          {
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_COMMUNICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 2;
+            }
+          },
+          {
+            label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_PRODUCT,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 3;
+            }
+          },
+          // {
+          //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_NOMINEE,
+          //   disabled: this.menuDisabled,
+          //   command: (event: any) => {
+          //     this.activeIndex = 5;
+          //   }
+          // },
+          {
+            label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_REQUIRED_DOCUMENTS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 6;
+            }
+          }
+        ];
+      } else {
+        this.items = [
+          {
+            label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_NEW_MEMBER,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 0;
+            }
+          },
+          {
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_KYC,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 1;
+            }
+          },
+          {
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_COMMUNICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 2;
+            }
+          },
+          {
+            label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_PRODUCT,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 3;
+            }
+          },
+          {
+            label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_JOINTHOLDERDETAILS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 4;
+            }
+          },
+          // {
+          //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_NOMINEE,
+          //   disabled: this.menuDisabled,
+          //   command: (event: any) => {
+          //     this.activeIndex = 5;
+          //   }
+          // },
+          {
+            label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_REQUIRED_DOCUMENTS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 6;
+            }
+          }
+        ];
+      }
+    } else {
+      if (this.rdAccountsModel.accountTypeName != AccountTypes.JOINT) {
+        this.items = [
+          {
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_MEMBERSHIP_DETAILS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 0;
+            }
+          },
+          {
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_COMMUNICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 2;
+            }
+          },
+          {
+            label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_PRODUCT,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 3;
+            }
+          },
+          // {
+          //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_NOMINEE,
+          //   disabled: this.menuDisabled,
+          //   command: (event: any) => {
+          //     this.activeIndex = 5;
+          //   }
+          // },
+          {
+            label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_REQUIRED_DOCUMENTS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 6;
+            }
+          }
+        ];
+      } else {
+        this.items = [
+          {
+            label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_MEMBERSHIP_DETAILS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 0;
+            }
+          },
+          {
+            label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_COMMUNICATION,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 2;
+            }
+          },
+          {
+            label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_PRODUCT,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 3;
+            }
+          },
+          {
+            label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_JOINTHOLDERDETAILS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 4;
+            }
+          },
+          // {
+          //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_NOMINEE,
+          //   disabled: this.menuDisabled,
+          //   command: (event: any) => {
+          //     this.activeIndex = 5;
+          //   }
+          // },
+          {
+            label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_REQUIRED_DOCUMENTS,
+            disabled: this.menuDisabled,
+            command: (event: any) => {
+              this.activeIndex = 6;
+            }
+          }
+        ];
+      }
+    }
+  }
+
+  itemListWithParamsForGroupInstitution() {
+    this.items = [];
+    if (this.rdAccId != null && this.rdAccId != undefined) {
       if (this.showForm) {
         if (this.rdAccountsModel.accountTypeName != AccountTypes.JOINT) {
+
           this.items = [
             {
-              label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_NEW_MEMBER,
+              label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_NEW_MEMBER, queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 0;
               }
             },
             {
-              label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_KYC,
+              label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_KYC, queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 1;
               }
             },
             {
-              label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_COMMUNICATION,
+              label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_COMMUNICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 2;
               }
             },
             {
-              label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_PRODUCT,
+              label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_PRODUCT, queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 3;
               }
             },
+            // {
+            //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_NOMINEE,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
+            //   disabled: this.menuDisabled,
+            //   command: (event: any) => {
+            //     this.activeIndex = 5;
+            //   }
+            // },
             {
-              label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_NOMINEE,
-              disabled: this.menuDisabled,
-              command: (event: any) => {
-                this.activeIndex = 5;
-              }
-            },
-            {
-              label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_REQUIRED_DOCUMENTS,
+              label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_REQUIRED_DOCUMENTS, queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 6;
@@ -1718,49 +2123,49 @@ export class RecurringDepositStepperComponent implements OnInit {
         } else {
           this.items = [
             {
-              label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_NEW_MEMBER,
+              label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_NEW_MEMBER, queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 0;
               }
             },
             {
-              label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_KYC,
+              label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_KYC, queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 1;
               }
             },
             {
-              label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_COMMUNICATION,
+              label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_COMMUNICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 2;
               }
             },
             {
-              label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_PRODUCT,
+              label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_PRODUCT, queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 3;
               }
             },
             {
-              label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_JOINTHOLDERDETAILS,
+              label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_JOINTHOLDERDETAILS, queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 4;
               }
             },
+            // {
+            //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_NOMINEE,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
+            //   disabled: this.menuDisabled,
+            //   command: (event: any) => {
+            //     this.activeIndex = 5;
+            //   }
+            // },
             {
-              label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_NOMINEE,
-              disabled: this.menuDisabled,
-              command: (event: any) => {
-                this.activeIndex = 5;
-              }
-            },
-            {
-              label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_REQUIRED_DOCUMENTS,
+              label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_REQUIRED_DOCUMENTS, queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 6;
@@ -1772,131 +2177,35 @@ export class RecurringDepositStepperComponent implements OnInit {
         if (this.rdAccountsModel.accountTypeName != AccountTypes.JOINT) {
           this.items = [
             {
-              label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_MEMBERSHIP_DETAILS,
+              label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_MEMBERSHIP_DETAILS, queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 0;
               }
             },
             {
-              label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_COMMUNICATION,
+              label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_COMMUNICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 2;
               }
             },
             {
-              label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_PRODUCT,
-              disabled: this.menuDisabled,
-              command: (event: any) => {
-                this.activeIndex = 3;
-              }
-            },
-            {
-              label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_NOMINEE,
-              disabled: this.menuDisabled,
-              command: (event: any) => {
-                this.activeIndex = 5;
-              }
-            },
-            {
-              label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_REQUIRED_DOCUMENTS,
-              disabled: this.menuDisabled,
-              command: (event: any) => {
-                this.activeIndex = 6;
-              }
-            }
-          ];
-        }else {
-          this.items = [
-            {
-              label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_MEMBERSHIP_DETAILS,
-              disabled: this.menuDisabled,
-              command: (event: any) => {
-                this.activeIndex = 0;
-              }
-            },
-            {
-              label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_COMMUNICATION,
-              disabled: this.menuDisabled,
-              command: (event: any) => {
-                this.activeIndex = 2;
-              }
-            },
-            {
-              label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_PRODUCT,
-              disabled: this.menuDisabled,
-              command: (event: any) => {
-                this.activeIndex = 3;
-              }
-            },
-            {
-              label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_JOINTHOLDERDETAILS,
-              disabled: this.menuDisabled,
-              command: (event: any) => {
-                this.activeIndex = 4;
-              }
-            },
-            {
-              label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_NOMINEE,
-              disabled: this.menuDisabled,
-              command: (event: any) => {
-                this.activeIndex = 5;
-              }
-            },
-            {
-              label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_REQUIRED_DOCUMENTS,
-              disabled: this.menuDisabled,
-              command: (event: any) => {
-                this.activeIndex = 6;
-              }
-            }
-          ];
-        }
-      }
-    }
-  
-    itemListWithoutParamsForGroupInstitution(){
-      if (this.showForm) {
-        if (this.rdAccountsModel.accountTypeName != AccountTypes.JOINT) {
-          this.items = [
-            {
-              label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_NEW_MEMBER,
-              disabled: this.menuDisabled,
-              command: (event: any) => {
-                this.activeIndex = 0;
-              }
-            },
-            {
-              label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_KYC,
-              disabled: this.menuDisabled,
-              command: (event: any) => {
-                this.activeIndex = 1;
-              }
-            },
-            {
-              label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_COMMUNICATION,
-              disabled: this.menuDisabled,
-              command: (event: any) => {
-                this.activeIndex = 2;
-              }
-            },
-            {
-              label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_PRODUCT,
+              label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_PRODUCT, queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 3;
               }
             },
             // {
-            //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_NOMINEE,
+            //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_NOMINEE,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
             //   disabled: this.menuDisabled,
             //   command: (event: any) => {
             //     this.activeIndex = 5;
             //   }
             // },
             {
-              label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_REQUIRED_DOCUMENTS,
+              label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_REQUIRED_DOCUMENTS, queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 6;
@@ -1906,134 +2215,42 @@ export class RecurringDepositStepperComponent implements OnInit {
         } else {
           this.items = [
             {
-              label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_NEW_MEMBER,
+              label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_MEMBERSHIP_DETAILS, queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 0;
               }
             },
             {
-              label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_KYC,
-              disabled: this.menuDisabled,
-              command: (event: any) => {
-                this.activeIndex = 1;
-              }
-            },
-            {
-              label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_COMMUNICATION,
+              label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_COMMUNICATION, queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 2;
               }
             },
             {
-              label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_PRODUCT,
+              label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_PRODUCT, queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 3;
               }
             },
             {
-              label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_JOINTHOLDERDETAILS,
+              label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_JOINTHOLDERDETAILS, queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 4;
               }
             },
             // {
-            //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_NOMINEE,
+            //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_NOMINEE,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
             //   disabled: this.menuDisabled,
             //   command: (event: any) => {
             //     this.activeIndex = 5;
             //   }
             // },
             {
-              label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_REQUIRED_DOCUMENTS,
-              disabled: this.menuDisabled,
-              command: (event: any) => {
-                this.activeIndex = 6;
-              }
-            }
-          ];
-        }
-      } else {
-        if (this.rdAccountsModel.accountTypeName != AccountTypes.JOINT) {
-          this.items = [
-            {
-              label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_MEMBERSHIP_DETAILS,
-              disabled: this.menuDisabled,
-              command: (event: any) => {
-                this.activeIndex = 0;
-              }
-            },
-            {
-              label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_COMMUNICATION,
-              disabled: this.menuDisabled,
-              command: (event: any) => {
-                this.activeIndex = 2;
-              }
-            },
-            {
-              label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_PRODUCT,
-              disabled: this.menuDisabled,
-              command: (event: any) => {
-                this.activeIndex = 3;
-              }
-            },
-            // {
-            //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_NOMINEE,
-            //   disabled: this.menuDisabled,
-            //   command: (event: any) => {
-            //     this.activeIndex = 5;
-            //   }
-            // },
-            {
-              label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_REQUIRED_DOCUMENTS,
-              disabled: this.menuDisabled,
-              command: (event: any) => {
-                this.activeIndex = 6;
-              }
-            }
-          ];
-        } else {
-          this.items = [
-            {
-              label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_MEMBERSHIP_DETAILS,
-              disabled: this.menuDisabled,
-              command: (event: any) => {
-                this.activeIndex = 0;
-              }
-            },
-            {
-              label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_COMMUNICATION,
-              disabled: this.menuDisabled,
-              command: (event: any) => {
-                this.activeIndex = 2;
-              }
-            },
-            {
-              label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_PRODUCT,
-              disabled: this.menuDisabled,
-              command: (event: any) => {
-                this.activeIndex = 3;
-              }
-            },
-            {
-              label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_JOINTHOLDERDETAILS,
-              disabled: this.menuDisabled,
-              command: (event: any) => {
-                this.activeIndex = 4;
-              }
-            },
-            // {
-            //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_NOMINEE,
-            //   disabled: this.menuDisabled,
-            //   command: (event: any) => {
-            //     this.activeIndex = 5;
-            //   }
-            // },
-            {
-              label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_REQUIRED_DOCUMENTS,
+              label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_REQUIRED_DOCUMENTS, queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId) },
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 6;
@@ -2042,201 +2259,10 @@ export class RecurringDepositStepperComponent implements OnInit {
           ];
         }
       }
+    } else {
+      this.itemListWithoutParamsForGroupInstitution();
     }
-  
-    itemListWithParamsForGroupInstitution(){
-      this.items = [];
-      if(this.rdAccId != null && this.rdAccId != undefined){
-        if (this.showForm) {
-          if (this.rdAccountsModel.accountTypeName != AccountTypes.JOINT) {
-    
-            this.items = [
-              {
-                label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_NEW_MEMBER,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 0;
-                }
-              },
-              {
-                label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_KYC,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 1;
-                }
-              },
-              {
-                label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_COMMUNICATION,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 2;
-                }
-              },
-              {
-                label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_PRODUCT,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 3;
-                }
-              },
-              // {
-              //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_NOMINEE,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
-              //   disabled: this.menuDisabled,
-              //   command: (event: any) => {
-              //     this.activeIndex = 5;
-              //   }
-              // },
-              {
-                label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_REQUIRED_DOCUMENTS,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 6;
-                }
-              }
-            ];
-          }else {
-            this.items = [
-              {
-                label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_NEW_MEMBER,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 0;
-                }
-              },
-              {
-                label: 'KYC', icon: 'fa fa-podcast', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_KYC,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 1;
-                }
-              },
-              {
-                label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_COMMUNICATION,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 2;
-                }
-              },
-              {
-                label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_PRODUCT,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 3;
-                }
-              },
-              {
-                label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_JOINTHOLDERDETAILS,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 4;
-                }
-              },
-              // {
-              //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_NOMINEE,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
-              //   disabled: this.menuDisabled,
-              //   command: (event: any) => {
-              //     this.activeIndex = 5;
-              //   }
-              // },
-              {
-                label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_REQUIRED_DOCUMENTS,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 6;
-                }
-              }
-            ];
-          }
-        }else {
-          if(this.rdAccountsModel.accountTypeName != AccountTypes.JOINT) {        
-            this.items = [
-              {
-                label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_MEMBERSHIP_DETAILS,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 0;
-                }
-              },
-              {
-                label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_COMMUNICATION,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 2;
-                }
-              },
-              {
-                label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_PRODUCT,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 3;
-                }
-              },
-              // {
-              //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_NOMINEE,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
-              //   disabled: this.menuDisabled,
-              //   command: (event: any) => {
-              //     this.activeIndex = 5;
-              //   }
-              // },
-              {
-                label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_REQUIRED_DOCUMENTS,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 6;
-                }
-              }
-            ];
-          }else {
-            this.items = [
-              {
-                label: 'Member Details', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_MEMBERSHIP_DETAILS,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 0;
-                }
-              },
-              {
-                label: 'Communication', icon: 'fa fa-map-marker', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_COMMUNICATION,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 2;
-                }
-              },
-              {
-                label: 'Application', icon: 'fa fa-id-badge', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_PRODUCT,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 3;
-                }
-              },
-              {
-                label: 'Joint Account', icon: 'fa fa-handshake-o', routerLink: termdeposittransactionconstant.TERMDEPOST_FD_CUMULATIVE_JOINTHOLDERDETAILS,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 4;
-                }
-              },
-              // {
-              //   label: 'Nominee', icon: 'fa fa-user-o', routerLink: termdeposittransactionconstant.TERMDEPOSIT_RECURRING_DEPOSIT_NOMINEE,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
-              //   disabled: this.menuDisabled,
-              //   command: (event: any) => {
-              //     this.activeIndex = 5;
-              //   }
-              // },
-              {
-                label: 'Required Documents', icon: 'fa fa-file-text', routerLink: termdeposittransactionconstant.RECURRING_DEPOSIT_REQUIRED_DOCUMENTS,queryParams: { id: this.encryptDecryptService.encrypt(this.rdAccId)},
-                disabled: this.menuDisabled,
-                command: (event: any) => {
-                  this.activeIndex = 6;
-                }
-              }
-            ];
-          }
-        }
-      }else {
-        this.itemListWithoutParamsForGroupInstitution();
-      }
-    }
+  }
 
 
 }

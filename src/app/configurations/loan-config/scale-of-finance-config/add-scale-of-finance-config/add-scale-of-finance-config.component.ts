@@ -30,6 +30,7 @@ export class AddScaleOfFinanceConfigComponent implements OnInit{
   todayDate: Date = new Date();
   financialYears:  any[] = [];
   statusList: any[] = [];
+  uomTypesList :any[]=[];
 
   constructor(private router: Router, private formBuilder: FormBuilder,private commonComponent : CommonComponent ,private commonFunctionsService: CommonFunctionsService,
     private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService,private scaleOfFinanceConfigService : ScaleOfFinanceConfigsService,private datePipe: DatePipe,
@@ -41,6 +42,7 @@ export class AddScaleOfFinanceConfigComponent implements OnInit{
       maxAmount:new FormControl(''), 
       effectiveStartDate:['', [Validators.required]],
       statusName:['', [Validators.required]],
+      uom:['', [Validators.required]],
      // endDate:['', [Validators.required]]
     });
   }
@@ -92,6 +94,7 @@ export class AddScaleOfFinanceConfigComponent implements OnInit{
     }
     this.getAllCropTypes();
     this.generateFinancialYears();
+    this.getAllUomTypes();
 }
 generateFinancialYears() {
   const currentYear = new Date().getFullYear();
@@ -162,6 +165,29 @@ navigateback(){
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         this.cropList = this.responseModel.data;
         this.cropList = this.cropList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+          return { label: relationType.name, value: relationType.id };
+        });
+      }
+      else {
+        this.msgs = [];
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
+    });
+  }
+
+  /**
+   * @implements get all crop Types 
+   * @author jyothi.naidana
+   */
+  getAllUomTypes(){
+    this.scaleOfFinanceConfigService.getAllUom().subscribe((response : any )=>{
+      this.responseModel  = response;
+      if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+        this.uomTypesList = this.responseModel.data;
+        this.uomTypesList = this.uomTypesList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE && obj.name != null).map((relationType: { name: any; id: any; }) => {
           return { label: relationType.name, value: relationType.id };
         });
       }

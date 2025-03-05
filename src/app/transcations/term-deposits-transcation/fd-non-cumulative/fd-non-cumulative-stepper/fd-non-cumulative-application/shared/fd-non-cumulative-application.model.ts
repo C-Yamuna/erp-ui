@@ -196,6 +196,12 @@ export class FdNonCumulativeApplication {
 
      seniorCitizenRoi: any;
 
+     tenureTypeName : any;
+
+     renewalTypeName: any;
+
+     interestPayoutTypeName: any;
+
 }
 
 export class FdNonCummProductDefinitionModel {

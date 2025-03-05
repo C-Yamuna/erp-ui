@@ -103,10 +103,18 @@ export class FdCumulativePreviewComponent {
   isStaff: boolean = false;
   isKycEmpty: boolean = false;
   genderList: any[] = [];
+  kycPhotoCopyZoom: boolean =false;
+  docPhotoCopyZoom: boolean = false;
+  nomineePhotoCopyZoom: boolean = false;
+  guardianPhotoCopyZoom: boolean = false;
   renewalList:any[] = [];
   interestPaymentFrequencyList: any[] = [];
   tenureTypeList: any[]=[];
-
+  yearFlag: boolean = false;
+  monthFlag: boolean = false;
+  daysFlag: boolean = false;
+  interestPayoutFlag: boolean = false;
+  renewalFlag: boolean = false;
 
   constructor(private router: Router,
     private fdCumulativeApplicationService: FdCumulativeApplicationService,
@@ -176,18 +184,17 @@ export class FdCumulativePreviewComponent {
 
          if (idEdit == "1") {
              this.preveiwFalg = true;
-             this.isShowSubmit = applicationConstants.TRUE; // Allow Submit
              this.viewButton = false;
-             this.editFlag = false;
          } else {
              this.preveiwFalg = false;
+             this.viewButton = true;
          }
          if (params['isGridPage'] != undefined && params['isGridPage'] != null) {
              let isGrid = this.encryptDecryptService.decrypt(params['isGridPage']);
              if (isGrid === "0") {
                  this.isShowSubmit = applicationConstants.FALSE;
-                 this.viewButton = true;
-                 this.editFlag = false;
+                //  this.viewButton = true;
+                 this.editFlag = true;
              } else {
                  this.isShowSubmit = applicationConstants.TRUE;
              }
@@ -262,7 +269,9 @@ export class FdCumulativePreviewComponent {
           if (this.fdCumulativeApplicationModel.maturityDate != null && this.fdCumulativeApplicationModel.maturityDate != undefined) {
             this.fdCumulativeApplicationModel.maturityDate = this.datePipe.transform(this.fdCumulativeApplicationModel.maturityDate, this.orgnizationSetting.datePipe);
           }
-
+          this.tenureCheck();
+          this.interestPayoutCheck();
+          this.renewalCheck();
           if (this.fdCumulativeApplicationModel.memberTypeName != null && this.fdCumulativeApplicationModel.memberTypeName != undefined) {
             this.memberTypeName = this.fdCumulativeApplicationModel.memberTypeName;
             this.memberTypeCheck(this.memberTypeName);
@@ -323,8 +332,14 @@ export class FdCumulativePreviewComponent {
             if (this.fdCumulativeApplicationModel.fdCummulativeAccountNomineeList != null && this.fdCumulativeApplicationModel.fdCummulativeAccountNomineeList != undefined &&
               this.fdCumulativeApplicationModel.fdCummulativeAccountNomineeList[0] != null && this.fdCumulativeApplicationModel.fdCummulativeAccountNomineeList[0] != undefined)
               this.nomineeDetailsModel = this.fdCumulativeApplicationModel.fdCummulativeAccountNomineeList[0];
+              if (this.nomineeDetailsModel.nomineeDob != null && this.nomineeDetailsModel.nomineeDob != undefined) {
+                this.nomineeDetailsModel.nomineeDobVal = this.datePipe.transform(this.nomineeDetailsModel.nomineeDob, this.orgnizationSetting.datePipe);
+              }
             if (this.nomineeDetailsModel.nomineeFilePath != null && this.nomineeDetailsModel.nomineeFilePath != undefined) {
               this.nomineeDetailsModel.nomineeSighnedFormMultiPartList = this.fileUploadService.getFile(this.nomineeDetailsModel.nomineeFilePath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.nomineeDetailsModel.nomineeFilePath);
+            }
+            if (this.nomineeDetailsModel.nomineeAge < 18) {
+              this.guardainFormEnable = true;
             }
             //guardian
             if (this.fdCumulativeApplicationModel.fdCummulativeAccountGaurdianList != null && this.fdCumulativeApplicationModel.fdCummulativeAccountGaurdianList != undefined &&
@@ -646,4 +661,49 @@ export class FdCumulativePreviewComponent {
 
     }
   }
+
+  onClickKycPhotoCopy(rowData :any){
+    this.multipleFilesList = [];
+    this.kycPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
+  }
+  onClickDocPhotoCopy(rowData :any){
+    this.multipleFilesList = [];
+    this.docPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
+  }
+  onClickNomineePhotoCopy(){
+    this.nomineePhotoCopyZoom = true;
+  }
+  onClickGuardianPhotoCopy(){
+    this.guardianPhotoCopyZoom = true;
+  }
+    /**
+   * @implements check for years,months,days to show and hide based on tenuretype
+   * @author bhargavi
+   */
+    tenureCheck() {
+      const tenureType = this.fdCumulativeApplicationModel.tenureType;
+      this.yearFlag = tenureType === 2 || tenureType === 5 || tenureType === 6 || tenureType === 7 ? true : false;
+      this.monthFlag = tenureType === 3 || tenureType === 4 || tenureType === 6 || tenureType === 7 ? true : false;
+      this.daysFlag = tenureType === 1 || tenureType === 4 || tenureType === 5 || tenureType === 7 ? true : false;
+    }
+  
+    /**
+     * @implements check for paymenttype show and hide based on interestPayoutType
+     * @author bhargavi
+     */
+    interestPayoutCheck() {
+      const interestPayoutType = this.fdCumulativeApplicationModel.interestPayoutType;
+      this.interestPayoutFlag = interestPayoutType === 3 ? true : false;
+    }
+    
+    /**
+     * @implements check for autorenewal show and hide based on renewalType
+     * @author bhargavi
+     */
+    renewalCheck() {
+      const renewalType = this.fdCumulativeApplicationModel.isAutoRenewal;
+      this.renewalFlag = renewalType === true ? true : false;
+    }
 }

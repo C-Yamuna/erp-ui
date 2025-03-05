@@ -1,8 +1,10 @@
 <div class="col-12">
     <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'"></p-messages>
-    <div class="row justify-content-between top-header-section px-0">
-        <div class="col-lg-6 col-md-4 col-sm-12 col-xs-12 main-heading mt-1 mb-2 justify-content-start">{{'ERP.SAVINGS_BANK' | translate}}</div>
-        <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12 justify-content-end view-popup-top">
+    <div class="row justify-content-between top-header-section">
+        <div class="col-lg-6 col-md-4 col-sm-12 col-xs-12 main-heading mt-1 mb-2 justify-content-start px-0">{{'ERP.SAVINGS_BANK' | translate}}<i
+            class="fa fa-angle-right font-bold mr-3 ml-3"></i>{{'ERP.CREATE_ACCOUNT' |
+        translate}}</div>
+        <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12 justify-content-end view-popup-top px-0">
             <div class="d-flex pull-right">
                 <div class="col-auto">
                     <p-inputSwitch [(ngModel)]="showForm" (onChange)="onChange()"
@@ -11,7 +13,7 @@
                 <div class="col-auto">
                     <p class="mt-1 px-2">{{'DEMANDDEPOSITS.ADD_B_CLASS_MEMBERSHIP' | translate}}</p>
                 </div>
-                <p-button class="ml-3" icon="fa fa-download" label="Application"></p-button>
+                <p-button class="ml-3" icon="fa fa-download" label="{{'ERP.TEMPLATE' | translate}}"></p-button>
             </div>
         </div>
     </div>
@@ -22,8 +24,8 @@
             [class.disabled]="menuDisabled" styleClass="tab-menu-style"></p-tabMenu> 
             </div>-->
             <!-- left side menu -->
-            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 left-sidecard" >
-                <div class="col-12 membership-side-card" *ngIf ="(showForm && activeIndex>0) || !showForm">
+            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 left-sidecard" *ngIf ="(showForm && activeIndex>0) || !showForm">
+                <div class="col-12 membership-side-card">
                     <div class="col-12 pb-1">
                         <h5 class="transaction-side-card-header">{{'ERP.BASIC_DETAILS' | translate}}</h5>
                     </div>
@@ -397,7 +399,7 @@
 
 <!-- Individual details dialog -->
 <div class="view-moredetails-popup">
-    <p-dialog header="Basic Details" [modal]="true" [(visible)]="membreIndividualFlag" [style]="{ width: '55vw' }">
+    <p-dialog header="Basic Details" [modal]="true" [(visible)]="membreIndividualFlag" styleClass="moredetails-style">
         <div class="col-12 view-morepopup">
             <div class="d-flex justify-content-center px-3 py-0 mb-2">
                 <div *ngIf="!this.membershipBasicRequiredDetails.photoCopyPath">
@@ -518,7 +520,7 @@
                         <p class="label-input-text">{{membershipBasicRequiredDetails.occupationName }}</p>
                     </div>
                 </div>
-                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.AADHAR_NO' | translate}}</span>
@@ -594,67 +596,67 @@
         </div>
         <div class="col-12 popup-basic-details">
             <div class="row">
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.NAME' | translate}}</span>
                         <p class="label-input-text">{{membershipInstitutionDetailsModel.name}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
                         <p class="label-input-text">{{membershipInstitutionDetailsModel.tempAdmissionNumber}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.MEMBER_TYPE' | translate}}</span>
                         <p class="label-input-text">{{membershipInstitutionDetailsModel.memberTypeName}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.ADMISSION_DATE' | translate}}</span>
                         <p class="label-input-text">{{membershipInstitutionDetailsModel.admissionDateVal}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.REGISTERED_DATE' | translate}}</span>
                         <p class="label-input-text">{{membershipInstitutionDetailsModel.registrationDateVal}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.CONTACT' | translate}}</span>
                         <p class="label-input-text">{{membershipInstitutionDetailsModel.pocNumber}}</p>
                     </div>
-                </div>
-                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                </div> -->
+                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                 <div class="form-group">
                     <span class="label-view">{{'ERP.EMAIL' | translate}}</span>
                     <p class="label-input-text">{{membershipInstitutionDetailsModel.emailId}}</p>
                 </div>
             </div> -->
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.PAN_NO' | translate}}</span>
                         <p class="label-input-text">{{membershipInstitutionDetailsModel.panNumber}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.TAN_NO' | translate}}</span>
                         <p class="label-input-text">{{membershipInstitutionDetailsModel.tanNumber}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.GST_NO' | translate}}</span>
                         <p class="label-input-text">{{membershipInstitutionDetailsModel.gstNumber}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.KYC' | translate}}</span>
                         <p class="label-input-text">{{isKycApproved}}</p>
@@ -708,68 +710,68 @@
         </div>
         <div class="col-12 popup-basic-details">
             <div class="row">
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.NAME' | translate}}</span>
                         <p class="label-input-text">{{memberGroupDetailsModel.name}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
                         <p class="label-input-text">{{memberGroupDetailsModel.tempAdmissionNumber}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.MEMBER_TYPE' | translate}}</span>
                         <p class="label-input-text">{{memberGroupDetailsModel.memberTypeName}}</p>
                     </div>
                 </div>
 
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.REGISTERED_DATE' | translate}}</span>
                         <p class="label-input-text">{{memberGroupDetailsModel.registrationDateVal}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.ADMISSION_DATE' | translate}}</span>
                         <p class="label-input-text">{{memberGroupDetailsModel.admissionDateVal}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.CONTACT' | translate}}</span>
                         <p class="label-input-text">{{memberGroupDetailsModel.pocNumber}}</p>
                     </div>
-                </div>
-                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                </div> -->
+                <!-- <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                                 <div class="form-group">
                                     <span class="label-view">{{'ERP.EMAIL' | translate}}</span>
                                     <p class="label-input-text">{{memberGroupDetailsModel.emailId}}</p>
                                 </div>
                             </div> -->
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.TAN_NO' | translate}}</span>
                         <p class="label-input-text">{{memberGroupDetailsModel.tanNumber}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.PAN_NO' | translate}}</span>
                         <p class="label-input-text">{{memberGroupDetailsModel.panNumber}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.GST_NO' | translate}}</span>
                         <p class="label-input-text">{{memberGroupDetailsModel.gstNumber}}</p>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 min-h-50px">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
                     <div class="form-group">
                         <span class="label-view">{{'ERP.KYC' | translate}}</span>
                         <p class="label-input-text">{{isKycApproved}}</p>

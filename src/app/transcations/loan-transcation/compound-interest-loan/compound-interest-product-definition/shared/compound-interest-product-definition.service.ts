@@ -1,6 +1,7 @@
 import { HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { Configuration } from 'src/app/configurations/configurations-constants';
 import { CommonHttpService } from 'src/app/shared/common-http.service';
 import { CommonFunctionsService } from 'src/app/shared/commonfunction.service';
 import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-constants';
@@ -65,4 +66,12 @@ export class CompoundInterestProductDefinitionService {
     const headers = new HttpHeaders({});
      return this.commonHttpService.generateAssetSheet(headers,url);
    }
+
+   getAllLoanPurpose(){
+    return this.commonHttpService.getAll(Configuration.LOANS + Configuration.LOAN_PURPOSE + Configuration.GET_ALL);
+  }
+
+  getAllCollateralTypes(){
+    return this.commonHttpService.getAll(Configuration.LOANS + Configuration.COLLATERAL_TYPES + Configuration.GET_ALL);
+  }
 }

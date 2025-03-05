@@ -33,6 +33,7 @@ export class ProductsComponent {
     this.columns = [
       { field: 'productId', header: 'MEMBERSHIPCONFIG.PRODUCT' },
       { field: 'name', header: 'MEMBERSHIPCONFIG.SUB_PRODUCT' },
+      { field: 'isAclassName', header: 'MEMBERSHIPCONFIG.IS_ACLASS' },
       { field: 'code', header: 'MEMBERSHIPCONFIG.CODE' },
       { field: 'nameInLocalLang', header: 'MEMBERSHIPCONFIG.NAME_IN_LOCAL_LANGUAGE' },
       { field: 'isCustomization', header: 'MEMBERSHIPCONFIG.IS_CUSTAMIZATION' },

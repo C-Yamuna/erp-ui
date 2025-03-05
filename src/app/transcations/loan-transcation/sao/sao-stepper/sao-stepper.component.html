@@ -12,7 +12,7 @@
                 </div> -->
     </div>
 
-    <div class="col-12 p-0 mt-3">
+    <div class="col-12 p-0 mt-2">
         <div class="row g-3">
             <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 left-sidecard">
                 <div class="col-12 membership-side-card">
@@ -326,18 +326,18 @@
                         <p-button *ngIf="activeIndex == 0" label="{{'ERP.BACK'|translate }}"
                             (click)="back(activeIndex)"></p-button>
 
-                        <p-button *ngIf="activeIndex>0 &&  activeIndex<=8" label="{{'ERP.PREVIOUS'|translate }}"
+                        <p-button *ngIf="activeIndex>0 &&  activeIndex<=7" label="{{'ERP.PREVIOUS'|translate }}"
                             icon="fa fa-chevron-left" iconPos="left" (click)="prevStep(activeIndex)"
-                            [disabled]="previouseButtonDisable"></p-button>
+                           ></p-button>
 
-                        <p-button *ngIf="activeIndex<=8 && activeIndex !=0" label="{{'ERP.BACK'|translate }}"
+                        <p-button *ngIf="activeIndex<=7 && activeIndex !=0" label="{{'ERP.BACK'|translate }}"
                             (click)="cancel(activeIndex)"></p-button>
 
-                        <p-button *ngIf="(activeIndex!=8 && activeIndex<8)" label="{{'ERP.SAVE_AND_ NEXT'|translate }}"
+                        <p-button *ngIf="(activeIndex!=7 && activeIndex<7)" label="{{'ERP.SAVE_AND_ NEXT'|translate }}"
                             icon="fa fa-chevron-right" iconPos="right" (click)="nextStep(activeIndex)"
                             [disabled]="buttonDisabled"></p-button>
 
-                        <p-button *ngIf="activeIndex==8" label="{{'ERP.SAVE_AND_PREVIEW'|translate }}"
+                        <p-button *ngIf="activeIndex==7" label="{{'ERP.SAVE_AND_PREVIEW'|translate }}"
                             icon="fa fa-chevron-right" iconPos="right" (click)="submit()"
                             [disabled]="buttonDisabled"></p-button>
 
@@ -350,7 +350,7 @@
         </div>
         <!-- Individual details dialog -->
         <div class="view-moredetails-popup">
-        <p-dialog header="More Basic Details" [(visible)]="membreIndividualFlag" [style]="{ width: '55vw' }">
+        <p-dialog header="More Basic Details" [(visible)]="membreIndividualFlag" styleClass="moredetails-style">
             <div class="col-12 view-morepopup">
                 <div class="d-flex justify-content-center px-3 py-0 mb-2" *ngIf="photoCopyFlag">
                     <div class="px-0" *ngFor="let img of individualMemberDetailsModel.multipartFileListForPhotoCopy">

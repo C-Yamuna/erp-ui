@@ -6,12 +6,12 @@
         </div>
     </div>
     
-        <div class="row">
+        <div class="row mt-2">
             <div class="col-25-right">
         
                 <div class="col-12 sb-side-card" *ngIf="memberTypeName == 'Individual'">
                     <div class="col-12">
-                        <h5 class="transaction-side-card-header">{{'ERP.ADMISSION_DETAILS' | translate}}</h5>
+                        <h5 class="transaction-side-card-header">{{'ERP.ACCOUNT_DETAILS' | translate}}</h5>
                     </div>
                     <div class="col-12 pic-sig-status">
                         <div class="d-flex justify-content-center mb-2">
@@ -148,8 +148,8 @@
                     </div>
         
                     <!-- KYC Approved -->
-                    <!-- <div class="col-12 basicdata-card text-break py-0">
-                        <div class="col-10 d-flex p-0">
+                    <!-- <div class="col-12 basicdata-card text-break d-flex py-0">
+                        <div class="col-10 p-0">
                         <div>
                         <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                         <p class="label-input-text">{{isKycApproved}}</p>
@@ -159,12 +159,10 @@
                     </div> -->
                     <!-- KYC Not Approved -->
                     <div class="col-12 basicdata-card text-break py-0">
-                        <div class="col-12 d-flex p-0">
-                        <div>
+                        
                         <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                         <p class="label-input-text">{{isKycApproved}}</p>
-                    </div>
-                        </div>
+                    
                     </div>
                     <div class="col-12 color-light justify-content-end text-right">
                         <a class="fst-italic text-light cursor-pointer"
@@ -186,7 +184,7 @@
                 </div>
                 <div class="col-12 sb-side-card" *ngIf="memberTypeName == 'Group'">
                     <div class="col-12">
-                        <h5 class="transaction-side-card-header">{{'ERP.ADMISSION_DETAILS' | translate}}</h5>
+                        <h5 class="transaction-side-card-header">{{'ERP.ACCOUNT_DETAILS' | translate}}</h5>
                     </div>
                     <div class="col-12 pic-sig-status">
                         <div class="d-flex justify-content-center mb-2">
@@ -300,8 +298,8 @@
                     </div> -->
         
                     <!-- KYC Approved -->
-                    <!-- <div class="col-12 basicdata-card text-break py-0">
-                        <div class="col-10 d-flex p-0">
+                    <!-- <div class="col-12 basicdata-card text-break d-flex py-0">
+                        <div class="col-10 p-0">
                         <div>
                         <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                         <p class="label-input-text">{{isKycApproved}}</p>
@@ -311,12 +309,10 @@
                     </div> -->
                     <!-- KYC Not Approved -->
                     <div class="col-12 basicdata-card text-break py-0">
-                        <div class="col-12 d-flex p-0">
-                        <div>
+                        
                         <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                         <p class="label-input-text">{{isKycApproved}}</p>
-                    </div>
-                        </div>
+                    
                     </div>
                     <div class="col-12 color-light justify-content-end text-right">
                         <a class="fst-italic text-light cursor-pointer" (click)="onClickOfGroupPromotes()">{{'ERP.MORE_DETAILS'
@@ -325,7 +321,7 @@
                 </div>
                 <div class="col-12 sb-side-card" *ngIf="memberTypeName == 'Institution'">
                     <div class="col-12">
-                        <h5 class="transaction-side-card-header">{{'ERP.ADMISSION_DETAILS' | translate}}</h5>
+                        <h5 class="transaction-side-card-header">{{'ERP.ACCOUNT_DETAILS' | translate}}</h5>
                     </div>
         
                     <div class="col-12 pic-sig-status">
@@ -422,8 +418,8 @@
                     </div> -->
         
                     <!-- KYC Approved -->
-                    <!-- <div class="col-12 basicdata-card text-break py-0">
-                        <div class="col-10 d-flex p-0">
+                    <!-- <div class="col-12 basicdata-card text-break d-flex py-0">
+                        <div class="col-10 p-0">
                         <div>
                         <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                         <p class="label-input-text">{{isKycApproved}}</p>
@@ -433,12 +429,10 @@
                     </div> -->
                     <!-- KYC Not Approved -->
                     <div class="col-12 basicdata-card text-break py-0">
-                        <div class="col-12 d-flex p-0">
-                        <div>
+                        
                         <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                         <p class="label-input-text">{{isKycApproved}}</p>
-                    </div>
-                        </div>
+                   
                     </div>
                     <div class="col-12 color-light justify-content-end text-right">
                         <a class="fst-italic text-light cursor-pointer" (click)="onClick()">{{'ERP.MORE_DETAILS' |
@@ -745,7 +739,7 @@
                     </div>
                     <div class="col-12 p-1"></div>
                     <!-- grid for top 5 reocrds of transaction list -->
-                    <div class="col-12 bg-light-card">
+                    <div class="col-12 pb-3 bg-light-card">
                         <div class="col-12">
                             <h6 class="sub-heading">{{'ERP.LAST_5_TRANSACTIONS' | translate}}</h6>
                             <div class="globel-border-top-color"></div>
@@ -1026,7 +1020,7 @@
 
 <!-- Individual details dialog -->
 <div class="view-moredetails-popup">
-    <p-dialog header="Basic Details" [modal]="true" [(visible)]="membreIndividualFlag" styleClass="moredetails-style">  
+    <p-dialog header="{{'ERP.ACCOUNT_DETAILS' | translate}}" [modal]="true" [(visible)]="membreIndividualFlag" styleClass="moredetails-style">  
         <div class="col-12 view-morepopup">
                 <div class="d-flex justify-content-center px-3 py-0 mb-2">
                     <div *ngIf ="!this.membershipBasicRequiredDetails.photoCopyPath">
@@ -1213,7 +1207,7 @@
     </div>
 <!-- institution Promoter details dialog -->
 <div class="view-moredetails-popup">
-    <p-dialog header="More Basic Details" [(visible)]="institutionPromoterFlag" styleClass="moredetails-style">
+    <p-dialog header="{{'ERP.ACCOUNT_DETAILS' | translate}}" [modal]="true" [(visible)]="institutionPromoterFlag" styleClass="moredetails-style">
         <div class="col-12 view-morepopup">
             <div class="d-flex justify-content-center px-3 py-0 mb-2">
                 <img src="assets/images/no-image.jpg" class="image-user">
@@ -1327,7 +1321,7 @@
 
 <!-- group prmoter details dialog -->
 <div class="view-moredetails-popup">
-    <p-dialog header="More Basic Details" [(visible)]="groupPromotersPopUpFlag" styleClass="moredetails-style">
+    <p-dialog header="{{'ERP.ACCOUNT_DETAILS' | translate}}" [modal]="true" [(visible)]="groupPromotersPopUpFlag" styleClass="moredetails-style">
         <div class="col-12 view-morepopup">
             <div class="d-flex justify-content-center px-3 py-0 mb-2">
                 <img src="assets/images/no-image.jpg" class="image-user">
@@ -1441,55 +1435,46 @@
 
 <!--Individual photo Copy dialog -->
 <p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [modal]="true" [(visible)]="memberPhotoCopyZoom" styleClass="photo-dialog">
-                <div id="carouselExampleRide" class="carousel slide" data-bs-ride="true">
-                    <div class="carousel-inner">
-                      <div class="carousel-item active" data-bs-interval="3000">
-                        <div>
-                            <div *ngFor="let img of membershipBasicRequiredDetails.multipartFileListForPhotoCopy">
-                            <div *ngIf="photoCopyFlag">
-                                <span class="{{img.imageValue}}"
-                                    *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                    <!-- <a href="{{img.imageValue}}" (clicl)="onClickMemberPhotoCopy()"></a> -->
-                                    <img src="{{img.imageValue}}" class="popup-images">
-                                </span>
-                            </div>
-                            <div *ngIf="!photoCopyFlag">
-                                <span>
-                                    <img src="assets/images/no-image.jpg" class="popup-images">
-                                </span>
-                            </div>
-                        </div>
-                        </div>
-                      </div>
-                      <div class="carousel-item" data-bs-interval="3000">
-                        <div>
-                            <div *ngFor="let img of membershipBasicRequiredDetails.multipartFileListForsignatureCopyPath">
-                            <div *ngIf="photoCopyFlag">
-                                <span class="{{img.imageValue}}"
-                                    *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                    <!-- <a href="{{img.imageValue}}" (clicl)="onClickMemberPhotoCopy()"></a> -->
-                                    <img src="{{img.imageValue}}" class="popup-images">
-                                </span>
-                            </div>
-                            <div *ngIf="!photoCopyFlag">
-                                <span>
-                                    <img src="assets/images/no-image.jpg" class="popup-images">
-                                </span>
-                            </div>
-                        </div>
-                        </div>
-                      </div>
+    <div class="col-12 px-0">
+        <div class="row">
+            <div class="col-6">
+                <div>
+                    <div *ngFor="let img of membershipBasicRequiredDetails.multipartFileListForPhotoCopy">
+                    <div *ngIf="photoCopyFlag">
+                        <span class="{{img.imageValue}}"
+                            *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                            <!-- <a href="{{img.imageValue}}" (clicl)="onClickMemberPhotoCopy()"></a> -->
+                            <img src="{{img.imageValue}}" class="popup-images">
+                        </span>
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleRide" data-bs-slide="prev">
-                      <span class="fa fa-angle-left" aria-hidden="true"></span>
-                      <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleRide" data-bs-slide="next">
-                      <span class="fa fa-angle-right" aria-hidden="true"></span>
-                      <span class="visually-hidden">Next</span>
-                    </button>
-                  </div>
-
+                    <div *ngIf="!photoCopyFlag">
+                        <span>
+                            <img src="assets/images/no-image.jpg" class="popup-images">
+                        </span>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div>
+                    <div *ngFor="let img of membershipBasicRequiredDetails.multipartFileListForsignatureCopyPath">
+                    <div *ngIf="photoCopyFlag">
+                        <span class="{{img.imageValue}}"
+                            *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                            <!-- <a href="{{img.imageValue}}" (clicl)="onClickMemberPhotoCopy()"></a> -->
+                            <img src="{{img.imageValue}}" class="popup-images">
+                        </span>
+                    </div>
+                    <div *ngIf="!photoCopyFlag">
+                        <span>
+                            <img src="assets/images/no-image.jpg" class="popup-images">
+                        </span>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
                 <!-- <div class="col-12">
                     <div class="d-flex justify-content-end">
         <p-button class="action-edit" label="{{'ERP.CLOSE' | translate}}" (click)="closePhoto()"></p-button>

@@ -341,5 +341,7 @@ export class RdAccountsService {
   getAllDivision(){
     return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.DIVISION + Configuration.GET_ALL);
   }
-  
+  getAllSubProduct() {
+    return this.commonHttpService.getAll(ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.SUB_PRODUCT + ERP_TRANSACTION_CONSTANTS.GET_ALL);
+  }
 }

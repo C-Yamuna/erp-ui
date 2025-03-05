@@ -274,6 +274,26 @@ export class CommonComponent implements OnInit {
     ]
     return tenureTypeList;
   }
+
+  public transactionModeType() {
+    let transactionModeList = [
+      { label: "Cash", value: 1 },
+      { label: "Cheque", value: 2},
+      { label: "Transfer", value: 3 },
+    ]
+    return transactionModeList;
+  }
+
+  public renewalType() {
+    let renewalTypeList = [
+      { label: "Deposit Amount", value: 1 },
+      { label: "Maturity Amount", value: 2},
+      { label: "Manual Renewal Amount", value: 3 }
+    ]
+    return renewalTypeList;
+  }
+
+
   public collectionApportionType() {
     let collectionApportionTypeList = [
       { label: "Charges", value: 1 },

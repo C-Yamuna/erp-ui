@@ -2,28 +2,40 @@
     <h6 class="sub-heading">{{'ERP.ADD_JOINT_HOLDERS_SECONDARY' | translate}}</h6>
     <div class="stepper-top-section-strip">
         <div class="row">
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 stepper-top-product-name-background">
+            <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12 stepper-top-product-name-background">
                 <div class="form-group">
                     <span>{{'ERP.PRODUCT_NAME' | translate}}</span>
                     <p class="mb-0">{{productName}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
+                <div class="form-group ml-2">
+                    <span>{{'ERP.ACCOUNT_NUMBER' | translate}}</span>
+                    <p class="mb-0">{{accountModel.accountNumber}}</p>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
                 <div class="form-group ml-2">
                     <span>{{'ERP.ACCOUNT_TYPE' | translate}}</span>
-                    <p class="mb-0">{{accountType}}</p>
+                    <p class="mb-0">{{accountModel.accountTypeName}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
                 <div class="form-group">
                     <span>{{'ERP.DEPOSIT_AMOUNT' | translate}}</span>
-                    <p class="mb-0">{{depositAmount}}</p>
+                    <p class="mb-0">{{accountModel.depositAmount}}</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
+                <div class="form-group">
+                    <span>{{'ERP.ADMISSION_NUMBER' | translate}}</span>
+                    <p class="mb-0">{{admissionNumber}}</p>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
                 <div class="form-group">
                     <span>{{'ERP.DEPOSIT_DATE' | translate}}</span>
-                    <p class="mb-0">{{depositDateVal}}</p>
+                    <p class="mb-0">{{accountModel.depositDate}}</p>
                 </div>
             </div>
         </div>
@@ -37,9 +49,13 @@
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <label>{{'ERP.JOINT_HOLDER_ADMISSION_NUMBER' | translate}}</label>
                     
-                    <p-multiSelect [options]="admissionNumberList" [(ngModel)]="selectedAdmissionNumberList"
+                    <!-- <p-multiSelect [options]="admissionNumberList" [(ngModel)]="selectedAdmissionNumberList"
                         placeholder="Select admission Number" optionLabel="label" formControlName="admissionNumber" [showClear]="true"
-                        (onChange)="onSelectionChange($event)" (onClear)="onClear($event)" />
+                        (onChange)="onSelectionChange($event)" (onClear)="onClear($event)" /> -->
+                        <p-multiSelect [options]="admissionNumberList" [(ngModel)]="selectedAdmissionNumberList"
+                                        placeholder="Select Admission Number" optionLabel="label" formControlName="admissionNumber" [showClear]="true"
+                                        (onChange)="onSelectionChange($event)" (onClear)="onClear($event)" (onHide)="onHide($event)"
+                                        (onShow)="onShow($event)" (onPanelClick)="onPanelClick($event)" />
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <label>{{'ERP.NO_OF_JOINT_HOLDERS' | translate}}</label>

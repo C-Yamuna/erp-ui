@@ -86,4 +86,8 @@ export class CompoundInterestProductDefinition {
     filesDTOList ?:any;
 
     signedCopy?:any;
+
+    purposeTypeIds?:any;
+
+    collateralTypeIds?:any;
 }

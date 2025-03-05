@@ -115,7 +115,7 @@ updateData() {
     formValid: !this.genealogyForm.valid ? true : false,
     data: this.saoLoanGenealogyModel,
     isDisable: this.saveAndNextDisable,
-    stepperIndex: 8,
+    stepperIndex: 7,
   });
 }
 save() {

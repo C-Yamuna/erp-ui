@@ -25,8 +25,6 @@ export const ERP_TRANSACTION_CONSTANTS = {
     GET_ALL_GRID: '/get_all_grid',
     DELETE: '/remove',
     ADD_ALL: '/add_all',
-    BLOCKS:'/blocks',
-    DIVISION:'/division',
     TRANSFER_TRANSACTION_DETAILS: '/transfer_transaction_details',
     STANDING_INSTRUCTIONS_PAYMENTS: '/standing_instructions_payments',
     SB_TRANSACTION_DETAILS: '/sb_transaction_details',
@@ -367,6 +365,7 @@ export const ERP_TRANSACTION_CONSTANTS = {
     SAO_PROD_COLLATERALS_CONFIG: '/sao_prod_collaterals_config',
     SAO_OTHER_LOAN_DETAILS: '/sao_other_loan_details',
     GET_SAO_OTHER_LOANS_DETAILS_BY_LOAN_APPLICATION_ID: '/get_sao_other_loans_details_by_loan_application_id',
+    GET_LAND_DETAILS_BY_APPLICATION_ID_AND_PACS_ID:'/get_land_details_by_applicationId_and_pacsId',
     SAO_MORTGAGE_DETAILS_SUMMARY: '/sao_mortgage_details_summary',
     SAO_LOAN_SUBSIDY_DETAILS: '/sao_loan_subsidy_details',
     SAO_LOAN_OUTSTANDING_DETAILS: '/sao_loan_outstanding_details',
@@ -381,7 +380,10 @@ export const ERP_TRANSACTION_CONSTANTS = {
     GET_INSURENCE_DETAILS_BY_APPLICATION_ID:'/get_insurence_details_by_loan_application_id',
     SAO_LOAN_GUARANTOR_DETAILS: '/sao_loan_guarantor_details',
     SAO_LOAN_GENEALOGY_TREE: '/sao_loan_genealogy_tree',
+    SAO_LOAN_HISTORY:'/sao_loan_existing_details',
     GET_NOMINEE_DETAILS_BY_APPLICATION_ID:'/get_sao_loan_nominee_details_by_application_id',
+    SAO_LOAN_EXIST_DETAILS:'/sao_loan_existing_details',
+    SAO_LOAN_HISTORY_BY_APPLICATION_ID:'/get_by_loan_application_id',
     GET_SAO_GENEALOGY_TREE_DETAILS_BY_LOAN_APPLICATION_ID: '/get_sao_genealogy_tree_details_by_loan_application_id',
     SAO_LOAN_DOCUMENTS_DETAILS: '/sao_loan_documents_details',
     SAO_LOAN_DISBURSEMENT_SCHEDULE: '/sao_loan_disbursement_schedule',
@@ -559,6 +561,7 @@ export const ERP_TRANSACTION_CONSTANTS = {
     COUNTER_WISE_DIFFERENCE_AMOUNT_DENOMINATION: '/counter_wise_difference_amount_denomination',
     DAMAGED_OR_FAKE_NOTES: '/damaged_or_fake_notes',
     VAULT_CASH: '/vault_cash',
+    CASH_MANAGEMENT: '/cash_management',
     //agent_details_transaction
     AGENT_DETAILS:"/agent",
     GET_PREVIEW_DETAILS:"/get_preview_details",
@@ -581,6 +584,8 @@ export const ERP_TRANSACTION_CONSTANTS = {
     LAND_TYPE: '/land_type',
     IRRIGATION_TYPE: '/irrigation_type',
     LAND_OWNERSHIP: '/land_ownership',
+    MSG_FOR_FILE_ZISE_FOR_IMAGE:'file is bigger than 2MB',
+    MSG_FOR_FILE_ZISE_FOR_PDF:'file is bigger than 5MB',
 
 
     COUNTER_DENOMINATION:'/counter_denomination',
@@ -913,7 +918,7 @@ export const ERP_TRANSACTION_CONSTANTS = {
    ACCOUNT_NOMINEE:'/account_nominees',
    ACCOUNT_KYC:'/account_kyc',
    GET_ALL_KYC_DETAILS_BY_ADMISSION_NUMBER:'get_all_acc_kyc_details_by_admission_number',
-   GET_DAILY_DEPOSITS_KYC_DETAILS_BY_ACCOUNT_ID:'get_kyc_details_by_account_id',
+   GET_DAILY_DEPOSITS_KYC_DETAILS_BY_ACCOUNT_ID:'/get_kyc_details_by_account_id',
    UPDATE_DAILY_DEPOSITS_ACCOUNT_WITH_MEMBER_MODULE:'/update_account_with_membership_module_details',
    ACCOUNT_REQURIED_DOCUMNETS:'/required_document_details',
    DAILY_DEPOSITS_APPLICATION_PREVIEW_DOWNLOAD:'/daily_deposits_application_preview_download',
@@ -945,6 +950,9 @@ export const ERP_TRANSACTION_CONSTANTS = {
    GET_TERM_LOAN_DISBURSEMENT_SCHEDULE_BY_LOAN_APPLICATION_ID:'/get_term_loan_disbursement_schedule_by_loan_application_id',
    GET_TERM_DISBURSEMENT_LIST_BY_APPLICATION_ID:'/get_disbursement_list_by_application_id',
    GET_TERM_LOAN_COLLECTION_BY_APPLICATION_ID:'/get_term_loan_collections_by_application_id',
+   CI_LOAN_EXIST_DETAILS: '/ci_loan_existing_details',
+   CI_LOAN_HISTORY_BY_ACCOUNT_ID:'/get_by_loan_acc_id',
+  
 
 
    FD_PRODUCT_DEFINITION_PREVIEW_DOWNLOAD:'/fd_cummulative_product_definition_preview_download',
@@ -957,6 +965,21 @@ export const ERP_TRANSACTION_CONSTANTS = {
    SI_LOAN_APPLICATION_PREVIEW_DOWNLOAD :'/si_loan_application_preview_download',
    TERM_LOAN_FIELD_VISIT_CONFIG:'/term_loan_field_visit_config',
    GET_TERM_LOAN_FIELD_VISIT_LIST_BY_PRODUCT_ID:'/get_term_loan_field_visit_list_by_product_id',
-   GET_TERM_LOAN_DISBURSEMENT_SCHEDULE_LIST_BY_PRODUCT_ID:'/get_term_loan_disbursement_schedule_list_by_product_id'
+   GET_TERM_LOAN_DISBURSEMENT_SCHEDULE_LIST_BY_PRODUCT_ID:'/get_term_loan_disbursement_schedule_list_by_product_id',
+   GET_ALL_CURRENT_DATE_TRANSACTIONS: '/get_all_current_date_transactions',
+
+   GET_MEMBER_SHARES_BY_ADMISSION_NUMBER_AND_MEMBER_TYPE: '/get_saving_account_by_admission_number',
+   GET_DEMAND_DEPOSITS_BY_ADMISSION_NUMBER_AND_MEMBER_TYPE: '/get_saving_account_by_admission_number',
+   GET_DAILY_DEPOSITS_BY_ADMISSION_NUMBER_AND_MEMBER_TYPE: '/get_saving_account_by_admission_number',
+   GET_TERM_DEPOSITS_BY_ADMISSION_NUMBER_AND_MEMBER_TYPE: '/get_saving_account_by_admission_number',
+   GET_LOANS_BY_ADMISSION_NUMBER_AND_MEMBER_TYPE: '/get_saving_account_by_admission_number',
+   GET_LOCKERS_BY_ADMISSION_NUMBER_AND_MEMBER_TYPE: '/get_saving_account_by_admission_number',
+   GET_AGENTS_BY_ADMISSION_NUMBER_AND_MEMBER_TYPE: '/get_saving_account_by_admission_number',
+
+   SI_LOAN_EXIST_DETAILS: '/si_loan_existing_details',
+   SI_LOAN_HISTORY_BY_ACCOUNT_ID:'/get_by_loan_acc_id',
+   GET_TERM_DISBURSEMENT_LIST_BY_APPLICATIONID:'/get_term_disbursement_list_by_application_id',
+   TERM_LOAN_EXISTING_DETAILS:'/term_loan_existing_details',
+   GET_BY_LOAN_ACCOUNT_ID:'/get_by_loan_acc_id'
 
 }

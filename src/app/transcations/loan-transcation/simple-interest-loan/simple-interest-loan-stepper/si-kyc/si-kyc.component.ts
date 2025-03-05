@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FileUpload } from 'primeng/fileupload';
@@ -114,6 +114,8 @@ export class SiKycComponent {
   isPanNumber: boolean = false;
   buttonDisabledForKyc :boolean = false;
   isNotmemberkycForm:any;
+  isMaximized:boolean = false;
+  kycPhotoCopyZoom: boolean = false;
 
   constructor(private formBuilder: FormBuilder,
     private commonComponent: CommonComponent, private activateRoute: ActivatedRoute,
@@ -528,13 +530,41 @@ export class SiKycComponent {
      * @implements /image upload and document path save
      * @author k.yamuna
      */
-   imageUploader(event: any, fileUpload: FileUpload) {
+  
+  imageUploader(event: any, fileUpload: FileUpload) {
     this.isFileUploaded = applicationConstants.FALSE;
     this.siLoanKycModel.multipartFileList = [];
     this.siLoanKycModel.filesDTOList = [];
     this.siLoanKycModel.kycFilePath = null;
-    let files: FileUploadModel = new FileUploadModel();
+    this.msgs = [];
+    let allowedImageTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/bmp", "image/webp", "image/svg+xml"];
+    let allowedPdfType = "application/pdf";
+
     for (let file of event.files) {
+      let fileSizeMB = file.size / (1024 * 1024); // Convert bytes to MB
+      let fileType = file.type.toLowerCase();
+
+      if (allowedImageTypes.includes(fileType)) {
+        if (fileSizeMB > 2) {
+          this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_2MB }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 3000);
+        }
+      } else if (fileType === allowedPdfType) {
+        if (fileSizeMB > 5) {
+          this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_5MB }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 3000);
+        }
+      } else {
+        this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.UNSUPPORTED_FILE_TYPE }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      }
+
       let reader = new FileReader();
       reader.onloadend = (e) => {
         let files = new FileUploadModel();
@@ -543,22 +573,28 @@ export class SiKycComponent {
         files.fileType = file.type.split('/')[1];
         files.value = this.uploadFileData.result.split(',')[1];
         files.imageValue = this.uploadFileData.result;
+
         let index = this.multipleFilesList.findIndex(x => x.fileName == files.fileName);
         if (index === -1) {
           this.multipleFilesList.push(files);
-          this.siLoanKycModel.filesDTOList.push(files); // Add to filesDTOList array
+          this.siLoanKycModel.filesDTOList.push(files);
         }
+
         let timeStamp = this.commonComponent.getTimeStamp();
-        this.siLoanKycModel.filesDTOList[0].fileName = "SI_LOAN_KYC_" + this.loanAccId + "_" + timeStamp + "_" + file.name;
-        this.siLoanKycModel.kycFilePath = "SI_LOAN_KYC_" + this.loanAccId + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
+        this.siLoanKycModel.filesDTOList[0].fileName = `SI_LOAN_KYC_${this.loanAccId}_${timeStamp}_${file.name}`;
+        this.siLoanKycModel.kycFilePath = `SI_LOAN_KYC_${this.loanAccId}_${timeStamp}_${file.name}`;
+
         this.isFileUploaded = applicationConstants.TRUE;
+
         let index1 = event.files.findIndex((x: any) => x === file);
         fileUpload.remove(event, index1);
         fileUpload.clear();
-      }
+      };
+
       reader.readAsDataURL(file);
     }
   }
+
   /**
      * @implements delete kyc details 
      * @author k.yamuna
@@ -1170,14 +1206,50 @@ updateFieldState(): void {
   if (this.isMemberCreation) {
       this.kycForm.get('kycDocumentTypeName')?.enable();
       this.kycForm.get('promoter')?.enable();
+      this.kycForm.get('documentNumber')?.enable();
   } else {
       this.kycForm.get('kycDocumentTypeName')?.disable();
       this.kycForm.get('promoter')?.disable();
+      this.kycForm.get('documentNumber')?.disable();
   }
 
   // Ensure validation updates
   this.kycForm.get('kycDocumentTypeName')?.updateValueAndValidity();
   this.kycForm.get('promoter')?.updateValueAndValidity();
 }
+
+onClickkycPhotoCopy(rowData :any){
+  this.multipleFilesList = [];
+  this.kycPhotoCopyZoom = true;
+  this.multipleFilesList = rowData.multipartFileList;
+}
+kycclosePhoto(){
+  this.kycPhotoCopyZoom = false;
+}
+kycclosePhotoCopy() {
+  this.kycPhotoCopyZoom = false;
+}
+
+// Popup Maximize
+    @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+  
+    onDialogResize(event: any) {
+      this.isMaximized = event.maximized;
+  
+      if (this.isMaximized) {
+        // Restore original image size when maximized
+        this.imageElement.nativeElement.style.width = 'auto';
+        this.imageElement.nativeElement.style.height = 'auto';
+        this.imageElement.nativeElement.style.maxWidth = '100%';
+        this.imageElement.nativeElement.style.maxHeight = '100vh';
+      } else {
+        // Fit image inside the dialog without scrollbars
+        this.imageElement.nativeElement.style.width = '100%';
+        this.imageElement.nativeElement.style.height = '100%';
+        this.imageElement.nativeElement.style.maxWidth = '100%';
+        this.imageElement.nativeElement.style.maxHeight = '100%';
+        this.imageElement.nativeElement.style.objectFit = 'contain';
+      }
+    }
 
 }

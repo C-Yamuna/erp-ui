@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Responsemodel } from 'src/app/shared/responsemodel';
 import { FdNonCumulativeApplication } from '../fd-non-cumulative-application/shared/fd-non-cumulative-application.model';
 import { FdNonCummulativeTransactionRequiredDocuments } from './shared/fd-non-cummulative-transaction-required-documents.model';
@@ -62,9 +62,10 @@ export class FdNonCummulativeTransactionRequiredDocumentsComponent {
   depositAmount: any;
   mandatoryDoxsTextShow: boolean = false;
   requiredDocumentsNamesText: any;
-  saveAndPreview : boolean = false;
+  saveAndPreview: boolean = false;
   productId: any;
   docPhotoCopyZoom: boolean = false;
+  isMaximized: boolean = false;
 
   constructor(private router: Router,
     private formBuilder: FormBuilder,
@@ -118,8 +119,8 @@ export class FdNonCummulativeTransactionRequiredDocumentsComponent {
     this.fdNonCummulativeTransactionRequiredDocumentsService.getAllRequiredDocumentsFromFdNonCummulativeProductDefinition().subscribe((res: any) => {
       this.responseModel = res;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
-        this.documentNameList = this.responseModel.data.filter((document: any) => document.status == applicationConstants.ACTIVE  && document.fdNonCummProductId == productId).map((count: any) => {
-          return { label: count.documentTypeName, value: count.documentTypeId,isMandatory:count.isRequired }
+        this.documentNameList = this.responseModel.data.filter((document: any) => document.status == applicationConstants.ACTIVE && document.fdNonCummProductId == productId).map((count: any) => {
+          return { label: count.documentTypeName, value: count.documentTypeId, isMandatory: count.isRequired }
         });
         let filteredObj = this.documentNameList.find((data: any) => null != data && this.fdNonCummulativeRequiredDocumentsModel.fdNonCummulativeAccountId != null && data.value == this.fdNonCummulativeRequiredDocumentsModel.fdNonCummulativeAccountId);
         if (filteredObj != null && undefined != filteredObj)
@@ -155,33 +156,49 @@ export class FdNonCummulativeTransactionRequiredDocumentsComponent {
      */
   imageUploader(event: any, fileUpload: FileUpload) {
     this.isFileUploaded = applicationConstants.FALSE;
+    this.fdNonCummulativeRequiredDocumentsModel.multipartFileList = [];
     this.multipleFilesList = [];
     this.fdNonCummulativeRequiredDocumentsModel.filesDTOList = [];
     this.fdNonCummulativeRequiredDocumentsModel.requiredDocumentFilePath = null;
-    let files: FileUploadModel = new FileUploadModel();
+
     for (let file of event.files) {
+      let fileSizeMB = file.size / (1024 * 1024);
+
+      if (fileSizeMB > 5) {
+        this.msgs = [{
+          severity: 'warning',
+          summary: applicationConstants.STATUS_WARN,
+          detail: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_5MB
+        }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+        continue;
+      }
+
       let reader = new FileReader();
       reader.onloadend = (e) => {
         this.isFileUploaded = applicationConstants.TRUE;
-        let files = new FileUploadModel();
-        this.uploadFileData = e.currentTarget;
-        files.fileName = file.name;
-        files.fileType = file.type.split('/')[1];
-        files.value = this.uploadFileData.result.split(',')[1];
-        files.imageValue = this.uploadFileData.result;
-
-        let index = this.multipleFilesList.findIndex(x => x.fileName == files.fileName);
-        if (index === -1) {
-          this.multipleFilesList.push(files);
-          this.fdNonCummulativeRequiredDocumentsModel.filesDTOList.push(files); // Add to filesDTOList array
+        if (!e.target || !e.target.result) {
+          return;
         }
-        let timeStamp = this.commonComponent.getTimeStamp();
-        this.fdNonCummulativeRequiredDocumentsModel.filesDTOList[0].fileName = "FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS" + this.fdNonCummulativeAccId + "_" + timeStamp + "_" + file.name;
-        this.fdNonCummulativeRequiredDocumentsModel.requiredDocumentFilePath = "FD_NON_CUMMULATIVE_REQUIRED_DOCUMENTS" + this.fdNonCummulativeAccId + "_" + timeStamp + "_" + file.name; // This will set the last file's name as requiredDocumentFilePath
-        let index1 = event.files.findIndex((x: any) => x === file);
-        fileUpload.remove(event, index1);
+        let filesDTO = new FileUploadModel();
+        this.uploadFileData = e.target as FileReader;
+        filesDTO.fileName = `FD_NON_CUM_REQUIRED_DOCUMENT_${this.memberId}_${this.commonComponent.getTimeStamp()}_${file.name}`;
+        filesDTO.fileType = file.type.split('/')[1];
+        filesDTO.value = (this.uploadFileData.result as string).split(',')[1];
+        filesDTO.imageValue = this.uploadFileData.result as string;
+
+        this.fdNonCummulativeRequiredDocumentsModel.filesDTOList.push(filesDTO);
+        this.fdNonCummulativeRequiredDocumentsModel.requiredDocumentFilePath = filesDTO.fileName;
+
+        let index1 = event.files.indexOf(file);
+        if (index1 > -1) {
+          fileUpload.remove(event, index1);
+        }
         fileUpload.clear();
-      }
+      };
+
       reader.readAsDataURL(file);
     }
   }
@@ -334,7 +351,7 @@ export class FdNonCummulativeTransactionRequiredDocumentsComponent {
               this.addDocumentOfKycFalg = true;
               this.buttonDisabled = true;
             }
-            if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length >0) {
+            if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0) {
               let i = 0;
               for (let doc of this.documentNameList) {
                 if (i == 0)
@@ -454,7 +471,7 @@ export class FdNonCummulativeTransactionRequiredDocumentsComponent {
   /**
     * @author bhargavi
     * @implements edit document
-    * @argument index(position of document card),requiredDocumentModel
+    * @argument index(position of document card),fdNonCummulativeRequiredDocumentsModel
     */
   toggleEditForm(index: number, modelData: any): void {
     if (this.editIndex === index) {
@@ -595,7 +612,10 @@ export class FdNonCummulativeTransactionRequiredDocumentsComponent {
     this.displayDialog = false;
     this.updateData();
   }
-
+  /**
+   * @implements documents duplicate check
+   * @author bhargavi
+   */
   documentDuplicate(id: any) {
     if (id != null && id != undefined) {
       if (this.documentDataList != null && this.documentDataList != undefined && this.documentDataList.length > 0) {
@@ -627,13 +647,37 @@ export class FdNonCummulativeTransactionRequiredDocumentsComponent {
     }
   }
 
-  onClickdocPhotoCopy(){
+  onClickdocPhotoCopy(rowData: any) {
+    this.multipleFilesList = [];
     this.docPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
   }
-  docclosePhoto(){
+  docclosePhoto() {
     this.docPhotoCopyZoom = false;
   }
   docclosePhotoCopy() {
     this.docPhotoCopyZoom = false;
+  }
+
+  // Popup Maximize
+  @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+
+  onDialogResize(event: any) {
+    this.isMaximized = event.maximized;
+
+    if (this.isMaximized) {
+      // Restore original image size when maximized
+      this.imageElement.nativeElement.style.width = 'auto';
+      this.imageElement.nativeElement.style.height = 'auto';
+      this.imageElement.nativeElement.style.maxWidth = '100%';
+      this.imageElement.nativeElement.style.maxHeight = '100vh';
+    } else {
+      // Fit image inside the dialog without scrollbars
+      this.imageElement.nativeElement.style.width = '100%';
+      this.imageElement.nativeElement.style.height = '100%';
+      this.imageElement.nativeElement.style.maxWidth = '100%';
+      this.imageElement.nativeElement.style.maxHeight = '100%';
+      this.imageElement.nativeElement.style.objectFit = 'contain';
+    }
   }
 }

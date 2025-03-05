@@ -26,6 +26,9 @@ export class InvestmentApprovalDetailsComponent {
   pacsId: any;
   branchId: any;
   showForm: boolean = false;
+  operations: any;
+  investmentOperationsList: any[] = [];
+  sharesOperationsList: any[] = [];
   constructor(private router: Router,
     private translate: TranslateService,
     private commonFunctionsService: CommonFunctionsService,
@@ -44,6 +47,16 @@ export class InvestmentApprovalDetailsComponent {
         { field: 'depositDate', header: 'INVESTMENTS_TRANSACTIONS.DEPOSIT_DATE_PURCHASE_DATE' },
         { field: 'statusName', header: 'INVESTMENTS_TRANSACTIONS.STATUS' },
       ];
+
+      // this.investmentOperationsList = [
+      //   { label: "Interest Received", value: 1 },
+      //   { label: "Foreclosure", value: 2 },
+      //   { label: "Closure", value: 3 }
+      // ];
+  
+      // this.sharesOperationsList = [
+      //   { label: "Share Withdraw", value: 1 }
+      // ];
   }
   ngOnInit() {
     this.orgnizationSetting = this.commonComponent.orgnizationSettings()
@@ -67,9 +80,34 @@ export class InvestmentApprovalDetailsComponent {
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         this.gridListData = this.responseModel.data;
         this.gridListData = this.responseModel.data.filter((data: any) => data.statusName == CommonStatusData.SUBMISSION_FOR_APPROVAL ||
-          data.statusName == CommonStatusData.APPROVED ||  data.statusName == CommonStatusData.REJECTED).map((item: any) => {
+          data.statusName == CommonStatusData.APPROVED ||  data.statusName == CommonStatusData.REJECTED || data.statusName == CommonStatusData.CLOSURE_REQUEST ||
+          data.statusName == CommonStatusData.CLOSED ||  data.statusName == CommonStatusData.FORECLOSURE_REQUEST ).map((item: any) => {
             item.depositDate = this.datePipe.transform(item.depositDate, this.orgnizationSetting.datePipe);
             item.maturityDate = this.datePipe.transform(item.maturityDate, this.orgnizationSetting.datePipe);
+            //defaualt values as false
+          item.isSubmissionForApproval = false;
+          item.isApproved = false;
+          item.isRejected = false;
+          item.isRequestForResubmission = false;
+          item.isRequestForClosure = false;
+          item.isRequestForForeClosure = false;
+          item.isClosed = false;
+
+          if (item.statusName === CommonStatusData.SUBMISSION_FOR_APPROVAL) {
+            item.isSubmissionForApproval = true;
+          } else if (item.statusName === CommonStatusData.APPROVED) {
+            item.isApproved = true;
+          } else if (item.statusName === CommonStatusData.REJECTED) {
+            item.isRejected = true;
+          } else if (item.statusName === CommonStatusData.REQUEST_FOR_RESUBMISSION) {
+            item.isRequestForResubmission = true;
+          } else if (item.statusName === CommonStatusData.FORECLOSURE_REQUEST) {
+            item.isRequestForForeClosure = true;
+          } else if (item.statusName === CommonStatusData.CLOSURE_REQUEST) {
+            item.isRequestForClosure = true;
+          } else if (item.statusName === CommonStatusData.CLOSED) {
+            item.isClosed = true;
+          }
             if(item.roi == null || item.roi == undefined)
               item.roi = "--"
             return item;

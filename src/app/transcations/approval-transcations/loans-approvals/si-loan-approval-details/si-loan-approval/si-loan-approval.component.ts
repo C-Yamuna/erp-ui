@@ -32,6 +32,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SiLoanKycService } from 'src/app/transcations/loan-transcation/shared/si-loans/si-loan-kyc.service';
 import { SiLoanMortagageDetailsService } from 'src/app/transcations/loan-transcation/shared/si-loans/si-loan-mortagage-details.service';
 import { VillagesService } from 'src/app/transcations/term-deposits-transcation/shared/villages.service';
+import { SiLoanHistoryService } from 'src/app/transcations/loan-transcation/shared/si-loans/si-loan-history.service';
 
 @Component({
   selector: 'app-si-loan-approval',
@@ -55,9 +56,6 @@ export class SiLoanApprovalComponent {
     siLoanDocumentsModel: SiLoanDocuments = new SiLoanDocuments();
     siLoanGenealogyTreeModel: SiLoanGenealogyTree = new SiLoanGenealogyTree();
     siVehicleLoanMortgageModel: SiVehicleLoanMortgage = new SiVehicleLoanMortgage();
-  
-  
-  
     siLoanProductDefinitionModel: SiLoanProductDefinition = new SiLoanProductDefinition();
     siLoanInterestPolicyModel: SiLoanInterestPolicy = new SiLoanInterestPolicy();
   
@@ -135,6 +133,7 @@ export class SiLoanApprovalComponent {
     propertyFlag: boolean = false;
     otherFlag: boolean = false;
     vahicalFlag: boolean = false;
+    siLoanHistoryList: any[] = [];
   
     
     bondTypesList: any;
@@ -144,142 +143,157 @@ export class SiLoanApprovalComponent {
     siOtherLoanMortgageList:  any[]=[];
     collateralList:  any[]=[];
     loanAccId: any;
-  statusList:  any[]=[];
+    statusList:  any[]=[];
+    historyColumns: any[]=[];
+    mastercollateralList: any[]=[];
+    moduleTypes: any[] = [];
   
   
     constructor(private router: Router, private formBuilder: FormBuilder, private commonStatusService: CommonCategoryService,
       private commonComponent: CommonComponent, private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService,
       private siLoanApplicationService: SiLoanApplicationService, private datePipe: DatePipe, private siProductDefinitionService: SiProductDefinitionService,
       private fileUploadService: FileUploadService, private commonFunctionsService: CommonFunctionsService, private villageService : VillagesService,
-      private translate: TranslateService, private siLoanKycService: SiLoanKycService, private siLoanMortagageDetailsService:SiLoanMortagageDetailsService,) {
-      this.amountblock = [
-        { field: 'Service Type', header: 'ERP.SERVICE_TYPE' },
-        { field: 'Service Charges', header: 'ERP.SERVICE_CHANRGES' },
-        { field: 'Requested Date', header: 'ERP.REQUESTED_DATE' },
+      private translate: TranslateService, private siLoanKycService: SiLoanKycService, private siLoanMortagageDetailsService:SiLoanMortagageDetailsService,
+     private siLoanHistoryService :SiLoanHistoryService) {
+        this.amountblock = [
+          { field: 'Service Type', header: 'ERP.SERVICE_TYPE' },
+          { field: 'Service Charges', header: 'ERP.SERVICE_CHANRGES' },
+          { field: 'Requested Date', header: 'ERP.REQUESTED_DATE' },
+        ];
+        this.kycDetailsColumns = [
+          { field: 'effStartDate', header: 'ERP.APPROVED_DATE' },
+          { field: 'statusName', header: 'ERP.STATUS_NAME' },
+          { field: 'docPath', header: 'ERP.DOCUMENT' },
+        ];
+        this.guarantorColumns = [
+          { field: 'memberTypeName', header: 'ERP.MEMBER_TYPE' },
+          { field: 'admissionNumber', header: 'ERP.ADMISSION_NO' },
+          { field: 'admissionDateVal', header: 'ERP.ADMISSION_DATE' },
+          { field: 'name', header: 'ERP.NAME' },
+          { field: 'aadharNumber', header: 'ERP.AADHAR' },
+          { field: 'mobileNumber', header: 'ERP.MOBILE' },
+          { field: 'emailId', header: 'ERP.EMAIL' },
+        ];
+        this.jointHolderColumns = [
+          { field: 'memberTypeName', header: 'ERP.MEMBER_TYPE' },
+          { field: 'admissionNumber', header: 'ERP.ADMISSION_NO' },
+          { field: 'admissionDateVal', header: 'ERP.ADMISSION_DATE' },
+          { field: 'name', header: 'ERP.NAME' },
+          { field: 'aadharNumber', header: 'ERP.AADHAR' },
+          { field: 'mobileNumber', header: 'ERP.MOBILE' },
+          { field: 'emailId', header: 'ERP.EMAIL' },
+        ];
+       //gold
+       this.goldLoanMortgageColumns = [
+        { field: 'ornamentDescription', header: 'LOANS.ORNAMENT_DESCRIPTION' },
+        { field: 'ornamentsCount', header: 'LOANS.ORNAMENTS_COUNT' },
+        { field: 'ornamentQualityInKdm', header: 'LOANS.ORNAMENT_QUALITY_IN_KDM' },
+        { field: 'ornamentGrossWeightInGm', header: 'LOANS.ORNAMENT_NET_WEIGHT_IN_GM' },
+        { field: 'ornamentNetWeightInGm', header: 'LOANS.ORNAMNET_GROSS_WEIGHT_IN_GM' },
+        { field: 'valuePerGramInRs', header: 'LOANS.VALUE_PER_GRAM' },
+        { field: 'ornamentNetValueInRs', header: 'LOANS.ORNAMENT_NET_VALUE' }
       ];
-      this.kycDetailsColumns = [
-        { field: 'effStartDate', header: 'ERP.APPROVED_DATE' },
-        { field: 'statusName', header: 'ERP.STATUS_NAME' },
-        { field: 'docPath', header: 'ERP.DOCUMENT' },
-      ];
-      this.guarantorColumns = [
-        { field: 'memberTypeName', header: 'ERP.MEMBER_TYPE' },
-        { field: 'admissionNumber', header: 'ERP.ADMISSION_NO' },
-        { field: 'admissionDateVal', header: 'ERP.ADMISSION_DATE' },
-        { field: 'name', header: 'ERP.NAME' },
-        { field: 'aadharNumber', header: 'ERP.AADHAR' },
-        { field: 'mobileNumber', header: 'ERP.MOBILE' },
-        { field: 'emailId', header: 'ERP.EMAIL' },
-      ];
-      this.jointHolderColumns = [
-        { field: 'memberTypeName', header: 'ERP.MEMBER_TYPE' },
-        { field: 'admissionNumber', header: 'ERP.ADMISSION_NO' },
-        { field: 'admissionDateVal', header: 'ERP.ADMISSION_DATE' },
-        { field: 'name', header: 'ERP.NAME' },
-        { field: 'aadharNumber', header: 'ERP.AADHAR' },
-        { field: 'mobileNumber', header: 'ERP.MOBILE' },
-        { field: 'emailId', header: 'ERP.EMAIL' },
-      ];
-     //gold
-     this.goldLoanMortgageColumns = [
-      { field: 'ornamentDescription', header: 'Ornament Description' },
-      { field: 'ornamentsCount', header: 'Ornaments Count' },
-      { field: 'ornamentQualityInKdm', header: 'Ornament Quality In Kdm' },
-      { field: 'ornamentGrossWeightInGm', header: 'Ornament Net Weight In Gm' },
-      { field: 'ornamentNetWeightInGm', header: 'Ornament Gross Weight In Gm' },
-      { field: 'valuePerGramInRs', header: 'Value Per Gram' },
-      { field: 'ornamentNetValueInRs', header: 'Ornament Net Value' },
-    ];
-  
-      //land
-      this.landLoanMortgageColumns = [
-        { field: 'villageName', header: 'Village' },
-        { field: 'passbookNumber', header: 'Passbook No' },
-        { field: 'khataNumber', header: 'Khata Book No' },
-        { field: 'surveyNumber', header: 'Survey No.' },
-        { field: 'totalLandInUnits', header: 'Total Land In Units' },
-        { field: 'totalLandInSubUnits', header: 'Total Land In Sub Units' },
-        { field: 'landValuePerUnit', header: 'Land Value Per Unit' },
-        { field: 'totalLandValue', header: ' Total Land Value' },
-        { field: 'mortgageLandInUnits', header: 'Mortgage Land In Units' },
-        { field: 'mortgageLandInSubUnits', header: 'Mortgage Land In SubUnits' },
-        { field: 'mortgageLandValuePerUnit', header: 'Mortgage Land Value Per Unit' },
-        { field: 'totalMortgageLandValue', header: 'Total Mortgage Land Value' },
-        { field: 'mortgageDeedNumber', header: ' Mortgage Deed Number' },
-        { field: 'mortgageDeedDateVal', header: 'Mortgage Deed Date' },
-        { field: 'landOwnershipName', header: 'Land Ownership' },
-      ];
-  
-     //Bond
-     this.bondLoanMortgageColumns = [
-      { field: 'bondTypeName', header: 'Bond Types	' },
-      { field: 'bondNumber', header: 'Bond Number	' },
-      { field: 'bondIssuedDateVal', header: 'Bond Issued Date' },
-      { field: 'bondIssuedBy', header: 'Bond Issued By	' },
-      { field: 'bondMaturityDateVal', header: 'Bond Maturity Date	' },
-      { field: 'bondMaturityValueInRs', header: 'Bond Maturity Value		' },
-      { field: 'bondPrincipleAmount', header: 'Bond Principal Amount	' },
-      // { field: 'Action', header: 'ACTION' },
-    ];
-  
-    //vehicle
-    //vehicla status master 
-    //used unused
-    this.vehicleLoanMortgageColumns = [
-      { field: 'vehicleMakerOrBrand', header: 'Vehicle Maker Or Brand' },
-      { field: 'vehicleModel', header: 'Vehicle Model' },
-      { field: 'vehicleRegNumber', header: 'Vehicle RegNumber' },
-      { field: 'vehicleCost', header: 'Vehicle Cost' },
-      { field: 'hypothecation', header: 'Hypothecation' },
-      { field: 'insuranceNumber', header: 'Insurance Number' },
-      { field: 'insuranceAmount', header: 'Sum Insured (₹)' },
-      { field: 'vehicleStatus', header: 'Vehicle Status' },
-    ];
-  
-   //storage
-    this.storageLoanMortgageColumns = [
-      { field: 'Commodity', header: 'Commodity' },
-      { field: 'NWR Storage Receipt Number', header: 'NWR Storage Receipt Number' },
-      { field: 'dateOfIssue', header: 'Date Of Issue' },
-      { field: 'Number Of Units Stored', header: 'Number Of Units Stored' },
-      { field: 'Per Unit Cost', header: 'Per Unit Cost' },
-      { field: 'Net Value', header: 'Net Value' },
-    ];
-  
-  
-    //other
-    this.otherLoanMortgageColumns = [
-      { field: 'itemName', header: 'ITEM NAME' },
-      { field: 'netWeight', header: 'NET WEIGHT IN GRAMS' },
-      { field: 'grossWeight', header: 'GROSS WEIGHT IN GRAMS' },
-      { field: 'value', header: 'VALUE' },
-      { field: 'remarks', header: 'REMARKS' },
-    ];
-  
-    //property
-    this.propertyColumns = [
-      { field: 'site', header: 'Site Name' },
-      { field: 'location', header: 'Location' },
-      { field: 'squareYards', header: 'Square Yards' },
-      { field: 'propertySurveyNumber', header: 'Survey Number' },
-      { field: 'valueOfProperty', header: 'Value Of Property' },
-      { field: 'nameOfProperty', header: 'Name Of Property' },
-      { field: 'extentOfProperty', header: 'Extent Of Property' },
-    ];
-  
-      this.documentDetails = [
-        { field: 'documentTypeName', header: 'ERP.DOCUMENT_TYPE' },
-        { field: 'documentNo', header: 'ERP.DOCUMENT_NUMBER' },
-        { field: 'filePath', header: 'ERP.FILE_PATH' },
-        // { field: 'remarks', header: 'REMARKS' },
+    
+        //land
+        this.landLoanMortgageColumns = [
+          { field: 'villageName', header: 'LOANS.VILLAGE' },
+          { field: 'passbookNumber', header: 'LOANS.PASSBOOK_NO' },
+          { field: 'khataNumber', header: 'LOANS.KHATA_BOOK_NO' },
+          { field: 'surveyNumber', header: 'LOANS.SURVEY_NO' },
+          { field: 'totalLandInUnits', header: 'LOANS.TOTAL_LAND_IN_UNITS' },
+          { field: 'totalLandInSubUnits', header: 'LOANS.TOTAL_LAND_IN_SUB_UNITS' },
+          { field: 'landValuePerUnit', header: 'LOANS.LAND_VALUE_PER_UNIT' },
+          { field: 'totalLandValue', header: ' LOANS.TOTAL_AND_VALUE' },
+          { field: 'mortgageLandInUnits', header: 'LOANS.MORTGAGE_LAND_IN_UNITS' },
+          { field: 'mortgageLandInSubUnits', header: 'LOANS.MORTGAGE_LAND_IN_SUBUNITS' },
+          { field: 'mortgageLandValuePerUnit', header: 'LOANS.MORTGAGE_LAND_VALUE_PER_UNIT' },
+          { field: 'totalMortgageLandValue', header: 'LOANS.TOTAL_MORTGAGE_LAND_VALUE' },
+          { field: 'mortgageDeedNumber', header: 'LOANS.MORTGAGE_DEED_NUMBER' },
+          { field: 'mortgageDeedDateVal', header: 'LOANS.MORTGAGE_DEED_DATE' },
+          { field: 'landOwnershipName', header: 'LOANS.LAND_OWNERSHIP' },
+        ];
+     
+       //Bond
+       this.bondLoanMortgageColumns = [
+        { field: 'bondTypeName', header: 'LOANS.BOND_TYPES' },
+        { field: 'bondNumber', header: 'LOANS.BOND_NUMBER' },
+        { field: 'bondIssuedDateVal', header: 'LOANS.BOND_ISSUED_DATE' },
+        { field: 'bondIssuedBy', header: 'LOANS.BOND_ISSUED_BY' },
+        { field: 'bondMaturityDateVal', header: 'LOANS.BOND_MATURITY_DATE' },
+        { field: 'bondMaturityValueInRs', header: 'LOANS.BOND_MATURITY_VALUE' },
+        { field: 'bondPrincipleAmount', header: 'LOANS.BOND_PRINCIPAL_MOUNT' },
         // { field: 'Action', header: 'ACTION' },
       ];
-      this.genealogyTreeDetails = [
-        { field: 'relationWithApplicantName', header: 'ERP.RELATION_WITH_MEMBER' },
-        { field: 'name', header: 'ERP.RELATION_NAME' },
-        // { field: 'remarks', header: 'REMARKS' },
-        // { field: 'Action', header: 'ACTION' },
+    
+      //vehicle
+      //vehicla status master 
+      //used unused
+      this.vehicleLoanMortgageColumns = [
+        { field: 'vehicleMakerOrBrand', header: 'LOANS.VEHICLE_MAKER_OR_BRAND' },
+        { field: 'vehicleModel', header: 'LOANS.VEHICLE_MODEL' },
+        { field: 'vehicleRegNumber', header: 'LOANS.VEHICLE_REGNUMBER' },
+        { field: 'vehicleCost', header: 'LOANS.VEHICLE_COST' },
+        { field: 'hypothecation', header: 'LOANS.HYPOTHECATION' },
+        { field: 'insuranceNumber', header: 'LOANS.INSURANCE_NUMBER' },
+        { field: 'insuranceAmount', header: 'LOANS.SUM_INSURED(₹)' },
+        { field: 'vehicleStatus', header: 'LOANS.VEHICLE_STATUS' },
       ];
+    
+      this.storageLoanMortgageColumns = [
+        { field: 'Commodity', header: 'LOANS.COMMODITY' },
+        { field: 'NWR Storage Receipt Number', header: 'LOANS.NWR_STORAGE_RECEIPT_UMBER' },
+        { field: 'dateOfIssue', header: 'LOANS.DATE_OF_ISSUE' },
+        { field: 'Number Of Units Stored', header: 'LOANS.NUMBER_OF_UNITS_STORED' },
+        { field: 'Per Unit Cost', header: 'LOANS.PER_UNIT_COST' },
+        { field: 'Net Value', header: 'LOANS.NET_VALUE' },
+        { field: 'Action', header: 'LOANS.ACTION' },
+      ];
+    
+      //other
+      this.otherLoanMortgageColumns = [
+        { field: 'itemName', header: 'LOANS.ITEM_NAME' },
+        { field: 'netWeight', header: 'LOANS.NET_WEIGHT_IN_GRAMS' },
+        { field: 'grossWeight', header: 'LOANS.GROSS_WEIGHT_IN_GRAMS' },
+        { field: 'value', header: 'LOANS.VALUE' },
+        { field: 'remarks', header: 'LOANS.REMARKS' },
+      ];
+    
+      //property
+      this.propertyColumns = [
+        { field: 'site', header: 'LOANS.SITE_NAMES' },
+        { field: 'location', header: 'LOANS.LOCATION' },
+        { field: 'squareYards', header: 'LOANS.SQUARE_YARDS' },
+        { field: 'propertySurveyNumber', header: 'LOANS.SURVEY_NUMBER' },
+        { field: 'valueOfProperty', header: 'LOANS.VALUE_OF_PROPERTY' },
+        { field: 'nameOfProperty', header: 'LOANS.NAME _OF_PROPERTY' },
+        { field: 'extentOfProperty', header: 'LOANS.EXTENT_OF_PROPERTY' },
+      ];
+    
+      this.historyColumns = [
+        { field: 'accountNumber', header: 'LOANS.NAME' },
+        // { field: 'admissionNumber', header: 'ERP.ADMISSION_NUMBER' },
+        { field: 'bankName', header: 'LOANS.BANKNAME' },
+        { field: 'loanAmount', header: 'LOANS.LOAN_AMOUNT' },
+        { field: 'collateralTypeName', header: 'LOANS.COLLATERAL_TYPE' },
+        { field: 'openingDateVal', header: 'LOANS.OPENINGDATE' },
+        { field: 'closingDateVal', header: 'LOANS.CLOSINGDATE' },
+        { field: 'isNpaName', header: 'LOANS.ISNPA' },
+        { field: 'moduleTypeName', header: 'LOANS.MODULE_TYPE' },
+      ];
+    
+        this.documentDetails = [
+          { field: 'documentTypeName', header: 'ERP.DOCUMENT_TYPE' },
+          { field: 'documentNo', header: 'ERP.DOCUMENT_NUMBER' },
+          { field: 'filePath', header: 'ERP.FILE_PATH' },
+          // { field: 'remarks', header: 'REMARKS' },
+          // { field: 'Action', header: 'ACTION' },
+        ];
+        this.genealogyTreeDetails = [
+          { field: 'relationWithApplicantName', header: 'ERP.RELATION_WITH_MEMBER' },
+          { field: 'name', header: 'ERP.RELATION_NAME' },
+          // { field: 'remarks', header: 'REMARKS' },
+          // { field: 'Action', header: 'ACTION' },
+        ];
       this.admissionDetails = this.formBuilder.group({
         admissionNumber: ['', [Validators.required, Validators.minLength(3)]],
         templatepath: ['', [Validators.required, Validators.email]],
@@ -626,6 +640,7 @@ export class SiLoanApprovalComponent {
               if (this.siLoanProductDefinitionModel.siInterestPolicyConfigDTOList != undefined && this.siLoanProductDefinitionModel.siInterestPolicyConfigDTOList != null)
                 this.siLoanInterestPolicyModel = this.siLoanProductDefinitionModel.siInterestPolicyConfigDTOList[0];
             }
+            this.getAllCollaterals();
           }
           // this.msgs = [];
           // this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
@@ -795,5 +810,78 @@ export class SiLoanApprovalComponent {
       this.isDisableSubmit = false;
     }
   }
+  /**
+     * @implements get all collateral
+     * @author K.yamuna
+     */
+    getAllCollaterals() {
+      this.msgs = [];
+      this.commonComponent.startSpinner();
+      this.siLoanHistoryService.getAllCollateralTypes().subscribe((response: any) => {
+        this.responseModel = response;
+        if (this.responseModel != null&& this.responseModel.data!= undefined) {
+          this.mastercollateralList = this.responseModel.data.filter((data: any) => data.status == applicationConstants.ACTIVE).map((collateral: any) => {
+            return { label: collateral.name, value: collateral.id }
+        });
+        this.getSiLoanHistoryByApplicationId(this.id);
+        this.commonComponent.stopSpinner();
+      }
+      else {
+        this.msgs = [];
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
+      }, error => {
+        this.msgs = [];
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+        this.commonComponent.stopSpinner();
+      });
+    }
+    /**
+       * @implements get si Loan History by Application Id
+       * @param siLoanApplicationId 
+       * @author K.yamuna
+       */
+    getSiLoanHistoryByApplicationId(siLoanApplicationId: any) {
+      this.commonFunctionsService
+      this.siLoanHistoryService.getSiLoanExistedDetailsByApplicationId(siLoanApplicationId).subscribe((data: any) => {
+        this.responseModel = data;
+        if (this.responseModel != null && this.responseModel != undefined) {
+          if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+            if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
+              this.siLoanHistoryList = this.responseModel.data.filter((obj: any) => obj != null).map((history: any) => {
+                history.closingDateVal = this.datePipe.transform(history.closingDate, this.orgnizationSetting.datePipe);
+                history.openingDateVal = this.datePipe.transform(history.openingDate, this.orgnizationSetting.datePipe);
+                if (history.isNPA != null && history.isNPA != undefined && history.isNPA)
+                  history.isNpaName = "Yes";
+                else
+                  history.isNpaName = "No";
+                history.moduleTypeName = this.moduleTypes.find((obj: any) => obj.value == history.moduleType)?.label;
+                history.collateralTypeName = this.mastercollateralList.find((obj: any) => obj.value == history.collateralType)?.label;
+                return history;
+              });
+            }
+          }
+          else {
+            this.msgs = [];
+            this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+            setTimeout(() => {
+              this.msgs = [];
+            }, 2000);
+          }
+        }
+      }, error => {
+        this.commonComponent.stopSpinner();
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      });
+    }
   }
   

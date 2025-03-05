@@ -42,7 +42,7 @@ export class FdNonCumulativeComponent implements OnInit {
   orgnizationSetting: any;
   gridListLenght: Number | undefined;
   showForm: boolean = false;
-  memberPhotoCopyZoom: any;
+  memberPhotoCopyZoom: boolean = false;
   memberphotCopyMultipartFileList: any[] = [];
   createdCount: any;
   inProgressCount:any;
@@ -81,7 +81,7 @@ export class FdNonCumulativeComponent implements OnInit {
 
     ]
     this.termdeposits = [
-      { field: 'admissionNumber', header: 'Admision Number' },
+      { field: 'admissionNumber', header: 'Admission Number' },
       { field: 'accountNumber', header: 'Account Number' },
       { field: 'accountTypeName', header: 'Account Type' },
       { field: 'memberTypeName', header: 'TERMDEPOSITSTRANSACTION.MEMBER_TYPE' },
@@ -89,7 +89,7 @@ export class FdNonCumulativeComponent implements OnInit {
       { field: 'depositAmount', header: 'Deposit Amount' },
       { field: 'depositDate', header: 'Deposit Date' },
       { field: 'roi', header: 'ROI' },
-      { field: 'statusName', header: 'status' },
+      { field: 'statusName', header: 'Status' },
     ];
 
     let tabLabels = [

@@ -128,7 +128,7 @@
                                 <span class="{{img.imageValue}}" (click)="onClickMemberPhotoCopy(rowData)"
                                     *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                     <!-- <a href="{{img.imageValue}}" ></a> -->
-                                    <img class="table-circle-image" src="{{img.imageValue}}">
+                                    <img class="table-circle-image cursor-pointer" src="{{img.imageValue}}">
                                 </span>
                             </span>
                             <span *ngIf="!rowData.isRejected" class="account-number-style"
@@ -139,7 +139,7 @@
                         <div class="d-block"
                             *ngIf="rowData.multipartFileListForPhotoCopy == null || rowData.multipartFileListForPhotoCopy == undefined || rowData.multipartFileListForPhotoCopy.length == 0">
                             <span (click)="onClickMemberPhotoCopy(rowData)">
-                                <img class="table-circle-image" src="assets/images/no-image.jpg">
+                                <img class="table-circle-image cursor-pointer" src="assets/images/no-image.jpg">
                             </span>
                             <span *ngIf="!rowData.isRejected" class="account-number-style"
                                 (click)="editAccount(rowData)">{{rowData[col.field]}}</span>
@@ -183,7 +183,7 @@
                 </td>
 
                 <td>
-                    <div class="global-action-btn flex align-items-center justify-content-center">
+                    <div class="global-action-btn flex align-items-center justify-content-start">
                         <p-button label="{{'TERMDEPOSITS.VIEW' | translate}}" (click)="view(rowData)"
                             class="action-view"></p-button>
                         <p-dropdown *ngIf="rowData.statusName == 'Approved'" id="bunit_txt_status"
@@ -217,3 +217,30 @@
     </div>
     <div class="col-12 margtop-3rem"></div>
 </div>
+
+<!-- photo Copy dialog -->
+<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="memberPhotoCopyZoom" styleClass="photo-dialog">
+    <div class="col-12 px-0">
+        <div class="row">
+            <div class="col-6">
+                <div>
+                    <div>
+                        <img src="assets/images/no-image.jpg"  class="popup-images">
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div>
+                    <div>
+                        <img src="assets/images/no-file.jpg" class="popup-images">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="col-12">
+                    <div class="d-flex justify-content-end">
+         <p-button class="action-edit" label="{{'ERP.CLOSE' | translate}}" (click)="closePhoto()"></p-button> 
+        </div>
+    </div> -->
+</p-dialog>

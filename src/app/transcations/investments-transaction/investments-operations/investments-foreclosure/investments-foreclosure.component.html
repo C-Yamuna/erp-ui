@@ -1,1 +1,451 @@
-<p>investments-foreclosure works!</p>
+<p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
+    [hideTransitionOptions]="'500ms'"></p-messages>
+<div class="col-12">
+    <div class="row">
+        <div class="d-flex justify-content-between top-header-section">
+            <div class="main-heading mt-1 justify-content-start">{{'INVESTMENTS_TRANSACTIONS.INVESTMENTS' | translate}}
+                <i class="fa fa-angle-right font-bold mr-3 ml-3"></i>
+                {{'ERP.FORECLOSURE_DETAILS' | translate}}
+            </div>
+        </div>
+    </div>
+    <div class="col-12 p-0">
+        <div class="row">
+            <div class="col-25-right">
+                <!--  left side screen start -->
+                <div class="col-12 basic-view side-card-style">
+                    <div class="col-12 inner-border">
+                        <div class="side-card-header-border">
+                            <div class="row">
+                                <div class="col-10 py-0">
+                                    <h6 class="side-card-header">{{'INVESTMENTS_TRANSACTIONS.INVESTMENT_DETAILS'
+                                        | translate}}</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-12 col-md-9 col-sm-8 col-xs-8 mt-2">
+                                <div class="row">
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                        <span class="basicdata-icons icon-size"></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">{{'INVESTMENTS_TRANSACTIONS.PRODUCT' |
+                                                translate}}</p>
+                                            <p class="label-input-text">
+                                                {{investmentApplicationDetailsModel.productName}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                        <span class="basicdata-icons icon-size"></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">{{'INVESTMENTS_TRANSACTIONS.BANK_NAME'
+                                                | translate}}
+                                            </p>
+                                            <p class="label-input-text">
+                                                {{investmentApplicationDetailsModel.bankName}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                        <span class="basicdata-icons icon-size"></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">
+                                                {{'INVESTMENTS_TRANSACTIONS.ACCOUNT_NUMBER' |
+                                                translate}}</p>
+                                            <p class="label-input-text">
+                                                {{investmentApplicationDetailsModel.accountNumber}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                        <span class="basicdata-icons icon-size"></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">
+                                                {{'INVESTMENTS_TRANSACTIONS.DEPOSIT_AMOUNT' | translate}}</p>
+                                            <p class="label-input-text">
+                                                {{investmentApplicationDetailsModel.depositAmount}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                        <span class="basicdata-icons icon-size"></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">{{'INVESTMENTS_TRANSACTIONS.ROI' |
+                                                translate}}</p>
+                                            <p class="label-input-text">
+                                                {{investmentApplicationDetailsModel.roi}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                        <span class="basicdata-icons icon-size"></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">
+                                                {{'INVESTMENTS_TRANSACTIONS.DEPOSIT_DATE' | translate}}</p>
+                                            <p class="label-input-text">
+                                                {{investmentApplicationDetailsModel.depositDate}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                        <span class="basicdata-icons icon-size"></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">
+                                                {{'INVESTMENTS_TRANSACTIONS.DEPOSIT_TYPE' | translate}}</p>
+                                            <p class="label-input-text">
+                                                {{depositTypeName}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                        <span class="basicdata-icons icon-size"></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">
+                                                {{'INVESTMENTS_TRANSACTIONS.TENURE_IN_YEARS' | translate}}</p>
+                                            <p class="label-input-text">
+                                                {{investmentApplicationDetailsModel.tenureInYears}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                        <span class="basicdata-icons icon-size"></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">
+                                                {{'INVESTMENTS_TRANSACTIONS.MATURITY_INTEREST_AMOUNT' | translate}}
+                                            </p>
+                                            <p class="label-input-text">
+                                                {{investmentApplicationDetailsModel.maturityInterest}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                        <span class="basicdata-icons icon-size"></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">
+                                                {{'INVESTMENTS_TRANSACTIONS.MATURITY_AMOUNT' | translate}}</p>
+                                            <p class="label-input-text">
+                                                {{investmentApplicationDetailsModel.maturityAmount}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                        <span class="basicdata-icons icon-size"></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">
+                                                {{'INVESTMENTS_TRANSACTIONS.MATURITY_DATE' | translate}}</p>
+                                            <p class="label-input-text">
+                                                {{investmentApplicationDetailsModel.maturityDate}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 d-flex basicdata-card">
+                                        <span class="basicdata-icons icon-size"></span>
+                                        <div>
+                                            <p class="label-view text-fontwt">
+                                                {{'INVESTMENTS_TRANSACTIONS.INTEREST_PAYMENT_FREQUENCY' |
+                                                translate}}</p>
+                                            <p class="label-input-text">
+                                                {{investmentApplicationDetailsModel.interestOrInstallmentFrequencyName}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--  left side screen end-->
+            <!--  middle screen start -->
+            <div class="col-50-midd">
+                <div class="col-12 bg-card border">
+                    <div class="col-12">
+                        <div class="row justify-content-between">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <h5 class="sub-heading">{{'INVESTMENTS_TRANSACTIONS.INTEREST_PAYMENT' | translate}}</h5>
+                            </div>
+                            <div class="globel-border-top-color"></div>
+                            <p-table #dt [value]="interestPaymentList" dataKey="id" editMode="row"
+                                styleClass="p-datatable-striped" [rows]="5" [paginator]="true"
+                                [showJumpToPageDropdown]="true" [showPageLinks]="false" [pageLinks]="1"
+                                [responsive]="true" rowExpandMode="single">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th> {{'INVESTMENTS_TRANSACTIONS.INTEREST_AMOUNT' | translate}}</th>
+                                        <th> {{'INVESTMENTS_TRANSACTIONS.INTEREST_POSTING_DATE' | translate}}</th>
+                                        <th> {{'INVESTMENTS_TRANSACTIONS.STATUS' | translate}}</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+                                    <tr [pEditableRow]="rowData">
+                                        <td>
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="output">{{rowData.interestAmount}}</ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                        <td>
+                                            <p-cellEditor>
+                                                <ng-template
+                                                    pTemplate="output">{{rowData.interestPostingDate}}</ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                        <td>
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="output">
+                                                    <div *ngIf="rowData.statusName == 'Submission for Approval'">
+                                                        <div class="status-style statussubmissionforapproval">
+                                                            {{ rowData.statusName}}
+                                                        </div>
+                                                    </div>
+                                                    <div *ngIf="rowData.statusName == 'Approved'">
+                                                        <div class="status-style statusactive">
+                                                            {{ rowData.statusName}}
+                                                        </div>
+                                                    </div>
+                                                    <div *ngIf="rowData.statusName == 'Rejected'">
+                                                        <div class="status-style statusreject">
+                                                            {{ rowData.statusName}}
+                                                        </div>
+                                                    </div>
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                    </div>
+                    <div class="pt-2">
+                        <p>Total Interest Paid Amount : <b>{{totalInterestPaid}}</b></p>
+                    </div>
+                </div>
+            </div>
+            <!--  middle screen end-->
+               <!--  foreClosure -->
+            <div class="col-25-left" *ngIf="foreClosureShow">
+                <div class="col-12 rightside-form-style">
+                    <div class="col-12">
+                        <h5 class="transaction-side-card-header text-dark border-bottom border-secondary pt-0">
+                            {{'ERP.FORECLOSURE_DETAILS' | translate}}</h5>
+                    </div>
+                    <form [formGroup]="foreClosureForm">
+                        <div class="col-12  mt-n1">
+                            <div class="row g-3   bg-label-colorfull">
+                                <div class="col-lg-12 col-md-12 col-sm-6">
+                                    <div class="form-label">
+                                        <label for="username">{{'ERP.FORECLOSURE_DATE' | translate}}
+                                        </label>
+                                        <p-calendar [showIcon]="true" [dateFormat]="orgnizationSetting.calendar"
+                                            id="calendar" formControlName="foreClosureDate" name="calendar"
+                                            [(ngModel)]="investmentApplicationDetailsModel.foreClosureDate"
+                                            placeholder="DD/MM/YYYY"></p-calendar>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-6">
+                                    <div class="form-label">
+                                        <label><span class="red">*</span>{{'INVESTMENTS_TRANSACTIONS.REASON'
+                                            | translate}}</label>
+                                            <p-dropdown [options]="reasonList" optionLabel="label"
+                                            formControlName="reason"[(ngModel)]="reason" placeholder="Select"></p-dropdown>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-6">
+                                    <div class="form-label">
+                                        <label><span class="red">*</span>{{'INVESTMENTS_TRANSACTIONS.PENALTY_AMOUNT'
+                                            | translate}}</label>
+                                        <input type="text" pInputText formControlName="penaltyAmount"
+                                            placeholder="Enter Penalty Amount" [(ngModel)]="penaltyAmount"
+                                            [disabled]="true" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-6">
+                                    <div class="form-label">
+                                        <label><span class="red">*</span>{{'INVESTMENTS_TRANSACTIONS.BALANCE_AMOUNT'
+                                            | translate}}</label>
+                                        <input type="text" pInputText formControlName="foreClosureMaturityAmount"
+                                            placeholder="Enter Maturity Amount" [(ngModel)]="investmentApplicationDetailsModel.foreClosureMaturityAmount"
+                                            [disabled]="true" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-6">
+                                    <div class="form-label">
+                                        <label><span
+                                                class="red">*</span>{{'INVESTMENTS_TRANSACTIONS.AMOUNT_TRANSFER_MODE' |
+                                            translate}}</label>
+                                        <p-dropdown [options]="amountTransferList" optionLabel="label"
+                                            formControlName="transactionMode"
+                                            [(ngModel)]="investmentApplicationDetailsModel.transactionMode"
+                                            (onChange)="onChangeTransactionMode(investmentApplicationDetailsModel.transactionMode)"
+                                            placeholder="Select"></p-dropdown>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-6" *ngIf="acNumberShow">
+                                    <div class="form-label">
+                                        <label><span
+                                                class="red">*</span>{{'INVESTMENTS_TRANSACTIONS.PACS_DCCB_AC_NUMBER'
+                                            | translate}}</label>
+                                        <input type="text" pInputText formControlName="societyAccountNumber"
+                                            pKeyFilter="num" maxlength="15" placeholder="Enter Account Number"
+                                            [(ngModel)]="investmentApplicationDetailsModel.societyAccountNumber" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-6" *ngIf="chequeNumberShow">
+                                    <div class="form-label">
+                                        <label><span class="red">*</span>{{'INVESTMENTS_TRANSACTIONS.CHEQUE_NUMBER'
+                                            | translate}}</label>
+                                        <input type="text" pInputText formControlName="chequeNumber" pKeyFilter="num"
+                                            maxlength="15" placeholder="Enter Cheque Number"
+                                            [(ngModel)]="chequeNumber" />
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="form-label">
+                                        <span class=""> {{ 'INVESTMENTS_TRANSACTIONS.FORECLOSURE_COPY_PATH' | translate }}
+                                        </span>
+                                        <div class="uplodad-style align-items-center">
+                                            <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold"
+                                                name="myfile[]" chooseLabel=" " id="apply-leave_fileUp_attach"
+                                                name="file" accept=".pdf" [customUpload]="true"
+                                                (onRemove)="fileRemoveEvent()"
+                                                (onSelect)="foreClosureFileUploader($event,fileUpload)">
+                                            </p-fileUpload>
+                                            <div class="col-12  d-flex p-1 contant-body"
+                                                *ngFor="let img of investmentApplicationDetailsModel.multipartFileList">
+                                                <div *ngIf="img.fileType=='pdf'">
+                                                    <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png"
+                                                            width="22" height="22"></a>
+                                                </div>
+                                                <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
+                                                    tooltipPosition="bottom">
+                                                    {{img.fileName}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-6">
+                                    <div class="form-label">
+                                        <label for="username">{{'ERP.REMARKS' | translate}}
+                                        </label>
+                                        <textarea type="text" formControlName="remarks" pInputTextarea
+                                            placeholder="Enter Remarks Here"
+                                            [(ngModel)]="investmentApplicationDetailsModel.remarks"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-12 btn-footer px-0">
+                    <div class="col-12 d-flex justify-content-end px-0 mt-1 group-button-bottom">
+                        <p-button label="Back" (click)="navigateBack()"></p-button>
+                        <p-button label="{{'ERP.SUBMIT' | translate}}" [disabled]="!foreClosureForm.valid"
+                            (click)="saveInvestmentForeClosure()"></p-button>
+                    </div>
+                </div>
+            </div>
+            <!--  closure -->
+            <div class="col-25-left" *ngIf="!foreClosureShow">
+                <div class="col-12 rightside-form-style">
+                    <div class="col-12">
+                        <h5 class="transaction-side-card-header text-dark border-bottom border-secondary pt-0">
+                            {{'ERP.CLOSURE_DETAILS' | translate}}</h5>
+                    </div>
+                    <form [formGroup]="closureForm">
+                        <div class="col-12  mt-n1">
+                            <div class="row g-3   bg-label-colorfull">
+                                <div class="col-lg-12 col-md-12 col-sm-6">
+                                    <div class="form-label">
+                                        <label for="username">{{'ERP.CLOSURE_DATE' | translate}}
+                                        </label>
+                                        <p-calendar [showIcon]="true" [dateFormat]="orgnizationSetting.calendar"
+                                            id="calendar" formControlName="closureDate" name="calendar"
+                                            [(ngModel)]="investmentApplicationDetailsModel.closureDate"
+                                            placeholder="DD/MM/YYYY"></p-calendar>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-6">
+                                    <div class="form-label">
+                                        <label><span
+                                                class="red">*</span>{{'INVESTMENTS_TRANSACTIONS.BALANCE_AMOUNT'
+                                            | translate}}</label>
+                                        <input type="text" pInputText formControlName="maturityAmount"
+                                            placeholder="Enter Maturity Amount"
+                                            [(ngModel)]="closeAmount"
+                                            [disabled]="true" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-6">
+                                    <div class="form-label">
+                                        <label><span class="red">*</span>{{'INVESTMENTS_TRANSACTIONS.AMOUNT_TRANSFER_MODE' |
+                                            translate}}</label>
+                                        <p-dropdown [options]="amountTransferList" optionLabel="label"
+                                            formControlName="transactionMode" placeholder="Select Payment Type"
+                                            [(ngModel)]="investmentApplicationDetailsModel.transactionMode"
+                                            (onChange)="onChangeClosureTransactionMode(investmentApplicationDetailsModel.transactionMode)"
+                                            placeholder="Select"></p-dropdown>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-6" *ngIf="acNumberShow">
+                                    <div class="form-label">
+                                        <label><span
+                                                class="red">*</span>{{'INVESTMENTS_TRANSACTIONS.PACS_DCCB_AC_NUMBER'
+                                            | translate}}</label>
+                                        <input type="text" pInputText formControlName="societyAccountNumber" pKeyFilter="num" maxlength="15"
+                                            placeholder="Enter Account Number" [(ngModel)]="investmentApplicationDetailsModel.societyAccountNumber"/>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-6" *ngIf="chequeNumberShow">
+                                    <div class="form-label">
+                                        <label><span
+                                                class="red">*</span>{{'INVESTMENTS_TRANSACTIONS.CHEQUE_NUMBER'
+                                            | translate}}</label>
+                                        <input type="text" pInputText formControlName="chequeNumber" pKeyFilter="num" maxlength="15"
+                                            placeholder="Enter Cheque Number" [(ngModel)]="chequeNumber"/>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="form-label">
+                                        <span class=""> {{ 'INVESTMENTS_TRANSACTIONS.CLOSURE_COPY_PATH' | translate }} </span>
+                                        <div class="uplodad-style align-items-center">
+                                            <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold"
+                                                name="myfile[]" chooseLabel=" " id="apply-leave_fileUp_attach"
+                                                name="file" accept=".pdf" [customUpload]="true"
+                                                (onRemove)="closeFileRemoveEvent()"
+                                                (onSelect)="closureFileUploader($event,fileUpload)">
+                                            </p-fileUpload>
+                                            <div class="col-12  d-flex p-1 contant-body"
+                                                *ngFor="let img of investmentApplicationDetailsModel.multipartFileList">
+                                                <div *ngIf="img.fileType=='pdf'">
+                                                    <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png"
+                                                            width="22" height="22"></a>
+                                                </div>
+                                                <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
+                                                    tooltipPosition="bottom">
+                                                    {{img.fileName}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-6">
+                                    <div class="form-label">
+                                        <label for="username">{{'ERP.REMARKS' | translate}}
+                                        </label>
+                                        <textarea type="text" formControlName="remarks" pInputTextarea
+                                            placeholder="Enter Remarks Here"
+                                            [(ngModel)]="investmentApplicationDetailsModel.remarks"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-12 btn-footer px-0">
+                    <div class="col-12 d-flex justify-content-end px-0 mt-1 group-button-bottom">
+                        <p-button label="Back" (click)="navigateBack()"></p-button>
+                        <p-button label="{{'ERP.SUBMIT' | translate}}" [disabled]="!closureForm.valid"
+                            (click)="saveInvestmentClosure()"></p-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -110,6 +110,8 @@ export class DailyDepositStepperComponent {
   jointAccountHolderList: any[] = [];
   memberTypeList: any[] = [];
 
+
+
   constructor(private router: Router,
     private commonComponent: CommonComponent,
     private activateRoute: ActivatedRoute,
@@ -193,6 +195,7 @@ export class DailyDepositStepperComponent {
       this.getAllTypeOfMembershipDetails(this.pacsId, this.branchId);
     }
     this.appendCurrentStepperData();
+   
   }
 
 
@@ -249,6 +252,7 @@ export class DailyDepositStepperComponent {
           else if (this.activeIndex == 3) {
             if (data.data != null && data.data != undefined) {
               this.accountsModel = data.data;
+              
             }
             this.itemList();
           }
@@ -258,6 +262,7 @@ export class DailyDepositStepperComponent {
               if (data.data.admissionNumber != null && data.data.admissionNumber != undefined) {
                 this.accountsModel.adminssionNumber = data.data.admissionNumber;
               }
+              
               if (data.data.accId != null && data.data.accId != undefined) {
                 this.accId = data.data.accId;
               }
@@ -271,14 +276,16 @@ export class DailyDepositStepperComponent {
           else if (this.activeIndex == 5) {
             if (data.data != null && data.data != undefined) {
               this.accountNomineeModel = data.data;
+              
               if (this.accountNomineeModel != null && this.accountNomineeModel != undefined) {
-                // if (this.accountNomineeModel.RdAccountGuardian != null && this.accountNomineeModel.RdAccountGuardian != undefined) {
-                //   this.accountGuardianModel = this.accountNomineeModel.RdAccountGuardian;
-                // }
+                if (this.accountNomineeModel.accountGuardian != null && this.accountNomineeModel.accountGuardian != undefined) {
+                  this.accountGuardianModel = this.accountNomineeModel.accountGuardian;
+                }
               }
             }
+           
             this.itemList();
-          } else if (this.activeIndex == 6) {
+          } else if (this.activeIndex == 6 ) {
             if (data.data != null && data.data != undefined) {
               this.requiredDocumentDetails = data.data;
             }
@@ -482,6 +489,8 @@ export class DailyDepositStepperComponent {
       }
     }
     this.activeItem = this.items[this.activeIndex];
+
+    this.activeItem = this.items[this.activeIndex];
   }
 
 
@@ -659,8 +668,6 @@ export class DailyDepositStepperComponent {
     } else if (activeIndex == 4) {
       this.saveJointHolder();
     } else if (activeIndex == 5) {
-      // this.activeIndex = activeIndex + 1;
-      // this.navigateTo(this.activeIndex, this.accId);
       this.addOrUpdateNomineeDetails();
       if (this.accountGuardianModel != null && this.accountGuardianModel != undefined) {
         this.addOrUpdateGurdianetails();
@@ -1317,6 +1324,10 @@ export class DailyDepositStepperComponent {
   addOrUpdateNomineeDetails() {
     this.accountNomineeModel.accId = this.accId;
     this.accountNomineeModel.accountNumber = this.accountNumber;
+    this.accountNomineeModel.status = applicationConstants.ACTIVE;
+    if (this.accountNomineeModel.dateOfBirthVal != null && this.accountNomineeModel.dateOfBirthVal != undefined) {
+      this.accountNomineeModel.dateOfBirth = this.commonFunctionsService.getUTCEpoch(new Date(this.accountNomineeModel.dateOfBirthVal));
+    }
     // this. fdCumulativeNominee.isNewMember = this.showForm;
     if (this.accountNomineeModel.id == null) {
       this.isNomineeEdit = false;
@@ -1332,9 +1343,9 @@ export class DailyDepositStepperComponent {
           setTimeout(() => {
             this.msgs = [];
           }, 1200);
-          this.activeIndex = this.activeIndex + 1;
-          this.navigateTo(this.activeIndex, this.accId);
-          this.completed = 1;
+            this.activeIndex = this.activeIndex + 1;
+            this.navigateTo(this.activeIndex, this.accId);
+            this.completed = 1;
         } else {
           this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
           setTimeout(() => {
@@ -1357,9 +1368,11 @@ export class DailyDepositStepperComponent {
           setTimeout(() => {
             this.msgs = [];
           }, 1200);
-          this.activeIndex = this.activeIndex + 1;
-          this.navigateTo(this.activeIndex, this.accId);
-          this.completed = 1;
+
+            this.activeIndex = this.activeIndex + 1;
+            this.navigateTo(this.activeIndex, this.accId);
+            this.completed = 1;
+          
         } else {
           this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
           setTimeout(() => {
@@ -1477,5 +1490,5 @@ export class DailyDepositStepperComponent {
     this.memberPhotoCopyZoom = false;
   }
 
-
+  
 }

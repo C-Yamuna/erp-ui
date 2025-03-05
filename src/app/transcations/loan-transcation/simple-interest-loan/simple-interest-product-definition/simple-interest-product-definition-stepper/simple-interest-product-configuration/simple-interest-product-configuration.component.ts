@@ -33,9 +33,15 @@ export class SimpleInterestProductConfigurationComponent {
   siProductId: any;
   collaterals: any;
   statusList: any[] = [];
-
+  productDefinitionList: any[] = [];
+  tempProductDefinitionList: any[] = [];
+  selectedPurposeTypes:any[]=[];
   selectedCollateralIds: number[] = [];
   amountAndTenureFlag: boolean = applicationConstants.TRUE;
+  purposeTypeList: any[] = [];
+
+
+
   constructor(private formBuilder: FormBuilder, private commonComponent: CommonComponent, private activateRoute: ActivatedRoute,
     private datePipe: DatePipe, private encryptService: EncryptDecryptService,
     private simpleInterestProductDefinitionService: SimpleInterestProductDefinitionService, private collateralTypesService: CollateralTypesService,
@@ -58,7 +64,8 @@ export class SimpleInterestProductConfigurationComponent {
       'minDaysForRenewel': new FormControl('', Validators.required),
       'interestPostingFrequency': new FormControl('', Validators.required),
       'nomineeRequired': new FormControl('', Validators.required),
-      'collateraltypes': new FormControl('',),
+      'collateraltypes':new FormControl('',Validators.required),
+     'purposeType':new FormControl('',Validators.required)
     })
   }
   /**
@@ -71,6 +78,8 @@ export class SimpleInterestProductConfigurationComponent {
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
     this.isSpecialSchemelist = this.commonComponent.requiredlist();
     this.interestPostingFrequencyList = this.commonComponent.rePaymentFrequency();
+    this.getAllCollaterals();
+    this.getAllPurposeTypes();
     this.statusList = this.commonComponent.status();
     this.activateRoute.queryParams.subscribe(params => {
       let encrypted = params['id'];
@@ -82,6 +91,7 @@ export class SimpleInterestProductConfigurationComponent {
         this.isEdit = applicationConstants.FALSE;
       }
       this.updateData();
+      this.getAllProductDefinitions();
     });
 
     this.productionDefinitionForm.valueChanges.subscribe((data: any) => {
@@ -90,43 +100,70 @@ export class SimpleInterestProductConfigurationComponent {
         this.save();
       }
     });
-    this.getAllCollaterals();
+   
   }
-  getPreviewDetailsByProductId(id: any) {
-    this.isEdit = applicationConstants.TRUE;
-    this.siProdCollateralsConfigDTOList = []
-    this.simpleInterestProductDefinitionService.getPreviewDetailsByProductId(id).subscribe(res => {
-      this.responseModel = res;
-      this.commonComponent.stopSpinner();
-      if (this.responseModel.status == applicationConstants.STATUS_SUCCESS && this.responseModel.data[0] != null) {
-        this.simpleInterestProductDefinitionModel = this.responseModel.data[0];
-        if (this.simpleInterestProductDefinitionModel != null && this.simpleInterestProductDefinitionModel != undefined) {
-
-          if (null != this.simpleInterestProductDefinitionModel.effectiveStartDate && undefined != this.simpleInterestProductDefinitionModel.effectiveStartDate)
-            this.simpleInterestProductDefinitionModel.effectiveStartDate = this.datePipe.transform(this.simpleInterestProductDefinitionModel.effectiveStartDate, this.orgnizationSetting.datePipe);
-
-          if (null != this.simpleInterestProductDefinitionModel.endDate && undefined != this.simpleInterestProductDefinitionModel.endDate)
-            this.simpleInterestProductDefinitionModel.endDate = this.datePipe.transform(this.simpleInterestProductDefinitionModel.endDate, this.orgnizationSetting.datePipe);
-          this.initializeFormWithCollaterals(this.simpleInterestProductDefinitionModel.siProdCollateralsConfigDTOList);
-          this.productionDefinitionForm.patchValue(this.simpleInterestProductDefinitionModel);
-
-
-
-        }
-        this.updateData();
-      } else {
-        this.commonComponent.stopSpinner();
-        this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
-        setTimeout(() => {
-          this.msgs = [];
-        }, 2000);
-      }
-    }, error => {
-      this.msgs = [];
-      this.msgs = [{ severity: "error", summary: 'Failed', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST }];
-      this.commonComponent.stopSpinner();
-    });
-  }
+ /**
+    * @implements get preview details by product id
+    * @param id 
+    * @author k.yamuna
+    */
+   getPreviewDetailsByProductId(id: any) {
+     this.isEdit = applicationConstants.TRUE;
+     this.siProdCollateralsConfigDTOList=[]
+     this.simpleInterestProductDefinitionService.getPreviewDetailsByProductId(id).subscribe(res => {
+       this.responseModel = res;
+       this.commonComponent.stopSpinner();
+       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS && this.responseModel.data[0] != null) {
+         this.simpleInterestProductDefinitionModel = this.responseModel.data[0];
+         if (this.simpleInterestProductDefinitionModel != null && this.simpleInterestProductDefinitionModel != undefined) {
+           //pusepose type ids
+           if (this.simpleInterestProductDefinitionModel.purposeTypeIds != null && this.simpleInterestProductDefinitionModel.purposeTypeIds != undefined) {
+             let contentSelected = this.simpleInterestProductDefinitionModel.purposeTypeIds.split(',');
+             if (contentSelected.length > 0) {
+               for (let id of contentSelected) {
+                 this.selectedPurposeTypes.push(Number(id));
+               }
+               if (this.selectedPurposeTypes?.length) {
+                 this.selectedPurposeTypes = [...this.selectedPurposeTypes]; // Trigger change detection
+               }
+             }
+           }
+           //collateral type ids
+           if (this.simpleInterestProductDefinitionModel.collateralTypeIds != null && this.simpleInterestProductDefinitionModel.collateralTypeIds != undefined) {
+             let contentSelected = this.simpleInterestProductDefinitionModel.collateralTypeIds.split(',');
+             if (contentSelected.length > 0) {
+               for (let id of contentSelected) {
+                 this.selectedCollateralIds.push(Number(id));
+               }
+               if (this.selectedCollateralIds?.length) {
+                 this.selectedCollateralIds = [...this.selectedCollateralIds]; // Trigger change detection
+               }
+             }
+           }
+           if(null!=this.simpleInterestProductDefinitionModel.effectiveStartDate && undefined!=this.simpleInterestProductDefinitionModel.effectiveStartDate)
+             this.simpleInterestProductDefinitionModel.effectiveStartDate = this.datePipe.transform(this.simpleInterestProductDefinitionModel.effectiveStartDate, this.orgnizationSetting.datePipe);
+ 
+           if(null!=this.simpleInterestProductDefinitionModel.endDate && undefined!=this.simpleInterestProductDefinitionModel.endDate)
+             this.simpleInterestProductDefinitionModel.endDate = this.datePipe.transform(this.simpleInterestProductDefinitionModel.endDate, this.orgnizationSetting.datePipe);
+           if(this.simpleInterestProductDefinitionModel.siProdCollateralsConfigDTOList != null && this.simpleInterestProductDefinitionModel.siProdCollateralsConfigDTOList != undefined && this.simpleInterestProductDefinitionModel.siProdCollateralsConfigDTOList.length >0)
+               // this.initializeFormWithCollaterals(this.simpleInterestProductDefinitionModel.ciProdCollateralsConfigDTOList);
+           this.productionDefinitionForm.patchValue(this.simpleInterestProductDefinitionModel);
+       }
+       this.updateData();
+       }else {
+         this.commonComponent.stopSpinner();
+         this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
+         setTimeout(() => {
+           this.msgs = [];
+         }, 2000);
+       }
+     }, error => {
+       this.msgs = [];
+       this.msgs = [{ severity: "error", summary: 'Failed', detail:  applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST }];
+       this.commonComponent.stopSpinner();
+     });
+   }
+ 
 
   /**
     @author vinitha
@@ -183,20 +220,6 @@ export class SimpleInterestProductConfigurationComponent {
     this.productionDefinitionForm.get('collateraltypes')?.setValue(this.selectedCollateralIds);
   }
 
-  onCollateralChange(event: any) {
-    const newlySelectedIds = event.value;
-    this.selectedCollateralIds = newlySelectedIds;
-    this.productionDefinitionForm.get('collateraltypes')?.setValue(this.selectedCollateralIds);
-
-    this.simpleInterestProductDefinitionModel.siProdCollateralsConfigDTOList = this.selectedCollateralIds.map((id: any) => ({
-      siProductId: this.siProductId,
-      collateralType: id,
-      status: this.statusList[0].value,
-      statusName: this.statusList[0].label,
-      collateralTypeName: this.siProdCollateralsConfigDTOList.find(item => item.value === id)?.label
-    }));
-    this.updateData();
-  }
 
   amountValidation(box: any) {
     if (this.simpleInterestProductDefinitionModel.eligibleMInAmount != null && this.simpleInterestProductDefinitionModel.eligibleMInAmount != undefined
@@ -269,4 +292,140 @@ export class SimpleInterestProductConfigurationComponent {
     }
     this.updateData();
   }
+  /**
+      @author Dileep_Kumar_G
+      @implements get All Product Definitions
+    */
+  getAllProductDefinitions() {
+    this.simpleInterestProductDefinitionService.getAllSimpleInterestProductDefinition().subscribe((data: any) => {
+      this.responseModel = data;
+      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+        if (null != this.responseModel.data && undefined != this.responseModel.data) {
+          this.productDefinitionList = this.responseModel.data;
+          this.tempProductDefinitionList = this.productDefinitionList;
+        }
+        this.commonComponent.stopSpinner();
+      } else {
+        this.commonComponent.stopSpinner();
+        this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
+    }, error => {
+      this.msgs = [];
+      this.msgs = [{ severity: "error", summary: 'Failed', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST }];
+      this.commonComponent.stopSpinner();
+    });
+  }
+
+  /**
+    @author Dileep_Kumar_G
+    @implements product Name Duplicate Check
+    */
+  productNameDuplicateCheck() {
+    let isFlag = applicationConstants.TRUE;
+    if (this.isEdit) {
+      if (null != this.tempProductDefinitionList && undefined != this.tempProductDefinitionList && this.tempProductDefinitionList.length > 0) {
+        const user = this.tempProductDefinitionList.find(user => user.name === this.simpleInterestProductDefinitionModel.name);
+        if (user != null && user != undefined) {
+          if (user.id === this.simpleInterestProductDefinitionModel.id) {
+            isFlag = applicationConstants.FALSE;
+          }
+        }
+      }
+    }
+    if (null != this.tempProductDefinitionList && undefined != this.tempProductDefinitionList && this.tempProductDefinitionList.length > 0) {
+      this.tempProductDefinitionList.filter((data: any) => null != data.name).map(product => {
+        if (isFlag && product.name === this.simpleInterestProductDefinitionModel.name) {
+          this.msgs = [];
+          this.msgs.push({ severity: 'warning', detail: applicationConstants.PRODUCT_NAME_ALREADY_EXIST });
+          this.productionDefinitionForm.get('name')?.reset();
+          setTimeout(() => {
+            this.msgs = [];
+          }, 1500);
+        }
+      });
+    }
+  }
+   /**
+   * @implements  get all purpose types
+   * @author k.yamuna
+   */
+   getAllPurposeTypes() {
+    this.commonComponent.startSpinner();
+    this.purposeTypeList = [];
+    this.simpleInterestProductDefinitionService.getAllLoanPurpose().subscribe((res: any) => {
+      this.responseModel = res;
+      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS && this.responseModel.data[0] != null) {
+        if (this.responseModel.data == null || (this.responseModel.data != null && this.responseModel.data.length == 0)) {
+          this.commonComponent.stopSpinner();
+          this.msgs = [];
+          this.msgs = [{ severity: 'error', detail: applicationConstants.RELATIONSHIP_TYPE_NO_DATA_MESSAGE }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        } else {
+          this.purposeTypeList = this.responseModel.data.filter((documenttype: any) => documenttype.status == applicationConstants.ACTIVE).map((count: any) => {
+            return { label: count.name, value: count.id }
+          });
+
+          // let purposeType = this.purposeTypeList.find((data: any) => null != data && data.value == this.ciPurposeModel.purposeId);
+          // if (purposeType != null && undefined != purposeType)
+          //   this.ciPurposeModel.loanPurposeName = purposeType.label;
+          this.commonComponent.stopSpinner();
+        }
+      }
+    },
+      error => {
+        this.msgs = [];
+        this.commonComponent.stopSpinner();
+        this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      });
+  }
+  /**
+   * @implements on porpose Change
+   * @param event 
+   * @author k.yamuna
+   */
+  onChangePurPoseTypes(event: any) {
+    const newlySelectedIds = event.value;
+    this.selectedPurposeTypes = newlySelectedIds;
+    const purposeIds: number[] = this.selectedPurposeTypes;
+    const pacsIdString :string= purposeIds.join(',');
+    this.simpleInterestProductDefinitionModel.purposeTypeIds = pacsIdString
+    // this.productionDefinitionForm.get('purposeType')?.setValue(this.selectedPurposeTypes);
+    this.simpleInterestProductDefinitionModel.siProdPurposeConfigDTOList = this.selectedPurposeTypes.map((id: any) => ({
+      ciProductId: this.siProductId,
+      purposeId: id,
+      status: this.statusList[0].value, 
+      statusName: this.statusList[0].label,
+    }));
+    this.updateData();
+  }
+
+  
+    /**
+     * @implements on Collateral Changes
+     * @param event 
+     * @authork.yamuna
+     */
+    onCollateralChange(event: any) {
+      const newlySelectedIds = event.value;
+      this.selectedCollateralIds = newlySelectedIds;
+      const collateralIds: number[] = this.selectedCollateralIds;
+      const collateralIdsString :string= collateralIds.join(',');
+      this.simpleInterestProductDefinitionModel.collateralTypeIds = collateralIdsString
+      this.simpleInterestProductDefinitionModel.siProdCollateralsConfigDTOList = this.selectedCollateralIds.map((id: any) => ({
+        ciProductId: this.siProductId,
+        collateralType: id,
+        status: this.statusList[0].value, 
+        statusName: this.statusList[0].label,
+        collateralTypeName: this.siProdCollateralsConfigDTOList.find(item => item.value === id)?.label
+      }));
+      this.updateData();
+    }
 }

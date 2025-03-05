@@ -106,6 +106,8 @@ export class FdCumulativeNominee {
     memberType:any;
 
     memberTypeName:any;
+
+    nomineeDobVal: any;
 }
 
 export class MemberGuardianDetailsModelDetails {

@@ -200,11 +200,21 @@ export class RecurringDepositCommunicationComponent {
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
           this.membershipBasicDetail = this.responseModel.data[0];
+          this.membershipBasicDetail.photoPath = this.responseModel.data[0].photoCopyPath;
+          this.membershipBasicDetail.signaturePath = this.responseModel.data[0].signatureCopyPath;
+          this.membershipBasicDetail.subProductName = this.responseModel.data[0].subProductName;
+          this.memberTypeName = this.responseModel.data[0].memberTypeName;
+          this.membershipBasicDetail.resolutionCopy = this.responseModel.data[0].mcrDocumentCopy;
+          this.membershipBasicDetail.mcrNumber = this.responseModel.data[0].mcrNumber;
+          if (this.membershipBasicDetail.resolutionDate != null && this.membershipBasicDetail.resolutionDate != undefined) {
+            this.membershipBasicDetail.resolutionDateVal = this.datePipe.transform(this.membershipBasicDetail.resolutionDate, this.orgnizationSetting.datePipe);
+          }
+          this.membershipBasicDetail.fdNonCummCommunicationDto = this.responseModel.data[0].memberShipCommunicationDetailsDTO;
           if (this.responseModel.data[0].memberShipCommunicationDetailsDTO != null && this.responseModel.data[0].memberShipCommunicationDetailsDTO != undefined &&
-            this.responseModel.data[0].memberShipCommunicationDetailsDTO != null && this.responseModel.data[0].memberShipCommunicationDetailsDTO != undefined){
-            this. rdAccountCommunicationModel = this.responseModel.data[0].memberShipCommunicationDetailsDTO;
-            if(this.responseModel.data[0].memberShipCommunicationDetailsDTO.admisionNumber != null && this.responseModel.data[0].memberShipCommunicationDetailsDTO.admisionNumber != undefined)
-              this. rdAccountCommunicationModel.admissionNumber = this.responseModel.data[0].memberShipCommunicationDetailsDTO.admisionNumber;
+            this.responseModel.data[0].memberShipCommunicationDetailsDTO != null && this.responseModel.data[0].memberShipCommunicationDetailsDTO != undefined) {
+            this.rdAccountCommunicationModel = this.responseModel.data[0].memberShipCommunicationDetailsDTO;
+            if (this.responseModel.data[0].memberShipCommunicationDetailsDTO.admisionNumber != null && this.responseModel.data[0].memberShipCommunicationDetailsDTO.admisionNumber != undefined)
+              this.rdAccountCommunicationModel.admissionNumber = this.responseModel.data[0].memberShipCommunicationDetailsDTO.admisionNumber;
             this.setAllFields();
           }
           this.updateData();
@@ -218,6 +228,7 @@ export class RecurringDepositCommunicationComponent {
       }, 3000);
     });
   }
+
 
   getGroupDetailsByAdmissionNumber(admissionNUmber: any) {
     this.rdAccountsService.getMemberGroupByAdmissionNumber(admissionNUmber).subscribe((data: any) => {
@@ -298,13 +309,13 @@ export class RecurringDepositCommunicationComponent {
 
   getAllDistrictsByStateId(id: any, isResetIds: any) {
     if (isResetIds) {
-      this.communicationForm.get('districtName').reset();
-      this.communicationForm.get('subDistrictName').reset();
-      this.communicationForm.get('villageName').reset();
+      this.communicationForm.get('districtId').reset();
+      this.communicationForm.get('subDistrictId').reset();
+      this.communicationForm.get('villageId').reset();
       this.communicationForm.get('address1').reset();
       this.communicationForm.get('pinCode').reset();
-      this.communicationForm.get('permanentAddress1')?.reset();
-      this.communicationForm.get('permanentPinCode')?.reset();
+      this.communicationForm.get('division').reset();
+      this.communicationForm.get('block').reset();
       this.districtsList = [];
       this.subDistrictList = [];
       this.villageList = [];
@@ -332,12 +343,12 @@ export class RecurringDepositCommunicationComponent {
 
   getAllSubDistrictByDistrictId(id: any, isResetIds: any) {
     if (isResetIds) {
-      this.communicationForm.get('subDistrictName').reset();
-      this.communicationForm.get('villageName').reset();
+      this.communicationForm.get('subDistrictId').reset();
+      this.communicationForm.get('villageId').reset();
       this.communicationForm.get('address1').reset();
       this.communicationForm.get('pinCode').reset();
-      this.communicationForm.get('permanentAddress1')?.reset();
-      this.communicationForm.get('permanentPinCode')?.reset();
+      this.communicationForm.get('division').reset();
+      this.communicationForm.get('block').reset();
       this.subDistrictList = [];
       this.villageList = [];
     }
@@ -364,11 +375,11 @@ export class RecurringDepositCommunicationComponent {
 
   getAllVillagesBySubDistrictId(id: any, isResetIds: any) {
     if (isResetIds) {
-      this.communicationForm.get('villageName').reset();
+      this.communicationForm.get('villageId').reset();
       this.communicationForm.get('address1').reset();
       this.communicationForm.get('pinCode').reset();
-      this.communicationForm.get('permanentAddress1')?.reset();
-      this.communicationForm.get('permanentPinCode')?.reset();
+      this.communicationForm.get('division').reset();
+      this.communicationForm.get('block').reset();
       this.villageList = [];
     }
     this.rdAccountsService.getvillagesBySubDistrictId(id).subscribe((response: any) => {
@@ -510,11 +521,13 @@ export class RecurringDepositCommunicationComponent {
 
   getAllPermanentDistrictsByStateId(id: any, isResetIds: any) {
     if (isResetIds) {
-      this.communicationForm.get('permanentDistrictName').reset();
-      this.communicationForm.get('permanentSubDistrictName').reset();
-      this.communicationForm.get('permanentVillageName').reset();
-      this.communicationForm.get('permanentAddress1')?.reset();
-      this.communicationForm.get('permanentPinCode')?.reset();
+      this.communicationForm.get('permanentDistrictId').reset();
+      this.communicationForm.get('permanentSubDistrictId').reset();
+      this.communicationForm.get('permanentVillageId').reset();
+      this.communicationForm.get('permanentAddress1').reset();
+      this.communicationForm.get('permanentPinCode').reset();
+      this.communicationForm.get('permanentDivision').reset();
+      this.communicationForm.get('permanentBlock').reset();
       this.permanentDistrictList = [];
       this.permanentSubDistrictList = [];
       this.permanentVillageList = [];
@@ -542,10 +555,12 @@ export class RecurringDepositCommunicationComponent {
 
   getAllPermanentSubDistrictByDistrictId(id: any, isResetIds: any) {
     if (isResetIds) {
-      this.communicationForm.get('permanentSubDistrictName').reset();
-      this.communicationForm.get('permanentVillageName').reset();
-      this.communicationForm.get('permanentAddress1')?.reset();
-      this.communicationForm.get('permanentPinCode')?.reset();
+      this.communicationForm.get('permanentSubDistrictId').reset();
+      this.communicationForm.get('permanentVillageId').reset();
+      this.communicationForm.get('permanentAddress1').reset();
+      this.communicationForm.get('permanentPinCode').reset();
+      this.communicationForm.get('permanentDivision').reset();
+      this.communicationForm.get('permanentBlock').reset();
       this.permanentSubDistrictList = [];
       this.permanentVillageList = [];
     }
@@ -572,9 +587,11 @@ export class RecurringDepositCommunicationComponent {
 
   getAllPermanentVillagesBySubDistrictId(id: any, isResetIds: any) {
     if (isResetIds) {
-      this.communicationForm.get('permanentVillageName').reset();
-      this.communicationForm.get('permanentAddress1')?.reset();
-      this.communicationForm.get('permanentPinCode')?.reset();
+      this.communicationForm.get('permanentVillageId').reset();
+      this.communicationForm.get('permanentAddress1').reset();
+      this.communicationForm.get('permanentPinCode').reset();
+      this.communicationForm.get('permanentDivision').reset();
+      this.communicationForm.get('permanentBlock').reset();
       this.permanentVillageList = [];
     }
     this.rdAccountsService.getvillagesBySubDistrictId(id).subscribe((response: any) => {

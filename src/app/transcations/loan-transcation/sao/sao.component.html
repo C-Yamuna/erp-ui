@@ -228,7 +228,7 @@
                 <td>
                     <div class="global-action-btn flex align-items-center justify-content-start">
                         <p-button label="view" class="action-view" (click)="view(rowData)"></p-button>
-                        <p-dropdown id="bunit_txt_status" class="action-operation" placeholder="operations"
+                        <p-dropdown [disabled]="!rowData.approved" id="bunit_txt_status" class="action-operation" placeholder="operations"
                             [filter]="true" [options]="operationslist" [(ngModel)]="operations"
                             (onChange)="navigateToOperations($event,rowData)" [appendTo]="'body'"></p-dropdown>
 

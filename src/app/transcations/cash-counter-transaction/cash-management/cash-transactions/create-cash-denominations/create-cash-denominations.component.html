@@ -1,0 +1,178 @@
+<div class="col-12">
+    <div class="row">
+        <div class="d-flex justify-content-between top-header-section">
+            <div class="main-heading mt-1 justify-content-start">
+                {{'CASH_COUNTER_TRANSACTIONS.CASH_TRANSACTION' | translate}}<i
+                    class="fa fa-angle-right font-bold mr-3 ml-3"></i>ADD</div>
+        </div>
+    </div>
+
+    <div class="col-12 bg-card mt-1">
+        <div class="col-12 pt-0">
+            <form [formGroup]="cashTransactionForm">
+                <div class="mt-n1  bg-label-colorfull">
+                    <div class="row g-3">
+                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                            <label><span class="red">*</span>{{'CASH_COUNTER_TRANSACTIONS.ADMISSION_NUMBER' |
+                                translate}}</label>
+                            <p-dropdown [options]="admissionNumbersList" [filter]="true" placeholder="Select"
+                                formControlName="admissionNumber"
+                                (onChange)="OnChangeAdmissionNumber($event.value)"></p-dropdown>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                            <div class="form-label">
+                                <label><span class="red">*</span>{{'CASH_COUNTER_TRANSACTIONS.MEMBER_TYPE' |
+                                    translate}}</label>
+                                <input pInputText id="bunit_txt_name" maxlength="40" type="text"
+                                    formControlName="memberTypeName" [(ngModel)]="transactionModel.memberTypeName">
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                            <div class="form-label">
+                                <label><span class="red">*</span>{{'CASH_COUNTER_TRANSACTIONS.ACCOUNT_NUMBER' |
+                                    translate}}</label>
+                                <p-dropdown [options]="accountNumbersList" placeholder="Select"
+                                    formControlName="accountNumber"
+                                    [(ngModel)]="transactionModel.accountNumber"></p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                            <div class="form-label">
+                                <label><span class="red">*</span>{{'CASH_COUNTER_TRANSACTIONS.TRANSACTION_DATE' |
+                                    translate}}</label>
+                                <p-calendar [showIcon]="true" formControlName="date" [yearNavigator]="true"
+                                    yearRange="1970:2050" [showIcon]="true" dateFormat="{{orgnizationSetting.calendar}}"
+                                    id="work_flow_start_date" formControlName="transactionDateVal"
+                                    [(ngModel)]="transactionModel.transactionDateVal" [maxDate]="maxDate"
+                                    placeholder="DD/MM/YYYY"></p-calendar>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                            <div class="form-label">
+                                <label><span class="red">*</span>{{'CASH_COUNTER_TRANSACTIONS.TRANSACTION_MODE' |
+                                    translate}}</label>
+                                <input pInputText id="bunit_txt_name" maxlength="40" type="text"
+                                    formControlName="transactionModeName"
+                                    [(ngModel)]="transactionModel.transactionModeName">
+                            </div>
+                        </div>
+                        <!-- <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                            <div class="form-label">
+                                <label><span class="red">*</span>{{'CASH_COUNTER_TRANSACTIONS.TRANSACTION_TYPE' |
+                                    translate}}</label>
+                                <p-dropdown [options]="transactionTypeOptions" placeholder="Select"
+                                    formControlName="transactionType"
+                                    [(ngModel)]="transactionModel.transactionType"></p-dropdown>
+                            </div>
+                        </div> -->
+                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                            <div class="form-label">
+                                <label><span class="red">*</span>{{'CASH_COUNTER_TRANSACTIONS.TRANSACTION_MODE' |
+                                    translate}}</label>
+                                <input pInputText id="bunit_txt_name" maxlength="40" type="text"
+                                    formControlName="transactionTypeName"
+                                    [(ngModel)]="transactionModel.transactionTypeName">
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                            <div class="form-label">
+                                <label><span class="red">*</span>{{'CASH_COUNTER_TRANSACTIONS.TRANSACTION_AMOUNT' |
+                                    translate}}</label>
+                                <p-inputNumber id="bunit_txt_name" formControlName="transactionAmount"
+                                    [(ngModel)]="transactionModel.transactionAmount" mode="currency"
+                                    inputId="currency-india" currency="INR" locale="en-IN" (keyup)="onAmountChange()">
+                                </p-inputNumber>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                            <div class="form-label">
+                                <label><span class="red">*</span>{{'CASH_COUNTER_TRANSACTIONS.AMOUNT_IN_WORDS' |
+                                    translate}}</label>
+                                <input pInputText id="bunit_txt_name" maxlength="40" type="text"
+                                    formControlName="amountInWords" [(ngModel)]="transactionModel.amountInWords">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <div class="col-12 p-1"></div>
+
+    <div class="col-12 bg-card">
+        <div class="col-12">
+            <h6 class="sub-heading">{{'CASH_COUNTER_TRANSACTIONS.DENOMINATIONS' | translate}}</h6>
+            <div class="row g-3">
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="globel-border-top-color"></div>
+                    <p-table #dt [columns]="columns" [value]="currencyList" dataKey="id">
+                        <ng-template pTemplate="header" let-columns>
+                            <tr>
+                                <th>{{'LOANS.NOTES' | translate}}</th>
+                                <th>{{'LOANS.NOTES_COUNT' | translate}}</th>
+                                <th>{{'LOANS.AMOUNT' | translate}}</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData let-columns="columns">
+                            <tr>
+                                <td>{{ rowData.name }}</td>
+                                <td>
+                                    <input [(ngModel)]="rowData.noteCount"
+                                        (ngModelChange)="onNoteDenominationChange(rowData)" placeholder="Enter count"
+                                        pInputText />
+                                </td>
+                                <td>{{ rowData.noteAmount }}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    <div class="col-12 margtop-3rem"></div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="globel-border-top-color"></div>
+                    <p-table #dt [columns]="subColumns" [value]="coinList" dataKey="id">
+                        <ng-template pTemplate="header" let-columns>
+                            <tr>
+                                <th>{{'LOANS.COINS' | translate}}</th>
+                                <th>{{'LOANS.COINS_COUNT' | translate}}</th>
+                                <th>{{'LOANS.COIN_AMOUNT' | translate}}</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData let-columns="columns">
+                            <tr>
+                                <td>{{ rowData.name }}</td>
+                                <td>
+                                    <input [(ngModel)]="rowData.coinCount"
+                                        (ngModelChange)="onCoinDenominationChange(rowData)" placeholder="Enter count"
+                                        pInputText />
+                                </td>
+                                <td>{{ rowData.coinAmount }}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    <div class="col-12 margtop-3rem"></div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 p-2 globel-border bg-white shadow-sm rounded">
+                <p>GRAND TOTAL (₹) : <span class="fw-semibold">{{ totalAmount }}</span></p>
+                <p class="m-0">AMOUNT IN WORDS : <span class="fw-semibold">{{ totalAmountInWords }}</span></p>
+            </div>
+        </div>
+    </div>
+
+    <p *ngIf="!isTotalAmountMatched" class="error-message">
+        The transaction amount does not match the total amount.
+    </p>
+
+    <div class="col-12 btn-footer px-0">
+        <div class="col-12 d-flex justify-content-end px-0 mt-1 group-button-bottom">
+            <p-button label="{{'CASH_COUNTER_TRANSACTIONS.BACK' | translate}}" (click)="navigateToBack()"></p-button>
+            <p-button label="{{'CASH_COUNTER_TRANSACTIONS.SUBMIT' | translate}}"
+                [disabled]="!isTotalAmountMatched && !cashTransactionForm.valid"
+                (click)="addOrUpdateDemandDepositTransaction()"></p-button>
+        </div>
+    </div>
+</div>

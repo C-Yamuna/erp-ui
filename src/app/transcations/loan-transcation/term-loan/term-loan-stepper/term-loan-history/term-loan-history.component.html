@@ -1,0 +1,212 @@
+<div class="col-12">
+    <p-messages label="Info" life="2000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
+    [hideTransitionOptions]="'500ms'"></p-messages>
+   
+    <div class="stepper-top-section-strip">
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 stepper-top-product-name-background">
+                <div class="form-group">
+                    <span>{{'LOAN_TRANSACTION.PRODUCT_NAME' | translate}}</span>
+                    <p class="mb-0">{{termLoanApplicationModel.termProductName}}</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="form-group ml-2">
+                    <span>{{'LOAN_TRANSACTION.ACCOUNT_TYPE' | translate}}</span>
+                    <p class="mb-0">{{termLoanApplicationModel.operationTypeName}}</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="form-group">
+                    <span>{{'LOAN_TRANSACTION.ACCOUNT_NUMBER' | translate}}</span>
+                    <p class="mb-0">{{termLoanApplicationModel.accountNumber}}</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="form-group">
+                    <span>{{'LOAN_TRANSACTION.REQUEST_AMOUNT' | translate}}</span>
+                    <p class="mb-0">{{termLoanApplicationModel.requestedAmount}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-12"></div>
+    <h6 class="sub-heading">{{'LOANS.LOAN_HISTORY' | translate}}<span class="admission-text"></span></h6>
+    <form [formGroup]="termLoanHistoryForm" id="proj_stakeholder_form">
+        <div class="flex justify-content-between py-2">
+            <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                <!-- <div class="main-heading mt-1">{{'LOAN_TRANSACTION.CASTE' | translate}}</div> -->
+            </div>
+            <div class="col-xl-7 col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                <div class="col-12 p-0">
+                    <div class="d-flex justify-content-end search-input-style">
+                        <div class="input-group search-box d-flex justify-content-end">
+                            <div class="search">
+                                <span class="p-input-icon-right">
+                                    <i class="pi pi-search global-search-icon"></i>
+                                    <input autocomplete="off" type="text" id="skill_category_txt_search" pInputText
+                                    placeholder="Search" class="searchbox"
+                                    #searchInput (input)="dt.filterGlobal(searchInput.value, 'contains')">
+                                </span>
+                            </div>
+                        </div>
+
+                        <p-button (click)="addHistory()" label="{{ 'ADD' | translate }}" icon="fa fa-plus"
+                            iconPos="left" [disabled]="addButtonService" id="bunit_bt_submit"></p-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="globel-border-top-color"></div>
+        <p-table #dt [columns]="historyColumns" [value]="termLoanHistoryList" dataKey="id"
+            editMode="row" styleClass="p-datatable-striped" [rows]="5" [paginator]="true"
+            [showJumpToPageDropdown]="true" [showPageLinks]="false" [pageLinks]="1" [responsive]="true"
+            rowExpandMode="single">
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th><span class="red">*</span>{{'LOAN_TRANSACTION.ACCOUNT_NUMBER' | translate}}</th>
+                    <!-- <th><span class="red">*</span>{{'LOAN_TRANSACTION.ADMISSION_NUMBER' | translate}}</th> -->
+                    <th><span class="red">*</span>{{'LOANS.BANKNAME' | translate}}</th>
+                    <th><span class="red">*</span>{{'LOANS.LOAN_AMOUNT' | translate}}</th>
+                    <th><span class="red">*</span>{{'LOANS.COLLATERALTYPE' | translate}}</th>
+                    <th><span class="red">*</span>{{'LOANS.OPENINGDATE' | translate}}</th>
+                    <th><span class="red">*</span>{{'LOANS.CLOSINGDATE' | translate}}</th>
+                    <th><span class="red">*</span>{{'LOANS.ISNPA' | translate}}</th>
+                    <th><span class="red">*</span>{{'LOANS.MODULE_TYPE' | translate}}</th>
+                    <!-- <th>{{'LOAN_TRANSACTION.REMARKS' | translate}}</th> -->
+                    <th class="width-15em">{{'LOAN_TRANSACTION.ACTION' | translate}}</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row let-editing="editing" let-ri="rowIndex">
+                <tr [pEditableRow]="row">
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText id="bunit_txt_name" type="text" formControlName="accountNumber"
+                                            placeholder="Enter Your Account Number"  pKeyFilter="pint"
+                                            [(ngModel)]="row.accountNumber">
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                {{row.accountNumber}}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <!-- <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText id="bunit_txt_name" type="text" formControlName="admissionNumber"
+                                            placeholder="Enter Your Admission Number"  pKeyFilter="pint"
+                                            [(ngModel)]="row.admissionNumber">
+                            </ng-template>
+                            <ng-template pTemplate="output">{{row.admissionNumber}}</ng-template>
+                        </p-cellEditor>
+                    </td> -->
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText id="bunit_txt_name" type="text" formControlName="bankName"
+                                            placeholder="Enter Your Pincode" 
+                                            [(ngModel)]="row.bankName">
+                            </ng-template>
+                            <ng-template pTemplate="output">{{row.bankName}}</ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText id="bunit_txt_name" type="text" formControlName="loanAmount"
+                                            placeholder="Enter Your Pincode" pKeyFilter="pnum"
+                                            [(ngModel)]="row.loanAmount">
+                            </ng-template>
+                            <ng-template pTemplate="output">{{row.loanAmount}}</ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <p-dropdown placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}" formControlName="collateralType"
+                                    [options]="collateralList" id="docTypeId" [(ngModel)]="row.collateralType" [appendTo]="'body'">
+                                </p-dropdown>
+                            </ng-template>
+                            <ng-template pTemplate="output">{{row.collateralTypeName}}</ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <p-calendar formControlName="openingDate" [showIcon]="true" dateFormat="{{orgnizationSetting.calendar}}"
+                                    [(ngModel)]="row.openingDateVal" placeholder="DD/MM/YYYY" [appendTo]="'body'">
+                                </p-calendar>
+                            </ng-template>
+                            <ng-template pTemplate="output">{{row.openingDateVal}}</ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <p-calendar formControlName="closingDate" [showIcon]="true" dateFormat="{{orgnizationSetting.calendar}}"
+                                    [(ngModel)]="row.closingDateVal" placeholder="DD/MM/YYYY" [appendTo]="'body'">
+                                </p-calendar>
+                            </ng-template>
+                            <ng-template pTemplate="output">{{row.closingDateVal}}</ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                            <p-dropdown placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}" formControlName="isNPA"
+                                    [options]="trueFalseList" id="docTypeId" [(ngModel)]="row.isNPA" [appendTo]="'body'">
+                                </p-dropdown>
+                            </ng-template>
+                            <ng-template pTemplate="output">{{row.isNpaName}}</ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <p-dropdown placeholder="{{'LOAN_TRANSACTION.SELECT' | translate}}" formControlName="moduleType"
+                                    [options]="moduleTypes" id="docTypeId" [(ngModel)]="row.moduleType" [appendTo]="'body'">
+                                </p-dropdown>
+                            </ng-template>
+                            <ng-template pTemplate="output">{{row.moduleTypeName}}</ng-template>
+                        </p-cellEditor>
+                    </td>
+
+                    <td>
+                        <div class="global-action-btn flex align-items-center justify-content-center">
+                            <p-button label="{{'LOAN_TRANSACTION.SAVE'|translate }}" *ngIf="editing"
+                                [disabled]="!termLoanHistoryForm.valid" (click)="saveLoanHistory(row)" pSaveEditableRow
+                                id="prj_stakehlder_bt_cancel" class="action-save">
+                            </p-button>
+                            <p-button label="{{'LOAN_TRANSACTION.CANCEL'|translate }}" *ngIf="editing" pCancelEditableRow
+                                id="prj_stakehlder_bt_cancel" class="action-cancel" (click)="cancelHistory()">
+                            </p-button>
+                            <p-button label="{{'LOAN_TRANSACTION.EDIT' | translate}}" *ngIf="!editing" pInitEditableRow
+                                (click)="editHistory(row)" id="prj_stakehlder_bt_edit" class="action-edit"
+                                [disabled]="editDeleteDisable"></p-button>
+                            <p-button label="{{'LOAN_TRANSACTION.DELETE' | translate}}" *ngIf="!editing" (click)="delete(row)"
+                                id="prj_stakehlder_bt_edit" class="action-delete"
+                                [disabled]="editDeleteDisable"></p-button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </form>
+</div>
+
+<!-- delete dialog box -->
+<p-dialog [(visible)]="displayDialog" [closable]="false" styleClass="delete-popup" [responsive]="true">
+    <div class="col-12">
+        <i class="fa fa-times-circle text-center" aria-hidden="true"></i>
+    
+        <p class="text-center popup-header">{{'ERP.ARE_YOU_SURE_TO_DELETE' | translate}}</p>
+        <p class="text-center pop-subheader">{{'ERP.DO_YOU_REALLY_TO_DELETE_THESE_RECORDS' | translate}}</p>
+  
+    </div>
+    <div class="col-12 text-center p-2">
+            <p-button pRipple class="yes-button" label="{{'ERP.DELETE' | translate}}" (click)="submitDelete()"></p-button>
+            <p-button pRipple class="no-button" label="{{'ERP.CANCEL' | translate}}" (click)="cancelForDialogBox()"></p-button>
+    </div>
+  </p-dialog>

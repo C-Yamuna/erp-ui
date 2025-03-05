@@ -125,6 +125,12 @@
                     </td>
                 </tr>
             </ng-template>
+            <ng-template pTemplate="summary">
+                <h3 class="NData" *ngIf="siLoanGenealogyTreeList.length == 0">
+                    <i class="fa fa-meh-o" aria-hidden="true"></i>
+                    {{'MEMBERSHIPCONFIG.NO_DATA' | translate}}
+                </h3>
+            </ng-template>
         </p-table>
     </form>
 </div>

@@ -108,7 +108,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="siChargesModel.minSlabAmount"
-                                    formControlName="minSlabAmount"  (keyup)="checkForSlabAmount()">
+                                    formControlName="minSlabAmount"  (focusout)="checkForSlabAmount(1)" pKeyFilter="money">
 
                             </ng-template>
                             <ng-template pTemplate="output">{{siChargesModel.minSlabAmount}}</ng-template>
@@ -118,7 +118,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="siChargesModel.maxSlabAmount"
-                                    formControlName="maxSlabAmount"  (keyup)="checkForSlabAmount()">
+                                    formControlName="maxSlabAmount"  (focusout)="checkForSlabAmount(2)" pKeyFilter="money">
 
                             </ng-template>
                             <ng-template pTemplate="output">{{siChargesModel.maxSlabAmount}}</ng-template>
@@ -140,7 +140,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="siChargesModel.minCharges"
-                                    formControlName="minCharges" (keyup)="checkForCharges()">
+                                    formControlName="minCharges" (focusout)="checkForCharges(1)" pKeyFilter="money">
                             </ng-template>
                             <ng-template pTemplate="output">{{siChargesModel.minCharges}}</ng-template>
                         </p-cellEditor>
@@ -149,7 +149,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="siChargesModel.maxChrges"
-                                    formControlName="maxChrges" (keyup)="checkForCharges()">
+                                    formControlName="maxChrges" (focusout)="checkForCharges(2)" pKeyFilter="money">
                             </ng-template>
                             <ng-template pTemplate="output">{{siChargesModel.maxChrges}}</ng-template>
                         </p-cellEditor>
@@ -158,7 +158,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="siChargesModel.cgstPercentage"
-                                    formControlName="cgstPercentage">
+                                    formControlName="cgstPercentage" pKeyFilter="num">
                             </ng-template>
                             <ng-template pTemplate="output">{{siChargesModel.cgstPercentage}}</ng-template>
                         </p-cellEditor>
@@ -167,7 +167,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="siChargesModel.sgstPercentage"
-                                    formControlName="sgstPercentage">
+                                    formControlName="sgstPercentage" pKeyFilter="num">
 
                             </ng-template>
                             <ng-template pTemplate="output">{{siChargesModel.sgstPercentage}}</ng-template>
@@ -177,7 +177,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="siChargesModel.igstPercentage"
-                                    formControlName="igstPercentage">
+                                    formControlName="igstPercentage" pKeyFilter="num">
 
                             </ng-template>
                             <ng-template pTemplate="output">{{siChargesModel.igstPercentage}}</ng-template>

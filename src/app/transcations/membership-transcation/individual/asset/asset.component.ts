@@ -113,27 +113,47 @@ export class AssetComponent {
     this.updateData();
     this.getAllGroupedAssetAndSubAssetTypes();
   }
+  // updateData() {
+  //   if (this.memberBasicDetailsModel.memberShipAssertDetailsDTOList != null && this.memberBasicDetailsModel.memberShipAssertDetailsDTOList != undefined &&
+  //     this.memberBasicDetailsModel.memberShipAssertDetailsDTOList.length > 0 && this.buttonsFlag ) {
+  //     this.landFlag = true;
+  //   }
+  //   this.membershipAssetsDetailsModel.membershipId =this.memberBasicDetailsModel.id
+  //   this.memberBasicDetailsStepperService.changeData({
+  //     formValid: this.assertForm.valid ,
+  //     data: this.membershipAssetsDetailsModel,
+  //     savedId:this.memberId,
+  //     stepperIndex: 7,
+  //     isDisable: !this.landFlag ? true : false,    });
+  // }
+
   updateData() {
-    if (this.memberBasicDetailsModel.memberShipAssertDetailsDTOList != null && this.memberBasicDetailsModel.memberShipAssertDetailsDTOList != undefined &&
-      this.memberBasicDetailsModel.memberShipAssertDetailsDTOList.length > 0 && this.buttonsFlag ) {
-      this.landFlag = true;
+    if ( this.memberShipAssertDetailsList == null ||  this.memberShipAssertDetailsList == undefined ||
+      this.memberShipAssertDetailsList.length == 0) {
+      this.buttonsFlag = true;
     }
-    this.membershipAssetsDetailsModel.membershipId =this.memberBasicDetailsModel.id
+    else {
+      this.buttonsFlag = false;
+    }
+    if (this.landFlag) {
+      this.buttonsFlag = true;
+    }
     this.memberBasicDetailsStepperService.changeData({
       formValid: this.assertForm.valid ,
       data: this.membershipAssetsDetailsModel,
       savedId:this.memberId,
       stepperIndex: 7,
-      isDisable: !this.landFlag ? true : false,    });
+      isDisable: this.landFlag
+    });
   }
   save() {
     this.updateData();
   }
   editVillageRow(row: any) {
-    this.addButton = true;
-    this.editDeleteDisable = true;
-    this.buttonsFlag  = false;
-    this.landFlag =false
+    this.addButton =  applicationConstants.TRUE
+    this.editDeleteDisable =  applicationConstants.TRUE
+    // this.buttonsFlag  = false;
+    this.landFlag = applicationConstants.TRUE;
     this.updateData();
     this.getAllGroupedAssetAndSubAssetTypes();
 
@@ -161,10 +181,10 @@ export class AssetComponent {
 
   onRowEditSave() {
     this.addNewEntry();
-    this.editDeleteDisable = true;
-    this.addButton = true;
-    this.buttonsFlag  = false;
-    this.landFlag =false
+    this.editDeleteDisable = applicationConstants.TRUE;
+    this.addButton = applicationConstants.TRUE;
+    // this.buttonsFlag  = false;
+    this.landFlag = applicationConstants.TRUE;
     this.updateData();
     this.dt._first = 0;
     // this.promoterDetailsForm.reset();
@@ -173,10 +193,10 @@ export class AssetComponent {
     this.getAllGroupedAssetAndSubAssetTypes();
   }
   onRowEditCancel() {
-    this.addButton = false;
-    this.editDeleteDisable = false;
-    this.buttonsFlag  = true;
-    // this.landFlag =true;
+    this.addButton = applicationConstants.FALSE;
+    this.editDeleteDisable =  applicationConstants.FALSE;
+    // this.buttonsFlag  = true;
+    this.landFlag =applicationConstants.FALSE;
     this.updateData();
     const index = this.dt.value.indexOf(this.newRow);
 
@@ -286,8 +306,9 @@ export class AssetComponent {
     rowData.pacsId = 1;
     rowData.branchId = 1;
     rowData.membershipId = this.memberBasicDetailsModel.id;
-    this.addButton = false;
-    this.editDeleteDisable = false;
+    this.addButton = applicationConstants.FALSE;
+    this.editDeleteDisable = applicationConstants.FALSE;
+    this.landFlag = applicationConstants.FALSE;
 
     this.assetsList.filter(data => data != null && data.value == rowData.assetTypeId).map(count => {
       rowData.assetTypeName = count.label;
@@ -299,9 +320,9 @@ export class AssetComponent {
         this.responseModel = response;
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
           this.membershipAssetsDetailsModel = response.data[0];
-          this.buttonsFlag  = true;
-          this.landFlag =true;
-          this.updateData();
+          // this.buttonsFlag  = true;
+          // this.landFlag =true;
+          // this.updateData();
           if(null != this.membershipAssetsDetailsModel.registeredDate)
             this.membershipAssetsDetailsModel.registeredDateVal=this.datePipe.transform(this.membershipAssetsDetailsModel.registeredDate, this.orgnizationSetting.datePipe);
           this.commonComponent.stopSpinner();
@@ -332,8 +353,8 @@ export class AssetComponent {
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
           if(null != this.responseModel.data[0].registeredDate)
             this.responseModel.data[0].registeredDateVal=this.datePipe.transform(this.responseModel.data[0].registeredDate, this.orgnizationSetting.datePipe);
-          this.buttonsFlag  = true;
-          this.landFlag =true;
+          // this.buttonsFlag  = true;
+          // this.landFlag =true;
           this.memberShipAssertDetailsList.unshift(this.responseModel.data[0]);
           this.memberShipAssertDetailsList.splice(1, 1);
           this.updateData();

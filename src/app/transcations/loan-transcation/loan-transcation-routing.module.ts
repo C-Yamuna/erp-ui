@@ -123,11 +123,11 @@ import { SiLoanApprovalComponent } from '../approval-transcations/loans-approval
 import { SiLoanApprovalDetailsComponent } from '../approval-transcations/loans-approvals/si-loan-approval-details/si-loan-approval-details.component';
 import { TermLoanFieldVisitConfigComponent } from './term-loan/term-loan-product-definition/term-loan-product-definition-stepper/term-loan-field-visit-config/term-loan-field-visit-config.component';
 import { TermLoanDisbursementScheduleComponent } from './term-loan/term-loan-product-definition/term-loan-product-definition-stepper/term-loan-disbursement-schedule/term-loan-disbursement-schedule.component';
-
-  
-
-
-
+import { SaoLoanHistoryComponent } from './sao/sao-stepper/sao-loan-history/sao-loan-history.component';
+import { CiLoanHistoryComponent } from './compound-interest-loan/compound-interest-loan-stepper/ci-loan-history/ci-loan-history/ci-loan-history.component';
+import { SiLoanHistoryComponent } from './simple-interest-loan/simple-interest-loan-stepper/si-loan-history/si-loan-history.component';
+import { SiLoanHistory } from './shared/si-loans/si-loan-history.model';
+import { TermLoanHistoryComponent } from './term-loan/term-loan-stepper/term-loan-history/term-loan-history.component';
 
 const routes: Routes = [
   {
@@ -171,7 +171,8 @@ const routes: Routes = [
         { path: 'sao_nominee', component:SaoNomineeComponent },
         { path: 'sao_loan_mortagage', component: SaoLoanMortagageComponent},
         { path: 'sao_loan_documents', component: SaoLoanDocumentsComponent },
-        { path: 'sao_loan_genealogy_tree', component: SaoLoanGenealogyTreeComponent },
+        { path: 'sao_loan_existing_details', component: SaoLoanHistoryComponent },
+        // { path: 'sao_loan_genealogy_tree', component: SaoLoanGenealogyTreeComponent },
        
       ]
     },
@@ -194,6 +195,7 @@ const routes: Routes = [
         { path: 'term_loans_joint_account', component: TermLoanJointAccountComponent },
         { path: 'term_loans_new_membership', component: TermLoanNewMembershipComponent },
         { path: 'term_loans_membership', component: TermLoanMembershipComponent },
+        { path: 'term_loans_loan_history', component: TermLoanHistoryComponent },
        
       ]
 
@@ -218,6 +220,7 @@ const routes: Routes = [
         { path: 'simple_interest_loans_nominee', component:SiNomineeComponent },
         { path: 'simple_interest_loans_mortagage', component: SiLoanMortgageComponent},
         { path: 'simple_interest_loans_documents', component: SiLoanDocumentsComponent },
+        { path: 'simple_interest_loan_history', component: SiLoanHistoryComponent },
         { path: 'simple_interest_loans_genealogy_tree', component: SiLoanGenealogyTreeComponent },
       ]
     },
@@ -241,7 +244,8 @@ const routes: Routes = [
         { path: 'compound_interest_loans_documents', component: CiLoanDocumentsComponent },
         { path: 'compound_interest_loans_genealogy_tree', component: CiLoanGenealogyTreeComponent },
         { path: 'compound_interest_loans_co_applicant_details', component:CiLoanCoApplicantDetailsComponent },
-        { path: 'compound_interest_loans_new_membership_details', component:CiLoanNewMembershipComponent }
+        { path: 'compound_interest_loans_new_membership_details', component:CiLoanNewMembershipComponent },
+        { path: 'compound_interest_loan_history',component:CiLoanHistoryComponent}
       ]   
     }, 
       { path: 'depositor_loans' , component:DepositorLoanComponent},

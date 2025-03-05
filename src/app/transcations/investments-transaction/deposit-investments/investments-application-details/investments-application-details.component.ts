@@ -41,7 +41,9 @@ export class InvestmentsApplicationDetailsComponent implements OnInit{
   uploadFileData: any;
   autoRenewalTypeList:any []=[];
   installmentAmountFlag: boolean = false;
-
+  renewalList:any []=[];
+  showRenewalType: boolean = false;
+  resolutionCopyFileList: any[] = [];
   constructor(private router: Router, 
     private formBuilder: FormBuilder,
     private encryptDecryptService :EncryptDecryptService,
@@ -66,9 +68,11 @@ export class InvestmentsApplicationDetailsComponent implements OnInit{
       maturityInterest: [{ value: '', disabled: true }, Validators.required],
       maturityAmount: [{ value: '', disabled: true }, Validators.required],
       interestOrInstallmentFrequencyName: ['', Validators.required],
-      isAutoRenewal: [false],
+      isAutoRenewal: [''],
       autoRenewalType: [''],
-      installmentAmount: ['']
+      installmentAmount: [''],
+      resolutionNumber:['', Validators.required],
+      resolutionDate:['', Validators.required]
     })
   }
   ngOnInit() {
@@ -81,6 +85,7 @@ export class InvestmentsApplicationDetailsComponent implements OnInit{
         this.translate.use('en');
       }
     });
+    this.renewalList = this.commonComponent.requiredlist();
     this.depositTypeList = this.commonComponent.depositTypeList();
     this.autoRenewalTypeList = this.commonComponent.autoRenewalType();
     this.interestPaymentFrequencyList = this.commonComponent.interestPaymentFrequency();
@@ -105,10 +110,18 @@ export class InvestmentsApplicationDetailsComponent implements OnInit{
               this.investmentApplicationDetailsModel.maturityDate = this.datePipe.transform(this.investmentApplicationDetailsModel.maturityDate, this.orgnizationSetting.datePipe);
               this.investmentApplicationDetailsModel.maturityDate = new Date(this.investmentApplicationDetailsModel.maturityDate);
             }
+            if (this.investmentApplicationDetailsModel.resolutionDate != null) {
+              this.investmentApplicationDetailsModel.resolutionDate = this.datePipe.transform(this.investmentApplicationDetailsModel.resolutionDate, this.orgnizationSetting.datePipe);
+              this.investmentApplicationDetailsModel.resolutionDate = new Date(this.investmentApplicationDetailsModel.resolutionDate);
+            }
             if(this.investmentApplicationDetailsModel.depositBondCopyPath != null && this.investmentApplicationDetailsModel.depositBondCopyPath != undefined){
               let multipartFileList = this.fileUploadService.getFile(this.investmentApplicationDetailsModel.depositBondCopyPath ,
               ERP_TRANSACTION_CONSTANTS.INVESTMENTS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.investmentApplicationDetailsModel.depositBondCopyPath);
               this.investmentApplicationDetailsModel.multipartFileList = multipartFileList;
+            }
+            if(this.investmentApplicationDetailsModel.resolutionCopyPath != null && this.investmentApplicationDetailsModel.resolutionCopyPath != undefined){
+              this.resolutionCopyFileList = this.fileUploadService.getFile(this.investmentApplicationDetailsModel.resolutionCopyPath ,
+              ERP_TRANSACTION_CONSTANTS.INVESTMENTS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.investmentApplicationDetailsModel.resolutionCopyPath);
             }
 
             if(this.investmentApplicationDetailsModel.depositType != undefined && this.investmentApplicationDetailsModel.depositType != null)
@@ -139,7 +152,7 @@ export class InvestmentsApplicationDetailsComponent implements OnInit{
       }
     });
     // this.getAllProductsBasedOnPacsId(this.pacsId);
-    this.onAutoRenewalChange();
+    // this.onAutoRenewalChange();
   }
 
   updateData() {
@@ -242,17 +255,17 @@ export class InvestmentsApplicationDetailsComponent implements OnInit{
 
   //method for enable or disable of autoRenewalType based on its value.
   //@bhargavi
-  onAutoRenewalChange(): void {
-    const autoRenewalControl = this.applicationDetailsForm.get('isAutoRenewal');
-    const autoRenewalTypeControl = this.applicationDetailsForm.get('autoRenewalType');
-    if (autoRenewalControl && autoRenewalTypeControl) {
-      autoRenewalControl.valueChanges.subscribe((isAutoRenewal: boolean) => {
-        if (isAutoRenewal) {
-          autoRenewalTypeControl.enable();
-        } else {
-          autoRenewalTypeControl.disable();
-        }
-      });
+  onAutoRenewalChange(isAutoRenewal: any) {
+    if (isAutoRenewal != null && isAutoRenewal != undefined) {
+      if (isAutoRenewal) {
+        this.showRenewalType = applicationConstants.TRUE;
+        this.applicationDetailsForm.get('autoRenewalType')?.setValidators([Validators.required]);
+      } else {
+        this.showRenewalType = applicationConstants.FALSE;
+        this.investmentApplicationDetailsModel.autoRenewalType = null;
+        this.applicationDetailsForm.get('autoRenewalType')?.clearValidators();
+      }
+      this.applicationDetailsForm.get('autoRenewalType')?.updateValueAndValidity();
     }
   }
 
@@ -260,13 +273,18 @@ export class InvestmentsApplicationDetailsComponent implements OnInit{
     if (depositType != null && depositType != undefined) {
       if (depositType == 3) {
         this.installmentAmountFlag = applicationConstants.TRUE;
+        this.showRenewalType = applicationConstants.FALSE;
+        this.investmentApplicationDetailsModel.autoRenewalType = null;
+        this.investmentApplicationDetailsModel.isAutoRenewal = null;
         this.applicationDetailsForm.get('installmentAmount')?.setValidators([Validators.required]);
+        this.applicationDetailsForm.get('autoRenewalType')?.clearValidators();
       }else{
         this.investmentApplicationDetailsModel.installmentAmount = null;
         this.installmentAmountFlag = applicationConstants.FALSE;
         this.applicationDetailsForm.get('installmentAmount')?.clearValidators();
       }
       this.applicationDetailsForm.get('installmentAmount')?.updateValueAndValidity();
+      this.applicationDetailsForm.get('autoRenewalType')?.updateValueAndValidity();
     }
   }
 
@@ -324,7 +342,9 @@ export class InvestmentsApplicationDetailsComponent implements OnInit{
     if (this.investmentApplicationDetailsModel.tenureInYears != null && this.investmentApplicationDetailsModel.tenureInYears != undefined &&
       this.investmentApplicationDetailsModel.depositAmount != null && this.investmentApplicationDetailsModel.depositAmount != undefined &&
       this.investmentApplicationDetailsModel.depositDate != null && this.investmentApplicationDetailsModel.depositDate != undefined &&
-      this.investmentApplicationDetailsModel.roi != null && this.investmentApplicationDetailsModel.roi != undefined) {
+      this.investmentApplicationDetailsModel.roi != null && this.investmentApplicationDetailsModel.roi != undefined &&
+      this.investmentApplicationDetailsModel.tenureInYears != "" && this.investmentApplicationDetailsModel.depositAmount != "" &&
+      this.investmentApplicationDetailsModel.roi != "") {
 
       let tenureInMonths;
       let tenureInDays;
@@ -352,6 +372,45 @@ export class InvestmentsApplicationDetailsComponent implements OnInit{
       this.investmentApplicationDetailsModel.maturityInterest = interest.toFixed(2);
 
       this.investmentApplicationDetailsModel.maturityAmount = (Number(this.investmentApplicationDetailsModel.depositAmount) + interest).toFixed(2);
+    }else{
+      this.investmentApplicationDetailsModel.maturityInterest = null;
+      this.investmentApplicationDetailsModel.maturityDate = null;
+      this.investmentApplicationDetailsModel.maturityAmount = null;
+    }
+  }
+
+  resolutionUploader(event: any, fileUpload: FileUpload) {
+    this.isFileUploaded = applicationConstants.FALSE;
+    this.resolutionCopyFileList = [];
+    this.investmentApplicationDetailsModel.filesDTOList = [];
+    this.investmentApplicationDetailsModel.resolutionCopyPath = null;
+    if (event.files && event.files.length > 0) {
+      let file = event.files[0];
+      let reader = new FileReader();
+      reader.onloadend = (e) => {
+        let files = new FileUploadModel();
+        this.uploadFileData = e.currentTarget;
+        files.fileName = file.name;
+        files.fileType = file.type.split('/')[1];
+        files.value = this.uploadFileData.result.split(',')[1];
+        files.imageValue = this.uploadFileData.result;
+        let timeStamp = this.commonComponent.getTimeStamp();
+        this.investmentApplicationDetailsModel.filesDTOList.push(files);
+        this.investmentApplicationDetailsModel.filesDTOList[this.investmentApplicationDetailsModel.filesDTOList.length - 1].fileName = "INVESTMENT_RESOLUTION_COPY_" + timeStamp + "_" + file.name;
+        this.investmentApplicationDetailsModel.resolutionCopyPath = "INVESTMENT_RESOLUTION_COPY_" + timeStamp + "_" + file.name;
+        this.updateData();
+      }
+      reader.readAsDataURL(file);
+    } else {
+      console.warn("No file uploaded.");
+    }
+  }
+  
+  resolutionRemoveEvent() {
+    this.resolutionCopyFileList = [];
+    if (this.investmentApplicationDetailsModel.filesDTOList != null && this.investmentApplicationDetailsModel.filesDTOList != undefined) {
+      this.investmentApplicationDetailsModel.resolutionCopyPath = null;
+      this.investmentApplicationDetailsModel.filesDTOList = null;
     }
   }
 

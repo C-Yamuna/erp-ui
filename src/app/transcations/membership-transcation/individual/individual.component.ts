@@ -495,7 +495,7 @@ export class IndividualComponent {
     
     else if(activeIndex == 5){
       this.addOrUpdateNominee(activeIndex,"next")
-      if(this.memberNomineeDetailsModel.memberAge <= 18){
+      if(this.memberNomineeDetailsModel.memberAge <= 18 || this.memberNomineeDetailsModel.nomineeAge <= 18 ){
         this.addOrUpdateGardian(activeIndex,"next")
       }
     }

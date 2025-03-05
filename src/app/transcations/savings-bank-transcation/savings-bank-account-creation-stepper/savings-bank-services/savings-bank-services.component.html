@@ -9,6 +9,12 @@
                     <p class="mb-0">{{productName}}</p>
                 </div>
             </div>
+            <!-- <div class="col-lg-2 col-md-2 col-sm-12">
+                <div class="form-group ml-2">
+                    <span>{{'ERP.ADMINSSION_NUMBER' | translate}}</span>
+                    <p class="mb-0">{{admissionNumber}}</p>
+                </div>
+            </div> -->
             <div class="col-lg-2 col-md-2 col-sm-12">
                 <div class="form-group ml-2">
                     <span>{{'ERP.ACCOUNT_NUMBER' | translate}}</span>
@@ -36,12 +42,11 @@
         </div>
     </div> 
     <div class="col-12"></div>
-    <h6 class="sub-heading">{{'ERP.SERVICE' | translate}}</h6>   
     <!-- <form [formGroup]="serviceForm" id="exit_types_form"> -->
             <form [formGroup]="serviceForm" id="proj_stakeholder_form">
-                <div class="flex justify-content-between py-2">
+                <div class="flex justify-content-between p-0 pb-2">
                     <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                        <!-- <div class="main-heading mt-1">{{'ERP.CASTE' | translate}}</div> -->
+                        <h6 class="sub-heading">{{'ERP.SERVICE' | translate}}</h6>
                     </div>
                     <div class="col-xl-7 col-lg-7 col-md-7 col-sm-7 col-xs-7">
                         <div class="col-12 p-0">
@@ -139,6 +144,7 @@
                                                     accept=".pdf" (onRemove)="fileRemoeEvent()" 
                                                     (onSelect)="fileUploader($event,fileUpload ,row)" >
                                             </p-fileUpload>
+                                            <span class="red"> {{fileSizeMsgForImage}}</span>
                                         </div>
                                         <div  class="col-12  d-flex p-1 contant-body" *ngFor="let img of row.requestedDocPathMultipartFileList">
                                             <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">

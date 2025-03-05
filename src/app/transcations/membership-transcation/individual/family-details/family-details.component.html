@@ -100,7 +100,8 @@
                   <p-cellEditor>
                     <ng-template pTemplate="input">
                       <p-dropdown [options]="relationshipTypeList" placeholder="Select" formControlName="relationTypeId"
-                        [(ngModel)]="rowData.relationTypeId" [appendTo]="'body'" (onChange)="familyDplicate(rowData.relationTypeId)">
+                        [(ngModel)]="rowData.relationTypeId" [appendTo]="'body'"
+                        (onChange)="familyDplicate(rowData.relationTypeId)">
                       </p-dropdown>
                     </ng-template>
                     <ng-template pTemplate="output">
@@ -113,8 +114,8 @@
                     <ng-template pTemplate="input">
                       <input pInputText type="text" [(ngModel)]="rowData.surname" formControlName="surname">
                       <p-message severity="error" text="Enter Valid Mobile Number"
-                      *ngIf="!familyForm.controls['surname'].valid && familyForm.controls['surname'].dirty">
-                  </p-message>
+                        *ngIf="!familyForm.controls['surname'].valid && familyForm.controls['surname'].dirty">
+                      </p-message>
                     </ng-template>
                     <ng-template pTemplate="output">{{rowData.surname}}</ng-template>
                   </p-cellEditor>
@@ -124,8 +125,8 @@
                     <ng-template pTemplate="input">
                       <input pInputText type="text" [(ngModel)]="rowData.name" formControlName="name">
                       <p-message severity="error" text="Enter Valid Name"
-                      *ngIf="!familyForm.controls['name'].valid && familyForm.controls['name'].dirty">
-                  </p-message>
+                        *ngIf="!familyForm.controls['name'].valid && familyForm.controls['name'].dirty">
+                      </p-message>
                     </ng-template>
                     <ng-template pTemplate="output">{{rowData.name}}</ng-template>
                   </p-cellEditor>
@@ -134,16 +135,12 @@
                   <p-cellEditor>
                     <ng-template pTemplate="input">
                       <!-- <input pInputText type="text" [(ngModel)]="rowData.memDobVal" formControlName="dob"> -->
-
-                     
-                   <p-calendar formControlName="dob" 
-                   [showIcon]="true" 
-                   [dateFormat]="orgnizationSetting.calendar"
-                   [(ngModel)]="rowData.memDobVal" 
-                   placeholder="DD/MM/YYYY"  
-                   (focusout)="datesValidationCheckAgeAndDob(rowData, 2)"
-                   [maxDate]="today" [appendTo]="'body'">
-               </p-calendar>
+            
+            
+                      <p-calendar formControlName="dob" [showIcon]="true" [dateFormat]="orgnizationSetting.calendar"
+                        [(ngModel)]="rowData.memDobVal" placeholder="DD/MM/YYYY" [maxDate]="today" [appendTo]="'body'">
+                        <!-- (focusout)="datesValidationCheckAgeAndDob(rowData, 2)" -->
+                      </p-calendar>
                     </ng-template>
                     <ng-template pTemplate="output">{{rowData.memDobVal}}</ng-template>
                   </p-cellEditor>
@@ -151,23 +148,22 @@
                 <td>
                   <p-cellEditor>
                     <ng-template pTemplate="input">
-                      <input pInputText type="text" maxlength="2"   
-                      [(ngModel)]="rowData.age" formControlName="age" (focusout)="datesValidationCheckAgeAndDob(rowData, 1)" pKeyFilter="pint">
+                      <input pInputText type="text" maxlength="2" [(ngModel)]="rowData.age" formControlName="age" pKeyFilter="pint">
                     </ng-template>
                     <ng-template pTemplate="output">{{rowData.age}}</ng-template>
                   </p-cellEditor>
                 </td>
+                <!-- //(focusout)="datesValidationCheckAgeAndDob(rowData, 1)" -->
                 <td>
                   <p-cellEditor>
                     <ng-template pTemplate="input">
-                      <p-dropdown [options]="groupedQualificationSubQualification"
-                            [(ngModel)]="rowData.qualificationId" formControlName="qualificationId"
-                            placeholder="Select" [group]="true" [filter]="true"
-                            (onChange)="onChangeQualificationChange(rowData.qualificationId)" [appendTo]="'body'">
-                            <ng-template let-group pTemplate="group">
-                                <span>{{group.label}}</span>
-                            </ng-template>
-                        </p-dropdown>
+                      <p-dropdown [options]="groupedQualificationSubQualification" [(ngModel)]="rowData.qualificationId"
+                        formControlName="qualificationId" placeholder="Select" [group]="true" [filter]="true"
+                        (onChange)="onChangeQualificationChange(rowData.qualificationId)" [appendTo]="'body'">
+                        <ng-template let-group pTemplate="group">
+                          <span>{{group.label}}</span>
+                        </ng-template>
+                      </p-dropdown>
                     </ng-template>
                     <ng-template pTemplate="output">
                       {{rowData.qualificationName}}
@@ -177,10 +173,11 @@
                 <td>
                   <p-cellEditor>
                     <ng-template pTemplate="input">
-                      <input pInputText type="text"  minlength="12" maxlength="12" [(ngModel)]="rowData.aadharNumber" formControlName="aadharNumber">
+                      <input pInputText type="text" minlength="12" maxlength="12" [(ngModel)]="rowData.aadharNumber"
+                        formControlName="aadharNumber">
                       <p-message severity="error" text="Enter Valid Aadhar Number"
-                      *ngIf="!familyForm.controls['aadharNumber'].valid && familyForm.controls['aadharNumber'].dirty">
-                  </p-message>
+                        *ngIf="!familyForm.controls['aadharNumber'].valid && familyForm.controls['aadharNumber'].dirty">
+                      </p-message>
                     </ng-template>
                     <ng-template pTemplate="output">{{rowData.aadharNumber}}</ng-template>
                   </p-cellEditor>
@@ -188,61 +185,60 @@
                 <td>
                   <p-cellEditor>
                     <ng-template pTemplate="input">
-                      <input pInputText type="text" minlength="10" maxlength="10" [(ngModel)]="rowData.mobileNumber" formControlName="mobileNumber">
+                      <input pInputText type="text" minlength="10" maxlength="10" [(ngModel)]="rowData.mobileNumber"
+                        formControlName="mobileNumber">
                       <p-message severity="error" text="Enter Valid Mobile Number"
-                      *ngIf="!familyForm.controls['mobileNumber'].valid && familyForm.controls['mobileNumber'].dirty">
-                  </p-message>
+                        *ngIf="!familyForm.controls['mobileNumber'].valid && familyForm.controls['mobileNumber'].dirty">
+                      </p-message>
                     </ng-template>
                     <ng-template pTemplate="output">{{rowData.mobileNumber}}</ng-template>
                   </p-cellEditor>
                 </td>
-              <!-- <td>
-                <p-cellEditor class="table-uploadfilestyle">
-                    <ng-template pTemplate="input">
-                        <div class="uplodad-style align-items-center">
-                            <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
-                                    id="apply-leave_fileUp_attach" chooseLabel=" " name="file"
-                                    accept=".png,.jpg,.jpeg" (onRemove)="fileRemoveEvent(rowData)"
-                                    (onSelect)="fileUploader($event,fileUpload,rowData)" >
-                            </p-fileUpload>
-                        </div>
-                        <div class="col-12 d-flex p-1 contant-body" *ngFor="let img of rowData.multipleFilesList">
-                            <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22"
-                                        height="22"></a>
-                            </div>  
-                            <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                {{img.fileName}}</div>
-                        </div>
-
-                    </ng-template>
-                    <ng-template pTemplate="output">
-                        <div class="d-flex pt-1"  *ngFor="let img of rowData.multipleFilesList">
-                            <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22"
-                                        height="22"></a>
-                            </div>  
-                            <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                {{img.fileName}}</div>
-                        </div>
-                    </ng-template>
-                </p-cellEditor>
-            </td> -->
+                <!-- <td>
+                            <p-cellEditor class="table-uploadfilestyle">
+                                <ng-template pTemplate="input">
+                                    <div class="uplodad-style align-items-center">
+                                        <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                                                id="apply-leave_fileUp_attach" chooseLabel=" " name="file"
+                                                accept=".png,.jpg,.jpeg" (onRemove)="fileRemoveEvent(rowData)"
+                                                (onSelect)="fileUploader($event,fileUpload,rowData)" >
+                                        </p-fileUpload>
+                                    </div>
+                                    <div class="col-12 d-flex p-1 contant-body" *ngFor="let img of rowData.multipleFilesList">
+                                        <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                            <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22"
+                                                    height="22"></a>
+                                        </div>  
+                                        <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                            {{img.fileName}}</div>
+                                    </div>
+            
+                                </ng-template>
+                                <ng-template pTemplate="output">
+                                    <div class="d-flex pt-1"  *ngFor="let img of rowData.multipleFilesList">
+                                        <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                            <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22"
+                                                    height="22"></a>
+                                        </div>  
+                                        <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                            {{img.fileName}}</div>
+                                    </div>
+                                </ng-template>
+                            </p-cellEditor>
+                        </td> -->
                 <td>
                   <div class="global-action-btn flex align-items-center justify-content-start">
-                  <p-button *ngIf="editing"
-                  [disabled]="!familyForm.valid" (click)="saveOrUpdateFamilyDetailsDetails(rowData)" pSaveEditableRow id="prj_stakehlder_bt_cancel"
-                    label="{{'ERP.SAVE' | translate}}" class="action-save">
-                  </p-button>
-                  <p-button *ngIf="editing"  pCancelEditableRow id="prj_stakehlder_bt_cancel"
-                    class="action-delete"  (click)="onRowEditCancel()" label="{{'ERP.CANCEL' | translate}}">
-                  </p-button>
-                  <p-button *ngIf="!editing" pInitEditableRow
-                    (click)="editVillageRow(rowData)"  [disabled]="editDeleteDisable"
-                    label="{{'ERP.EDIT' | translate}}"  id="prj_stakehlder_bt_edit" class='action-edit'></p-button>
+                    <p-button *ngIf="editing" [disabled]="!familyForm.valid" (click)="saveOrUpdateFamilyDetailsDetails(rowData)"
+                      pSaveEditableRow id="prj_stakehlder_bt_cancel" label="{{'ERP.SAVE' | translate}}" class="action-save">
+                    </p-button>
+                    <p-button *ngIf="editing" pCancelEditableRow id="prj_stakehlder_bt_cancel" class="action-delete"
+                      (click)="onRowEditCancel()" label="{{'ERP.CANCEL' | translate}}">
+                    </p-button>
+                    <p-button *ngIf="!editing" pInitEditableRow (click)="editVillageRow(rowData)" [disabled]="editDeleteDisable"
+                      label="{{'ERP.EDIT' | translate}}" id="prj_stakehlder_bt_edit" class='action-edit'></p-button>
                   </div>
                 </td>
-             </tr>
+              </tr>
             </ng-template>
             <ng-template pTemplate="summary">
               <h3 class="NData" *ngIf="memberShipFamilyDetailsDTOList.length == 0">

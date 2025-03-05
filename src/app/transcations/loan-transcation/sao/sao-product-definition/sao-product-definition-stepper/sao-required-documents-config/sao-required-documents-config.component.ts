@@ -311,7 +311,7 @@ export class SaoRequiredDocumentsConfigComponent {
     );
   
     if (isDuplicate) {
-      this.requiredDocumentsForm.get('documentTypeName')?.reset();
+      this.requiredDocumentsForm.get('documentType')?.reset();
       this.msgs = [{ severity: 'error',  detail:applicationConstants.DOCUMENT_TYPE_ALREADY_EXIST}];
       setTimeout(() => {
         this.msgs = [];

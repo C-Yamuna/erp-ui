@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Responsemodel } from 'src/app/shared/responsemodel';
 import { FdNonCumulativeKyc } from './shared/fd-non-cumulative-kyc.model';
@@ -17,7 +17,7 @@ import { MemberGroupDetailsModel, MembershipInstitutionDetailsModel, NewMembersh
 import { DatePipe } from '@angular/common';
 import { FileUploadService } from 'src/app/shared/file-upload.service';
 import { Table } from 'primeng/table';
-import { MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
+import { DOCUMENT_TYPES, MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-fd-non-cumulative-kyc',
@@ -89,12 +89,12 @@ export class FdNonCumulativeKycComponent {
   productName: any;
   admissionNumber: any;
   showForm: any;
-  individualFlag : boolean = false;
-  groupFlag : boolean = false;
-  institutionFlag : boolean = false;
+  individualFlag: boolean = false;
+  groupFlag: boolean = false;
+  institutionFlag: boolean = false;
   memberTypeName: any;
-  promoterDetails: any[]= [];
-  institutionPromoter: any[]= [];
+  promoterDetails: any[] = [];
+  institutionPromoter: any[] = [];
   memberName: any;
   mobileNumer: any;
   aadharNumber: any;
@@ -103,11 +103,13 @@ export class FdNonCumulativeKycComponent {
   memberTypeId: any;
   displayDialog: boolean = false;
   deleteId: any;
-  promotersList: any [] =[];
+  promotersList: any[] = [];
   mandatoryDoxsTextShow: boolean = false;
   requiredDocumentsNamesText: any;
-  saveAndNextEnable : boolean = false;
+  saveAndNextEnable: boolean = false;
   kycPhotoCopyZoom: boolean = false;
+  isPanNumber: boolean = false;
+  isMaximized: boolean = false;
 
 
   constructor(private router: Router,
@@ -118,13 +120,13 @@ export class FdNonCumulativeKycComponent {
     private encryptDecryptService: EncryptDecryptService,
     private fdNonCumulativeKycService: FdNonCumulativeKycService,
     private commonFunctionsService: CommonFunctionsService,
-    private datePipe: DatePipe , private fileUploadService :FileUploadService
+    private datePipe: DatePipe, private fileUploadService: FileUploadService
   ) {
     this.kycForm = this.formBuilder.group({
       'docTypeName': new FormControl('', Validators.required),
-      'docNumber': new FormControl('',[Validators.required, Validators.pattern(applicationConstants.ALLOW_NUMBERS_ONLY)]),
-      'nameAsPerDocument': new FormControl('',[Validators.required,Validators.pattern(applicationConstants.NEW_NAME_PATTERN), Validators.maxLength(40)]),
-      'fileUpload': new FormControl(''),
+      'docNumber': new FormControl('', [Validators.required, Validators.pattern(applicationConstants.ALLOW_NUMBERS_ONLY)]),
+      'nameAsPerDocument': new FormControl('', [Validators.required, Validators.pattern(applicationConstants.NEW_NAME_PATTERN), Validators.maxLength(40)]),
+      'kycFilePath': new FormControl(''),
       'promoter': new FormControl('')
     });
   }
@@ -136,12 +138,12 @@ export class FdNonCumulativeKycComponent {
       this.uploadFlag = true;
     }
     this.activateRoute.queryParams.subscribe(params => {
-      if (params['id'] != undefined ) {
+      if (params['id'] != undefined) {
         let queryParams = this.encryptDecryptService.decrypt(params['id']);
         this.fdNonCummulativeAccId = Number(queryParams);
         this.getFdNonCummApplicationById(this.fdNonCummulativeAccId);
         this.isEdit = true;
-        
+
       } else {
         this.isEdit = false;
       }
@@ -155,17 +157,17 @@ export class FdNonCumulativeKycComponent {
     this.getAllKycTypes();
     this.updateData();
   }
-  
+
   getAllKycTypes() {
     this.fdNonCumulativeKycService.getAllKycTypesFromCommonMaster().subscribe((res: any) => {
       this.responseModel = res;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         this.documentNameList = this.responseModel.data.filter((kyc: any) => kyc.status == applicationConstants.ACTIVE).map((count: any) => {
-          return { label: count.name, value: count.id , isMandatory:count.isMandatory}
+          return { label: count.name, value: count.id, isMandatory: count.isMandatory }
         });
         let filteredObj = this.documentNameList.find((data: any) => null != data && this.fdNonCumulativeKycModel.kycDocumentTypeId != null && data.value == this.fdNonCumulativeKycModel.kycDocumentTypeId);
-            if (filteredObj != null && undefined != filteredObj)
-              this.fdNonCumulativeKycModel.kycDocumentTypeName = filteredObj.label;
+        if (filteredObj != null && undefined != filteredObj)
+          this.fdNonCumulativeKycModel.kycDocumentTypeName = filteredObj.label;
         let i = 0;
         for (let doc of this.documentNameList) {
           if (i == 0)
@@ -182,41 +184,77 @@ export class FdNonCumulativeKycComponent {
       }
     });
   }
-
-
+  /**
+     * @author bhargavi
+     * @implements kyc document upload 
+     */
   imageUploader(event: any, fileUpload: FileUpload) {
+    let fileSizeFlag = false;
     this.isFileUploaded = applicationConstants.FALSE;
     this.multipleFilesList = [];
     this.fdNonCumulativeKycModel.filesDTOList = [];
     this.fdNonCumulativeKycModel.kycFilePath = null;
+    this.fdNonCumulativeKycModel.multipartFileList = [];
     let files: FileUploadModel = new FileUploadModel();
-    for (let file of event.files) {
-      let reader = new FileReader();
-      reader.onloadend = (e) => {
-        this.isFileUploaded = applicationConstants.TRUE;
-        let files = new FileUploadModel();
-        this.uploadFileData = e.currentTarget;
-        files.fileName = file.name;
-        files.fileType = file.type.split('/')[1];
-        files.value = this.uploadFileData.result.split(',')[1];
-        files.imageValue = this.uploadFileData.result;
-        let index = this.multipleFilesList.findIndex(x => x.fileName == files.fileName);
-        if (index === -1) {
-          this.multipleFilesList.push(files);
-          this.fdNonCumulativeKycModel.filesDTOList.push(files); // Add to filesDTOList array
-        }
-        let timeStamp = this.commonComponent.getTimeStamp();
-        this.fdNonCumulativeKycModel.filesDTOList[0].fileName = "FD_NON_KYC_" + this.fdNonCummulativeAccId + "_" +timeStamp+ "_"+ file.name ;
-        this.fdNonCumulativeKycModel.kycFilePath = "FD_NON_KYC_" + this.fdNonCummulativeAccId + "_" +timeStamp+"_"+ file.name; // This will set the last file's name as docPath
-        let index1 = event.files.findIndex((x: any) => x === file);
-        fileUpload.remove(event, index1);
-        fileUpload.clear();
+
+    let selectedFiles = [...event.files];
+    let file = selectedFiles[0];
+
+    if (file.fileType !== ".pdf") {
+      if (file.size / 1024 / 1024 > 2) {
+        this.msgs = [{ severity: "warning", summary: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_2MB }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+        fileSizeFlag = true;
       }
-      reader.readAsDataURL(file);
+    } else if (file.fileType === ".pdf") {
+      if (file.size / 1024 / 1024 > 5) {
+        this.msgs = [{ severity: "warning", summary: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_5MB },];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+        fileSizeFlag = true;
+      }
+    }
+    fileUpload.clear();
+    if (!fileSizeFlag) {
+      for (let file of selectedFiles) {
+        let reader = new FileReader();
+        reader.onloadend = (e) => {
+          this.isFileUploaded = applicationConstants.TRUE;
+          let files = new FileUploadModel();
+          this.uploadFileData = e.currentTarget;
+          files.fileName = file.name;
+          files.fileType = file.type.split("/")[1];
+          files.value = this.uploadFileData.result.split(",")[1];
+          files.imageValue = this.uploadFileData.result;
+
+          let index = this.multipleFilesList.findIndex((x) => x.fileName === files.fileName);
+          if (index === -1) {
+            this.multipleFilesList.push(files);
+            this.fdNonCumulativeKycModel.filesDTOList.push(files);
+            this.fdNonCumulativeKycModel.multipartFileList.push(files);
+          }
+
+          let timeStamp = this.commonComponent.getTimeStamp();
+          this.fdNonCumulativeKycModel.filesDTOList[0].fileName = "FD_NON_CUM_KYC_" + this.fdNonCummulativeAccId + "_" + timeStamp + "_" + file.name;
+          this.fdNonCumulativeKycModel.kycFilePath = "FD_NON_CUM_KYC_" + this.fdNonCummulativeAccId + "_" + timeStamp + "_" + file.name;
+
+          let index1 = event.files.findIndex((x: any) => x === file);
+          fileUpload.remove(event, index1);
+          fileUpload.clear();
+        };
+        reader.readAsDataURL(file);
+      }
+    } else {
+      setTimeout(() => {
+        this.msgs = [];
+      }, 2000);
     }
   }
 
-  
+
   save() {
     this.updateData();
   }
@@ -234,7 +272,7 @@ export class FdNonCumulativeKycComponent {
           if ((documentNameList.length != this.kycModelList.length - missingItems.length) || this.buttonDisabled) {
             this.saveAndNextEnable = true;
           }
-        }else {//group institution promoter kyc mandatory uploads check
+        } else {//group institution promoter kyc mandatory uploads check
           let i = 0;
           this.promotersList.forEach((promoter: any) => {
             let KycList = this.kycModelList.filter((obj: any) => obj.promoterId === promoter.value);
@@ -285,14 +323,14 @@ export class FdNonCumulativeKycComponent {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         this.kycModelList = this.responseModel.data;
-          this.getAllKycsDetailsFdKycDetails(this.fdNonCummulativeAccId);
-          this.commonComponent.stopSpinner();
+        this.getAllKycsDetailsFdKycDetails(this.fdNonCummulativeAccId);
+        this.commonComponent.stopSpinner();
         this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
         setTimeout(() => {
           this.msgs = [];
         }, 3000);
       }
-      else{
+      else {
         this.commonComponent.stopSpinner();
         this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
         setTimeout(() => {
@@ -318,18 +356,18 @@ export class FdNonCumulativeKycComponent {
             if (this.kycModelList != null && this.kycModelList != undefined) {
               this.editDocumentOfKycFalg = true;
               for (let kyc of this.kycModelList) {
-                if(kyc.kycFilePath != null && kyc.kycFilePath != undefined){
-                  if(kyc.kycFilePath != null && kyc.kycFilePath != undefined){
-                    kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath ,ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
+                if (kyc.kycFilePath != null && kyc.kycFilePath != undefined) {
+                  if (kyc.kycFilePath != null && kyc.kycFilePath != undefined) {
+                    kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
 
                   }
-                }  
+                }
               }
               this.buttonDisabled = false;
               this.updateData();
             }
           }
-          else{
+          else {
             this.addDocumentOfKycFalg = true;
             this.buttonDisabled = true;
             this.updateData();
@@ -354,16 +392,16 @@ export class FdNonCumulativeKycComponent {
   saveKyc(row: any) {
     this.fdNonCumulativeKycModel.fdNonCummulativeAccId = this.fdNonCummulativeAccId;
     this.fdNonCumulativeKycModel.admissionNumber = this.admissionNumber;
-    this.fdNonCumulativeKycModel.memberTypeName  = this.memberTypeName;
-    this.fdNonCumulativeKycModel.memberType  = this.memberTypeId;
-    this.fdNonCumulativeKycModel.memberId  = this.memberId;
-    if(this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0){
+    this.fdNonCumulativeKycModel.memberTypeName = this.memberTypeName;
+    this.fdNonCumulativeKycModel.memberType = this.memberTypeId;
+    this.fdNonCumulativeKycModel.memberId = this.memberId;
+    if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0) {
       let filteredObj = this.documentNameList.find((data: any) => null != data && this.fdNonCumulativeKycModel.kycDocumentTypeId != null && data.value == this.fdNonCumulativeKycModel.kycDocumentTypeId);
-      if (filteredObj != null && undefined != filteredObj && filteredObj.label != null && filteredObj.label != undefined){
+      if (filteredObj != null && undefined != filteredObj && filteredObj.label != null && filteredObj.label != undefined) {
         this.fdNonCumulativeKycModel.kycDocumentTypeName = filteredObj.label;
       }
     }
-    this.fdNonCumulativeKycModel.status  = applicationConstants.ACTIVE;
+    this.fdNonCumulativeKycModel.status = applicationConstants.ACTIVE;
     this.fdNonCumulativeKycService.addKyc(this.fdNonCumulativeKycModel).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
@@ -372,7 +410,7 @@ export class FdNonCumulativeKycComponent {
         setTimeout(() => {
           this.msgs = [];
         }, 1200);
-      }else {
+      } else {
         this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
         setTimeout(() => {
           this.msgs = [];
@@ -419,15 +457,15 @@ export class FdNonCumulativeKycComponent {
             }
             if (this.fdNonCumulativeApplicationModel.depositAmount != null && this.fdNonCumulativeApplicationModel.depositAmount != undefined) {
               this.minBalence = this.fdNonCumulativeApplicationModel.depositAmount;
-            } 
-            if(this.fdNonCumulativeApplicationModel.admissionNumber != null && this.fdNonCumulativeApplicationModel.admissionNumber != undefined){
+            }
+            if (this.fdNonCumulativeApplicationModel.admissionNumber != null && this.fdNonCumulativeApplicationModel.admissionNumber != undefined) {
               this.admissionNumber = this.fdNonCumulativeApplicationModel.admissionNumber;
             }
-            if(this.fdNonCumulativeApplicationModel.memberTypeName != null && this.fdNonCumulativeApplicationModel.memberTypeName != undefined){
+            if (this.fdNonCumulativeApplicationModel.memberTypeName != null && this.fdNonCumulativeApplicationModel.memberTypeName != undefined) {
               this.memberTypeName = this.fdNonCumulativeApplicationModel.memberTypeName;
               this.membershipDataFromModule();
             }
-            if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length >0) {
+            if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0) {
               let i = 0;
               for (let doc of this.documentNameList) {
                 if (i == 0)
@@ -442,13 +480,13 @@ export class FdNonCumulativeKycComponent {
                 this.mandatoryDoxsTextShow = true;
               }
             }
-          
-            if(this.responseModel.data[0].memberType != null && this.responseModel.data[0].memberType != undefined)
+
+            if (this.responseModel.data[0].memberType != null && this.responseModel.data[0].memberType != undefined)
               this.memberTypeId = this.responseModel.data[0].memberType;
             this.getAllKycsDetailsFdKycDetails(this.fdNonCummulativeAccId);
             this.updateData();
           }
-        }else {
+        } else {
           this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
           setTimeout(() => {
             this.msgs = [];
@@ -465,11 +503,11 @@ export class FdNonCumulativeKycComponent {
     });
   }
 
- /**
-  * @implements add kyc
-  * @param event 
- 
-  */
+  /**
+   * @implements add kyc
+   * @param event 
+  
+   */
   addKyc(event: any) {
     this.isFileUploaded = applicationConstants.FALSE;
     // this.getAllKycTypes();
@@ -493,16 +531,16 @@ export class FdNonCumulativeKycComponent {
     this.getAllKycsDetailsFdKycDetails(this.fdNonCummulativeAccId);
     this.updateData();
   }
-  
+
   onClick() {
     this.addDocumentOfKycFalg = true;
   }
- /**
-  * @implements edit card data
-  * @param index 
-  * @param modelData 
- 
-  */
+  /**
+   * @implements edit card data
+   * @param index 
+   * @param modelData 
+  
+   */
   toggleEditForm(index: number, modelData: any): void {
     if (this.editIndex === index) {
       this.editIndex = index;
@@ -526,41 +564,41 @@ export class FdNonCumulativeKycComponent {
     this.editDocumentOfKycFalg = true;
     this.buttonDisabled = false;
     this.editButtonDisable = false;
-      this.getAllKycsDetailsFdKycDetails(this.fdNonCummulativeAccId);
-    
+    this.getAllKycsDetailsFdKycDetails(this.fdNonCummulativeAccId);
+
     this.updateData();
   }
 
-   /**
-    * @implements edit save
-    * @param row 
+  /**
+   * @implements edit save
+   * @param row 
  
-    */
+   */
   editsave(row: any) {
     this.fdNonCumulativeKycModel.fdNonCummulativeAccId = this.fdNonCummulativeAccId;
     this.fdNonCumulativeKycModel.admissionNumber = this.admissionNumber;
-    this.fdNonCumulativeKycModel.memberTypeName  = this.memberTypeName;
-    this.fdNonCumulativeKycModel.memberType  = this.memberTypeId;
-    this.fdNonCumulativeKycModel.memberId  = this.memberId;
-    
-    if(this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0){
+    this.fdNonCumulativeKycModel.memberTypeName = this.memberTypeName;
+    this.fdNonCumulativeKycModel.memberType = this.memberTypeId;
+    this.fdNonCumulativeKycModel.memberId = this.memberId;
+
+    if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0) {
       let filteredObj = this.documentNameList.find((data: any) => null != data && this.fdNonCumulativeKycModel.kycDocumentTypeId != null && data.value == this.fdNonCumulativeKycModel.kycDocumentTypeId);
-      if (filteredObj != null && undefined != filteredObj && filteredObj.label != null && filteredObj.label != undefined){
+      if (filteredObj != null && undefined != filteredObj && filteredObj.label != null && filteredObj.label != undefined) {
         this.fdNonCumulativeKycModel.kycDocumentTypeName = filteredObj.label;
       }
     }
     this.editDocumentOfKycFalg = true;
     this.buttonDisabled = false;
     this.editButtonDisable = false;
-    this.fdNonCumulativeKycModel.status  = applicationConstants.ACTIVE;
+    this.fdNonCumulativeKycModel.status = applicationConstants.ACTIVE;
     this.fdNonCumulativeKycService.updateKyc(this.fdNonCumulativeKycModel).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         // this.kycModelList = this.responseModel.data;
         this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 1200);
+        setTimeout(() => {
+          this.msgs = [];
+        }, 1200);
       }
       else {
         this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
@@ -582,11 +620,11 @@ export class FdNonCumulativeKycComponent {
 
   }
 
- /**
-  * @implements get kyc by Id
-  * @param id 
- 
-  */
+  /**
+   * @implements get kyc by Id
+   * @param id 
+  
+   */
   getKycById(id: any) {
     this.fdNonCumulativeKycService.getKycById(id).subscribe((data: any) => {
       this.responseModel = data;
@@ -596,10 +634,13 @@ export class FdNonCumulativeKycComponent {
             if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
               this.fdNonCumulativeKycModel = this.responseModel.data[0];
               if (this.fdNonCumulativeKycModel.kycFilePath != undefined) {
-                if(this.fdNonCumulativeKycModel.kycFilePath != null && this.fdNonCumulativeKycModel.kycFilePath != undefined){
-                  this.fdNonCumulativeKycModel.multipartFileList = this.fileUploadService.getFile(this.fdNonCumulativeKycModel.kycFilePath ,ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.fdNonCumulativeKycModel.kycFilePath);
+                if (this.fdNonCumulativeKycModel.kycFilePath != null && this.fdNonCumulativeKycModel.kycFilePath != undefined) {
+                  this.fdNonCumulativeKycModel.multipartFileList = this.fileUploadService.getFile(this.fdNonCumulativeKycModel.kycFilePath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.fdNonCumulativeKycModel.kycFilePath);
                   this.isFileUploaded = applicationConstants.TRUE;
                 }
+              }
+              if (this.fdNonCumulativeKycModel.kycDocumentTypeName != null && this.fdNonCumulativeKycModel.kycDocumentTypeName != undefined) {
+                this.documentNumberDynamicValidation(this.fdNonCumulativeKycModel.kycDocumentTypeName);
               }
             }
           }
@@ -627,7 +668,7 @@ export class FdNonCumulativeKycComponent {
               this.membershipBasicRequiredDetailsModel.admissionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
             }
             this.memberId = this.membershipBasicRequiredDetailsModel.id;
-            
+
           }
         }
         else {
@@ -667,7 +708,7 @@ export class FdNonCumulativeKycComponent {
             if (this.memberGroupDetailsModel.admissionDate != null && this.memberGroupDetailsModel.admissionDate != undefined) {
               this.memberGroupDetailsModel.admissionDateVal = this.datePipe.transform(this.memberGroupDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
             }
-              this.memberId = this.memberGroupDetailsModel.id;
+            this.memberId = this.memberGroupDetailsModel.id;
           }
         }
         else {
@@ -731,27 +772,27 @@ export class FdNonCumulativeKycComponent {
       });
   }
 
-  membershipDataFromModule(){
+  membershipDataFromModule() {
     if (this.memberTypeName == MemberShipTypesData.INDIVIDUAL) {
       this.individualFlag = true;
     } else if (this.memberTypeName == MemberShipTypesData.GROUP) {
       this.groupFlag = true;
-      if(this.fdNonCumulativeApplicationModel.memberShipGroupDetailsDTO.groupPromoterList != null && this.fdNonCumulativeApplicationModel.memberShipGroupDetailsDTO.groupPromoterList != undefined && this.fdNonCumulativeApplicationModel.memberShipGroupDetailsDTO.groupPromoterList.length >0){
+      if (this.fdNonCumulativeApplicationModel.memberShipGroupDetailsDTO.groupPromoterList != null && this.fdNonCumulativeApplicationModel.memberShipGroupDetailsDTO.groupPromoterList != undefined && this.fdNonCumulativeApplicationModel.memberShipGroupDetailsDTO.groupPromoterList.length > 0) {
         this.promotersList = this.fdNonCumulativeApplicationModel.memberShipGroupDetailsDTO.groupPromoterList.filter((promoter: any) => promoter.status == applicationConstants.ACTIVE).map((promoter: any) => {
-          return { label: promoter.name+" "+promoter.surname, value: promoter.id }
+          return { label: promoter.name + " " + promoter.surname, value: promoter.id }
         });
       }
-    
+
     } else if (this.memberTypeName == MemberShipTypesData.INSTITUTION) {
       this.institutionFlag = true;
-      if(this.fdNonCumulativeApplicationModel.memInstitutionDTO.institutionPromoterList != null && this.fdNonCumulativeApplicationModel.memInstitutionDTO.institutionPromoterList != undefined && this.fdNonCumulativeApplicationModel.memInstitutionDTO.institutionPromoterList.length >0){
+      if (this.fdNonCumulativeApplicationModel.memInstitutionDTO.institutionPromoterList != null && this.fdNonCumulativeApplicationModel.memInstitutionDTO.institutionPromoterList != undefined && this.fdNonCumulativeApplicationModel.memInstitutionDTO.institutionPromoterList.length > 0) {
         this.promotersList = this.fdNonCumulativeApplicationModel.memInstitutionDTO.institutionPromoterList.filter((promoter: any) => promoter.status == applicationConstants.ACTIVE).map((promoter: any) => {
-          return { label: promoter.name+" "+promoter.surname, value: promoter.id }
+          return { label: promoter.name + " " + promoter.surname, value: promoter.id }
         });
       }
-     
+
     }
-    
+
   }
 
   /**
@@ -759,17 +800,38 @@ export class FdNonCumulativeKycComponent {
    * @param kycDocTypeId 
 
    */
-  kycModelDuplicateCheck(fdNonCumulativeKycModel: any) {
+  kycModelDuplicateCheck(rowData: any) {
+    if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0) {
+      let filteredObj = this.documentNameList.find((data: any) => null != data && this.fdNonCumulativeKycModel.kycDocumentTypeId != null && data.value == this.fdNonCumulativeKycModel.kycDocumentTypeId);
+      if (filteredObj != null && undefined != filteredObj && filteredObj.label != null && filteredObj.label != undefined) {
+        this.fdNonCumulativeKycModel.kycDocumentTypeName = filteredObj.label;
+        this.documentNumberDynamicValidation(this.fdNonCumulativeKycModel.kycDocumentTypeName);
+      }
+    }
     if (this.kycModelList != null && this.kycModelList != undefined && this.kycModelList.length > 0) {
-      let duplicate
-      if (this.fdNonCumulativeApplicationModel.memberTypeName != MemberShipTypesData.INDIVIDUAL) {
-        duplicate = this.kycModelList.find((obj: any) => obj && obj.kycDocumentTypeId === this.fdNonCumulativeKycModel.kycDocumentTypeId && obj.promoterId === fdNonCumulativeKycModel.promoterId);
+      let duplicate: any
+      if (this.fdNonCumulativeKycModel.memberTypeName != MemberShipTypesData.INDIVIDUAL) {
+        duplicate = this.kycModelList.filter((obj: any) => obj && obj.kycDocumentTypeId === rowData.kycDocumentTypeId && obj.promoterId === rowData.promoterId);
       }
       else {
-        duplicate = this.kycModelList.find((obj: any) => obj && obj.kycDocumentTypeId === fdNonCumulativeKycModel.kycDocumentTypeId);
+        duplicate = this.kycModelList.filter((obj: any) => obj && obj.kycDocumentTypeId === rowData.kycDocumentTypeId);
       }
-      if (duplicate != null && duplicate != undefined) {
+      if (this.addDocumentOfKycFalg && duplicate != null && duplicate != undefined && duplicate.length == 1) {
         this.kycForm.reset();
+        this.fdNonCumulativeKycModel = new FdNonCumulativeKyc();
+        if (rowData.id != null && rowData != undefined)
+          this.fdNonCumulativeKycModel.id = rowData.id;
+        this.msgs = [];
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "duplicate Kyc Types" }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      }
+      else if (!this.addDocumentOfKycFalg && duplicate != null && duplicate != undefined && duplicate.length == 1 && duplicate[0].id != rowData.id) {
+        this.kycForm.reset();
+        this.fdNonCumulativeKycModel = new FdNonCumulativeKyc();
+        if (rowData.id != null && rowData != undefined)
+          this.fdNonCumulativeKycModel.id = rowData.id;
         this.msgs = [];
         this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "duplicate Kyc Types" }];
         setTimeout(() => {
@@ -779,16 +841,16 @@ export class FdNonCumulativeKycComponent {
     }
   }
 
-   /**
+  /**
 
-   * @implements on click delete
-   */
-   deletDilogBox(rowData:any){
+  * @implements on click delete
+  */
+  deletDilogBox(rowData: any) {
     this.displayDialog = true;
-    if(rowData.id != null && rowData.id != undefined){
+    if (rowData.id != null && rowData.id != undefined) {
       this.deleteId = rowData.id;
     }
-   
+
   }
 
   /**
@@ -803,30 +865,33 @@ export class FdNonCumulativeKycComponent {
 
    * @implements submit delete diloge 
    */
-  submitDelete(){
-    if(this.deleteId != null && this.deleteId != undefined){
+  submitDelete() {
+    if (this.deleteId != null && this.deleteId != undefined) {
       this.delete(this.deleteId);
     }
     this.fdNonCumulativeKycModel = new FdNonCumulativeKyc();
-      this.displayDialog = false;
+    this.displayDialog = false;
   }
 
   /**
    * @implements onFile remove
 
    */
-  fileRemoeEvent(){
-    if(this.fdNonCumulativeKycModel.filesDTOList != null && this.fdNonCumulativeKycModel.filesDTOList != undefined && this.fdNonCumulativeKycModel.filesDTOList.length > 0){
-     let removeFileIndex = this.fdNonCumulativeKycModel.filesDTOList.findIndex((obj:any) => obj && obj.fileName === this.fdNonCumulativeKycModel.kycFilePath);
-     if(removeFileIndex != null && removeFileIndex != undefined){
-       this.fdNonCumulativeKycModel.filesDTOList[removeFileIndex] = null;
-       this.fdNonCumulativeKycModel.kycFilePath = null;
-     }
+  fileRemoeEvent() {
+    this.isFileUploaded = applicationConstants.FALSE;
+    if (this.fdNonCumulativeKycModel.filesDTOList != null && this.fdNonCumulativeKycModel.filesDTOList != undefined && this.fdNonCumulativeKycModel.filesDTOList.length > 0) {
+      let removeFileIndex = this.fdNonCumulativeKycModel.filesDTOList.findIndex((obj: any) => obj && obj.fileName === this.fdNonCumulativeKycModel.kycFilePath);
+      if (removeFileIndex != null && removeFileIndex != undefined) {
+        this.fdNonCumulativeKycModel.filesDTOList[removeFileIndex] = null;
+        this.fdNonCumulativeKycModel.kycFilePath = null;
+      }
     }
-   }
+  }
 
-   onClickkycPhotoCopy() {
+  onClickkycPhotoCopy(rowData: any) {
+    this.multipleFilesList = [];
     this.kycPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
   }
 
   kycclosePhoto() {
@@ -837,4 +902,63 @@ export class FdNonCumulativeKycComponent {
     this.kycPhotoCopyZoom = false;
   }
 
+  /**
+    * @implements document number dynamic Vaildation
+    * @author Bhargavi
+    */
+  documentNumberDynamicValidation(docTypeName: any) {
+    if (DOCUMENT_TYPES.AADHAR == this.fdNonCumulativeKycModel.kycDocumentTypeName) {
+      const controlTow = this.kycForm.get('docNumber');
+      if (controlTow) {
+        controlTow.setValidators([
+          Validators.required,
+          Validators.pattern(applicationConstants.AADHAR_PATTERN)
+        ]);
+        controlTow.updateValueAndValidity();
+      }
+      this.isPanNumber = false;
+    }
+    else if (DOCUMENT_TYPES.PANNUMBER == this.fdNonCumulativeKycModel.kycDocumentTypeName) {
+      const controlTow = this.kycForm.get('docNumber');
+      if (controlTow) {
+        controlTow.setValidators([
+          Validators.required,
+          Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN)
+        ]);
+        controlTow.updateValueAndValidity();
+      }
+      this.isPanNumber = true;
+    }
+    else {
+      const controlTow = this.kycForm.get('docNumber');
+      if (controlTow) {
+        controlTow.setValidators([
+          Validators.required,
+        ]);
+        controlTow.updateValueAndValidity();
+      }
+      this.isPanNumber = false;
+    }
+  }
+  // Popup Maximize
+  @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+
+  onDialogResize(event: any) {
+    this.isMaximized = event.maximized;
+
+    if (this.isMaximized) {
+      // Restore original image size when maximized
+      this.imageElement.nativeElement.style.width = 'auto';
+      this.imageElement.nativeElement.style.height = 'auto';
+      this.imageElement.nativeElement.style.maxWidth = '100%';
+      this.imageElement.nativeElement.style.maxHeight = '100vh';
+    } else {
+      // Fit image inside the dialog without scrollbars
+      this.imageElement.nativeElement.style.width = '100%';
+      this.imageElement.nativeElement.style.height = '100%';
+      this.imageElement.nativeElement.style.maxWidth = '100%';
+      this.imageElement.nativeElement.style.maxHeight = '100%';
+      this.imageElement.nativeElement.style.objectFit = 'contain';
+    }
+  }
 }

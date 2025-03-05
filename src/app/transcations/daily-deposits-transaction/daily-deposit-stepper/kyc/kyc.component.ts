@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { applicationConstants } from 'src/app/shared/applicationConstants';
 import { MemberGroupDetailsModel, MembershipBasicDetail, MembershipInstitutionDetailsModel } from 'src/app/transcations/term-deposits-transcation/shared/membership-basic-detail.model';
 import { Accounts } from '../../shared/accounts.model';
 import { AccountKYC } from '../../shared/account-kyc.model';
 import { Responsemodel } from 'src/app/shared/responsemodel';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonComponent } from 'src/app/shared/common.component';
@@ -14,7 +14,7 @@ import { FileUploadService } from 'src/app/shared/file-upload.service';
 import { FileUpload } from 'primeng/fileupload';
 import { FileUploadModel } from 'src/app/layout/mainmenu/shared/file-upload-model.model';
 import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-constants';
-import { MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
+import { DOCUMENT_TYPES, MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
 import { DailyDepositsAccountsService } from '../../shared/daily-deposits-accounts.service';
 
 @Component({
@@ -26,7 +26,7 @@ export class KycComponent {
   kycForm: FormGroup;
   kyc: any;
   checked: any;
-  rdAccId: any;
+  accId: any;
   accountType: any;
   applicationType: any;
   msgs: any[] = [];
@@ -36,8 +36,8 @@ export class KycComponent {
   membershipBasicDetail: MembershipBasicDetail = new MembershipBasicDetail();
   memberGroupDetailsModel: MemberGroupDetailsModel = new MemberGroupDetailsModel();
   membershipInstitutionDetailsModel: MembershipInstitutionDetailsModel = new MembershipInstitutionDetailsModel();
-  rdAccountsModel: Accounts = new Accounts();
-  rdKycModel: AccountKYC = new AccountKYC();
+  accountsModel: Accounts = new Accounts();
+  accountsKycModel: AccountKYC = new AccountKYC();
   kycModelList: any[] = [];
   adhaarFilesList: any[] = [];
   signFilesList: any[] = [];
@@ -90,6 +90,17 @@ export class KycComponent {
   displayDialog: boolean = false;
   deleteId: any;
   promotersList: any[] = [];
+  isPanNumber: boolean = false;
+  mandatoryDoxsTextShow: boolean = false;
+  saveAndNextEnable : boolean = false;
+  kycPhotoCopyZoom: boolean = false;
+  isMaximized: boolean = false;
+  requiredDocumentsNamesText: any;
+  saveButtonDisable: boolean= false;
+  requiredDocumentsList: any[]=[];
+  isDisable: boolean=false;
+  mandatoryList:any[]=[];
+  fileSizeMsgForImage: any;
 
 
   constructor(private router: Router, private formBuilder: FormBuilder,
@@ -100,10 +111,11 @@ export class KycComponent {
     private dailyDepositsAccountsService:DailyDepositsAccountsService
   ) {
     this.kycForm = this.formBuilder.group({
-      'docNumber': ['', [Validators.pattern(applicationConstants.ALLOW_NUMBERS_ONLY), Validators.compose([Validators.required])]],
-      'docTypeName': ['', Validators.compose([Validators.required])],
-      'fileUpload': ['',],
-      'promoter': ['',],
+      'docNumber': new FormControl('', [Validators.required, Validators.pattern(/^[^\s]+(\s.*)?$/)]),
+      'requiredDocTypeName': new FormControl('', Validators.required),
+      'nameAsPerDocument': new FormControl('',[Validators.required,Validators.pattern(applicationConstants.NEW_NAME_PATTERN), Validators.maxLength(40), Validators.pattern(/^[^\s]+(\s.*)?$/)]),
+      'fileUpload': new FormControl(''),
+      // 'promoter': ['', ],
     });
   }
 
@@ -116,8 +128,8 @@ export class KycComponent {
     this.activateRoute.queryParams.subscribe(params => {
       if (params['id'] != undefined) {
         let queryParams = this.encryptDecryptService.decrypt(params['id']);
-        this.rdAccId = Number(queryParams);
-        this.getRdAccounts(this.rdAccId);
+        this.accId = Number(queryParams);
+        this.getRdAccounts(this.accId);
         this.isEdit = true;
 
       } else {
@@ -126,7 +138,7 @@ export class KycComponent {
     });
     this.buttonDisabled = false;
     this.columns = [
-      { field: 'docTypeName', header: 'MEMBERSHIP.KYC_DOCUMENT_NAME' },
+      { field: 'docTypeName', header: 'MEMBERSHIP.KYgetAllC_DOCUMENT_NAME' },
       { field: 'docNumber', header: 'MEMBERSHIP.KYC_DOCUMENT_NUMBER' },
       { field: 'docPath', header: 'MEMBERSHIP.KYC_DOCUMENT' }
     ];
@@ -139,25 +151,58 @@ export class KycComponent {
       this.responseModel = res;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         this.documentNameList = this.responseModel.data.filter((kyc: any) => kyc.status == applicationConstants.ACTIVE).map((count: any) => {
-          return { label: count.name, value: count.id }
+          return { label: count.name, value: count.id, isMandatory: count.isMandatory }
         });
-        let filteredObj = this.documentNameList.find((data: any) => null != data && this.rdKycModel.requiredDocId != null && data.value == this.rdKycModel.requiredDocId);
-        if (filteredObj != null && undefined != filteredObj)
-          this.rdKycModel.kycDocumentTypeName = filteredObj.label;
+        let filteredObj = this.documentNameList.find((data: any) => null != data && this.accountsKycModel.kycDocumentTypeId != null && data.value == this.accountsKycModel.kycDocumentTypeId);
+        if (filteredObj != null && undefined != filteredObj) {
+          this.accountsKycModel.kycDocumentTypeName = filteredObj.label;
+        }
+        this.mandatoryList = this.documentNameList.filter((obj: any) => obj.isMandatory == applicationConstants.TRUE);
+        let i = 0;
+        for (let doc of this.documentNameList) {
+          if (i == 0)
+            this.requiredDocumentsNamesText = "'Please Upload Mandatory KYC Documents "
+          if (doc.isMandatory) {
+            i = i + 1;
+            this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + doc.label;
+            if (i < this.mandatoryList.length) {
+              this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + " , "
+            }
+          }
+        }
+        this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + "'";
+        if (i > 0) {
+          this.mandatoryDoxsTextShow = true;
+        }
       }
     });
   }
 
 
   imageUploader(event: any, fileUpload: FileUpload) {
-    this.isFileUploaded = applicationConstants.FALSE;
+    this.saveButtonDisable = true;
+    this.isFileUploaded = applicationConstants.TRUE;
+    this.saveButtonDisable = true;
     this.multipleFilesList = [];
-    this.rdKycModel.filesDTOList = [];
-    this.rdKycModel.kycFilePath = null;
+    this.accountsKycModel.filesDTOList = [];
+    this.accountsKycModel.kycFilePath = null;
+    this.accountsKycModel.multipartFileList = [];
     let files: FileUploadModel = new FileUploadModel();
-    for (let file of event.files) {
+
+    let selectedFiles = [...event.files];
+    if(selectedFiles[0].fileType != ".pdf"){
+      if (selectedFiles[0].size/1024/1024 > 2) {
+        this.fileSizeMsgForImage= "file is bigger than 2MB";
+       }
+    }
+   
+    // Clear file input before processing files
+    fileUpload.clear();
+
+    for (let file of selectedFiles) {
       let reader = new FileReader();
       reader.onloadend = (e) => {
+        this.isFileUploaded = applicationConstants.TRUE;
         let files = new FileUploadModel();
         this.uploadFileData = e.currentTarget;
         files.fileName = file.name;
@@ -167,14 +212,16 @@ export class KycComponent {
         let index = this.multipleFilesList.findIndex(x => x.fileName == files.fileName);
         if (index === -1) {
           this.multipleFilesList.push(files);
-          this.rdKycModel.filesDTOList.push(files); // Add to filesDTOList array
+          this.accountsKycModel.filesDTOList.push(files); // Add to filesDTOList array
+          this.accountsKycModel.multipartFileList.push(files);
         }
         let timeStamp = this.commonComponent.getTimeStamp();
-        this.rdKycModel.filesDTOList[0].fileName = "RD_KYC_" + this.rdAccId + "_" + timeStamp + "_" + file.name;
-        this.rdKycModel.kycFilePath = "RD_KYC_" + this.rdAccId + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
+        this.accountsKycModel.filesDTOList[0].fileName = "DD_KYC_" + this.accId + "_" +timeStamp+ "_"+ file.name ;
+        this.accountsKycModel.kycFilePath = "DD_KYC" + this.accId + "_" +timeStamp+"_"+ file.name; // This will set the last file's name as docPath
         let index1 = event.files.findIndex((x: any) => x === file);
         fileUpload.remove(event, index1);
         fileUpload.clear();
+        
       }
       reader.readAsDataURL(file);
     }
@@ -185,16 +232,30 @@ export class KycComponent {
     this.updateData();
   }
   updateData() {
-    this.rdKycModel.accId = this.rdAccId;
-    this.rdKycModel.admissionNumber = this.admissionNumber;
-    // this.rdKycModel.memberTypeName = this.memberTypeName;
-    this.rdKycModel.memberType = this.memberTypeId;
-    this.rdKycModel.memberId = this.memberId;
+    this.accountsKycModel.accId = this.accId;
+    this.accountsKycModel.admissionNumber = this.admissionNumber;
+    // this.accountsKycModel.memberTypeName = this.memberTypeName;
+    this.accountsKycModel.memberType = this.memberTypeId;
+    this.accountsKycModel.memberId = this.memberId;
+    if (this.mandatoryList != null && this.mandatoryList != undefined && this.mandatoryList.length > 0 && this.accountsModel.accountKycList != null
+      && this.accountsModel.accountKycList != undefined && this.accountsModel.accountKycList.length>0) {
+        this.requiredDocumentsList = this.accountsModel.accountKycList;
+      if (this.requiredDocumentsList != null && this.requiredDocumentsList != undefined && this.requiredDocumentsList.length > 0) {
+        if (this.requiredDocumentsList.every((doc: { kycDocumentTypeName: any; }) => this.mandatoryList.some(kyc => kyc.kycDocumentTypeName === doc.kycDocumentTypeName))) {
+          this.isDisable = true;
+        } else {
+          this.isDisable = false;
+        }
+      }
+      else {
+        this.isDisable = true;
+      }
+    }
     this.dailyDepositsAccountsService.changeData({
       formValid: !this.kycForm.valid ? true : false,
-      data: this.rdKycModel,
+      data: this.accountsKycModel,
       // isDisable: this.documentsData.length <= 0 ? true : false || this.uploadFlag,
-      isDisable: this.buttonDisabled,
+      isDisable: !this.isDisable,
       stepperIndex: 1,
     });
   }
@@ -209,7 +270,7 @@ export class KycComponent {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         this.kycModelList = this.responseModel.data;
-        this.getAllKycsDetailsRdKycDetails(this.rdAccId);
+        this.getAllKycsDetailsRdKycDetails(this.accId);
         this.commonComponent.stopSpinner();
         this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
         setTimeout(() => {
@@ -233,30 +294,32 @@ export class KycComponent {
   }
 
   getAllKycsDetailsRdKycDetails(id: any) {
-    this.dailyDepositsAccountsService.getAccounts(id).subscribe((response: any) => {
+    this.kycModelList = [];
+    this.dailyDepositsAccountsService.getKycDetailsByAccountId(id).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel != null && this.responseModel != undefined) {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.kycModelList = this.responseModel.data;
+
+            if (this.accountsKycModel.kycFilePath != null && this.accountsKycModel.kycFilePath != undefined) {
+              this.accountsKycModel.multipartFileList = this.fileUploadService.getFile(this.accountsKycModel.kycFilePath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.accountsKycModel.kycFilePath);
+
+            }
             if (this.kycModelList != null && this.kycModelList != undefined) {
               this.editDocumentOfKycFalg = true;
               for (let kyc of this.kycModelList) {
-                if (kyc.kycFilePath != null && kyc.kycFilePath != undefined) {
-                  if (kyc.kycFilePath != null && kyc.kycFilePath != undefined) {
-                    kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
-
-                  }
-                }
+                let multipleFilesList = [];
+                let file = new FileUploadModel();
+                file.imageValue = ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath;
+                let objects = kyc.kycFilePath.split('.');
+                file.fileType = objects[objects.length - 1];
+                let name = kyc.kycFilePath.replace(/ /g, "_");
+                file.fileName = name
+                multipleFilesList.push(file);
+                kyc.multipartFileList = multipleFilesList;
               }
-              this.buttonDisabled = false;
-              this.updateData();
             }
-          }
-          else {
-            this.addDocumentOfKycFalg = true;
-            this.buttonDisabled = true;
-            this.updateData();
           }
         }
       }
@@ -275,22 +338,23 @@ export class KycComponent {
 
    */
   saveKyc(row: any) {
-    this.rdKycModel.accId = this.rdAccId;
-    this.rdKycModel.admissionNumber = this.admissionNumber;
-    // this.rdKycModel.memberTypeName = this.memberTypeName;
-    this.rdKycModel.memberType = this.memberTypeId;
-    this.rdKycModel.memberId = this.memberId;
+    this.accountsKycModel.accId = this.accId;
+    this.accountsKycModel.admissionNumber = this.admissionNumber;
+    this.accountsKycModel.accountNumber = this.accountsKycModel.accountNumber;
+    // this.accountsKycModel.memberTypeName = this.memberTypeName;
+    this.accountsKycModel.memberType = this.memberTypeId;
+    this.accountsKycModel.memberId = this.memberId;
     if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0) {
-      let filteredObj = this.documentNameList.find((data: any) => null != data && this.rdKycModel.kycDocumentTypeId != null && data.value == this.rdKycModel.kycDocumentTypeId);
+      let filteredObj = this.documentNameList.find((data: any) => null != data && this.accountsKycModel.kycDocumentTypeId != null && data.value == this.accountsKycModel.kycDocumentTypeId);
       if (filteredObj != null && undefined != filteredObj && filteredObj.label != null && filteredObj.label != undefined) {
-        this.rdKycModel.kycDocumentTypeName = filteredObj.label;
+        this.accountsKycModel.kycDocumentTypeName = filteredObj.label;
       }
     }
-    this.rdKycModel.status = applicationConstants.ACTIVE;
-    this.dailyDepositsAccountsService.addAccountKyc(this.rdKycModel).subscribe((response: any) => {
+    this.accountsKycModel.status = applicationConstants.ACTIVE;
+    this.dailyDepositsAccountsService.addAccountKyc(this.accountsKycModel).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-        this.rdKycModel = this.responseModel.data[0];
+        this.accountsKycModel = this.responseModel.data[0];
         this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
         setTimeout(() => {
           this.msgs = [];
@@ -303,7 +367,8 @@ export class KycComponent {
       }
       this.addKycButton = false;
       this.buttonDisabled = false;
-      this.getAllKycsDetailsRdKycDetails(this.rdAccId);
+      this.getAllKycsDetailsRdKycDetails(this.accId);
+      this.updateData();
     }, error => {
       this.commonComponent.stopSpinner();
       this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
@@ -322,7 +387,7 @@ export class KycComponent {
     this.kycModelList = [];
     this.addKycButton = false;
     this.editButtonDisable = false;
-    this.getAllKycsDetailsRdKycDetails(this.rdAccId);
+    this.getAllKycsDetailsRdKycDetails(this.accId);
   }
   getRdAccounts(id: any) {
     this.dailyDepositsAccountsService.getAccounts(id).subscribe((data: any) => {
@@ -330,30 +395,46 @@ export class KycComponent {
       if (this.responseModel != null && this.responseModel != undefined) {
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
-            this.rdAccountsModel = this.responseModel.data[0]
-            if (this.rdAccountsModel.depositDate != null && this.rdAccountsModel.depositDate != undefined) {
-              this.accountOpeningDateVal = this.datePipe.transform(this.rdAccountsModel.depositDate, this.orgnizationSetting.datePipe);
+            this.accountsModel = this.responseModel.data[0]
+            if (this.accountsModel.depositDate != null && this.accountsModel.depositDate != undefined) {
+              this.accountOpeningDateVal = this.datePipe.transform(this.accountsModel.depositDate, this.orgnizationSetting.datePipe);
             }
-            if (this.rdAccountsModel.productName != null && this.rdAccountsModel.productName != undefined) {
-              this.productName = this.rdAccountsModel.productName;
+            if (this.accountsModel.productName != null && this.accountsModel.productName != undefined) {
+              this.productName = this.accountsModel.productName;
             }
-            if (this.rdAccountsModel.accountTypeName != null && this.rdAccountsModel.accountTypeName != undefined) {
-              this.accountType = this.rdAccountsModel.accountTypeName;
+            if (this.accountsModel.accountTypeName != null && this.accountsModel.accountTypeName != undefined) {
+              this.accountType = this.accountsModel.accountTypeName;
             }
-            if (this.rdAccountsModel.depositAmount != null && this.rdAccountsModel.depositAmount != undefined) {
-              this.minBalence = this.rdAccountsModel.depositAmount;
+            if (this.accountsModel.depositAmount != null && this.accountsModel.depositAmount != undefined) {
+              this.minBalence = this.accountsModel.depositAmount;
             }
-            if (this.rdAccountsModel.adminssionNumber != null && this.rdAccountsModel.adminssionNumber != undefined) {
-              this.admissionNumber = this.rdAccountsModel.adminssionNumber;
+            if (this.accountsModel.adminssionNumber != null && this.accountsModel.adminssionNumber != undefined) {
+              this.admissionNumber = this.accountsModel.adminssionNumber;
             }
-            if (this.rdAccountsModel.memberTypeName != null && this.rdAccountsModel.memberTypeName != undefined) {
-              this.memberTypeName = this.rdAccountsModel.memberTypeName;
+            if (this.accountsModel.memberTypeName != null && this.accountsModel.memberTypeName != undefined) {
+              this.memberTypeName = this.accountsModel.memberTypeName;
               this.membershipDataFromModule();
             }
 
             if (this.responseModel.data[0].memberTypeId != null && this.responseModel.data[0].memberTypeId != undefined)
               this.memberTypeId = this.responseModel.data[0].memberTypeId;
-            this.getAllKycsDetailsRdKycDetails(this.rdAccId);
+            // this.getAllKycsDetailsRdKycDetails(this.accId);
+            if (this.accountsModel.accountKycList != null && this.accountsModel.accountKycList != undefined && this.accountsModel.accountKycList.length > 0) {
+              this.kycModelList = this.accountsModel.accountKycList;
+              if(this.accountsKycModel.kycFilePath != null && this.accountsKycModel.kycFilePath != undefined){
+                this.accountsKycModel.multipartFileList = this.fileUploadService.getFile(this.accountsKycModel.kycFilePath ,ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.accountsKycModel.kycFilePath);
+                this.saveButtonDisable = true;
+              }
+              else{
+                this.saveButtonDisable = false;
+              }
+              for (let kyc of this.kycModelList) {
+                kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath, ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
+                if (kyc.multipartFileList != null && kyc.multipartFileList != undefined) {
+                  kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
+                }
+              }
+            }
             this.updateData();
           }
         } else {
@@ -379,12 +460,13 @@ export class KycComponent {
   
    */
   addKyc(event: any) {
-    this.getAllKycTypes();
+    this.addDocumentOfKycFalg = true;
+    this.isFileUploaded = applicationConstants.FALSE;
     this.multipleFilesList = [];
-    this.addDocumentOfKycFalg = !this.addDocumentOfKycFalg;
     this.buttonDisabled = true;
     this.editButtonDisable = true;
-    this.rdKycModel = new AccountKYC();
+    this.accountsKycModel = new AccountKYC();
+    this.getAllKycTypes();
     this.updateData();
   }
 
@@ -396,7 +478,7 @@ export class KycComponent {
     this.addDocumentOfKycFalg = !this.addDocumentOfKycFalg;
     this.buttonDisabled = false;
     this.editButtonDisable = false;
-    this.getAllKycsDetailsRdKycDetails(this.rdAccId);
+    this.getAllKycsDetailsRdKycDetails(this.accId);
     this.updateData();
   }
 
@@ -415,6 +497,11 @@ export class KycComponent {
     } else {
       this.editIndex = index;
     }
+    if(modelData.kycFilePath != null){
+      this.saveButtonDisable=true;
+    }else{
+      this.saveButtonDisable=false;
+    }
     this.editButtonDisable = true;
     this.buttonDisabled = true;
     this.veiwCardHide = false;
@@ -432,7 +519,7 @@ export class KycComponent {
     this.editDocumentOfKycFalg = true;
     this.buttonDisabled = false;
     this.editButtonDisable = false;
-    this.getAllKycsDetailsRdKycDetails(this.rdAccId);
+    this.getAllKycsDetailsRdKycDetails(this.accId);
 
     this.updateData();
   }
@@ -443,22 +530,23 @@ export class KycComponent {
  
    */
   editsave(row: any) {
-    this.rdKycModel.accId = this.rdAccId;
-    this.rdKycModel.admissionNumber = this.admissionNumber;
-    // this.rdKycModel.memberTypeName = this.memberTypeName;
-    this.rdKycModel.memberType = this.memberTypeId;
-    this.rdKycModel.memberId = this.memberId;
+    this.accountsKycModel.accId = this.accId;
+    this.accountsKycModel.admissionNumber = this.admissionNumber;
+    // this.accountsKycModel.memberTypeName = this.memberTypeName;
+    this.accountsKycModel.accountNumber = this.accountsKycModel.accountNumber;
+    this.accountsKycModel.memberType = this.memberTypeId;
+    this.accountsKycModel.memberId = this.memberId;
 
     if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0) {
-      let filteredObj = this.documentNameList.find((data: any) => null != data && this.rdKycModel.requiredDocId != null && data.value == this.rdKycModel.kycDocumentTypeId);
+      let filteredObj = this.documentNameList.find((data: any) => null != data && this.accountsKycModel.requiredDocId != null && data.value == this.accountsKycModel.kycDocumentTypeId);
       if (filteredObj != null && undefined != filteredObj && filteredObj.label != null && filteredObj.label != undefined) {
-        this.rdKycModel.kycDocumentTypeName = filteredObj.label;
+        this.accountsKycModel.kycDocumentTypeName = filteredObj.label;
       }
     }
     this.editDocumentOfKycFalg = true;
     this.buttonDisabled = false;
     this.editButtonDisable = false;
-    this.dailyDepositsAccountsService.updateAccountKyc(this.rdKycModel).subscribe((response: any) => {
+    this.dailyDepositsAccountsService.updateAccountKyc(this.accountsKycModel).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         // this.kycModelList = this.responseModel.data;
@@ -475,7 +563,7 @@ export class KycComponent {
       }
       this.addKycButton = false;
       this.buttonDisabled = false;
-      this.getAllKycsDetailsRdKycDetails(this.rdAccId);
+      this.getAllKycsDetailsRdKycDetails(this.accId);
       this.updateData();
     }, error => {
       this.commonComponent.stopSpinner();
@@ -499,11 +587,14 @@ export class KycComponent {
         if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
           if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
             if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
-              this.rdKycModel = this.responseModel.data[0];
-              if (this.rdKycModel.kycFilePath != undefined) {
-                if (this.rdKycModel.kycFilePath != null && this.rdKycModel.kycFilePath != undefined) {
-                  this.rdKycModel.multipartFileList = this.fileUploadService.getFile(this.rdKycModel.kycFilePath, ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.rdKycModel.kycFilePath);
-
+              this.accountsKycModel = this.responseModel.data[0];
+              if (this.accountsKycModel.kycFilePath != undefined) {
+                if (this.accountsKycModel.kycFilePath != null && this.accountsKycModel.kycFilePath != undefined) {
+                  this.accountsKycModel.multipartFileList = this.fileUploadService.getFile(this.accountsKycModel.kycFilePath, ERP_TRANSACTION_CONSTANTS.DAILYDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.accountsKycModel.kycFilePath);
+                  this.isFileUploaded = applicationConstants.TRUE;
+                }
+                if(this.accountsKycModel.kycDocumentTypeName != null && this.accountsKycModel.kycDocumentTypeName != undefined){
+                  this.documentNumberDynamicValidation(this.accountsKycModel.kycDocumentTypeName );
                 }
               }
             }
@@ -641,16 +732,16 @@ export class KycComponent {
       this.individualFlag = true;
     } else if (this.memberTypeName == MemberShipTypesData.GROUP) {
       this.groupFlag = true;
-      if (this.rdAccountsModel.memberShipGroupDetailsDTO.groupPromoterList != null && this.rdAccountsModel.memberShipGroupDetailsDTO.groupPromoterList != undefined && this.rdAccountsModel.memberShipGroupDetailsDTO.groupPromoterList.length > 0) {
-        this.promotersList = this.rdAccountsModel.memberShipGroupDetailsDTO.groupPromoterList.filter((promoter: any) => promoter.status == applicationConstants.ACTIVE).map((promoter: any) => {
+      if (this.accountsModel.memberShipGroupDetailsDTO.groupPromoterList != null && this.accountsModel.memberShipGroupDetailsDTO.groupPromoterList != undefined && this.accountsModel.memberShipGroupDetailsDTO.groupPromoterList.length > 0) {
+        this.promotersList = this.accountsModel.memberShipGroupDetailsDTO.groupPromoterList.filter((promoter: any) => promoter.status == applicationConstants.ACTIVE).map((promoter: any) => {
           return { label: promoter.name + " " + promoter.surname, value: promoter.id }
         });
       }
 
     } else if (this.memberTypeName == MemberShipTypesData.INSTITUTION) {
       this.institutionFlag = true;
-      if (this.rdAccountsModel.memInstitutionDTO.institutionPromoterList != null && this.rdAccountsModel.memInstitutionDTO.institutionPromoterList != undefined && this.rdAccountsModel.memInstitutionDTO.institutionPromoterList.length > 0) {
-        this.promotersList = this.rdAccountsModel.memInstitutionDTO.institutionPromoterList.filter((promoter: any) => promoter.status == applicationConstants.ACTIVE).map((promoter: any) => {
+      if (this.accountsModel.memInstitutionDTO.institutionPromoterList != null && this.accountsModel.memInstitutionDTO.institutionPromoterList != undefined && this.accountsModel.memInstitutionDTO.institutionPromoterList.length > 0) {
+        this.promotersList = this.accountsModel.memInstitutionDTO.institutionPromoterList.filter((promoter: any) => promoter.status == applicationConstants.ACTIVE).map((promoter: any) => {
           return { label: promoter.name + " " + promoter.surname, value: promoter.id }
         });
       }
@@ -664,18 +755,44 @@ export class KycComponent {
    * @param kycDocTypeId 
 
    */
-  kycModelDuplicateCheck(kycDocTypeId: any) {
-    if (this.kycModelList != null && this.kycModelList != undefined && this.kycModelList.length > 0) {
-      let duplicate = this.kycModelList.find((obj: any) => obj && obj.kycDocumentTypeId === kycDocTypeId);
-      if (duplicate != null && duplicate != undefined) {
-        this.kycForm.reset();
-        this.msgs = [];
-        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "duplicate Kyc Types" }];
-        setTimeout(() => {
-          this.msgs = [];
-        }, 3000);
+  kycModelDuplicateCheck(rowData: any,kycDocumentTypeId:any) {
+    if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0) {
+      this.accountsKycModel.kycDocumentTypeId = kycDocumentTypeId;
+      let filteredObj = this.documentNameList.find((data: any) => null != data && this.accountsKycModel.kycDocumentTypeId != null && data.value == this.accountsKycModel.kycDocumentTypeId);
+      if (filteredObj != null && undefined != filteredObj && filteredObj.label != null && filteredObj.label != undefined) {
+        this.accountsKycModel.kycDocumentTypeName = filteredObj.label;
+        this.documentNumberDynamicValidation(this.accountsKycModel.kycDocumentTypeName );
       }
+      
     }
+    if(this.kycModelList != null && this.kycModelList != undefined && this.kycModelList.length > 0){
+      let duplicate :any
+      
+        duplicate = this.kycModelList.filter((obj:any) => obj && obj.kycDocumentTypeId === rowData.kycDocumentTypeId );
+      
+    if ( this.addDocumentOfKycFalg && duplicate != null && duplicate != undefined && duplicate.length ==1) {
+      this.kycForm.reset();
+      this.accountsKycModel = new AccountKYC();
+      if(rowData.id != null && rowData != undefined)
+        this.accountsKycModel.id = rowData.id;
+      this.msgs = [];
+      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "duplicate Kyc Types"}];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    }
+    else if(!this.addDocumentOfKycFalg && duplicate != null && duplicate != undefined && duplicate.length ==1 && duplicate[0].id != rowData.id){
+      this.kycForm.reset();
+      this.accountsKycModel = new AccountKYC();
+      if(rowData.id != null && rowData != undefined)
+        this.accountsKycModel.id = rowData.id;
+      this.msgs = [];
+      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "duplicate Kyc Types"}];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    } 
+  }
   }
 
   /**
@@ -706,7 +823,7 @@ export class KycComponent {
     if (this.deleteId != null && this.deleteId != undefined) {
       this.delete(this.deleteId);
     }
-    this.rdKycModel = new AccountKYC();
+    this.accountsKycModel = new AccountKYC();
     this.displayDialog = false;
   }
 
@@ -715,12 +832,85 @@ export class KycComponent {
 
    */
   fileRemoeEvent() {
-    if (this.rdKycModel.filesDTOList != null && this.rdKycModel.filesDTOList != undefined && this.rdKycModel.filesDTOList.length > 0) {
-      let removeFileIndex = this.rdKycModel.filesDTOList.findIndex((obj: any) => obj && obj.fileName === this.rdKycModel.kycFilePath);
+    if (this.accountsKycModel.filesDTOList != null && this.accountsKycModel.filesDTOList != undefined && this.accountsKycModel.filesDTOList.length > 0) {
+      let removeFileIndex = this.accountsKycModel.filesDTOList.findIndex((obj: any) => obj && obj.fileName === this.accountsKycModel.kycFilePath);
       if (removeFileIndex != null && removeFileIndex != undefined) {
-        this.rdKycModel.filesDTOList[removeFileIndex] = null;
-        this.rdKycModel.kycFilePath = null;
+        this.accountsKycModel.filesDTOList[removeFileIndex] = null;
+        this.accountsKycModel.kycFilePath = null;
       }
     }
   }
+  documentNumberDynamicValidation(docTypeName: any) {
+    if (DOCUMENT_TYPES.AADHAR == this.accountsKycModel.kycDocumentTypeName) {
+      const controlTow = this.kycForm.get('docNumber');
+      if (controlTow) {
+        controlTow.setValidators([
+          Validators.required,
+          Validators.pattern(applicationConstants.AADHAR_PATTERN)
+        ]);
+        controlTow.updateValueAndValidity();
+      }
+      this.isPanNumber = false;
+    }
+    else if (DOCUMENT_TYPES.PANNUMBER == this.accountsKycModel.kycDocumentTypeName) {
+      const controlTow = this.kycForm.get('docNumber');
+      if (controlTow) {
+        controlTow.setValidators([
+          Validators.required,
+          Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN)
+        ]);
+        controlTow.updateValueAndValidity();
+      }
+      this.isPanNumber = true;
+    }
+    else {
+      const controlTow = this.kycForm.get('docNumber');
+      if (controlTow) {
+        controlTow.setValidators([
+          Validators.required,
+        ]);
+        controlTow.updateValueAndValidity();
+      }
+      this.isPanNumber = false;
+    }
+  }
+  onClickkycPhotoCopy(rowData :any){
+    this.multipleFilesList = [];
+    this.kycPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
+  }
+  kycclosePhoto(){
+    this.kycPhotoCopyZoom = false;
+  }
+  kycclosePhotoCopy() {
+    this.kycPhotoCopyZoom = false;
+  }
+  fileRemoveEvent() {
+    this.accountsKycModel.multipartFileList = [];
+    if (this.accountsKycModel.filesDTOList != null && this.accountsKycModel.filesDTOList != undefined) {
+      this.accountsKycModel.kycFilePath = null;
+      this.accountsKycModel.filesDTOList = null;
+    }
+  }
+  // Popup Maximize
+          @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+        
+          onDialogResize(event: any) {
+            this.isMaximized = event.maximized;
+        
+            if (this.isMaximized) {
+              // Restore original image size when maximized
+              this.imageElement.nativeElement.style.width = 'auto';
+              this.imageElement.nativeElement.style.height = 'auto';
+              this.imageElement.nativeElement.style.maxWidth = '100%';
+              this.imageElement.nativeElement.style.maxHeight = '100vh';
+            } else {
+              // Fit image inside the dialog without scrollbars
+              this.imageElement.nativeElement.style.width = '100%';
+              this.imageElement.nativeElement.style.height = '100%';
+              this.imageElement.nativeElement.style.maxWidth = '100%';
+              this.imageElement.nativeElement.style.maxHeight = '100%';
+              this.imageElement.nativeElement.style.objectFit = 'contain';
+            }
+          }
 }

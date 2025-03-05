@@ -129,6 +129,9 @@ export class DepositInvestmentsComponent {
     if (this.investmentApplicationDetailsModel.maturityDate) {
       this.investmentApplicationDetailsModel.maturityDate = this.commonFunctionsService.getUTCEpoch(new Date(this.investmentApplicationDetailsModel.maturityDate));
     }
+    if (this.investmentApplicationDetailsModel.resolutionDate != null) {
+      this.investmentApplicationDetailsModel.resolutionDate = this.commonFunctionsService.getUTCEpoch(new Date(this.investmentApplicationDetailsModel.resolutionDate));
+    }
     this.investmentApplicationDetailsModel.statusName = "In Progress";
     if (investmentApplicationDetailsModel.id != null && investmentApplicationDetailsModel.id != undefined) {
       this.investmentApplicationDetailsService.updateInvestmentApplicationDetails(investmentApplicationDetailsModel).subscribe((response: any) => {

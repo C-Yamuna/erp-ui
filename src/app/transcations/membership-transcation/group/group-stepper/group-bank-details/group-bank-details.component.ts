@@ -112,6 +112,10 @@ export class GroupBankDetailsComponent {
         if (this.memberGroupDetailsModel.admissionDate != null && this.memberGroupDetailsModel.admissionDate != undefined) {
           this.memberGroupDetailsModel.admissionDateVal = this.datePipe.transform(this.memberGroupDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
         }
+
+        if (this.memberGroupDetailsModel.admissionDate != null && this.memberGroupDetailsModel.admissionDate != undefined) {
+          this.memberGroupDetailsModel.admissionDateVal = this.datePipe.transform(this.memberGroupDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
+        }
         if (this.memberGroupDetailsModel.memberBankDetailsDTOList.length > 0) {
           this.memberBankDetailsDTOList = this.memberGroupDetailsModel.memberBankDetailsDTOList;
         }
@@ -133,14 +137,34 @@ export class GroupBankDetailsComponent {
     });
   }
 
+  // updateData() {
+  //   this.bankDetailsModel.memberId = this.memberGroupDetailsModel.id
+  //   this.memberBasicDetailsStepperService.changeData({
+  //     formValid: this.bankForm.valid,
+  //     data: this.bankDetailsModel,
+  //     savedId: this.groupId,
+  //     stepperIndex: 4,
+  //     // isDisable: !this.landFlag ? true : false,
+  //   });
+  // }
   updateData() {
     this.bankDetailsModel.memberId = this.memberGroupDetailsModel.id
+    if (this.memberBankDetailsDTOList == null || this.memberBankDetailsDTOList == undefined ||
+      this.memberBankDetailsDTOList.length == 0) {
+      this.buttonsFlag = true;
+    }
+    else {
+      this.buttonsFlag = false;
+    }
+    if (this.landFlag) {
+      this.buttonsFlag = true;
+    }
     this.memberBasicDetailsStepperService.changeData({
-      formValid: this.bankForm.valid,
+      formValid: this.bankForm.valid ,
       data: this.bankDetailsModel,
-      savedId: this.groupId,
+      savedId:this.groupId,
       stepperIndex: 4,
-      // isDisable: !this.landFlag ? true : false,
+      isDisable: this.landFlag
     });
   }
 
@@ -152,11 +176,11 @@ export class GroupBankDetailsComponent {
    * @author yamuna.k
    */
   editVillageRow(row: any) {
-    this.addButton = true;
-    this.editDeleteDisable = true;
+    this.addButton = applicationConstants.TRUE;
+    this.editDeleteDisable = applicationConstants.TRUE;
     // this.buttonsFlag  = false;
-    // this.landFlag =false
-    // this.updateData();
+    this.landFlag =applicationConstants.TRUE;
+    this.updateData();
   }
      /**
    * @implements  add new entry inline
@@ -173,10 +197,10 @@ export class GroupBankDetailsComponent {
   onRowEditSave() {
     this.bankForm.reset();
     this.addNewEntry();
-    this.editDeleteDisable = true;
-    this.addButton = true;
+    this.editDeleteDisable = applicationConstants.TRUE;
+    this.addButton = applicationConstants.TRUE;
     // this.buttonsFlag  = false;
-    // this.landFlag =false
+    this.landFlag = applicationConstants.TRUE;
     // this.updateData();
     this.dt._first = 0;
     this.dt.value.unshift(this.newRow);
@@ -191,10 +215,10 @@ export class GroupBankDetailsComponent {
    * @author yamuna.k
    */
   onRowEditCancel() {
-    this.addButton = false;
-    this.editDeleteDisable = false;
-    this.buttonsFlag = true;
-    // this.landFlag =true;
+    this.addButton = applicationConstants.FALSE;
+    this.editDeleteDisable = applicationConstants.FALSE;
+    // this.buttonsFlag = true;
+    this.landFlag = applicationConstants.FALSE;
     this.updateData();
     const index = this.dt.value.indexOf(this.newRow);
 
@@ -216,9 +240,9 @@ export class GroupBankDetailsComponent {
     rowData.memberId = this.groupId;
     rowData.memberType = this.memberGroupDetailsModel.memberTypeId;
     rowData.admissionNumber = this.memberGroupDetailsModel.admissionNumber;
-    this.addButton = false;
-    this.editDeleteDisable = false;
-
+    this.addButton = applicationConstants.FALSE;
+    this.editDeleteDisable = applicationConstants.FALSE;
+    this.landFlag = applicationConstants.FALSE;
     if (rowData.id != null) {
       this.MembershipBankDetailsService.updateMembershipBankDetails(rowData).subscribe((response: any) => {
         this.responseModel = response;

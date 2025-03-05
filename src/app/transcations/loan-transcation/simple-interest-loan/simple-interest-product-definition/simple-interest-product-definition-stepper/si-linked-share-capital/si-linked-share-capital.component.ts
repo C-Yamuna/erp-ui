@@ -12,6 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 import { EncryptDecryptService } from 'src/app/shared/encrypt-decrypt.service';
 import { SimpleInterestProductDefinitionService } from '../../shared/simple-interest-product-definition.service';
 import { SiLinkedShareCapitalService } from './shared/si-linked-share-capital.service';
+import { BoxNumber } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-si-linked-share-capital',
@@ -53,7 +54,7 @@ export class SiLinkedShareCapitalComponent {
       'igstPercentage': new FormControl('',),
       'minSlabAmount':new FormControl('', Validators.required),
       'gstApplicable': new FormControl('', Validators.required),
-      'maxSlabAmount':new FormControl('', ),
+      'maxSlabAmount':new FormControl('', Validators.required),
     });
   }
   ngOnInit() {
@@ -291,22 +292,28 @@ getPreviewDetailsByProductId(id: any) {
   
       return applicationConstants.FALSE;
     }
-     checkForAmount(): void {
-      const minSlabAmount = this.linkedShareCapitalForm.get('minSlabAmount')?.value;
-      const maxSlabAmount = this.linkedShareCapitalForm.get('maxSlabAmount')?.value;
-  
-      if (minSlabAmount && maxSlabAmount &&  minSlabAmount >=maxSlabAmount) {
-        this.amountAndTenureFlag = applicationConstants.FALSE;
-        this.msgs = [{ severity: 'error', detail: applicationConstants.MIN_SLAB_AMOUNT_ERROR }];
-        setTimeout(() => {
-          this.msgs = [];
-        }, 1500);
-      } else {
-        this.msgs = [];
-        this.amountAndTenureFlag = applicationConstants.TRUE;
-      }
-  
-
-      this.updateData();
+     checkForAmount(box : any): void {
+       const minSlabAmount = this.linkedShareCapitalForm.get('minSlabAmount')?.value;
+            const maxSlabAmount = this.linkedShareCapitalForm.get('maxSlabAmount')?.value;
+        
+            if (minSlabAmount != null && minSlabAmount !='' && maxSlabAmount != null && maxSlabAmount !='' &&
+              Number(minSlabAmount) > Number(maxSlabAmount)) {
+              this.msgs = [];
+              if (box == BoxNumber.BOX_ONE) {
+                this.msgs.push({ severity: 'warning', detail: applicationConstants.MINIMUM_SLAB_AMOUNT_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAXIMUM_SLAB_AMOUNT });
+                this.linkedShareCapitalForm.get('minSlabAmount')?.reset();
+              } else if (box == BoxNumber.BOX_TWO) {
+                this.msgs.push({ severity: 'warning', detail: applicationConstants.MAXIMUM_SLAB_AMOUNT_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MINIMUM_SLAB_AMOUNT });
+                this.linkedShareCapitalForm.get('maxSlabAmount')?.reset();
+              setTimeout(() => {
+                this.msgs = [];
+              }, 1500);
+            } else {
+              this.msgs = [];
+              this.amountAndTenureFlag = applicationConstants.TRUE;
+            }
+            this.updateData();
+          }
+   
     }
 }

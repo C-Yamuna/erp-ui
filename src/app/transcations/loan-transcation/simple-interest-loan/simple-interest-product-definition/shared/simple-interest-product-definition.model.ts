@@ -86,4 +86,8 @@ export class SimpleInterestProductDefinition {
     multipartFileList?:any;
 
     filesDTOList ?:any;
+
+    purposeTypeIds:any;
+
+    collateralTypeIds:any;
 }

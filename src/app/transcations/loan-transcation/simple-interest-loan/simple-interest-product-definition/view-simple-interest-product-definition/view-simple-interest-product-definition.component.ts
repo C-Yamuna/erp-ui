@@ -52,6 +52,9 @@ export class ViewSimpleInterestProductDefinitionComponent {
   isFileUploaded: boolean = false;
   multipleFilesList: any[] = [];
   uploadFileData: any;
+  purposeTypes : any;
+  purposeTypeList: any[] = [];
+  collateralNames  : any;
 
   constructor(private commonComponent: CommonComponent, private formBuilder: FormBuilder,
     private activateRoute: ActivatedRoute, private encryptService: EncryptDecryptService, private datePipe: DatePipe,
@@ -62,6 +65,8 @@ export class ViewSimpleInterestProductDefinitionComponent {
   ngOnInit(): void {
     this.orgnizationSetting = this.commonComponent.orgnizationSettings()
     this.interestPostingFrequencyList = this.commonComponent.rePaymentFrequency();
+    this.getAllPurposeTypes();
+    this.getAllCollaterals();
     this.commonFunctionsService.data.subscribe((res: any) => {
       if (res) {
         this.translate.use(res);
@@ -104,7 +109,8 @@ export class ViewSimpleInterestProductDefinitionComponent {
                     value: item.collateralType
                   }));
               }
-            
+              this.setCollateralNames();
+              this.purposeTypesNameSet();
             
               if (this.simpleInterestProductDefinitionModel.siInterestPolicyConfigDTOList != null && this.simpleInterestProductDefinitionModel.siInterestPolicyConfigDTOList != undefined && this.simpleInterestProductDefinitionModel.siInterestPolicyConfigDTOList.length > 0) {
                 this.interestPolicyList = this.simpleInterestProductDefinitionModel.siInterestPolicyConfigDTOList;
@@ -332,5 +338,119 @@ export class ViewSimpleInterestProductDefinitionComponent {
       reader.readAsDataURL(file);
     }
   }
+    /**
+     * @implements collateral names
+     * @author jyothi.nadana
+     */
+    setCollateralNames() {
+      //collateral type ids
+      if (this.simpleInterestProductDefinitionModel.collateralTypeIds != null && this.simpleInterestProductDefinitionModel.collateralTypeIds != undefined) {
+        let contentSelected = this.simpleInterestProductDefinitionModel.collateralTypeIds.split(',');
+        if (contentSelected.length > 0) {
+          let i = 0;
+          for (let id of contentSelected) {
+            if (this.collateralNames != null && this.collateralNames != undefined)
+              this.collateralNames = this.collateralNames + this.collateralList.find((obj: any) => obj.value == id)?.label;
+            else
+              this.collateralNames = this.collateralList.find((obj: any) => obj.value == id)?.label;
+            i = i + 1;
+            if (i < contentSelected.length) {
+              this.collateralNames = this.collateralNames + ","
+            }
+          }
+        }
+      }
+    }
+  
+    /**
+     * @implements get all collaterals
+     * @author k.ymauna
+     */
+    getAllCollaterals() {
+      this.msgs = [];
+      this.commonComponent.startSpinner();
+      this.simpleInterestProductDefinitionService.getAllCollateralTypes().subscribe((response: any) => {
+        this.responseModel = response;
+        if (this.responseModel != null&& this.responseModel.data!= undefined) {
+          this.collateralList = this.responseModel.data.filter((data: any) => data.status == applicationConstants.ACTIVE).map((collateral: any) => {
+            return { label: collateral.name, value: collateral.id }
+        });
+        this.commonComponent.stopSpinner();
+      }
+      else {
+        this.msgs = [];
+        this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
+      }, error => {
+        this.msgs = [];
+        this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+        this.commonComponent.stopSpinner();
+      });
+    }
+   
+  
+     /**
+     * @implements  get all purpose types
+     * @author k.ymauna
+     */
+     getAllPurposeTypes() {
+      this.commonComponent.startSpinner();
+      this.purposeTypeList = [];
+      this.simpleInterestProductDefinitionService.getAllLoanPurpose().subscribe((res: any) => {
+        this.responseModel = res;
+        if (this.responseModel.status === applicationConstants.STATUS_SUCCESS && this.responseModel.data[0] != null) {
+          if (this.responseModel.data == null || (this.responseModel.data != null && this.responseModel.data.length == 0)) {
+            this.commonComponent.stopSpinner();
+            this.msgs = [];
+            this.msgs = [{ severity: 'error', detail: applicationConstants.RELATIONSHIP_TYPE_NO_DATA_MESSAGE }];
+            setTimeout(() => {
+              this.msgs = [];
+            }, 2000);
+          } else {
+            this.purposeTypeList = this.responseModel.data.filter((documenttype: any) => documenttype.status == applicationConstants.ACTIVE).map((count: any) => {
+              return { label: count.name, value: count.id }
+            });
+            this.commonComponent.stopSpinner();
+          }
+        }
+      },
+        error => {
+          this.msgs = [];
+          this.commonComponent.stopSpinner();
+          this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        });
+    }
+      /**
+   * @implements purposeType name listout
+   * @author k.yamuna
+   */
+  purposeTypesNameSet(){
+    //pusepose type ids
+    if (this.simpleInterestProductDefinitionModel.purposeTypeIds != null && this.simpleInterestProductDefinitionModel.purposeTypeIds != undefined) {
+     let contentSelected = this.simpleInterestProductDefinitionModel.purposeTypeIds.split(',');
+     if (contentSelected.length > 0) {
+       let i = 0;
+       for (let id of contentSelected) {
+         if(this.purposeTypes != null && this.purposeTypes != undefined)
+           this.purposeTypes = this.purposeTypes + this.purposeTypeList.find((obj:any) => obj.value == id)?.label;
+         else 
+           this.purposeTypes = this.purposeTypeList.find((obj:any) => obj.value == id)?.label;
+           i = i +1;
+           if(i < contentSelected.length){
+             this.purposeTypes = this.purposeTypes + ","
+           }
+       }
+     }
+   }
+ }
 
 }

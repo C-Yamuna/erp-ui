@@ -248,6 +248,12 @@ export class CiLoanGuarantorComponent {
     // }
   }
 
+  /**
+   * @implements get all type of membership details
+   * @param pacsId 
+   * @param branchId 
+   * @author jyothi.naidana
+   */
   getAllTypeOfMembershipDetails(pacsId: any, branchId: any) {
     this.membershipDetailsService.getAllTypeOfMemberDetailsListFromMemberModule(pacsId, branchId).subscribe((response: any) => {
       this.responseModel = response;
@@ -280,6 +286,11 @@ export class CiLoanGuarantorComponent {
     });
   }
 
+  /**
+   * @implements get Membership details
+   * @param admissionNumber 
+   * @author jyothi.naidana
+   */
   getMembershipDetails(admissionNumber: any) {
     this.tempGuarantorDetailsList = this.ciGuarantorDetailsList;
     this.ciGuarantorDetailsList = [];

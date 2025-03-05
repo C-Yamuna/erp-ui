@@ -46,6 +46,7 @@ export class SaoProductDetailsComponent {
   cropTypesList: any[] = [];
   soilTypeList: any[] = [];
   operationList: any[] = [];
+  repaymentFrequencyList: any[] = [];
   pacsId: any;
   isEdit: boolean = false;
   msgs: any[] = [];
@@ -80,7 +81,7 @@ export class SaoProductDetailsComponent {
   chargesList: any[] = [];
   purposeList: any[] = [];
   requiredDocumentsList: any[] = [];
-  disbursmentFlag :  boolean = false;
+  disbursmentFlag: boolean = false;
 
   saoLoanDisbursementModel: SaoLoanDisbursement = new SaoLoanDisbursement();
   // saoLoanDisbursementScheduleModel: SaoLoanDisbursementScheduleModel = new SaoLoanDisbursementScheduleModel();
@@ -88,8 +89,8 @@ export class SaoProductDetailsComponent {
   insurenceFlag: boolean = false;
   constructor(private router: Router, private formBuilder: FormBuilder, private saoProductDefinitionsService: SaoProductDefinitionsService, private activateRoute: ActivatedRoute,
     private commonComponent: CommonComponent, private encryptDecryptService: EncryptDecryptService, private saoLoanApplicationService: SaoLoanApplicationService,
-    private commonFunctionsService: CommonFunctionsService, private datePipe: DatePipe, private membershipBasicDetailsService: MembershipBasicDetailsService,
-    private saoLoanDisbursementService: SaoDisbursementService, private saoProductPurposeService: SaoProductPurposeService
+    private commonFunctionsService: CommonFunctionsService, private datePipe: DatePipe,
+    private saoLoanDisbursementService: SaoDisbursementService,
   ) {
 
     this.apllicationdetailsform = this.formBuilder.group({
@@ -98,18 +99,20 @@ export class SaoProductDetailsComponent {
       effectiveRoi: [{ value: '', disabled: true }],
       societyAccountNumber: ['', [Validators.required, Validators.minLength(3)]],
       applicationDate: [{ value: '', disabled: true }],
-      minLoanPeriod: [{ value: '', disabled: true }],
-      maxLoanPeriod: [{ value: '', disabled: true }],
+      // minLoanPeriod: [{ value: '', disabled: true }],
+      // maxLoanPeriod: [{ value: '', disabled: true }],
       penalInterest: [{ value: '', disabled: true }],
       iod: [{ value: '', disabled: true }],
-      repaymentFrequencyName: [{ value: '', disabled: true }],
+      repaymentFrequency: [, [Validators.required]],
       purposeName: [{ value: '', disabled: true }],
       operationTypeName: ['', [Validators.required, Validators.minLength(3)]],
       requestedAmount: ['', [Validators.required, Validators.minLength(3)]],
-      sanctionAmount: [null, [Validators.required, this.sanctionAmountValidator.bind(this)]],
-      loanPeriod: ['',],
-      loanDueDate: ['',],
-      plannedDisbursements: ['', [Validators.required]],
+      sanctionAmount: ['', [Validators.required]],
+      loanPeriod: ['', [Validators.required]],
+      loanDueDate: ['', [Validators.required]],
+      sanctionDate: ['', [Validators.required]],
+      // plannedDisbursements: ['', [Validators.required]],
+      applicationNumber: ['', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.compose([Validators.required])]],
       annualIncome: ['', [Validators.required]],
       // cgstAmount:['', ],
       // sgstAmount: ['', ],
@@ -119,7 +122,7 @@ export class SaoProductDetailsComponent {
 
     this.insurencedetailsform = this.formBuilder.group({
       policyName: new FormControl('', [Validators.required, Validators.pattern(applicationConstants.NEW_NAME_PATTERN)]),
-      policyNumber: new FormControl('', [Validators.required,Validators.pattern(applicationConstants.ALPHANUMERIC)]),
+      policyNumber: new FormControl('', [Validators.required, Validators.pattern(applicationConstants.ALPHANUMERIC)]),
       premium: ['', [Validators.required, Validators.minLength(3)]],
     })
 
@@ -136,6 +139,7 @@ export class SaoProductDetailsComponent {
   ngOnInit() {
     this.orgnizationSetting = this.commonComponent.orgnizationSettings()
     this.getAllOperationTypes();
+    this.getAllRepaymentFrequency();
     this.collectionTypeList = [
       { label: 'Amount', value: 1 },
       { label: 'Percentage', value: 2 },
@@ -144,7 +148,7 @@ export class SaoProductDetailsComponent {
     this.gender = this.commonComponent.genderList();
     this.maritalstatus = this.commonComponent.maritalStatusList();
     this.activateRoute.queryParams.subscribe(params => {
-      if (params['id'] != undefined ) {
+      if (params['id'] != undefined) {
         this.commonComponent.startSpinner();
         let id = this.encryptDecryptService.decrypt(params['id']);
         this.savedId = id;
@@ -189,24 +193,23 @@ export class SaoProductDetailsComponent {
         this.productList = this.productList.filter((obj: any) => obj != null && obj.status == 3).map((product: { name: any; id: any; }) => {
           return { label: product.name, value: product.id };
         });
-        //this.productList.unshift({ label: 'select', value: 0 });
       }
     });
   }
 
- 
-   onSelectLoanDueDate() {
-      let flag = false;
-      this.msgs = [];
-      if (this.saoLoanApplicatonModel.loanDueDateVal != undefined) {
-        this.saoLoanApplicatonModel.loanDueDate = this.commonFunctionsService.getUTCEpoch(new Date(this.saoLoanApplicatonModel.loanDueDateVal));
-  
-        if (this.saoLoanApplicatonModel.applicationDateVal != undefined)
-          this.saoLoanApplicatonModel.applicationDate = this.commonFunctionsService.getUTCEpoch(new Date(this.saoLoanApplicatonModel.applicationDateVal));
-  
-        // if (this.saoLoanApplicatonModel.sanctionDateVal != undefined)
-        //   this.saoLoanApplicatonModel.sanctionDate = this.commonFunctionsService.getUTCEpoch(new Date(this.saoLoanApplicatonModel.sanctionDateVal));
-        
+
+  onSelectLoanDueDate() {
+    let flag = false;
+    this.msgs = [];
+    if (this.saoLoanApplicatonModel.loanDueDateVal != undefined) {
+      this.saoLoanApplicatonModel.loanDueDate = this.commonFunctionsService.getUTCEpoch(new Date(this.saoLoanApplicatonModel.loanDueDateVal));
+
+      if (this.saoLoanApplicatonModel.applicationDateVal != undefined)
+        this.saoLoanApplicatonModel.applicationDate = this.commonFunctionsService.getUTCEpoch(new Date(this.saoLoanApplicatonModel.applicationDateVal));
+
+      if (this.saoLoanApplicatonModel.sanctionDateVal != undefined)
+        this.saoLoanApplicatonModel.sanctionDate = this.commonFunctionsService.getUTCEpoch(new Date(this.saoLoanApplicatonModel.sanctionDateVal));
+      if (this.saoLoanApplicatonModel.individualMemberDetailsDTO != null) {
         if (!flag && this.saoLoanApplicatonModel.individualMemberDetailsDTO.admissionDate != undefined && this.saoLoanApplicatonModel.individualMemberDetailsDTO.admissionDate > this.saoLoanApplicatonModel.loanDueDate) {
           flag = true;
           this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.DUE_DATE_SHOULD_NOT_LESS_THAN_ADMISSION_DATE }];
@@ -217,62 +220,207 @@ export class SaoProductDetailsComponent {
           flag = true;
           this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.DUE_DATE_SHOULD_NOT_LESS_THAN_SANCTION_DATE }];
         }
-  
-        if(flag){
-          this.apllicationdetailsform.get('loanDueDate')?.reset();
-          this.saoLoanApplicatonModel.loanDueDate = null;
-          setTimeout(() => {
-            this.msgs = [];
-          }, 2000);
+      } else if (this.saoLoanApplicatonModel.memberGroupDetailsDTO != null) {
+        if (!flag && this.saoLoanApplicatonModel.memberGroupDetailsDTO.admissionDate != undefined && this.saoLoanApplicatonModel.memberGroupDetailsDTO.admissionDate > this.saoLoanApplicatonModel.loanDueDate) {
+          flag = true;
+          this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.DUE_DATE_SHOULD_NOT_LESS_THAN_ADMISSION_DATE }];
+        } else if (!flag && this.saoLoanApplicatonModel.applicationDate != undefined && this.saoLoanApplicatonModel.applicationDate > this.saoLoanApplicatonModel.loanDueDate) {
+          flag = true;
+          this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.DUE_DATE_SHOULD_NOT_LESS_THAN_APPLICATION_DATE }];
+        } else if (!flag && this.saoLoanApplicatonModel.sanctionDate != undefined && this.saoLoanApplicatonModel.sanctionDate > this.saoLoanApplicatonModel.loanDueDate) {
+          flag = true;
+          this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.DUE_DATE_SHOULD_NOT_LESS_THAN_SANCTION_DATE }];
+        }
+      } else {
+        if (!flag && this.saoLoanApplicatonModel.memberInstitutionDTO.admissionDate != undefined && this.saoLoanApplicatonModel.memberInstitutionDTO.admissionDate > this.saoLoanApplicatonModel.loanDueDate) {
+          flag = true;
+          this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.DUE_DATE_SHOULD_NOT_LESS_THAN_ADMISSION_DATE }];
+        } else if (!flag && this.saoLoanApplicatonModel.applicationDate != undefined && this.saoLoanApplicatonModel.applicationDate > this.saoLoanApplicatonModel.loanDueDate) {
+          flag = true;
+          this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.DUE_DATE_SHOULD_NOT_LESS_THAN_APPLICATION_DATE }];
+        } else if (!flag && this.saoLoanApplicatonModel.sanctionDate != undefined && this.saoLoanApplicatonModel.sanctionDate > this.saoLoanApplicatonModel.loanDueDate) {
+          flag = true;
+          this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.DUE_DATE_SHOULD_NOT_LESS_THAN_SANCTION_DATE }];
         }
       }
+
+
+      if (flag) {
+        this.apllicationdetailsform.get('loanDueDate')?.reset();
+        this.saoLoanApplicatonModel.loanDueDate = null;
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
     }
+  }
+  onSelectSanctionDate() {
+    let flag = false;
+    this.msgs = [];
+    if (this.saoLoanApplicatonModel.sanctionDateVal != undefined) {
+      this.saoLoanApplicatonModel.sanctionDate = this.commonFunctionsService.getUTCEpoch(new Date(this.saoLoanApplicatonModel.sanctionDateVal));
 
-    onSelectRequestedAmount(){
-      
+      if (this.saoLoanApplicatonModel.applicationDateVal != undefined)
+        this.saoLoanApplicatonModel.applicationDate = this.commonFunctionsService.getUTCEpoch(new Date(this.saoLoanApplicatonModel.applicationDateVal));
+
+      if (this.saoLoanApplicatonModel.loanDueDateVal != undefined)
+        this.saoLoanApplicatonModel.loanDueDate = this.commonFunctionsService.getUTCEpoch(new Date(this.saoLoanApplicatonModel.loanDueDateVal));
+      if (this.saoLoanApplicatonModel.individualMemberDetailsDTO != null) {
+        if (!flag && this.saoLoanApplicatonModel.individualMemberDetailsDTO.admissionDate != undefined && this.saoLoanApplicatonModel.individualMemberDetailsDTO.admissionDate > this.saoLoanApplicatonModel.sanctionDate) {
+          flag = true;
+          this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.SANCTION_DATE_SHOULD_NOT_LESS_THAN_ADMISSION_DATE }];
+        } else
+          if (!flag && this.saoLoanApplicatonModel.applicationDate != undefined && this.saoLoanApplicatonModel.applicationDate > this.saoLoanApplicatonModel.sanctionDate
+          ) {
+            flag = true;
+            this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.SANCTION_DATE_SHOULD_BE_IN_BETWEEN_MIN_AND_MAX_DATES }];
+          } else if (this.saoLoanApplicatonModel.sanctionDate >= this.saoProductDetailsModel.endDate && this.saoLoanApplicatonModel.sanctionDate <= this.saoProductDetailsModel.effectiveStartDate) {
+            flag = true;
+            this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.SANCTION_DATE_SHOULD_NOT_LESS_THAN_APPLICATION_DATE }];
+
+          }
+          else if (!flag && this.saoLoanApplicatonModel.loanDueDate != undefined && this.saoLoanApplicatonModel.loanDueDate < this.saoLoanApplicatonModel.sanctionDate) {
+            flag = true;
+            this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.SANCTION_DATE_SHOULD_NOT_GREATER_THAN_DUE_DATE }];
+          }
+      } else if (this.saoLoanApplicatonModel.memberGroupDetailsDTO != null) {
+        if (!flag && this.saoLoanApplicatonModel.memberGroupDetailsDTO.admissionDate != undefined && this.saoLoanApplicatonModel.memberGroupDetailsDTO.admissionDate > this.saoLoanApplicatonModel.sanctionDate) {
+          flag = true;
+          this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.SANCTION_DATE_SHOULD_NOT_LESS_THAN_ADMISSION_DATE }];
+        } else
+          if (!flag && this.saoLoanApplicatonModel.applicationDate != undefined && this.saoLoanApplicatonModel.applicationDate > this.saoLoanApplicatonModel.sanctionDate
+          ) {
+            flag = true;
+            this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.SANCTION_DATE_SHOULD_BE_IN_BETWEEN_MIN_AND_MAX_DATES }];
+          } else if (this.saoLoanApplicatonModel.sanctionDate >= this.saoProductDetailsModel.endDate && this.saoLoanApplicatonModel.sanctionDate <= this.saoProductDetailsModel.effectiveStartDate) {
+            flag = true;
+            this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.SANCTION_DATE_SHOULD_NOT_LESS_THAN_APPLICATION_DATE }];
+
+          }
+          else if (!flag && this.saoLoanApplicatonModel.loanDueDate != undefined && this.saoLoanApplicatonModel.loanDueDate < this.saoLoanApplicatonModel.sanctionDate) {
+            flag = true;
+            this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.SANCTION_DATE_SHOULD_NOT_GREATER_THAN_DUE_DATE }];
+          }
+      } else {
+        if (!flag && this.saoLoanApplicatonModel.memberInstitutionDTO.admissionDate != undefined && this.saoLoanApplicatonModel.memberInstitutionDTO.admissionDate > this.saoLoanApplicatonModel.sanctionDate) {
+          flag = true;
+          this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.SANCTION_DATE_SHOULD_NOT_LESS_THAN_ADMISSION_DATE }];
+        } else
+          if (!flag && this.saoLoanApplicatonModel.applicationDate != undefined && this.saoLoanApplicatonModel.applicationDate > this.saoLoanApplicatonModel.sanctionDate
+          ) {
+            flag = true;
+            this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.SANCTION_DATE_SHOULD_BE_IN_BETWEEN_MIN_AND_MAX_DATES }];
+          } else if (this.saoLoanApplicatonModel.sanctionDate >= this.saoProductDetailsModel.endDate && this.saoLoanApplicatonModel.sanctionDate <= this.saoProductDetailsModel.effectiveStartDate) {
+            flag = true;
+            this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.SANCTION_DATE_SHOULD_NOT_LESS_THAN_APPLICATION_DATE }];
+
+          }
+          else if (!flag && this.saoLoanApplicatonModel.loanDueDate != undefined && this.saoLoanApplicatonModel.loanDueDate < this.saoLoanApplicatonModel.sanctionDate) {
+            flag = true;
+            this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.SANCTION_DATE_SHOULD_NOT_GREATER_THAN_DUE_DATE }];
+          }
+        this.calculateLoanDueDate();
+      }
+      if (flag) {
+        this.apllicationdetailsform.get('sanctionDate')?.reset();
+        this.saoLoanApplicatonModel.sanctionDate = null;
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
+
     }
+    this.calculateLoanDueDate();
+  }
 
+  getAllRepaymentFrequency() {
 
+    this.saoLoanApplicationService.getAllRepaymentFrequency().subscribe(response => {
+      this.responseModel = response;
+      if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+
+        this.repaymentFrequencyList = this.responseModel.data.filter((repaymentFrequency: { status: number; }) => repaymentFrequency.status == applicationConstants.ACTIVE).map((repaymentFrequency: any) => {
+          return { label: repaymentFrequency.name, value: repaymentFrequency.id };
+        });
+      }
+    },
+      error => {
+        this.msgs = [];
+
+        this.msgs.push({ severity: 'error', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST });
+      })
+  }
+
+  /**
+     * @implements PeriodInMonths in between min and max PeriodInMonths for product definition
+     * @author akhila
+     */
+  onSelectPeriodInMonths(months: any) {
+    let flag = false;
+    if (months != undefined) {
+      if (months != undefined && months >= this.saoProductDetailsModel.minLoanPeriod &&
+        months <= this.saoProductDetailsModel.maxLoanPeriod) {
+        flag = true;
+      }
+      else {
+        flag = false;
+      }
+      if (!flag) {
+        this.msgs = [{
+          severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: "Loan period in months should be in between minLoanPeriod and maxLoanPeriod" + this.saoProductDetailsModel.minLoanPeriod
+            + "," + this.saoProductDetailsModel.maxLoanPeriod
+        }];
+        this.apllicationdetailsform.get('loanPeriod')?.reset();
+        this.saoLoanApplicatonModel.loanPeriod = null;
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
+
+    }
+    this.calculateLoanDueDate();
+  }
+  /**
+  * @implements loan due date based on sanction date and loan period in months
+  * @author akhila
+  */
+  calculateLoanDueDate() {
+    if (this.saoLoanApplicatonModel.sanctionDateVal && this.saoLoanApplicatonModel.loanPeriod) {
+      let sanctionDate = new Date(this.saoLoanApplicatonModel.sanctionDateVal);
+      let loanPeriodMonths = parseInt(this.saoLoanApplicatonModel.loanPeriod, 10);
+      if (!isNaN(loanPeriodMonths) && loanPeriodMonths > 0) {
+        sanctionDate.setMonth(sanctionDate.getMonth() + loanPeriodMonths);
+        this.saoLoanApplicatonModel.loanDueDateVal = new Date(sanctionDate);
+      }
+    }
+  }
 
   /**
       * @implements SanctionAmount in between min and max amount for product definition
       * @author m.akhila
    */
-  
-  onSelectSanctionAmountCaliculation() {
-    const sanctionAmount = this.saoLoanApplicatonModel.sanctionAmount;
-    const minAmount = this.saoProductDetailsModel.eligibleMInAmount;
-    const maxAmount = this.saoProductDetailsModel.eligibleMaxAmount;
-
-    if (sanctionAmount !== undefined) {
-      if (sanctionAmount < minAmount || sanctionAmount > maxAmount) {
-        this.apllicationdetailsform.get('sanctionAmount')?.setErrors({
-          invalidSanctionAmount: true
-        });
-      } else {
-        this.apllicationdetailsform.get('sanctionAmount')?.setErrors(null);
+  onSelectSanctionAmountCailculation(sanctionAmount: any) {
+    let flag = false;
+    if (sanctionAmount != undefined) {
+      if (sanctionAmount != undefined && this.saoLoanApplicatonModel.sanctionAmount >= this.saoProductDetailsModel.eligibleMInAmount &&
+        sanctionAmount <= this.saoProductDetailsModel.eligibleMaxAmount) {
+        flag = true;
       }
+      else {
+        flag = false;
+      }
+      if (!flag) {
+        this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: "Sanction amount should be in between Min and Max Amounts" + this.saoProductDetailsModel.eligibleMInAmount + "," + this.saoProductDetailsModel.eligibleMaxAmount }];
+        this.apllicationdetailsform.get('sanctionAmount')?.reset();
+        this.saoLoanApplicatonModel.sanctionAmount = null;
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
+
     }
   }
 
-  sanctionAmountValidator(control: any) {
-    const sanctionAmount = control.value;
-    const minAmount = this.saoProductDetailsModel.eligibleMInAmount;
-    const maxAmount = this.saoProductDetailsModel.eligibleMaxAmount;
-
-    if (sanctionAmount && (sanctionAmount < minAmount || sanctionAmount > maxAmount)) {
-      this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.SANCTION_AMOUNT_SHOULD_BE_MIN_AND_MAX_AMOUNT }];
-      this.apllicationdetailsform.get('sanctionAmount')?.reset();
-      this.saoLoanApplicatonModel.sanctionAmount = null;
-      setTimeout(() => {
-        this.msgs = [];
-      }, 2000);
-      return { invalidSanctionAmount: true };
-
-    }
-    return null;
-  }
-  
   getSaoLoanApplicationDetailsById(id: any) {
     this.commonFunctionsService
     this.saoLoanApplicationService.getSaoLoanApplicationDetailsById(this.savedId).subscribe((data: any) => {
@@ -295,14 +443,17 @@ export class SaoProductDetailsComponent {
                 else if (this.saoLoanApplicatonModel.applicationDate != null && this.saoLoanApplicatonModel.applicationDate != undefined) {
                   this.saoLoanApplicatonModel.applicationDateVal = this.commonFunctionsService.dateConvertionIntoFormate(this.saoLoanApplicatonModel.applicationDate);
                 }
+                if (this.saoLoanApplicatonModel.sanctionDate != null && this.saoLoanApplicatonModel.sanctionDate != undefined)
+                  this.saoLoanApplicatonModel.sanctionDateVal = this.datePipe.transform(this.saoLoanApplicatonModel.sanctionDate, this.orgnizationSetting.datePipe);
+
                 if (this.saoLoanApplicatonModel.loanDueDate != null && this.saoLoanApplicatonModel.loanDueDate != undefined) {
                   this.saoLoanApplicatonModel.loanDueDateVal = this.datePipe.transform(this.saoLoanApplicatonModel.loanDueDate, this.orgnizationSetting.datePipe);
                 }
                 if (this.saoLoanApplicatonModel.saoProductId != null && this.saoLoanApplicatonModel.saoProductId != undefined) {
-                  this.isProductDisable = applicationConstants.TRUE;
+
                   this.productInfoFalg = true;
-                  // this.getPurposeTypesByProductId(this.saoLoanApplicatonModel.saoProductId)
                   this.getProductDetailsById(this.saoLoanApplicatonModel.saoProductId);
+                  this.isProductDisable = applicationConstants.TRUE;
                 }
                 // if (this.saoLoanApplicatonModel.saoDisbursementDTOList != null) {
                 //   this.disbursmentScheduleList = this.saoLoanApplicatonModel.saoDisbursementDTOList;
@@ -348,10 +499,14 @@ export class SaoProductDetailsComponent {
   }
 
   updateData() {
-    this.saveAndNextDisable = !(this.apllicationdetailsform.valid || this.insurencedetailsform.valid);
-
+    if (this.insurenceFlag) {
+      this.saveAndNextDisable = (!((this.apllicationdetailsform.valid) && (this.insurencedetailsform.valid))) || this.editDeleteDisable;
+    }
+    else {
+      this.saveAndNextDisable = (!(this.apllicationdetailsform.valid)) || this.editDeleteDisable;
+    }
+    // this.saveAndNextDisable = !(this.apllicationdetailsform.valid && this.insurencedetailsform.valid);
     this.saoLoanApplicatonModel.saoLoanInsuranceDetailsDTO = this.saoLoanInsuranceDetailsModel;
-
     this.saoLoanApplicationService.changeData({
       formValid: !this.apllicationdetailsform.valid ? true : false,
       data: this.saoLoanApplicatonModel,
@@ -385,58 +540,58 @@ export class SaoProductDetailsComponent {
 
   }
   /**
-     * @implements get account Types 
-     * @author jyothi.naidana
+     * @implements get operation Types 
+     * @author akhila
      */
-    getAllOperationTypes() {
-      this.saoLoanApplicationService.getAllAccountTypes().subscribe((res: any) => {
-        this.responseModel = res;
-        if (this.responseModel != null && this.responseModel != undefined) {
-          if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-            if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
-              this.operationList = this.responseModel.data;
-              this.operationList = this.operationList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
-                return { label: relationType.name, value: relationType.id };
-              });
-            }
-          }
-          if (this.saoLoanApplicatonModel.operationTypeId != undefined) {
-            const filteredItem = this.operationList.find((item: { value: any; }) => item.value === this.saoLoanApplicatonModel.operationTypeId);
-            this.saoLoanApplicatonModel.operationTypeName = filteredItem.label;
+  getAllOperationTypes() {
+    this.saoLoanApplicationService.getAllOperationTypes().subscribe((res: any) => {
+      this.responseModel = res;
+      if (this.responseModel != null && this.responseModel != undefined) {
+        if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+          if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+            this.operationList = this.responseModel.data;
+            this.operationList = this.operationList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
+              return { label: relationType.name, value: relationType.id };
+            });
           }
         }
-      }, error => {
-        this.msgs = [];
-       
-        this.msgs.push({ severity: 'error', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST });
-      })
-    }
-    calculateDisbursement() {
-      if (!this.saoLoanApplicatonModel.requestedAmount || !this.saoProductDetailsModel.saoLoanDisbursementScheduleDTOList) {
-        this.disbursmentScheduleList = []; // Reset list if data is incomplete
-        return;
+        if (this.saoLoanApplicatonModel.operationTypeId != undefined) {
+          const filteredItem = this.operationList.find((item: { value: any; }) => item.value === this.saoLoanApplicatonModel.operationTypeId);
+          this.saoLoanApplicatonModel.operationTypeName = filteredItem.label;
+        }
       }
-    
-      const requestedAmount = this.saoLoanApplicatonModel.requestedAmount;
-      const currentDate = new Date();
-    
-      this.disbursmentScheduleList = this.saoProductDetailsModel.saoLoanDisbursementScheduleDTOList.map((schedule: { visitNumber: any; tenureTypeName: any;disbursementPercentage: number; visitTenure: number; }) => {
-        const percentage = (schedule.disbursementPercentage / 100) * this.requestedAmount;
-      
-        const visitTenure = schedule.visitTenure ?? 0;
-    
-        const disbursementDate = new Date(currentDate);
-        disbursementDate.setDate(disbursementDate.getDate() + visitTenure);
-        const formattedDate = `${String(disbursementDate.getDate()).padStart(2, '0')}/${String(disbursementDate.getMonth() + 1).padStart(2, '0')}/${disbursementDate.getFullYear()}`;
-    
-        return {
-          disbursementOrder: schedule.visitNumber,
-          typeName: schedule.tenureTypeName,
-          disbursementAmount: percentage,
-          disbursementDateVal: formattedDate
-        };
-      });
+    }, error => {
+      this.msgs = [];
+
+      this.msgs.push({ severity: 'error', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST });
+    })
+  }
+  calculateDisbursement() {
+    if (!this.saoLoanApplicatonModel.requestedAmount || !this.disbursmentScheduleList) {
+      this.disbursmentScheduleList = []; // Reset list if data is incomplete
+      return;
     }
+
+    const requestedAmount = this.saoLoanApplicatonModel.requestedAmount;
+    const currentDate = new Date();
+
+    this.disbursmentScheduleList = this.saoProductDetailsModel.saoLoanDisbursementScheduleDTOList.map((schedule: { visitNumber: any; tenureTypeName: any; disbursementPercentage: number; visitTenure: number; }) => {
+      const percentage = (schedule.disbursementPercentage / 100) * this.requestedAmount;
+
+      const visitTenure = schedule.visitTenure ?? 0;
+
+      const disbursementDate = new Date(currentDate);
+      disbursementDate.setDate(disbursementDate.getDate() + visitTenure);
+      const formattedDate = `${String(disbursementDate.getDate()).padStart(2, '0')}/${String(disbursementDate.getMonth() + 1).padStart(2, '0')}/${disbursementDate.getFullYear()}`;
+
+      return {
+        disbursementOrder: schedule.visitNumber,
+        typeName: schedule.tenureTypeName,
+        disbursementAmount: percentage,
+        disbursementDateVal: formattedDate
+      };
+    });
+  }
   getProductDetailsById(id: any) {
     this.saoProductDefinitionsService.getPreviewDetailsByProductId(id).subscribe((data: any) => {
       this.responseModel = data;
@@ -459,14 +614,20 @@ export class SaoProductDetailsComponent {
 
         if (this.saoProductDetailsModel.maxLoanPeriod != undefined && this.saoProductDetailsModel.maxLoanPeriod != null)
           this.saoLoanApplicatonModel.maxLoanPeriod = this.saoProductDetailsModel.maxLoanPeriod;
-        if (this.saoProductDetailsModel.isInsuranceAppicable != null && this.saoProductDetailsModel.isInsuranceAppicable != undefined) {
-          if (this.saoProductDetailsModel.isInsuranceAppicable == true)
-            this.insurenceFlag = true;
-        } else {
-          this.insurenceFlag = false;
+
+        this.insurenceFlag = this.saoProductDetailsModel.isInsuranceAppicable;
+        if (this.insurenceFlag) {
+          if (this.saoLoanApplicatonModel.saoLoanInsuranceDetailsDTO != null && this.saoLoanApplicatonModel.saoLoanInsuranceDetailsDTO != undefined)
+            this.saoLoanInsuranceDetailsModel = this.saoLoanApplicatonModel.saoLoanInsuranceDetailsDTO;
         }
-        if (this.saoProductDetailsModel.interestPostingFrequencyName != undefined && this.saoProductDetailsModel.interestPostingFrequencyName != null)
-          this.saoLoanApplicatonModel.repaymentFrequencyName = this.saoProductDetailsModel.interestPostingFrequencyName;
+
+        if (this.saoProductDetailsModel.isInsuranceAppicable != null && this.saoProductDetailsModel.isInsuranceAppicable != undefined && this.saoProductDetailsModel.isInsuranceAppicable)
+          this.saoProductDetailsModel.isInsuranceAppicable = applicationConstants.YES;
+        else
+          this.saoProductDetailsModel.isInsuranceAppicable = applicationConstants.NO
+
+        if (this.saoProductDetailsModel.interestPostingFrequency != undefined && this.saoProductDetailsModel.interestPostingFrequency != null)
+          this.saoLoanApplicatonModel.repaymentFrequency = this.saoProductDetailsModel.interestPostingFrequency;
 
         if (this.saoProductDetailsModel.saoInterestPolicyConfigDtoList != null && this.saoProductDetailsModel.saoInterestPolicyConfigDtoList != undefined) {
 
@@ -528,153 +689,14 @@ export class SaoProductDetailsComponent {
         }
 
         if (this.saoProductDetailsModel.saoLoanDisbursementScheduleDTOList != null && this.saoProductDetailsModel.saoLoanDisbursementScheduleDTOList != undefined && this.saoProductDetailsModel.saoLoanDisbursementScheduleDTOList.length > 0) {
-            this.disbursmentScheduleList = this.saoProductDetailsModel.saoLoanDisbursementScheduleDTOList;
-            this.disbursmentFlag = false;
-        }else{
+          this.disbursmentScheduleList = this.saoProductDetailsModel.saoLoanDisbursementScheduleDTOList;
+          this.calculateDisbursement();
           this.disbursmentFlag = true;
+        } else {
+          this.disbursmentFlag = false;
         }
       }
     });
   }
 
-
-  addData() {
-    this.addButton = true;
-    this.editDeleteDisable = true;
-    this.updateData();
-    this.dt._first = 0;
-
-    // Generate disbursement number
-    const newRow = {
-      securityType: '',
-      disbursementOrder: this.generateDisbursementNumber(), // Automatically set disbursement number
-    };
-
-    this.dt.value.unshift(newRow);  // Insert the new row
-    this.dt.initRowEdit(this.dt.value[0]); // Initialize the edit mode for the first row
-  }
-
-  onDisbursementChange() {
-    if (this.saoLoanApplicatonModel.plannedDisbursements != null && this.saoLoanApplicatonModel.plannedDisbursements != undefined) {
-      this.scheduleRecordsCount = true;
-    } else {
-      this.scheduleRecordsCount = false;
-    }
-  }
-  disbursementCounter: number = 1;
-  generateDisbursementNumber(): string {
-
-    return ' ' + this.disbursementCounter++; // Generates unique numbers like DIS-1, DIS-2, etc.
-  }
-  addOrUpdateSchedulerDetails(rowData: any) {
-    this.addButton = false;
-    this.editDeleteDisable = false;
-    rowData.saoLoanApplicationId = this.savedId;
-    if (!rowData.disbursementOrder) {
-      rowData.disbursementOrder = this.generateDisbursementNumber();
-    }
-    this.saoLoanDisbursementModel = rowData;
-    if (rowData.id != undefined) {
-
-      this.saoLoanDisbursementService.updateSaoDisbursement(this.saoLoanDisbursementModel).subscribe((res: any) => {
-        this.responseModel = res;
-        if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-          this.getSaoLoanApplicationDetailsById(this.savedId);
-          this.msgs = [{ severity: 'success', detail: this.responseModel.statusMsg }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 2000);
-        } else {
-          this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 2000);
-        }
-      }, error => {
-        this.msgs = [{ severity: 'error', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST }];
-      })
-    } else {
-      this.saoLoanDisbursementModel.statusName = CommonStatusData.SCHEDULED;
-      this.saoLoanDisbursementService.addSaoDisbursement(this.saoLoanDisbursementModel).subscribe((res: any) => {
-        this.responseModel = res;
-        if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-          this.getSaoLoanApplicationDetailsById(this.savedId);
-          this.msgs = [{ severity: 'success', detail: this.responseModel.statusMsg }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 2000);
-        } else {
-          this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 2000);
-        }
-      }, error => {
-        this.msgs = [({ severity: 'error', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST })];
-        setTimeout(() => {
-          this.msgs = [];
-        }, 2000);
-      })
-    }
-  }
-
-  cancelSchedulerDetails() {
-    this.disbursmentScheduleList = [];
-    this.addButton = false;
-    this.editDeleteDisable = false;
-    this.getSaoLoanApplicationDetailsById(this.savedId);
-    this.updateData();
-  }
-
-  editSchedulerDetailsRow(row: any) {
-    this.addButton = false;
-    this.editDeleteDisable = false;
-    this.saoLoanDisbursementModel = row;
-    this.saoLoanDisbursementModel.saoLoanApplicationId = this.savedId;
-    this.saoLoanDisbursementService.getSaoDisbursementById(this.saoLoanDisbursementModel.id).subscribe((response: any) => {
-      this.responseModel = response;
-      if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-        this.saoLoanDisbursementModel = this.responseModel.data;
-
-      }
-      this.getSaoLoanApplicationDetailsById(this.savedId);
-    });
-    this.updateData();
-  }
-
-  updateApplication() {
-    this.addButton = false;
-    if (this.saoLoanApplicatonModel.id != null && this.saoLoanApplicatonModel.id != undefined) {
-      if (this.saoLoanApplicatonModel.saoLoanInsuranceDetailsDTO.id != null && this.saoLoanApplicatonModel.saoLoanInsuranceDetailsDTO.id != undefined) {
-        this.saoLoanApplicatonModel.saoLoanInsuranceDetailsDTO.saoLoanApplicationId = this.savedId;
-      }
-      if (this.saoLoanApplicatonModel.loanDueDateVal != null && this.saoLoanApplicatonModel.loanDueDateVal != undefined) {
-        this.saoLoanApplicatonModel.loanDueDate = this.commonFunctionsService.getUTCEpoch(new Date(this.saoLoanApplicatonModel.loanDueDateVal));
-      }
-      this.saoLoanApplicationService.updateSaoLoanApplication(this.saoLoanApplicatonModel).subscribe((response: any) => {
-        this.responseModel = response;
-        this.saoLoanApplicatonModel = this.responseModel.data;
-        if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
-          if (this.responseModel.data.length > 0 && this.responseModel.data[0] != undefined && this.responseModel.data[0] != null) {
-            if (this.responseModel.data[0].id != undefined && this.responseModel.data[0].id != null)
-              this.savedId = this.responseModel.data[0].id;
-
-            this.getSaoLoanApplicationDetailsById(this.savedId);
-
-            this.apllicationdetailsform.get('plannedDisbursements')?.disable();
-            this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
-            setTimeout(() => {
-              this.msgs = [];
-            }, 1200);
-
-          }
-        } else {
-          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 3000);
-        }
-      },);
-    }
-  }
 }

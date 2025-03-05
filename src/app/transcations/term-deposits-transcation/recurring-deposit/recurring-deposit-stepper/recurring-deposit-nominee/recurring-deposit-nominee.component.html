@@ -82,6 +82,25 @@
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
+                                                <label><span class="red">*</span>{{'ERP.DATE_OF_BIRTH' | translate}}</label>
+                                                <p-calendar formControlName="dateOfBirth" [showIcon]="true" [dateFormat]="orgnizationSetting.calendar"
+                                                    [(ngModel)]="rdAccountNomineeModel.nomineeDobVal" [appendTo]="'body'" placeholder="DD/MM/YYYY"
+                                                    [maxDate]="today" (onSelect)="ageCalculation(false)">
+                                                </p-calendar>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="form-label">
+                                                <label><span class="red">*</span>{{'ERP.AGE' | translate}}</label>
+                                                <input pInputText type="text" [(ngModel)]="rdAccountNomineeModel.nomineeAge" minlength="1" maxlength="3"
+                                                    formControlName="nomineeAge" placeholder="Enter Aadhar Number" (focusout)="ageCalculation(true)">
+                                                <p-message severity="error" text="Enter Valid Aadhar Number"
+                                                    *ngIf="!nomineeForm.controls['nomineeAge'].valid && nomineeForm.controls['nomineeAge'].dirty">
+                                                </p-message>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                            <div class="form-label">
                                                 <label><span
                                                         class="red">*</span>{{'TERMDEPOSITSTRANSACTION.AADHAR_NUMBER' |
                                                     translate}}</label>
@@ -119,13 +138,14 @@
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
-                                                <span>{{ 'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate }}</span>
+                                                <span>{{ 'TERMDEPOSITSTRANSACTION.DOCUMENT_COPY'
+                                                    | translate }} {{ 'TERMDEPOSITSTRANSACTION.PDF_SIZE' | translate }}</span>
                                                 <div class="uplodad-style align-items-center">
                                                     <!-- Upload Button Column -->
 
                                                     <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold"
                                                         name="myfile[]" chooseLabel=" " id="apply-leave_fileUp_attach"
-                                                        name="file" accept=".png,.jpg,.jpeg,.pdf"
+                                                        name="file" accept=".pdf"
                                                         (onRemove)="fileRemoeEvent('Nominee')"
                                                         (onSelect)="fileUploader($event,fileUpload,'Nominee')">
                                                     </p-fileUpload>
@@ -133,8 +153,13 @@
                                                     <!-- Uploaded Files Display Column -->
 
                                                     <div class="col-12  d-flex p-1 contant-body" *ngFor="let img of rdAccountNomineeModel.nomineeMultiPartList">
-                                                        <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                        <!-- <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                                             <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22" height="22"></a>
+                                                        </div> -->
+                                                        <div class="col-12 p-0" *ngIf=" img.fileType =='pdf'">
+                                                            <a href="{{img.imageValue}}">
+                                                                <img src="assets\images\pdf.png" class="pdf-img img-fluid" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                                            </a>
                                                         </div>
                                                         <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
                                                             {{img.fileName}}</div>
@@ -167,9 +192,8 @@
                                     <div class="row">
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
-                                                <span class=""> <span class="red">*</span>{{ 'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate
-                                                    }}
-                                                </span>
+                                                <span>{{ 'TERMDEPOSITSTRANSACTION.DOCUMENT_COPY'
+                                                    | translate }} {{ 'TERMDEPOSITSTRANSACTION.PDF_SIZE' | translate }}</span>
                                                 <div class="uplodad-style align-items-center">
                                                     <!-- Upload Button Column -->
                                                     <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold"
@@ -179,8 +203,13 @@
                                                         (onSelect)="fileUploader($event,fileUpload,'Nominee')">
                                                     </p-fileUpload>
                                                     <div class="col-12  d-flex p-1 contant-body" *ngFor="let img of rdAccountNomineeModel.nomineeMultiPartList">
-                                                        <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                        <!-- <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                                             <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22" height="22"></a>
+                                                        </div> -->
+                                                        <div class="col-12 p-0" *ngIf=" img.fileType =='pdf'">
+                                                            <a href="{{img.imageValue}}">
+                                                                <img src="assets\images\pdf.png" class="pdf-img img-fluid" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                                            </a>
                                                         </div>
                                                         <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
                                                             {{img.fileName}}</div>
@@ -207,8 +236,8 @@
                     <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12" *ngIf='guarntorDetailsFalg'>
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-12">
-                                <label><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.TYPE_OF_GUARDAIN' |
-                                    translate}}</label>
+                                <span>{{ 'TERMDEPOSITSTRANSACTION.DOCUMENT_COPY'
+                                    | translate }} {{ 'TERMDEPOSITSTRANSACTION.PDF_SIZE' | translate }}</span>
                                 <!-- [disabled]="guardainTypeDisable" -->
                                 <p-dropdown placeholder="{{'TERMDEPOSITSTRANSACTION.SELECT' | translate}}"
                                     [options]="guadianTypesList" formControlName="guardainType"
@@ -289,18 +318,23 @@
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-12">
                                             <div class="form-label">
-                                                <span><span class="red">*</span>{{ 'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate }}</span>
-                                                <div class="uplodad-style align-items-center">
+                                                <span>{{ 'TERMDEPOSITSTRANSACTION.DOCUMENT_COPY'
+                                                    | translate }} {{ 'TERMDEPOSITSTRANSACTION.PDF_SIZE' | translate }}</span>                                                <div class="uplodad-style align-items-center">
                                                     <!-- Upload Button Column -->
-                                                    <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold"
+                                                    <p-fileUpload #fileUpload1 class="qua-upld file-attach semi-bold"
                                                         name="myfile[]" id="apply-leave_fileUp_attach" chooseLabel=" "
                                                         name="file" accept=".png,.jpg,.jpeg"
                                                         (onRemove)="fileRemoeEvent('Guardain')"
-                                                        (onSelect)="fileUploader($event,fileUpload,'Guardain')">
+                                                        (onSelect)="fileUploader($event,fileUpload1,'Guardain')">
                                                     </p-fileUpload>
                                                     <div class="col-12  d-flex p-1 contant-body" *ngFor="let img of rdAccountGuardianModel.guardainMultipartList">
-                                                        <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                        <!-- <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                                             <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22" height="22"></a>
+                                                        </div> -->
+                                                        <div class="col-12 p-0" *ngIf=" img.fileType =='pdf'">
+                                                            <a href="{{img.imageValue}}">
+                                                                <img src="assets\images\pdf.png" class="pdf-img img-fluid" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                                            </a>
                                                         </div>
                                                         <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
                                                             {{img.fileName}}</div>
@@ -330,18 +364,23 @@
                                     <div class="row">
                                         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
                                             <div class="form-label">
-                                                <span><span class="red">*</span>{{ 'TERMDEPOSITSTRANSACTION.SIGNED_DOCUMENT' | translate }}</span>
-                                                <div class="uplodad-style align-items-center">
+                                                <span>{{ 'TERMDEPOSITSTRANSACTION.DOCUMENT_COPY'
+                                                    | translate }} {{ 'TERMDEPOSITSTRANSACTION.PDF_SIZE' | translate }}</span>                                                <div class="uplodad-style align-items-center">
                                                     <!-- Upload Button Column -->
-                                                    <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold"
+                                                    <p-fileUpload #fileUpload1 class="qua-upld file-attach semi-bold"
                                                         name="myfile[]" id="apply-leave_fileUp_attach" chooseLabel=" "
                                                         name="file" accept=".png,.jpg,.jpeg"
                                                         (onRemove)="fileRemoeEvent('Guardain')"
-                                                        (onSelect)="fileUploader($event,fileUpload,'Guardain')">
+                                                        (onSelect)="fileUploader($event,fileUpload1,'Guardain')">
                                                     </p-fileUpload>
                                                     <div class="col-12  d-flex p-1 contant-body" *ngFor="let img of rdAccountGuardianModel.guardainMultipartList">
-                                                        <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                        <!-- <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
                                                             <a href="{{img.imageValue}}"> <img src="{{img.imageValue}}" width="22" height="22"></a>
+                                                        </div> -->
+                                                        <div class="col-12 p-0" *ngIf=" img.fileType =='pdf'">
+                                                            <a href="{{img.imageValue}}">
+                                                                <img src="assets\images\pdf.png" class="pdf-img img-fluid" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                                            </a>
                                                         </div>
                                                         <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
                                                             {{img.fileName}}</div>

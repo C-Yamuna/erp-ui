@@ -522,27 +522,31 @@ getPreviewDetailsByProductId(id: any) {
     
       return applicationConstants.FALSE;
     }
-     checkForAmount(box : any): void {
-      const minSlabAmount = Number(this.interestPolicyForm.get('minSlabAmount')?.value);
-      const maxSlabAmount = Number(this.interestPolicyForm.get('maxSlabAmount')?.value);
+    checkForAmount(box: any): void {
+      if (this.interestPolicyForm.get('minSlabAmount') != null && this.interestPolicyForm.get('minSlabAmount') != undefined &&
+        this.interestPolicyForm.get('maxSlabAmount') != null && this.interestPolicyForm.get('maxSlabAmount') != undefined) {
   
-      if (minSlabAmount && maxSlabAmount &&  minSlabAmount > maxSlabAmount) {
-        this.msgs = [];
-        if(box == BoxNumber.BOX_ONE){
-          this.msgs.push({ severity: 'warning', detail: applicationConstants.MINIMUM_SLAB_AMOUNT_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAXIMUM_SLAB_AMOUNT });
-          this.interestPolicyForm.get('minSlabAmount')?.reset();
-        }else if (box == BoxNumber.BOX_TWO) {
-          this.msgs.push({ severity: 'warning', detail: applicationConstants.MAXIMUM_SLAB_AMOUNT_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MINIMUM_SLAB_AMOUNT});
-          this.interestPolicyForm.get('maxSlabAmount')?.reset();
-          this.saoProductDefinitionModel.maxLoanPeriod = null;
-        }
-        setTimeout(() => {
+  
+        const minSlabAmount = Number(this.interestPolicyForm.get('minSlabAmount')?.value);
+        const maxSlabAmount = Number(this.interestPolicyForm.get('maxSlabAmount')?.value);
+  
+        if (minSlabAmount > maxSlabAmount) {
           this.msgs = [];
-        }, 1500);
-      } 
+          if (box == BoxNumber.BOX_ONE) {
+            this.msgs.push({ severity: 'warning', detail: applicationConstants.MINIMUM_SLAB_AMOUNT_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAXIMUM_SLAB_AMOUNT });
+            this.interestPolicyForm.get('minSlabAmount')?.reset();
+          } else if (box == BoxNumber.BOX_TWO) {
+            this.msgs.push({ severity: 'warning', detail: applicationConstants.MAXIMUM_SLAB_AMOUNT_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MINIMUM_SLAB_AMOUNT });
+            this.interestPolicyForm.get('maxSlabAmount')?.reset();
+            this.saoProductDefinitionModel.maxLoanPeriod = null;
+          }
+          setTimeout(() => {
+            this.msgs = [];
+          }, 1500);
+        }
+      }
       this.updateData();
     }
-
     checkApportionOrder(apportionOrder: any){
       const isDuplicate = this.apportionOrderList.some(row => 
         row.apportionOrder === Number(apportionOrder)

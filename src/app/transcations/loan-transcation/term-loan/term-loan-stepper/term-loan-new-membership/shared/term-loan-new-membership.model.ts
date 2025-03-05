@@ -132,6 +132,10 @@ export class MembershipBasicRequiredDetails {
 
 
     signaturePath?: any;
+
+    societyAdmissionNumber: any;
+
+    subProductId: any;
 }
 export class MemberGroupDetailsModel {
 
@@ -176,6 +180,12 @@ export class MemberGroupDetailsModel {
     signatureCopyPath: any;
     pocNumber: any;
     pocName: any;
+    societyAdmissionNumber:any;
+    operatorTypeId:any;
+  
+    operatorTypeName:any;
+
+    subProductId: any;
 
 }
 export class MembershipInstitutionDetailsModel {
@@ -261,6 +271,12 @@ export class MembershipInstitutionDetailsModel {
     institutionStatus: any;
 
     pocNumber: any;
+    societyAdmissionNumber:any;
+    operatorTypeId:any;
+  
+    operatorTypeName:any;
+
+    subProductId: any;
 
 
 }
@@ -332,6 +348,9 @@ export class promoterDetailsModel {
     multipartFileListForPhotoCopyPath: any;
 
     multipartFileListForSignatureCopyPath: any;
+    endDateVal: any;
+
+    isPoc: any;
 }
 export class InstitutionPromoterDetailsModel {
     id: any;
@@ -401,6 +420,10 @@ export class InstitutionPromoterDetailsModel {
     multipartFileListForSignatureCopyPath: any;
 
     isGroupLeader: any;
+
+    endDateVal: any;
+
+    isPoc: any;
 
 }
 

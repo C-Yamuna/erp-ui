@@ -30,7 +30,7 @@
                                             </div>
                                             <div class="col-6" *ngIf="editbutton">
                                                 <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
-                                                    (click)="editDepositDetails(investmentApplicationDetailsModel,0)"></p-button>
+                                                    (click)="editDepositDetails(investmentApplicationDetailsModel,0)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                             </div>
                                         </div>
                                         <!-- <div class="col-6" *ngIf="editbutton">
@@ -137,6 +137,35 @@
                                                 <p class="label-input-text">
                                                     {{investmentApplicationDetailsModel.installmentAmount}}</p>
                                             </div>
+                                            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 ">
+                                                <h6 class="label-view">{{'INVESTMENTS_TRANSACTIONS.RESOLUTION_NUMBER' |
+                                                    translate}}</h6>
+                                                <p class="label-input-text">
+                                                    {{investmentApplicationDetailsModel.resolutionNumber}}</p>
+                                            </div>
+                                            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 ">
+                                                <h6 class="label-view">
+                                                    {{'INVESTMENTS_TRANSACTIONS.RESOLUTION_DATE' |
+                                                    translate}}</h6>
+                                                <p class="label-input-text">
+                                                    {{investmentApplicationDetailsModel.resolutionDate}}
+                                                </p>
+                                            </div>
+                                            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 ">
+                                                <div class="form-label">
+                                                    <h6 class="label-view">{{ 'INVESTMENTS_TRANSACTIONS.RESOLUTION_COPY' | translate }}</h6>
+                                                    <div class="uplodad-style align-items-center">
+                                                        <div class="col-12  d-flex p-0 pt-1" *ngFor="let img of resolutionCopyFileList">
+                                                            <div *ngIf="img.fileType=='pdf'">
+                                                                <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22" height="22"></a>
+                                                            </div>
+                                                            <div class="label-input-text docname-texteclipse mt-1 ml-2" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                                                {{img.fileName}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6 " *ngIf="!installmentAmountFlag">
                                                 <h6 class="label-view">{{'INVESTMENTS_TRANSACTIONS.AUTO_RENEWAL' |
                                                     translate}}</h6>
@@ -190,7 +219,7 @@
                                                 <div class="col-6" *ngIf="editbutton">
                                                     <p-button icon="fa fa-pencil-square-o"
                                                         class="kyc-edit-btn pull-right"
-                                                        (click)="editDepositDetails(investmentAccountDocumentsModel,1)"></p-button>
+                                                        (click)="editDepositDetails(investmentAccountDocumentsModel,1)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                                 </div>
                                             </div>
                                                 <div class="col-12 p-0">
@@ -215,21 +244,18 @@
                                                                 </div>
                                                                
                                                                 </div>
-                                                                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end">
-                                                                    <div class="kycview-done icon-size text-right"><i class="fa fa-check-circle mr-0" aria-hidden="true"></i></div>
-                                                                    <div class="col-12 px-0">
-                                                                        <div class="col-12 px-0" *ngFor="let img of document.multipartFileList">
-                                                                            <!-- <div class="col-12 p-0" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                                                <a href="{{img.imageValue}}">
-                                                                                    <img src="{{img.imageValue}}" class="upload-img img-fluid" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                                                                </a>
-                                                                            </div> -->
-                                                                            <div class="col-12 p-0" *ngIf="img.fileType=='pdf'">
-                                                                                <a href="{{img.imageValue}}">
-                                                                                    <img src="assets\images\pdf.png" class="upload-img img-fluid" pTooltip="{{img.fileName}}"
-                                                                                        tooltipPosition="bottom">
-                                                                                </a>
-                                                                            </div>
+                                                                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end d-flex right-actions">
+                                                                    <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClickdoccPhotoCopy(document)">
+                                                                        <i class="fa fa-eye m-0" aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}"
+                                                                            tooltipPosition="top"></i></div>
+                                                                    <div class="carddownload-icon icon-size text-right" *ngFor="let img of document.multipartFileList"
+                                                                        pTooltip="{{'ERP.DOC_DOWNLOAD' | translate}}" tooltipPosition="top">
+                                                                        <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                                            <a href="{{img.imageValue}}">
+                                                                                <i class="fa fa-download ml-3 mr-0" aria-hidden="true">
+                                                                                    <!-- <img src="{{img.imageValue}}"> -->
+                                                                                </i>
+                                                                            </a>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -323,3 +349,16 @@
         </div>
     </div>
 </div>
+
+<!-- DOC Photo Copy -->
+<p-dialog header="{{'ERP.DOCUMENT_COPY' | translate}}" [(visible)]="docPhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
+    <div class="col-12">
+        <div *ngFor="let img of multipleFilesList">
+            <div class="mb-3 imgcustom-class" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                <!-- <a href="{{img.imageValue}}"> -->
+                        <img src="{{img.imageValue}}" class="doc-photocopy">
+                <!-- </a> -->
+            </div>
+        </div>
+    </div>
+</p-dialog>

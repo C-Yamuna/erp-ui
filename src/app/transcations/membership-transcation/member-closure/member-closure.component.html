@@ -5,13 +5,13 @@
                     class="fa fa-angle-right font-bold mr-3 ml-3"></i>{{'ERP.CLOSURE' | translate}}</div>
             <div class="justify-content-end view-popup-top">
                 <div class="d-flex">
-                    <p-button class="ml-3" icon="fa fa-download" label="Template"></p-button>
+                    <p-button class="ml-3" icon="fa fa-download" label="{{'ERP.TEMPLATE' | translate}}"></p-button>
                 </div>
             </div>
         </div>
 
     </div>
-    <div class="row">
+    <div class="row mt-2">
         <div class="col-25-right">
         <div class="col-12 memnbership-side-closure-card border-light" *ngIf="selectedMemberType == 'Individual'">
                             <div class="col-12">
@@ -106,7 +106,7 @@
                                 </div>
                                 <!-- KYC Approved -->
                                 <!-- <div class="col-12 d-flex basicdata-card">
-                                    <div class="col-10 d-flex">
+                                    <div class="col-10 p-0">
                                     <div>
                                     <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                     <p class="label-input-text">{{isKycApproved}}</p>
@@ -179,8 +179,8 @@
                                         <p class="label-input-text">{{memberGroupBasicDetails.tanNumber}}</p>
                                 </div>
                                 <!-- KYC Approved -->
-                                <div class="col-12 basicdata-card text-break text-white py-0">
-                                    <div class="col-10 d-flex">
+                                <div class="col-12 basicdata-card text-break text-white d-flex py-0">
+                                    <div class="col-10 p-0">
                                         <div>
                                             <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                             <p class="label-input-text">Approved</p>
@@ -253,8 +253,8 @@
                                         <p class="label-input-text">{{institutionBasicDetailsModel.tanNumber}}</p>
                                 </div>
                                 <!-- KYC Approved -->
-                                <div class="col-12 basicdata-card text-break text-white py-0">
-                                    <div class="col-10 d-flex">
+                                <div class="col-12 basicdata-card text-break text-white d-flex py-0">
+                                    <div class="col-10 p-0">
                                         <div>
                                             <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                             <p class="label-input-text">Approved</p>
@@ -274,7 +274,7 @@
         </div>
         </div>
 
-        <div class="col-75-fullmidd mt-2">
+        <div class="col-75-fullmidd">
             
                 <!-- <div class="col-12">
                     <div class="row justify-content-between">

@@ -99,7 +99,13 @@ export class RdPreviewComponent {
   isStaff: any;
   genderList: any[] = [];
   installmentfrequencyList: any[] =[];
-
+  kycPhotoCopyZoom: boolean = false;
+  nomineePhotoCopyZoom: boolean = false;
+  guardianPhotoCopyZoom: boolean = false;
+  docPhotoCopyZoom: boolean = false;
+  interestPayoutFlag: boolean = false;
+  monthFlag: boolean = false;
+  yearFlag: boolean = false;
 
   constructor(private router: Router,
     private rdAccountsService: RdAccountsService,
@@ -177,18 +183,17 @@ export class RdPreviewComponent {
 
         if (idEdit == "1") {
             this.preveiwFalg = true;
-            this.isShowSubmit = applicationConstants.TRUE; // Allow Submit
             this.viewButton = false;
-            this.editFlag = false;
         } else {
             this.preveiwFalg = false;
+            this.viewButton = true;
         }
         if (params['isGridPage'] != undefined && params['isGridPage'] != null) {
             let isGrid = this.encryptDecryptService.decrypt(params['isGridPage']);
             if (isGrid === "0") {
                 this.isShowSubmit = applicationConstants.FALSE;
-                this.viewButton = true;
-                this.editFlag = false;
+                // this.viewButton = true;
+                this.editFlag = true;
             } else {
                 this.isShowSubmit = applicationConstants.TRUE;
             }
@@ -208,6 +213,12 @@ export class RdPreviewComponent {
   submit() {
     if (this.rdAccountsModel.depositDate != null && this.rdAccountsModel.depositDate != undefined) {
       this.rdAccountsModel.depositDate = this.commonFunctionsService.getUTCEpoch(new Date(this.rdAccountsModel.depositDate));
+    }
+    if (this.rdAccountsModel.installmentDate != null && this.rdAccountsModel.installmentDate != undefined) {
+      this.rdAccountsModel.installmentDate = this.commonFunctionsService.getUTCEpoch(new Date(this.rdAccountsModel.installmentDate));
+    }
+    if (this.rdAccountsModel.maturityDate != null && this.rdAccountsModel.maturityDate != undefined) {
+      this.rdAccountsModel.maturityDate = this.commonFunctionsService.getUTCEpoch(new Date(this.rdAccountsModel.maturityDate));
     }
 
     this.rdAccountsModel.status = 5;
@@ -259,6 +270,12 @@ export class RdPreviewComponent {
             this.rdAccountsModel.depositDate = this.datePipe.transform(this.rdAccountsModel.depositDate, this.orgnizationSetting.datePipe);
           }
 
+          if (this.rdAccountsModel.installmentDate != null && this.rdAccountsModel.installmentDate != undefined) {
+            this.rdAccountsModel.installmentDate = this.datePipe.transform(this.rdAccountsModel.installmentDate, this.orgnizationSetting.datePipe);
+          }
+          if (this.rdAccountsModel.maturityDate != null && this.rdAccountsModel.maturityDate != undefined) {
+            this.rdAccountsModel.maturityDate = this.datePipe.transform(this.rdAccountsModel.maturityDate, this.orgnizationSetting.datePipe);
+          }
           if (this.rdAccountsModel.memberTypeName != null && this.rdAccountsModel.memberTypeName != undefined) {
             this.memberTypeName = this.rdAccountsModel.memberTypeName;
             this.memberTypeCheck(this.memberTypeName);
@@ -266,6 +283,8 @@ export class RdPreviewComponent {
               this.rdAccountsModel.accountTypeName = applicationConstants.SINGLE_ACCOUNT_TYPE;
             }
           }
+          this.tenureCheck();
+          this.interestPayoutCheck();
           if (this.responseModel.data[0].memberTypeName == MemberShipTypesData.INDIVIDUAL) {
             if (this.rdAccountsModel.memberShipBasicDetailsDTO.age != null && this.rdAccountsModel.memberShipBasicDetailsDTO.age != undefined && this.rdAccountsModel.memberShipBasicDetailsDTO.age < 18) {
               this.guardainFormEnable = true;
@@ -641,4 +660,39 @@ export class RdPreviewComponent {
 
     }
   }
+
+  onClickKycPhotoCopy(rowData :any){
+    this.multipleFilesList = [];
+    this.kycPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
+  }
+  onClickDocPhotoCopy(rowData :any){
+    this.multipleFilesList = [];
+    this.docPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
+  }
+  onClickNomineePhotoCopy(){
+    this.nomineePhotoCopyZoom = true;
+  }
+  onClickGuardianPhotoCopy(){
+    this.guardianPhotoCopyZoom = true;
+  }
+      /**
+ * @implements check for years,months,days to show and hide based on tenuretype
+ * @author bhargavi
+ */
+      tenureCheck() {
+        const tenureType = this.rdAccountsModel.tenureType;
+        this.yearFlag = tenureType === 2 || tenureType === 5 || tenureType === 6 || tenureType === 7 ? true : false;
+        this.monthFlag = tenureType === 3 || tenureType === 4 || tenureType === 6 || tenureType === 7 ? true : false;
+      }
+  
+      /**
+     * @implements check for paymenttype show and hide based on interestPayoutType
+     * @author bhargavi
+     */
+      interestPayoutCheck() {
+        const interestPayoutType = this.rdAccountsModel.interestPayoutType;
+        this.interestPayoutFlag = interestPayoutType === 3 ? true : false;
+      }
 }

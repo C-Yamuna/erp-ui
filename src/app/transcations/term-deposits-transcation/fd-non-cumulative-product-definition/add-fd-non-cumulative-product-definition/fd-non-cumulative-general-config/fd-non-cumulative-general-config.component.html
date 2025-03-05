@@ -11,7 +11,7 @@
                             <label for="username"><span class="red">*</span>{{'TERMDEPOSITSTRANSACTION.PRODUCT_NAME' | translate}}</label>
                         
                             <input pInputText id="bunit_txt_name" maxlength="40" type="text" formControlName="name"
-                                [(ngModel)]="fdNonCumulativeProductDefinitionModel.name">
+                                [(ngModel)]="fdNonCumulativeProductDefinitionModel.name" (focusout)="productNameDuplicateCheck()">
                             <p-message severity="error" text="Enter Valid Name"
                                 *ngIf="!generalconfigform.controls['name'].valid && generalconfigform.controls['name'].dirty">
                             </p-message>

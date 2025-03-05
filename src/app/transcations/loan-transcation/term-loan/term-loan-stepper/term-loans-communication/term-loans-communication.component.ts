@@ -38,7 +38,7 @@ export class TermLoansCommunicationComponent {
   permenentDistrictList: any[] = [];
   permenentSubDistrictList: any[] = [];
   permenentVillageList: any[] = [];
-  id: any;
+  termLoanApplicationId: any;
   orgnizationSetting: any;
   showForm: boolean = false;
   admissionNumber: any;
@@ -49,7 +49,7 @@ export class TermLoansCommunicationComponent {
   flagForLabelName: any;
   blocksList: any[] = [];
   divisionList: any[] = [];
-
+  isEdit: any;
 
   constructor(private router: Router,
     private formBuilder: FormBuilder,
@@ -85,21 +85,27 @@ export class TermLoansCommunicationComponent {
   
     ngOnInit(): void {
       this.orgnizationSetting = this.commonComponent.orgnizationSettings();
-      this.showForm = this.commonFunctionsService.getStorageValue(applicationConstants.B_CLASS_MEMBER_CREATION);
       this.activateRoute.queryParams.subscribe(params => {
-        if (params['id'] != undefined) {
+        if (params['id'] != undefined || params['admissionNumber'] != undefined) {
           if (params['id'] != undefined) {
             let id = this.encryptDecryptService.decrypt(params['id']);
-            this.id = Number(id);
-            this.getTermApplicationByTermAccId(this.id);
+            this.termLoanApplicationId = Number(id);
+            if (params['admissionNumber'] != undefined) {
+              this.admissionNumber = this.encryptDecryptService.decrypt(params['admissionNumber']);
+            }
+            this.getTermApplicationByTermAccId(this.termLoanApplicationId);
           }
+          // this.isEdit = true;
+          if (this.termLoanApplicationModel != null && this.termLoanApplicationModel != null)
+            this.flagForLabelName = true;
+        } else {
+          this.isEdit = false;
+          this.flagForLabelName = false;
         }
+  
       });
       this.communicationForm.valueChanges.subscribe((data: any) => {
         this.updateData();
-        if (this.communicationForm.valid) {
-          this.save();
-        }
       });
       this.getAllStatesList();
       this.getAllPermanentStatesList();
@@ -108,9 +114,10 @@ export class TermLoansCommunicationComponent {
     }
   
     updateData() {
-      if (this.id != null && this.id != undefined)
-        this.termLoanCommunicationModel.termLoanApplicationId = this.id;
+      if (this.termLoanApplicationId != null && this.termLoanApplicationId != undefined)
+        this.  termLoanCommunicationModel.termLoanApplicationId = this.termLoanApplicationId;
       if (this.accountNumber != null && this.accountNumber != undefined)
+        this.termLoanCommunicationModel.accountNumber = this.accountNumber;
       this.termLoanCommunicationModel.memberTypeName = this.memberTypeName;
       this.termLoanApplicationsService.changeData({
         formValid: !this.communicationForm.valid ? true : false,
@@ -122,37 +129,41 @@ export class TermLoansCommunicationComponent {
     save() {
       this.updateData();
     }
-  
-    // get call term loan account by id
+
     getTermApplicationByTermAccId(id: any) {
       this.termLoanApplicationsService.getTermApplicationByTermAccId(id).subscribe((data: any) => {
         this.responseModel = data;
         if (this.responseModel != null && this.responseModel != undefined) {
-          if (this.responseModel.data != null && this.responseModel.data != undefined) {
-            if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
-              if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined && this.responseModel.data.length > 0) {
-                if (this.responseModel.data[0].admissionNumber != null && this.responseModel.data[0].admissionNumber != undefined)
-                  this.admissionNumber = this.responseModel.data[0].admissionNumber;
-                if (this.responseModel.data[0].accountNumber != null && this.responseModel.data[0].accountNumber != undefined)
-                  this.accountNumber = this.responseModel.data[0].accountNumber;
-                if (this.responseModel.data[0].memberTypeName != null && this.responseModel.data[0].memberTypeName != undefined)
-                  this.memberTypeName = this.responseModel.data[0].memberTypeName;
-                this.termLoanApplicationModel = this.responseModel.data[0];
-                if (this.termLoanApplicationModel != null && this.termLoanApplicationModel != undefined)
-                  if (this.termLoanApplicationModel.termLoanCommunicationDTO != null && this.termLoanApplicationModel.termLoanCommunicationDTO != undefined &&
-                    this.termLoanApplicationModel.termLoanCommunicationDTO[0] != null && this.termLoanApplicationModel.termLoanCommunicationDTO[0] != undefined) {
-                    this.termLoanCommunicationModel = this.termLoanApplicationModel.termLoanCommunicationDTO[0];
-                    this.setAllFields();
-                  }
-                  else {
-                    if (this.memberTypeName == "Individual")
-                      this.getMemberDetailsByAdmissionNumber(this.admissionNumber);
-                    else if (this.memberTypeName == "Group")
-                      this.getGroupDetailsByAdmissionNumber(this.admissionNumber);
-                    else if (this.memberTypeName == "Institution")
-                      this.getInstitutionDetailsByAdmissionNumber(this.admissionNumber);
-                  }
+          if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+            if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+              this.termLoanApplicationModel = this.responseModel.data[0];
+
+              if(this.responseModel.data[0].admissionNo != null && this.responseModel.data[0].admissionNo != undefined){
+                this.termLoanCommunicationModel.admissionNumber  =  this.responseModel.data[0].admissionNo;
+                this.admissionNumber  =  this.responseModel.data[0].admissionNo;
+              }
+              if (this.termLoanApplicationModel.termLoanCommunicationDTO != null && this.termLoanApplicationModel.termLoanCommunicationDTO != undefined) {
+                this.isEdit = true;
+                this.termLoanCommunicationModel = this.termLoanApplicationModel.termLoanCommunicationDTO;
+  
+                if (this.termLoanCommunicationModel.memberTypeName != null && this.termLoanCommunicationModel.memberTypeName != undefined)
+                  this.termLoanCommunicationModel.memberTypeName = this.termLoanCommunicationModel.memberTypeName;
+  
+                if (this.termLoanCommunicationModel.memberShipId != null && this.termLoanCommunicationModel.memberShipId != undefined)
+                  this.termLoanCommunicationModel.memberType = this.termLoanCommunicationModel.memberShipId;
+  
+                if (this.termLoanCommunicationModel.isSameAddress != null && this.termLoanCommunicationModel.isSameAddress != undefined) {
+                  this.setAllFields();
+                }
                 this.updateData();
+              }
+              else {
+                this.isEdit = false;
+                if (this.termLoanApplicationModel.admissionNo != null && this.termLoanApplicationModel.admissionNo) {
+                  this.getMemberDetailsByAdmissionNumber(this.termLoanApplicationModel.admissionNo);
+                  this.getMemberGroupDetailsByGroupAdmissionNumber(this.termLoanApplicationModel.admissionNo);
+                  this.getMemberInstitutionDetailsByAdmissionNumber(this.termLoanApplicationModel.admissionNo);
+                }
               }
             }
           }
@@ -162,9 +173,10 @@ export class TermLoansCommunicationComponent {
         this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
         setTimeout(() => {
           this.msgs = [];
-        }, 2000);
+        }, 3000);
       });
     }
+  
   
     setAllFields() {
       if (this.termLoanCommunicationModel.isSameAddress != null && this.termLoanCommunicationModel.isSameAddress != undefined) {
@@ -192,24 +204,31 @@ export class TermLoansCommunicationComponent {
       if (this.termLoanCommunicationModel.permanentSubDistrictId != null)
         this.getAllPermanentVillagesByMandalId(this.termLoanCommunicationModel.permanentSubDistrictId, false)
     }
-  
-    //Get Member Details from Membership Module by AdmissionNumber
     getMemberDetailsByAdmissionNumber(admissionNumber: any) {
       this.membershipService.getMembershipBasicDetailsByAdmissionNumber(admissionNumber).subscribe((data: any) => {
         this.responseModel = data;
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
-          if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+          if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.membershipBasicRequiredDetailsModel = this.responseModel.data[0];
-            if (this.responseModel.data[0].memberShipCommunicationDetailsDTO != null && this.responseModel.data[0].memberShipCommunicationDetailsDTO != undefined &&
-              this.responseModel.data[0].memberShipCommunicationDetailsDTO != null && this.responseModel.data[0].memberShipCommunicationDetailsDTO != undefined) {
+            if (this.responseModel.data[0].memberShipCommunicationDetailsDTO != null && this.responseModel.data[0].memberShipCommunicationDetailsDTO != undefined){
               this.termLoanCommunicationModel = this.responseModel.data[0].memberShipCommunicationDetailsDTO;
-              if (this.responseModel.data[0].memberShipCommunicationDetailsDTO.admisionNumber != null && this.responseModel.data[0].memberShipCommunicationDetailsDTO.admisionNumber != undefined)
-                this.termLoanCommunicationModel.admissionNumber = this.responseModel.data[0].memberShipCommunicationDetailsDTO.admisionNumber;
+            }
+            if (this.responseModel.data[0].admissionNumber != null && this.responseModel.data[0].admissionNumber != undefined) {
+              this.termLoanCommunicationModel.admissionNumber = this.responseModel.data[0].admissionNumber;
+            }
+            if (this.responseModel.data[0].memberTypeName != null && this.responseModel.data[0].memberTypeName != undefined) {
+              this.termLoanCommunicationModel.memberTypeName = this.responseModel.data[0].memberTypeName;
+            }
+            if (this.responseModel.data[0].memberTypeId != null && this.responseModel.data[0].memberTypeId != undefined) {
+              this.termLoanCommunicationModel.memberType = this.responseModel.data[0].memberTypeId;
+            }
+            if (this.termLoanCommunicationModel.isSameAddress != null && this.termLoanCommunicationModel.isSameAddress != undefined) {
               this.setAllFields();
             }
-            this.updateData();
+            this.termLoanCommunicationModel.id = null;
           }
         }
+        this.updateData();
       }, error => {
         this.commonComponent.stopSpinner();
         this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
@@ -219,23 +238,33 @@ export class TermLoansCommunicationComponent {
       });
     }
   
+  
     //Get Group Details from Membership Module by AdmissionNumber
-    getGroupDetailsByAdmissionNumber(admissionNUmber: any) {
-      this.membershipService.getMemberGroupByAdmissionNumber(admissionNUmber).subscribe((data: any) => {
+    getMemberGroupDetailsByGroupAdmissionNumber(admissionNumber: any) {
+      this.membershipService.getMemberGroupByAdmissionNumber(admissionNumber).subscribe((data: any) => {
         this.responseModel = data;
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
-          if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
-            this.memberGroupDetailsModel = this.responseModel.data[0];
-            if (this.responseModel.data[0].groupCommunicationList != null && this.responseModel.data[0].groupCommunicationList != undefined &&
-              this.responseModel.data[0].groupCommunicationList[0] != null && this.responseModel.data[0].groupCommunicationList[0] != undefined) {
+          if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+            this.responseModel.data[0].groupCommunicationList;
+            if (this.responseModel.data[0].groupCommunicationList.length > 0 && this.responseModel.data[0].groupCommunicationList[0] != null && this.responseModel.data[0].groupCommunicationList[0] != undefined) {
               this.termLoanCommunicationModel = this.responseModel.data[0].groupCommunicationList[0];
-              this.termLoanCommunicationModel.pinCode = this.responseModel.data[0].groupCommunicationList[0].pincode;
-              if (this.termLoanCommunicationModel.memberTypeName != null && this.termLoanCommunicationModel.memberTypeName != undefined)
-                this.memberTypeName = this.termLoanCommunicationModel.memberTypeName;
+            }
+            if (this.responseModel.data[0].admissionNumber != null && this.responseModel.data[0].admissionNumber != undefined) {
+              this.termLoanCommunicationModel.admissionNumber = this.responseModel.data[0].admissionNumber;
+            }
+            if (this.responseModel.data[0].memberTypeName != null && this.responseModel.data[0].memberTypeName != undefined) {
+              this.termLoanApplicationModel.memberTypeName = this.responseModel.data[0].memberTypeName;
+            }
+            if (this.responseModel.data[0].memberTypeId != null && this.responseModel.data[0].memberTypeId != undefined) {
+              this.termLoanCommunicationModel.memberType = this.responseModel.data[0].memberTypeId;
+            }
+  
+            this.termLoanCommunicationModel.id = null;
+            if (this.termLoanCommunicationModel.isSameAddress != null && this.termLoanCommunicationModel.isSameAddress != undefined) {
               this.setAllFields();
             }
-            this.updateData();
           }
+          this.updateData();
         }
       }, error => {
         this.commonComponent.stopSpinner();
@@ -247,21 +276,30 @@ export class TermLoansCommunicationComponent {
     }
   
     //Get Institution Details from Membership Module by AdmissionNumber
-    getInstitutionDetailsByAdmissionNumber(admissionNumber: any) {
+    getMemberInstitutionDetailsByAdmissionNumber(admissionNumber: any) {
       this.membershipService.getMemberIstitutionByAdmissionNumber(admissionNumber).subscribe((data: any) => {
         this.responseModel = data;
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
-          if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
-            this.membershipInstitutionDetailsModel = this.responseModel.data[0];
-            if (this.responseModel.data[0].institutionCommunicationDTOList != null && this.responseModel.data[0].institutionCommunicationDTOList != undefined &&
-              this.responseModel.data[0].institutionCommunicationDTOList[0] != null && this.responseModel.data[0].institutionCommunicationDTOList[0] != undefined) {
+          if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+            this.responseModel.data[0].institutionCommunicationDTOList;
+            if (this.responseModel.data[0].institutionCommunicationDTOList.length > 0 && this.responseModel.data[0].institutionCommunicationDTOList.length > 0 && this.responseModel.data[0].institutionCommunicationDTOList[0] != null && this.responseModel.data[0].institutionCommunicationDTOList[0] != undefined) {
               this.termLoanCommunicationModel = this.responseModel.data[0].institutionCommunicationDTOList[0];
-              if (this.termLoanCommunicationModel.memberTypeName != null && this.termLoanCommunicationModel.memberTypeName != undefined)
-                this.memberTypeName = this.termLoanCommunicationModel.memberTypeName;
+            }
+            if (this.responseModel.data[0].admissionNumber != null && this.responseModel.data[0].admissionNumber != undefined) {
+              this.termLoanCommunicationModel.admissionNumber = this.responseModel.data[0].admissionNumber;
+            }
+            if (this.responseModel.data[0].memberTypeName != null && this.responseModel.data[0].memberTypeName != undefined) {
+              this.termLoanApplicationModel.memberTypeName = this.responseModel.data[0].memberTypeName;
+            }
+            if (this.responseModel.data[0].memberTypeId != null && this.responseModel.data[0].memberTypeId != undefined) {
+              this.termLoanCommunicationModel.memberType = this.responseModel.data[0].memberTypeId;
+            }
+            this.termLoanCommunicationModel.id = null;
+            if (this.termLoanCommunicationModel.isSameAddress != null && this.termLoanCommunicationModel.isSameAddress != undefined) {
               this.setAllFields();
             }
-            this.updateData();
           }
+          this.updateData();
         }
       }, error => {
         this.commonComponent.stopSpinner();
@@ -282,7 +320,7 @@ export class TermLoansCommunicationComponent {
               this.statesList = this.responseModel.data.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((state: { name: any; id: any; }) => {
                 return { label: state.name, value: state.id };
               });
-              // this.sameAsRegisterAddress();
+              this.sameAsRegisterAddress();
             }
             else {
               this.msgs = [];
@@ -318,7 +356,7 @@ export class TermLoansCommunicationComponent {
           });
           const state = this.statesList.find((item: { value: any; }) => item.value === id);
           this.termLoanCommunicationModel.stateName = state.label;
-          // this.sameAsRegisterAddress();
+          this.sameAsRegisterAddress();
         }
         else {
           this.msgs = [];
@@ -350,7 +388,7 @@ export class TermLoansCommunicationComponent {
           });
           const district = this.districtsList.find((item: { value: any; }) => item.value === id);
           this.termLoanCommunicationModel.districtName = district.label;
-          // this.sameAsRegisterAddress();
+          this.sameAsRegisterAddress();
         }
         else {
           this.msgs = [];
@@ -382,7 +420,7 @@ export class TermLoansCommunicationComponent {
               });
               const mandal = this.mandalsList.find((item: { value: any; }) => item.value === id);
               this.termLoanCommunicationModel.subDistrictName = mandal.label;
-              // this.sameAsRegisterAddress();
+              this.sameAsRegisterAddress();
             }
             else {
               this.msgs = [];
@@ -441,7 +479,7 @@ export class TermLoansCommunicationComponent {
               }, 2000);
             }
           }
-          // this.sameAsRegisterAddress();
+          this.sameAsRegisterAddress();
         }
       },
         error => {
@@ -635,100 +673,6 @@ export class TermLoansCommunicationComponent {
         this.termLoanCommunicationModel.permanentBlockId = block.value
        this.termLoanCommunicationModel.permanentBlockName = block.label
       }
-    // sameAsRegisterAddress() {
-    //   if (this.termLoanCommunicationModel.isSameAddress == true) {
-    //     this.termLoanCommunicationModel.permanentStateId = this.termLoanCommunicationModel.stateId;
-    //     if (this.termLoanCommunicationModel.districtId != this.termLoanCommunicationModel.permanentDistrictId) {
-    //       this.termLoanCommunicationModel.permanentDistrictId = null;
-    //       this.getAllPermanentDistrictsByStateId(this.termLoanCommunicationModel.permanentStateId, false);
-    //       this.termLoanCommunicationModel.permanentDistrictId = this.termLoanCommunicationModel.districtId;
-    //     }
-    //     if (this.termLoanCommunicationModel.subDistrictId != this.termLoanCommunicationModel.permanentSubDistrictId) {
-    //       this.termLoanCommunicationModel.permanentSubDistrictId = null;
-    //       this.getAllPermanentMandalsByDistrictId(this.termLoanCommunicationModel.permanentDistrictId, false);
-    //       this.termLoanCommunicationModel.permanentSubDistrictId = this.termLoanCommunicationModel.subDistrictId;
-    //     }
-    //     if (this.termLoanCommunicationModel.villageId != this.termLoanCommunicationModel.permanentVillageId) {
-    //       this.termLoanCommunicationModel.permanentVillageId = null;
-    //       this.getAllPermanentVillagesByMandalId(this.termLoanCommunicationModel.permanentSubDistrictId, false);
-    //       this.termLoanCommunicationModel.permanentVillageId = this.termLoanCommunicationModel.villageId;
-    //     }
-    //   }
-    // }
-  
-    // sameAsPerAddr(isSameAddress: any) {
-    //   if (isSameAddress) {
-    //     this.termLoanCommunicationModel.isSameAddress = applicationConstants.TRUE;
-    //     this.communicationForm.get('permanentStateId').disable();
-    //     this.communicationForm.get('permanentDistrictId').disable();
-    //     this.communicationForm.get('permanentSubDistrictId').disable();
-    //     this.communicationForm.get('permanentVillageId').disable();
-    //     this.communicationForm.get('permanentAddress1').disable();
-    //     this.communicationForm.get('permanentPinCode').disable();
-  
-    //     this.termLoanCommunicationModel.permanentStateId = this.termLoanCommunicationModel.stateId;
-    //     if (this.termLoanCommunicationModel.districtId != this.termLoanCommunicationModel.permanentDistrictId) {
-    //       this.termLoanCommunicationModel.permanentDistrictId = null;
-    //       this.getAllPermanentDistrictsByStateId(this.termLoanCommunicationModel.permanentStateId, false);
-    //       this.termLoanCommunicationModel.permanentDistrictId = this.termLoanCommunicationModel.districtId;
-    //     }
-    //     if (this.termLoanCommunicationModel.subDistrictId != this.termLoanCommunicationModel.permanentSubDistrictId) {
-    //       this.termLoanCommunicationModel.permanentSubDistrictId = null;
-    //       this.getAllPermanentMandalsByDistrictId(this.termLoanCommunicationModel.permanentDistrictId, false);
-    //       this.termLoanCommunicationModel.permanentSubDistrictId = this.termLoanCommunicationModel.subDistrictId;
-    //     }
-    //     if (this.termLoanCommunicationModel.villageId != this.termLoanCommunicationModel.permanentVillageId) {
-    //       this.termLoanCommunicationModel.permanentVillageId = null;
-    //       this.getAllPermanentVillagesByMandalId(this.termLoanCommunicationModel.permanentSubDistrictId, false);
-    //       this.termLoanCommunicationModel.permanentVillageId = this.termLoanCommunicationModel.villageId;
-    //     }
-    //     this.termLoanCommunicationModel.permanentAddress1 = this.termLoanCommunicationModel.address1;
-    //     this.termLoanCommunicationModel.permanentPinCode = this.termLoanCommunicationModel.pinCode;
-    //   }
-    //   else {
-    //     this.termLoanCommunicationModel.isSameAddress = applicationConstants.FALSE;
-  
-    //     this.communicationForm.get('permanentStateId').enable();
-    //     this.communicationForm.get('permanentDistrictId').enable();
-    //     this.communicationForm.get('permanentSubDistrictId').enable();
-    //     this.communicationForm.get('permanentVillageId').enable();
-    //     this.communicationForm.get('permanentAddress1').enable();
-    //     this.communicationForm.get('permanentPinCode').enable();
-  
-    //     this.communicationForm.get('permanentStateId').reset();
-    //     this.communicationForm.get('permanentDistrictId').reset();
-    //     this.communicationForm.get('permanentSubDistrictId').reset();
-    //     this.communicationForm.get('permanentVillageId').reset();
-    //     this.communicationForm.get('permanentAddress1').reset();
-    //     this.communicationForm.get('permanentPinCode').reset();
-    //     this.permenentDistrictList = [];
-    //     this.permenentSubDistrictList = [];
-    //     this.permenentVillageList = [];
-  
-    //     this.communicationForm.get('permanentStateId').enable();
-    //     this.communicationForm.get('permanentDistrictId').enable();
-    //     this.communicationForm.get('permanentSubDistrictId').enable();
-    //     this.communicationForm.get('permanentVillageId').enable();
-    //     this.communicationForm.get('permanentAddress1').enable();
-    //     this.communicationForm.get('permanentPinCode').enable();
-  
-    //     this.termLoanCommunicationModel.permanentStateId = null;
-    //     this.termLoanCommunicationModel.permanentDistrictId = null;
-    //     this.termLoanCommunicationModel.permanentSubDistrictId = null;
-    //     this.termLoanCommunicationModel.permanentVillageId = null;
-    //     this.termLoanCommunicationModel.permanentAddress1 = null;
-    //     this.termLoanCommunicationModel.permanentPinCode = null;
-    //   }
-    //   this.updateData();
-    // }
-  
-    // RegAddressToComAddress() {
-    //   if (this.termLoanCommunicationModel.isSameAddress == true) {
-    //     this.termLoanCommunicationModel.permanentAddress1 = this.termLoanCommunicationModel.address1;
-    //     this.termLoanCommunicationModel.permanentPinCode = this.termLoanCommunicationModel.pinCode;
-    //   }
-    // }
-  
     sameAsPerAddr(isSameAddress: any) {
       if (isSameAddress) {
         this.termLoanCommunicationModel.isSameAddress = applicationConstants.TRUE;

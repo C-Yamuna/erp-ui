@@ -80,10 +80,11 @@ export class SiRequiredDocumentsComponent {
     @author vinitha
     @implements Integrating SI Loans Product Definition Configuration details To Main Stepper Component
    */
+  
   updateData() {
     this.siRequiredDocumentsModel.siProductId = this.siProductId
     this.simpleInterestProductDefinitionService.changeData({
-      formValid: this.enableSaveAndNextButton ,
+      formValid: !this.addButton ,
       data: this.siRequiredDocumentsModel,
       savedId:this.siProductId,
       stepperIndex: 5,

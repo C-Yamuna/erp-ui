@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { applicationConstants } from 'src/app/shared/applicationConstants';
 import { InstitutionPromoterDetailsModel, MemberGroupDetailsModel, MembershipBasicRequiredDetails, MembershipInstitutionDetailsModel, promoterDetailsModel } from '../term-loan-new-membership/shared/term-loan-new-membership.model';
 import { TermApplication } from '../term-loan-application-details/shared/term-application.model';
@@ -20,7 +20,7 @@ import { DatePipe } from '@angular/common';
 import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-constants';
 import { FileUpload } from 'primeng/fileupload';
 import { FileUploadModel } from 'src/app/layout/mainmenu/shared/file-upload-model.model';
-import { MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
+import { DOCUMENT_TYPES, MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-term-loan-membership',
@@ -51,7 +51,8 @@ export class TermLoanMembershipComponent {
   editIndex: any;
   isFileUploaded: boolean = false;
   uploadFileData: any;
-  
+  tempKycList :any[] =[];
+  isPanNumber: boolean = false;
   membershipBasicRequiredDetails: MembershipBasicRequiredDetails = new MembershipBasicRequiredDetails();
   memberGroupDetailsModel: MemberGroupDetailsModel = new MemberGroupDetailsModel();
   membershipInstitutionDetailsModel: MembershipInstitutionDetailsModel = new MembershipInstitutionDetailsModel();
@@ -69,7 +70,11 @@ export class TermLoanMembershipComponent {
   termLoanKycDetailsList: any[] = [];
   veiwCardHide: boolean = false;
   promotersList: any [] =[];
-  
+  originalData: any;
+  mandatoryDoxsTextShow: boolean = false;
+  requiredDocumentsNamesText: any;
+  isMaximized: boolean = false;
+  kycPhotoCopyZoom: boolean = false;
   
   constructor(private router: Router, 
     private formBuilder: FormBuilder,  private termLoanApplicationsService: TermApplicationService,
@@ -80,10 +85,11 @@ export class TermLoanMembershipComponent {
        private membershipService: TermLoanNewMembershipService, private termLoanKycService: TermLoanKycService, 
         private fileUploadService : FileUploadService) {
           this.kycForm = this.formBuilder.group({
-            'documentNumber': ['',[Validators.pattern(applicationConstants.ALLOW_NUMBERS_ONLY),Validators.compose([Validators.required])]],
-            'kycDocumentTypeName': new FormControl('', Validators.required),
-            'nameAsPerDocument' :  ['',[Validators.pattern(applicationConstants.NEW_ALPHANUMERIC),Validators.compose([Validators.required])]],
-            'fileUpload': new FormControl('')
+            'documentNumber': new FormControl({ value: '', disabled: true }, [Validators.required, Validators.pattern(/^[^\s]+(\s.*)?$/)]),
+            'kycDocumentTypeName': new FormControl({ value: '', disabled: true }, Validators.required),
+            'nameAsPerDocument': new FormControl({ value: '', disabled: false }, [Validators.pattern(applicationConstants.ALPHA_NAME_PATTERN), Validators.required]),
+            'promoter': new FormControl({ value: '', disabled: true }), // 🔹 Disabled initially
+            'fileUpload': new FormControl({ value: '', disabled: false })
           });
   }
   
@@ -142,17 +148,35 @@ export class TermLoanMembershipComponent {
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
               if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
-                this.admissionNumber = this.responseModel.data[0].adminssionNumber;
+                this.admissionNumber = this.responseModel.data[0].admissionNo;
                 this.memberTypeName = this.responseModel.data[0].memberTypeName;;
                 this.termLoanApplicationModel = this.responseModel.data[0];
-                if(this.termLoanApplicationModel.termLoanKycDetailsDTOList != null &&  this.termLoanApplicationModel.termLoanKycDetailsDTOList != undefined && this.termLoanApplicationModel.termLoanKycDetailsDTOList.length>0 ){
+                if(this.termLoanApplicationModel.termLoanKycDetailsDTOList != null &&  this.termLoanApplicationModel.termLoanKycDetailsDTOList != undefined && this.  termLoanApplicationModel.termLoanKycDetailsDTOList.length>0 ){
                     this.termLoanKycDetailsList = this.termLoanApplicationModel.termLoanKycDetailsDTOList;
                     for(let kyc of this.termLoanKycDetailsList){
                         kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
                     }
+                    this.tempKycList = this.termLoanKycDetailsList;
                 }
-                this.memberTypeCheckForPromotersKyc(this.termLoanApplicationModel.memberTypeId);
-                this.membershipDataFromSbModule(this.termLoanApplicationModel.memberGroupDetailsDTO);
+                //required documents
+              if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length >0) {
+                let i = 0;
+                for (let doc of this.documentNameList) {
+                  if (i == 0)
+                    this.requiredDocumentsNamesText = "Please Upload Mandatory KYC Documents ("
+                  if (doc.isMandatory) {
+                    i = i + 1;
+                    this.requiredDocumentsNamesText = this.requiredDocumentsNamesText+ doc.label + ",";
+                  }
+                }
+                this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + ")";
+                if (i > 0) {
+                  this.mandatoryDoxsTextShow = true;
+                }
+              }
+                
+                this.memberTypeCheckForPromotersKyc(this.  termLoanApplicationModel.memberTypeName);
+                this.membershipDataFromSbModule(this.  termLoanApplicationModel);
                 this.updateData();
               }
             }
@@ -174,12 +198,11 @@ export class TermLoanMembershipComponent {
     });
   }
   
- /**
+  /**
   * @implements updateData To parent component'
   */
   updateData() {
     if(this.termLoanKycDetailsList != null && this.termLoanKycDetailsList != undefined && this.termLoanKycDetailsList.length > 0){
-      // this.kycDuplicate = this.termLoanKycModelDuplicateCheck(this.termLoanKycDetailsList);
       if(this.kycDuplicate|| this.buttonDisabled){
         this.isDisableFlag = true;
       }
@@ -220,10 +243,12 @@ export class TermLoanMembershipComponent {
               }
               this.termLoanApplicationModel.termLoanKycDetailsDTOList = this.memberGroupDetailsModel.groupKycList;
             }
+            this.tempKycList = this.termLoanKycDetailsList;
             if (this.membershipInstitutionDetailsModel.memberTypeId == null ||  this.membershipInstitutionDetailsModel.memberTypeId == undefined) {
               this.membershipInstitutionDetailsModel.memberTypeId = applicationConstants.INSTITUTION_MEMBER_TYPE_ID;
             }
-            this.memberTypeCheckForPromotersKyc(this.membershipBasicRequiredDetails.memberTypeId);
+            this.memberTypeCheckForPromotersKyc(this.membershipInstitutionDetailsModel.memberTypeName);
+            this.termLoanApplicationModel.memberTypeName = this.membershipInstitutionDetailsModel.memberTypeName;
             this.admissionNumber = this.membershipInstitutionDetailsModel.admissionNumber;
             this.termLoanApplicationModel.memberTypeId = this.membershipInstitutionDetailsModel.memberTypeId;
             this.membershipInstitutionDetailsModel.isNewMember = this.showForm;
@@ -258,14 +283,18 @@ export class TermLoanMembershipComponent {
             if (this.memberGroupDetailsModel.memberTypeId == null ||  this.memberGroupDetailsModel.memberTypeId == undefined) {
               this.memberGroupDetailsModel.memberTypeId = applicationConstants.GROUP_MEMBER_TYPE_ID;
             }
-            this.memberTypeCheckForPromotersKyc(this.membershipBasicRequiredDetails.memberTypeId);
+            this.memberTypeCheckForPromotersKyc(this.membershipBasicRequiredDetails.memberTypeName);
             if(this.memberGroupDetailsModel.groupKycList != null && this.memberGroupDetailsModel. groupKycList != undefined){
               this.termLoanKycDetailsList = this.memberGroupDetailsModel. groupKycList;
               for(let kyc of this.termLoanKycDetailsList){
                 kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
+                if(kyc.multipartFileList == null || kyc.multipartFileList == undefined || kyc.multipartFileList.length ==0){
+                  kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath ,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
+                }
               }              
                this.termLoanApplicationModel.termLoanKycDetailsDTOList = this.memberGroupDetailsModel. groupKycList;
             }
+            this.tempKycList = this.termLoanKycDetailsList;
             this.admissionNumber = this.memberGroupDetailsModel.admissionNumber;
             this.memberGroupDetailsModel.isNewMember = this.showForm;
             this.termLoanApplicationModel.memberTypeName = this.memberGroupDetailsModel.memberTypeName;
@@ -311,7 +340,7 @@ export class TermLoanMembershipComponent {
           if (this.membershipBasicRequiredDetails.memberTypeId == null ||  this.membershipBasicRequiredDetails.memberTypeId == undefined) {
             this.membershipBasicRequiredDetails.memberTypeId = applicationConstants.INDIVIDUAL_MEMBER_TYPE_ID;
           }
-          this.memberTypeCheckForPromotersKyc(this.membershipBasicRequiredDetails.memberTypeId);
+          this.memberTypeCheckForPromotersKyc(this.membershipBasicRequiredDetails.memberTypeName);
           if (this.membershipBasicRequiredDetails.photoCopyPath != null && this.membershipBasicRequiredDetails.photoCopyPath != undefined) {
             this.membershipBasicRequiredDetails.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetails.photoCopyPath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetails.photoCopyPath  );
           }
@@ -324,6 +353,7 @@ export class TermLoanMembershipComponent {
             kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
             return kyc;
           });
+          this.tempKycList = this.termLoanKycDetailsList;
             this.termLoanApplicationModel.termLoanKycDetailsDTOList = this.membershipBasicRequiredDetails.memberShipKycDetailsDTOList;
           }
           this.termLoanApplicationModel.memberTypeName = this.membershipBasicRequiredDetails.memberTypeName;
@@ -348,35 +378,42 @@ export class TermLoanMembershipComponent {
       this.responseModel = res;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         this.documentNameList = this.responseModel.data.filter((kyc: any) => kyc.status == applicationConstants.ACTIVE).map((count: any) => {
-          return { label: count.name, value: count.id }
+          return { label: count.name, value: count.id ,isMandatory:count.isMandatory }
         });
         let filteredObj = this.documentNameList.find((data: any) => null != data && data.value == this. termLoanKycModel.kycDocumentTypeId);
             if (filteredObj != null && undefined != filteredObj)
               this. termLoanKycModel.kycDocumentTypeName = filteredObj.label;
+           
+          let i = 0;
+          for (let doc of this.documentNameList) {
+            if (i == 0)
+              this.requiredDocumentsNamesText = "Please Upload Mandatory KYC Documents ("
+            if (doc.isMandatory) {
+              i = i + 1;
+              this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + "," + doc.label + ",";
+            }
+          }
+          this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + ")";
+          if (i > 0) {
+            this.mandatoryDoxsTextShow = true;
+          }
       }
     });
   }
-
-  OnChangeMemberType(documentTypeId :any){
-    if(this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0){
-    let filteredObj = this.documentNameList.find((data: any) => null != data && data.value == documentTypeId);
-    if (filteredObj != null && undefined != filteredObj && filteredObj.label != null && filteredObj.label != undefined){
-          this. termLoanKycModel.kycDocumentTypeName = filteredObj.label;
-    }
-  }
-  if(this.termLoanKycDetailsList != null && this.termLoanKycDetailsList != undefined && this.termLoanKycDetailsList.length > 0){
-    this.kycDuplicate = this.termLoanKycModelDuplicateCheck(this.termLoanKycDetailsList);
-  }
-    this.updateData();
-  }
+  
   //image upload and document path save
   imageUploader(event: any, fileUpload: FileUpload) {
     this.isFileUploaded = applicationConstants.FALSE;
-    this.termLoanKycModel.multipartFileList = [];
+    this.multipleFilesList = [];
     this.termLoanKycModel.filesDTOList = [];
     this.termLoanKycModel.kycFilePath = null;
+    this.termLoanKycModel.multipartFileList = [];
     let files: FileUploadModel = new FileUploadModel();
-    for (let file of event.files) {
+
+    let selectedFiles = [...event.files];
+    fileUpload.clear();
+
+    for (let file of selectedFiles) {
       let reader = new FileReader();
       reader.onloadend = (e) => {
         let files = new FileUploadModel();
@@ -385,15 +422,16 @@ export class TermLoanMembershipComponent {
         files.fileType = file.type.split('/')[1];
         files.value = this.uploadFileData.result.split(',')[1];
         files.imageValue = this.uploadFileData.result;
+        
         let index = this.multipleFilesList.findIndex(x => x.fileName == files.fileName);
         if (index === -1) {
           this.multipleFilesList.push(files);
           this.termLoanKycModel.filesDTOList.push(files); // Add to filesDTOList array
+          this.termLoanKycModel.multipartFileList.push(files);
         }
         let timeStamp = this.commonComponent.getTimeStamp();
-        this.termLoanKycModel.filesDTOList[0].fileName = "TERM_LOAN_KYC_" + this.termLoanApplicationId + "_" + timeStamp + "_" + file.name;
-        this.termLoanKycModel.kycFilePath = "TERM_LOAN_KYC_" + this.termLoanApplicationId + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
-        this.isFileUploaded = applicationConstants.TRUE;
+        this.termLoanKycModel.filesDTOList[0].fileName = "TERM_LOAN_KYC_" + this.  termLoanApplicationId + "_" +timeStamp+ "_"+ file.name ;
+        this.termLoanKycModel.kycFilePath = "TERM_LOAN_KYC_" + this.termLoanApplicationId + "_" +timeStamp+"_"+ file.name; // This will set the last file's name as kycFilePath
         let index1 = event.files.findIndex((x: any) => x === file);
         fileUpload.remove(event, index1);
         fileUpload.clear();
@@ -403,15 +441,12 @@ export class TermLoanMembershipComponent {
   }
 
   fileRemoveEvent() {
-    this.isFileUploaded = applicationConstants.FALSE; // upload validation
-    if(this.termLoanKycModel.filesDTOList != null && this.termLoanKycModel.filesDTOList != undefined && this.termLoanKycModel.filesDTOList.length > 0){
-     let removeFileIndex = this.termLoanKycModel.filesDTOList.findIndex((obj:any) => obj && obj.fileName === this.termLoanKycModel.kycFilePath);
-     if(removeFileIndex != null && removeFileIndex != undefined){
-       this.termLoanKycModel.filesDTOList[removeFileIndex] = null;
-       this.termLoanKycModel.kycFilePath = null;
-     }
+    this.termLoanKycModel.multipartFileList = [];
+    if (this.termLoanKycModel.filesDTOList != null && this.termLoanKycModel.filesDTOList != undefined) {
+      this.termLoanKycModel.kycFilePath = null;
+      this.termLoanKycModel.filesDTOList = null;
     }
-   }
+  }
 
 //delete kyc 
   delete(rowData: any) {
@@ -424,7 +459,7 @@ export class TermLoanMembershipComponent {
     });
   }
 
-  //get all kyc details by fd acc id
+  //get all kyc details by term acc id
   getAllKycsDetailsTermKycDetails(admissionNumber: any) {
     this.termLoanKycDetailsList = [];
     this.termLoanKycService.getKycBytermAccId(admissionNumber).subscribe((response: any) => {
@@ -481,6 +516,7 @@ export class TermLoanMembershipComponent {
   }
   //click on edit and populate data on form and save & next disable purpose
   toggleEditForm(index: number, modelData: any): void {
+    this.documentNumberDynamicValidation(modelData.documentNumber);
     if (this.editIndex === index) {
       this.editIndex = index;
     } else {
@@ -492,63 +528,68 @@ export class TermLoanMembershipComponent {
     this.editDocumentOfKycFalg = false;
     this.getAllKycTypes();
     this.addOrEditKycTempList(modelData);
+    // this.getKycById(modelData.id);
+    this.editIndex = index;
+    this.originalData = { ...modelData }; // Create a shallow copy of the object
+    this.termLoanKycModel = { ...modelData }; // Assign the cloned object to the form model
     this.updateData();
   }
   //edit cancle
   editCancle() {
-    this.termLoanKycModel = new TermLoanKyc();
+    this.termLoanKycDetailsList = [];
+    this.termLoanKycDetailsList = this.tempKycList;
     this.editDocumentOfKycFalg = true;
     this.buttonDisabled = false;
     this.editButtonDisable = false;
+    this.termLoanKycModel = new TermLoanKyc();
+      if (this.editIndex !== null && this.originalData) {
+          this.termLoanKycDetailsList[this.editIndex] = { ...this.originalData };
+      }
+      this.editIndex = null; // Exit edit mode
+      this.originalData = null; // Clear stored original data
     this.updateData();
   }
  
+
   editsave(row: any) {
-      this.termLoanKycModel.termLoanApplicationId = this.termLoanApplicationId;
-      this.termLoanKycModel.admissionNumber = this.admissionNumber;
-      this.termLoanKycModel.memberTypeName = this.memberTypeName;
-      this.termLoanKycModel.memberType = this.memberTypeId;
-      // this.termLoanKycModel.memberId = this.m;
-      if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0) {
-        let filteredObj = this.documentNameList.find((data: any) => null != data && this.termLoanKycModel.kycDocumentTypeId != null && data.value == this.termLoanKycModel.kycDocumentTypeId);
-        if (filteredObj != null && undefined != filteredObj && filteredObj.label != null && filteredObj.label != undefined) {
-          this.termLoanKycModel.kycDocumentTypeName = filteredObj.label;
-        }
-      }
+      this.memberTypeCheckForPromotersKyc(this.  termLoanApplicationModel.memberTypeName);
       this.editDocumentOfKycFalg = true;
       this.buttonDisabled = false;
       this.editButtonDisable = false;
-            this.termLoanKycService.updateTermLoanKYCDetails(this.termLoanKycModel).subscribe((response: any) => {
-        this.responseModel = response;
-        if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-          this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 1200);
-        }
-        else {
-          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 3000);
-        }
-        // this.addKycButton = false;
-        this.buttonDisabled = false;
-        if(this.termLoanApplicationId != null && this.termLoanApplicationId != undefined)
-        {
-          this.getTermApplicationByTermAccId(this.termLoanApplicationId);
-
-        }
-        this.updateData();
-      }, error => {
-        this.commonComponent.stopSpinner();
-        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
-        setTimeout(() => {
-          this.msgs = [];
-        }, 3000);
-      });
-    // }
-    
+      this.editButtonDisable = false;
+      let docType  = this.documentNameList.filter((obj:any) => row.kycDocumentTypeId == obj.value);
+      if(docType != null && docType != undefined && docType.length >0){
+        row.kycDocumentTypeName = docType[0].label;
+      }
+      const existingIndex = null;
+      row.filesDTOList = this.termLoanKycModel.filesDTOList;
+      if(!this.individualFlag){
+        let promoter  = this.promotersList.filter((obj:any) => row.promoterId == obj.value);
+      if(promoter != null && promoter != undefined && promoter.length >0){
+        row.promoterName = promoter[0].label;
+      }
+        const existingIndex = this.termLoanKycDetailsList.findIndex(
+          promoter => promoter.kycDocumentTypeId === row.kycDocumentTypeId && promoter.promoterId == row.promoterId);//finding the kyc obj in list for replace the updated data
+          if (this.editIndex !== null && this.originalData) {
+            this.termLoanKycDetailsList[this.editIndex] = row;
+            this.tempKycList[this.editIndex] = row;
+          }
+          // this.termLoanKycDetailsList[existingIndex]= null;
+          // this.termLoanKycDetailsList[existingIndex] = row;
+          // this.tempKycList[existingIndex] = row;
+      }
+      else {
+        const existingIndex = this.termLoanKycDetailsList.findIndex(
+          promoter => promoter.kycDocumentTypeId === row.kycDocumentTypeId);//finding the kyc obj in list for replace the updated data
+          if (this.editIndex !== null && this.originalData) {
+            this.termLoanKycDetailsList[this.editIndex] = row;
+            this.tempKycList[this.editIndex] = row;
+          }
+          // this.termLoanKycDetailsList[existingIndex]= null;
+          // this.termLoanKycDetailsList[existingIndex] = row;
+          // this.tempKycList[existingIndex] = row;
+      }
+      this.updateData();
   }
 
   //get kyc details by kyc id for edit purpose
@@ -576,37 +617,57 @@ export class TermLoanMembershipComponent {
   addOrEditKycTempList(rowData : any){
     const kyc = this.termLoanKycDetailsList.find(obj => obj && obj.kycDocumentTypeId === rowData.kycDocumentTypeId );
     this. termLoanKycModel = kyc;
+    this.memberTypeCheckForPromotersKyc(this.  termLoanApplicationModel.memberTypeName);
+    if(!this.individualFlag){
+      const kyc = this.termLoanKycDetailsList.findIndex(obj => obj && obj.kycDocumentTypeId === rowData.kycDocumentTypeId  && obj.promoterId == rowData.promoterId);
+    }else{
+      const kyc = this.termLoanKycDetailsList.findIndex(obj => obj && obj.kycDocumentTypeId === rowData.kycDocumentTypeId );
+    }
+    this.termLoanKycModel = kyc;
+    if(this.termLoanKycModel.kycFilePath != null || this.termLoanKycModel.kycFilePath != undefined){
+      rowData.kycFilePath = this.termLoanKycModel.kycFilePath;
+      if(this.termLoanKycModel.multipartFileList != null && this.termLoanKycModel.multipartFileList != undefined && this.termLoanKycModel.multipartFileList.length >0){
+        rowData.multipartFileList =  this.termLoanKycModel.multipartFileList;
+
+      }
+    }
   }
 
-  termLoanKycModelDuplicateCheck(termLoanKycDetailsList: any) {
-    let duplicate = false;
-    // const uniqueIds = new Set<number>();
-    // const duplicateIds = new Set<number>();
-    // if (this.termLoanKycDetailsList != null && this.termLoanKycDetailsList != undefined && this.termLoanKycDetailsList.length > 0) {
-    //   for (let item of this.termLoanKycDetailsList) {
-    //     if (item != null && item != undefined && item.kycDocumentTypeId != null && item.kycDocumentTypeId != undefined) {
-    //       if (uniqueIds.has(item.kycDocumentTypeId)) {
-    //         duplicateIds.add(item.kycDocumentTypeId);
-    //       } else {
-    //         uniqueIds.add(item.kycDocumentTypeId);
-    //       }
-    //     }
-    //     if (duplicateIds.size > 0) {
-    //       duplicate = true;
-    //       this.kycForm.reset();
-    //       this.msgs = [];
-    //       this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "duplicate Kyc Types" }];
-    //       setTimeout(() => {
-    //         this.msgs = [];
-    //       }, 1500);
-    //     }
-    //   }
-    // }
+  termLoanKycModelDuplicateCheck(rowData: any) {
+    let duplicate 
+    if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0) {
+      let filteredObj = this.documentNameList.find((data: any) => null != data && this.termLoanKycModel.kycDocumentTypeId != null && data.value == this.termLoanKycModel.kycDocumentTypeId);
+      if (filteredObj != null && undefined != filteredObj && filteredObj.label != null && filteredObj.label != undefined) {
+        this.termLoanKycModel.kycDocumentTypeName = filteredObj.label;
+        this.documentNumberDynamicValidation(this.termLoanKycModel.kycDocumentTypeName);
+      }
+    }
+    if (this.termLoanKycDetailsList != null && this.termLoanKycDetailsList != undefined && this.termLoanKycDetailsList.length > 0) {
+      let duplicate: any
+      if (this.  termLoanApplicationModel.memberTypeName != MemberShipTypesData.INDIVIDUAL) {
+        duplicate = this.termLoanKycDetailsList.filter((obj: any) => obj && obj.kycDocumentTypeId === rowData.kycDocumentTypeId && obj.promoterId === rowData.promoterId);
+      }
+      else {
+        duplicate = this.termLoanKycDetailsList.filter((obj: any) => obj && obj.kycDocumentTypeId === rowData.kycDocumentTypeId);
+      }
+      if (duplicate != null && duplicate != undefined && duplicate.length == 1 && duplicate[0].id != rowData.id) {
+        this.kycForm.get("promoter").reset();
+        this.kycForm.get("kycDocumentTypeName").reset();
+        this.termLoanKycModel = new TermLoanKyc();
+        if (rowData.id != null && rowData != undefined)
+          this.termLoanKycModel.id = rowData.id;
+        this.msgs = [];
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "duplicate Kyc Type" }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      }
+    }
     return duplicate;
   }
 
-  memberTypeCheckForPromotersKyc(memberType :any){
-    if(memberType == applicationConstants.INDIVIDUAL_MEMBER_TYPE_ID){
+  memberTypeCheckForPromotersKyc(memberTypeName :any){
+    if(memberTypeName == MemberShipTypesData.INDIVIDUAL){
       this.individualFlag = true;
     }
     else {
@@ -622,31 +683,88 @@ export class TermLoanMembershipComponent {
     }
   }
 
-  /**
-   * @implements membership data from sb module
 
-   */
 membershipDataFromSbModule(obj :any){
   if (obj.memberTypeName == "Individual") {
     this.individualFlag = true;
   } else if (obj.memberTypeName == "Group") {
     this.groupFlag = true;
-    if(this.termLoanApplicationModel.memberGroupDetailsDTO.groupPromoterList != null && this.termLoanApplicationModel.memberGroupDetailsDTO.groupPromoterList != undefined && this.termLoanApplicationModel.memberGroupDetailsDTO.groupPromoterList.length >0){
+    if(this.termLoanApplicationModel.memberGroupDetailsDTO.groupPromoterList != null && this.  termLoanApplicationModel.memberGroupDetailsDTO.groupPromoterList != undefined && this.  termLoanApplicationModel.memberGroupDetailsDTO.groupPromoterList.length >0){
       this.promotersList = this.termLoanApplicationModel.memberGroupDetailsDTO.groupPromoterList.filter((promoter: any) => promoter.status == applicationConstants.ACTIVE).map((promoter: any) => {
-        return { label: promoter.name+" "+promoter.surname, value: promoter.id }
+        return { label: promoter.name+" "+promoter.surname +"-"+promoter.aadharNumber, value: promoter.id }
       });
     }
   
   } else if (obj.memberTypeName == "Institution") {
     this.institutionFlag = true;
-    if(this.termLoanApplicationModel.memberInstitutionDTO.institutionPromoterList != null && this.termLoanApplicationModel.memberInstitutionDTO.institutionPromoterList != undefined && this.termLoanApplicationModel.memberInstitutionDTO.institutionPromoterList.length >0){
+    if(this.termLoanApplicationModel.memberInstitutionDTO.institutionPromoterList != null && this.  termLoanApplicationModel.memberInstitutionDTO.institutionPromoterList != undefined && this.  termLoanApplicationModel.memberInstitutionDTO.institutionPromoterList.length >0){
       this.promotersList = this.termLoanApplicationModel.memberInstitutionDTO.institutionPromoterList.filter((promoter: any) => promoter.status == applicationConstants.ACTIVE).map((promoter: any) => {
-        return { label: promoter.name+" "+promoter.surname, value: promoter.id }
+        return { label: promoter.name+" "+promoter.surname+"-"+promoter.aadharNumber, value: promoter.id }
       });
     }
    
   }
   
 }
+
+  documentNumberDynamicValidation(docTypeName: any) {
+    if (DOCUMENT_TYPES.AADHAR == this.termLoanKycModel.kycDocumentTypeName) {
+      const controlTow = this.kycForm.get('documentNumber');
+      if (controlTow) {
+        controlTow.setValidators([
+          Validators.required,
+          Validators.pattern(applicationConstants.AADHAR_PATTERN)
+        ]);
+        controlTow.updateValueAndValidity();
+      }
+      this.isPanNumber = false;
+    }
+    else if (DOCUMENT_TYPES.PANNUMBER == this.termLoanKycModel.kycDocumentTypeName) {
+      const controlTow = this.kycForm.get('documentNumber');
+      if (controlTow) {
+        controlTow.setValidators([
+          Validators.required,
+          Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN)
+        ]);
+        controlTow.updateValueAndValidity();
+      }
+      this.isPanNumber = true;
+    }
+    else {
+      this.isPanNumber = false;
+    }
+  }
   
+  onClickkycPhotoCopy(rowData :any){
+    this.multipleFilesList = [];
+    this.kycPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
+  }
+  kycclosePhoto(){
+    this.kycPhotoCopyZoom = false;
+  }
+  kycclosePhotoCopy() {
+    this.kycPhotoCopyZoom = false;
+  }
+  // Popup Maximize
+        @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+      
+        onDialogResize(event: any) {
+          this.isMaximized = event.maximized;
+      
+          if (this.isMaximized) {
+            // Restore original image size when maximized
+            this.imageElement.nativeElement.style.width = 'auto';
+            this.imageElement.nativeElement.style.height = 'auto';
+            this.imageElement.nativeElement.style.maxWidth = '100%';
+            this.imageElement.nativeElement.style.maxHeight = '100vh';
+          } else {
+            // Fit image inside the dialog without scrollbars
+            this.imageElement.nativeElement.style.width = '100%';
+            this.imageElement.nativeElement.style.height = '100%';
+            this.imageElement.nativeElement.style.maxWidth = '100%';
+            this.imageElement.nativeElement.style.maxHeight = '100%';
+            this.imageElement.nativeElement.style.objectFit = 'contain';
+          }
+        }
 }

@@ -57,7 +57,7 @@
                                             (onChange)='getPermanentVillage(siLoanCommunicationModel.permanentVillageId)'></p-dropdown>
                                     </div>
                                 </div>
-                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                                <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
                                         <label for="username">
                                             {{'MEMBERSHIP_TRANSACTION.DIVISION' | translate}}
@@ -66,7 +66,7 @@
                                             [(ngModel)]="siLoanCommunicationModel.permanentDivisionName">
                                     </div>
                                 </div>
-                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                                <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
                                         <label for="username">
                                             {{'MEMBERSHIP_TRANSACTION.BLOCK' | translate}}
@@ -95,7 +95,7 @@
                                                 class="red">*</span>{{'ERP.PINCODE' | translate}}
                                         </label>
 
-                                        <input pInputText id="bunit_txt_name" maxlength="40" type="text"
+                                        <input pInputText id="bunit_txt_name" minlength="6" maxlength="6" type="text"
                                             placeholder="Enter Pincode" formControlName="permanentPinCode"
                                             (keyup)="RegAddressToComAddress()"
                                             [(ngModel)]="siLoanCommunicationModel.permanentPinCode">
@@ -170,7 +170,7 @@
                                             [(ngModel)]="siLoanCommunicationModel.villageId"></p-dropdown>
                                     </div>
                                 </div>
-                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                                <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
                                         <label for="username">
                                             {{'MEMBERSHIP_TRANSACTION.DIVISION' | translate}}
@@ -179,7 +179,7 @@
                                             [(ngModel)]="this.siLoanCommunicationModel.divisionName">
                                     </div>
                                 </div>
-                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+                                <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-label">
                                         <label for="username">
                                             {{'MEMBERSHIP_TRANSACTION.BLOCK' | translate}}
@@ -204,9 +204,9 @@
                                                 class="red">*</span>{{'ERP.PINCODE' | translate}}
                                         </label>
 
-                                        <input pInputText id="bunit_txt_name" maxlength="40" type="text"
+                                        <input pInputText id="bunit_txt_name" minlength="6" maxlength="6" type="text"
                                             formControlName="pinCode" placeholder="Enter Pincode"
-                                            [(ngModel)]="siLoanCommunicationModel.pinCode">
+                                            [(ngModel)]="siLoanCommunicationModel.pincode">
                                         <p-message severity="error" text="Enter Valid pinCode"
                                             *ngIf="!communicationForm.controls['pinCode'].valid && communicationForm.controls['pinCode'].dirty">
                                         </p-message>

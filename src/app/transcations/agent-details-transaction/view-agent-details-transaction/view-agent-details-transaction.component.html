@@ -161,17 +161,17 @@
                                             </div>
                                             <div class="col-6" *ngIf="editbutton">
                                                 <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
-                                                    (click)="editAgentDetails(membershipBasicDetailsModel,0)"></p-button>
+                                                    (click)="editAgentDetails(membershipBasicDetailsModel,0)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                             </div>
                                         </div>
-                                        <div class="col-12 p-0">
+                                        <div class="col-12 px-0">
                                             <div class="row g-3">
-                                                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12"
+                                                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mt-2"
                                                     *ngFor="let document of kycGridList ; let i = index">
                                                     <div class="stepper-kyc-card p-3 pb-1 mb-2">
                                                         <div class="row">
                                                             <div
-                                                                class="col-lg-7 col-md-7 col-sm-7 col-xs-6 d-flex align-items-center">
+                                                                class="col-lg-8 col-md-8 col-sm-8 col-xs-8 d-flex align-items-center">
                                                                 <div class="card-leftbody">
                                                                     <div
                                                                         class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
@@ -199,25 +199,22 @@
                                              -->
                                                                 </div>
                                                             </div>
-                                                            <div
-                                                                class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end">
-                                                                <div class="kycview-done icon-size text-right"><i
-                                                                        class="fa fa-check-circle mr-0"
-                                                                        aria-hidden="true"></i></div>
-                                                                <div class="col-12 px-0">
-                                                                    <div class="col-12 px-0"
-                                                                        *ngFor="let img of document.multipartFileList">
-                                                                        <div class="col-12 p-0"
-                                                                            *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                                            <a href="{{img.imageValue}}">
-                                                                                <img src="{{img.imageValue}}"
-                                                                                    class="upload-img img-fluid"
-                                                                                    pTooltip="{{img.fileName}}"
-                                                                                    tooltipPosition="bottom">
-                                                                            </a>
-                                                                        </div>
+                                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 justify-content-end d-flex right-actions">
+                                                                <div class="cardview-icon icon-size text-right cursor-pointer"
+                                                                    (click)="onClickkycPhotoCopy(document)"><i class="fa fa-eye m-0" aria-hidden="true"
+                                                                        pTooltip="{{'ERP.VIEW_DOC' | translate}}" tooltipPosition="top"></i></div>
+                                                                <div class="carddownload-icon icon-size text-right"
+                                                                    *ngFor="let img of document.multipartFileList" pTooltip="{{'ERP.DOC_DOWNLOAD' | translate}}"
+                                                                    tooltipPosition="top">
+                                                                    <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                                        <a href="{{img.imageValue}}">
+                                                                            <i class="fa fa-download ml-3 mr-0" aria-hidden="true">
+                                                                                <!-- <img src="{{img.imageValue}}"> -->
+                                                                            </i>
+                                                                        </a>
                                                                     </div>
                                                                 </div>
+                                                                <div><img src="assets/images/verify.png" alt="" class="verifykyc ml-3"></div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -243,7 +240,7 @@
                                             </div>
                                             <div class="col-6" *ngIf="editbutton">
                                                 <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
-                                                    (click)="editAgentDetails(membershipBasicDetailsModel,1)"></p-button>
+                                                    (click)="editAgentDetails(membershipBasicDetailsModel,1)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                             </div>
                                         </div>
 
@@ -386,7 +383,7 @@
                                             </div>
                                             <div class="col-6" *ngIf="editbutton">
                                                 <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
-                                                    (click)="editAgentDetails(membershipBasicDetailsModel,2)"></p-button>
+                                                    (click)="editAgentDetails(membershipBasicDetailsModel,2)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                             </div>
                                         </div>
                                         <div class="col-12 p-0">
@@ -429,111 +426,109 @@
                                             </div>
                                             <div class="col-6" *ngIf="editbutton">
                                                 <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
-                                                    (click)="editAgentDetails(membershipBasicDetailsModel,3)"></p-button>
+                                                    (click)="editAgentDetails(membershipBasicDetailsModel,3)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                             </div>
                                         </div>
                                         <div class="col-12 p-0">
                                             <div class="row g-3">
-                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <div class="stepper-nominee-card p-3 pb-1 mb-2">
                                                         <div class="row">
-                                                            <h6 class="super-sub-heading mt-1">{{'ERP.NOMINEE' |
-                                                                translate}}</h6>
-                                                            <div class="col-12">
+                                                            <div class="col-12 py-0">
                                                                 <div class="row">
                                                                     <div
-                                                                        class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center">
-                                                                        <div class="card-leftbody">
-                                                                            <div class="row">
-
-                                                                                <div
-                                                                                    class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
-                                                                                    <h6 class="label-view">
-                                                                                        {{'AGENT_DETAILS_TRANSACTION.TYPE_OF_NOMINEE'
-                                                                                        |
-                                                                                        translate}}</h6>
-                                                                                    <p class="label-input-text">
-                                                                                        {{nomineeModel.nomineeType}}</p>
-                                                                                </div>
-                                                                                <div
-                                                                                    class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
-                                                                                    <h6 class="label-view">
-                                                                                        {{'AGENT_DETAILS_TRANSACTION.RELATIONSHIP_WITH_MEMBERSHIP'
-                                                                                        | translate}}</h6>
-                                                                                    <p class="label-input-text">
-                                                                                        {{nomineeModel.relationTypeName}}
-                                                                                    </p>
-                                                                                </div>
-                                                                                <div
-                                                                                    class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
-                                                                                    <h6 class="label-view">
-                                                                                        {{'AGENT_DETAILS_TRANSACTION.FULL_NAME'
-                                                                                        |
-                                                                                        translate}}</h6>
-                                                                                    <p class="label-input-text">
-                                                                                        {{nomineeModel.nomineeName}}</p>
-                                                                                </div>
-                                                                                <div
-                                                                                    class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
-                                                                                    <h6 class="label-view">
-                                                                                        {{'AGENT_DETAILS_TRANSACTION.MOBILE_NUMBER'
-                                                                                        |
-                                                                                        translate}}</h6>
-                                                                                    <p class="label-input-text">
-                                                                                        {{nomineeModel.nomineeMobileNumber}}
-                                                                                    </p>
-                                                                                </div>
-                                                                                <div
-                                                                                    class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
-                                                                                    <h6 class="label-view">
-                                                                                        {{'AGENT_DETAILS_TRANSACTION.EMAIL'
-                                                                                        |
-                                                                                        translate}}</h6>
-                                                                                    <p class="label-input-text">
-                                                                                        {{nomineeModel.nomineeEmailId}}
-                                                                                    </p>
-                                                                                </div>
-
-
-                                                                                <div
-                                                                                    class="col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
-                                                                                    <h6 class="label-view">
-                                                                                        {{'AGENT_DETAILS_TRANSACTION.AADHAR_NUMBER'
-                                                                                        | translate}}</h6>
-                                                                                    <p class="label-input-text">
-                                                                                        {{nomineeModel.nomineeAadharNumber}}
-                                                                                    </p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
+                                                                        class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                                                        <h6 class="super-sub-heading">{{'ERP.NOMINEE' |
+                                                                            translate}}</h6>
                                                                     </div>
                                                                     <div
-                                                                        class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-xs-12 justify-content-end">
-                                                                        <div class="col-12 px-0">
-                                                                            <div class="px-0"
-                                                                                *ngFor="let img of nomineeModel.multipartFileList">
-                                                                                <div class="col-12 p-0"
-                                                                                    *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
-                                                                                    <a href="{{img.imageValue}}">
-                                                                                        <img src="{{img.imageValue}}"
-                                                                                            class="upload-img img-fluid"
-                                                                                            pTooltip="{{img.fileName}}"
-                                                                                            tooltipPosition="bottom">
-                                                                                    </a>
-                                                                                </div>
-                                                                                <div class="col-12 p-0"
-                                                                                    *ngIf=" img.fileType =='pdf'">
-                                                                                    <a href="{{img.imageValue}}">
-                                                                                        <img src="assets\images\pdf.png"
-                                                                                            class="pdf-img img-fluid"
-                                                                                            pTooltip="{{img.fileName}}"
-                                                                                            tooltipPosition="bottom">
-                                                                                    </a>
-                                                                                </div>
-                                                                            </div>
+                                                                        class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4 justify-content-end d-flex">
+                                                                        <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClicknomineePhotoCopy()"><i class="fa fa-eye m-0" aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}" tooltipPosition="top"></i></div>
+                                                                        <div class="carddownload-icon icon-size text-right" *ngFor="let img of nomineeModel.multipartFileList" pTooltip="{{'ERP.DOC_DOWNLOAD' | translate}}" tooltipPosition="top">
+                                                                    <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                                                                        <a href="{{img.imageValue}}">
+                                                                            <i class="fa fa-download ml-3 mr-0" aria-hidden="true">
+                                                                            </i>
+                                                                        </a>
+                                                                    </div>
+                                                                    <div *ngIf=" img.fileType =='pdf'">
+                                                                        <a href="{{img.imageValue}}">
+                                                                            <i class="fa fa-download ml-3 mr-0" aria-hidden="true">
+                                                                            </i>
+                                                                        </a>
+                                                                    </div>
+                                                                    </div>
                                                                         </div>
                                                                     </div>
+                                                            </div>
+                                                            <div class="col-12 pb-0">
+                                                                <div class="row">
+                                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center" >
+                                                            <div class="card-leftbody">
+                                                                <div class="row">
+
+                                                                    <div
+                                                                        class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                                                                        <h6 class="label-view">
+                                                                            {{'AGENT_DETAILS_TRANSACTION.TYPE_OF_NOMINEE'
+                                                                            |
+                                                                            translate}}</h6>
+                                                                        <p class="label-input-text">
+                                                                            {{nomineeModel.nomineeType}}</p>
+                                                                    </div>
+                                                                    <div
+                                                                        class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                                                                        <h6 class="label-view">
+                                                                            {{'AGENT_DETAILS_TRANSACTION.RELATIONSHIP_WITH_MEMBERSHIP'
+                                                                            | translate}}</h6>
+                                                                        <p class="label-input-text">
+                                                                            {{nomineeModel.relationTypeName}}
+                                                                        </p>
+                                                                    </div>
+                                                                    <div
+                                                                        class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                                                                        <h6 class="label-view">
+                                                                            {{'AGENT_DETAILS_TRANSACTION.FULL_NAME'
+                                                                            |
+                                                                            translate}}</h6>
+                                                                        <p class="label-input-text">
+                                                                            {{nomineeModel.nomineeName}}</p>
+                                                                    </div>
+                                                                    <div
+                                                                        class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                                                                        <h6 class="label-view">
+                                                                            {{'AGENT_DETAILS_TRANSACTION.MOBILE_NUMBER'
+                                                                            |
+                                                                            translate}}</h6>
+                                                                        <p class="label-input-text">
+                                                                            {{nomineeModel.nomineeMobileNumber}}
+                                                                        </p>
+                                                                    </div>
+                                                                    <div
+                                                                        class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                                                                        <h6 class="label-view">
+                                                                            {{'AGENT_DETAILS_TRANSACTION.EMAIL'
+                                                                            |
+                                                                            translate}}</h6>
+                                                                        <p class="label-input-text">
+                                                                            {{nomineeModel.nomineeEmailId}}
+                                                                        </p>
+                                                                    </div>
+
+
+                                                                    <div
+                                                                        class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                                                                        <h6 class="label-view">
+                                                                            {{'AGENT_DETAILS_TRANSACTION.AADHAR_NUMBER'
+                                                                            | translate}}</h6>
+                                                                        <p class="label-input-text">
+                                                                            {{nomineeModel.nomineeAadharNumber}}
+                                                                        </p>
+                                                                    </div>
                                                                 </div>
+                                                            </div>
+                                                            </div>
+                                                            </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -559,7 +554,7 @@
                                             </div>
                                             <div class="col-6" *ngIf="editbutton">
                                                 <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
-                                                    (click)="editAgentDetails(membershipBasicDetailsModel,4)"></p-button>
+                                                    (click)="editAgentDetails(membershipBasicDetailsModel,4)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -851,3 +846,36 @@
     </div>
 </p-dialog>
 
+<!-- KYC Photo Copy -->
+<p-dialog header="{{'ERP.DOCUMENT_COPY' | translate}}" [(visible)]="kycPhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
+    <div class="col-12">
+    <div *ngFor="let img of multipleFilesList">
+        <div class="mb-3 imgcustom-class" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+            <!-- <a href="{{img.imageValue}}"> -->
+                    <img src="{{img.imageValue}}" class="doc-photocopy">
+            <!-- </a> -->
+        </div>
+    </div>
+    
+</div>
+</p-dialog>
+
+<!-- Nominee Photo Copy -->
+<p-dialog header="{{'ERP.DOCUMENT_COPY' | translate}}" [(visible)]="nomineePhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
+    <div class="col-12">
+    <div *ngFor="let img of  nomineeModel.multipartFileList">
+        <!-- Image -->
+        <div class="mb-3 imgcustom-class" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+            <!-- <a href="{{img.imageValue}}"> -->
+                    <img src="{{img.imageValue}}" class="doc-photocopy">
+            <!-- </a> -->
+        </div>
+        <!-- PDF -->
+        <div class="mb-3 imgcustom-class" *ngIf=" img.fileType =='pdf'">
+            <!-- <a href="{{img.imageValue}}"> -->
+                    <img src="assets/images/pdficon-img.png" class="doc-photocopy">
+            <!-- </a> -->
+        </div>
+    </div>
+</div>
+</p-dialog>

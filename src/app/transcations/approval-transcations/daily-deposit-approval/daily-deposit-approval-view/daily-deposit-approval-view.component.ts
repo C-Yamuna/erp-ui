@@ -98,6 +98,11 @@ export class DailyDepositApprovalViewComponent {
   viewButton: boolean = false;
   editFlag: boolean = false;
   statusList: any[] = [];
+  kycPhotoCopyZoom: boolean = false;
+  docPhotoCopyZoom:boolean = false;
+  nomineePhotoCopyZoom:boolean = false;
+  guardianPhotoCopyZoom:boolean = false;
+  isKycEmpty: boolean = false;
 
   constructor(private router: Router,
     private dailyDepositsAccountsService: DailyDepositsAccountsService,
@@ -358,6 +363,8 @@ export class DailyDepositApprovalViewComponent {
                 kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
               }
             }
+          }else {
+            this.isKycEmpty = true;
           }
 
           if (this.accountsModel.accountNomineeList != null && this.accountsModel.accountNomineeList != undefined &&
@@ -527,5 +534,22 @@ export class DailyDepositApprovalViewComponent {
           this.msgs = [];
         }, 2000);
       });
+  }
+
+  onClickkycPhotoCopy(rowData :any){
+    this.multipleFilesList = [];
+    this.kycPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
+  }
+  onClickdoccPhotoCopy(rowData :any){
+    this.multipleFilesList = [];
+    this.docPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
+  }
+  onClicknomineePhotoCopy(){
+    this.nomineePhotoCopyZoom = true;
+  }
+  onClickguardianPhotoCopy(){
+    this.guardianPhotoCopyZoom = true;
   }
 }

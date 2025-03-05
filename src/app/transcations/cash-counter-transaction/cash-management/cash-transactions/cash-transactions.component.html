@@ -1,0 +1,102 @@
+<div class="col-12">
+    <div class="row justify-content-between top-header-section px-0">
+        <div class="col-lg-6 col-md-5 col-sm-12 col-xs-12 main-heading mt-1 justify-content-start">
+            {{'CASH_COUNTER_TRANSACTIONS.CASH_TRANSACTIONS' | translate}}</div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-sm-12 col-xs-12">
+                    <div class="col-12 p-0">
+                        <div class="d-flex justify-content-end search-input-style">
+                            <div class="input-group search-box d-flex justify-content-end">
+                                <div class="search">
+                                    <span class="p-input-icon-right">
+                                        <i class="pi pi-search global-search-icon"></i>
+                                        <input type="text" pInputText class="searchbox" placeholder="Search" />
+                                    </span>
+                                </div>
+                            </div>
+                            <p-button label="{{'CASH_COUNTER_TRANSACTIONS.CREATE_TRANSACTION' | translate}}"
+                                (click)="createTransactionDenomination()" icon="fa fa-plus"></p-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="globel-border-top-color"></div>
+
+    <p-table [columns]="columns" [value]="gridList" dataKey="id" selectionMode="single" styleClass="p-datatable-striped"
+        [rows]="5" [paginator]="true" [showJumpToPageDropdown]="true" [showPageLinks]="false" [pageLinks]="1"
+        [responsive]="true" rowExpandMode="single">
+        <ng-template pTemplate="header">
+            <tr>
+                <th *ngFor="let col of columns">
+                    {{col.header | translate}}
+                </th>
+                <th class="width-15em">{{'ERP.ACTION' | translate}}</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-gridList let-expanded="expanded" let-rowData>
+            <tr>
+                <td *ngFor="let col of columns">
+                    <div class="status-style statusactive"
+                        *ngIf="(col.field =='accountStatusName') && rowData.approved"> {{rowData[col.field]}}</div>
+                    <div class="status-style statusreject"
+                        *ngIf="(col.field =='accountStatusName') && rowData.rejected"> {{rowData[col.field]}}</div>
+                    <div class="status-style statussubmissionforapproval"
+                        *ngIf="(col.field =='accountStatusName') && rowData.submissionForApproval">
+                        {{rowData[col.field]}}</div>
+                    <div class="status-style statuspending"
+                        *ngIf="(col.field =='accountStatusName') && rowData.created"> {{rowData[col.field]}}</div>
+                    <div class="status-style statusrequestforresumission"
+                        *ngIf="(col.field =='accountStatusName') && rowData.requestForResubmmission">
+                        {{rowData[col.field]}}</div>
+                    <div class="status-style statusreject" *ngIf="(col.field =='accountStatusName') && rowData.closed">
+                        {{rowData[col.field]}}</div>
+                    <div class="status-style statuspending"
+                        *ngIf="(col.field =='accountStatusName') && rowData.closureRequest"> {{rowData[col.field]}}
+                    </div>
+                    <div *ngIf="col.field !='accountStatusName' && col.field !='accountNumber'"> {{rowData[col.field]}}
+                    </div>
+                </td>
+
+                <td>
+                    <div class="global-action-btn flex align-items-center justify-content-start">
+                        <p-button label="view" class="action-view" (click)="view(rowData)"></p-button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <div class="status-counts">
+        <span class="active-div">
+            <span class="status-circle active"></span>In Progress : {{createdCount}}
+        </span>
+        <span class="inactive-div">
+            <span class="status-circle inactive"></span>Submission for Approval: {{submissionForApprovalCount}}
+        </span>
+        <span class="active-div">
+            <span class="status-circle active"></span>Request for Resubmission : {{requestForResubmmissionCount}}
+        </span>
+        <span class="inactive-div">
+            <span class="status-circle inactive"></span>Approved: {{approvedCount}}
+        </span>
+        <span class="active-div">
+            <span class="status-circle active"></span>Rejected : {{rejectCount}}
+        </span>
+    </div>
+
+    <div class="col-12 margtop-3rem"></div>
+
+    <div class="col-12 btn-footer px-0">
+        <div class="col-12 d-flex justify-content-end px-0 mt-1 group-button-bottom">
+            <p-button label="{{'CASH_COUNTER_TRANSACTIONS.BACK' | translate}}" (click)="navigateToBack()"></p-button>
+        </div>
+    </div>
+
+</div>

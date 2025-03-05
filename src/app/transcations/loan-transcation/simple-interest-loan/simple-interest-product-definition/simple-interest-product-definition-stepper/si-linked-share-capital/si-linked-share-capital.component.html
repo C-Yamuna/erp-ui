@@ -101,7 +101,7 @@
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
                                     <input pInputText type="text" [(ngModel)]="siLinkedShareCapitalModel.minSlabAmount"
-                                    (keyup)="checkForAmount()" formControlName="minSlabAmount">
+                                    (focusout)="checkForAmount(1)" formControlName="minSlabAmount" pKeyFilter="num">
                                     
                                 </ng-template>
                                 <ng-template pTemplate="output">{{siLinkedShareCapitalModel.minSlabAmount}}</ng-template>
@@ -111,7 +111,7 @@
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
                                     <input pInputText type="text" [(ngModel)]="siLinkedShareCapitalModel.maxSlabAmount"
-                                    (keyup)="checkForAmount()"  formControlName="maxSlabAmount" >
+                                    (focusout)="checkForAmount(2)"  formControlName="maxSlabAmount" pKeyFilter="num">
                                     
                                 </ng-template>
                                 <ng-template pTemplate="output">{{siLinkedShareCapitalModel.maxSlabAmount}}</ng-template>
@@ -133,7 +133,7 @@
                             <td>
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
-                                    <input pInputText type="text" [(ngModel)]="siLinkedShareCapitalModel.cgstPercentage" formControlName="cgstPercentage" >
+                                    <input pInputText type="text" [(ngModel)]="siLinkedShareCapitalModel.cgstPercentage" formControlName="cgstPercentage" pKeyFilter="num">
                                 </ng-template>
                                 <ng-template pTemplate="output">{{siLinkedShareCapitalModel.cgstPercentage}}</ng-template>
                             </p-cellEditor>
@@ -141,7 +141,7 @@
                         <td>
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
-                                    <input pInputText type="text" [(ngModel)]="siLinkedShareCapitalModel.sgstPercentage" formControlName="sgstPercentage" >
+                                    <input pInputText type="text" [(ngModel)]="siLinkedShareCapitalModel.sgstPercentage" formControlName="sgstPercentage" pKeyFilter="num">
                                     
                                 </ng-template>
                                 <ng-template pTemplate="output">{{siLinkedShareCapitalModel.sgstPercentage}}</ng-template>
@@ -150,7 +150,7 @@
                         <td>
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
-                                    <input pInputText type="text" [(ngModel)]="siLinkedShareCapitalModel.igstPercentage" formControlName="igstPercentage" >
+                                    <input pInputText type="text" [(ngModel)]="siLinkedShareCapitalModel.igstPercentage" formControlName="igstPercentage" pKeyFilter="num">
                                    
                                 </ng-template>
                                 <ng-template pTemplate="output">{{siLinkedShareCapitalModel.igstPercentage}}</ng-template>

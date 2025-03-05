@@ -544,7 +544,8 @@ width: auto !important;
     font-size: 12px;
     color: #565656;
     margin-bottom: 2px;
-    word-break: break-all;
+    word-wrap: break-word;
+    word-break: break-word;
     font-weight: 400;
 }
 .label-input-text{
@@ -552,7 +553,8 @@ width: auto !important;
     color: #161616;
     font-weight: 600;
     margin-bottom: 12px;
-    word-break: break-all;
+    word-wrap: break-word;
+    word-break: break-word;
 }
 .scroll-class{width: 100%; height: 73vh;}
 
@@ -880,8 +882,8 @@ p-calendar{
 }
 .mem-details-stripimage{
     position: relative;
-    top:20px;
-    left: 10px;
+    /* top:20px;
+    left: 10px; */
     height: 50px;
     width: 50px;
     border-radius: 50%;
@@ -892,9 +894,10 @@ p-calendar{
     border-radius: 5px;
     background-color: #eceff9;
     /* min-height: 380px; */
-    height: auto;
-    overflow-y: scroll;
-    overflow-x: hidden;
+    /* height: auto; */
+    /* overflow-y: scroll;
+    overflow-x: hidden; */
+    overflow: auto;
 }
 .h-90p{min-height: 90px}
 /* Datepicker Styles Start */
@@ -1553,6 +1556,8 @@ body .p-inline-message.p-inline-message-error {
     /* border: 1px solid #5686E1; */
     background: #eff5ff;
     border-radius: 5px;
+    flex-grow: 1;
+    box-sizing: border-box;
  }
  .uploadpdf-img{width: 40px;}
 .pdf-img{
@@ -1810,7 +1815,7 @@ body .p-inline-message.p-inline-message-error {
   justify-content: center;
   overflow: hidden;
 }
-.doc-photo-dialog .p-dialog-header .p-dialog-header-icons .p-dialog-header-maximize{background-color: #fff !important; color: #0c457c !important;}
+.p-dialog-header .p-dialog-header-icons .p-dialog-header-maximize{background-color: #fff !important; color: #0c457c !important;}
 /* Photo Copy Styles ENd */
 
 /* P-Chips */
@@ -1945,7 +1950,7 @@ body .p-inline-message.p-inline-message-error {
     min-height: 30px;
 }
 .closure-cardscroll{
-    height: 37rem;
+    height: 38rem;
     overflow-y: auto;
   }
   .degreeview-scroll{
@@ -1963,3 +1968,5 @@ body .p-inline-message.p-inline-message-error {
     background: #c5c4c4;
   }
 /* Member Closing and 360 view styles End*/
+
+.p-dialog-mask.p-component-overlay {z-index: 1000000 !important;}

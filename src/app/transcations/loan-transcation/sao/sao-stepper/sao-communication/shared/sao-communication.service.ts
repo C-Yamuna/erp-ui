@@ -1,6 +1,7 @@
 import { HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { Configuration } from 'src/app/configurations/configurations-constants';
 import { CommonHttpService } from 'src/app/shared/common-http.service';
 import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-constants';
 
@@ -58,11 +59,12 @@ export class SaoCommunicationService {
     let headers = new HttpHeaders({ 'id': id + '', 'communicationTypeId': communicationTypeId + '',})
     return this.commonHttpService.getById(headers,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.SAO_LOAN_COMMUNICATION + ERP_TRANSACTION_CONSTANTS.GET_BY_LOAN_ID_MEMBER_TYPE);
   }
-   getAllBlock(){
-      return this.commonHttpService.getAll(ERP_TRANSACTION_CONSTANTS.COMMON_MASTER + ERP_TRANSACTION_CONSTANTS.BLOCKS + ERP_TRANSACTION_CONSTANTS.GET_ALL);
+   getBlockList(){
+      return this.commonHttpService.getAll(Configuration.COMMON_MASTER + Configuration.BLOCKS + Configuration.GET_ALL);
     }
-    getAllDivision(){
-      return this.commonHttpService.getAll(ERP_TRANSACTION_CONSTANTS.COMMON_MASTER + ERP_TRANSACTION_CONSTANTS.BLOCKS + ERP_TRANSACTION_CONSTANTS.GET_ALL);
+  
+  
+    getAllDivisionList(){
+      return this.commonHttpService.getAll(  Configuration.COMMON_MASTER + Configuration.DIVISION + Configuration.GET_ALL);
     }
-   
 }

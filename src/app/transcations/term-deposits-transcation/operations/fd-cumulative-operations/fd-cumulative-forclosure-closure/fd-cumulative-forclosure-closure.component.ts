@@ -120,6 +120,12 @@ export class FdCumulativeForclosureClosureComponent {
   isClosure: boolean = false;
   check: boolean = false;
   productId: any;
+  yearFlag: boolean = false;
+  monthFlag: boolean = false;
+  daysFlag: boolean = false;
+  interestPayoutFlag: boolean = false;
+  renewalFlag: boolean = false;
+
   constructor(private router: Router,
     private fdCumulativeApplicationService: FdCumulativeApplicationService,
     private commonComponent: CommonComponent,
@@ -218,6 +224,9 @@ export class FdCumulativeForclosureClosureComponent {
       if (this.responseModel.status != null && this.responseModel.status != undefined && this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
           this.fdCumulativeApplicationModel = this.responseModel.data[0];
+          this.tenureCheck();
+          this.interestPayoutCheck();
+          this.renewalCheck();
           const currentDate = new Date();
           let currentDateLong = this.commonFunctionsService.getUTCEpoch(new Date(currentDate));
           if(this.fdCumulativeApplicationModel.maturityDate < currentDateLong){
@@ -673,4 +682,33 @@ export class FdCumulativeForclosureClosureComponent {
       reader.readAsDataURL(file);
     }
   }
+
+      /**
+   * @implements check for years,months,days to show and hide based on tenuretype
+   * @author bhargavi
+   */
+      tenureCheck() {
+        const tenureType = this.fdCumulativeApplicationModel.tenureType;
+        this.yearFlag = tenureType === 2 || tenureType === 5 || tenureType === 6 || tenureType === 7 ? true : false;
+        this.monthFlag = tenureType === 3 || tenureType === 4 || tenureType === 6 || tenureType === 7 ? true : false;
+        this.daysFlag = tenureType === 1 || tenureType === 4 || tenureType === 5 || tenureType === 7 ? true : false;
+      }
+    
+      /**
+       * @implements check for paymenttype show and hide based on interestPayoutType
+       * @author bhargavi
+       */
+      interestPayoutCheck() {
+        const interestPayoutType = this.fdCumulativeApplicationModel.interestPayoutType;
+        this.interestPayoutFlag = interestPayoutType === 3 ? true : false;
+      }
+      
+      /**
+       * @implements check for autorenewal show and hide based on renewalType
+       * @author bhargavi
+       */
+      renewalCheck() {
+        const renewalType = this.fdCumulativeApplicationModel.renewalType;
+        this.renewalFlag = renewalType === 'true' ? true : false;
+      }
 }

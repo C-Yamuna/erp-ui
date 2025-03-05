@@ -41,14 +41,14 @@
                             <label><span class="red">*</span>{{'INVESTMENTS_TRANSACTIONS.DEPOSIT_AMOUNT' | translate}}</label>
                                 <input type="text" pInputText formControlName="depositAmount" placeholder="Enter Deposit Amount"
                                     [(ngModel)]="investmentApplicationDetailsModel.depositAmount" 
-                                    (focusout)="amountCheck(true)" pKeyFilter="num"/>
+                                    (focusout)="amountCheck(true)" pKeyFilter="num" (focusout)="calculateMaturityDetails()"/>
                             </div>
                         </div>
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
                             <div class="form-label">
                             <label><span class="red">*</span>{{'INVESTMENTS_TRANSACTIONS.ROI' | translate}}</label>
                                 <input type="text" pInputText  formControlName="roi" placeholder="Enter ROI"
-                                    [(ngModel)]="investmentApplicationDetailsModel.roi" />
+                                    [(ngModel)]="investmentApplicationDetailsModel.roi" (focusout)="calculateMaturityDetails()" />
                             </div>
                         </div>
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
@@ -95,7 +95,7 @@
                             <div class="form-label">
                             <label><span class="red">*</span>{{'INVESTMENTS_TRANSACTIONS.MATURITY_DATE' | translate}}</label>
                                 <p-calendar [showIcon]="true" formControlName="maturityDate" placeholder="Select Maturity Date"
-                                    dateFormat="{{orgnizationSetting.calendar}}" (onSelect)="dateCheck(false)" [disabled]="true"
+                                    dateFormat="{{orgnizationSetting.calendar}}" (onSelect)="dateCheck(false)"
                                     [(ngModel)]="investmentApplicationDetailsModel.maturityDate"></p-calendar>
                             </div>
                         </div>
@@ -103,14 +103,14 @@
                             <div class="form-label">
                             <label><span class="red">*</span>{{'INVESTMENTS_TRANSACTIONS.MATURITY_INTEREST_AMOUNT' | translate}}</label>
                                 <input type="text" pInputText formControlName="maturityInterest" placeholder="Enter Maturity Interest Amount"
-                                    [(ngModel)]="investmentApplicationDetailsModel.maturityInterest" [disabled]="true" />
+                                    [(ngModel)]="investmentApplicationDetailsModel.maturityInterest" />
                             </div>
                         </div>
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
                             <div class="form-label">
                             <label><span class="red">*</span>{{'INVESTMENTS_TRANSACTIONS.MATURITY_AMOUNT' | translate}}</label>
                                 <input type="text" pInputText formControlName="maturityAmount" placeholder="Enter Maturity Amount"
-                                    [(ngModel)]="investmentApplicationDetailsModel.maturityAmount" [disabled]="true"
+                                    [(ngModel)]="investmentApplicationDetailsModel.maturityAmount"
                                     (focusout)="amountCheck(false)" pKeyFilter="num" />
                             </div>
                         </div>
@@ -127,6 +127,40 @@
                             <label><span class="red">*</span>{{'INVESTMENTS_TRANSACTIONS.INSTALLMENT_AMOUNT' | translate}}</label>
                                 <input type="text" pInputText formControlName="installmentAmount" placeholder="Enter Amount"
                                     [(ngModel)]="investmentApplicationDetailsModel.installmentAmount" pKeyFilter="num"/>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="form-label">
+                            <label><span class="red">*</span>{{'INVESTMENTS_TRANSACTIONS.RESOLUTION_NUMBER' | translate}}</label>
+                                <input type="text" pInputText formControlName="resolutionNumber" placeholder="Enter Resolution Number"
+                                    [(ngModel)]="investmentApplicationDetailsModel.resolutionNumber" pKeyFilter="num"/>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
+                            <div class="form-label">
+                            <label><span class="red">*</span>{{'INVESTMENTS_TRANSACTIONS.RESOLUTION_DATE' | translate}}</label>
+                                <p-calendar [showIcon]="true" formControlName="resolutionDate" placeholder="Select Date"
+                                    dateFormat="{{orgnizationSetting.calendar}}"
+                                    [(ngModel)]="investmentApplicationDetailsModel.resolutionDate"></p-calendar>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="form-label">
+                                <span class=""> {{ 'ERP.UPLOAD' | translate }}&nbsp;{{ 'INVESTMENTS_TRANSACTIONS.RESOLUTION_COPY' | translate }} </span>
+                                <div class="uplodad-style align-items-center">
+                                    <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                                        id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".pdf"
+                                        (onRemove)="resolutionRemoveEvent()"
+                                        (onSelect)="resolutionUploader($event,fileUpload)">
+                                    </p-fileUpload>
+                                    <div  class="col-12  d-flex p-1 contant-body" *ngFor="let img of resolutionCopyFileList">
+                                        <div *ngIf="img.fileType=='pdf'">
+                                            <a href="{{img.imageValue}}"> <img src="assets\images\pdf.png" width="22" height="22"></a>
+                                        </div>  
+                                        <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                            {{img.fileName}}</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
@@ -152,18 +186,18 @@
                                     </div>
                                 </div>
                             </div>
-    
-                        </div>
-                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12" *ngIf="!installmentAmountFlag">
-                            <div class="grid mr-3 mt-3">
-                                <p-inputSwitch formControlName="isAutoRenewal"
-                                    [(ngModel)]="investmentApplicationDetailsModel.isAutoRenewal" class="ml-2"></p-inputSwitch>
-                                    <p class="pl-2 m-0">{{'INVESTMENTS_TRANSACTIONS.AUTO_RENEWAL' | translate}}</p> 
-                            </div>
                         </div>
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12" *ngIf="!installmentAmountFlag">
                             <div class="form-label">
-                            <label>{{'INVESTMENTS_TRANSACTIONS.AUTO_RENEWAL_TYPE' | translate}}</label>
+                            <label>{{'INVESTMENTS_TRANSACTIONS.AUTO_RENEWAL' | translate}}</label>
+                                <p-dropdown [options]="renewalList" placeholder="Select" formControlName="isAutoRenewal"
+                                    [(ngModel)]="investmentApplicationDetailsModel.isAutoRenewal"
+                                    (onChange)="onAutoRenewalChange(investmentApplicationDetailsModel.isAutoRenewal)"></p-dropdown>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12" *ngIf="showRenewalType">
+                            <div class="form-label">
+                            <label><span class="red">*</span>{{'INVESTMENTS_TRANSACTIONS.AUTO_RENEWAL_TYPE' | translate}}</label>
                                 <p-dropdown [options]="autoRenewalTypeList" placeholder="Select" formControlName="autoRenewalType"
                                     [(ngModel)]="investmentApplicationDetailsModel.autoRenewalType"></p-dropdown>
                             </div>

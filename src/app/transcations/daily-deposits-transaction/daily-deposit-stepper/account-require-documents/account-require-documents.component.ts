@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { applicationConstants } from 'src/app/shared/applicationConstants';
 import { Accounts } from '../../shared/accounts.model';
 import { RequiredDocuments } from '../../daily-deposits-product-definition/add-daily-deposits-product-definition/required-documents/shared/required-documents.model';
@@ -90,7 +90,10 @@ export class AccountRequireDocumentsComponent {
   depositAmount: any;
   mandatoryDoxsTextShow: boolean = false;
   requiredDocumentsNamesText: any;
-  kycPhotoCopyZoom: boolean = false;
+  docPhotoCopyZoom: boolean = false;
+  requiredDocumentsList: any[]=[];
+  isDisable: boolean = false;
+  isMaximized: boolean = false;
 
   constructor(private router: Router, 
     private formBuilder: FormBuilder, 
@@ -177,20 +180,33 @@ export class AccountRequireDocumentsComponent {
     this.requiredDocumentDetails.memberType  = this.memberTypeId;
     this.requiredDocumentDetails.memberId  = this.memberId;
     this.requiredDocumentDetails.accountNumber = this.accountNumber;
+    if(this.requiredDocumentsList != null && this.requiredDocumentsList != undefined && this.requiredDocumentsList.length>0){
+      if( this.requiredDocumentsList.every(doc =>this.kycModelList.some(kyc => kyc.requiredDocumentTypeName === doc.documentTypeName) )){
+        this.isDisable = true;
+      }else{
+        this.isDisable = false;
+      }
+    }
+    else{
+      this.isDisable = true;
+    }
     this.dailyDepositsAccountsService.changeData({
       formValid: !this.requiredForm.valid ? true : false,
       data: this.requiredDocumentDetails,
-      isDisable: this.buttonDisabled,
+      isDisable: !this.isDisable,
       stepperIndex: 6,
     });
   }
   imageUploader(event: any, fileUpload: FileUpload) {
-    this.isFileUploaded = applicationConstants.TRUE;
+    this.isFileUploaded = applicationConstants.FALSE;
     this.multipleFilesList = [];
     this.requiredDocumentDetails.filesDTOList = [];
+    this.requiredDocumentDetails.multipartFileList = [];
     this.requiredDocumentDetails.requiredDocumentFilePath = null;
+
     let files: FileUploadModel = new FileUploadModel();
     for (let file of event.files) {
+      this.isFileUploaded = applicationConstants.TRUE;
       let reader = new FileReader();
       reader.onloadend = (e) => {
         let files = new FileUploadModel();
@@ -206,11 +222,12 @@ export class AccountRequireDocumentsComponent {
           this.requiredDocumentDetails.filesDTOList.push(files); // Add to filesDTOList array
         }
         let timeStamp = this.commonComponent.getTimeStamp();
-        this.requiredDocumentDetails.filesDTOList[0].fileName = "DAILY_DEPOSITS_REQUIRED_DOCUMENTS" + this.accId + "_" +timeStamp+ "_"+ file.name ;
-        this.requiredDocumentDetails.requiredDocumentFilePath = "DAILY_DEPOSITS_REQUIRED_DOCUMENTS" + this.accId + "_" +timeStamp+"_"+ file.name; // This will set the last file's name as requiredDocumentFilePath
+        this.requiredDocumentDetails.filesDTOList[0].fileName = "DAILY_DEPOSITS_REQUIRED_DOCUMENTS" + this.accId + "_" + timeStamp + "_" + file.name;
+        this.requiredDocumentDetails.requiredDocumentFilePath = "DAILY_DEPOSITS_REQUIRED_DOCUMENTS" + this.accId + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
         let index1 = event.files.findIndex((x: any) => x === file);
         fileUpload.remove(event, index1);
         fileUpload.clear();
+
       }
       reader.readAsDataURL(file);
     }
@@ -313,6 +330,9 @@ export class AccountRequireDocumentsComponent {
             if (this.responseModel.data[0].depositAmount != null && this.responseModel.data[0].depositAmount != undefined) {
               this.depositAmount = this.responseModel.data[0].depositAmount;
             }
+            if(this.accountsModel.productId!=null && this.accountsModel.productId!=undefined)
+              this.getProductOverView(this.accountsModel.productId)
+
             this.getAllKycTypes()
             if(this.responseModel.data[0].requiredDocumentDetailsDTOList != null && this.responseModel.data[0].requiredDocumentDetailsDTOList != undefined){
               this.kycModelList = this.responseModel.data[0].requiredDocumentDetailsDTOList;
@@ -585,13 +605,55 @@ export class AccountRequireDocumentsComponent {
     }
    }
   }
-  onClickkycPhotoCopy(){
-    this.kycPhotoCopyZoom = true;
+  onClickdocPhotoCopy(rowData: any) {
+    this.multipleFilesList = [];
+    this.docPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
   }
-  kycclosePhoto(){
-    this.kycPhotoCopyZoom = false;
+    docclosePhoto(){
+      this.docPhotoCopyZoom = false;
+    }
+    docclosePhotoCopy() {
+      this.docPhotoCopyZoom = false;
+    }
+  getProductOverView(productId:any){
+    this.dailyDepositsAccountsService.getDailyDepositProductDefinitionOverviewDetailsById(productId).subscribe((data: any) => {
+      this.responseModel = data;
+      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+        if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
+         
+          if (this.responseModel.data[0].requiredDocumentsConfigList != null && this.responseModel.data[0].requiredDocumentsConfigList != undefined && this.responseModel.data[0].requiredDocumentsConfigList.length > 0) {
+            // this.requiredDocumentsList = this.responseModel.data[0].requiredDocumentsConfigList;
+           this.requiredDocumentsList =this.responseModel.data[0].requiredDocumentsConfigList.filter((document: any) => document.isRequired == applicationConstants.ACTIVE ).map((count: any) => {
+              return count;
+            }); 
+          }
+          this.updateData();
+
+        }
+      }
+    });
   }
-  kycclosePhotoCopy() {
-    this.kycPhotoCopyZoom = false;
-  }
+
+  // Popup Maximize
+            @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+          
+            onDialogResize(event: any) {
+              this.isMaximized = event.maximized;
+          
+              if (this.isMaximized) {
+                // Restore original image size when maximized
+                this.imageElement.nativeElement.style.width = 'auto';
+                this.imageElement.nativeElement.style.height = 'auto';
+                this.imageElement.nativeElement.style.maxWidth = '100%';
+                this.imageElement.nativeElement.style.maxHeight = '100vh';
+              } else {
+                // Fit image inside the dialog without scrollbars
+                this.imageElement.nativeElement.style.width = '100%';
+                this.imageElement.nativeElement.style.height = '100%';
+                this.imageElement.nativeElement.style.maxWidth = '100%';
+                this.imageElement.nativeElement.style.maxHeight = '100%';
+                this.imageElement.nativeElement.style.objectFit = 'contain';
+              }
+            }
 }

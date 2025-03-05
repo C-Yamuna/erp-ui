@@ -108,12 +108,12 @@ ngOnInit() {
           this.activeIndex = 3;
         }
       },
-      {
-        label: 'Purpose',icon: 'fa fa-bandcamp', routerLink: Loantransactionconstant.COMPOUND_INTEREST_PROD_PURPOSE_CONFIG,
-        command: (event: any) => {
-          this.activeIndex = 4;
-        }
-      },
+      // {
+      //   label: 'Purpose',icon: 'fa fa-bandcamp', routerLink: Loantransactionconstant.COMPOUND_INTEREST_PROD_PURPOSE_CONFIG,
+      //   command: (event: any) => {
+      //     this.activeIndex = 4;
+      //   }
+      // },
       {
         label: 'Required Documents',icon: 'fa fa-file-text', routerLink: Loantransactionconstant.COMPOUND_INTEREST_REQUIRED_DOCUMENT_CONFIG,
         command: (event: any) => {
@@ -190,6 +190,8 @@ ngAfterContentChecked(): void {
     @argument activeIndex
    */
 prevStep(activeIndex: any) {
+  if(this.activeIndex == 5)
+    activeIndex = activeIndex - 1;
   this.activeIndex = activeIndex - 1;
   this.navigateTo(this.activeIndex,this.savedID);
 
@@ -211,7 +213,7 @@ saveAndNext(activeIndex: number) {
       this.activeIndex = activeIndex + 1;
       this.navigateTo(this.activeIndex,this.savedID);
   } else if (activeIndex == 3) {
-    this.activeIndex = activeIndex + 1;
+    this.activeIndex = activeIndex + 2;
     this.navigateTo(this.activeIndex,this.savedID);
   }
   else if (activeIndex == 4) {

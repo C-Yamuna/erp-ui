@@ -253,6 +253,7 @@ export const applicationConstants = {
     MINIMUM_WITH_DRAW_LIMIT_PER_DAY_WITH_OUT_PAN_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MINIMUM_WITH_DRAW_LIMIT_PER_DAY_WITH_PAN:"Minimum Withdraw Limit Per Day Without Pan Should be Greater Than or Equal To Miniimum Withdraw Limit Per Day With Pan",
     MAXIMUM_WITH_DRAW_LIMIT_SAME_BRANCH_ATM_PER_DAY_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAXIMUM_WITH_DRAW_LIMIT_OTHER_BRANCH_ATM_PER_DAY:"Maximum Withdraw Limit Same Branch ATM Per Day Should be Less Than or Equal To Maximum Withdraw Limit Other branch ATM Per Day ",
     MAXIMUM_WITH_DRAW_LIMIT_OTHER_BRANCH_ATM_PER_DAY_WITH_OUT_PAN_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MAXIMUM_WITH_DRAW_SAME_BRANCH_ATM_LIMIT_PER_DAY:"Maximum Withdraw Limit Other Branch ATM Per Day Should be Greater Than or Equal To Maximum Withdraw Limit Same Branch ATM Per Day ",
+    PRODUCT_NAME_ALREADY_EXIST:"Product Name Already Exist ",
     DAILY_DEPOSITS: "Daily Deposits",
     CLOSURE:"Closure",
     FORECLOSURE:"Foreclosure",
@@ -280,8 +281,18 @@ export const applicationConstants = {
     POC_ALREADY_EXIST:'POC Already Exist',
     VISIT_TENURE_CANNOT_EXCEED_30_DAYS:'Visit tenure cannot exceed 30 days',
     VISIT_NUMBER_ALREADY_EXIST:'Visit Number Already Exist',
-    CROP:'Crop'
-
+    CROP:'Crop',
+    A_CLASS_MEMBER_MUST_BE_18_YEARS_OR_OLDER:'A-Class members must be 18 or older',
+    AGE_SHOULD_NOT_BE_ZERO_OR_NEGATIVE:'Age should not be zero or negative',
+    THE_FILE_SIZE_SHOULD_BE_LESS_THEN_2MB:'The file size should be less than 2MB.',
+    THE_FILE_SIZE_SHOULD_BE_LESS_THEN_5MB:'The file size should be less than 5MB.',
+    UNSUPPORTED_FILE_TYPE:'Unsupported file type',
+    MINOR_ACCOUNT_MEMBERS_SHOULD_TAKE_ONLY_MAJOR_MEMBER_AS_NOMINEE:'Minor Account Members Should Take Only Major Members As Nominee',
+    GUARDIAN_MUST_BE_18_YEARS_OR_OLDER:'A-Class members must be 18 or older',
+    AMOUNT_MISMTACH: 'Transaction amount is not equal to total denomination amount',
+    DATE_OF_BIRTH_SHOUL_NOT_BE_GREATER_THAN_ADMISSION_DATE:'Date Of Birth Should Not Be Greater Than Admission Date',
+    TERM_LOAN_APPLICATION_DOWNLOAD_SECESSFULLY:"Term Loan Application Downloaded Successfully",
+    UNABLE_TO_DOWNLOAD_TERM_LOAN_APPLICATION:"Unable to Download Application"
 };
 
 

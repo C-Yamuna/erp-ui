@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Responsemodel } from 'src/app/shared/responsemodel';
 import { MembershipBasicDetails, MembershipGroupDetails, MemInstitutionDetails } from './shared/membership-details.model';
 import { CiLoanApplication } from '../ci-product-details/shared/ci-loan-application.model';
@@ -71,6 +71,9 @@ export class CiMembershipDetailsComponent {
   requiredDocumentsNamesText: any;
   mandatoryDoxsTextShow: boolean = false;
   saveAndNextEnable : boolean = false;
+  fileSizeMsgForImage: any;
+  isMaximized: boolean = false;
+  kycPhotoCopyZoom: boolean = false;
 
 
 
@@ -329,7 +332,12 @@ export class CiMembershipDetailsComponent {
   }
 
   
-  //member module data by member admission Number
+  
+  /**
+   * @implements get member details by admission Number
+   * @param admissionNumber 
+   * @author jyothi.naidana
+   */
   getMemberDetailsByAdmissionNumber(admissionNumber: any) {
     this.ciLoanKycDetailsList = [];
     this.membershipDetailsService.getMembershipBasicDetailsByAdmissionNumber(admissionNumber).subscribe((data: any) => {
@@ -337,7 +345,7 @@ export class CiMembershipDetailsComponent {
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
           this.membershipBasicDetailsModel = this.responseModel.data[0];
-          this.membershipBasicDetailsModel.ciLoanCommunicationDTOList = this.responseModel.data[0].ciLoanCommunicationDTOList;
+          this.membershipBasicDetailsModel.ciLoanCommunicationDTO = this.responseModel.data[0].memberShipCommunicationDetailsDTO;
          
           if (this.membershipBasicDetailsModel.dob != null && this.membershipBasicDetailsModel.dob != undefined) {
             this.membershipBasicDetailsModel.dob = this.datePipe.transform(this.membershipBasicDetailsModel.dob, this.orgnizationSetting.datePipe);
@@ -348,9 +356,9 @@ export class CiMembershipDetailsComponent {
           if (this.membershipBasicDetailsModel.admissionDate != null && this.membershipBasicDetailsModel.admissionDate != undefined) {
             this.membershipBasicDetailsModel.admissionDate = this.datePipe.transform(this.membershipBasicDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
           }
-          if(this.membershipBasicDetailsModel.ciLoanCommunicationDTOList!= null && this.membershipBasicDetailsModel. ciLoanCommunicationDTOList != undefined){
+          if(this.membershipBasicDetailsModel.ciLoanCommunicationDTO!= null && this.membershipBasicDetailsModel. ciLoanCommunicationDTOList != undefined){
             this.ciLoanCommunicationModel = this.membershipBasicDetailsModel. ciLoanCommunicationDTOList;
-            this.ciLoanApplicationModel.ciLoanCommunicationDTOList = this.membershipBasicDetailsModel.ciLoanCommunicationDTOList;
+            this.ciLoanApplicationModel.ciLoanCommunicationDTOList = this.membershipBasicDetailsModel.ciLoanCommunicationDTO;
           }
           if (this.membershipBasicDetailsModel.memberTypeId == null ||  this.membershipBasicDetailsModel.memberTypeId == undefined) {
             this.membershipBasicDetailsModel.memberTypeId = applicationConstants.INDIVIDUAL_MEMBER_TYPE_ID;
@@ -417,43 +425,62 @@ export class CiMembershipDetailsComponent {
     });
   }
   
-  //image upload and document path save
-  //@bhargavi
+  /**
+   * @implements image uploaded
+   * @param event 
+   * @param fileUpload 
+   * @author jyothi.naidana
+   */
   imageUploader(event: any, fileUpload: FileUpload) {
     this.isFileUploaded = applicationConstants.FALSE;
     this.multipleFilesList = [];
+    this.fileSizeMsgForImage = null;
+    let fileSizeFalg = false;
     this.ciLoanKycModel.filesDTOList = [];
     this.ciLoanKycModel.kycFilePath = null;
     this.ciLoanKycModel.multipartFileList = [];
     let files: FileUploadModel = new FileUploadModel();
 
     let selectedFiles = [...event.files];
-    fileUpload.clear();
-
-    for (let file of selectedFiles) {
-      let reader = new FileReader();
-      reader.onloadend = (e) => {
-        let files = new FileUploadModel();
-        this.uploadFileData = e.currentTarget;
-        files.fileName = file.name;
-        files.fileType = file.type.split('/')[1];
-        files.value = this.uploadFileData.result.split(',')[1];
-        files.imageValue = this.uploadFileData.result;
-        
-        let index = this.multipleFilesList.findIndex(x => x.fileName == files.fileName);
-        if (index === -1) {
-          this.multipleFilesList.push(files);
-          this.ciLoanKycModel.filesDTOList.push(files); // Add to filesDTOList array
-          this.ciLoanKycModel.multipartFileList.push(files);
-        }
-        let timeStamp = this.commonComponent.getTimeStamp();
-        this.ciLoanKycModel.filesDTOList[0].fileName = "CI_KYC_" + this.ciLoanApplicationId + "_" +timeStamp+ "_"+ file.name ;
-        this.ciLoanKycModel.kycFilePath = "CI_KYC_" + this.ciLoanApplicationId + "_" +timeStamp+"_"+ file.name; // This will set the last file's name as kycFilePath
-        let index1 = event.files.findIndex((x: any) => x === file);
-        fileUpload.remove(event, index1);
-        fileUpload.clear();
+    if (selectedFiles[0].fileType != ".pdf") {
+      if (selectedFiles[0].size / 1024 / 1024 > 2) {
+        this.fileSizeMsgForImage = ERP_TRANSACTION_CONSTANTS.MSG_FOR_FILE_ZISE_FOR_IMAGE;
+        fileSizeFalg = true;
       }
-      reader.readAsDataURL(file);
+    }
+    else if (selectedFiles[0].fileType == ".pdf") {
+      if (selectedFiles[0].size / 1024 / 1024 > 5) {
+        this.fileSizeMsgForImage = ERP_TRANSACTION_CONSTANTS.MSG_FOR_FILE_ZISE_FOR_PDF;
+        fileSizeFalg = true;
+      }
+    }
+    fileUpload.clear();
+    if (!fileSizeFalg) {
+      for (let file of selectedFiles) {
+        let reader = new FileReader();
+        reader.onloadend = (e) => {
+          let files = new FileUploadModel();
+          this.uploadFileData = e.currentTarget;
+          files.fileName = file.name;
+          files.fileType = file.type.split('/')[1];
+          files.value = this.uploadFileData.result.split(',')[1];
+          files.imageValue = this.uploadFileData.result;
+
+          let index = this.multipleFilesList.findIndex(x => x.fileName == files.fileName);
+          if (index === -1) {
+            this.multipleFilesList.push(files);
+            this.ciLoanKycModel.filesDTOList.push(files); // Add to filesDTOList array
+            this.ciLoanKycModel.multipartFileList.push(files);
+          }
+          let timeStamp = this.commonComponent.getTimeStamp();
+          this.ciLoanKycModel.filesDTOList[0].fileName = "CI_KYC_" + this.ciLoanApplicationId + "_" + timeStamp + "_" + file.name;
+          this.ciLoanKycModel.kycFilePath = "CI_KYC_" + this.ciLoanApplicationId + "_" + timeStamp + "_" + file.name; // This will set the last file's name as kycFilePath
+          let index1 = event.files.findIndex((x: any) => x === file);
+          fileUpload.remove(event, index1);
+          fileUpload.clear();
+        }
+        reader.readAsDataURL(file);
+      }
     }
   }
 
@@ -777,4 +804,37 @@ membershipDataFromSbModule(obj :any){
     }
   }
   
+  onClickkycPhotoCopy(rowData :any){
+    this.multipleFilesList = [];
+    this.kycPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
+  }
+  kycclosePhoto(){
+    this.kycPhotoCopyZoom = false;
+  }
+  kycclosePhotoCopy() {
+    this.kycPhotoCopyZoom = false;
+  }
+  
+  // Popup Maximize
+      @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+    
+      onDialogResize(event: any) {
+        this.isMaximized = event.maximized;
+    
+        if (this.isMaximized) {
+          // Restore original image size when maximized
+          this.imageElement.nativeElement.style.width = 'auto';
+          this.imageElement.nativeElement.style.height = 'auto';
+          this.imageElement.nativeElement.style.maxWidth = '100%';
+          this.imageElement.nativeElement.style.maxHeight = '100vh';
+        } else {
+          // Fit image inside the dialog without scrollbars
+          this.imageElement.nativeElement.style.width = '100%';
+          this.imageElement.nativeElement.style.height = '100%';
+          this.imageElement.nativeElement.style.maxWidth = '100%';
+          this.imageElement.nativeElement.style.maxHeight = '100%';
+          this.imageElement.nativeElement.style.objectFit = 'contain';
+        }
+      }
 }

@@ -1,5 +1,5 @@
-<p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
-    [hideTransitionOptions]="'500ms'"></p-messages>
+<!-- <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
+    [hideTransitionOptions]="'500ms'"></p-messages> -->
 <div class="col-12">
     <!-- <div class="row">
         <div class="d-flex justify-content-between top-header-section">
@@ -419,7 +419,7 @@
                                             <div class="col-6">
                                                 <p-button *ngIf="preveiwFalg" icon="fa fa-pencil-square-o"
                                                     class="kyc-edit-btn pull-right"
-                                                    (click)="kycEdit(viewSaoLoanApplicatonModel)"></p-button>
+                                                    (click)="kycEdit(viewSaoLoanApplicatonModel)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                             </div>
                                         </div>
 
@@ -432,7 +432,7 @@
                                                         <div class="row">
 
                                                             <div
-                                                                class="col-lg-7 col-md-7 col-sm-7 col-xs-6 d-flex align-items-center">
+                                                                class="col-lg-8 col-md-8 col-sm-8 col-xs-8 d-flex align-items-center">
                                                                 <div class="card-leftbody">
                                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12"
                                                                         *ngIf="memberTypeName != 'Individual'">
@@ -460,26 +460,21 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div
-                                                                class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end">
-                                                                <div class="kycview-done icon-size text-right"><i
-                                                                        class="fa fa-check-circle mr-0"
-                                                                        aria-hidden="true"></i></div>
-                                                                <div class="col-12 px-0">
-                                                                    <div class="col-12 px-0"
-                                                                        *ngFor="let img of document.multipartFileList">
-                                                                        <div class="col-12 p-0"
-                                                                            *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                                            <a href="{{img.imageValue}}">
-                                                                                <img src="{{img.imageValue}}"
-                                                                                    class="upload-img img-fluid"
-                                                                                    pTooltip="{{img.fileName}}"
-                                                                                    tooltipPosition="bottom">
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
+                                                                <div
+                                                                    class="col-lg-4 col-md-4 col-sm-4 col-xs-4 justify-content-end d-flex right-actions">
+                                                                    <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClickkycPhotoCopy(document)"><i class="fa fa-eye m-0" aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}" tooltipPosition="top"></i></div>
+                                                                            <div class="carddownload-icon icon-size text-right" *ngFor="let img of document.multipartFileList" pTooltip="{{'ERP.DOC_DOWNLOAD' | translate}}" tooltipPosition="top">
+                                                                                <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                                                    <a href="{{img.imageValue}}">
+                                                                                        <i class="fa fa-download ml-3 mr-0" aria-hidden="true">
+                                                                                            <!-- <img src="{{img.imageValue}}"> -->
+                                                                                        </i>
+                                                                                    </a>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div><img src="assets/images/verify.png" alt="" class="verifykyc ml-3"></div>
+
                                                                 </div>
-                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -507,12 +502,87 @@
                                             <div class="col-6">
                                                 <p-button *ngIf="preveiwFalg" icon="fa fa-pencil-square-o"
                                                     class="kyc-edit-btn pull-right"
-                                                    (click)="communicationEdit(viewSaoLoanApplicatonModel)"></p-button>
+                                                    (click)="communicationEdit(viewSaoLoanApplicatonModel)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
 
                                             </div>
                                         </div>
                                         <div class="col-12 p-0">
                                             <div class="row">
+                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <div class="nominee-card p-3 pb-1 mb-2">
+                                                        <div class="row">
+                                                            <h6 class="super-sub-heading mt-1">Permanent</h6>
+                                                            <div class="col-12">
+                                                                <div class="row">
+                                                                    <div
+                                                                        class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                                        <div class="row">
+                                                                            <div
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <h6 class="label-view">State</h6>
+                                                                                <p class="label-input-text">
+                                                                                    {{saoLoanCommunicationModel.permanentStateName}}
+                                                                                </p>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <h6 class="label-view">District</h6>
+                                                                                <p class="label-input-text">
+                                                                                    {{saoLoanCommunicationModel.permanentDistrictName}}
+                                                                                </p>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <h6 class="label-view">Sub District</h6>
+                                                                                <p class="label-input-text">
+                                                                                    {{saoLoanCommunicationModel.permanentSubDistrictName}}
+                                                                                </p>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <h6 class="label-view">Village</h6>
+                                                                                <p class="label-input-text">
+                                                                                    {{saoLoanCommunicationModel.permanentVillageName}}
+                                                                                </p>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <h6 class="label-view">Division</h6>
+                                                                                <p class="label-input-text">
+                                                                                    {{saoLoanCommunicationModel.permanentDivisionName}}
+                                                                                </p>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <h6 class="label-view">Block</h6>
+                                                                                <p class="label-input-text">
+                                                                                    {{saoLoanCommunicationModel.permanentBlockName}}
+                                                                                </p>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <h6 class="label-view">Address</h6>
+                                                                                <p class="label-input-text">
+                                                                                    {{saoLoanCommunicationModel.permanentAddress1}}
+                                                                                </p>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <h6 class="label-view">Pincode</h6>
+                                                                                <p class="label-input-text">
+                                                                                    {{saoLoanCommunicationModel.permanentPinCode}}
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                       
+                                                    </div>
+                                                </div>
                                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <div class="nominee-card p-3 pb-1 mb-2">
                                                         <div class="row">
@@ -553,6 +623,20 @@
                                                                             </div>
                                                                             <div
                                                                                 class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <h6 class="label-view">Division</h6>
+                                                                                <p class="label-input-text">
+                                                                                    {{saoLoanCommunicationModel.divisionName}}
+                                                                                </p>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <h6 class="label-view">Block</h6>
+                                                                                <p class="label-input-text">
+                                                                                    {{saoLoanCommunicationModel.blockName}}
+                                                                                </p>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">Address</h6>
                                                                                 <p class="label-input-text">
                                                                                     {{saoLoanCommunicationModel.address1}}
@@ -562,7 +646,7 @@
                                                                                 class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">Pincode</h6>
                                                                                 <p class="label-input-text">
-                                                                                    {{saoLoanCommunicationModel.pinCode}}
+                                                                                    {{saoLoanCommunicationModel.pincode}}
                                                                                 </p>
                                                                             </div>
                                                                         </div>
@@ -570,11 +654,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <div class="nominee-card p-3 pb-1 mb-2">
-                                                        <div class="row">
+                                                        <!-- <div class="row">
                                                             <h6 class="super-sub-heading mt-1">Permanent</h6>
                                                             <div class="col-12">
                                                                 <div class="row">
@@ -611,6 +691,20 @@
                                                                             </div>
                                                                             <div
                                                                                 class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <h6 class="label-view">Division</h6>
+                                                                                <p class="label-input-text">
+                                                                                    {{saoLoanCommunicationModel.permanentDivisionName}}
+                                                                                </p>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                                <h6 class="label-view">Block</h6>
+                                                                                <p class="label-input-text">
+                                                                                    {{saoLoanCommunicationModel.permanentBlockName}}
+                                                                                </p>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
                                                                                 <h6 class="label-view">Address</h6>
                                                                                 <p class="label-input-text">
                                                                                     {{saoLoanCommunicationModel.permanentAddress1}}
@@ -629,19 +723,10 @@
 
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        </div> -->
                                                     </div>
                                                 </div>
-                                                <!-- <div class="col-lg-12 col-md-12 col-sm-12 ht-3rem">
-                                                    <h6 class="subsuper-sub-heading mt-1">{{'ERP.REGISTERED' |
-                                                        translate}}</h6>
-                                                    <p class="label-input-text">{{addressOne}}</p>
-                                                </div>
-                                                <div class="col-lg-12 col-md-12 col-sm-12 ht-3rem">
-                                                    <h6 class="subsuper-sub-heading mt-2">{{'ERP.PERMANENT' |
-                                                        translate}}</h6>
-                                                    <p class="label-input-text">{{addressTwo}}</p>
-                                                </div> -->
+                                               
                                             </div>
                                         </div>
                                     </div>
@@ -666,7 +751,7 @@
                                             <div class="col-6">
                                                 <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
                                                     *ngIf="preveiwFalg"
-                                                    (click)="applicationEdit(viewSaoLoanApplicatonModel)"></p-button>
+                                                    (click)="applicationEdit(viewSaoLoanApplicatonModel)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                             </div>
                                         </div>
                                         <div class="col-12 p-0">
@@ -856,7 +941,7 @@
                                             <div class="col-6">
                                                 <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn pull-right"
                                                     *ngIf="preveiwFalg"
-                                                    (click)="jointHolderEdit(viewSaoLoanApplicatonModel)"></p-button>
+                                                    (click)="jointHolderEdit(viewSaoLoanApplicatonModel)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                             </div>
                                         </div>
                                         <div class="col-12 p-3 mem-details-stripbox mb-3">
@@ -966,7 +1051,7 @@
                                             <div class="col-6">
                                                 <p-button *ngIf="preveiwFalg" icon="fa fa-pencil-square-o"
                                                     class="kyc-edit-btn pull-right"
-                                                    (click)="loanDocumentEdit(viewSaoLoanApplicatonModel)"></p-button>
+                                                    (click)="loanDocumentEdit(viewSaoLoanApplicatonModel)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                             </div>
                                         </div>
                                         <div class="col-12 p-0">
@@ -978,7 +1063,7 @@
                                                         <div class="row">
 
                                                             <div
-                                                                class="col-lg-7 col-md-7 col-sm-7 d-flex align-items-center">
+                                                                class="col-xl-10 col-lg-10 col-md-10 col-sm-10 d-flex align-items-center">
                                                                 <div class="card-leftbody">
                                                                     <div
                                                                         class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
@@ -1000,31 +1085,20 @@
                                                                     </div> -->
                                                                 </div>
                                                             </div>
-                                                            <div class="col-lg-5 col-md-5 col-sm-5 justify-content-end">
-                                                                <div class="col-12 px-0 mt-4">
-                                                                    <div class="col-12 px-0"
-                                                                        *ngFor="let img of document.multipartFileList">
-                                                                        <div class="col-12 p-0"
-                                                                            *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                                                            <a href="{{img.imageValue}}">
-                                                                                <img src="{{img.imageValue}}"
-                                                                                    class="upload-img img-fluid"
-                                                                                    pTooltip="{{img.fileName}}"
-                                                                                    tooltipPosition="bottom">
-                                                                            </a>
-                                                                        </div>
-                                                                        <div class="col-12 p-0"
-                                                                            *ngIf=" img.fileType =='pdf'">
-                                                                            <a href="{{img.imageValue}}">
-                                                                                <img src="assets\images\pdf.png"
-                                                                                    class="pdf-img img-fluid"
-                                                                                    pTooltip="{{img.fileName}}"
-                                                                                    tooltipPosition="bottom">
-                                                                            </a>
-                                                                        </div>
+                                                            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2 justify-content-end d-flex right-actions">
+                                                                <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClickdoccPhotoCopy(document)">
+                                                                    <i class="fa fa-eye m-0" aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}"
+                                                                        tooltipPosition="top"></i></div>
+                                                                <div class="carddownload-icon icon-size text-right" *ngFor="let img of document.multipartFileList"
+                                                                    pTooltip="{{'ERP.DOC_DOWNLOAD' | translate}}" tooltipPosition="top">
+                                                                    <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                                                        <a href="{{img.imageValue}}">
+                                                                            <i class="fa fa-download ml-3 mr-0" aria-hidden="true">
+                                                                                <!-- <img src="{{img.imageValue}}"> -->
+                                                                            </i>
+                                                                        </a>
                                                                     </div>
                                                                 </div>
-
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1051,78 +1125,91 @@
                                             <div class="col-6">
                                                 <p-button *ngIf="preveiwFalg" icon="fa fa-pencil-square-o"
                                                     class="kyc-edit-btn pull-right"
-                                                    (click)="nomineeEdit(viewSaoLoanApplicatonModel)"></p-button>
+                                                    (click)="nomineeEdit(viewSaoLoanApplicatonModel)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                             </div>
                                         </div>
 
-                                        <div class="col-12 p-0">
+                                        <div class="col-12 px-0">
                                             <div class="row g-3">
-                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-2 card-ht-same">
                                                     <div class="stepper-nominee-card p-3 pb-1 mb-2">
                                                         <div class="row">
-                                                            <h6 class="super-sub-heading mt-1">{{'ERP.NOMINEE' |
-                                                                translate}}</h6>
-                                                            <div class="col-12">
+                                                            <div class="col-12 py-0">
                                                                 <div class="row">
                                                                     <div
                                                                         class="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center">
-                                                                        <div class="card-leftbody">
-                                                                            <div class="row">
-                                                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
-                                                                                    <h6 class="label-view">{{'ERP.NOMINEE_TYPE' | translate}}</h6>
-                                                                                    <p class="label-input-text">{{saoLoanNomineeDetailsModel.nomineeTypeName}}</p>
-                                                                                </div>
-                                                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
-                                                                                    *ngIf="saoLoanNomineeDetailsModel.nomineeType == 3">
-                                                                                    <h6 class="label-view">{{'ERP.REMARKS' | translate}}</h6>
-                                                                                    <p class="label-input-text">{{saoLoanNomineeDetailsModel.remarks}}</p>
-                                                                                </div>
-                                                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
-                                                                                    *ngIf="saoLoanNomineeDetailsModel.nomineeType != 3">
-                                                                                    <h6 class="label-view">{{'ERP.RELATIONSHIP_WITH_MEMBER' | translate}}</h6>
-                                                                                    <p class="label-input-text">{{saoLoanNomineeDetailsModel.relationTypeName}}</p>
-                                                                                </div>
-                                                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
-                                                                                    *ngIf="saoLoanNomineeDetailsModel.nomineeType != 3">
-                                                                                    <h6 class="label-view">{{'ERP.NAME' | translate}}</h6>
-                                                                                    <p class="label-input-text">{{saoLoanNomineeDetailsModel.nomineeName}}</p>
-                                                                                </div>
-                                                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
-                                                                                    *ngIf="saoLoanNomineeDetailsModel.nomineeType != 3">
-                                                                                    <h6 class="label-view">{{'ERP.AADHAR_NO' | translate}}</h6>
-                                                                                    <p class="label-input-text">{{saoLoanNomineeDetailsModel.nomineeAadharNumber}}</p>
-                                                                                </div>
-                                                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
-                                                                                    *ngIf="saoLoanNomineeDetailsModel.nomineeType != 3">
-                                                                                    <h6 class="label-view">{{'ERP.CONTACT' | translate}}</h6>
-                                                                                    <p class="label-input-text">{{saoLoanNomineeDetailsModel.nomineeMobileNumber}}
-                                                                                    </p>
-                                                                                </div>
-                                                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
-                                                                                    *ngIf="saoLoanNomineeDetailsModel.nomineeType != 3">
-                                                                                    <h6 class="label-view">{{'ERP.EMAIL' | translate}}</h6>
-                                                                                    <p class="label-input-text">{{saoLoanNomineeDetailsModel.nomineeEmailId}}
-                                                                                    </p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
+                                                                        <h6 class="super-sub-heading mt-1">{{'ERP.NOMINEE' |
+                                                                            translate}}</h6>
                                                                     </div>
-                                                                    <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-xs-12 justify-content-end"
-                                                                        *ngFor="let img of saoLoanNomineeDetailsModel.nomineeFilePathList">
-                                                                        <div class="col-12 px-0">
-                                                                            <div class="col-12 px-0">
-                                                                                <div class="col-12 p-0">
-                                                                                    <a href="{{img.imageValue}}">
-                                                                                        <img src="{{img.imageValue}}"
-                                                                                            class="upload-img img-fluid"
-                                                                                            pTooltip="Download"
-                                                                                            tooltipPosition="top"></a>
-                                                                                </div>
+                                                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4 justify-content-end d-flex">
+                                                                        <div class="cardview-icon icon-size text-right cursor-pointer" (click)="onClicknomineePhotoCopy()"><i class="fa fa-eye m-0" aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}" tooltipPosition="top"></i></div>
+                                                                        <div class="carddownload-icon icon-size text-right" *ngFor="let img of saoLoanNomineeDetailsModel.nomineeFilePathList" pTooltip="{{'ERP.DOC_DOWNLOAD' | translate}}" tooltipPosition="top">
+                                                                            <!-- Image -->
+                                                                            <div *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                                                                                <a href="{{img.imageValue}}">
+                                                                                    <i class="fa fa-download ml-3 mr-0" aria-hidden="true">
+                                                                                        <!-- <img src="{{img.imageValue}}"> -->
+                                                                                    </i>
+                                                                                </a>
+                                                                            </div>
+                                                                            <!-- PDF -->
+                                                                            <div *ngIf=" img.fileType =='pdf'">
+                                                                                <a href="{{img.imageValue}}">
+                                                                                    <i class="fa fa-download ml-3 mr-0" aria-hidden="true">
+                                                                                        <!-- <img src="{{img.imageValue}}"> -->
+                                                                                    </i>
+                                                                                </a>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                     
                                                                 </div>
+                                                            </div>
+                                                            <div class="col-12 pb-0">
+                                                                <div class="row">
+                                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex align-items-center" >
+                                                            <div class="card-leftbody">
+                                                                <div class="row">
+                                                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 ">
+                                                                        <h6 class="label-view">{{'ERP.NOMINEE_TYPE' | translate}}</h6>
+                                                                        <p class="label-input-text">{{saoLoanNomineeDetailsModel.nomineeTypeName}}</p>
+                                                                    </div>
+                                                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
+                                                                        *ngIf="saoLoanNomineeDetailsModel.nomineeType == 3">
+                                                                        <h6 class="label-view">{{'ERP.REMARKS' | translate}}</h6>
+                                                                        <p class="label-input-text">{{saoLoanNomineeDetailsModel.remarks}}</p>
+                                                                    </div>
+                                                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
+                                                                        *ngIf="saoLoanNomineeDetailsModel.nomineeType != 3">
+                                                                        <h6 class="label-view">{{'ERP.RELATIONSHIP_WITH_MEMBER' | translate}}</h6>
+                                                                        <p class="label-input-text">{{saoLoanNomineeDetailsModel.relationTypeName}}</p>
+                                                                    </div>
+                                                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
+                                                                        *ngIf="saoLoanNomineeDetailsModel.nomineeType != 3">
+                                                                        <h6 class="label-view">{{'ERP.NAME' | translate}}</h6>
+                                                                        <p class="label-input-text">{{saoLoanNomineeDetailsModel.nomineeName}}</p>
+                                                                    </div>
+                                                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
+                                                                        *ngIf="saoLoanNomineeDetailsModel.nomineeType != 3">
+                                                                        <h6 class="label-view">{{'ERP.AADHAR_NO' | translate}}</h6>
+                                                                        <p class="label-input-text">{{saoLoanNomineeDetailsModel.nomineeAadharNumber}}</p>
+                                                                    </div>
+                                                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
+                                                                        *ngIf="saoLoanNomineeDetailsModel.nomineeType != 3">
+                                                                        <h6 class="label-view">{{'ERP.CONTACT' | translate}}</h6>
+                                                                        <p class="label-input-text">{{saoLoanNomineeDetailsModel.nomineeMobileNumber}}
+                                                                        </p>
+                                                                    </div>
+                                                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12 "
+                                                                        *ngIf="saoLoanNomineeDetailsModel.nomineeType != 3">
+                                                                        <h6 class="label-view">{{'ERP.EMAIL' | translate}}</h6>
+                                                                        <p class="label-input-text">{{saoLoanNomineeDetailsModel.nomineeEmailId}}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            </div>
+                                                            </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1132,7 +1219,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="col-12 p-1"></div>
                         <!-- Gurantor Details  -->
                         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -1150,7 +1237,7 @@
                                             <div class="col-6">
                                                 <p-button *ngIf="preveiwFalg" icon="fa fa-pencil-square-o"
                                                     class="kyc-edit-btn pull-right"
-                                                    (click)="loanGurantorEdit(viewSaoLoanApplicatonModel)"></p-button>
+                                                    (click)="loanGurantorEdit(viewSaoLoanApplicatonModel)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                             </div>
                                         </div>
                                         <div class="globel-border-top-color"></div>
@@ -1198,11 +1285,62 @@
                                             <div class="col-6">
                                                 <p-button *ngIf="preveiwFalg" icon="fa fa-pencil-square-o"
                                                     class="kyc-edit-btn pull-right"
-                                                    (click)="loanMortagageEdit(viewSaoLoanApplicatonModel)"></p-button>
+                                                    (click)="loanMortagageEdit(viewSaoLoanApplicatonModel)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                             </div>
                                         </div>
                                         <div class="globel-border-top-color"></div>
-                                        <p-table [columns]="landMortagageDetails"
+                                        <p-table [columns]="memberLandDetails" [value]="memberLandDetailsList" dataKey="id"
+                                        selectionMode="single" [rows]="5" styleClass="p-datatable-striped" [showJumpToPageDropdown]="true" [showPageLinks]="false"
+                                        [paginator]="false" [pageLinks]="1" [responsive]="true" rowExpandMode="single">
+                                        <ng-template pTemplate="header">
+                                            <tr>
+                                                <th>
+                                                    {{'MEMBERSHIP_TRANSACTION.VILLAGE' | translate}}
+                                                    </th>
+                                                    <th>
+                                                    {{'MEMBERSHIP_TRANSACTION.PASSBOOK_NO' | translate}}
+                                                  </th>
+                                                   <th>
+                                                    {{'MEMBERSHIP_TRANSACTION.KHATA_BOOK_NUMBER' | translate}}
+                                                  </th>
+                                                  <th>
+                                                    {{'MEMBERSHIP_TRANSACTION.SURVEY_NO' | translate}}
+                                                  </th>
+                                                 
+                                                  <th>
+                                                    {{'MEMBERSHIP_TRANSACTION.LAND' | translate}} (in {{measuringUnit}})
+                                                  </th>
+                                                  <th>
+                                                    {{'MEMBERSHIP_TRANSACTION.LAND' | translate}} (in {{measuringSubUnit}})
+                                                  </th>
+                                                 
+                                                  <th>
+                                                    {{'MEMBERSHIP_TRANSACTION.LAND_TYPE' | translate}}
+                                                  </th>
+                                                  <th>
+                                                    {{'MEMBERSHIP_TRANSACTION.LAND_OWNERSHIP' | translate}}
+                                                  </th>
+                        
+                                                  <!-- <th>
+                                                    {{'MEMBERSHIP_TRANSACTION.SOURCE' | translate}}
+                                                  </th> -->
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+                                            <tr [pSelectableRow]="rowData">
+                                                <td *ngFor="let col of memberLandDetails">
+                                                    {{rowData[col.field]}}
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="summary">
+                                            <h3 class="NData d-flex" *ngIf="memberLandDetailsList.length == 0">
+                                                <i class="fa fa-meh-o" aria-hidden="true"></i>
+                                                <div class="no-data"> {{'MEMBERSHIPCONFIG.NO_DATA' | translate}}</div>
+                                            </h3>
+                                        </ng-template>
+                                    </p-table>
+                                        <!-- <p-table [columns]="landMortagageDetails"
                                             [value]="saoLoanLandMortageDetailsDTOList" dataKey="id"
                                             selectionMode="single" styleClass="p-datatable-striped"
                                             [showJumpToPageDropdown]="true" [showPageLinks]="false" [rows]="5"
@@ -1223,14 +1361,14 @@
                                                     </td>
                                                 </tr>
                                             </ng-template>
-                                        </p-table>
+                                        </p-table> -->
                                         <div class="col-12 margtop-3rem"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-12 p-1"></div>
-                        <!-- Loan Genology  -->
+                        <!-- Loan History  -->
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
                                 <div class=" global-card-bg-color view-carddata icon-size pb-3">
@@ -1239,33 +1377,33 @@
                                             <div class="col-6">
                                                 <div class="d-flex">
                                                     <span class="card-icon"><i class="fa fa-sitemap"></i></span>
-                                                    <h6 class="sub-heading">{{'ERP.LOAN_GENEALOGY_TREE' |
+                                                    <h6 class="sub-heading">{{'LOANS.LOAN_HISTORY' |
                                                         translate}}</h6>
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <p-button *ngIf="preveiwFalg" icon="fa fa-pencil-square-o"
                                                     class="kyc-edit-btn pull-right"
-                                                    (click)="loanGenologyEdit(viewSaoLoanApplicatonModel)"></p-button>
+                                                    (click)="loanHistoryEdit(viewSaoLoanApplicatonModel)" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                                             </div>
                                         </div>
                                         <div class="globel-border-top-color"></div>
-                                        <p-table [columns]="loanGeneologyTree" [value]="saoLoanGeneologyTreeList"
+                                        <p-table [columns]="historyColumns" [value]="saoLoanHistoryList"
                                             dataKey="id" selectionMode="single" styleClass="p-datatable-striped"
                                             [showJumpToPageDropdown]="true" [showPageLinks]="false" [rows]="5"
                                             [paginator]="false" [pageLinks]="1" [responsive]="true"
                                             rowExpandMode="single">
                                             <ng-template pTemplate="header">
                                                 <tr>
-                                                    <th *ngFor="let col of loanGeneologyTree">
+                                                    <th *ngFor="let col of historyColumns">
                                                         {{col.header | translate}}
                                                     </th>
                                                 </tr>
                                             </ng-template>
-                                            <ng-template pTemplate="body" let-saoLoanGeneologyTreeList
+                                            <ng-template pTemplate="body" let-saoLoanHistoryList
                                                 let-expanded="expanded" let-rowData>
                                                 <tr>
-                                                    <td *ngFor="let col of loanGeneologyTree">
+                                                    <td *ngFor="let col of historyColumns">
                                                         {{rowData[col.field]}}
                                                     </td>
                                                 </tr>
@@ -1280,17 +1418,15 @@
                 </p-scrollPanel>
                 <div class="col-12 viewbottom-footer icon-size">
                     <div class="row">
-                        <div class="col-xl-3 col-lg-4 col-md-3 col-sm-4 mt-4">
+                        <div class="col-xl-6 col-lg-4 col-md-3 col-sm-4 mt-4" *ngIf = "!editOpt && preveiwFalg">
+                            <div class="view-dow-upload">
                             <p-button icon="fa fa-download" iconPos="left" (click)="pdfDownload()"
                                 pTooltip="FilledApplication" tooltipPosition="top"></p-button>
                             <!-- <p-button icon="fa fa-print" iconPos="left" pTooltip="Print"
                                 tooltipPosition="top"></p-button> -->
-                        </div>
-
-                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12" *ngIf="!editOpt && preveiwFalg">
-                            <div class="form-label">
-                                <span class=""><span class="red">*</span>{{ 'LOANS.DOCUMENT_COPY' | translate}} </span>
+                            <div class="form-label -mt-5 pt-1 ml-2">
                                 <div class="uplodad-style align-items-center">
+                                    <div class="text-fontwt"><span class="red">*</span>{{ 'ERP.SIGNED_COPY_PATH' | translate}}</div>
                                     <!-- Upload Button Column -->
                                     <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
                                         id="apply-leave_fileUp_attach" chooseLabel=" " name="file"
@@ -1310,19 +1446,41 @@
                                     </div>
                                 </div>
                             </div>
-
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-3 col-sm-4 mt-4" *ngIf="!editOpt && !preveiwFalg || editOpt ">
+                            <div class="form-label">
+                                <span class="">{{'ERP.UPLOAD_SIGNED_COPY' | translate}}</span>
+                                <div class="uplodad-style align-items-center">
+                                    <!-- Uploaded Files Display Column -->
+                                    <div class="col-12 d-flex px-0" *ngFor="let img of viewSaoLoanApplicatonModel.multipartFileList">
+                                        <span *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                                            <a href="{{img.imageValue}}">
+                                                <img src="{{img.imageValue}}" width="22" height="22">
+                                            </a>
+                                        </span>
+                                        <span *ngIf="img.fileType=='pdf'">
+                                            <a href="{{img.imageValue}}"> <img src="assets/images/pdficon-img.png" width="22" height="22"></a>
+                                        </span>
+                                        <span class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}" tooltipPosition="bottom">
+                                            {{img.fileName}}
+                                        </span>
+                                    </div>
+                        
+                                </div>
+                            </div>
                         </div>
                         <div class="col-12 p-3 bottom-padding"></div>
-                        <div class="col-xl-3 col-lg-4 col-md-3 col-sm-4 ht-3rem" *ngIf="!editOpt && !preveiwFalg ">
+                        <div class="col-xl-3 col-lg-4 col-md-3 col-sm-4 ht-3rem" >
                             <h6 class="label-view">{{'ERP.STATUS' | translate}}</h6>
                             <p class="label-input-text">{{viewSaoLoanApplicatonModel.accountStatusName}}</p>
                         </div>
                         <div class="col-12 p-3 bottom-padding"></div>
-                        <div class="col-xl-3 col-lg-4 col-md-3 col-sm-4 ht-3rem" *ngIf="!editOpt && !preveiwFalg ">
+                        <div class="col-xl-3 col-lg-4 col-md-3 col-sm-4 ht-3rem" >
                             <h6 class="label-view">{{'ERP.REMARKS' | translate}}</h6>
                             <p class="label-input-text">{{viewSaoLoanApplicatonModel.remarks}}</p>
                         </div>
-                        <div class="col-xl-3 col-lg-4 col-md-3 col-sm-4 mt-4">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mt-12">
                             <div class="d-flex justify-content-end">
                                 <p-button label="BACK" (click)="back()"></p-button>
                                 <p-button *ngIf="isShowSubmit" label="{{'ERP.SUBMIT' | translate}}" (click)="submit()"
@@ -1648,4 +1806,51 @@
     <!-- <ng-template pTemplate="footer">
             <p-button class="pull-right" label="{{'ERP.CLOSE' | translate}}" (click)="close()"></p-button>
         </ng-template> -->
+</p-dialog>
+
+<!-- KYC Photo Copy -->
+<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="kycPhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
+    <div class="col-12">
+    <div *ngFor="let img of multipleFilesList">
+        <div class="mb-3 imgcustom-class" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+            <!-- <a href="{{img.imageValue}}"> -->
+                    <img src="{{img.imageValue}}" class="doc-photocopy">
+            <!-- </a> -->
+        </div>
+    </div>
+    
+</div>
+</p-dialog>
+
+<!-- DOC Photo Copy -->
+<p-dialog header="{{'ERP.DOCUMENT_COPY' | translate}}" [(visible)]="docPhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
+    <div class="col-12">
+        <div *ngFor="let img of multipleFilesList">
+            <div class="mb-3 imgcustom-class" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
+                <!-- <a href="{{img.imageValue}}"> -->
+                        <img src="{{img.imageValue}}" class="doc-photocopy">
+                <!-- </a> -->
+            </div>
+        </div>
+    </div>
+</p-dialog>
+
+<!-- Nominee Photo Copy -->
+<p-dialog header="{{'ERP.DOCUMENT_COPY' | translate}}" [(visible)]="nomineePhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
+    <div class="col-12">
+    <div *ngFor="let img of  saoLoanNomineeDetailsModel.nomineeFilePathList">
+        <!-- Image -->
+        <div class="mb-3 imgcustom-class" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+            <!-- <a href="{{img.imageValue}}"> -->
+                    <img src="{{img.imageValue}}" class="doc-photocopy">
+            <!-- </a> -->
+        </div>
+        <!-- PDF -->
+        <div class="mb-3 imgcustom-class" *ngIf=" img.fileType =='pdf'">
+            <!-- <a href="{{img.imageValue}}"> -->
+                    <img src="assets/images/pdficon-img.png" class="doc-photocopy">
+            <!-- </a> -->
+        </div>
+    </div>
+</div>
 </p-dialog>

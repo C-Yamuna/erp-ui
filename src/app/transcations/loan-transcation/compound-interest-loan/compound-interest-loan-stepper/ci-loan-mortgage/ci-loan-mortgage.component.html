@@ -1,6 +1,6 @@
 <div class="col-12">
     <!-- <p-card class="m-4"> -->
-    <h6 class="sub-heading">{{'LOAN_TRANSACTION.MORTAGAGE_DETAILS' | translate}}</h6>
+    
     <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
         [hideTransitionOptions]="'500ms'"></p-messages>
         <div class="stepper-top-section-strip">
@@ -33,6 +33,7 @@
         </div>
 
     <div class="col-12"></div>
+    <h6 class="sub-heading">{{'LOAN_TRANSACTION.MORTAGAGE_DETAILS' | translate}}</h6>
         <!-- <form [formGroup]="collateralForm"> -->
             <div class="col-12 p-0">
                 <div class="col-12 p-0 bg-label-colorfull">
@@ -1232,7 +1233,7 @@
 </p-dialog>
 
 
-<!-- band pop up -->
+<!-- bond pop up -->
 <p-dialog header="Bond Mortgage" [(visible)]="bondMortgagePopUp" styleClass="moredetails-style" [closable]="false">
     <div class="popup-basic-details">
         <form [formGroup]="ciBondMortgageForm" id="proj_stakeholder_form">

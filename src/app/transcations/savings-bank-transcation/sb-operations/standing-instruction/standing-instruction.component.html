@@ -6,7 +6,7 @@
                     class="fa fa-angle-right font-bold mr-3 ml-3"></i>{{'ERP.STANDING_INSTRUCTIONS' | translate}}</div>
         </div>
     </div>
-        <div class="row">
+        <div class="row mt-2">
             <div class="col-25-right">
                 
                 <div class="col-12 sb-side-card" *ngIf="memberTypeName == 'Individual'">
@@ -144,8 +144,8 @@
                     </div>
 
                     <!-- KYC Approved -->
-                    <!-- <div class="col-12 basicdata-card text-break py-0">
-                        <div class="col-10 d-flex p-0">
+                    <!-- <div class="col-12 basicdata-card text-break d-flex py-0">
+                        <div class="col-10 p-0">
                         <div>
                         <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                         <p class="label-input-text">{{isKycApproved}}</p>
@@ -155,12 +155,10 @@
                     </div> -->
                     <!-- KYC Not Approved -->
                     <div class="col-12 basicdata-card text-break py-0">
-                        <div class="col-12 d-flex p-0">
-                        <div>
+                        
                         <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                         <p class="label-input-text">{{isKycApproved}}</p>
-                    </div>
-                        </div>
+                    
                     </div>
 
                     <div class="col-12 color-light justify-content-end text-right">
@@ -306,8 +304,8 @@
                             <p class="label-input-text"> {{memberGroupDetailsModel.name}}</p>
                     </div> -->
                     <!-- KYC Approved -->
-                    <!-- <div class="col-12 basicdata-card text-break py-0">
-                        <div class="col-10 d-flex p-0">
+                    <!-- <div class="col-12 basicdata-card text-break d-flex py-0">
+                        <div class="col-10 p-0">
                         <div>
                         <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                         <p class="label-input-text">{{isKycApproved}}</p>
@@ -317,12 +315,10 @@
                     </div> -->
                     <!-- KYC Not Approved -->
                     <div class="col-12 basicdata-card text-break py-0">
-                        <div class="col-12 d-flex p-0">
-                        <div>
+                        
                         <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                         <p class="label-input-text">{{isKycApproved}}</p>
-                    </div>
-                        </div>
+                    
                     </div>
                     <div class="col-12 color-light justify-content-end text-right">
                         <a class="fst-italic text-light cursor-pointer" (click)="onClickOfGroupPromotes()">{{'ERP.MORE_DETAILS' | translate}}</a>
@@ -438,8 +434,8 @@
                     </div> -->
     
                     <!-- KYC Approved -->
-                    <!-- <div class="col-12 basicdata-card text-break py-0">
-                        <div class="col-10 d-flex p-0">
+                    <!-- <div class="col-12 basicdata-card text-break d-flex py-0">
+                        <div class="col-10 p-0">
                         <div>
                         <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                         <p class="label-input-text">{{isKycApproved}}</p>
@@ -449,12 +445,10 @@
                     </div> -->
                     <!-- KYC Not Approved -->
                     <div class="col-12 basicdata-card text-break py-0">
-                        <div class="col-12 d-flex p-0">
-                        <div>
+                        
                         <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                         <p class="label-input-text">{{isKycApproved}}</p>
-                    </div>
-                        </div>
+                    
                     </div>
                     <div class="col-12 color-light justify-content-end text-right">
                         <a class="fst-italic text-light cursor-pointer" (click)="onClick()">{{'ERP.MORE_DETAILS' | translate}}</a>
@@ -606,10 +600,10 @@
                     </form>
                     <div class="col-12 p-1"></div>
 
-                    <div class="col-12 p-3 bg-light-card">
-                    <div class="flex justify-content-between py-2">
+                    <div class="col-12 p-3 pb-4 bg-light-card">
+                    <div class="flex justify-content-between p-0 pb-2">
                         <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                             <div class="sub-heading mt-1">{{'ERP.ALL_STANDING_INSTRUCTIONS' | translate}}</div>
+                             <div class="sub-heading">{{'ERP.ALL_STANDING_INSTRUCTIONS' | translate}}</div>
                         </div>
                         <div class="col-xl-7 col-lg-7 col-md-7 col-sm-7 col-xs-7">
                             <div class="col-12 p-0">
@@ -676,7 +670,7 @@
                                 </tr>
                             </ng-template>
                         </p-table>
-                        <div class="col-12 margtop-3rem"></div>
+                        <!-- <div class="col-12 margtop-3rem"></div> -->
                     </div>
                 </div>
             </div>
@@ -684,7 +678,7 @@
 
 <!-- Individual details dialog -->
 <div class="view-moredetails-popup">
-    <p-dialog header="Basic Details" [modal]="true" [(visible)]="membreIndividualFlag" [style]="{ width: '55vw' }">  
+    <p-dialog header="{{'ERP.ACCOUNT_DETAILS' | translate}}" [modal]="true" [(visible)]="membreIndividualFlag" styleClass="moredetails-style">  
         <div class="col-12 view-morepopup">
                 <div class="d-flex justify-content-center px-3 py-0 mb-2">
                     <div *ngIf ="!this.membershipBasicRequiredDetails.photoCopyPath">
@@ -872,7 +866,7 @@
 
 <!-- institution Promoter details dialog -->
 <div class="view-moredetails-popup">
-    <p-dialog header="More Basic Details" [modal]="true" [(visible)]="institutionPromoterFlag" styleClass="moredetails-style">
+    <p-dialog header="{{'ERP.ACCOUNT_DETAILS' | translate}}" [modal]="true" [(visible)]="institutionPromoterFlag" styleClass="moredetails-style">
         <div class="col-12 view-morepopup">
             <div class="d-flex justify-content-center px-3 py-0 mb-2">
                 <img src="assets/images/no-image.jpg" class="image-user">
@@ -982,7 +976,7 @@
 
 <!-- group prmoter details dialog -->
 <div class="view-moredetails-popup">
-    <p-dialog header="More Basic Details" [modal]="true" [(visible)]="groupPromotersPopUpFlag" styleClass="moredetails-style">
+    <p-dialog header="{{'ERP.ACCOUNT_DETAILS' | translate}}" [modal]="true" [(visible)]="groupPromotersPopUpFlag" styleClass="moredetails-style">
         <div class="col-12 view-morepopup">
             <div class="d-flex justify-content-center px-3 py-0 mb-2">
                 <img src="assets/images/no-image.jpg" class="image-user">

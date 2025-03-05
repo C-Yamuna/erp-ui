@@ -413,39 +413,94 @@ export class KYCComponent  implements OnInit {
     imageUploader(event: any, fileUpload: FileUpload) {
       this.saveButtonDisable = true;
       this.isFileUploaded = applicationConstants.FALSE;
-      this.kycModel.multipleFilesList = [];
-      this.multipleFilesList = [];
-      this.kycModel.filesDTO = null; // Initialize as a single object
-      this.kycModel.kycFilePath = null;
-      if (event.files.length !== 1) {
-        console.error('Exactly one file must be selected.');
-        return;
+      
+      this.msgs = [];
+  
+      if (!event.files || event.files.length !== 1) {
+          console.error('Exactly one file must be selected.');
+          return;
       }
-      let file = event.files[0]; // Only one file
+  
+      let file = event.files[0];
+      let fileSizeMB = file.size / (1024 * 1024);
+      let fileType = file.type.toLowerCase();
+      const allowedImageTypes = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"];
+      
+      if (fileType === "application/pdf") {
+          // **PDF files are not allowed**
+          this.clearFileUpload(fileUpload, event);
+          this.msgs = [{ 
+              severity: 'error', 
+              summary: applicationConstants.STATUS_ERROR, 
+              detail: "PDF files are not allowed. Please upload an image file." 
+          }];
+          return;
+      }
+  
+      if (!allowedImageTypes.includes(fileType)) {
+          this.clearFileUpload(fileUpload, event);
+          this.msgs = [{ 
+              severity: 'warning', 
+              summary: applicationConstants.STATUS_WARN, 
+              detail: "Invalid file type. Please upload an image file." 
+          }];
+          return;
+      }
+  
+      if (fileSizeMB > 2) {
+          this.clearFileUpload(fileUpload, event);
+          this.msgs = [{ 
+              severity: 'warning', 
+              summary: applicationConstants.STATUS_WARN, 
+              detail: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_2MB 
+          }];
+          return;
+      }
+  
       let reader = new FileReader();
       reader.onloadend = (e) => {
-        if (!e.target || !e.target.result) {
-          console.error('FileReader failed to read file:', file.name);
-          return;
-        }
-        let filesDTO = new FileUploadModel();
-        this.uploadFileData = e.target as FileReader;
-        filesDTO.fileName = "MEMBER_KYC_" + this.memberId + "_" + this.commonComponent.getTimeStamp() + "_" + file.name;
-        filesDTO.fileType = file.type.split('/')[1];
-        filesDTO.value = (this.uploadFileData.result as string).split(',')[1];
-        filesDTO.imageValue = this.uploadFileData.result as string;
-        this.kycModel.filesDTO = filesDTO;
-        this.kycModel.kycFilePath = filesDTO.fileName;
-        let index1 = event.files.indexOf(file);
-        if (index1 > -1) {
-          fileUpload.remove(event, index1);
-        }
-        fileUpload.clear();
+          let filesDTO = new FileUploadModel();
+          this.uploadFileData = e.target as FileReader;
+          filesDTO.fileName = `MEMBER_KYC_${this.memberId}_${this.commonComponent.getTimeStamp()}_${file.name}`;
+          filesDTO.fileType = file.type.split('/')[1];
+          filesDTO.value = (this.uploadFileData.result as string).split(',')[1];
+          filesDTO.imageValue = this.uploadFileData.result as string;
+  
+          this.kycModel.filesDTO = filesDTO;
+          this.kycModel.kycFilePath = filesDTO.fileName;
+  
+          let index1 = event.files.indexOf(file);
+          if (index1 > -1) {
+              fileUpload.remove(event, index1);
+          }
+          fileUpload.clear();
       };
   
       reader.readAsDataURL(file);
-     
-    }
+  }
+  
+  /** Utility method to clear the file input */
+  clearFileUpload(fileUpload: FileUpload, event: any) {
+      this.kycModel.multipleFilesList = [];
+      this.multipleFilesList = [];
+      this.kycModel.filesDTO = null;
+      this.kycModel.kycFilePath = null;
+      
+      fileUpload.clear();
+      
+      // **Explicitly clear the file input**
+      if (event && event.target) {
+          event.target.value = '';  // **Important step to reset file input**
+      }
+  
+      setTimeout(() => {
+          this.msgs = [];
+      }, 3000);
+  }
+  
+  
+  
+  
   fileRemoveEvent() {
     this.saveButtonDisable = false;
     this.kycModel.multipleFilesList = [];
@@ -458,7 +513,7 @@ export class KYCComponent  implements OnInit {
     if (id != null && id != undefined) {
       if (this.kycModelList != null && this.kycModelList != undefined && this.kycModelList.length > 0) {
         for (let item of this.kycModelList) {
-          if (item != null && item != undefined && item.kycDocumentTypeId === id) {
+          if (item != null && item != undefined && item.kycDocumentTypeId === id && item.status == applicationConstants.ACTIVE) {
             this.kycForm.reset();
             this.msgs = [];
             this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "Kyc Document already exists" }];

@@ -82,7 +82,7 @@ export class SimpleInterestLoanComponent {
       { field: 'accountNumber', header: 'ERP.ACCOUNT_NUMBER' },
       { field: 'admissionNo', header: 'ERP.ADMISSION_NUMBER' },
       { field: 'memberTypeName',header:'LOAN_TRANSACTION.MEMBER_TYPE'},
-      { field: 'accountTypeName', header: 'ERP.OPERATION_TYPE' },
+      { field: 'operationTypeName', header: 'ERP.OPERATION_TYPE' },
       { field: 'applicationDateVal', header: 'ERP.APPLICATION_DATE' },
       { field: 'sanctionDateVal', header: 'ERP.SANCTION_DATE' },
       { field: 'repaymentFrequencyName', header: 'ERP.REPAYMENT_FREQUENCY' },

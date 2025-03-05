@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Responsemodel } from 'src/app/shared/responsemodel';
@@ -111,7 +111,8 @@ export class CiKycComponent {
   mandatoryDoxsTextShow: boolean = false;
   saveAndNextEnable : boolean = false;
   kycPhotoCopyZoom: boolean = false;
-  isPanNumber: boolean = false;;
+  isPanNumber: boolean = false;
+  isMaximized: boolean = false;
 
   constructor(private router: Router, 
     private formBuilder: FormBuilder, 
@@ -125,10 +126,10 @@ export class CiKycComponent {
      private commonFunctionsService: CommonFunctionsService, 
      private datePipe: DatePipe) {
       this.kycForm = this.formBuilder.group({
-        'docNumber': ['', [ Validators.compose([Validators.required])]],
-        'docTypeName': ['',  Validators.compose([Validators.required])],
-        'fileUpload': ['', ],
-        'nameAsPerDocument':[Validators.compose([Validators.required]), Validators.pattern(applicationConstants.NAME_PATTERN)],
+        'docNumber': new FormControl('', Validators.required),
+        'docTypeName': new FormControl('', Validators.required),
+        'fileUpload': new FormControl('',),
+        'nameAsPerDocument':  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
         'promoter': ['', ],
       });
     }
@@ -172,19 +173,22 @@ export class CiKycComponent {
             return { label: count.name, value: count.id , isMandatory:count.isMandatory }
           });
           let filteredObj = this.documentNameList.find((data: any) => null != data && this.ciLoanKycModel.kycDocumentTypeId != null && data.value == this.ciLoanKycModel.kycDocumentTypeId);
-              if (filteredObj != null && undefined != filteredObj){
-                this.ciLoanKycModel.kycDocumentTypeName = filteredObj.label;
-              }
+          if (filteredObj != null && undefined != filteredObj) {
+            this.ciLoanKycModel.kycDocumentTypeName = filteredObj.label;
+          }
+          let mandatoryList = this.documentNameList.filter((obj: any) => obj.isMandatory == applicationConstants.TRUE);
           let i = 0;
           for (let doc of this.documentNameList) {
             if (i == 0)
-              this.requiredDocumentsNamesText = "Please Upload Mandatory KYC Documents ("
+              this.requiredDocumentsNamesText = "'Please Upload Mandatory KYC Documents "
             if (doc.isMandatory) {
               i = i + 1;
-              this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + "'" + doc.label + "'";
+              this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + doc.label;
+              if (i < mandatoryList.length) {
+                this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + " , "
+              }
             }
           }
-          this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + ")";
           if (i > 0) {
             this.mandatoryDoxsTextShow = true;
           }
@@ -468,16 +472,19 @@ export class CiKycComponent {
               }
               //required documents
               if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length >0) {
+                let mandatoryList = this.documentNameList.filter((obj: any) => obj.isMandatory == applicationConstants.TRUE);
                 let i = 0;
                 for (let doc of this.documentNameList) {
                   if (i == 0)
-                    this.requiredDocumentsNamesText = "Please Upload Mandatory KYC Documents ("
+                    this.requiredDocumentsNamesText = "'Please Upload Mandatory KYC Documents "
                   if (doc.isMandatory) {
                     i = i + 1;
-                    this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + "'" + doc.label + "'";
+                    this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + doc.label;
+                    if (i < mandatoryList.length) {
+                      this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + " , "
+                    }
                   }
                 }
-                this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + ")";
                 if (i > 0) {
                   this.mandatoryDoxsTextShow = true;
                 }
@@ -819,8 +826,8 @@ export class CiKycComponent {
           duplicate = this.kycModelList.filter((obj:any) => obj && obj.kycDocumentTypeId === ciLoanKycModel.kycDocumentTypeId );
         }
       if ( this.addDocumentOfKycFalg && duplicate != null && duplicate != undefined && duplicate.length ==1) {
-        this.kycForm.reset();
-        this.ciLoanKycModel = new CiLoanKyc();
+        this.kycForm.get("docTypeName")?.reset();
+        this.kycForm.get("promoter")?.reset();
         if(ciLoanKycModel.id != null && ciLoanKycModel != undefined)
           this.ciLoanKycModel.id = ciLoanKycModel.id;
         this.msgs = [];
@@ -830,8 +837,8 @@ export class CiKycComponent {
         }, 3000);
       }
       else if(!this.addDocumentOfKycFalg && duplicate != null && duplicate != undefined && duplicate.length ==1 && duplicate[0].id != ciLoanKycModel.id){
-        this.kycForm.reset();
-        this.ciLoanKycModel = new CiLoanKyc();
+        this.kycForm.get("docTypeName")?.reset();
+        this.kycForm.get("promoter")?.reset();
         if(ciLoanKycModel.id != null && ciLoanKycModel != undefined)
           this.ciLoanKycModel.id = ciLoanKycModel.id;
         this.msgs = [];
@@ -933,4 +940,25 @@ export class CiKycComponent {
       this.kycPhotoCopyZoom = false;
     }
    
+    // Popup Maximize
+              @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+            
+              onDialogResize(event: any) {
+                this.isMaximized = event.maximized;
+            
+                if (this.isMaximized) {
+                  // Restore original image size when maximized
+                  this.imageElement.nativeElement.style.width = 'auto';
+                  this.imageElement.nativeElement.style.height = 'auto';
+                  this.imageElement.nativeElement.style.maxWidth = '100%';
+                  this.imageElement.nativeElement.style.maxHeight = '100vh';
+                } else {
+                  // Fit image inside the dialog without scrollbars
+                  this.imageElement.nativeElement.style.width = '100%';
+                  this.imageElement.nativeElement.style.height = '100%';
+                  this.imageElement.nativeElement.style.maxWidth = '100%';
+                  this.imageElement.nativeElement.style.maxHeight = '100%';
+                  this.imageElement.nativeElement.style.objectFit = 'contain';
+                }
+              }
 }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MembershipBasicDetails, MembershipGroupDetails, MemInstitutionDetails } from '../ci-membership-details/shared/membership-details.model';
 import { Responsemodel } from 'src/app/shared/responsemodel';
@@ -13,6 +13,7 @@ import { DatePipe } from '@angular/common';
 import { applicationConstants } from 'src/app/shared/applicationConstants';
 import { CiLoanApplicationService } from '../ci-product-details/shared/ci-loan-application.service';
 import { MembershipDetailsService } from '../ci-membership-details/shared/membership-details.service';
+import { MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-ci-communication',
@@ -47,6 +48,8 @@ export class CiCommunicationComponent {
   memberTypeName: any;
   showForm: boolean = false;
   id:any;
+  divisionList: any[]=[];
+  blockList: any[]=[];
 
 
 
@@ -61,19 +64,24 @@ export class CiCommunicationComponent {
     private commonFunctionsService: CommonFunctionsService, 
     private datePipe: DatePipe) {
     this.communicationForm = this.formBuilder.group({
-      stateName: ['',Validators.required],
-      districtName: ['',Validators.required],
-      subDistrictName: ['',Validators.required],
-      villageName: ['',Validators.required],
-      address1: ['',Validators.required],
-      pinCode: ['', [Validators.pattern(applicationConstants.PINCODE_PATTERN), Validators.compose([Validators.required])]],
-      permanentStateName: ['',Validators.required],
-      permanentDistrictName: ['',Validators.required],
-      permanentSubDistrictName: ['',Validators.required],
-      permanentVillageName: ['',Validators.required],
-      permanentAddress1: ['',Validators.required],
-      permanentPinCode:['', [Validators.pattern(applicationConstants.PINCODE_PATTERN), Validators.compose([Validators.required])]],
-      isSameAddress: ['']
+      "stateName": new FormControl('', Validators.required),
+      "districtName": new FormControl('', Validators.required),
+      "subDistrictName": new FormControl('', Validators.required),
+      "villageName": new FormControl('', Validators.required),
+      "address1": new FormControl('', Validators.required),
+      "pinCode": new FormControl('', Validators.required),
+      "permanentStateName": new FormControl('', Validators.required),
+      "permanentDistrictName": new FormControl('', Validators.required),
+      "permanentSubDistrictName": new FormControl('', Validators.required),
+      "permanentVillageName": new FormControl('', Validators.required),
+      "permanentAddress1": new FormControl('', Validators.required),
+      "permanentPinCode": new FormControl('', Validators.required),
+      "isSameAddress": new FormControl('',),
+      "checked": new FormControl('',),
+      "block": new FormControl({ value: '', disabled: true }),
+      "division": new FormControl({ value: '', disabled: true }),
+      "permanentBlock": new FormControl({ value: '', disabled: true }),
+      "permanentDivision": new FormControl({ value: '', disabled: true })
     })
   }
 
@@ -97,7 +105,8 @@ export class CiCommunicationComponent {
     });
     this.getAllStatesList();
     this.getAllPermanentStatesList();
-
+    this.getAlldivisionList();
+    this.getAllBlockList();
   }
 
   updateData() {
@@ -118,6 +127,10 @@ export class CiCommunicationComponent {
   }
 
 
+  /**
+   * @implements get ci Loan application by id
+   * @author jyothi.naidana
+   */
   getCiLoanApplicationsById() {
     this.ciLoanApplicationService.getLoanApplicationDetailsByLoanApplicationId(this.ciLoanApplicationId).subscribe((data: any) => {
       this.responseModel = data;
@@ -139,11 +152,11 @@ export class CiCommunicationComponent {
                   this.setAllFields();
                 }
                 else {
-                  if (this.memberTypeName == "Individual")
+                  if (this.memberTypeName == MemberShipTypesData.INDIVIDUAL)
                     this.getmembershipBasicDetailsByAdmissionNumber(this.admissionNumber);
-                  else if (this.memberTypeName == "Group")
+                  else if (this.memberTypeName == MemberShipTypesData.GROUP)
                     this.getGroupDetailsByAdmissionNumber(this.admissionNumber);
-                  else if (this.memberTypeName == "Institution")
+                  else if (this.memberTypeName == MemberShipTypesData.INSTITUTION)
                     this.getInstitutionDetailsByAdmissionNumber(this.admissionNumber);
                 }
               this.updateData();
@@ -164,12 +177,12 @@ export class CiCommunicationComponent {
   setAllFields() {
     if (this.ciLoanCommunicationModel.isSameAddress != null && this.ciLoanCommunicationModel.isSameAddress != undefined) {
       if (this.ciLoanCommunicationModel.isSameAddress == true) {
-        this.communicationForm.get('permanentStateName')?.disable();
-        this.communicationForm.get('permanentDistrictName')?.disable();
-        this.communicationForm.get('permanentSubDistrictName')?.disable();
-        this.communicationForm.get('permanentVillageName')?.disable();
-        this.communicationForm.get('permanentAddress1')?.disable();
-        this.communicationForm.get('permanentPinCode')?.disable();
+        this.communicationForm.get('stateName')?.disable();
+        this.communicationForm.get('districtName')?.disable();
+        this.communicationForm.get('subDistrictName')?.disable();
+        this.communicationForm.get('villageName')?.disable();
+        this.communicationForm.get('address1')?.disable();
+        this.communicationForm.get('pinCode')?.disable();
         this.RegAddressToComAddress();
       }
     }
@@ -186,6 +199,7 @@ export class CiCommunicationComponent {
       this.getAllPermanentSubDistrictByDistrictId(this.ciLoanCommunicationModel.permanentDistrictId, false)
     if (this.ciLoanCommunicationModel.permanentSubDistrictId != null)
       this.getAllPermanentVillagesBySubDistrictId(this.ciLoanCommunicationModel.permanentSubDistrictId, false)
+    
   }
 
   getmembershipBasicDetailsByAdmissionNumber(admissionNumber: any) {
@@ -235,7 +249,7 @@ export class CiCommunicationComponent {
             if (this.ciLoanCommunicationModel.memberType != null && this.ciLoanCommunicationModel.memberType != undefined)
               this.memberTypeName = this.ciLoanCommunicationModel.memberType;
             this.ciLoanCommunicationModel.memberType = this.responseModel.data[0].memberTypeId;
-            this.ciLoanCommunicationModel.pinCode = this.responseModel.data[0].groupCommunicationList[0].pincode;
+            this.ciLoanCommunicationModel.pincode = this.responseModel.data[0].groupCommunicationList[0].pincode;
             this.ciLoanCommunicationModel.permanentPinCode = this.responseModel.data[0].groupCommunicationList[0].permanentPincode;
             this.setAllFields();
           }
@@ -290,7 +304,7 @@ export class CiCommunicationComponent {
             this.statesList = this.responseModel.data.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((state: { name: any; id: any; }) => {
               return { label: state.name, value: state.id };
             });
-            this.sameAsRegisterAddress();
+            // this.sameAsRegisterAddress();
           }
           else {
             this.msgs = [];
@@ -309,6 +323,8 @@ export class CiCommunicationComponent {
       this.communicationForm.get('districtName')?.reset();
       this.communicationForm.get('subDistrictName')?.reset();
       this.communicationForm.get('villageName')?.reset();
+      this.communicationForm.get('division')?.reset();
+      this.communicationForm.get('block')?.reset();
       this.communicationForm.get('address1')?.reset();
       this.communicationForm.get('pinCode')?.reset();
       
@@ -325,7 +341,7 @@ export class CiCommunicationComponent {
         });
         const state = this.statesList.find((item: { value: any; }) => item.value === id);
         this.ciLoanCommunicationModel.stateName = state.label;
-        this.sameAsRegisterAddress();
+        // this.sameAsRegisterAddress();
       }
       else {
         this.msgs = [];
@@ -343,8 +359,8 @@ export class CiCommunicationComponent {
       this.communicationForm.get('villageName')?.reset();
       this.communicationForm.get('address1')?.reset();
       this.communicationForm.get('pinCode')?.reset();
-      this.communicationForm.get('permanentAddress1')?.reset();
-      this.communicationForm.get('permanentPinCode')?.reset();
+      this.communicationForm.get('division')?.reset();
+      this.communicationForm.get('block')?.reset();
       this.subDistrictList = [];
       this.villageList = [];
     }
@@ -357,7 +373,7 @@ export class CiCommunicationComponent {
         });
         const district = this.districtsList.find((item: { value: any; }) => item.value === id);
         this.ciLoanCommunicationModel.districtName = district.label;
-        this.sameAsRegisterAddress();
+        // this.sameAsRegisterAddress();
       }
       else {
         this.msgs = [];
@@ -374,8 +390,8 @@ export class CiCommunicationComponent {
       this.communicationForm.get('villageName')?.reset();
       this.communicationForm.get('address1')?.reset();
       this.communicationForm.get('pinCode')?.reset();
-      this.communicationForm.get('permanentAddress1')?.reset();
-      this.communicationForm.get('permanentPinCode')?.reset();
+      this.communicationForm.get('division')?.reset();
+      this.communicationForm.get('block')?.reset();
       this.villageList = [];
     }
     this.ciLoanApplicationService.getvillagesBySubDistrictId(id).subscribe((response: any) => {
@@ -384,12 +400,25 @@ export class CiCommunicationComponent {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.villageList = this.responseModel.data;
-            this.villageList = this.villageList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
-              return { label: relationType.name, value: relationType.id };
+            this.villageList = this.villageList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; blockId:any; divisionId:any}) => {
+              return { label: relationType.name, value: relationType.id,  block:relationType.blockId ,division:relationType.divisionId};
             });
             const subDistrictName = this.subDistrictList.find((item: { value: any; }) => item.value === id);
-            this.ciLoanCommunicationModel.subDistrictName = subDistrictName.label;
-            this.sameAsRegisterAddress();
+            if(subDistrictName != null && subDistrictName != undefined)
+              this.ciLoanCommunicationModel.subDistrictName = subDistrictName.label;
+            // this.sameAsRegisterAddress();
+
+            const villageName = this.villageList.find((item: { value: any; }) => item.value === this.ciLoanCommunicationModel.villageId);
+            if(villageName != null && villageName != undefined)
+              this.ciLoanCommunicationModel.villageName = villageName.label;
+
+            let object =  this.villageList.find((obj:any)=> obj.value == this.ciLoanCommunicationModel.villageId);
+            if(object != null && object != undefined){
+              this.ciLoanCommunicationModel.divisionId = object.division;
+              this.ciLoanCommunicationModel.divisionName = this.getDivisionName(this.ciLoanCommunicationModel.divisionId);
+              this.ciLoanCommunicationModel.blockId = object.block ;
+              this.ciLoanCommunicationModel.blockName = this.getBlockName( this.ciLoanCommunicationModel.blockId );
+            }
           }
           else {
             this.msgs = [];
@@ -403,11 +432,49 @@ export class CiCommunicationComponent {
     });
   }
 
+  /**
+   * @implements filter division name
+   * @param divisionId 
+   * @returns 
+   */
+  getDivisionName(divisionId:any){
+    let divisionName ;
+    let obj = this.divisionList.find((obj:any)=>obj.value == divisionId);
+    if(obj != null && obj != undefined){
+      divisionName = obj.label;
+    }
+    return divisionName;
+  }
+
+  /**
+   * @implements filter block name
+   * @param blockId 
+   * @returns 
+   * @author jyothi.naidana
+   */
+  getBlockName(blockId :any){
+    let blockName ;
+    let obj = this.blockList.find((obj:any)=>obj.value == blockId);
+    if(obj != null && obj != undefined){
+      blockName = obj.label;
+    }
+    return blockName;
+  }
+
+  /**
+   * @implements village name 
+   * @param id 
+   * @author jyothi.naidana
+   */
   getVillage(id: any) {
     const villageName = this.villageList.find((item: { value: any; }) => item.value === id);
-    this.ciLoanCommunicationModel.villageName = villageName.label;
-    this.communicationForm.get('permanentAddress1')?.reset();
-      this.communicationForm.get('permanentPinCode')?.reset();
+    if(villageName != null && villageName != undefined)
+      this.ciLoanCommunicationModel.villageName = villageName.label;
+    
+    this.communicationForm.get('address1')?.reset();
+    this.communicationForm.get('pinCode')?.reset();
+    this.communicationForm.get('division')?.reset();
+    this.communicationForm.get('block')?.reset();
     this.sameAsRegisterAddress();
   }
 
@@ -421,6 +488,7 @@ export class CiCommunicationComponent {
             this.permanentStatesList = this.responseModel.data.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((state: { name: any; id: any; }) => {
               return { label: state.name, value: state.id };
             });
+            this.sameAsRegisterAddress();
           }
           else {
             this.msgs = [];
@@ -439,8 +507,12 @@ export class CiCommunicationComponent {
       this.communicationForm.get('permanentDistrictName')?.reset();
       this.communicationForm.get('permanentSubDistrictName')?.reset();
       this.communicationForm.get('permanentVillageName')?.reset();
+      this.communicationForm.get('permanentDivision')?.reset();
+      this.communicationForm.get('permanentBlock')?.reset();
       this.communicationForm.get('permanentAddress1')?.reset();
       this.communicationForm.get('permanentPinCode')?.reset();
+      this.ciLoanCommunicationModel.permanentBlockId = null;
+      this.ciLoanCommunicationModel.permanentDivisionId = null;
       this.permanentDistrictList = [];
       this.permanentSubDistrictList = [];
       this.permanentVillageList = [];
@@ -453,7 +525,9 @@ export class CiCommunicationComponent {
           return { label: relationType.name, value: relationType.id };
         });
         const perState = this.permanentStatesList.find((item: { value: any; }) => item.value === id);
-        this.ciLoanCommunicationModel.permanentStateName = perState.label;
+        if(perState != null && perState != undefined)
+          this.ciLoanCommunicationModel.permanentStateName = perState.label;
+        this.sameAsRegisterAddress();
       }
       else {
         this.msgs = [];
@@ -469,8 +543,12 @@ export class CiCommunicationComponent {
     if (isResetIds) {
       this.communicationForm.get('permanentSubDistrictName')?.reset();
       this.communicationForm.get('permanentVillageName')?.reset();
+      this.communicationForm.get('permanentDivision')?.reset();
+      this.communicationForm.get('permanentBlock')?.reset();
       this.communicationForm.get('permanentAddress1')?.reset();
       this.communicationForm.get('permanentPinCode')?.reset();
+      this.ciLoanCommunicationModel.permanentBlockId = null;
+      this.ciLoanCommunicationModel.permanentDivisionId = null;
       this.permanentSubDistrictList = [];
       this.permanentVillageList = [];
     }
@@ -483,6 +561,7 @@ export class CiCommunicationComponent {
         });
         const perDistrict = this.permanentDistrictList.find((item: { value: any; }) => item.value === id);
         this.ciLoanCommunicationModel.permanentDistrictName = perDistrict.label;
+        this.sameAsRegisterAddress();
       }
       else {
         this.msgs = [];
@@ -494,11 +573,21 @@ export class CiCommunicationComponent {
     });
   }
 
+  /**
+   * @implements get all permanent villages by subdistrict id
+   * @param id 
+   * @param isResetIds 
+   * @author jyothi.naidana
+   */
   getAllPermanentVillagesBySubDistrictId(id: any, isResetIds: any) {
     if (isResetIds) {
       this.communicationForm.get('permanentVillageName')?.reset();
+      this.communicationForm.get('permanentDivision')?.reset();
+      this.communicationForm.get('permanentBlock')?.reset();
       this.communicationForm.get('permanentAddress1')?.reset();
       this.communicationForm.get('permanentPinCode')?.reset();
+      this.ciLoanCommunicationModel.permanentBlockId = null;
+      this.ciLoanCommunicationModel.permanentDivisionId = null;
       this.permanentVillageList = [];
     }
     this.ciLoanApplicationService.getvillagesBySubDistrictId(id).subscribe((response: any) => {
@@ -507,11 +596,20 @@ export class CiCommunicationComponent {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.permanentVillageList = this.responseModel.data;
-            this.permanentVillageList = this.permanentVillageList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
-              return { label: relationType.name, value: relationType.id };
+            this.permanentVillageList = this.permanentVillageList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; blockId:any; divisionId:any}) => {
+              return { label: relationType.name, value: relationType.id,  block:relationType.blockId ,division:relationType.divisionId};
             });
             const persubDistrictName = this.permanentSubDistrictList.find((item: { value: any; }) => item.value === id);
-            this.ciLoanCommunicationModel.permanentSubDistrictName = persubDistrictName.label;
+            if(persubDistrictName != null && persubDistrictName != undefined)
+              this.ciLoanCommunicationModel.permanentSubDistrictName = persubDistrictName.label;
+            let object = this.permanentVillageList.find((obj: any) => obj.value == this.ciLoanCommunicationModel.permanentVillageId);
+            if (object != null && object != undefined) {
+              this.ciLoanCommunicationModel.permanentDivisionId = object.division;
+              this.ciLoanCommunicationModel.permanentDivisionName = this.getDivisionName(this.ciLoanCommunicationModel.divisionId);
+              this.ciLoanCommunicationModel.permanentBlockId = object.block;
+              this.ciLoanCommunicationModel.permanentBlockName = this.getBlockName(this.ciLoanCommunicationModel.blockId);
+            }
+            this.sameAsRegisterAddress();
           }
           else {
             this.msgs = [];
@@ -525,114 +623,224 @@ export class CiCommunicationComponent {
     });
   }
 
+  /**
+   * @implements get permanent Village
+   * @param id 
+   * @author jyothi.naidana
+   */
   getPermanentVillage(id: any) {
     const perVillage = this.permanentVillageList.find((item: { value: any; }) => item.value === id);
-    this.ciLoanCommunicationModel.permanentVillageName = perVillage.label;
+    if(perVillage != null && perVillage != undefined)
+      this.ciLoanCommunicationModel.permanentVillageName = perVillage.label;
+    let object =  this.permanentVillageList.find((obj:any)=> obj.value == id);
+    if(object != null && object != undefined){
+      this.ciLoanCommunicationModel.permanentDivisionId = object.division;
+      this.ciLoanCommunicationModel.permanentDivisionName = this.getDivisionName(this.ciLoanCommunicationModel.permanentDivisionId);
+      this.ciLoanCommunicationModel.permanentBlockId = object.block ;
+      this.ciLoanCommunicationModel.permanentBlockName = this.getBlockName(this.ciLoanCommunicationModel.permanentBlockId );
+    }
+    this.sameAsRegisterAddress();
   }
 
+  /**
+   * @implements same as pegistrationAddress
+   * @author jyothi.naidana
+   */
   sameAsRegisterAddress() {
     if (this.ciLoanCommunicationModel.isSameAddress == true) {
       this.ciLoanCommunicationModel.permanentStateId = this.ciLoanCommunicationModel.stateId;
       if (this.ciLoanCommunicationModel.districtId != this.ciLoanCommunicationModel.permanentDistrictId) {
-        this.ciLoanCommunicationModel.permanentDistrictId = null;
-        this.getAllPermanentDistrictsByStateId(this.ciLoanCommunicationModel.permanentStateId, false);
-        this.ciLoanCommunicationModel.permanentDistrictId = this.ciLoanCommunicationModel.districtId;
+        this.ciLoanCommunicationModel.districtId = null;
+        this.getAllDistrictsByStateId(this.ciLoanCommunicationModel.permanentStateId, false);
+        this.ciLoanCommunicationModel.districtId = this.ciLoanCommunicationModel.permanentDistrictId;
       }
       if (this.ciLoanCommunicationModel.subDistrictId != this.ciLoanCommunicationModel.permanentSubDistrictId) {
-        this.ciLoanCommunicationModel.permanentSubDistrictId = null;
-        this.getAllPermanentSubDistrictByDistrictId(this.ciLoanCommunicationModel.permanentDistrictId, false);
-        this.ciLoanCommunicationModel.permanentSubDistrictId = this.ciLoanCommunicationModel.subDistrictId;
+        this.ciLoanCommunicationModel.subDistrictId = null;
+        this.getAllSubDistrictByDistrictId(this.ciLoanCommunicationModel.permanentDistrictId, false);
+        this.ciLoanCommunicationModel.subDistrictId = this.ciLoanCommunicationModel.permanentSubDistrictId;
+        
       }
       if (this.ciLoanCommunicationModel.villageId != this.ciLoanCommunicationModel.permanentVillageId) {
-        this.ciLoanCommunicationModel.permanentVillageId = null;
-        this.getAllPermanentVillagesBySubDistrictId(this.ciLoanCommunicationModel.permanentSubDistrictId, false);
-        this.ciLoanCommunicationModel.permanentVillageId = this.ciLoanCommunicationModel.villageId;
+        this.ciLoanCommunicationModel.villageId = null;
+        this.getAllVillagesBySubDistrictId(this.ciLoanCommunicationModel.permanentSubDistrictId, false);
+        this.ciLoanCommunicationModel.villageId = this.ciLoanCommunicationModel.permanentVillageId;
+      }
+      this.ciLoanCommunicationModel.blockId = this.ciLoanCommunicationModel.permanentBlockId;
+      this.ciLoanCommunicationModel.divisionId = this.ciLoanCommunicationModel.permanentDivisionId;
+      this.ciLoanCommunicationModel.pincode= this.ciLoanCommunicationModel.permanentPinCode;
+      this.ciLoanCommunicationModel.address1= this.ciLoanCommunicationModel.permanentAddress1;
+    }
+    else {
+      let object =  this.villageList.find((obj:any)=> obj.value == this.ciLoanCommunicationModel.villageId);
+      if(object != null && object != undefined){
+        this.ciLoanCommunicationModel.divisionId = object.division;
+        this.ciLoanCommunicationModel.divisionName = this.getDivisionName(this.ciLoanCommunicationModel.divisionId);
+        this.ciLoanCommunicationModel.blockId = object.block ;
+        this.ciLoanCommunicationModel.blockName = this.getBlockName( this.ciLoanCommunicationModel.blockId );
       }
     }
   }
 
+  /**
+   * @implements same as per address
+   * @param isSameAddress 
+   * @author jyothi.naidana
+   */
   sameAsPerAddr(isSameAddress: any) {
     if (isSameAddress) {
       this.ciLoanCommunicationModel.isSameAddress = applicationConstants.TRUE;
-      this.communicationForm.get('permanentStateName')?.reset();
-      this.communicationForm.get('permanentDistrictName')?.reset();
-      this.communicationForm.get('permanentSubDistrictName')?.reset();
-      this.communicationForm.get('permanentVillageName')?.reset();
-      this.communicationForm.get('permanentAddress1')?.reset();
-      this.communicationForm.get('permanentPinCode')?.reset();
+      this.communicationForm.get('stateName')?.reset();
+      this.communicationForm.get('districtName')?.reset();
+      this.communicationForm.get('subDistrictName')?.reset();
+      this.communicationForm.get('villageName')?.reset();
+      this.communicationForm.get('address1')?.reset();
+      this.communicationForm.get('pinCode')?.reset();
       
-      this.communicationForm.get('permanentStateName')?.disable();
-      this.communicationForm.get('permanentDistrictName')?.disable();
-      this.communicationForm.get('permanentSubDistrictName')?.disable();
-      this.communicationForm.get('permanentVillageName')?.disable();
-      this.communicationForm.get('permanentAddress1')?.disable();
-      this.communicationForm.get('permanentPinCode')?.disable();
+      this.communicationForm.get('stateName')?.disable();
+      this.communicationForm.get('districtName')?.disable();
+      this.communicationForm.get('subDistrictName')?.disable();
+      this.communicationForm.get('villageName')?.disable();
+      this.communicationForm.get('address1')?.disable();
+      this.communicationForm.get('pinCode')?.disable();
 
-     
-
-
-      this.ciLoanCommunicationModel.permanentStateId = this.ciLoanCommunicationModel.stateId;
+      this.ciLoanCommunicationModel.stateId = null;
+       this.ciLoanCommunicationModel.stateId = this.ciLoanCommunicationModel.permanentStateId ;
       if (this.ciLoanCommunicationModel.districtId != this.ciLoanCommunicationModel.permanentDistrictId) {
-        this.ciLoanCommunicationModel.permanentDistrictId = null;
-        this.getAllPermanentDistrictsByStateId(this.ciLoanCommunicationModel.permanentStateId, false);
-        this.ciLoanCommunicationModel.permanentDistrictId = this.ciLoanCommunicationModel.districtId;
+        this.ciLoanCommunicationModel.districtId = null;
+        this.getAllDistrictsByStateId(this.ciLoanCommunicationModel.permanentStateId, false);
+        this.ciLoanCommunicationModel.districtId = this.ciLoanCommunicationModel.permanentDistrictId;
       }
       if (this.ciLoanCommunicationModel.subDistrictId != this.ciLoanCommunicationModel.permanentSubDistrictId) {
-        this.ciLoanCommunicationModel.permanentSubDistrictId = null;
-        this.getAllPermanentSubDistrictByDistrictId(this.ciLoanCommunicationModel.permanentDistrictId, false);
-        this.ciLoanCommunicationModel.permanentSubDistrictId = this.ciLoanCommunicationModel.subDistrictId;
+        this.ciLoanCommunicationModel.subDistrictId = null;
+        this.getAllSubDistrictByDistrictId(this.ciLoanCommunicationModel.permanentDistrictId, false);
+        this.ciLoanCommunicationModel.subDistrictId = this.ciLoanCommunicationModel.permanentSubDistrictId;
       }
       if (this.ciLoanCommunicationModel.villageId != this.ciLoanCommunicationModel.permanentVillageId) {
-        this.ciLoanCommunicationModel.permanentVillageId = null;
-        this.getAllPermanentVillagesBySubDistrictId(this.ciLoanCommunicationModel.permanentSubDistrictId, false);
-        this.ciLoanCommunicationModel.permanentVillageId = this.ciLoanCommunicationModel.villageId;
+        this.ciLoanCommunicationModel.villageId = null;
+        this.getAllVillagesBySubDistrictId(this.ciLoanCommunicationModel.permanentSubDistrictId, false);
+        this.ciLoanCommunicationModel.villageId = this.ciLoanCommunicationModel.permanentVillageId;
+        
       }
-
-      this.ciLoanCommunicationModel.permanentAddress1 = this.ciLoanCommunicationModel.address1;
-      this.ciLoanCommunicationModel.permanentPinCode = this.ciLoanCommunicationModel.pinCode;
+      this.ciLoanCommunicationModel.address1 = this.ciLoanCommunicationModel.permanentAddress1;
+      this.ciLoanCommunicationModel.pincode = this.ciLoanCommunicationModel.permanentPinCode;
     }
     else {
       this.ciLoanCommunicationModel.isSameAddress = applicationConstants.FALSE;
+      this.communicationForm.get('stateName')?.reset();
+      this.communicationForm.get('districtName')?.reset();
+      this.communicationForm.get('subDistrictName')?.reset();
+      this.communicationForm.get('villageName')?.reset();
+      this.communicationForm.get('address1')?.reset();
+      this.communicationForm.get('pinCode')?.reset();
+      this.districtsList = [];
+      this.subDistrictList = [];
+      this.villageList = [];
 
-      this.communicationForm.get('permanentStateName')?.enable();
-      this.communicationForm.get('permanentDistrictName')?.enable();
-      this.communicationForm.get('permanentSubDistrictName')?.enable();
-      this.communicationForm.get('permanentVillageName')?.enable();
-      this.communicationForm.get('permanentAddress1')?.enable();
-      this.communicationForm.get('permanentPinCode')?.enable();
+      this.communicationForm.get('stateName')?.enable();
+      this.communicationForm.get('districtName')?.enable();
+      this.communicationForm.get('subDistrictName')?.enable();
+      this.communicationForm.get('villageName')?.enable();
+      this.communicationForm.get('address1')?.enable();
+      this.communicationForm.get('pinCode')?.enable();
 
-      this.communicationForm.get('permanentStateName')?.reset();
-      this.communicationForm.get('permanentDistrictName')?.reset();
-      this.communicationForm.get('permanentSubDistrictName')?.reset();
-      this.communicationForm.get('permanentVillageName')?.reset();
-      this.communicationForm.get('permanentAddress1')?.reset();
-      this.communicationForm.get('permanentPinCode')?.reset();
-      this.permanentDistrictList = [];
-      this.permanentSubDistrictList = [];
-      this.permanentVillageList = [];
-
-
-      this.communicationForm.get('permanentStateName')?.enable();
-      this.communicationForm.get('permanentDistrictName')?.enable();
-      this.communicationForm.get('permanentSubDistrictName')?.enable();
-      this.communicationForm.get('permanentVillageName')?.enable();
-      this.communicationForm.get('permanentAddress1')?.enable();
-      this.communicationForm.get('permanentPinCode')?.enable();
-
-      this.ciLoanCommunicationModel.permanentStateId = null;
-      this.ciLoanCommunicationModel.permanentDistrictId = null;
-      this.ciLoanCommunicationModel.permanentSubDistrictId = null;
-      this.ciLoanCommunicationModel.permanentVillageId = null;
-      this.ciLoanCommunicationModel.permanentAddress1 = null;
-      this.ciLoanCommunicationModel.permanentPinCode = null;
+      this.ciLoanCommunicationModel.stateId = null;
+      this.ciLoanCommunicationModel.districtId= null;
+      this.ciLoanCommunicationModel.subDistrictId = null;
+      this.ciLoanCommunicationModel.villageId = null;
+      this.ciLoanCommunicationModel.address1 = null;
+      this.ciLoanCommunicationModel.pincode = null;
+      this.ciLoanCommunicationModel.divisionId= null;
+      this.ciLoanCommunicationModel.blockId = null;
     }
     this.updateData();
   }
 
   RegAddressToComAddress() {
     if (this.ciLoanCommunicationModel.isSameAddress == true) {
-      this.ciLoanCommunicationModel.permanentAddress1 = this.ciLoanCommunicationModel.address1;
-      this.ciLoanCommunicationModel.permanentPinCode = this.ciLoanCommunicationModel.pinCode;
+      this.ciLoanCommunicationModel.address1 = this.ciLoanCommunicationModel.permanentAddress1;
+      this.ciLoanCommunicationModel.pincode = this.ciLoanCommunicationModel.permanentPinCode;
     }
   }
+
+  /**
+ * @implements get all division List 
+ * @author jyothi.naidana
+ */
+  getAlldivisionList(){
+    this.ciLoanApplicationService.getAllDivisionList().subscribe((response: any) => {
+      this.responseModel = response;
+      if (this.responseModel != null && this.responseModel != undefined) {
+        if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+          if (this.responseModel.data.length > 0 &&  this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+            this.divisionList = this.responseModel.data;
+            this.divisionList = this.divisionList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
+              return { label: relationType.name, value: relationType.id};
+            });
+          }
+        let division = this.divisionList.find((data: any) => null != data && this.ciLoanCommunicationModel.divisionId != null &&  data.value == this.ciLoanCommunicationModel.divisionId);
+          if (division != null && undefined != division)
+            this.ciLoanCommunicationModel.divisionName = division.label;
+
+        division = this.divisionList.find((data: any) => null != data && this.ciLoanCommunicationModel.permanentDivisionId != null &&  data.value == this.ciLoanCommunicationModel.permanentDivisionId);
+          if (division != null && undefined != division)
+            this.ciLoanCommunicationModel.permanentDistrictName = division.label;
+      }
+      else{
+        this.commonComponent.stopSpinner();
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      }
+    }
+    }, error => {
+      this.commonComponent.stopSpinner();
+      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    });
+  }
+
+  /**
+   * @implements get all block list
+   * @author jyothi.naidana
+   *    */
+  getAllBlockList(){
+    this.ciLoanApplicationService.getBlockList().subscribe((response: any) => {
+      this.responseModel = response;
+      if (this.responseModel != null && this.responseModel != undefined) {
+        if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+          if (this.responseModel.data.length > 0 &&  this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
+            this.blockList = this.responseModel.data;
+            this.blockList = this.blockList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
+              return { label: relationType.name, value: relationType.id};
+            });
+          }
+        let block = this.blockList.find((data: any) => null != data && this.ciLoanCommunicationModel.blockId != null &&  data.value == this.ciLoanCommunicationModel.blockId);
+          if (block != null && undefined != block)
+            this.ciLoanCommunicationModel.blockName = block.label;
+         block = this.blockList.find((data: any) => null != data && this.ciLoanCommunicationModel.permanentBlockId != null &&  data.value == this.ciLoanCommunicationModel.permanentBlockId);
+          if (block != null && undefined != block)
+            this.ciLoanCommunicationModel.permanentBlockName = block.label;
+      }
+      else{
+        this.commonComponent.stopSpinner();
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      }
+    }
+    }, error => {
+      this.commonComponent.stopSpinner();
+      this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
+    });
+  }
+
+  
+
 }

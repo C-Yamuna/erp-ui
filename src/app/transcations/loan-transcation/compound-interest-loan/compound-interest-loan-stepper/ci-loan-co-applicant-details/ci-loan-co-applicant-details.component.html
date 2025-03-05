@@ -1,5 +1,5 @@
 <div class="col-12">
-    <h6 class="sub-heading">{{'LOAN_TRANSACTION.ADD_JOINT_HOLDERS_SECONDARY' | translate}}</h6>
+    
     <div class="stepper-top-section-strip">
         <div class="row">
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 stepper-top-product-name-background">
@@ -29,12 +29,12 @@
         </div>
     </div>
     <div class="col-12"></div>
-
+    <h6 class="sub-heading">{{'LOAN_TRANSACTION.ADD_JOINT_HOLDERS_SECONDARY' | translate}}</h6>
     <form [formGroup]="jointAccountForm" id="exit_types_form">
         <div class="mt-n1 bg-label-colorfull">
             <div class="row g-3">
                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
-                    <label>{{'LOAN_TRANSACTION.JOINT_HOLDER_ADMISSION_NUMBERS' | translate}}</label>
+                    <label><span class="red">*</span>{{'LOAN_TRANSACTION.JOINT_HOLDER_ADMISSION_NUMBERS' | translate}}</label>
 
                     <p-multiSelect [options]="admissionNumberList" [(ngModel)]="selectedAdmissionNumberList"
                         placeholder="Select admission Number"  formControlName="admissionNumber" optionLabel="label" [showClear]="true"

@@ -130,7 +130,9 @@ export class TermLoanApplicationDetailsComponent {
         loanPeriod: ['', [Validators.required]],
         loanDueDate: ['', [Validators.required]],
         operationTypeId: ['', [Validators.required]],
-        graceperiod:['', [Validators.required]],
+        gracePeriod:['', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.compose([Validators.required])]],
+        societyAccountNumber: ['', [Validators.pattern(applicationConstants.ACCOUNT_NUMBER_PATTERN), Validators.compose([Validators.required])]],
+        gestationPeriod: ['', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.compose([Validators.required])]],
       })
       this.chargesDetailsForm = this.formBuilder.group({
   
@@ -185,24 +187,17 @@ export class TermLoanApplicationDetailsComponent {
       this.insurenceDetailsForm.valueChanges.subscribe((data: any) => {
         this.updateData();
       });
-      if (this.termLoanApplicationModel != null && this.termLoanApplicationModel != undefined) {
-        if (this.termLoanApplicationModel.termProductId != null && this.termLoanApplicationModel.termProductId != undefined) {
-          this.getAllLoanPurpose(this.termLoanApplicationModel.termProductId);
-        }
+     
+      this.termLoanapplicationForm.get('termProductId')?.valueChanges.subscribe(() => {
+        this.updateDisbursementTable();
+      });
+    
+      this.termLoanapplicationForm.get('requestedAmount')?.valueChanges.subscribe(() => {
+        this.updateDisbursementTable();
+      });
+      if (!this.termLoanApplicationModel.termProductId && !this.termLoanApplicationModel.requestedAmount) {
+        this.updateDisbursementTable();
       }
-      this.termLoanapplicationForm.get('termProductId')?.valueChanges.subscribe(productId => {
-        if (productId) {
-          this.getProductDefinitionByProductId(productId);
-        }
-       
-      });
-  
-      this.termLoanapplicationForm.get('requestedAmount')?.valueChanges.subscribe(amount => {
-        this.requestedAmount = amount;
-        if (this.termLoanProductDefinitionModel?.termLoanDisbursementScheduleDTOList) {
-          this.calculateDisbursement();
-        }
-      });
     }
   
     save() {
@@ -441,7 +436,6 @@ export class TermLoanApplicationDetailsComponent {
             if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
               this.termLoanApplicationModel = this.responseModel.data[0];
   
-  
               if (this.termLoanApplicationModel.termProductId != null && this.termLoanApplicationModel.termProductId != undefined)
                 this.isProductDisable = applicationConstants.TRUE;
   
@@ -523,6 +517,11 @@ export class TermLoanApplicationDetailsComponent {
   
               if (this.termLoanApplicationModel.termLoanInsuranceDetailsDTO != null && this.termLoanApplicationModel.termLoanInsuranceDetailsDTO != undefined) {
                 this.termLoanInsuranceDetailsModel = this.termLoanApplicationModel.termLoanInsuranceDetailsDTO;
+              }
+              if (this.termLoanApplicationModel != null && this.termLoanApplicationModel != undefined) {
+                if (this.termLoanApplicationModel.termProductId != null && this.termLoanApplicationModel.termProductId != undefined) {
+                  this.getAllLoanPurpose(this.termLoanApplicationModel.termProductId);
+                }
               }
               this.getProductDefinitionByProductId(this.termLoanApplicationModel.termProductId);
             
@@ -1072,8 +1071,8 @@ export class TermLoanApplicationDetailsComponent {
             }
 
             if (this.termLoanProductDefinitionModel.termLoanDisbursementScheduleDTOList != null && this.termLoanProductDefinitionModel.termLoanDisbursementScheduleDTOList != undefined && this.termLoanApplicationModel.termLoanDisbursementDTOList.length > 0) {
-              this.termLoanDisbursementScheduleList = this.termLoanProductDefinitionModel.termLoanDisbursementScheduleDTOList;
-              this.termLoanDisbursementScheduleList = this.termLoanDisbursementScheduleList.filter((data: any) => data != null && data.disbursementDate != null).map((object: any) => {
+              this.disbursementlist = this.termLoanProductDefinitionModel.termLoanDisbursementScheduleDTOList;
+              this.disbursementlist = this.disbursementlist.filter((data: any) => data != null && data.disbursementDate != null).map((object: any) => {
                 object.disbursementDateVal = this.datePipe.transform(object.disbursementDate, this.orgnizationSetting.datePipe);
                 return object;
               });
@@ -1096,22 +1095,25 @@ export class TermLoanApplicationDetailsComponent {
       }
       
     }
-    onSactionAmountChange(sactionAmount:any){
-      this.termLoanApplicationModel.effectiveRoi = null;
-      this.termLoanApplicationModel.penalInterest = null;
-      this.termLoanApplicationModel.iod= null;
-      this.interestPolicyList = this.termLoanProductDefinitionModel.termInterestPolicyConfigDTOList.filter((obj:any)=>(obj.minSlabAmount <= sactionAmount && obj.maxSlabAmount >= sactionAmount ));
-      if( this.interestPolicyList != null &&  this.interestPolicyList != undefined &&  this.interestPolicyList.length >0){
-        this.termLoanApplicationModel.effectiveRoi = this.interestPolicyList[0].roi;
-        this.termLoanApplicationModel.penalInterest = this.interestPolicyList[0].penalInterest;
-        this.termLoanApplicationModel.iod = this.interestPolicyList[0].iod;
-      }
-      else {
-        this.msgs = [];
-          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "Given Saction Amount is Not in between of any Slabs in Product definition" }];
+    onSactionAmountChange(sanctionAmount:any){
+      let flag = false;
+      if (sanctionAmount != undefined) {
+        if ( sanctionAmount != undefined && this.termLoanApplicationModel.sanctionAmount >= this.termLoanProductDefinitionModel.eligibleMInAmount && 
+          sanctionAmount <= this.termLoanProductDefinitionModel.eligibleMaxAmount) {
+            flag = true;
+        } 
+        else{
+          flag = false;
+        }
+        if(!flag){
+          this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.SANCTION_AMOUNT_SHOULD_BE_MIN_AND_MAX_AMOUNT + this.termLoanProductDefinitionModel.eligibleMInAmount+ "," + this.termLoanProductDefinitionModel.eligibleMaxAmount}];
+          this.termLoanapplicationForm.get('sanctionAmount')?.reset();
+          this.termLoanApplicationModel.sanctionAmount = null;
           setTimeout(() => {
             this.msgs = [];
           }, 2000);
+        }
+        
       }
     
     }
@@ -1132,46 +1134,72 @@ export class TermLoanApplicationDetailsComponent {
         flag = false;
       }
       if(!flag){
-        this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.LOAN_PERIOD_IN_MOTHS_SHOULD_BE_MIN_AND_MAX_AMOUNT }];
+        this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.LOAN_PERIOD_IN_MOTHS_SHOULD_BE_MIN_AND_MAX_AMOUNT + this.termLoanProductDefinitionModel.minLoanPeriod
+          + "," + this.termLoanProductDefinitionModel.maxLoanPeriod
+        }];
         this.termLoanapplicationForm.get('loanPeriod')?.reset();
         this.termLoanApplicationModel.loanPeriod = null;
         setTimeout(() => {
           this.msgs = [];
         }, 2000);
       }
-      
     }
 }
 
+updateDisbursementTable() {
+  const productId = this.termLoanapplicationForm.get('termProductId')?.value;
+  const requestedAmount = this.termLoanapplicationForm.get('requestedAmount')?.value;
 
-
-
-calculateDisbursement() {
-  if (!this.termLoanApplicationModel.requestedAmount || !this.termLoanProductDefinitionModel.termLoanDisbursementScheduleDTOList) {
-    this.termLoanDisbursementScheduleList = []; // Reset list if data is incomplete
-    return;
+  if (productId && requestedAmount) {
+    this.getSchedulesByApplicationId(productId);
   }
-
-  const requestedAmount = this.termLoanApplicationModel.requestedAmount;
-  const currentDate = new Date();
-
-  this.termLoanDisbursementScheduleList = this.termLoanProductDefinitionModel.termLoanDisbursementScheduleDTOList.map((schedule: { visitNumber: any; tenureTypeName: any;disbursementPercentage: number; visitTenure: number; }) => {
-    const percentage = (schedule.disbursementPercentage / 100) * this.requestedAmount;
-  
-    const visitTenure = schedule.visitTenure ?? 0;
-
-    const disbursementDate = new Date(currentDate);
-    disbursementDate.setDate(disbursementDate.getDate() + visitTenure);
-    const formattedDate = `${String(disbursementDate.getDate()).padStart(2, '0')}/${String(disbursementDate.getMonth() + 1).padStart(2, '0')}/${disbursementDate.getFullYear()}`;
-
-    return {
-      disbursementOrder: schedule.visitNumber,
-      typeName: schedule.tenureTypeName,
-      disbursementAmount: percentage,
-      disbursementDateVal: formattedDate
-    };
-  });
 }
+  getSchedulesByApplicationId(termProductId: any) {
 
+    this.termLoanDisbursementService.getTermDisbursmentScheduleByLoanProductId(termProductId).subscribe((data: any) => {
+      this.responseModel = data;
+      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+        if (this.responseModel != null && this.responseModel != undefined) {
+          if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
+            this.termLoanDisbursementScheduleList = this.responseModel.data;
+            const currentDate = new Date();
+          
+            this.termLoanDisbursementScheduleList = this.termLoanDisbursementScheduleList.map((schedule: { visitNumber: any; tenureTypeName: any;disbursementPercentage: number; visitTenure: number; }) => {
+            
+        
+              const percentage = (schedule.disbursementPercentage / 100) * this.termLoanApplicationModel.requestedAmount;;
+            
+              const visitTenure = schedule.visitTenure ?? 0;
+          
+              const disbursementDate = new Date(currentDate);
+              disbursementDate.setDate(disbursementDate.getDate() + visitTenure);
+              const formattedDate = `${String(disbursementDate.getDate()).padStart(2, '0')}/${String(disbursementDate.getMonth() + 1).padStart(2, '0')}/${disbursementDate.getFullYear()}`;
+          
+              return {
+                disbursementOrder: schedule.visitNumber,
+                typeName: schedule.tenureTypeName,
+                disbursementAmount: percentage,
+                disbursementDateVal: formattedDate
+              };
+            });
+            
+          }
+          
+        }
+      } else {
+        this.commonComponent.stopSpinner();
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
+    }, error => {
+      this.commonComponent.stopSpinner();
+      this.msgs = [{ severity: "error", summary: 'Failed', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST }];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 2000);
+    });
+  }
 
 }

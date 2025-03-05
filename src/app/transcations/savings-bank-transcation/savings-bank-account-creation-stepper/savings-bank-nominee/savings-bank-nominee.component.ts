@@ -86,7 +86,9 @@ export class SavingsBankNomineeComponent implements OnInit {
   flag: boolean = false;
   isSaveAndNextEnable : boolean = false;
   today :any;
-
+  fileSizeMsgForImage: any;
+  fileSizeMsgForImageGuardiand: any;
+  isNewMember :boolean = false;
 
   constructor(private router: Router, private formBuilder: FormBuilder, private savingBankApplicationService: SavingBankApplicationService, private commonComponent: CommonComponent, private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService, private savingsBankNomineeService: SavingsBankNomineeService, private commonFunctionsService: CommonFunctionsService, private datePipe: DatePipe , private savingsBankCommunicationService : SavingsBankCommunicationService , private fileUploadService :FileUploadService) {
     this.nomineeForm = this.formBuilder.group({
@@ -246,8 +248,8 @@ export class SavingsBankNomineeComponent implements OnInit {
    * @implements memberType Check For Guardian And Nominee typwe List
    * @author jyothi.naidana
    */
-  memberTypeCheck(memberTypeName : any){
-    if(memberTypeName != "Individual"){
+  memberTypeCheck(obj: any) {
+    if (obj.memberTypeName != "Individual") {
       this.nomineeList = [
         { label: 'New Nominee', value: 1 },
         { label: 'No Nominee', value: 3 },
@@ -259,16 +261,28 @@ export class SavingsBankNomineeComponent implements OnInit {
       this.accountType = applicationConstants.SINGLE_ACCOUNT_TYPE;
     }
     else {
-      this.nomineeList = [
-        { label: 'New Nominee', value: 1 },
-        { label: 'Same As Membership Nominee', value: 2 },
-        { label: 'No Nominee', value: 3 },
-      ]
-      this.guadianTypesList= [
-        { label: 'New Guardain', value: 1 },
-        { label: 'Same as Member Guardain', value: 2 },
-        { label: 'No Guardain', value: 3 },
-      ];
+      if (obj.memberShipBasicDetailsDTO != null && obj.memberShipBasicDetailsDTO != undefined && !obj.memberShipBasicDetailsDTO.isNewMember) {
+        this.nomineeList = [
+          { label: 'New Nominee', value: 1 },
+          { label: 'Same As Membership Nominee', value: 2 },
+          { label: 'No Nominee', value: 3 },
+        ]
+        this.guadianTypesList = [
+          { label: 'New Guardain', value: 1 },
+          { label: 'Same as Member Guardain', value: 2 },
+          { label: 'No Guardain', value: 3 },
+        ];
+      }
+      else {
+        this.nomineeList = [
+          { label: 'New Nominee', value: 1 },
+          { label: 'No Nominee', value: 3 },
+        ]
+        this.guadianTypesList = [
+          { label: 'New Guardain', value: 1 },
+          { label: 'No Guardain', value: 3 },
+        ];
+      }
     }
   }
 
@@ -324,7 +338,7 @@ export class SavingsBankNomineeComponent implements OnInit {
             }
             if(this.responseModel.data[0].memberTypeName != null && this.responseModel.data[0].memberTypeName != undefined){
               this.memberTypeName = this.responseModel.data[0].memberTypeName;
-              this.memberTypeCheck(this.memberTypeName);
+              this.memberTypeCheck(this.responseModel.data[0]);
             }
             if(this.responseModel.data[0].admissionNumber != null && this.responseModel.data[0].admissionNumber != undefined){
               this.admissionNumber = this.responseModel.data[0].admissionNumber;
@@ -337,9 +351,6 @@ export class SavingsBankNomineeComponent implements OnInit {
             }
             if(this.responseModel.data[0].age != null && this.responseModel.data[0].age != undefined){
               this.age = this.responseModel.data[0].age;
-              if(this.age < 18){
-                this.guarntorDetailsFalg = true;
-              }
             }
             if(this.responseModel.data[0].sbNomineeDTO != null && this.responseModel.data[0].sbNomineeDTO != undefined){
               this.savingsBankNomineeModel = this.responseModel.data[0].sbNomineeDTO;
@@ -357,7 +368,7 @@ export class SavingsBankNomineeComponent implements OnInit {
                   this.isFileUploadedNominee = applicationConstants.TRUE;
                 }
               }
-              if(this.savingsBankNomineeModel.age < 18){
+              if(this.savingsBankNomineeModel.age < 18 || this.age < 18){
                 this.guarntorDetailsFalg = true;
               }
             }
@@ -671,9 +682,11 @@ export class SavingsBankNomineeComponent implements OnInit {
               this.savingsBankNomineeModel.nomineeSighnedFormMultiPartList = this.fileUploadService.getFile(this.savingsBankNomineeModel.signedNomineeForm  , ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.savingsBankNomineeModel.signedNomineeForm );
               this.isFileUploadedNominee = applicationConstants.TRUE;
             }
-            if(this.responseModel.data[0].dateOfBirth != null && this.responseModel.data[0].dateOfBirth != undefined){
-              this.savingsBankNomineeModel.dateOfBirth = this.responseModel.data[0].dateOfBirth;
-              this.savingsBankNomineeModel.dateOfBirthVal = this.datePipe.transform(this.responseModel.data[0].dateOfBirth, this.orgnizationSetting.datePipe);
+            if(this.responseModel.data[0].nomineeAge != null && this.responseModel.data[0].nomineeAge != undefined)
+              this.savingsBankNomineeModel.age =  this.responseModel.data[0].nomineeAge;
+            if(this.responseModel.data[0].nomineeDob != null && this.responseModel.data[0].nomineeDob != undefined){
+              this.savingsBankNomineeModel.dateOfBirth = this.responseModel.data[0].nomineeDob;
+              this.savingsBankNomineeModel.dateOfBirthVal = this.datePipe.transform(this.responseModel.data[0].nomineeDob, this.orgnizationSetting.datePipe);
             }
             this.savingsBankNomineeModel.nomineeType = 2;
             this.updateData();
@@ -774,6 +787,9 @@ export class SavingsBankNomineeComponent implements OnInit {
    */
   fileUploader(event: any, fileUpload: FileUpload , filePathName:any) {
     this.multipleFilesList = [];
+    this.fileSizeMsgForImage = null;
+    this.fileSizeMsgForImageGuardiand = null;
+    let fileSizeFalg = false;
     if(this.savingsBankNomineeModel != null && this.savingsBankNomineeModel != undefined && this.isEdit && this.savingsBankNomineeModel.filesDTOList == null || this.savingsBankNomineeModel.filesDTOList == undefined){
         this.savingsBankNomineeModel.filesDTOList = [];
     }
@@ -781,51 +797,63 @@ export class SavingsBankNomineeComponent implements OnInit {
       this.memberGuardianDetailsModelDetail.filesDTOList = [];
     }
     let selectedFiles = [...event.files];
-    fileUpload.clear();
     
+    fileUpload.clear();
+  
     if (filePathName === "Nominee") {
       this.isFileUploadedNominee = applicationConstants.FALSE;
       this.savingsBankNomineeModel.nomineeSighnedFormMultiPartList = [];
+      if (selectedFiles[0].size/1024/1024 > 5) {
+        this.fileSizeMsgForImage= "file is bigger than 5MB";
+        fileSizeFalg = true;
+       }
     }
     if (filePathName === "Guardain") {
       this.isFileUploadedGuardina = applicationConstants.FALSE;
       this.memberGuardianDetailsModelDetail.guardainSighnedMultipartFiles = [];
+      if (selectedFiles[0].size/1024/1024 > 5) {
+        this.fileSizeMsgForImageGuardiand = "file is bigger than 5MB";
+        fileSizeFalg = true;
+       }
     }
     let files: FileUploadModel = new FileUploadModel();
-    for (let file of selectedFiles) {
+    if(!fileSizeFalg){
+      for (let file of selectedFiles) {
      
-      let reader = new FileReader();
-      reader.onloadend = (e) => {
-        let files = new FileUploadModel();
-        this.uploadFileData = e.currentTarget;
-        files.fileName = file.name;
-        files.fileType = file.type.split('/')[1];
-        files.value = this.uploadFileData.result.split(',')[1];
-        files.imageValue = this.uploadFileData.result;
-        
-          this.multipleFilesList.push(files);
-          // Add to filesDTOList array
-        let timeStamp = this.commonComponent.getTimeStamp();
-        if (filePathName === "Nominee") {
-          this.isFileUploadedNominee = applicationConstants.TRUE;
-          this.savingsBankNomineeModel.filesDTOList.push(files); 
-          this.savingsBankNomineeModel.nomineeSighnedFormMultiPartList.push(files);
-          this.savingsBankNomineeModel.signedNomineeForm = null;
-          this.savingsBankNomineeModel.filesDTOList[this.savingsBankNomineeModel.filesDTOList.length-1].fileName = "SB_NOMINEE" + this.sbAccId + "_" + timeStamp + "_" + file.name;
-          this.savingsBankNomineeModel.signedNomineeForm = "SB_NOMINEE" + this.sbAccId + "_" +timeStamp+"_"+ file.name; 
+        let reader = new FileReader();
+        reader.onloadend = (e) => {
+          let files = new FileUploadModel();
+          this.uploadFileData = e.currentTarget;
+          files.fileName = file.name;
+          files.fileType = file.type.split('/')[1];
+          files.value = this.uploadFileData.result.split(',')[1];
+          files.imageValue = this.uploadFileData.result;
+          
+            this.multipleFilesList.push(files);
+            // Add to filesDTOList array
+          let timeStamp = this.commonComponent.getTimeStamp();
+          if (filePathName === "Nominee") {
+            this.isFileUploadedNominee = applicationConstants.TRUE;
+            this.savingsBankNomineeModel.filesDTOList.push(files); 
+            this.savingsBankNomineeModel.nomineeSighnedFormMultiPartList.push(files);
+            this.savingsBankNomineeModel.signedNomineeForm = null;
+            this.savingsBankNomineeModel.filesDTOList[this.savingsBankNomineeModel.filesDTOList.length-1].fileName = "SB_NOMINEE" + this.sbAccId + "_" + timeStamp + "_" + file.name;
+            this.savingsBankNomineeModel.signedNomineeForm = "SB_NOMINEE" + this.sbAccId + "_" +timeStamp+"_"+ file.name; 
+          }
+          if (filePathName === "Guardain") {
+            this.isFileUploadedGuardina = applicationConstants.TRUE;
+            this.memberGuardianDetailsModelDetail.filesDTOList.push(files); 
+            this.memberGuardianDetailsModelDetail.guardainSighnedMultipartFiles.push(files);
+            this.memberGuardianDetailsModelDetail.gaurdianSignedCopyPath = null;
+            this.memberGuardianDetailsModelDetail.filesDTOList[this.memberGuardianDetailsModelDetail.filesDTOList.length-1].fileName = "SB_GUARDAIN" + "_" + timeStamp + "_" + file.name;
+            this.memberGuardianDetailsModelDetail.gaurdianSignedCopyPath = "SB_GUARDAIN" + "_" + timeStamp + "_" + file.name; 
+          }
+          this.updateData();
         }
-        if (filePathName === "Guardain") {
-          this.isFileUploadedGuardina = applicationConstants.TRUE;
-          this.memberGuardianDetailsModelDetail.filesDTOList.push(files); 
-          this.memberGuardianDetailsModelDetail.guardainSighnedMultipartFiles.push(files);
-          this.memberGuardianDetailsModelDetail.gaurdianSignedCopyPath = null;
-          this.memberGuardianDetailsModelDetail.filesDTOList[this.memberGuardianDetailsModelDetail.filesDTOList.length-1].fileName = "SB_GUARDAIN" + "_" + timeStamp + "_" + file.name;
-          this.memberGuardianDetailsModelDetail.gaurdianSignedCopyPath = "SB_GUARDAIN" + "_" + timeStamp + "_" + file.name; 
-        }
-        this.updateData();
+        reader.readAsDataURL(file);
       }
-      reader.readAsDataURL(file);
     }
+    
   }
 /**
  * @implements gurdaind from validation
@@ -1155,8 +1183,8 @@ export class SavingsBankNomineeComponent implements OnInit {
   samAsMemberNimineeType(flag:boolean){
     this.newNominee = true;
     this.noNominee = false;
-    if(this.savingsBankNomineeModel.age < 18 ){
-      this.guarntorDetailsFalg = false; 
+    if(this.savingsBankNomineeModel.age < 18 || this.age <18){
+      this.guarntorDetailsFalg = true; 
     }
     //onchange on update
     if(flag){
@@ -1315,13 +1343,13 @@ export class SavingsBankNomineeComponent implements OnInit {
     this.nomineeForm.get('guardianMobile')?.enable();
     this.nomineeForm.get('guardianEmail')?.enable();
     this.guarntorDetailsFalg = true;
-    const controlName = this.nomineeForm.get('guardianRemarks');
-    if (controlName) {
-      controlName.setValidators([
-        Validators.required,
-      ]);
-      controlName.updateValueAndValidity();
-    }
+    // const controlName = this.nomineeForm.get('guardianRemarks');
+    // if (controlName) {
+    //   controlName.setValidators([
+    //     Validators.required,
+    //   ]);
+    //   controlName.updateValueAndValidity();
+    // }
 
     }
   }

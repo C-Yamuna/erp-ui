@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { FileUploadModel } from 'src/app/layout/mainmenu/shared/file-upload-model.model';
 import { GroupPromoterDetailsModel, InstitutionPromoterDetailsModel, MemberGroupDetailsModel, MembershipBasicDetail, MembershipInstitutionDetailsModel } from 'src/app/transcations/term-deposits-transcation/shared/membership-basic-detail.model';
 import { Accounts } from '../../shared/accounts.model';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Responsemodel } from 'src/app/shared/responsemodel';
 import { Table } from 'primeng/table';
 import { CommonFunctionsService } from 'src/app/shared/commonfunction.service';
@@ -85,7 +85,9 @@ export class NewMembershipComponent {
   rdAccId: any;
   multipleFilesList: any;
   uploadFileData: any;
-  isFileUploaded: any;;
+  isFileUploaded: any;
+  communityList: any[]=[];
+
   age: any;
   cancleButtonFlag : Boolean = true;
   promoterDetails: any[] = [];
@@ -97,6 +99,19 @@ export class NewMembershipComponent {
   promterTypeDisabled : any;
   subProductList:any[]=[];
   today:any;
+  isFileUploadedPhoto: Boolean =false;
+  isFileUploadedsignature: Boolean =false;
+  fileSizeMsgResulutionCopy :any;
+  fileSizeMsgForImage:any;
+  fileSizeMsgForSignature :any;
+  trueFalseList: any[] = [];
+  groupedQualificationSubQualification: any[]=[];
+  subQualificationList: any[]=[];
+  tempSubQualificationList: any[]=[];
+  tempSubCasteList: any[]=[];
+  groupedCasteSubCaste: any[]=[];
+  subCasteList: any[]=[];
+
   constructor(private router: Router,
     private formBuilder: FormBuilder,
     private commonComponent: CommonComponent,
@@ -107,24 +122,29 @@ export class NewMembershipComponent {
     private fileUploadService :FileUploadService,
     private dailyDepositsAccountsService :DailyDepositsAccountsService) {
       this.memberCreationForm = this.formBuilder.group({
-        surName: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
-        name: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
-        gender: ['', Validators.required],
-        dateOfBirth: ['', Validators.required],
-        age: ['', [Validators.pattern(applicationConstants.ALLOW_NUMBERS_ONLY), Validators.compose([Validators.required])]],
-        maritalStatus: ['', Validators.required],
-        relationWithMember: [''],
-        relationName: [''],
-        aadharNumber: ['', [Validators.pattern(applicationConstants.AADHAR_PATTERN), Validators.compose([Validators.required])]],
-        panNumber: ['', [Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN), Validators.compose([Validators.required])]],
-        mobileNumber: ['', [Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.compose([Validators.required])]],
-        occupation: [''],
-        quslification: [''],
-        caste: [''],
-        email: ['', [Validators.pattern(applicationConstants.EMAIL_PATTERN), Validators.compose([Validators.required])]],
-        admissionDate: [''],
-        isStaff: [''],
-        fileUpload:[''],
+       "surName":  new FormControl('', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
+      "name":  new FormControl('', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
+      "gender": new FormControl('', Validators.required),
+      "dateOfBirth": new FormControl('', Validators.required),
+      "age":  new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
+      "maritalStatus": new FormControl('', Validators.required),
+      "relationWithMember": ['', [Validators.pattern(applicationConstants.ALPHA_NAME_PATTERN), Validators.compose([Validators.required])]],
+      "relationName": new FormControl('', Validators.required),
+      "aadharNumber":  new FormControl('', [Validators.pattern(applicationConstants.AADHAR_PATTERN), Validators.maxLength(40)]),
+      "panNumber":  new FormControl('', [Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN), Validators.maxLength(40)]),
+      "mobileNumber":  new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
+      "occupation": new FormControl('', Validators.required),
+      "community": new FormControl('', Validators.required),
+      "quslification": new FormControl('', Validators.required),
+      "caste": new FormControl('', Validators.required),
+      "email":  new FormControl('', [Validators.pattern(applicationConstants.EMAIL_PATTERN), Validators.maxLength(40)]),
+      "admissionDate": new FormControl('', Validators.required),
+      "isStaff": new FormControl('', Validators.required),
+      "fileUpload" : new FormControl('',),
+      "admissionFee":  new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
+      "societyAdmissionNumber":  new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
+      // "mcrNumber":  new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
+    
       })
       this.groupForm = this.formBuilder.group({
         name: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
@@ -175,6 +195,7 @@ export class NewMembershipComponent {
       this.showForm = this.commonFunctionsService.getStorageValue(applicationConstants.B_CLASS_MEMBER_CREATION);
       this.orgnizationSetting = this.commonComponent.orgnizationSettings()
       this.maritalStatusList = this.commonComponent.maritalStatusList();
+      this.trueFalseList = this.commonComponent.requiredlist();
       this.today = new Date();
       this.genderList = [
         { label: 'Male', value: 1 },
@@ -192,6 +213,8 @@ export class NewMembershipComponent {
       this.getAllOccupationTypes();
       this.getAllQualificationType();
       this.getCastesList();
+      this.getAllCommunityTypes();
+
       this.activateRoute.queryParams.subscribe(params => {
         if (params['id'] != undefined) {
           this.commonComponent.startSpinner();
@@ -229,6 +252,40 @@ export class NewMembershipComponent {
       });
   
   
+    }
+   /**
+   * @implements get all community Types
+   * @author jyothi.naidana
+  
+   * @author jyothi.naidana
+   */
+    getAllCommunityTypes() {
+      this.commonComponent.startSpinner();
+      this.dailyDepositsAccountsService.getAllCommunity().subscribe((res: any) => {
+        this.responseModel = res;
+        if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+          if (this.responseModel.data != null && this.responseModel.data != null && this.responseModel.data.length > 0) {
+            this.communityList = this.responseModel.data.filter((customertype: any) => customertype.status == applicationConstants.ACTIVE).map((count: any) => {
+              return { label: count.name, value: count.id }
+            });
+          }
+        } else {
+          this.commonComponent.stopSpinner();
+          this.msgs = [];
+          this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        }
+      },
+        error => {
+          this.msgs = [];
+          this.commonComponent.stopSpinner();
+          this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        });
     }
     getRdAccounts(id: any) {
       this.dailyDepositsAccountsService.getAccounts(id).subscribe((data: any) => {
@@ -348,7 +405,7 @@ export class NewMembershipComponent {
       this. rdAccountsModel.memberType = this.memberTypeId;
       if (this.memberTypeName == MemberShipTypesData.INDIVIDUAL) {
         this.individualFlag = true;
-        this.isDisableFlag = (!this.memberCreationForm.valid)
+        this.isDisableFlag = (!this.memberCreationForm.valid) || !(this.isFileUploadedPhoto && this.isFileUploadedsignature)
         this. rdAccountsModel.memberTypeName = this.memberTypeName;
         this.membershipBasicRequiredDetailsModel.memberTypeName = this.memberTypeName;
         this.membershipBasicRequiredDetailsModel.isNewMember = this.showForm;
@@ -423,45 +480,82 @@ export class NewMembershipComponent {
         this.responseModel = res;
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           this.occupationTypeList = this.responseModel.data;
-          this.occupationTypeList = this.occupationTypeList.filter((obj: any) => obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
+          this.occupationTypeList = this.occupationTypeList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
             return { label: relationType.name, value: relationType.id };
           });
   
         }
       });
     }
+
+    onChangeOccupationChange() {
+      let occupation = this.occupationTypeList.find((data: any) => null != data && this.membershipBasicRequiredDetailsModel.occupationId != null && data.value == this.membershipBasicRequiredDetailsModel.occupationId);
+      if (occupation != null && undefined != occupation)
+      this.membershipBasicRequiredDetailsModel.occupationName = occupation.label;
+    }
+
     /**
      * @implements get getAll Qualification Types
     
      */
     getAllQualificationType() {
-      this.dailyDepositsAccountsService.getQualificationTypes().subscribe((res: any) => {
+      this.dailyDepositsAccountsService.getAllQualificationSubQualification().subscribe((res: any) => {
         this.responseModel = res;
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           this.qualificationTypes = this.responseModel.data;
-          this.qualificationTypes = this.qualificationTypes.filter((obj: any) => obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
+          this.groupedQualificationSubQualification = this.responseModel.data.filter((qualification:any) => qualification.status == applicationConstants.ACTIVE).map((count:any) => {
+            this.subQualificationList = [];
+            count.subQualificationList.filter((subCaste:any) => subCaste.status == applicationConstants.TRUE).map((subCount:any) => {
+              this.subQualificationList.push({ label: subCount.name, value: subCount.id})
+              this.tempSubQualificationList.push({ label: subCount.name, value: subCount.id})
+            });
+            return {
+              label: count.name, value: count.id, items: this.subQualificationList
+            }
+          });
+          this.qualificationTypes = this.qualificationTypes.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
             return { label: relationType.name, value: relationType.id };
           });
         }
       });
     }
   
+    onChangeQualificationChange() {
+      let qualification = this.tempSubQualificationList.find((data: any) => null != data && this.membershipBasicRequiredDetailsModel.qualificationId != null && data.value == this.membershipBasicRequiredDetailsModel.qualificationId);
+        if (qualification != null && undefined != qualification)
+            this.membershipBasicRequiredDetailsModel.qualificationName = qualification.label;
+    }
     /**
      * @implements get castes list
     
      */
     getCastesList() {
-      this.dailyDepositsAccountsService.getCastes().subscribe((res: any) => {
+      this.dailyDepositsAccountsService.getAllCasteSubCaste().subscribe((res: any) => {
         this.responseModel = res;
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           this.castesList = this.responseModel.data;
-          this.castesList = this.castesList.filter((obj: any) => obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
+          this.tempSubCasteList = [];
+          this.groupedCasteSubCaste = this.responseModel.data.filter((caste:any) => caste.status == applicationConstants.TRUE).map((count:any) => {
+            this.subCasteList = [];
+            count.subCastesList.filter((subCaste:any) => subCaste.status == applicationConstants.TRUE).map((subCount:any) => {
+              this.subCasteList.push({ label: subCount.name, value: subCount.id})
+              this.tempSubCasteList.push({ label: subCount.name, value: subCount.id})
+            });
+            return {
+              label: count.name, value: count.id, items: this.subCasteList
+            }
+          });
+          this.castesList = this.castesList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE).map((relationType: { name: any; id: any; }) => {
             return { label: relationType.name, value: relationType.id };
           });
         }
       });
     }
-  
+    onChangeCasteChange() {
+      let caste = this.tempSubCasteList.find((data: any) => null != data && this.membershipBasicRequiredDetailsModel.casteId != null && data.value == this.membershipBasicRequiredDetailsModel.casteId);
+      if (caste != null && undefined != caste)
+      this.membershipBasicRequiredDetailsModel.casteName = caste.label;
+    }
    
    /**
      * @implements get membership detaild by admission Number
@@ -484,11 +578,13 @@ export class NewMembershipComponent {
               if(this.membershipBasicRequiredDetailsModel.memberTypeId != undefined && this.membershipBasicRequiredDetailsModel.memberTypeId){
                 this.memberTypeId = this.membershipBasicRequiredDetailsModel.memberTypeId;
               }
-              if (this.membershipBasicRequiredDetailsModel.photoPath != null && this.membershipBasicRequiredDetailsModel.photoPath != undefined) {
-                this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.photoPath ,ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.photoPath  );
+              if (this.membershipBasicRequiredDetailsModel.photoCopyPath != null && this.membershipBasicRequiredDetailsModel.photoCopyPath != undefined) {
+                this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.photoCopyPath ,ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.photoCopyPath  );
+                this.isFileUploadedPhoto = applicationConstants.TRUE;
               }
-              if (this.membershipBasicRequiredDetailsModel.signaturePath != null && this.membershipBasicRequiredDetailsModel.signaturePath != undefined) {
-                this.membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.signaturePath ,ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.signaturePath  );
+              if (this.membershipBasicRequiredDetailsModel.signatureCopyPath != null && this.membershipBasicRequiredDetailsModel.signatureCopyPath != undefined) {
+                this.membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.membershipBasicRequiredDetailsModel.signatureCopyPath ,ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.membershipBasicRequiredDetailsModel.signatureCopyPath  );
+                this.isFileUploadedsignature = applicationConstants.TRUE;
               }
               this. rdAccountsModel.memberShipBasicDetailsDTO = this.membershipBasicRequiredDetailsModel;
               this. rdAccountsModel.memberTypeName = this.membershipBasicRequiredDetailsModel.memberTypeName;
@@ -953,7 +1049,7 @@ export class NewMembershipComponent {
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
             this.memberTypeList = this.responseModel.data;
-            this.memberTypeList = this.memberTypeList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+            this.memberTypeList = this.memberTypeList.filter((obj: any) => obj != null && obj.name==="Individual").map((relationType: { name: any; id: any; }) => {
               return { label: relationType.name, value: relationType.id };
             });
           }
@@ -994,66 +1090,92 @@ export class NewMembershipComponent {
      * @param fileUpload 
     
      */
-    fileUploader(event: any, fileUpload: FileUpload, filePathName: any) {
-      this.isFileUploaded = applicationConstants.FALSE;
+    fileUploader(event: any, fileUploadPhoto: FileUpload, fileUploadSign: FileUpload, filePathName: any) {
       this.multipleFilesList = [];
+      let fileSizeFalg = false;
       if(this.isEdit && this.membershipBasicRequiredDetailsModel.filesDTOList == null || this.membershipBasicRequiredDetailsModel.filesDTOList == undefined){
         this.membershipBasicRequiredDetailsModel.filesDTOList = [];
       }
-      let files: FileUploadModel = new FileUploadModel();
-      for (let file of event.files) {
-        let reader = new FileReader();
-        reader.onloadend = (e) => {
-          let timeStamp = this.commonComponent.getTimeStamp();
-          let files = new FileUploadModel();
-          this.uploadFileData = e.currentTarget;
-          files.fileName = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
-          files.fileType = file.type.split('/')[1];
-          files.value = this.uploadFileData.result.split(',')[1];
-          files.imageValue = this.uploadFileData.result;
-          this.multipleFilesList.push(files);
-           // Add to filesDTOList array
-          if (filePathName === "individualPhotoCopy") {
-            this.membershipBasicRequiredDetailsModel.filesDTOList.push(files);
-            this.membershipBasicRequiredDetailsModel.photoPath = null;
-            this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy = [];
-            this.membershipBasicRequiredDetailsModel.filesDTOList[this.membershipBasicRequiredDetailsModel.filesDTOList.length - 1].fileName = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
-            this.membershipBasicRequiredDetailsModel.photoPath = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
-          }
-          if (filePathName === "individualSighnedCopy") {
-            this.membershipBasicRequiredDetailsModel.filesDTOList.push(files);
-            this.membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath = [];
-            this.membershipBasicRequiredDetailsModel.signaturePath = null;
-            this.membershipBasicRequiredDetailsModel.filesDTOList[this.membershipBasicRequiredDetailsModel.filesDTOList.length - 1].fileName = "Individual_Member_signed_copy" + "_" + timeStamp + "_" + file.name;
-            this.membershipBasicRequiredDetailsModel.signaturePath = "Individual_Member_signed_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
-          }
-          if (filePathName === "groupPhotoCopy") {
-            this.memberGroupDetailsModel.filesDTOList.push(files);
-            this.memberGroupDetailsModel.photoCopyPath = null;
-            this.memberGroupDetailsModel.filesDTOList[this.memberGroupDetailsModel.filesDTOList.length - 1].fileName = "Group_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
-            this.memberGroupDetailsModel.photoCopyPath = "Group_Member_Photo_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
-          }
-          if (filePathName === "groupSignatureCopy") {
-            this.memberGroupDetailsModel.filesDTOList.push(files);
-            this.memberGroupDetailsModel.signaturePath = null;
-            this.memberGroupDetailsModel.filesDTOList[this.memberGroupDetailsModel.filesDTOList.length - 1].fileName = "Group_Member_signed_copy" + "_" + timeStamp + "_" + file.name;
-            this.memberGroupDetailsModel.signaturePath = "Group_Member_signed_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
-          }
-          if (filePathName === "intistutionPhotoCopy") {
-            this.membershipInstitutionDetailsModel.filesDTOList.push(files);
-            this.membershipInstitutionDetailsModel.photoCopyPath = null;
-            this.membershipInstitutionDetailsModel.filesDTOList[this.membershipInstitutionDetailsModel.filesDTOList.length - 1].fileName = "Institution_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
-            this.membershipInstitutionDetailsModel.photoCopyPath = "Institution_Member_Photo_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
-          }
-          if (filePathName === "institutionSignature") {
-            this.membershipInstitutionDetailsModel.filesDTOList.push(files);
-            this.membershipInstitutionDetailsModel.signaturePath = null;
-            this.membershipInstitutionDetailsModel.filesDTOList[this.membershipInstitutionDetailsModel.filesDTOList.length - 1].fileName = "Institution_Member_signed_copy" + "_" + timeStamp + "_" + file.name;
-            this.membershipInstitutionDetailsModel.signaturePath = "Institution_Member_signed_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
-          }
-        }
-        reader.readAsDataURL(file);
+      let selectedFiles = [...event.files];
+      if (filePathName === "individualPhotoCopy") {
+        this.isFileUploadedPhoto = applicationConstants.FALSE;
+        if (selectedFiles[0].size/1024/1024 > 2) {
+          this.fileSizeMsgForImage= "file is bigger than 2MB";
+          fileSizeFalg = true;
+         }
+        this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy = [];
+        // Clear file input before processing files
+        fileUploadPhoto.clear();
       }
+      if (filePathName === "individualSighnedCopy") {
+        this.isFileUploadedsignature = applicationConstants.FALSE;
+        this.membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath = [];
+        if (selectedFiles[0].size/1024/1024 > 2) {
+          this.fileSizeMsgForSignature = "file is bigger than 2MB";
+          fileSizeFalg = true;
+         }
+        fileUploadSign.clear();
+      }
+      // if (filePathName === "resulutionCopy") {
+      //   this.membershipBasicRequiredDetailsModel.mcrDocumentCopyMultiPartFileList = [];
+      //   if (selectedFiles[0].size/1000000  > 5) {
+      //     this.fileSizeMsgResulutionCopy = "file is bigger than 5MB";
+      //     fileSizeFalg = true;
+      //   }
+      //   fileUploadSign.clear();
+      // }
+      if(!fileSizeFalg){
+        let files: FileUploadModel = new FileUploadModel();
+        for (let file of selectedFiles) {
+          let reader = new FileReader();
+          reader.onloadend = (e) => {
+            let timeStamp = this.commonComponent.getTimeStamp();
+            let files = new FileUploadModel();
+            this.uploadFileData = e.currentTarget;
+            files.fileName = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
+            files.fileType = file.type.split('/')[1];
+            files.value = this.uploadFileData.result.split(',')[1];
+            files.imageValue = this.uploadFileData.result;
+            this.multipleFilesList.push(files);
+             // Add to filesDTOList array
+            if (filePathName === "individualPhotoCopy") {
+              this.fileSizeMsgForImage = null;
+              files.fileName = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
+              this.isFileUploadedPhoto = applicationConstants.TRUE;
+              this.membershipBasicRequiredDetailsModel.filesDTOList.push(files);
+              this.membershipBasicRequiredDetailsModel.photoCopyPath = null;
+              this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy.push(files);
+              this.membershipBasicRequiredDetailsModel.filesDTOList[this.membershipBasicRequiredDetailsModel.filesDTOList.length - 1].fileName = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
+              this.membershipBasicRequiredDetailsModel.photoCopyPath = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
+            }
+            else if (filePathName === "individualSighnedCopy") {
+              this.fileSizeMsgForSignature = null;
+              files.fileName = "Individual_Member_Signature_copy" + "_" + timeStamp + "_" + file.name;
+              this.isFileUploadedsignature = applicationConstants.TRUE;
+              this.membershipBasicRequiredDetailsModel.filesDTOList.push(files);
+              this.membershipBasicRequiredDetailsModel.multipartFileListForsignatureCopyPath.push(files);
+              this.membershipBasicRequiredDetailsModel.signatureCopyPath = null;
+              this.membershipBasicRequiredDetailsModel.filesDTOList[this.membershipBasicRequiredDetailsModel.filesDTOList.length - 1].fileName = "Individual_Member_signed_copy" + "_" + timeStamp + "_" + file.name;
+              this.membershipBasicRequiredDetailsModel.signatureCopyPath = "Individual_Member_signed_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
+            }
+            // else if (filePathName === "resulutionCopy") {
+            //   this.fileSizeMsgResulutionCopy = null;
+            //   files.fileName = "Resulution_copy" + "_" + timeStamp + "_" + file.name;
+            //   this.membershipBasicRequiredDetailsModel.filesDTOList.push(files);
+            //   this.membershipBasicRequiredDetailsModel.mcrDocumentCopyMultiPartFileList.push(files);
+            //   this.membershipBasicRequiredDetailsModel.mcrDocumentCopy = null;
+            //   this.membershipBasicRequiredDetailsModel.filesDTOList[this.membershipBasicRequiredDetailsModel.filesDTOList.length - 1].fileName = "Resulution_copy" + "_" + timeStamp + "_" + file.name;
+            //   this.membershipBasicRequiredDetailsModel.mcrDocumentCopy = "Resulution_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
+            // }
+            // let index1 = event.files.findIndex((x: any) => x === file);
+            // fileUpload.remove(event, index1);
+            // fileUpload.clear();
+            this.updateData();
+          }
+          reader.readAsDataURL(file);
+        }
+      }
+      
     }
   
     /**
@@ -1063,12 +1185,14 @@ export class NewMembershipComponent {
     fileRemoeEvent(fileName: any) {
         if (this.membershipBasicRequiredDetailsModel.filesDTOList != null && this.membershipBasicRequiredDetailsModel.filesDTOList != undefined && this.membershipBasicRequiredDetailsModel.filesDTOList.length > 0) {
           if (fileName == "individualPhotoCopy") {
+            this.isFileUploadedPhoto = applicationConstants.FALSE;
           let removeFileIndex = this.membershipBasicRequiredDetailsModel.filesDTOList.findIndex((obj: any) => obj && obj.fileName === this.membershipBasicRequiredDetailsModel.photoPath);
           let obj = this.membershipBasicRequiredDetailsModel.filesDTOList.find((obj: any) => obj && obj.fileName === this.membershipBasicRequiredDetailsModel.photoPath);
           this.membershipBasicRequiredDetailsModel.filesDTOList.splice(removeFileIndex, 1);
           this.membershipBasicRequiredDetailsModel.photoPath = null;
         }
         if (fileName == "individualSighnedCopy") {
+          this.isFileUploadedsignature = applicationConstants.FALSE;
           let removeFileIndex = this.membershipBasicRequiredDetailsModel.filesDTOList.findIndex((obj: any) => obj && obj.fileName === this.membershipBasicRequiredDetailsModel.signaturePath);
           let obj = this.membershipBasicRequiredDetailsModel.filesDTOList.find((obj: any) => obj && obj.fileName === this.membershipBasicRequiredDetailsModel.signaturePath);
           this.membershipBasicRequiredDetailsModel.filesDTOList.splice(removeFileIndex, 1);
@@ -1120,6 +1244,7 @@ export class NewMembershipComponent {
         }
       }
       this.updateData();
+      this.ageCaluculation(false);
     }
   
     /**
@@ -1461,5 +1586,61 @@ export class NewMembershipComponent {
          
         }
       }
+    }
+
+    onChangeCommunityChange() {
+      let community = this.communityList.find((data: any) => null != data && this.membershipBasicRequiredDetailsModel.communityId != null && data.value == this.membershipBasicRequiredDetailsModel.communityId);
+      if (community != null && undefined != community)
+      this.membershipBasicRequiredDetailsModel.communityName = community.label;
+    }
+
+    ageCaluculation(flag: any) {
+      if (flag) {//with age to date convertion
+        if (this.membershipBasicRequiredDetailsModel.age != null && this.membershipBasicRequiredDetailsModel.age != undefined) {
+          if (this.membershipBasicRequiredDetailsModel.age > 0) {
+  
+            const currentDate = new Date();  // Get the current date
+            const birthYear = currentDate.getFullYear() - this.membershipBasicRequiredDetailsModel.age;  // Subtract the entered age from the current year
+            const birthMonth = currentDate.getMonth();  // Keep the current month
+            const birthDate = currentDate.getDate();   // Keep the current day
+  
+            // Construct the calculated Date of Birth
+            const dob = new Date(birthYear, birthMonth, birthDate);
+  
+            // Array of month names for formatting (e.g., 'Jan', 'Feb', 'Mar', etc.)
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  
+            // Format the Date of Birth to 'DD/Mon/YYYY'
+            const formattedDob = `${dob.getDate() < 10 ? '0' + dob.getDate() : dob.getDate()}/${monthNames[dob.getMonth()]}/${dob.getFullYear()}`;
+  
+            // Format the Date of Birth to YYYY-MM-DD to match the input type="date" format
+            this.membershipBasicRequiredDetailsModel.dobVal = null;
+            this.membershipBasicRequiredDetailsModel.dob = null;
+            this.membershipBasicRequiredDetailsModel.dobVal = formattedDob;
+          }
+          else {
+            this.memberCreationForm.get('age')?.reset();
+            this.memberCreationForm.get("dateOfBirth")?.reset();
+            this.msgs = [{ severity: 'error',  detail: applicationConstants.AGE_SHOULD_NOT_BE_ZERO }];
+            setTimeout(() => {
+              this.msgs = [];
+            }, 3000);
+          }
+        }
+      }
+      else {//with date to age convertion
+        this.membershipBasicRequiredDetailsModel.dobVal = this.datePipe.transform(this.membershipBasicRequiredDetailsModel.dobVal, this.orgnizationSetting.datePipe);
+        if (this.membershipBasicRequiredDetailsModel.dobVal) {
+          const dob = new Date(this.membershipBasicRequiredDetailsModel.dobVal);  // Parse the date of birth entered by the user
+          const currentDate = new Date();  // Get the current date
+          let age = currentDate.getFullYear() - dob.getFullYear();  // Calculate age in years
+          const m = currentDate.getMonth() - dob.getMonth();  // Check if birthday has passed in the current year
+          if (m < 0 || (m === 0 && currentDate.getDate() < dob.getDate())) {
+            age--;  // If birthday hasn't occurred yet this year, subtract 1 from the age
+          }
+          this.membershipBasicRequiredDetailsModel.age = age;  // Set the calculated age to the class property
+        }
+      }
+  
     }
 }

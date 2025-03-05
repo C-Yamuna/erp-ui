@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Responsemodel } from 'src/app/shared/responsemodel';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -18,7 +18,7 @@ import { MemberGroupDetailsModel, MembershipInstitutionDetailsModel, NewMembersh
 import { Table } from 'primeng/table';
 import { DatePipe } from '@angular/common';
 import { FdCummulativeAccountCommunicationService } from '../../../shared/fd-cummulative-account-communication.service';
-import { MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
+import { DOCUMENT_TYPES, MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-fd-cumulative-kyc',
@@ -91,12 +91,12 @@ export class FdCumulativeKycComponent {
   productName: any;
   admissionNumber: any;
   showForm: any;
-  individualFlag : boolean = false;
-  groupFlag : boolean = false;
-  institutionFlag : boolean = false;
+  individualFlag: boolean = false;
+  groupFlag: boolean = false;
+  institutionFlag: boolean = false;
   memberTypeName: any;
-  promoterDetails: any[]= [];
-  institutionPromoter: any[]= [];
+  promoterDetails: any[] = [];
+  institutionPromoter: any[] = [];
   memberName: any;
   mobileNumer: any;
   aadharNumber: any;
@@ -105,22 +105,25 @@ export class FdCumulativeKycComponent {
   memberTypeId: any;
   displayDialog: boolean = false;
   deleteId: any;
-  promotersList: any [] =[];
+  promotersList: any[] = [];
   mandatoryDoxsTextShow: boolean = false;
   requiredDocumentsNamesText: any;
-  saveAndNextEnable : boolean = false;
+  saveAndNextEnable: boolean = false;
+  isMaximized: boolean = false;
+  kycPhotoCopyZoom: boolean = false;
+  isPanNumber: boolean = false;
 
 
-  constructor(private router: Router, private formBuilder: FormBuilder,  private fdCumulativeApplicationService: FdCumulativeApplicationService, private commonComponent: CommonComponent, private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService,
-     private fdCummulativeAccountCommunicationService: FdCummulativeAccountCommunicationService, private fdCumulativeKycService: FdCumulativeKycService,
-      private commonFunctionsService: CommonFunctionsService, private datePipe: DatePipe , private fileUploadService :FileUploadService) {
-        this.kycForm = this.formBuilder.group({
-          'docTypeName': new FormControl('', Validators.required),
-          'docNumber': new FormControl('',[Validators.required, Validators.pattern(applicationConstants.ALLOW_NUMBERS_ONLY)]),
-          'nameAsPerDocument': new FormControl('',[Validators.required,Validators.pattern(applicationConstants.NEW_NAME_PATTERN), Validators.maxLength(40)]),
-          'fileUpload': new FormControl(''),
-          'promoter': new FormControl('')
-        });
+  constructor(private router: Router, private formBuilder: FormBuilder, private fdCumulativeApplicationService: FdCumulativeApplicationService, private commonComponent: CommonComponent, private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService,
+    private fdCummulativeAccountCommunicationService: FdCummulativeAccountCommunicationService, private fdCumulativeKycService: FdCumulativeKycService,
+    private commonFunctionsService: CommonFunctionsService, private datePipe: DatePipe, private fileUploadService: FileUploadService) {
+    this.kycForm = this.formBuilder.group({
+      'docTypeName': new FormControl('', Validators.required),
+      'docNumber': new FormControl('', [Validators.required, Validators.pattern(applicationConstants.ALLOW_NUMBERS_ONLY)]),
+      'nameAsPerDocument': new FormControl('', [Validators.required, Validators.pattern(applicationConstants.NEW_NAME_PATTERN), Validators.maxLength(40)]),
+      'kycFilePath': new FormControl(''),
+      'promoter': new FormControl('')
+    });
   }
   ngOnInit(): void {
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
@@ -129,12 +132,12 @@ export class FdCumulativeKycComponent {
       this.uploadFlag = true;
     }
     this.activateRoute.queryParams.subscribe(params => {
-      if (params['id'] != undefined ) {
+      if (params['id'] != undefined) {
         let queryParams = this.encryptDecryptService.decrypt(params['id']);
         this.fdCummulativeAccId = Number(queryParams);
         this.getFdCummApplicationById(this.fdCummulativeAccId);
         this.isEdit = true;
-        
+
       } else {
         this.isEdit = false;
       }
@@ -148,17 +151,17 @@ export class FdCumulativeKycComponent {
     this.getAllKycTypes();
     this.updateData();
   }
-  
+
   getAllKycTypes() {
     this.fdCumulativeKycService.getAllKycTypes().subscribe((res: any) => {
       this.responseModel = res;
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         this.documentNameList = this.responseModel.data.filter((kyc: any) => kyc.status == applicationConstants.ACTIVE).map((count: any) => {
-          return { label: count.name, value: count.id, isMandatory:count.isMandatory }
+          return { label: count.name, value: count.id, isMandatory: count.isMandatory }
         });
         let filteredObj = this.documentNameList.find((data: any) => null != data && this.FdCumulativeKycModel.kycDocumentTypeId != null && data.value == this.FdCumulativeKycModel.kycDocumentTypeId);
-            if (filteredObj != null && undefined != filteredObj)
-              this.FdCumulativeKycModel.kycDocumentTypeName = filteredObj.label;
+        if (filteredObj != null && undefined != filteredObj)
+          this.FdCumulativeKycModel.kycDocumentTypeName = filteredObj.label;
         let i = 0;
         for (let doc of this.documentNameList) {
           if (i == 0)
@@ -178,47 +181,79 @@ export class FdCumulativeKycComponent {
 
 
   imageUploader(event: any, fileUpload: FileUpload) {
+    let fileSizeFlag = false;
     this.isFileUploaded = applicationConstants.FALSE;
     this.multipleFilesList = [];
     this.FdCumulativeKycModel.filesDTOList = [];
     this.FdCumulativeKycModel.kycFilePath = null;
+    this.FdCumulativeKycModel.multipartFileList = [];
     let files: FileUploadModel = new FileUploadModel();
-    for (let file of event.files) {
-      let reader = new FileReader();
-      reader.onloadend = (e) => {
-        this.isFileUploaded = applicationConstants.TRUE;
-        let files = new FileUploadModel();
-        this.uploadFileData = e.currentTarget;
-        files.fileName = file.name;
-        files.fileType = file.type.split('/')[1];
-        files.value = this.uploadFileData.result.split(',')[1];
-        files.imageValue = this.uploadFileData.result;
-        let index = this.multipleFilesList.findIndex(x => x.fileName == files.fileName);
-        if (index === -1) {
-          this.multipleFilesList.push(files);
-          this.FdCumulativeKycModel.filesDTOList.push(files); // Add to filesDTOList array
-        }
-        let timeStamp = this.commonComponent.getTimeStamp();
-        this.FdCumulativeKycModel.filesDTOList[0].fileName = "FD_KYC_" + this.fdCummulativeAccId + "_" +timeStamp+ "_"+ file.name ;
-        this.FdCumulativeKycModel.kycFilePath = "FD_KYC_" + this.fdCummulativeAccId + "_" +timeStamp+"_"+ file.name; // This will set the last file's name as docPath
-        let index1 = event.files.findIndex((x: any) => x === file);
-        fileUpload.remove(event, index1);
-        fileUpload.clear();
+
+    let selectedFiles = [...event.files];
+    let file = selectedFiles[0];
+
+    if (file.fileType !== ".pdf") {
+      if (file.size / 1024 / 1024 > 2) {
+        this.msgs = [{ severity: "warning", summary: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_2MB }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+        fileSizeFlag = true;
       }
-      reader.readAsDataURL(file);
+    } else if (file.fileType === ".pdf") {
+      if (file.size / 1024 / 1024 > 5) {
+        this.msgs = [{ severity: "warning", summary: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_5MB },];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+        fileSizeFlag = true;
+      }
+    }
+    fileUpload.clear();
+    if (!fileSizeFlag) {
+      for (let file of selectedFiles) {
+        let reader = new FileReader();
+        reader.onloadend = (e) => {
+          this.isFileUploaded = applicationConstants.TRUE;
+          let files = new FileUploadModel();
+          this.uploadFileData = e.currentTarget;
+          files.fileName = file.name;
+          files.fileType = file.type.split("/")[1];
+          files.value = this.uploadFileData.result.split(",")[1];
+          files.imageValue = this.uploadFileData.result;
+
+          let index = this.multipleFilesList.findIndex((x) => x.fileName === files.fileName);
+          if (index === -1) {
+            this.multipleFilesList.push(files);
+            this.FdCumulativeKycModel.filesDTOList.push(files);
+            this.FdCumulativeKycModel.multipartFileList.push(files);
+          }
+
+          let timeStamp = this.commonComponent.getTimeStamp();
+          this.FdCumulativeKycModel.filesDTOList[0].fileName = "FD_NON_CUM_KYC_" + this.fdCummulativeAccId + "_" + timeStamp + "_" + file.name;
+          this.FdCumulativeKycModel.kycFilePath = "FD_NON_CUM_KYC_" + this.fdCummulativeAccId + "_" + timeStamp + "_" + file.name;
+
+          let index1 = event.files.findIndex((x: any) => x === file);
+          fileUpload.remove(event, index1);
+          fileUpload.clear();
+        };
+        reader.readAsDataURL(file);
+      }
+    } else {
+      setTimeout(() => {
+        this.msgs = [];
+      }, 2000);
     }
   }
-
-  
   save() {
     this.updateData();
   }
   updateData() {
     this.FdCumulativeKycModel.fdCummulativeAccId = this.fdCummulativeAccId;
     this.FdCumulativeKycModel.admissionNumber = this.admissionNumber;
-    this.FdCumulativeKycModel.memberTypeName  = this.memberTypeName;
-    this.FdCumulativeKycModel.memberType  = this.memberTypeId;
-    this.FdCumulativeKycModel.memberId  = this.memberId;
+    this.FdCumulativeKycModel.memberTypeName = this.memberTypeName;
+    this.FdCumulativeKycModel.memberType = this.memberTypeId;
+    this.FdCumulativeKycModel.memberId = this.memberId;
     //for manadatory KYC Documents check
     this.saveAndNextEnable = false;
     if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0) {
@@ -229,27 +264,23 @@ export class FdCumulativeKycComponent {
           if ((documentNameList.length != this.kycModelList.length - missingItems.length) || this.buttonDisabled) {
             this.saveAndNextEnable = true;
           }
-        }else {//group institution promoter kyc mandatory uploads check
+        } else {//group institution promoter kyc mandatory uploads check
           let i = 0;
           this.promotersList.forEach((promoter: any) => {
             let KycList = this.kycModelList.filter((obj: any) => obj.promoterId === promoter.value);
 
             if (this.documentNameList?.length) {
-              // Filter only mandatory documents
               let mandatoryDocs = this.documentNameList.filter((doc: any) => doc.isMandatory);
 
               if (KycList.length > 0 && mandatoryDocs.length > 0) {
-                // Check if all mandatory documents are present in KycList
                 const missingItems = mandatoryDocs.filter(
                   (mandatoryDoc) => !KycList.some((kyc) => kyc.kycDocumentTypeId === mandatoryDoc.value)
                 );
 
-                // disable save button if any mandatory document is missing
                 if (missingItems.length > 0 || this.buttonDisabled) {
                   this.saveAndNextEnable = true;
                 }
               } else if ((KycList.length === 0 && mandatoryDocs.length > 0) || this.buttonDisabled) {
-                // If no KYC documents exist but mandatory ones are required
                 this.saveAndNextEnable = true;
               }
             }
@@ -280,14 +311,14 @@ export class FdCumulativeKycComponent {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         this.kycModelList = this.responseModel.data;
-          this.getAllKycsDetailsFdKycDetails(this.fdCummulativeAccId);
-          this.commonComponent.stopSpinner();
+        this.getAllKycsDetailsFdKycDetails(this.fdCummulativeAccId);
+        this.commonComponent.stopSpinner();
         this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
         setTimeout(() => {
           this.msgs = [];
         }, 3000);
       }
-      else{
+      else {
         this.commonComponent.stopSpinner();
         this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
         setTimeout(() => {
@@ -313,18 +344,18 @@ export class FdCumulativeKycComponent {
             if (this.kycModelList != null && this.kycModelList != undefined) {
               this.editDocumentOfKycFalg = true;
               for (let kyc of this.kycModelList) {
-                if(kyc.kycFilePath != null && kyc.kycFilePath != undefined){
-                  if(kyc.kycFilePath != null && kyc.kycFilePath != undefined){
-                    kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath ,ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
+                if (kyc.kycFilePath != null && kyc.kycFilePath != undefined) {
+                  if (kyc.kycFilePath != null && kyc.kycFilePath != undefined) {
+                    kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
 
                   }
-                }  
+                }
               }
               this.buttonDisabled = false;
               this.updateData();
             }
           }
-          else{
+          else {
             this.addDocumentOfKycFalg = true;
             this.buttonDisabled = true;
             this.updateData();
@@ -349,16 +380,16 @@ export class FdCumulativeKycComponent {
   saveKyc(row: any) {
     this.FdCumulativeKycModel.fdCummulativeAccId = this.fdCummulativeAccId;
     this.FdCumulativeKycModel.admissionNumber = this.admissionNumber;
-    this.FdCumulativeKycModel.memberTypeName  = this.memberTypeName;
-    this.FdCumulativeKycModel.memberType  = this.memberTypeId;
-    this.FdCumulativeKycModel.memberId  = this.memberId;
-    if(this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0){
+    this.FdCumulativeKycModel.memberTypeName = this.memberTypeName;
+    this.FdCumulativeKycModel.memberType = this.memberTypeId;
+    this.FdCumulativeKycModel.memberId = this.memberId;
+    if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0) {
       let filteredObj = this.documentNameList.find((data: any) => null != data && this.FdCumulativeKycModel.kycDocumentTypeId != null && data.value == this.FdCumulativeKycModel.kycDocumentTypeId);
-      if (filteredObj != null && undefined != filteredObj && filteredObj.label != null && filteredObj.label != undefined){
+      if (filteredObj != null && undefined != filteredObj && filteredObj.label != null && filteredObj.label != undefined) {
         this.FdCumulativeKycModel.kycDocumentTypeName = filteredObj.label;
       }
     }
-    this.FdCumulativeKycModel.status  = applicationConstants.ACTIVE;
+    this.FdCumulativeKycModel.status = applicationConstants.ACTIVE;
     this.fdCumulativeKycService.addKyc(this.FdCumulativeKycModel).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
@@ -367,7 +398,7 @@ export class FdCumulativeKycComponent {
         setTimeout(() => {
           this.msgs = [];
         }, 1200);
-      }else {
+      } else {
         this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
         setTimeout(() => {
           this.msgs = [];
@@ -414,15 +445,15 @@ export class FdCumulativeKycComponent {
             }
             if (this.fdCumulativeApplicationModel.depositAmount != null && this.fdCumulativeApplicationModel.depositAmount != undefined) {
               this.minBalence = this.fdCumulativeApplicationModel.depositAmount;
-            } 
-            if(this.fdCumulativeApplicationModel.admissionNumber != null && this.fdCumulativeApplicationModel.admissionNumber != undefined){
+            }
+            if (this.fdCumulativeApplicationModel.admissionNumber != null && this.fdCumulativeApplicationModel.admissionNumber != undefined) {
               this.admissionNumber = this.fdCumulativeApplicationModel.admissionNumber;
             }
-            if(this.fdCumulativeApplicationModel.memberTypeName != null && this.fdCumulativeApplicationModel.memberTypeName != undefined){
+            if (this.fdCumulativeApplicationModel.memberTypeName != null && this.fdCumulativeApplicationModel.memberTypeName != undefined) {
               this.memberTypeName = this.fdCumulativeApplicationModel.memberTypeName;
               this.membershipDataFromModule();
             }
-            if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length >0) {
+            if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0) {
               let i = 0;
               for (let doc of this.documentNameList) {
                 if (i == 0)
@@ -437,12 +468,12 @@ export class FdCumulativeKycComponent {
                 this.mandatoryDoxsTextShow = true;
               }
             }
-            if(this.responseModel.data[0].memberType != null && this.responseModel.data[0].memberType != undefined)
+            if (this.responseModel.data[0].memberType != null && this.responseModel.data[0].memberType != undefined)
               this.memberTypeId = this.responseModel.data[0].memberType;
             this.getAllKycsDetailsFdKycDetails(this.fdCummulativeAccId);
             this.updateData();
           }
-        }else {
+        } else {
           this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
           setTimeout(() => {
             this.msgs = [];
@@ -459,11 +490,11 @@ export class FdCumulativeKycComponent {
     });
   }
 
- /**
-  * @implements add kyc
-  * @param event 
- 
-  */
+  /**
+   * @implements add kyc
+   * @param event 
+  
+   */
   addKyc(event: any) {
     this.isFileUploaded = applicationConstants.FALSE;
     this.getAllKycTypes();
@@ -486,16 +517,16 @@ export class FdCumulativeKycComponent {
     this.getAllKycsDetailsFdKycDetails(this.fdCummulativeAccId);
     this.updateData();
   }
-  
+
   onClick() {
     this.addDocumentOfKycFalg = true;
   }
- /**
-  * @implements edit card data
-  * @param index 
-  * @param modelData 
- 
-  */
+  /**
+   * @implements edit card data
+   * @param index 
+   * @param modelData 
+  
+   */
   toggleEditForm(index: number, modelData: any): void {
     if (this.editIndex === index) {
       this.editIndex = index;
@@ -519,26 +550,26 @@ export class FdCumulativeKycComponent {
     this.editDocumentOfKycFalg = true;
     this.buttonDisabled = false;
     this.editButtonDisable = false;
-      this.getAllKycsDetailsFdKycDetails(this.fdCummulativeAccId);
-    
+    this.getAllKycsDetailsFdKycDetails(this.fdCummulativeAccId);
+
     this.updateData();
   }
 
-   /**
-    * @implements edit save
-    * @param row 
+  /**
+   * @implements edit save
+   * @param row 
  
-    */
+   */
   editsave(row: any) {
     this.FdCumulativeKycModel.fdCummulativeAccId = this.fdCummulativeAccId;
     this.FdCumulativeKycModel.admissionNumber = this.admissionNumber;
-    this.FdCumulativeKycModel.memberTypeName  = this.memberTypeName;
-    this.FdCumulativeKycModel.memberType  = this.memberTypeId;
-    this.FdCumulativeKycModel.memberId  = this.memberId;
-    
-    if(this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0){
+    this.FdCumulativeKycModel.memberTypeName = this.memberTypeName;
+    this.FdCumulativeKycModel.memberType = this.memberTypeId;
+    this.FdCumulativeKycModel.memberId = this.memberId;
+
+    if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0) {
       let filteredObj = this.documentNameList.find((data: any) => null != data && this.FdCumulativeKycModel.kycDocumentTypeId != null && data.value == this.FdCumulativeKycModel.kycDocumentTypeId);
-      if (filteredObj != null && undefined != filteredObj && filteredObj.label != null && filteredObj.label != undefined){
+      if (filteredObj != null && undefined != filteredObj && filteredObj.label != null && filteredObj.label != undefined) {
         this.FdCumulativeKycModel.kycDocumentTypeName = filteredObj.label;
       }
     }
@@ -550,9 +581,9 @@ export class FdCumulativeKycComponent {
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
         // this.kycModelList = this.responseModel.data;
         this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
-          setTimeout(() => {
-            this.msgs = [];
-          }, 1200);
+        setTimeout(() => {
+          this.msgs = [];
+        }, 1200);
       }
       else {
         this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
@@ -574,11 +605,11 @@ export class FdCumulativeKycComponent {
 
   }
 
- /**
-  * @implements get kyc by Id
-  * @param id 
- 
-  */
+  /**
+   * @implements get kyc by Id
+   * @param id 
+  
+   */
   getKycById(id: any) {
     this.fdCumulativeKycService.getKycById(id).subscribe((data: any) => {
       this.responseModel = data;
@@ -588,10 +619,13 @@ export class FdCumulativeKycComponent {
             if (this.responseModel.data.length > 0 && this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
               this.FdCumulativeKycModel = this.responseModel.data[0];
               if (this.FdCumulativeKycModel.kycFilePath != undefined) {
-                if(this.FdCumulativeKycModel.kycFilePath != null && this.FdCumulativeKycModel.kycFilePath != undefined){
-                  this.FdCumulativeKycModel.multipartFileList = this.fileUploadService.getFile(this.FdCumulativeKycModel.kycFilePath ,ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.FdCumulativeKycModel.kycFilePath);
+                if (this.FdCumulativeKycModel.kycFilePath != null && this.FdCumulativeKycModel.kycFilePath != undefined) {
+                  this.FdCumulativeKycModel.multipartFileList = this.fileUploadService.getFile(this.FdCumulativeKycModel.kycFilePath, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.FdCumulativeKycModel.kycFilePath);
                   this.isFileUploaded = applicationConstants.TRUE;
                 }
+                if(this.FdCumulativeKycModel.kycDocumentTypeName != null && this.FdCumulativeKycModel.kycDocumentTypeName != undefined){
+                  this.documentNumberDynamicValidation(this.FdCumulativeKycModel.kycDocumentTypeName );
+                }   
               }
             }
           }
@@ -619,7 +653,7 @@ export class FdCumulativeKycComponent {
               this.membershipBasicRequiredDetails.admissionDateVal = this.datePipe.transform(this.membershipBasicRequiredDetails.admissionDate, this.orgnizationSetting.datePipe);
             }
             this.memberId = this.membershipBasicRequiredDetails.id;
-            
+
           }
         }
         else {
@@ -659,7 +693,7 @@ export class FdCumulativeKycComponent {
             if (this.memberGroupDetailsModel.admissionDate != null && this.memberGroupDetailsModel.admissionDate != undefined) {
               this.memberGroupDetailsModel.admissionDateVal = this.datePipe.transform(this.memberGroupDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
             }
-              this.memberId = this.memberGroupDetailsModel.id;
+            this.memberId = this.memberGroupDetailsModel.id;
           }
         }
         else {
@@ -723,27 +757,27 @@ export class FdCumulativeKycComponent {
       });
   }
 
-  membershipDataFromModule(){
+  membershipDataFromModule() {
     if (this.memberTypeName == MemberShipTypesData.INDIVIDUAL) {
       this.individualFlag = true;
     } else if (this.memberTypeName == MemberShipTypesData.GROUP) {
       this.groupFlag = true;
-      if(this.fdCumulativeApplicationModel.memberShipGroupDetailsDTO.groupPromoterList != null && this.fdCumulativeApplicationModel.memberShipGroupDetailsDTO.groupPromoterList != undefined && this.fdCumulativeApplicationModel.memberShipGroupDetailsDTO.groupPromoterList.length >0){
+      if (this.fdCumulativeApplicationModel.memberShipGroupDetailsDTO.groupPromoterList != null && this.fdCumulativeApplicationModel.memberShipGroupDetailsDTO.groupPromoterList != undefined && this.fdCumulativeApplicationModel.memberShipGroupDetailsDTO.groupPromoterList.length > 0) {
         this.promotersList = this.fdCumulativeApplicationModel.memberShipGroupDetailsDTO.groupPromoterList.filter((promoter: any) => promoter.status == applicationConstants.ACTIVE).map((promoter: any) => {
-          return { label: promoter.name+" "+promoter.surname, value: promoter.id }
+          return { label: promoter.name + " " + promoter.surname, value: promoter.id }
         });
       }
-    
+
     } else if (this.memberTypeName == MemberShipTypesData.INSTITUTION) {
       this.institutionFlag = true;
-      if(this.fdCumulativeApplicationModel.memInstitutionDTO.institutionPromoterList != null && this.fdCumulativeApplicationModel.memInstitutionDTO.institutionPromoterList != undefined && this.fdCumulativeApplicationModel.memInstitutionDTO.institutionPromoterList.length >0){
+      if (this.fdCumulativeApplicationModel.memInstitutionDTO.institutionPromoterList != null && this.fdCumulativeApplicationModel.memInstitutionDTO.institutionPromoterList != undefined && this.fdCumulativeApplicationModel.memInstitutionDTO.institutionPromoterList.length > 0) {
         this.promotersList = this.fdCumulativeApplicationModel.memInstitutionDTO.institutionPromoterList.filter((promoter: any) => promoter.status == applicationConstants.ACTIVE).map((promoter: any) => {
-          return { label: promoter.name+" "+promoter.surname, value: promoter.id }
+          return { label: promoter.name + " " + promoter.surname, value: promoter.id }
         });
       }
-     
+
     }
-    
+
   }
 
   /**
@@ -751,17 +785,38 @@ export class FdCumulativeKycComponent {
    * @param kycDocTypeId 
 
    */
-  kycModelDuplicateCheck(FdCumulativeKycModel: any) {
+  kycModelDuplicateCheck(rowData: any) {
+    if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0) {
+      let filteredObj = this.documentNameList.find((data: any) => null != data && this.FdCumulativeKycModel.kycDocumentTypeId != null && data.value == this.FdCumulativeKycModel.kycDocumentTypeId);
+      if (filteredObj != null && undefined != filteredObj && filteredObj.label != null && filteredObj.label != undefined) {
+        this.FdCumulativeKycModel.kycDocumentTypeName = filteredObj.label;
+        this.documentNumberDynamicValidation(this.FdCumulativeKycModel.kycDocumentTypeName);
+      }
+    }
     if (this.kycModelList != null && this.kycModelList != undefined && this.kycModelList.length > 0) {
-      let duplicate
-      if (this.fdCumulativeApplicationModel.memberTypeName != MemberShipTypesData.INDIVIDUAL) {
-        duplicate = this.kycModelList.find((obj: any) => obj && obj.kycDocumentTypeId === this.FdCumulativeKycModel.kycDocumentTypeId && obj.promoterId === FdCumulativeKycModel.promoterId);
+      let duplicate: any
+      if (this.FdCumulativeKycModel.memberTypeName != MemberShipTypesData.INDIVIDUAL) {
+        duplicate = this.kycModelList.filter((obj: any) => obj && obj.kycDocumentTypeId === rowData.kycDocumentTypeId && obj.promoterId === rowData.promoterId);
       }
       else {
-        duplicate = this.kycModelList.find((obj: any) => obj && obj.kycDocumentTypeId === FdCumulativeKycModel.kycDocumentTypeId);
+        duplicate = this.kycModelList.filter((obj: any) => obj && obj.kycDocumentTypeId === rowData.kycDocumentTypeId);
       }
-      if (duplicate != null && duplicate != undefined) {
+      if (this.addDocumentOfKycFalg && duplicate != null && duplicate != undefined && duplicate.length == 1) {
         this.kycForm.reset();
+        this.FdCumulativeKycModel = new FdCumulativeKyc();
+        if (rowData.id != null && rowData != undefined)
+          this.FdCumulativeKycModel.id = rowData.id;
+        this.msgs = [];
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "duplicate Kyc Types" }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      }
+      else if (!this.addDocumentOfKycFalg && duplicate != null && duplicate != undefined && duplicate.length == 1 && duplicate[0].id != rowData.id) {
+        this.kycForm.reset();
+        this.FdCumulativeKycModel = new FdCumulativeKyc();
+        if (rowData.id != null && rowData != undefined)
+          this.FdCumulativeKycModel.id = rowData.id;
         this.msgs = [];
         this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "duplicate Kyc Types" }];
         setTimeout(() => {
@@ -771,15 +826,15 @@ export class FdCumulativeKycComponent {
     }
   }
 
-   /**
-   * @implements on click delete
-   */
-   deletDilogBox(rowData:any){
+  /**
+  * @implements on click delete
+  */
+  deletDilogBox(rowData: any) {
     this.displayDialog = true;
-    if(rowData.id != null && rowData.id != undefined){
+    if (rowData.id != null && rowData.id != undefined) {
       this.deleteId = rowData.id;
     }
-   
+
   }
 
   /**
@@ -792,25 +847,100 @@ export class FdCumulativeKycComponent {
   /**
    * @implements submit delete diloge 
    */
-  submitDelete(){
-    if(this.deleteId != null && this.deleteId != undefined){
+  submitDelete() {
+    if (this.deleteId != null && this.deleteId != undefined) {
       this.delete(this.deleteId);
     }
     this.FdCumulativeKycModel = new FdCumulativeKyc();
-      this.displayDialog = false;
+    this.displayDialog = false;
   }
 
   /**
    * @implements onFile remove
 
    */
-  fileRemoeEvent(){
-    if(this.FdCumulativeKycModel.filesDTOList != null && this.FdCumulativeKycModel.filesDTOList != undefined && this.FdCumulativeKycModel.filesDTOList.length > 0){
-     let removeFileIndex = this.FdCumulativeKycModel.filesDTOList.findIndex((obj:any) => obj && obj.fileName === this.FdCumulativeKycModel.kycFilePath);
-     if(removeFileIndex != null && removeFileIndex != undefined){
-       this.FdCumulativeKycModel.filesDTOList[removeFileIndex] = null;
-       this.FdCumulativeKycModel.kycFilePath = null;
-     }
+  fileRemoeEvent() {
+    this.isFileUploaded = applicationConstants.FALSE;
+    if (this.FdCumulativeKycModel.filesDTOList != null && this.FdCumulativeKycModel.filesDTOList != undefined && this.FdCumulativeKycModel.filesDTOList.length > 0) {
+      let removeFileIndex = this.FdCumulativeKycModel.filesDTOList.findIndex((obj: any) => obj && obj.fileName === this.FdCumulativeKycModel.kycFilePath);
+      if (removeFileIndex != null && removeFileIndex != undefined) {
+        this.FdCumulativeKycModel.filesDTOList[removeFileIndex] = null;
+        this.FdCumulativeKycModel.kycFilePath = null;
+      }
     }
-   }
+  }
+
+  onClickkycPhotoCopy(rowData: any) {
+    this.multipleFilesList = [];
+    this.kycPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
+  }
+
+  kycclosePhoto() {
+    this.kycPhotoCopyZoom = false;
+  }
+
+  kycclosePhotoCopy() {
+    this.kycPhotoCopyZoom = false;
+  }
+  // Popup Maximize
+  @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+
+  onDialogResize(event: any) {
+    this.isMaximized = event.maximized;
+
+    if (this.isMaximized) {
+      // Restore original image size when maximized
+      this.imageElement.nativeElement.style.width = 'auto';
+      this.imageElement.nativeElement.style.height = 'auto';
+      this.imageElement.nativeElement.style.maxWidth = '100%';
+      this.imageElement.nativeElement.style.maxHeight = '100vh';
+    } else {
+      // Fit image inside the dialog without scrollbars
+      this.imageElement.nativeElement.style.width = '100%';
+      this.imageElement.nativeElement.style.height = '100%';
+      this.imageElement.nativeElement.style.maxWidth = '100%';
+      this.imageElement.nativeElement.style.maxHeight = '100%';
+      this.imageElement.nativeElement.style.objectFit = 'contain';
+    }
+  }
+
+  /**
+    * @implements document number dynamic Vaildation
+    * @author Bhargavi
+    */
+  documentNumberDynamicValidation(docTypeName: any) {
+    if (DOCUMENT_TYPES.AADHAR == this.FdCumulativeKycModel.kycDocumentTypeName) {
+      const controlTow = this.kycForm.get('docNumber');
+      if (controlTow) {
+        controlTow.setValidators([
+          Validators.required,
+          Validators.pattern(applicationConstants.AADHAR_PATTERN)
+        ]);
+        controlTow.updateValueAndValidity();
+      }
+      this.isPanNumber = false;
+    }
+    else if (DOCUMENT_TYPES.PANNUMBER == this.FdCumulativeKycModel.kycDocumentTypeName) {
+      const controlTow = this.kycForm.get('docNumber');
+      if (controlTow) {
+        controlTow.setValidators([
+          Validators.required,
+          Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN)
+        ]);
+        controlTow.updateValueAndValidity();
+      }
+      this.isPanNumber = true;
+    }
+    else {
+      const controlTow = this.kycForm.get('docNumber');
+      if (controlTow) {
+        controlTow.setValidators([
+          Validators.required,
+        ]);
+        controlTow.updateValueAndValidity();
+      }
+      this.isPanNumber = false;
+    }
+  }
 }

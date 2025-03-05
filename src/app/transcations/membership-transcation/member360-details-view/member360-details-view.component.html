@@ -1,10 +1,10 @@
 <div class="col-12">
     <div class="row">
         <div class="d-flex justify-content-between top-header-section">
-            <div class="main-heading mt-1 mb-3 justify-content-start">{{'MEMBERSHIP_TRANSACTION.MEMBER360_VIEW' | translate}}</div>
+            <div class="main-heading mt-1 justify-content-start">{{'MEMBERSHIP_TRANSACTION.MEMBER360_VIEW' | translate}}</div>
         </div>
     </div>
-    <div class="row g-3">
+    <div class="row">
         <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 left-sidecard">
             <div class="col-12 memnbership-side-closure-card border-light">
                     <div class="col-12">
@@ -103,8 +103,8 @@
                                         <p class="label-input-text">{{memberBasicDetailsModel.panNumber}}</p>
                                 </div>
                                 <!-- KYC Approved -->
-                                <!-- <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
-                                    <div class="col-10 d-flex">
+                                <!-- <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white d-flex py-0">
+                                    <div class="col-10 p-0">
                                     <div>
                                     <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                     <p class="label-input-text">{{isKycApproved}}</p>
@@ -173,11 +173,12 @@
                                         <p class="label-input-text">{{memberGroupBasicDetails.tanNumber}}</p>
                                 </div>
                                 <!-- KYC Approved -->
-                                <!-- <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
-                                    <div class="col-10 d-flex">
-                                        
+                                <!-- <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break d-flex text-white py-0">
+                                    <div class="col-10 p-0">
+                                        <div>
                                             <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                             <p class="label-input-text">{{isKycApproved}}</p>
+                                        </div>
                                     </div>
                                     <div><img src="assets/images/verify.png" alt="" class="verifykyc mt-2"></div>
                                 </div> -->
@@ -245,11 +246,12 @@
                                         <p class="label-input-text">{{institutionBasicDetailsModel.tanNumber}}</p>
                                 </div>
                                 <!-- KYC Approved -->
-                                <!-- <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break text-white py-0">
-                                    <div class="col-10 d-flex p-0">
-                                        
+                                <!-- <div class="col-xl-12 col-lg-12 col-md-4 col-sm-6 col-xs-12 basicdata-card text-break d-flex text-white py-0">
+                                    <div class="col-10 p-0">
+                                        <div>
                                             <p class="label-view text-fontwt">{{'ERP.KYC' | translate}}</p>
                                             <p class="label-input-text">{{isKycApproved}}</p>
+                                        </div>
                                     </div>
                                     <div><img src="assets/images/verify.png" alt="" class="verifykyc mt-2"></div>
                                 </div> -->
@@ -423,7 +425,7 @@
 </div>
 
 <div class="view-moredetails-popup">
-    <p-dialog header="Basic Details" [modal]="true" [(visible)]="membreIndividualFlag" [style]="{ width: '55vw' }">
+    <p-dialog header="{{'ERP.BASIC_DETAILS' | translate}}" [modal]="true" [(visible)]="membreIndividualFlag" styleClass="moredetails-style">
         <div class="col-12 view-morepopup">
             <div class="d-flex justify-content-center px-3 py-0 mb-2">
                 <div *ngIf="!this.memberBasicDetailsModel.photoCopyPath">
@@ -460,7 +462,7 @@
             </div>
         </div>
         <div class="col-12 text-center popup-basic-details mt-5 pt-3">
-            <span class="fw-semi-bold">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
+            <span class="fw-semibold">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
             <p class="fw-bold">{{memberBasicDetailsModel.admissionNumber}}</p>
         </div>
         <div class="col-12 popup-basic-details">
@@ -609,8 +611,7 @@
     </p-dialog>
 </div>
 <div class="view-moredetails-popup">
-    <p-dialog header="Basic Details" [modal]="true" [(visible)]="memberGroupBasicDetailsFlag"
-        [style]="{ width: '55vw' }">
+    <p-dialog header="{{'ERP.BASIC_DETAILS' | translate}}" [modal]="true" [(visible)]="memberGroupBasicDetailsFlag" styleClass="moredetails-style">
         <div class="col-12 view-morepopup">
             <div class="d-flex justify-content-center px-3 py-0 mb-2">
                 <img src="assets/images/no-image.jpg" class="image-user">
@@ -619,7 +620,7 @@
             </div>
         </div>
         <div class="col-12 text-center popup-basic-details mt-5 pt-3">
-            <span class="fw-semi-bold">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
+            <span class="fw-semibold">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
             <p class="fw-bold">{{memberGroupBasicDetails.admissionNumber}}</p>
         </div>
         <div class="col-12 popup-basic-details">
@@ -693,8 +694,7 @@
     </p-dialog>
 </div>
 <div class="view-moredetails-popup">
-    <p-dialog header="Basic Details" [modal]="true" [(visible)]="memberInstitutionBasicDetailsFlag"
-        [style]="{ width: '55vw' }">
+    <p-dialog header="{{'ERP.BASIC_DETAILS' | translate}}" [modal]="true" [(visible)]="memberInstitutionBasicDetailsFlag" styleClass="moredetails-style">
         <div class="col-12 view-morepopup">
             <div class="d-flex justify-content-center px-3 py-0 mb-2">
                 <img src="assets/images/no-image.jpg" class="image-user">
@@ -703,7 +703,7 @@
             </div>
         </div>
         <div class="col-12 text-center popup-basic-details mt-5 pt-3">
-            <span class="fw-semi-bold">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
+            <span class="fw-semibold">{{'ERP.ADMISSION_NUMBER' | translate}}</span>
             <p class="fw-bold">{{institutionBasicDetailsModel.admissionNumber}}</p>
         </div>
         <div class="col-12 popup-basic-details">

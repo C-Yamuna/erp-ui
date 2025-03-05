@@ -28,6 +28,8 @@ export class ProductComponent implements OnInit {
   savedID: any;
   msgs: any[] = [];
   isAutoRenualList: any[] = [];
+  productDefinitionList: any[] = [];
+  tempProductDefinitionList: any[] = [];
 
   constructor(public messageService: MessageService,
     private router: Router,
@@ -97,6 +99,7 @@ export class ProductComponent implements OnInit {
         this.save();
       }
     });
+    this.getAllProductDefinitions();
   }
 
   updateData() {
@@ -194,5 +197,61 @@ export class ProductComponent implements OnInit {
       // }
     }
     this.updateData();
+  }
+  /**
+    @author Dileep_Kumar_G
+    @implements get All Product Definitions
+  */
+  getAllProductDefinitions() {
+    this.investmentsProductDefinitionService.getAllProducts().subscribe((data: any) => {
+      this.responseModel = data;
+      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+        if (null != this.responseModel.data && undefined != this.responseModel.data) {
+          this.productDefinitionList = this.responseModel.data;
+          this.tempProductDefinitionList = this.productDefinitionList;
+        }
+        this.commonComponent.stopSpinner();
+      } else {
+        this.commonComponent.stopSpinner();
+        this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
+    }, error => {
+      this.msgs = [];
+      this.msgs = [{ severity: "error", summary: 'Failed', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST }];
+      this.commonComponent.stopSpinner();
+    });
+  }
+
+  /**
+    @author Dileep_Kumar_G
+    @implements product Name Duplicate Check
+    */
+  productNameDuplicateCheck() {
+    let isFlag = applicationConstants.TRUE;
+    if (this.isEdit) {
+      if (null != this.tempProductDefinitionList && undefined != this.tempProductDefinitionList && this.tempProductDefinitionList.length > 0) {
+        const user = this.tempProductDefinitionList.find(user => user.name === this.investmentsProductDefinitionModel.name);
+        if (user != null && user != undefined) {
+          if (user.id === this.investmentsProductDefinitionModel.id) {
+            isFlag = applicationConstants.FALSE;
+          }
+        }
+      }
+    }
+    if (null != this.tempProductDefinitionList && undefined != this.tempProductDefinitionList && this.tempProductDefinitionList.length > 0) {
+      this.tempProductDefinitionList.filter((data: any) => null != data.name).map(product => {
+        if (isFlag && product.name === this.investmentsProductDefinitionModel.name) {
+          this.msgs = [];
+          this.msgs.push({ severity: 'warning', detail: applicationConstants.PRODUCT_NAME_ALREADY_EXIST });
+          this.productform.get('name')?.reset();
+          setTimeout(() => {
+            this.msgs = [];
+          }, 1500);
+        }
+      });
+    }
   }
 }

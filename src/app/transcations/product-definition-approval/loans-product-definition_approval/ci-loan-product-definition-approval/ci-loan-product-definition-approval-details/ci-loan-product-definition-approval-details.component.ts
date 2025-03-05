@@ -42,6 +42,9 @@ export class CiLoanProductDefinitionApprovalDetailsComponent {
   memberLandDetails: any;
   ciProductId: any;
   isDisableSubmit: boolean = false;
+  purposeTypeList: any[]=[];
+  collateralNames: any;
+  purposeTypes: any;
 
   constructor(private commonComponent: CommonComponent,
     private formBuilder: FormBuilder, private router: Router,
@@ -55,6 +58,8 @@ export class CiLoanProductDefinitionApprovalDetailsComponent {
   ngOnInit(): void {
     this.orgnizationSetting = this.commonComponent.orgnizationSettings()
     this.interestPostingFrequencyList = this.commonComponent.rePaymentFrequency();
+    this.getAllPurposeTypes();
+    this.getAllCollaterals();
     this.commonFunctionsService.data.subscribe((res: any) => {
       if (res) {
         this.translate.use(res);
@@ -90,7 +95,8 @@ export class CiLoanProductDefinitionApprovalDetailsComponent {
                     value: item.collateralType
                   }));
               }
-            
+              this.setCollateralNames();
+              this.purposeTypesNameSet();
               if (this.compoundInterestProductDefinitionModel.ciInterestPolicyConfigDTOList != null && this.compoundInterestProductDefinitionModel.ciInterestPolicyConfigDTOList != undefined && this.compoundInterestProductDefinitionModel.ciInterestPolicyConfigDTOList.length > 0) {
                 this.interestPolicyList = this.compoundInterestProductDefinitionModel.ciInterestPolicyConfigDTOList;
                 this.interestPolicyList = this.interestPolicyList.filter((data: any) => data != null && data.effectiveStartDate != null).map((object: any) => {
@@ -120,13 +126,13 @@ export class CiLoanProductDefinitionApprovalDetailsComponent {
                   return object;
                 });
               }
-              if (this.compoundInterestProductDefinitionModel.ciProdPurposeConfigDTOList != null && this.compoundInterestProductDefinitionModel.ciProdPurposeConfigDTOList != undefined && this.compoundInterestProductDefinitionModel.ciProdPurposeConfigDTOList.length > 0) {
-                this.purposeList = this.compoundInterestProductDefinitionModel.ciProdPurposeConfigDTOList;
-                this.purposeList = this.purposeList.filter((data: any) => data != null && data.effectiveStartDate != null).map((object: any) => {
-                  object.effectiveStartDate = this.datePipe.transform(object.effectiveStartDate, this.orgnizationSetting.datePipe);
-                  return object;
-                });
-              }
+              // if (this.compoundInterestProductDefinitionModel.ciProdPurposeConfigDTOList != null && this.compoundInterestProductDefinitionModel.ciProdPurposeConfigDTOList != undefined && this.compoundInterestProductDefinitionModel.ciProdPurposeConfigDTOList.length > 0) {
+              //   this.purposeList = this.compoundInterestProductDefinitionModel.ciProdPurposeConfigDTOList;
+              //   this.purposeList = this.purposeList.filter((data: any) => data != null && data.effectiveStartDate != null).map((object: any) => {
+              //     object.effectiveStartDate = this.datePipe.transform(object.effectiveStartDate, this.orgnizationSetting.datePipe);
+              //     return object;
+              //   });
+              // }
 
               if (this.compoundInterestProductDefinitionModel.ciRequiredDocumentsConfigDTOList != null && this.compoundInterestProductDefinitionModel.ciRequiredDocumentsConfigDTOList != undefined && this.compoundInterestProductDefinitionModel.ciRequiredDocumentsConfigDTOList.length > 0) {
                 this.requiredDocumentsList = this.compoundInterestProductDefinitionModel.ciRequiredDocumentsConfigDTOList;
@@ -144,6 +150,126 @@ export class CiLoanProductDefinitionApprovalDetailsComponent {
     })
     this.getAllStatusList();
   }
+
+  /**
+   * @implements purposeType name listout
+   * @author jyothi.naidana
+   */
+  purposeTypesNameSet(){
+    //pusepose type ids
+    if (this.compoundInterestProductDefinitionModel.purposeTypeIds != null && this.compoundInterestProductDefinitionModel.purposeTypeIds != undefined) {
+     let contentSelected = this.compoundInterestProductDefinitionModel.purposeTypeIds.split(',');
+     if (contentSelected.length > 0) {
+       let i = 0;
+       for (let id of contentSelected) {
+         if(this.purposeTypes != null && this.purposeTypes != undefined)
+           this.purposeTypes = this.purposeTypes + this.purposeTypeList.find((obj:any) => obj.value == id)?.label;
+         else 
+           this.purposeTypes = this.purposeTypeList.find((obj:any) => obj.value == id)?.label;
+           i = i +1;
+           if(i < contentSelected.length){
+             this.purposeTypes = this.purposeTypes + ","
+           }
+       }
+     }
+   }
+ }
+
+ /**
+  * @implements collateral names
+  * @author jyothi.nadana
+  */
+ setCollateralNames() {
+   //collateral type ids
+   if (this.compoundInterestProductDefinitionModel.collateralTypeIds != null && this.compoundInterestProductDefinitionModel.collateralTypeIds != undefined) {
+     let contentSelected = this.compoundInterestProductDefinitionModel.collateralTypeIds.split(',');
+     if (contentSelected.length > 0) {
+       let i = 0;
+       for (let id of contentSelected) {
+         if (this.collateralNames != null && this.collateralNames != undefined)
+           this.collateralNames = this.collateralNames + this.collateralList.find((obj: any) => obj.value == id)?.label;
+         else
+           this.collateralNames = this.collateralList.find((obj: any) => obj.value == id)?.label;
+         i = i + 1;
+         if (i < contentSelected.length) {
+           this.collateralNames = this.collateralNames + ","
+         }
+       }
+     }
+   }
+ }
+
+ /**
+  * @implements get all collaterals
+  * @author jyothi.naidana
+  */
+ getAllCollaterals() {
+   this.msgs = [];
+   this.commonComponent.startSpinner();
+   this.compoundInterestProductDefinitionService.getAllCollateralTypes().subscribe((response: any) => {
+     this.responseModel = response;
+     if (this.responseModel != null&& this.responseModel.data!= undefined) {
+       this.collateralList = this.responseModel.data.filter((data: any) => data.status == applicationConstants.ACTIVE).map((collateral: any) => {
+         return { label: collateral.name, value: collateral.id }
+     });
+     this.commonComponent.stopSpinner();
+   }
+   else {
+     this.msgs = [];
+     this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+     setTimeout(() => {
+       this.msgs = [];
+     }, 2000);
+   }
+   }, error => {
+     this.msgs = [];
+     this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
+     setTimeout(() => {
+       this.msgs = [];
+     }, 2000);
+     this.commonComponent.stopSpinner();
+   });
+ }
+
+
+  /**
+  * @implements  get all purpose types
+  * @author jyothi.naidana
+  */
+  getAllPurposeTypes() {
+   this.commonComponent.startSpinner();
+   this.purposeTypeList = [];
+   this.compoundInterestProductDefinitionService.getAllLoanPurpose().subscribe((res: any) => {
+     this.responseModel = res;
+     if (this.responseModel.status === applicationConstants.STATUS_SUCCESS && this.responseModel.data[0] != null) {
+       if (this.responseModel.data == null || (this.responseModel.data != null && this.responseModel.data.length == 0)) {
+         this.commonComponent.stopSpinner();
+         this.msgs = [];
+         this.msgs = [{ severity: 'error', detail: applicationConstants.RELATIONSHIP_TYPE_NO_DATA_MESSAGE }];
+         setTimeout(() => {
+           this.msgs = [];
+         }, 2000);
+       } else {
+         this.purposeTypeList = this.responseModel.data.filter((documenttype: any) => documenttype.status == applicationConstants.ACTIVE).map((count: any) => {
+           return { label: count.name, value: count.id }
+         });
+
+         // let purposeType = this.purposeTypeList.find((data: any) => null != data && data.value == this.ciPurposeModel.purposeId);
+         // if (purposeType != null && undefined != purposeType)
+         //   this.ciPurposeModel.loanPurposeName = purposeType.label;
+         this.commonComponent.stopSpinner();
+       }
+     }
+   },
+     error => {
+       this.msgs = [];
+       this.commonComponent.stopSpinner();
+       this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+       setTimeout(() => {
+         this.msgs = [];
+       }, 2000);
+     });
+ }
   navigateToBack() {
       this.router.navigate([productDefinitionApprovalConstant.CI_PRODUCT_DEFINITION_APPROVAL]);
   }

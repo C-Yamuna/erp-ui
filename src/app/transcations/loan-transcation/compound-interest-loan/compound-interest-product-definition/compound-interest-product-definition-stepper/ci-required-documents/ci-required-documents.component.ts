@@ -83,7 +83,7 @@ export class CiRequiredDocumentsComponent {
   updateData() {
     this.ciRequiredDocumentsModel.ciProductId = this.ciProductId
     this.compoundInterestProductDefinitionService.changeData({
-      formValid: this.enableSaveAndNextButton ,
+      formValid: !this.addButton ,
       data: this.ciRequiredDocumentsModel,
       savedId:this.ciProductId,
       stepperIndex: 5,
@@ -161,13 +161,13 @@ export class CiRequiredDocumentsComponent {
         if (this.compoundInterestProductDefinitionModel.ciRequiredDocumentsConfigDTOList != null && this.compoundInterestProductDefinitionModel.ciRequiredDocumentsConfigDTOList != undefined &&
             this.compoundInterestProductDefinitionModel.ciRequiredDocumentsConfigDTOList.length > 0) {
 
-              this.enableSaveAndNextButton = applicationConstants.TRUE;
+              // this.enableSaveAndNextButton = applicationConstants.TRUE;
 
           this.requiredDocumentsList = this.compoundInterestProductDefinitionModel.ciRequiredDocumentsConfigDTOList;
 
           
         }else{
-          this.enableSaveAndNextButton = applicationConstants.FALSE;
+          // this.enableSaveAndNextButton = applicationConstants.FALSE;
         }
       }
       this.updateData();
@@ -315,7 +315,7 @@ export class CiRequiredDocumentsComponent {
     );
   
     if (isDuplicate) {
-      this.requiredDocumentsForm.get('documentTypeName')?.reset();
+      this.requiredDocumentsForm.get('documentType')?.reset();
       this.msgs = [{ severity: 'error',  detail:applicationConstants.DOCUMENT_TYPE_ALREADY_EXIST}];
       setTimeout(() => {
         this.msgs = [];

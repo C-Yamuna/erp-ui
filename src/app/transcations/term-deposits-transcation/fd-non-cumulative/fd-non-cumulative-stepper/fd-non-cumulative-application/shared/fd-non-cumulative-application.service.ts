@@ -173,4 +173,25 @@ getAllOccupationTypesList(){
 saveAccountOnRenewal(object:any){
   return this.commonHttpService.post(object, Headers, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FD_NON_CUMMULATIVE_ACCOUNT+ ERP_TRANSACTION_CONSTANTS.SAVE_ACCOUNT_ON_RENEWAL);
 }
+
+getAllSubProduct() {
+  return this.commonHttpService.getAll(ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.SUB_PRODUCT + ERP_TRANSACTION_CONSTANTS.GET_ALL);
+}
+
+getGroupPromoters(id: string) {
+  let headers = new HttpHeaders({ 'id': id + '' })
+  return this.commonHttpService.getById(headers, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS+ ERP_TRANSACTION_CONSTANTS.GROUP_PROMOTERS + ERP_TRANSACTION_CONSTANTS.GET)
+}
+getInstitutionPromoters(id: string) {
+  let headers = new HttpHeaders({ 'id': id + '' })
+  return this.commonHttpService.getById(headers, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS+ ERP_TRANSACTION_CONSTANTS.INISTITUTION_PROMOTER_DETAILS + ERP_TRANSACTION_CONSTANTS.GET)
+}
+getGroupPromoterDetailsByGroupId(id: string) {
+  let headers = new HttpHeaders({ 'id': id + '' })
+  return this.commonHttpService.getById(headers, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS+ ERP_TRANSACTION_CONSTANTS.GROUP_PROMOTERS + ERP_TRANSACTION_CONSTANTS.GET_GROUP_PROMOTER_DETAILS_BY_GROUP_ID)
+}
+getInstitutionPromoterDetailsByInstitutionId(id: any,pacsId:any) {
+  let headers = new HttpHeaders({ 'id': id + '','pacsId': pacsId +'' })
+  return this.commonHttpService.getById(headers, ERP_TRANSACTION_CONSTANTS.LOANS+ ERP_TRANSACTION_CONSTANTS.INISTITUTION_PROMOTER_DETAILS + ERP_TRANSACTION_CONSTANTS.GET_INISTITUTION_PROMOTER_DETAILS_BY_INISTITUTIONID_AND_PACSID)
+}
 }

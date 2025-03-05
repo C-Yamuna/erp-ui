@@ -253,27 +253,38 @@ export class LandComponent {
               this.uniquePassbookList = [];
               this.uniqueKhatabookList = [];
               this.gridListData = this.customerLandDetails.custLandSurveyDetails;
-              this.gridListData.map(object => {
-                this.rowId = this.rowId + 1;
-                object.rowId = this.rowId;
-                this.totalLand = this.totalLand + object.totalLand;
-                if (this.uniquePassbookList.length == 0) {
-                  this.uniquePassbookList.push(object.passbookNumber);
-                } else {
-                  if (this.uniquePassbookList.indexOf(object.passbookNumber) === -1) {
+              if(this.gridListData != null && this.gridListData.length > 0){
+                this.buttonsFlag = true;
+                this.landFlag = true
+                this.updateData();
+                this.gridListData.map(object => {
+                  this.rowId = this.rowId + 1;
+                  object.rowId = this.rowId;
+                  this.totalLand = this.totalLand + object.totalLand;
+                  if (this.uniquePassbookList.length == 0) {
                     this.uniquePassbookList.push(object.passbookNumber);
+                  } else {
+                    if (this.uniquePassbookList.indexOf(object.passbookNumber) === -1) {
+                      this.uniquePassbookList.push(object.passbookNumber);
+                    }
+  
                   }
-
-                }
-                if (this.uniqueKhatabookList.length == 0) {
-                  this.uniqueKhatabookList.push(object.khataNumber);
-                } else {
-                  if (this.uniqueKhatabookList.indexOf(object.khataNumber) === -1) {
+                  if (this.uniqueKhatabookList.length == 0) {
                     this.uniqueKhatabookList.push(object.khataNumber);
+                  } else {
+                    if (this.uniqueKhatabookList.indexOf(object.khataNumber) === -1) {
+                      this.uniqueKhatabookList.push(object.khataNumber);
+                    }
+  
                   }
-
-                }
-              });
+                });
+              }
+              else{
+                this.buttonsFlag = false;
+                this.landFlag = false
+                this.updateData();
+              }
+          
               if (null != this.uniquePassbookList && undefined != this.uniquePassbookList && this.uniquePassbookList.length > 0) {
                 this.selectedPassbookNumber = null;
                 this.uniquePassbookList.filter(obj => null != obj).map(object => {
@@ -296,6 +307,7 @@ export class LandComponent {
               this.tempSurveyList = this.gridListData.map(x => Object.assign({}, x));
               this.submitButtonDisabled = applicationConstants.FALSE;
             }
+           
 
           }
         }
@@ -492,7 +504,7 @@ export class LandComponent {
             this.msgs = [];
           }, 2000);
         }
-        this.villagesList = this.responseModel.data.filter((village: any) => village.status == applicationConstants.TRUE).map((count: any) => {
+        this.villagesList = this.responseModel.data.filter((village: any) => village.status == applicationConstants.ACTIVE).map((count: any) => {
           return { label: count.villageName, value: count.id, villageId: count.villageId }
         });
         this.commonComponent.stopSpinner();
@@ -614,8 +626,7 @@ export class LandComponent {
   navigateToLandDetails() {
     this.displayDialog = applicationConstants.FALSE;
     this.isEditDisable = false;
-    this.buttonsFlag = true;
-    this.landFlag = true;;
+    this.getMembershipDetailsById(this.memberId);
     this.updateData();
     this.gridListData = this.tempSurveyList.map(x => Object.assign({}, x));
   }

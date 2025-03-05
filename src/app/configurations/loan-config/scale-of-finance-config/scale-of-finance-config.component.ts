@@ -23,6 +23,7 @@ export class ScaleOfFinanceConfigComponent implements OnInit{
   displayDialog: boolean = false;
   orgnizationSetting: any;
   deleteId: any;
+  uomTypesList: any[]=[];
   constructor(private router: Router,private scaleOfFinanceConfigService : ScaleOfFinanceConfigsService,private encryptDecryptService: EncryptDecryptService
     ,private datePipe:DatePipe,private commonComponent: CommonComponent)
      { 
@@ -30,6 +31,7 @@ export class ScaleOfFinanceConfigComponent implements OnInit{
         //{ field: 'pacsCode', header: 'PACS CODE' },
         { field: 'financialYear', header: 'LOANS.FINANCIAL_YEAR' },
         { field: 'cropTypeName', header: 'LOANS.CROP_TYPE' },
+        { field: 'uomName', header: 'LOANS.UOM' },
         { field: 'maxAmount', header: 'LOANS.LIMIT' },
         { field: 'effectiveStartDate', header: 'LOANS.EFFECTIVE_START_DATE' },
        // { field: 'endDate', header: 'LOANS.END_DATE' },
@@ -38,7 +40,9 @@ export class ScaleOfFinanceConfigComponent implements OnInit{
      }
   ngOnInit() {
     this.orgnizationSetting = this.commonComponent.orgnizationSettings()
-    this.getAll();
+    this.getAllUomTypes();
+   
+    
   }
   addData(){
     this.router.navigate([LoanConfigConstants.ADD_SCALE_OF_FINANCE_CONFIG]);
@@ -49,11 +53,13 @@ export class ScaleOfFinanceConfigComponent implements OnInit{
      
       if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
         this.gridList = this.responseModel.data;
-        this.gridList = this.responseModel.data.map((obj: { effectiveStartDate: string | number | Date | null; 
-          endDate: string | number | Date | null; 
-          financialYear: string | number | Date | null; }) => {
+        this.gridList = this.responseModel.data.map((obj:any) => {
           obj.effectiveStartDate = this.datePipe.transform(obj.effectiveStartDate, this.orgnizationSetting.datePipe);
           obj.endDate = this.datePipe.transform(obj.endDate, this.orgnizationSetting.datePipe);
+          let uom = this.uomTypesList.find( (object:any) => obj.uomType == object.value);
+          if(uom != null && uom != undefined){
+            obj.uomName = uom.label;
+          }
           //obj.financialYear = this.datePipe.transform(obj.financialYear, this.orgnizationSetting.datePipe)
           return obj;
         })
@@ -109,5 +115,30 @@ export class ScaleOfFinanceConfigComponent implements OnInit{
   }
   navigateToEdit(rowData:any){
     this.router.navigate([LoanConfigConstants.ADD_SCALE_OF_FINANCE_CONFIG], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id) } })
+  }
+
+  /**
+   * @implements get all crop Types 
+   * @author jyothi.naidana
+   */
+  getAllUomTypes(){
+    this.scaleOfFinanceConfigService.getAllUom().subscribe((response : any )=>{
+      this.responseModel  = response;
+      if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
+        this.uomTypesList = this.responseModel.data;
+        this.uomTypesList = this.uomTypesList.filter((obj: any) => obj != null && obj.status == applicationConstants.ACTIVE && obj.name != null).map((relationType: { name: any; id: any; }) => {
+          return { label: relationType.name, value: relationType.id };
+        });
+        this.getAll();
+      }
+      else {
+        this.msgs = [];
+        this.getAll();
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
+    });
   }
 }

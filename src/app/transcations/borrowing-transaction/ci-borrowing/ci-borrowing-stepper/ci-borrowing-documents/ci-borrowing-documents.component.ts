@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { applicationConstants } from 'src/app/shared/applicationConstants';
 import { CiAccountDetails } from '../ci-account-details/shared/ci-account-details.model';
 import { CiBorrowingAccountMapping } from '../ci-borrowing-account-mapping/shared/ci-borrowing-account-mapping.model';
@@ -82,6 +82,8 @@ export class CiBorrowingDocumentsComponent {
   showAddButton: boolean = applicationConstants.FALSE;
   documentList: any[] = [];
   saveAndNextEnable : boolean = false;
+  docPhotoCopyZoom: boolean = false;
+  isMaximized: boolean = false;
   constructor(private router:Router, private formBuilder:FormBuilder,
     private ciAccountDetailsService : CiAccountDetailsService,
     private ciBorrowingAccountMappingService:CiBorrowingAccountMappingService,
@@ -487,6 +489,39 @@ fileRemoveEvent() {
     this.displayDialog = applicationConstants.FALSE;
   }
 
+  onClickdocPhotoCopy(rowData: any) {
+      this.multipleFilesList = [];
+      this.docPhotoCopyZoom = true;
+      this.multipleFilesList = rowData.multipartFileList;
+    }
+      docclosePhoto(){
+        this.docPhotoCopyZoom = false;
+      }
+      docclosePhotoCopy() {
+        this.docPhotoCopyZoom = false;
+      }
+  
+      // Popup Maximize
+                  @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+                
+                  onDialogResize(event: any) {
+                    this.isMaximized = event.maximized;
+                
+                    if (this.isMaximized) {
+                      // Restore original image size when maximized
+                      this.imageElement.nativeElement.style.width = 'auto';
+                      this.imageElement.nativeElement.style.height = 'auto';
+                      this.imageElement.nativeElement.style.maxWidth = '100%';
+                      this.imageElement.nativeElement.style.maxHeight = '100vh';
+                    } else {
+                      // Fit image inside the dialog without scrollbars
+                      this.imageElement.nativeElement.style.width = '100%';
+                      this.imageElement.nativeElement.style.height = '100%';
+                      this.imageElement.nativeElement.style.maxWidth = '100%';
+                      this.imageElement.nativeElement.style.maxHeight = '100%';
+                      this.imageElement.nativeElement.style.objectFit = 'contain';
+                    }
+                  }
   
 
 }

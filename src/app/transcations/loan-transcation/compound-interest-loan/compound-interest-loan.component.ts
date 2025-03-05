@@ -121,17 +121,20 @@ export class CompoundInterestLoanComponent {
           else if(ciLoan.accountStatusName == applicationConstants.REJECTED){
             ciLoan.rejected = true;
             ciLoan.actionButton = false;
+            ciLoan.approved = false;
             this.rejectCount = this.rejectCount +1;
           }
           else if(ciLoan.accountStatusName == applicationConstants.SUBMISSION_FOR_APPROVAL){
             ciLoan.submissionForApproval = true;
             ciLoan.actionButton = false; 
+            ciLoan.approved = false;
             this.submissionForApprovalCount = this.submissionForApprovalCount + 1;
           }
           else if(ciLoan.accountStatusName == applicationConstants.CREATED || ciLoan.accountStatusName == applicationConstants.IN_PROGRESS){
             ciLoan.created = true; 
             ciLoan.viewButton = true;
             ciLoan.actionButton = true;
+            ciLoan.approved = false;
             this.inProgressCount = this.inProgressCount +1;
           }
           else if(ciLoan.accountStatusName == applicationConstants.REQUEST_FOR_RESUBIMSSION){

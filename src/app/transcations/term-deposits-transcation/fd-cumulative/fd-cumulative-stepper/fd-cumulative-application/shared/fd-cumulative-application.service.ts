@@ -144,4 +144,8 @@ export class FdCumulativeApplicationService {
   saveAccountOnRenewal(object:any){
     return this.commonHttpService.post(object, Headers, ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FD_CUMMULATIVE_ACCOUNTS+ ERP_TRANSACTION_CONSTANTS.SAVE_ACCOUNT_ON_RENEWAL);
   }
+
+  getAllSubProduct() {
+    return this.commonHttpService.getAll(ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.SUB_PRODUCT + ERP_TRANSACTION_CONSTANTS.GET_ALL);
+  }
 }

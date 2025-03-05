@@ -29,6 +29,8 @@ export class SaoLoanApplication {
 
     applicationDateVal: any;
 
+    sanctionDateVal: any;
+
     sanctionDate: any;
 
     fatherSpouseName: any;
@@ -110,101 +112,104 @@ export class SaoLoanApplication {
     landTypeName: any;
 
     totalOutstandingAmount: any;
-  
+
     filesDTO: any;
-  
+
     statusName: any;
-  
+
     gender: any;
-  
-    loanMortgageDetailsDTOList:any[] = [];
+
+    loanMortgageDetailsDTOList: any[] = [];
 
     saoLoanKycDetailsDTOList: any[] = [];
 
     saoRequiredDocumentsConfigDTOList: any[] = [];
-  
+
+    saoLoanExistingDetailsDTOList: any[] = [];
+
     collateralType: any;
-  
+
     accountStatusName: any;
-  
+
     foreclosureFilePath: any;
-  
+
     saoProductName: any;
-  
+
     memberTypeId: any;
 
     memberTypeName: any;
-  
-   saoLoanCommunicationDTO: any;
-  
-    saoChargesCollectionDetailsDTOList:any[] = [];
+
+    saoLoanCommunicationDTO: any;
+
+    saoChargesCollectionDetailsDTOList: any[] = [];
 
     saoOtherLoanDetailsDTOList: any[] = [];
-  
-   saoLoanNomineeDetailsDTO: any;
-  
-   saoLoanGuarantorDetailsDTOList:any[] = [];
-  
-   //saoLoanInsuranceDetailsDTOList: any;
-   saoLoanInsuranceDetailsDTO: any;
-  
-   saoLoanAppraiserDetailsDTOList: any;
-  
-    saoFieldVerificationDetailsDTOList:any[] = [];
-  
-    saoLoanDisbursementScheduleDTOList:any[] = [];
+
+    saoLoanNomineeDetailsDTO: any;
+
+    saoLoanGuarantorDetailsDTOList: any[] = [];
+
+    saoLoanInsuranceDetailsDTO: any;
+
+    saoLoanAppraiserDetailsDTOList: any;
+
+    saoFieldVerificationDetailsDTOList: any[] = [];
+
+    saoLoanDisbursementScheduleDTOList: any[] = [];
 
     saoDisbursementDTOList: any[] = [];
-  
-    saoLoanGenealogyTreeDTOList:any[] = [];
-  
-    saoLoanDocumentsDetailsDTOList:any[] = [];
-  
-   saoLoanLandMortageDetailsDTOList:any[] = [];
-  
-   individualMemberDetailsDTO: any;
-  
-   memberGroupDetailsDTO: any;
-  
-   memberInstitutionDTO: any;
 
-   repaymentFrequency: any;
+    saoLoanDocumentsDetailsDTOList: any[] = [];
 
-   repaymentFrequencyName: any;
+    // saoLoanLandMortageDetailsDTO: any;
 
-   penalInterest: any;
+    saoLoanLandMortageDetailsDTOList: any;
 
-   iod: any;
+    individualMemberDetailsDTO: any;
 
-   cgstAmount:any;
+    memberGroupDetailsDTO: any;
 
-   sgstAmount: any;
+    memberInstitutionDTO: any;
 
-   igstAmount: any;
+    repaymentFrequency: any;
 
-   totalCharges: any;
+    repaymentFrequencyName: any;
 
-   memberPhotoCopyPath: any;
-  
-   saoLoanJointMemsDetailsDTOList:any[] = [];
+    penalInterest: any;
 
-   multipartFileListForPhotoCopy: any;
+    iod: any;
 
-   multipartFileListForsignatureCopyPath: any;
+    cgstAmount: any;
 
-   loanApprovedDateVal: any;
+    sgstAmount: any;
 
-   saoCollectionDTOList: any [] = [];
+    igstAmount: any;
 
-   totalCollectionAmount: any;
+    totalCharges: any;
 
-   disbursedAmount: any;
+    memberPhotoCopyPath: any;
 
-   multipartFileList: any [] = [];
+    saoLoanJointMemsDetailsDTOList: any[] = [];
+
+    multipartFileListForPhotoCopy: any;
+
+    multipartFileListForsignatureCopyPath: any;
+
+    loanApprovedDateVal: any;
+
+    saoCollectionDTOList: any[] = [];
+
+    totalCollectionAmount: any;
+
+    disbursedAmount: any;
+
+    multipartFileList: any[] = [];
+
+    applicationNumber: any;
 
 }
 export class SaoOtherLoanDetailsModel {
-   
+
     id: any;
 
     pacsId: any;
@@ -224,7 +229,7 @@ export class SaoOtherLoanDetailsModel {
     loanAmount: any;
 
     dueAmount: any;
-  
+
     productName: any;
 
 }
@@ -252,11 +257,11 @@ export class SaoLoanInsuranceDetailsModel {
     insuranceType: any;
 
     vendorId: any;
-  
+
     remarks: any;
-  
+
     productName: any;
-  
+
     cropName: any;
 }
 export class SaoLoanGuarantorDetailsModel {
@@ -315,7 +320,7 @@ export class MemberShipBasicDetailsModel {
     id: any;
 
     memberTypeId: any;
-  
+
     memberTypeName: any;
 
     surname: any;
@@ -327,25 +332,25 @@ export class MemberShipBasicDetailsModel {
     age: any;
 
     genderId: any;
-  
+
     genderName: any;
 
     martialId: any;
-  
+
     maritalStatusName: any;
 
     relationId: any;
-  
+
     relationName: any;
 
     relativeName: any;
 
     qualificationId: any;
-  
+
     qualificationName: any;
 
     occupationId: any;
-  
+
     occupationName: any;
 
     aadharNumber: any;
@@ -357,11 +362,11 @@ export class MemberShipBasicDetailsModel {
     emailId: any;
 
     casteId: any;
-  
+
     casteName: any;
 
     communityId: any;
-  
+
     communityName: any;
 
     mcrNumber: any;
@@ -369,13 +374,13 @@ export class MemberShipBasicDetailsModel {
     admissionDate: any;
 
     admissionNumber: any;
-  
+
     tempAdmissionNumber: any;
 
     admissionFee: any;
 
     memStatus: any;
-  
+
     memStatusName: any;
 
     memStartDate: any;
@@ -413,7 +418,7 @@ export class MemberShipBasicDetailsModel {
 export class SaoLoanLandMortageDetailsModel {
     id: any;
 
-    saoLoanApplicationId : any;
+    saoLoanApplicationId: any;
 
     admissionNo: any;
 

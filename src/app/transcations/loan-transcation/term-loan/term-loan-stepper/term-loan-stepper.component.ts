@@ -416,7 +416,7 @@ export class TermLoanStepperComponent {
               }
             },
             {
-              label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERMLOANS_GENEALOGY_TREE,queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId)},
+              label: 'Loan History', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERM_LOAN_HISTORY,queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId)},
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 9;
@@ -490,7 +490,7 @@ export class TermLoanStepperComponent {
               }
             },
             {
-              label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERMLOANS_GENEALOGY_TREE,queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId)},
+              label: 'Loan History', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERM_LOAN_HISTORY,queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId)},
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 9;
@@ -552,7 +552,7 @@ export class TermLoanStepperComponent {
               }
             },
             {
-              label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERMLOANS_GENEALOGY_TREE,queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId)},
+              label: 'Loan History', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERM_LOAN_HISTORY,queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId)},
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 9;
@@ -619,7 +619,7 @@ export class TermLoanStepperComponent {
               }
             },
             {
-              label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERMLOANS_GENEALOGY_TREE,queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId)},
+              label: 'Loan History', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERM_LOAN_HISTORY,queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId)},
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 9;
@@ -805,7 +805,7 @@ export class TermLoanStepperComponent {
         this.router.navigate([Loantransactionconstant.TERM_LOAN_DOCUMENTS], { queryParams: { id: this.encryptDecryptService.encrypt(termLoanApplicationId) } });
         break;
       case 9:
-        this.router.navigate([Loantransactionconstant.TERMLOANS_GENEALOGY_TREE], { queryParams: { id: this.encryptDecryptService.encrypt(termLoanApplicationId) } });
+        this.router.navigate([Loantransactionconstant.TERM_LOAN_HISTORY], { queryParams: { id: this.encryptDecryptService.encrypt(termLoanApplicationId) } });
         break;
     }
   }
@@ -2074,7 +2074,7 @@ export class TermLoanStepperComponent {
             }
           },
           {
-            label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERMLOANS_GENEALOGY_TREE,
+            label: 'Loan History', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERM_LOAN_HISTORY,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 9;
@@ -2147,7 +2147,7 @@ export class TermLoanStepperComponent {
             }
           },
           {
-            label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERMLOANS_GENEALOGY_TREE,
+            label: 'Loan History', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERM_LOAN_HISTORY,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 9;
@@ -2211,7 +2211,7 @@ export class TermLoanStepperComponent {
             }
           },
           {
-            label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERMLOANS_GENEALOGY_TREE,
+            label: 'Loan History', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERM_LOAN_HISTORY,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 9;
@@ -2280,7 +2280,7 @@ export class TermLoanStepperComponent {
             }
           },
           {
-            label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERMLOANS_GENEALOGY_TREE,
+            label: 'Loan History', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERM_LOAN_HISTORY,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 9;
@@ -2351,7 +2351,7 @@ export class TermLoanStepperComponent {
             }
           },
           {
-            label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERMLOANS_GENEALOGY_TREE,
+            label: 'Loan History', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERM_LOAN_HISTORY,
             command: (event: any) => {
               this.activeIndex = 9;
             }
@@ -2417,7 +2417,7 @@ export class TermLoanStepperComponent {
             }
           },
           {
-            label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERMLOANS_GENEALOGY_TREE,
+            label: 'Loan History', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERM_LOAN_HISTORY,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 9;
@@ -2471,7 +2471,7 @@ export class TermLoanStepperComponent {
             }
           },
           {
-            label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERMLOANS_GENEALOGY_TREE,
+            label: 'Loan History', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERM_LOAN_HISTORY,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 9;
@@ -2532,7 +2532,7 @@ export class TermLoanStepperComponent {
             }
           },
           {
-            label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERMLOANS_GENEALOGY_TREE,
+            label: 'Loan History', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERM_LOAN_HISTORY,
             disabled: this.menuDisabled,
             command: (event: any) => {
               this.activeIndex = 9;
@@ -2599,7 +2599,7 @@ export class TermLoanStepperComponent {
               }
             },
             {
-              label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERMLOANS_GENEALOGY_TREE,queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId)},
+              label: 'Loan History', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERM_LOAN_HISTORY,queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId)},
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 9;
@@ -2666,7 +2666,7 @@ export class TermLoanStepperComponent {
               }
             },
             {
-              label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERMLOANS_GENEALOGY_TREE,queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId)},
+              label: 'Loan History', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERM_LOAN_HISTORY,queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId)},
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 9;
@@ -2721,7 +2721,7 @@ export class TermLoanStepperComponent {
               }
             },
             {
-              label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERMLOANS_GENEALOGY_TREE,queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId)},
+              label: 'Loan History', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERM_LOAN_HISTORY,queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId)},
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 9;
@@ -2781,7 +2781,7 @@ export class TermLoanStepperComponent {
               }
             },
             {
-              label: 'Loan Genealogy Tree', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERMLOANS_GENEALOGY_TREE,queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId)},
+              label: 'Loan History', icon: 'fa fa-sitemap', routerLink: Loantransactionconstant.TERM_LOAN_HISTORY,queryParams: { id: this.encryptDecryptService.encrypt(this.termLoanApplicationId)},
               disabled: this.menuDisabled,
               command: (event: any) => {
                 this.activeIndex = 9;

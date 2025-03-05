@@ -21,7 +21,7 @@ import { FileUpload } from 'primeng/fileupload';
 import { FileUploadModel } from 'src/app/layout/mainmenu/shared/file-upload-model.model';
 import { MembershipServiceService } from 'src/app/transcations/savings-bank-transcation/savings-bank-account-creation-stepper/membership-basic-required-details/shared/membership-service.service';
 import { CommunityService } from 'src/app/configurations/common-config/community/shared/community.service';
-import { CommonStatusData, MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
+import { CommonStatusData, MemberShipTypesData, membershipProductName } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-term-loan-new-membership',
@@ -125,7 +125,9 @@ export class TermLoanNewMembershipComponent {
   groupedCasteSubCaste: any[]=[];
   subCasteList: any[]=[];
   today :any;
+  subProductList: any[]=[];
 
+  
   constructor(private router: Router, private formBuilder: FormBuilder,
     private commonComponent: CommonComponent, private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService,
     private commonFunctionsService: CommonFunctionsService, private datePipe: DatePipe, private termLoanCommunicationService: TermLoanCommunicationService,
@@ -133,70 +135,83 @@ export class TermLoanNewMembershipComponent {
     private membershipService: TermLoanNewMembershipService, private fileUploadService: FileUploadService,private communityService: CommunityService) {
 
       this.memberCreationForm = this.formBuilder.group({
-        surName: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS)]],
-        name: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
-        gender: ['', Validators.required],
-        dateOfBirth: ['', Validators.required],
-        age: ['', [Validators.pattern(applicationConstants.ALLOW_NUMBERS_ONLY), Validators.compose([Validators.required])]],
-        maritalStatus: ['', Validators.required],
-        relationWithMember: ['',Validators.compose([Validators.required])],
-        relationName: ['', Validators.compose([Validators.required])],
-        aadharNumber: ['', [Validators.pattern(applicationConstants.AADHAR_PATTERN), Validators.compose([Validators.required])]],
-        panNumber: ['', [Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN), Validators.compose([Validators.required])]],
-        mobileNumber: ['', [Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.compose([Validators.required])]],
-        occupation: ['',Validators.compose([Validators.required])],
-        community: ['',Validators.compose([Validators.required])],
-        quslification: ['',Validators.compose([Validators.required])],
-        caste:  ['',Validators.compose([Validators.required])],
-        email: ['', [Validators.pattern(applicationConstants.EMAIL_PATTERN)]],
-        admissionDate: ['',Validators.compose([Validators.required])],
-        isStaff: ['',Validators.compose([Validators.required])],
-        fileUpload:[''],
-        admissionFee:['']
+        "subProductId": new FormControl('', Validators.required),
+        "surName":  new FormControl('', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
+        "name":  new FormControl('', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
+        "gender": new FormControl('', Validators.required),
+        "dateOfBirth": new FormControl('', Validators.required),
+        "age":  new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
+        "maritalStatus": new FormControl('', Validators.required),
+        "relationWithMember": ['', [Validators.pattern(applicationConstants.ALPHA_NAME_PATTERN), Validators.compose([Validators.required])]],
+        "relationName": new FormControl('', Validators.required),
+        "aadharNumber":  new FormControl('', [Validators.pattern(applicationConstants.AADHAR_PATTERN), Validators.maxLength(40)]),
+        "panNumber":  new FormControl('', [Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN), Validators.maxLength(40)]),
+        "mobileNumber":  new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
+        "occupation": new FormControl('', Validators.required),
+        "community": new FormControl('', Validators.required),
+        "quslification": new FormControl('', Validators.required),
+        "caste": new FormControl('', Validators.required),
+        "email":  new FormControl('', [Validators.pattern(applicationConstants.EMAIL_PATTERN), Validators.maxLength(40)]),
+        "admissionDate": new FormControl('', Validators.required),
+        "isStaff": new FormControl('', Validators.required),
+        "fileUpload" : new FormControl('',),
+        "admissionFee":  new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
+        "societyAdmissionNumber":  new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
+        "mcrNumber":  new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
       })
       this.groupForm = this.formBuilder.group({
-        name: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
-        registrationNumber: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
-        registrationDate: ['', Validators.required],
-        admissionDate: ['', Validators.required],
+        "subProductId": new FormControl('', Validators.required),
+        "name":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
+        "registrationNumber":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
+        "registrationDate": new FormControl('', Validators.required),
+        "admissionDate": new FormControl('', Validators.required),
         // pocNumber: ['', Validators.required],
-        mobileNumber: ['', [Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.compose([Validators.required])]],
-        panNumber: ['', [Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN), Validators.compose([Validators.required])]],
-        tanNumber: ['', [Validators.pattern(applicationConstants.TAN_NUMBER)]],
-        gstNumber: ['', [Validators.pattern(applicationConstants.GST_NUMBER_PATTERN)]],
-        pocName:['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
+        // "mobileNumber":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.maxLength(40)]),
+        "panNumber":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN), Validators.maxLength(40)]),
+        "tanNumber":  new FormControl('', [Validators.pattern(applicationConstants.TAN_NUMBER), Validators.maxLength(40)]),
+        "gstNumber":  new FormControl('', [Validators.pattern(applicationConstants.GST_NUMBER_PATTERN), Validators.maxLength(40)]),
+        // "pocName":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
+        "groupType": new FormControl('', Validators.required),
+        "societyAdmissionNumber":  new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
+        "operatorTypeId":new FormControl('', Validators.required),
   
       })
       this.institutionForm = this.formBuilder.group({
-        name: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
-        registrationNumber: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
-        registrationDate: ['', Validators.required],
-        admissionDate: ['', Validators.required],
+        "subProductId": new FormControl('', Validators.required),
+        "name":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
+        "registrationNumber":  new FormControl('', [Validators.required,Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.maxLength(40)]),
+        "registrationDate": new FormControl('', Validators.required),
+        "admissionDate": new FormControl('', Validators.required),
         // pocName: ['', Validators.required],
-        mobileNumber: ['', [Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.compose([Validators.required])]],
-        panNumber: ['', [Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN), Validators.compose([Validators.required])]],
-        tanNumber: ['', [Validators.pattern(applicationConstants.TAN_NUMBER)]],
-        gstNumber: ['', [Validators.pattern(applicationConstants.GST_NUMBER_PATTERN)]],
-        pocName:['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
+        // "mobileNumber": new FormControl('', [Validators.required,Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.maxLength(40)]),
+        "panNumber": new FormControl('', [Validators.required,Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN), Validators.maxLength(40)]),
+        "tanNumber": new FormControl('', [Validators.pattern(applicationConstants.TAN_NUMBER), Validators.maxLength(40)]),
+        "gstNumber": new FormControl('', [Validators.pattern(applicationConstants.GST_NUMBER_PATTERN), Validators.maxLength(40)]),
+        // "pocName": new FormControl('', [Validators.required,Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
+        "institutionType": new FormControl('',Validators.required),
+        "societyAdmissionNumber": new FormControl('', [Validators.pattern(applicationConstants.ALLOW_NEW_NUMBERS), Validators.maxLength(40)]),
+        "operatorTypeId":new FormControl('', Validators.required),
       })
       this.promoterDetailsForm = this.formBuilder.group({
-        surname: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
-        name: ['', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.compose([Validators.required])]],
-        operatorTypeId: ['',],
-        dob: ['', Validators.required],
-        age: ['', [Validators.pattern(applicationConstants.ALLOW_NUMBERS), Validators.compose([Validators.required])]],
-        genderId: ['', Validators.required],
-        martialId: ['', Validators.required],
-        mobileNumber: ['', [Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.compose([Validators.required])]],
-        aadharNumber: ['', [Validators.pattern(applicationConstants.AADHAR_PATTERN), Validators.compose([Validators.required])]],
-        emailId: ['', [Validators.pattern(applicationConstants.EMAIL_PATTERN)]],
-        startDate: ['', Validators.required],
-        promterType: ['',],
-        isGroupLeader :['', Validators.required],
-        admissionNumber :['',],
-        photoUpload :['',],
-        signatureUpload :['',],
-        authorizedSignatory:['', Validators.required],
+        "surname":  new FormControl('', [Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
+        "name": new FormControl('', [Validators.required,Validators.pattern(applicationConstants.NEW_NAME_VALIDATIONS), Validators.maxLength(40)]),
+        // "operatorTypeId": new FormControl('',),
+        "dob": new FormControl('', Validators.required),
+        "age": new FormControl('', Validators.required),
+        "genderId": new FormControl('', Validators.required),
+        "martialId": new FormControl('', Validators.required),
+        "mobileNumber": new FormControl('', [Validators.required,Validators.pattern(applicationConstants.MOBILE_PATTERN), Validators.maxLength(40)]),
+        "aadharNumber": new FormControl('', [Validators.required,Validators.pattern(applicationConstants.AADHAR_PATTERN), Validators.maxLength(40)]),
+        "emailId": new FormControl('', [Validators.pattern(applicationConstants.EMAIL_PATTERN), Validators.maxLength(40)]),
+        "startDate": new FormControl('', Validators.required),
+        "promterType": new FormControl('',),
+        "isGroupLeader" : new FormControl('', Validators.required),
+        "admissionNumber" : new FormControl('',),
+        "photoUpload" : new FormControl('',),
+        "ignatureUpload" : new FormControl('',),
+        "authorizedSignatory": new FormControl('', Validators.required),
+        "isPoc":new FormControl('',Validators.required),
+        'endDate': new FormControl(''),
       })
       this.today = new Date();//for future date set to disable
     }
@@ -212,6 +227,15 @@ export class TermLoanNewMembershipComponent {
       this.statusList = this.commonComponent.requiredlist();
       this.trueFalseList = this.commonComponent.requiredlist();
     
+      this.groupTypes  = [
+        { label: "Self Help Group", value:1 },
+        { label: "Rythu Mitra", value:2 }
+      ]
+      
+      this.institutionTypes= [
+        { label: "Self Help Group", value:1 },
+        { label: "Rythu Mitra", value:2 }
+      ]
       this.genderList = [
         { label: 'Male', value: 1 },
         { label: 'Female', value: 2 },
@@ -229,7 +253,7 @@ export class TermLoanNewMembershipComponent {
       this.getAllQualificationType();
       this.getCastesList();
       this.getAllCommunityTypes();
-  
+      this.getAllSubProducts();
       this.getAllTypeOfMembershipDetails(this.pacsId , this.branchId);
       this.activateRoute.queryParams.subscribe(params => {
         if (params['id'] != undefined) {
@@ -267,10 +291,47 @@ export class TermLoanNewMembershipComponent {
           this.save();
         }
       });
-  
-  
     }
   
+    /**
+   * @implements get all subproducts details
+   */
+  getAllSubProducts() {
+    this.commonComponent.startSpinner();
+    this.termLoanApplicationsService.getAllSubProduct().subscribe((res: any) => {
+      this.responseModel = res;
+      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+        this.subProductList = this.responseModel.data;
+        if (this.subProductList == null || (this.subProductList != null && this.subProductList.length == 0)) {
+          this.msgs = [];
+          this.msgs = [{ severity: 'error', detail: applicationConstants.SUB_PRODUCTS_NO_DATA_MESSAGE }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        }
+        this.subProductList = this.subProductList.filter((customertype: any) => customertype.status == applicationConstants.ACTIVE && customertype.name != membershipProductName.ACLASS_VOTING_MEMBER && customertype.name != membershipProductName.ACLASS_MEMBER).map((count: any) => {
+          return { label: count.name, value: count.id }
+        });
+          
+        this.commonComponent.stopSpinner();
+      } else {
+        this.commonComponent.stopSpinner();
+        this.msgs = [];
+        this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
+    },
+      error => {
+        this.msgs = [];
+        this.commonComponent.stopSpinner();
+        this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      });
+  }
     /**
      * @implements get all community Types
    
@@ -362,11 +423,20 @@ export class TermLoanNewMembershipComponent {
                       if(groupPromoters.startDate != null && groupPromoters.startDate != undefined){
                         groupPromoters.startDateVal = this.datePipe.transform(groupPromoters.startDate, this.orgnizationSetting.datePipe);
                       }
+                      if(groupPromoters.endDate != null && groupPromoters.endDate != undefined){
+                        groupPromoters.endDateVal  = this.datePipe.transform(groupPromoters.endDate, this.orgnizationSetting.datePipe);
+                      }
                       if(groupPromoters.genderId != null && groupPromoters.genderId != undefined){
                         let Obj = this.genderList.filter(obj => obj.value == groupPromoters.genderId);
                         if(Obj != null && Obj != undefined ){
                           groupPromoters.genderName = Obj[0].label ;
                         }
+                      }
+                      if(groupPromoters.authorizedSignatory != null && groupPromoters.authorizedSignatory != undefined && groupPromoters.authorizedSignatory){
+                        groupPromoters.authorizedSignatoryName = applicationConstants.YES;
+                      }
+                      else {
+                        groupPromoters.authorizedSignatoryName = applicationConstants.YES;
                       }
                     }
                   }
@@ -394,11 +464,20 @@ export class TermLoanNewMembershipComponent {
                       if(institution.startDate != null && institution.startDate != undefined){
                         institution.startDateVal = this.datePipe.transform(institution.startDate, this.orgnizationSetting.datePipe);
                       }
+                      if(institution.endDate != null && institution.endDate != undefined){
+                        institution.endDateVal  = this.datePipe.transform(institution.endDate, this.orgnizationSetting.datePipe);
+                      }
                       if(institution.genderId != null && institution.genderId != undefined){
                         let Obj = this.genderList.filter(obj => obj.value == institution.genderId);
                         if(Obj != null && Obj != undefined ){
                           institution.genderName = Obj[0].label ;
                         }
+                      }
+                      if(institution.authorizedSignatory != null && institution.authorizedSignatory != undefined && institution.authorizedSignatory){
+                        institution.authorizedSignatoryName = applicationConstants.YES;
+                      }
+                      else {
+                        institution.authorizedSignatoryName = applicationConstants.YES;
                       }
                     }
                   }
@@ -435,7 +514,7 @@ export class TermLoanNewMembershipComponent {
      */
     updateData() {
       this.  termLoanApplicationModel.memberTypeId = this.memberTypeId;
-      if (this.memberTypeName == "Individual") {
+      if (this.memberTypeName == MemberShipTypesData.INDIVIDUAL) {
         this.individualFlag = true;
         this.isDisableFlag = (!this.memberCreationForm.valid) || !(this.isFileUploadedPhoto && this.isFileUploadedsignature)
         this.  termLoanApplicationModel.memberTypeName = this.memberTypeName;
@@ -443,7 +522,7 @@ export class TermLoanNewMembershipComponent {
         this.  membershipBasicRequiredDetailsModel.isNewMember = this.showForm;
         this.  termLoanApplicationModel.individualMemberDetailsDTO = this.  membershipBasicRequiredDetailsModel;
       }
-      if (this.memberTypeName == "Group") {
+      if (this.memberTypeName == MemberShipTypesData.GROUP) {
         this.groupFlag = true;
         this.isDisableFlag = (!(this.groupForm.valid && (this.memberGroupDetailsModel.groupPromoterList != null && this.  memberGroupDetailsModel.groupPromoterList != undefined && this.  memberGroupDetailsModel.groupPromoterList.length  >=2))) || this.groupPromoters
         this.memberGroupDetailsModel.memberTypeId = this.memberTypeId;
@@ -453,7 +532,7 @@ export class TermLoanNewMembershipComponent {
         this.termLoanApplicationModel.memberTypeName = this.memberTypeName;
         this.addButton = !this.groupForm.valid;
       }
-      if (this.memberTypeName == "Institution") {
+      if (this.memberTypeName == MemberShipTypesData.INSTITUTION) {
         this.institutionFlag = true;
         this.isDisableFlag = (!(this.institutionForm.valid &&(this.membershipInstitutionDetailsModel.institutionPromoterList != null && this.membershipInstitutionDetailsModel.institutionPromoterList != undefined && this.membershipInstitutionDetailsModel.institutionPromoterList.length >0)))|| this.institutionPromoterPopUp
         this.membershipInstitutionDetailsModel.memberTypeId = this.memberTypeId;
@@ -464,7 +543,7 @@ export class TermLoanNewMembershipComponent {
         this.addButton = !this.institutionForm.valid;
     }
      
-      this.  termLoanApplicationsService.changeData({
+      this.termLoanApplicationsService.changeData({
         formValid: this.memberCreationForm.valid ? true : false || (this.institutionForm.valid) ? true : false || (this.groupForm.valid) ? true : false,
         data: this.  termLoanApplicationModel,
         isDisable: this.isDisableFlag,
@@ -473,7 +552,7 @@ export class TermLoanNewMembershipComponent {
     }
     /**
      * @implements update save
-   
+
      */
     save() {
       this.updateData();
@@ -481,7 +560,7 @@ export class TermLoanNewMembershipComponent {
   
     /**
      * @implements on Change Relation Type
-   
+
      */
     onChangeRelationTypeChange(event: any) {
       const filteredItem = this.relationTypesList.find(item => item.value === event.value);
@@ -490,10 +569,9 @@ export class TermLoanNewMembershipComponent {
     }
     /**
      * @implements get getAll relation Types
-   
      */
     getAllRelationTypes() {
-      this.  termLoanApplicationsService.getAllRelationTypes().subscribe((res: any) => {
+      this.termLoanApplicationsService.getAllRelationTypes().subscribe((res: any) => {
         this.responseModel = res;
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           this.relationTypesList = this.responseModel.data;
@@ -508,7 +586,7 @@ export class TermLoanNewMembershipComponent {
    
      */
     getAllOccupationTypes() {
-      this.  termLoanApplicationsService.getAllOccupationTypesList().subscribe((res: any) => {
+      this.termLoanApplicationsService.getAllOccupationTypesList().subscribe((res: any) => {
         this.responseModel = res;
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           this.occupationTypeList = this.responseModel.data;
@@ -801,8 +879,8 @@ export class TermLoanNewMembershipComponent {
         this.termLoanApplicationModel.memberTypeId = 1;
 
         this.termLoanApplicationModel.memberGroupDetailsDTO = null;
-        // this.memberGroupDetailsModel = new MemberGroupDetailsModel();
-        // this.membershipInstitutionDetailsModel = new MembershipInstitutionDetailsModel();
+        this.memberGroupDetailsModel = new MemberGroupDetailsModel();
+        this.membershipInstitutionDetailsModel = new MembershipInstitutionDetailsModel();
         this.termLoanApplicationModel.memberInstitutionDTO = null;
         this.groupForm.reset();
         this.institutionForm.reset();
@@ -821,8 +899,8 @@ export class TermLoanNewMembershipComponent {
         this.termLoanApplicationModel.memberInstitutionDTO = null;
         this.memberCreationForm.reset();
         this.institutionForm.reset();
-        // this.membershipBasicRequiredDetails = new MembershipBasicRequiredDetails();
-        // this.membershipInstitutionDetailsModel = new MembershipInstitutionDetailsModel();
+        this.membershipBasicRequiredDetailsModel = new MembershipBasicRequiredDetails();
+        this.membershipInstitutionDetailsModel = new MembershipInstitutionDetailsModel();
       }
       else if (event.value == 3) {
         this.addButton = false;
@@ -835,9 +913,8 @@ export class TermLoanNewMembershipComponent {
 
         this.termLoanApplicationModel.memberInstitutionDTO = null;
         this.termLoanApplicationModel.individualMemberDetailsDTO = null;
-        // this.membershipBasicRequiredDetails = new MembershipBasicRequiredDetails();;
-        
-        // this.memberGroupDetailsModel = new MemberGroupDetailsModel();
+        this.membershipBasicRequiredDetailsModel = new MembershipBasicRequiredDetails();;
+        this.memberGroupDetailsModel = new MemberGroupDetailsModel();
         this.groupForm.reset();
         this.memberCreationForm.reset();
       }
@@ -851,7 +928,6 @@ export class TermLoanNewMembershipComponent {
   
     */
     savePromoterDetails(rowData: any) {
-      rowData.isExistingMember = 
       rowData.pacsId = 1;
       rowData.status = applicationConstants.ACTIVE;
       this.addButton = false;
@@ -865,6 +941,9 @@ export class TermLoanNewMembershipComponent {
       if(rowData.startDateVal != null && rowData.startDateVal != undefined){
         rowData.startDate = this.commonFunctionsService.getUTCEpoch(new Date(rowData.startDateVal) );
       }
+      if(rowData.endDateVal != null && rowData.endDateVal != undefined){
+        rowData.endDate = this.commonFunctionsService.getUTCEpoch(new Date(rowData.endDateVal) );
+      }
       if(rowData.authorizedSignatory != null && rowData.authorizedSignatory != undefined && rowData.authorizedSignatory){
         rowData.authorizedSignatoryName = applicationConstants.YES;
       }
@@ -873,6 +952,9 @@ export class TermLoanNewMembershipComponent {
       }
       if (rowData.startDate != null && rowData.startDate != undefined) {
         rowData.startDateVal  = this.datePipe.transform(rowData.startDate, this.orgnizationSetting.datePipe);
+      }
+      if(rowData.endDate != null && rowData.endDate != undefined){
+        rowData.endDateVal  = this.datePipe.transform(rowData.endDate, this.orgnizationSetting.datePipe);
       }
       if (!this.  memberGroupDetailsModel.groupPromotersDTOList) {
         this.  memberGroupDetailsModel.groupPromotersDTOList = []; // Initialize it as an empty array
@@ -931,19 +1013,53 @@ export class TermLoanNewMembershipComponent {
     this.addButton = true;
     this.EditDeleteDisable = true;
     this.groupPromoters = true;
-    this.onChangeExistedPrmoter(rowData.isExistingMember , false);
     this.promoterDetailsModel = new promoterDetailsModel();
-    this.promoterDetailsModel = rowData;
+    // First, assign the data
+    this.promoterDetailsModel = { ...rowData };
+    // Then, disable the fields
+    if (rowData.isExistingMember) {
+      setTimeout(() => { // Ensure Angular updates the UI before disabling
+        this.promoterDetailsForm.get('surname')?.disable();
+        this.promoterDetailsForm.get('name')?.disable();
+        this.promoterDetailsForm.get('dob')?.disable();
+        // this.promoterDetailsForm.get('operatorTypeId')?.disable();
+        this.promoterDetailsForm.get('dob')?.disable();
+        this.promoterDetailsForm.get('age')?.disable();
+        this.promoterDetailsForm.get('genderId')?.disable();
+        this.promoterDetailsForm.get('martialId')?.disable();
+        this.promoterDetailsForm.get('mobileNumber')?.disable();
+        this.promoterDetailsForm.get('aadharNumber')?.disable();
+        this.promoterDetailsForm.get('emailId')?.disable();
+        this.promoterDetailsForm.get('startDate')?.disable();
+        this.promoterDetailsForm.get('admissionNumber')?.setValue(rowData.admissionNumber);
+      }, 100);
+    }
+    else {
+      this.promoterDetailsForm.get('surname')?.enable();
+      this.promoterDetailsForm.get('name')?.enable();
+      // this.promoterDetailsForm.get('operatorTypeId')?.enable();
+      this.promoterDetailsForm.get('dob')?.enable();
+      this.promoterDetailsForm.get('age')?.enable();
+      this.promoterDetailsForm.get('genderId')?.enable();
+      this.promoterDetailsForm.get('martialId')?.enable();
+      this.promoterDetailsForm.get('mobileNumber')?.enable();
+      this.promoterDetailsForm.get('aadharNumber')?.enable();
+      this.promoterDetailsForm.get('emailId')?.enable();
+      this.promoterDetailsForm.get('startDate')?.enable();
+      this.promoterDetailsForm.get('admissionNumber')?.setValidators(null); 
+      this.promoterDetailsForm.get('admissionNumber')?.updateValueAndValidity();
+      this.admissionNumberDropDown = false;
+    }
     // this.promoterDetailsModel = this.promoterDetails.find((obj:any) => (obj != null && obj != undefined) && obj.uniqueId === rowData.uniqueId );
     if(this.promoterDetailsModel.isExistingMember ){
       this.admissionNumberDropDown = true;
-      this.promoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadImage  );
-      this.promoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadSignature  );
+      this.promoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadImage);
+      this.promoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadSignature);
     }
     else{
       this.admissionNumberDropDown = false;
-      this.promoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadImage  );
-      this.promoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadSignature  );
+      this.promoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadImage );
+      this.promoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.promoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.promoterDetailsModel.uploadSignature);
     }
     this.isFileUploadedPromoterPhoto = applicationConstants.TRUE;
     this.isFileUploadedPromoterSignature = applicationConstants.TRUE;
@@ -956,8 +1072,6 @@ export class TermLoanNewMembershipComponent {
    
      */
     onRowAddSave() {
-      this.promoterDetailsForm.get("photoUpload").reset();
-      this.promoterDetailsForm.get("signatureUpload").reset();
       this.isFileUploadedPromoterPhoto = applicationConstants.FALSE;
       this.isFileUploadedPromoterSignature = applicationConstants.FALSE;
       this.groupPromoters = true;
@@ -1034,6 +1148,9 @@ export class TermLoanNewMembershipComponent {
       if(rowData.startDateVal != null && rowData.startDateVal != undefined){
         rowData.startDate = this.commonFunctionsService.getUTCEpoch(new Date(rowData.startDateVal) );
       }
+      if(rowData.endDateVal != null && rowData.endDateVal != undefined){
+        rowData.endDate = this.commonFunctionsService.getUTCEpoch(new Date(rowData.endDateVal) );
+      }
       if(rowData.authorizedSignatory != null && rowData.authorizedSignatory != undefined && rowData.authorizedSignatory){
         rowData.authorizedSignatoryName = applicationConstants.YES;
       }
@@ -1042,6 +1159,9 @@ export class TermLoanNewMembershipComponent {
       }
       if (rowData.startDate != null && rowData.startDate != undefined) {
         rowData.startDateVal  = this.datePipe.transform(rowData.startDate, this.orgnizationSetting.datePipe);
+      }
+      if(rowData.endDate != null && rowData.endDate != undefined){
+        rowData.endDateVal = this.commonFunctionsService.getUTCEpoch(new Date(rowData.endDate) );
       }
       let Object = this.operatorTypeList.find((obj:any)=>obj.value == rowData.operatorTypeId);
       if(Object != null && Object != undefined && Object.label != null && Object.label != undefined) {
@@ -1102,9 +1222,45 @@ export class TermLoanNewMembershipComponent {
     this.addButton = true;
     this.EditDeleteDisable = true;
     this.institutionPromoterPopUp = true;
-    this.onChangeExistedPrmoter(rowData.isExistingMember , false);
     this.institutionPromoterDetailsModel = new InstitutionPromoterDetailsModel();
-   
+    // First, assign the data
+    this.promoterDetailsModel = { ...rowData };
+    // Then, disable the fields
+    if (rowData.isExistingMember) {
+      this.admissionNumberDropDown = true;
+      setTimeout(() => { // Ensure Angular updates the UI before disabling
+        this.promoterDetailsForm.get('surname')?.disable();
+        this.promoterDetailsForm.get('name')?.disable();
+        this.promoterDetailsForm.get('dob')?.disable();
+        // this.promoterDetailsForm.get('operatorTypeId')?.disable();
+        this.promoterDetailsForm.get('dob')?.disable();
+        this.promoterDetailsForm.get('age')?.disable();
+        this.promoterDetailsForm.get('genderId')?.disable();
+        this.promoterDetailsForm.get('martialId')?.disable();
+        this.promoterDetailsForm.get('mobileNumber')?.disable();
+        this.promoterDetailsForm.get('aadharNumber')?.disable();
+        this.promoterDetailsForm.get('emailId')?.disable();
+        this.promoterDetailsForm.get('startDate')?.disable();
+        this.promoterDetailsForm.get('admissionNumber')?.setValue(rowData.admissionNumber);
+      }, 100);
+    }
+    else {
+      this.admissionNumberDropDown = false;
+      this.promoterDetailsForm.get('surname')?.enable();
+      this.promoterDetailsForm.get('name')?.enable();
+      // this.promoterDetailsForm.get('operatorTypeId')?.enable();
+      this.promoterDetailsForm.get('dob')?.enable();
+      this.promoterDetailsForm.get('age')?.enable();
+      this.promoterDetailsForm.get('genderId')?.enable();
+      this.promoterDetailsForm.get('martialId')?.enable();
+      this.promoterDetailsForm.get('mobileNumber')?.enable();
+      this.promoterDetailsForm.get('aadharNumber')?.enable();
+      this.promoterDetailsForm.get('emailId')?.enable();
+      this.promoterDetailsForm.get('startDate')?.enable();
+      this.promoterDetailsForm.get('admissionNumber')?.setValidators(null); 
+      this.promoterDetailsForm.get('admissionNumber')?.updateValueAndValidity();
+      
+    }
     // this.institutionPromoterDetailsModel =  this.institutionPromoter.find((obj:any) => (obj != null && obj != undefined) && obj.uniqueId === rowData.uniqueId );
     this.institutionPromoterDetailsModel = rowData;
     if(this.institutionPromoterDetailsModel.isExistingMember ){
@@ -1115,8 +1271,8 @@ export class TermLoanNewMembershipComponent {
     }
     else{
       this.admissionNumberDropDown = false;
-      this.institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionPromoterDetailsModel.uploadImage  );
-      this.institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionPromoterDetailsModel.uploadSignature  );
+      this.institutionPromoterDetailsModel.multipartFileListForPhotoCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadImage ,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionPromoterDetailsModel.uploadImage  );
+      this.institutionPromoterDetailsModel.multipartFileListForSignatureCopyPath = this.fileUploadService.getFile(this.institutionPromoterDetailsModel.uploadSignature ,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionPromoterDetailsModel.uploadSignature  );
     }
    
     this.isFileUploadedPromoterPhoto = applicationConstants.TRUE;
@@ -1129,8 +1285,6 @@ export class TermLoanNewMembershipComponent {
    
      */
     onRowAddInstitution() {
-      this.promoterDetailsForm.get("photoUpload").reset();
-      this.promoterDetailsForm.get("signatureUpload").reset();
       this.isFileUploadedPromoterPhoto = applicationConstants.FALSE;
       this.isFileUploadedPromoterSignature = applicationConstants.FALSE;
       this.institutionPromoterPopUp = true;
@@ -1219,17 +1373,18 @@ export class TermLoanNewMembershipComponent {
         let timeStamp = this.commonComponent.getTimeStamp();
         let files = new FileUploadModel();
         this.uploadFileData = e.currentTarget;
-        files.fileName = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
+        // files.fileName = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
         files.fileType = file.type.split('/')[1];
         files.value = this.uploadFileData.result.split(',')[1];
         files.imageValue = this.uploadFileData.result;
         this.multipleFilesList.push(files);
          // Add to filesDTOList array
         if (filePathName === "individualPhotoCopy") {
+          files.fileName = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
           this.isFileUploadedPhoto = applicationConstants.TRUE;
           this.membershipBasicRequiredDetailsModel.filesDTOList.push(files);
-          this.membershipBasicRequiredDetailsModel.photoCopyPath = null;
           this.membershipBasicRequiredDetailsModel.multipartFileListForPhotoCopy.push(files);
+          this.membershipBasicRequiredDetailsModel.photoCopyPath = null;
           this.membershipBasicRequiredDetailsModel.filesDTOList[this.membershipBasicRequiredDetailsModel.filesDTOList.length - 1].fileName = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
           this.membershipBasicRequiredDetailsModel.photoCopyPath = "Individual_Member_Photo_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
         }
@@ -1240,30 +1395,6 @@ export class TermLoanNewMembershipComponent {
           this.membershipBasicRequiredDetailsModel.signatureCopyPath = null;
           this.membershipBasicRequiredDetailsModel.filesDTOList[this.membershipBasicRequiredDetailsModel.filesDTOList.length - 1].fileName = "Individual_Member_signed_copy" + "_" + timeStamp + "_" + file.name;
           this.membershipBasicRequiredDetailsModel.signatureCopyPath = "Individual_Member_signed_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
-        }
-        if (filePathName === "groupPhotoCopy") {
-          this.memberGroupDetailsModel.filesDTOList.push(files);
-          this.memberGroupDetailsModel.photoCopyPath = null;
-          this.memberGroupDetailsModel.filesDTOList[this.memberGroupDetailsModel.filesDTOList.length - 1].fileName = "Group_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
-          this.memberGroupDetailsModel.photoCopyPath = "Group_Member_Photo_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
-        }
-        if (filePathName === "groupSignatureCopy") {
-          this.memberGroupDetailsModel.filesDTOList.push(files);
-          this.memberGroupDetailsModel.signatureCopyPath = null;
-          this.memberGroupDetailsModel.filesDTOList[this.memberGroupDetailsModel.filesDTOList.length - 1].fileName = "Group_Member_signed_copy" + "_" + timeStamp + "_" + file.name;
-          this.memberGroupDetailsModel.signatureCopyPath = "Group_Member_signed_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
-        }
-        if (filePathName === "intistutionPhotoCopy") {
-          this.membershipInstitutionDetailsModel.filesDTOList.push(files);
-          this.membershipInstitutionDetailsModel.photoCopyPath = null;
-          this.membershipInstitutionDetailsModel.filesDTOList[this.membershipInstitutionDetailsModel.filesDTOList.length - 1].fileName = "Institution_Member_Photo_copy" + "_" + timeStamp + "_" + file.name;
-          this.membershipInstitutionDetailsModel.photoCopyPath = "Institution_Member_Photo_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
-        }
-        if (filePathName === "institutionSignature") {
-          this.membershipInstitutionDetailsModel.filesDTOList.push(files);
-          this.membershipInstitutionDetailsModel.signatureCopyPath = null;
-          this.membershipInstitutionDetailsModel.filesDTOList[this.membershipInstitutionDetailsModel.filesDTOList.length - 1].fileName = "Institution_Member_signed_copy" + "_" + timeStamp + "_" + file.name;
-          this.membershipInstitutionDetailsModel.signatureCopyPath = "Institution_Member_signed_copy" + "_" + timeStamp + "_" + file.name; // This will set the last file's name as docPath
         }
         this.updateData();
       }
@@ -1370,7 +1501,7 @@ export class TermLoanNewMembershipComponent {
             this.membershipBasicRequiredDetailsModel.admissionDate = null;
             this.membershipBasicRequiredDetailsModel.admissionDateVal = null;
             this.memberCreationForm.get('admissionDate')?.reset;
-            this.msgs = [{ severity: 'warning', detail: applicationConstants.DATE_OF_BIRTH_SHOULD_NOT_BE_GREATER_THAN_ADMISSION_DATE }];
+            this.msgs = [{ severity: 'warning', detail: applicationConstants.DATE_OF_BIRTH_SHOUL_NOT_BE_GREATER_THAN_ADMISSION_DATE }];
             setTimeout(() => {
               this.msgs = [];        
             }, 2000);
@@ -1388,7 +1519,7 @@ export class TermLoanNewMembershipComponent {
             this.membershipBasicRequiredDetailsModel.admissionDate = null;
             this.membershipBasicRequiredDetailsModel.admissionDateVal = null;
             this.memberCreationForm.get('admissionDate')?.reset;
-            this.msgs = [{ severity: 'warning', detail: applicationConstants.DATE_OF_BIRTH_SHOULD_NOT_BE_GREATER_THAN_ADMISSION_DATE }];
+            this.msgs = [{ severity: 'warning', detail: applicationConstants.DATE_OF_BIRTH_SHOUL_NOT_BE_GREATER_THAN_ADMISSION_DATE }];
             setTimeout(() => {
               this.msgs = [];        
             }, 2000);
@@ -1417,16 +1548,18 @@ export class TermLoanNewMembershipComponent {
  
    */
   onChangeExistedPrmoter(isExistingMember :any ,flag :boolean){
+    this.resetFields();
     if(flag){
-      this.resetFields();
       this.promoterDetailsModel = new promoterDetailsModel();
+      this.promoterDetailsModel.isExistingMember = isExistingMember;
       this.institutionPromoterDetailsModel = new InstitutionPromoterDetailsModel();
+      this.institutionPromoterDetailsModel.isExistingMember = isExistingMember;
     }
     if(isExistingMember){
         this.admissionNumberDropDown = true;
         this.promoterDetailsForm.get('surname')?.disable();
         this.promoterDetailsForm.get('name')?.disable();
-        this.promoterDetailsForm.get('operatorTypeId')?.disable();
+        // this.promoterDetailsForm.get('operatorTypeId')?.disable();
         this.promoterDetailsForm.get('dob')?.disable();
         this.promoterDetailsForm.get('age')?.disable();
         this.promoterDetailsForm.get('genderId')?.disable();
@@ -1441,7 +1574,7 @@ export class TermLoanNewMembershipComponent {
     else {
         this.promoterDetailsForm.get('surname')?.enable();
         this.promoterDetailsForm.get('name')?.enable();
-        this.promoterDetailsForm.get('operatorTypeId')?.enable();
+        // this.promoterDetailsForm.get('operatorTypeId')?.enable();
         this.promoterDetailsForm.get('dob')?.enable();
         this.promoterDetailsForm.get('age')?.enable();
         this.promoterDetailsForm.get('genderId')?.enable();
@@ -1462,7 +1595,7 @@ export class TermLoanNewMembershipComponent {
     resetFields(){
       this.promoterDetailsForm.get('surname').reset();
       this.promoterDetailsForm.get('name').reset();
-      this.promoterDetailsForm.get('operatorTypeId').reset();
+      // this.promoterDetailsForm.get('operatorTypeId').reset();
       this.promoterDetailsForm.get('dob').reset();
       this.promoterDetailsForm.get('age').reset();
       this.promoterDetailsForm.get('genderId').reset();
@@ -1549,7 +1682,6 @@ export class TermLoanNewMembershipComponent {
 
           this.isFileUploadedPromoterSignature = applicationConstants.TRUE;
         }
-         this.promoterDetailsModel.operatorTypeId  = this.  membershipBasicRequiredDetailsModel.occupationId;
          
         }
       }
@@ -1558,7 +1690,7 @@ export class TermLoanNewMembershipComponent {
         this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
         setTimeout(() => {
           this.msgs = [];
-        }, 3000);
+        }, 2000);
       }
     
     }, error => {
@@ -1566,7 +1698,7 @@ export class TermLoanNewMembershipComponent {
       this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
       setTimeout(() => {
         this.msgs = [];
-      }, 3000);
+      }, 2000);
     });
   }
   
@@ -1584,7 +1716,7 @@ export class TermLoanNewMembershipComponent {
           this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "One Group leader is Already Exist" }];
           setTimeout(() => {
             this.msgs = [];
-          }, 3000);
+          }, 2000);
         }
       }
     }
@@ -1596,7 +1728,7 @@ export class TermLoanNewMembershipComponent {
           this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "One Group leader is Already Exist" }];
           setTimeout(() => {
             this.msgs = [];
-          }, 3000);
+          }, 2000);
         }
       }
     }
@@ -1727,7 +1859,7 @@ export class TermLoanNewMembershipComponent {
       this.termLoanApplicationModel.branchId = this.branchId;
       if (this.termLoanApplicationId != null && this.  termLoanApplicationId != undefined) {
         this.termLoanApplicationModel.statusName = applicationConstants.IS_ACTIVE;
-        this.termLoanApplicationsService.updateTermApplication(this.  termLoanApplicationModel).subscribe((response: any) => {
+        this.termLoanApplicationsService.updateTermApplication(this.termLoanApplicationModel).subscribe((response: any) => {
           this.responseModel = response;
           if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
             if (this.responseModel.data != null && this.responseModel.data != undefined && this.responseModel.data.length > 0) {
@@ -1738,19 +1870,19 @@ export class TermLoanNewMembershipComponent {
             this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: "Membership updated Successfully" }];
             setTimeout(() => {
               this.msgs = [];
-            }, 1200);
+            }, 2000);
           } else {
             this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
             setTimeout(() => {
               this.msgs = [];
-            }, 3000);
+            }, 2000);
           }
         }, error => {
           this.commonComponent.stopSpinner();
           this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
           setTimeout(() => {
             this.msgs = [];
-          }, 3000);
+          }, 2000);
         });
       } else {
         this.termLoanApplicationModel.statusName = applicationConstants.IN_PROGRESS;
@@ -1765,20 +1897,20 @@ export class TermLoanNewMembershipComponent {
             this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: "Membership Created Successfully" }];
             setTimeout(() => {
               this.msgs = [];
-            }, 1200);
+            }, 2000);
   
           } else {
             this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
             setTimeout(() => {
               this.msgs = [];
-            }, 3000);
+            }, 2000);
           }
         }, error => {
           this.commonComponent.stopSpinner();
           this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
           setTimeout(() => {
             this.msgs = [];
-          }, 3000);
+          }, 2000);
         });
       }
     }
@@ -1793,20 +1925,20 @@ export class TermLoanNewMembershipComponent {
             setTimeout(() => {
               this.msgs = [];
               this.getTermApplicationByTermAccId(this.  termLoanApplicationId);
-            }, 1200);
+            }, 2000);
             
           } else {
             this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
             setTimeout(() => {
               this.msgs = [];
-            }, 3000);
+            }, 2000);
           }
         }, error => {
           this.commonComponent.stopSpinner();
           this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
           setTimeout(() => {
             this.msgs = [];
-          }, 3000);
+          }, 2000);
         });
       }
       else {
@@ -1818,20 +1950,20 @@ export class TermLoanNewMembershipComponent {
             setTimeout(() => {
               this.msgs = [];
               this.getTermApplicationByTermAccId(this.  termLoanApplicationId);
-            }, 1200);
+            }, 2000);
             
           } else {
             this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
             setTimeout(() => {
               this.msgs = [];
-            }, 3000);
+            }, 2000);
           }
         }, error => {
           this.commonComponent.stopSpinner();
           this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
           setTimeout(() => {
             this.msgs = [];
-          }, 3000);
+          }, 2000);
         });
       }
     }
@@ -1843,19 +1975,19 @@ export class TermLoanNewMembershipComponent {
      */
     saveGropPromotersDetails(rowData:any){
       if (rowData.id != null && rowData.id != undefined) {
-        this.  termLoanApplicationsService.updateGropDetails(rowData).subscribe((response: any) => {
+        this.  termLoanApplicationsService.updateGroupPromoterDetails(rowData).subscribe((response: any) => {
           this.responseModel = response;
           if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
             this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
             setTimeout(() => {
               this.msgs = [];
-            }, 1200);
+            }, 2000);
             this.getTermApplicationByTermAccId(this.  termLoanApplicationId);
           } else {
             this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
             setTimeout(() => {
               this.msgs = [];
-            }, 3000);
+            }, 2000);
           }
           this.groupPromoters = false;
         }, error => {
@@ -1863,23 +1995,24 @@ export class TermLoanNewMembershipComponent {
           this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
           setTimeout(() => {
             this.msgs = [];
-          }, 3000);
+          }, 2000);
         });
       }
       else {
+        rowData.statusName == applicationConstants.ACTIVE;
         this.termLoanApplicationsService.addGroupPromoterDetails(rowData).subscribe((response: any) => {
           this.responseModel = response;
           if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
             this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
             setTimeout(() => {
               this.msgs = [];
-            }, 1200);
+            }, 2000);
             this.getTermApplicationByTermAccId(this.  termLoanApplicationId);
           } else {
             this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: this.responseModel.statusMsg }];
             setTimeout(() => {
               this.msgs = [];
-            }, 3000);
+            }, 2000);
           }
           this.groupPromoters = false;
         }, error => {
@@ -1887,7 +2020,7 @@ export class TermLoanNewMembershipComponent {
           this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.SERVER_DOWN_ERROR }];
           setTimeout(() => {
             this.msgs = [];
-          }, 3000);
+          }, 2000);
         });
       }
     }
@@ -1925,7 +2058,7 @@ export class TermLoanNewMembershipComponent {
           this.msgs = [{ severity: 'error',  detail: applicationConstants.AGE_SHOULD_NOT_BE_ZERO }];
           setTimeout(() => {
             this.msgs = [];
-          }, 3000);
+          }, 2000);
         }
       }
     }
@@ -2000,7 +2133,7 @@ export class TermLoanNewMembershipComponent {
             this.msgs = [{ severity: 'error',  detail: applicationConstants.AGE_SHOULD_NOT_BE_ZERO }];
             setTimeout(() => {
               this.msgs = [];
-            }, 3000);
+            }, 2000);
           }
         }
       }
@@ -2046,7 +2179,7 @@ export class TermLoanNewMembershipComponent {
             this.msgs = [{ severity: 'error',  detail: applicationConstants.AGE_SHOULD_NOT_BE_ZERO }];
             setTimeout(() => {
               this.msgs = [];
-            }, 3000);
+            }, 2000);
           }
         }
       }
@@ -2105,5 +2238,76 @@ export class TermLoanNewMembershipComponent {
     if (institution != null && undefined != institution)
       this.membershipInstitutionDetailsModel.institutionName = institution.label;
   }
+
+  /**
+   * @implements isPoc Check for promoters
+   * @param isPoc 
+   * @returns 
+   */
+  isPosCheck(isPoc: any , isGroup:any) {
+    if(isGroup){
+      if (this.promoterDetails && this.promoterDetails.length > 0) {
+        let duplicate = this.promoterDetails.find(
+          (obj: any) =>
+            obj && obj.status === applicationConstants.ACTIVE && obj.isPoc === applicationConstants.TRUE
+        );
+        if (isPoc === applicationConstants.TRUE && duplicate) {
+          this.promoterDetailsForm.get("isPoc").reset();
+          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.POC_ALREADY_EXIST }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+          return;
+        }
+      }
+    }
+    else {
+      if (this.institutionPromoter && this.institutionPromoter.length > 0) {
+        let duplicate = this.institutionPromoter.find(
+          (obj: any) =>
+            obj && obj.status === applicationConstants.ACTIVE && obj.isPoc === applicationConstants.TRUE
+        );
+        if (isPoc === applicationConstants.TRUE && duplicate) {
+          this.promoterDetailsForm.get("isPoc").reset();
+          this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: applicationConstants.POC_ALREADY_EXIST }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+          return;
+        }
+      }
+    }
+    
+  }
+
+  /**
+   * @implements on Change of gender Type gender Type nam mapping
+   */
+  onGenderChange(genderId :any){
+    this.membershipBasicRequiredDetailsModel.genderName =this.genderList.find((obj:any) => obj.value == genderId)?.label;
+  }
+
+   /**
+   * @implements on Change of marital status gender Type nam marital status
+   */
+  maritalStatusChange(maritalStatusId :any){
+    this.membershipBasicRequiredDetailsModel.maritalStatusName =this.maritalStatusList.find((obj:any) => obj.value == maritalStatusId)?.label;
+  }
+
+  /**
+   * @implements onChange operation Type
+   * @param oprationType 
+   * @param isGroup 
+   */
+  onChangeOperationType(oprationType:any,isGroup:any){
+    if(isGroup){
+      this.memberGroupDetailsModel.operatorTypeName= this.operatorTypeList.find((obj:any) => obj.value == oprationType)?.label;
+    }
+    else {
+      this.membershipInstitutionDetailsModel.operatorTypeName= this.operatorTypeList.find((obj:any) => obj.value == oprationType)?.label;
+    }
+   
+  }
+
 
 }

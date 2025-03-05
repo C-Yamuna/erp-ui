@@ -208,7 +208,7 @@
 </div>
 
 
-<p-dialog header="Product Details" [modal]="true" [(visible)]="displayDialog" styleClass="moredetails-style">
+<p-dialog header="Product Details" [modal]="true" [(visible)]="displayDialog" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="moredetails-style">
     <div class="popup-basic-details">
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
@@ -274,14 +274,14 @@
                                                     <h6 class="label-view">{{'DEMANDDEPOSITS.INTEREST_POSTING_REQUIRED'
                                                         |translate}}</h6>
                                                     <p class="label-input-text">{{
-                                                        productDefinitionModel.isInterestPostingAllowed ? 'Yes' : 'No'}}</p>
+                                                        productDefinitionModel.isInterestPostingAllowedName}}</p>
                                                 </div>
                                                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                                                     <h6 class="label-view">
                                                         {{'DEMANDDEPOSITS.IS_CHEQUE_BOOK_ISSUING_ALLOWED' |translate}}
                                                     </h6>
                                                     <p class="label-input-text">{{
-                                                        productDefinitionModel.isCheckBookIssuingAllowed ? 'Yes' : 'No'}}
+                                                        productDefinitionModel.isCheckBookIssuingAllowedName}}
                                                     </p>
                                                 </div>
                                                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
@@ -289,15 +289,14 @@
                                                         {{'DEMANDDEPOSITS.IS_CHEQUE_BOOK_OPERATIONS_ALLOWED'
                                                         |translate}}</h6>
                                                     <p class="label-input-text">{{
-                                                        productDefinitionModel.isChequeBookOperationsAllowed ? 'Yes' :
-                                                        'No'}}</p>
+                                                        productDefinitionModel.isChequeBookOperationsAllowedName}}</p>
                                                 </div>
                                                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                                                     <h6 class="label-view">
                                                         {{'DEMANDDEPOSITS.IS_DEBIT_CARD_ISSUING_ALLOWED' |translate}}
                                                     </h6>
                                                     <p class="label-input-text">{{
-                                                        productDefinitionModel.isDebitCardIssuingAllowed ? 'Yes' : 'No'}}
+                                                        productDefinitionModel.isDebitCardIssuingAllowedName}}
                                                     </p>
                                                 </div>
 

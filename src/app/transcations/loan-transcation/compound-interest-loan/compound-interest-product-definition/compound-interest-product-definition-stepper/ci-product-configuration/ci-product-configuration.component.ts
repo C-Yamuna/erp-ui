@@ -33,9 +33,13 @@ export class CiProductConfigurationComponent {
   ciProductId: any;
   collaterals:any;
   statusList: any[] = [];
+  selectedPurposeTypes:any[]=[];
+  productDefinitionList: any[] = [];
+  tempProductDefinitionList: any[] = [];
 
   selectedCollateralIds: number[] = [];
   amountAndTenureFlag: boolean = applicationConstants.TRUE;
+  purposeTypeList: any[] = [];
   constructor(private formBuilder: FormBuilder,private commonComponent: CommonComponent,private activateRoute: ActivatedRoute,
     private datePipe: DatePipe,private encryptService: EncryptDecryptService,
     private compoundInterestProductDefinitionService : CompoundInterestProductDefinitionService, private collateralTypesService : CollateralTypesService,
@@ -59,7 +63,8 @@ export class CiProductConfigurationComponent {
      'minDaysForRenewel': new FormControl('', Validators.required),
      'interestPostingFrequency': new FormControl('', Validators.required),
      'nomineeRequired': new FormControl('', Validators.required),
-     'collateraltypes': new FormControl('',),
+     'collateraltypes':new FormControl('',Validators.required),
+     'purposeType':new FormControl('',Validators.required)
     })    
   }
   /**
@@ -71,28 +76,36 @@ export class CiProductConfigurationComponent {
   ngOnInit() {
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
     this.isSpecialSchemelist = this.commonComponent.requiredlist();
-      this.interestPostingFrequencyList = this.commonComponent.rePaymentFrequency();
-      this.statusList = this.commonComponent.status();
+    this.interestPostingFrequencyList = this.commonComponent.rePaymentFrequency();
+    this.getAllCollaterals();
+    this.getAllPurposeTypes();
+    this.statusList = this.commonComponent.status();
     this.activateRoute.queryParams.subscribe(params => {
       let encrypted = params['id'];
-      if (encrypted!= undefined) {
+      if (encrypted != undefined) {
         this.isEdit = applicationConstants.TRUE;
         this.ciProductId = Number(this.encryptService.decrypt(encrypted));
-          this.getPreviewDetailsByProductId(this.ciProductId);
+        this.getPreviewDetailsByProductId(this.ciProductId);
       } else {
         this.isEdit = applicationConstants.FALSE;
       }
       this.updateData();
     });
-  
+
     this.productionDefinitionForm.valueChanges.subscribe((data: any) => {
       this.updateData();
       if (this.productionDefinitionForm.valid) {
         this.save();
       }
     });
-    this.getAllCollaterals();
+    
+    this.getAllCiProductDefinitions();
   }
+  /**
+   * @implements get preview details by product id
+   * @param id 
+   * @author jyothi.naidana
+   */
   getPreviewDetailsByProductId(id: any) {
     this.isEdit = applicationConstants.TRUE;
     this.ciProdCollateralsConfigDTOList=[]
@@ -102,17 +115,38 @@ export class CiProductConfigurationComponent {
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS && this.responseModel.data[0] != null) {
         this.compoundInterestProductDefinitionModel = this.responseModel.data[0];
         if (this.compoundInterestProductDefinitionModel != null && this.compoundInterestProductDefinitionModel != undefined) {
-
+          //pusepose type ids
+          if (this.compoundInterestProductDefinitionModel.purposeTypeIds != null && this.compoundInterestProductDefinitionModel.purposeTypeIds != undefined) {
+            let contentSelected = this.compoundInterestProductDefinitionModel.purposeTypeIds.split(',');
+            if (contentSelected.length > 0) {
+              for (let id of contentSelected) {
+                this.selectedPurposeTypes.push(Number(id));
+              }
+              if (this.selectedPurposeTypes?.length) {
+                this.selectedPurposeTypes = [...this.selectedPurposeTypes]; // Trigger change detection
+              }
+            }
+          }
+          //collateral type ids
+          if (this.compoundInterestProductDefinitionModel.collateralTypeIds != null && this.compoundInterestProductDefinitionModel.collateralTypeIds != undefined) {
+            let contentSelected = this.compoundInterestProductDefinitionModel.collateralTypeIds.split(',');
+            if (contentSelected.length > 0) {
+              for (let id of contentSelected) {
+                this.selectedCollateralIds.push(Number(id));
+              }
+              if (this.selectedCollateralIds?.length) {
+                this.selectedCollateralIds = [...this.selectedCollateralIds]; // Trigger change detection
+              }
+            }
+          }
           if(null!=this.compoundInterestProductDefinitionModel.effectiveStartDate && undefined!=this.compoundInterestProductDefinitionModel.effectiveStartDate)
             this.compoundInterestProductDefinitionModel.effectiveStartDate = this.datePipe.transform(this.compoundInterestProductDefinitionModel.effectiveStartDate, this.orgnizationSetting.datePipe);
 
           if(null!=this.compoundInterestProductDefinitionModel.endDate && undefined!=this.compoundInterestProductDefinitionModel.endDate)
             this.compoundInterestProductDefinitionModel.endDate = this.datePipe.transform(this.compoundInterestProductDefinitionModel.endDate, this.orgnizationSetting.datePipe);
-          this.initializeFormWithCollaterals(this.compoundInterestProductDefinitionModel.ciProdCollateralsConfigDTOList);
+          if(this.compoundInterestProductDefinitionModel.ciProdCollateralsConfigDTOList != null && this.compoundInterestProductDefinitionModel.ciProdCollateralsConfigDTOList != undefined && this.compoundInterestProductDefinitionModel.ciProdCollateralsConfigDTOList.length >0)
+              // this.initializeFormWithCollaterals(this.compoundInterestProductDefinitionModel.ciProdCollateralsConfigDTOList);
           this.productionDefinitionForm.patchValue(this.compoundInterestProductDefinitionModel);
-
-          
-
       }
       this.updateData();
       }else {
@@ -127,6 +161,46 @@ export class CiProductConfigurationComponent {
       this.msgs = [{ severity: "error", summary: 'Failed', detail:  applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST }];
       this.commonComponent.stopSpinner();
     });
+  }
+
+
+  /**
+   * @implements  get all purpose types
+   * @author jyothi.naidana
+   */
+  getAllPurposeTypes() {
+    this.commonComponent.startSpinner();
+    this.purposeTypeList = [];
+    this.compoundInterestProductDefinitionService.getAllLoanPurpose().subscribe((res: any) => {
+      this.responseModel = res;
+      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS && this.responseModel.data[0] != null) {
+        if (this.responseModel.data == null || (this.responseModel.data != null && this.responseModel.data.length == 0)) {
+          this.commonComponent.stopSpinner();
+          this.msgs = [];
+          this.msgs = [{ severity: 'error', detail: applicationConstants.RELATIONSHIP_TYPE_NO_DATA_MESSAGE }];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+        } else {
+          this.purposeTypeList = this.responseModel.data.filter((documenttype: any) => documenttype.status == applicationConstants.ACTIVE).map((count: any) => {
+            return { label: count.name, value: count.id }
+          });
+
+          // let purposeType = this.purposeTypeList.find((data: any) => null != data && data.value == this.ciPurposeModel.purposeId);
+          // if (purposeType != null && undefined != purposeType)
+          //   this.ciPurposeModel.loanPurposeName = purposeType.label;
+          this.commonComponent.stopSpinner();
+        }
+      }
+    },
+      error => {
+        this.msgs = [];
+        this.commonComponent.stopSpinner();
+        this.msgs = [{ severity: 'error', detail: applicationConstants.SERVER_DOWN_ERROR }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      });
   }
  
   /**
@@ -151,6 +225,11 @@ export class CiProductConfigurationComponent {
   save() {
     this.updateData();
   }
+
+  /**
+   * @implements get all collateral list 
+   * @author jyothi.naidana
+   */
   getAllCollaterals() {
     this.msgs = [];
     this.commonComponent.startSpinner();
@@ -178,17 +257,28 @@ export class CiProductConfigurationComponent {
       this.commonComponent.stopSpinner();
     });
   }
+  /**
+   * @implements initializeFormWithCollaterals
+   * @param collaterals 
+   * @author jyothi.naidana
+   */
   initializeFormWithCollaterals(collaterals: any[]) {
     this.selectedCollateralIds =collaterals.filter((data: any) => data.status == applicationConstants.ACTIVE).map((collateral: any) => collateral.collateralType);
-  
     this.productionDefinitionForm.get('collateraltypes')?.setValue(this.selectedCollateralIds);
   }
 
+  /**
+   * @implements on Collateral Changes
+   * @param event 
+   * @author jyothi.naidana
+   */
   onCollateralChange(event: any) {
     const newlySelectedIds = event.value;
     this.selectedCollateralIds = newlySelectedIds;
-    this.productionDefinitionForm.get('collateraltypes')?.setValue(this.selectedCollateralIds);
-  
+    const collateralIds: number[] = this.selectedCollateralIds;
+    const collateralIdsString :string= collateralIds.join(',');
+    this.compoundInterestProductDefinitionModel.collateralTypeIds = collateralIdsString
+    // this.productionDefinitionForm.get('collateraltypes')?.setValue(this.selectedCollateralIds);
     this.compoundInterestProductDefinitionModel.ciProdCollateralsConfigDTOList = this.selectedCollateralIds.map((id: any) => ({
       ciProductId: this.ciProductId,
       collateralType: id,
@@ -198,6 +288,28 @@ export class CiProductConfigurationComponent {
     }));
     this.updateData();
   }
+
+  /**
+   * @implements on Collateral Change
+   * @param event 
+   * @author jyothi.naidana
+   */
+  onChangePurPoseTypes(event: any) {
+    const newlySelectedIds = event.value;
+    this.selectedPurposeTypes = newlySelectedIds;
+    const purposeIds: number[] = this.selectedPurposeTypes;
+    const pacsIdString :string= purposeIds.join(',');
+    this.compoundInterestProductDefinitionModel.purposeTypeIds = pacsIdString
+    // this.productionDefinitionForm.get('purposeType')?.setValue(this.selectedPurposeTypes);
+    this.compoundInterestProductDefinitionModel.ciProdPurposeConfigDTOList = this.selectedPurposeTypes.map((id: any) => ({
+      ciProductId: this.ciProductId,
+      purposeId: id,
+      status: this.statusList[0].value, 
+      statusName: this.statusList[0].label,
+    }));
+    this.updateData();
+  }
+
   amountValidation(box: any) {
     if (this.compoundInterestProductDefinitionModel.eligibleMInAmount != null && this.compoundInterestProductDefinitionModel.eligibleMInAmount != undefined
       && this.compoundInterestProductDefinitionModel.eligibleMaxAmount != null && this.compoundInterestProductDefinitionModel.eligibleMaxAmount != undefined) {
@@ -269,5 +381,62 @@ this.updateData();
   }
 }
 this.updateData();
+  }
+
+   /**
+      @author Dileep_Kumar_G
+      @implements get All Product Definitions
+    */
+  getAllCiProductDefinitions() {
+    this.compoundInterestProductDefinitionService.getAllCompoundInterestProductDefinition().subscribe((data: any) => {
+      this.responseModel = data;
+      if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
+        if (null != this.responseModel.data && undefined != this.responseModel.data) {
+          this.productDefinitionList = this.responseModel.data;
+          this.tempProductDefinitionList = this.productDefinitionList;
+        }
+        this.commonComponent.stopSpinner();
+      } else {
+        this.commonComponent.stopSpinner();
+        this.msgs = [{ severity: 'error', detail: this.responseModel.statusMsg }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
+    }, error => {
+      this.msgs = [];
+      this.msgs = [{ severity: "error", summary: 'Failed', detail: applicationConstants.WE_COULDNOT_PROCESS_YOU_ARE_REQUEST }];
+      this.commonComponent.stopSpinner();
+    });
+  }
+
+  /**
+      @author Dileep_Kumar_G
+      @implements product Name Duplicate Check
+    */
+  productNameDuplicateCheck() {
+    let isFlag = applicationConstants.TRUE;
+    if (this.isEdit) {
+      if (null != this.tempProductDefinitionList && undefined != this.tempProductDefinitionList && this.tempProductDefinitionList.length > 0) {
+        const user = this.tempProductDefinitionList.find(user => user.name === this.compoundInterestProductDefinitionModel.name);
+        if (user != null && user != undefined) {
+          if (user.id === this.compoundInterestProductDefinitionModel.id) {
+            isFlag = applicationConstants.FALSE;
+          }
+        }
+      }
+    }
+    if (null != this.tempProductDefinitionList && undefined != this.tempProductDefinitionList && this.tempProductDefinitionList.length > 0) {
+      this.tempProductDefinitionList.filter((data: any) => null != data.name).map(product => {
+        if (isFlag && product.name === this.compoundInterestProductDefinitionModel.name) {
+          this.msgs = [];
+          this.msgs.push({ severity: 'warning', detail: applicationConstants.PRODUCT_NAME_ALREADY_EXIST });
+          this.productionDefinitionForm.get('name')?.reset();
+          setTimeout(() => {
+            this.msgs = [];
+          }, 1500);
+        }
+      });
+    }
   }
 }

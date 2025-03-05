@@ -134,13 +134,14 @@ export class SiCommunicationComponent {
           if (this.responseModel.data != null && this.responseModel.data != undefined) {
             if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
               if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined && this.responseModel.data.length > 0) {
-                if (this.responseModel.data[0].admissionNumber != null && this.responseModel.data[0].admissionNumber != undefined)
-                  this.admissionNumber = this.responseModel.data[0].admissionNumber;
-                if (this.responseModel.data[0].accountNumber != null && this.responseModel.data[0].accountNumber != undefined)
-                  this.accountNumber = this.responseModel.data[0].accountNumber;
-                if (this.responseModel.data[0].memberTypeName != null && this.responseModel.data[0].memberTypeName != undefined)
-                  this.memberTypeName = this.responseModel.data[0].memberTypeName;
                 this.siLoanApplicationModel = this.responseModel.data[0];
+                if (this.siLoanApplicationModel.admissionNo != null && this.siLoanApplicationModel.admissionNo != undefined)
+                  this.admissionNumber = this.siLoanApplicationModel.admissionNo;
+                if (this.siLoanApplicationModel.accountNumber != null && this.siLoanApplicationModel.accountNumber != undefined)
+                  this.accountNumber = this.siLoanApplicationModel.accountNumber;
+                if (this.siLoanApplicationModel.memberTypeName != null && this.siLoanApplicationModel.memberTypeName != undefined)
+                  this.memberTypeName = this.siLoanApplicationModel.memberTypeName;
+                this.siLoanApplicationModel = this.siLoanApplicationModel;
                 if (this.siLoanApplicationModel != null && this.siLoanApplicationModel != undefined)
                   if (this.siLoanApplicationModel.siLoanCommunicationDTO != null && this.siLoanApplicationModel.siLoanCommunicationDTO != undefined){
                     this.siLoanCommunicationModel = this.siLoanApplicationModel.siLoanCommunicationDTO;
@@ -167,6 +168,7 @@ export class SiCommunicationComponent {
         }, 2000);
       });
     }
+    
  
       /**
      *@author k.yamuna
@@ -227,6 +229,7 @@ export class SiCommunicationComponent {
         }, 3000);
       });
     }
+    
   
   
       /**
@@ -242,7 +245,7 @@ export class SiCommunicationComponent {
             if (this.responseModel.data[0].groupCommunicationList != null && this.responseModel.data[0].groupCommunicationList != undefined &&
               this.responseModel.data[0].groupCommunicationList[0] != null && this.responseModel.data[0].groupCommunicationList[0] != undefined) {
               this.siLoanCommunicationModel = this.responseModel.data[0].groupCommunicationList[0];
-              this.siLoanCommunicationModel.pinCode = this.responseModel.data[0].groupCommunicationList[0].pincode;
+              this.siLoanCommunicationModel.pincode = this.responseModel.data[0].groupCommunicationList[0].pincode;
               if (this.siLoanCommunicationModel.memberTypeName != null && this.siLoanCommunicationModel.memberTypeName != undefined)
                 this.memberTypeName = this.siLoanCommunicationModel.memberTypeName;
               this.setAllFields();
@@ -763,7 +766,7 @@ export class SiCommunicationComponent {
         }
         this.siLoanCommunicationModel.address1 = this.siLoanCommunicationModel.permanentAddress1;
         // this.siLoanCommunicationModel.permanentAddress2 = this.siLoanCommunicationModel.address2;
-        this.siLoanCommunicationModel.pinCode = this.siLoanCommunicationModel.permanentPinCode;
+        this.siLoanCommunicationModel.pincode = this.siLoanCommunicationModel.permanentPinCode;
         this.siLoanCommunicationModel.blockId = this.siLoanCommunicationModel.permanentBlockId;
         this.siLoanCommunicationModel.blockName = this.siLoanCommunicationModel.permanentBlockName;
   
@@ -799,7 +802,7 @@ export class SiCommunicationComponent {
         this.siLoanCommunicationModel.subDistrictId = null;
         this.siLoanCommunicationModel.villageId = null;
         this.siLoanCommunicationModel.address1 = null;
-        this.siLoanCommunicationModel.pinCode = null;
+        this.siLoanCommunicationModel.pincode = null;
         this.siLoanCommunicationModel.blockId = null;
         this.siLoanCommunicationModel.divisionId = null;
   
@@ -815,7 +818,7 @@ export class SiCommunicationComponent {
     RegAddressToComAddress() {
       if (this.siLoanCommunicationModel.isSameAddress == applicationConstants.TRUE) {
         this.siLoanCommunicationModel.address1 = this.siLoanCommunicationModel.permanentAddress1;
-        this.siLoanCommunicationModel.pinCode = this.siLoanCommunicationModel.permanentPinCode;
+        this.siLoanCommunicationModel.pincode = this.siLoanCommunicationModel.permanentPinCode;
       }
     }
 
@@ -846,9 +849,9 @@ export class SiCommunicationComponent {
           this.siLoanCommunicationModel.address1 = null;
           this.siLoanCommunicationModel.address1 = this.siLoanCommunicationModel.permanentAddress1;
         }
-        if (this.siLoanCommunicationModel.pinCode != this.siLoanCommunicationModel.permanentPinCode) {
-          this.siLoanCommunicationModel.pinCode = null;
-          this.siLoanCommunicationModel.pinCode = this.siLoanCommunicationModel.permanentPinCode;
+        if (this.siLoanCommunicationModel.pincode != this.siLoanCommunicationModel.permanentPinCode) {
+          this.siLoanCommunicationModel.pincode = null;
+          this.siLoanCommunicationModel.pincode = this.siLoanCommunicationModel.permanentPinCode;
         }
   
         if (this.siLoanCommunicationModel.divisionId != this.siLoanCommunicationModel.permanentDivisionId) {

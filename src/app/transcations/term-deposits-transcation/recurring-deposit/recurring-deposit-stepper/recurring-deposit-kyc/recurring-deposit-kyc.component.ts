@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RdAccountKycService } from '../../../shared/rd-account-kyc.service';
@@ -16,7 +16,7 @@ import { FileUpload } from 'primeng/fileupload';
 import { termdeposittransactionconstant } from '../../../term-deposit-transaction-constant';
 import { FileUploadService } from 'src/app/shared/file-upload.service';
 import { RdAccountsModel } from '../../../shared/term-depost-model.model';
-import { MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
+import { DOCUMENT_TYPES, MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
 
 @Component({
   selector: 'app-recurring-deposit-kyc',
@@ -101,6 +101,8 @@ export class RecurringDepositKycComponent {
   requiredDocumentsNamesText: any;
   saveAndNextEnable : boolean = false;
   kycPhotoCopyZoom: boolean = false;
+  isMaximized: boolean = false;
+  isPanNumber: boolean = false;
 
 
   constructor(private router: Router, private formBuilder: FormBuilder, private rdAccountsService: RdAccountsService,
@@ -112,7 +114,7 @@ export class RecurringDepositKycComponent {
         'docTypeName': new FormControl('', Validators.required),
         'docNumber': new FormControl('',[Validators.required, Validators.pattern(applicationConstants.ALLOW_NUMBERS_ONLY)]),
         'nameAsPerDocument': new FormControl('',[Validators.required,Validators.pattern(applicationConstants.NEW_NAME_PATTERN), Validators.maxLength(40)]),
-        'fileUpload': new FormControl(''),
+        'kycFilePath': new FormControl(''),
         'promoter': new FormControl('')
       });
   }
@@ -172,36 +174,57 @@ export class RecurringDepositKycComponent {
     });
   }
 
-
   imageUploader(event: any, fileUpload: FileUpload) {
+    let fileSizeFlag = false;
     this.isFileUploaded = applicationConstants.FALSE;
     this.multipleFilesList = [];
     this.rdKycModel.filesDTOList = [];
     this.rdKycModel.kycFilePath = null;
-    let files: FileUploadModel = new FileUploadModel();
-    for (let file of event.files) {
-      let reader = new FileReader();
-      reader.onloadend = (e) => {
-        this.isFileUploaded = applicationConstants.TRUE;
-        let files = new FileUploadModel();
-        this.uploadFileData = e.currentTarget;
-        files.fileName = file.name;
-        files.fileType = file.type.split('/')[1];
-        files.value = this.uploadFileData.result.split(',')[1];
-        files.imageValue = this.uploadFileData.result;
-        let index = this.multipleFilesList.findIndex(x => x.fileName == files.fileName);
-        if (index === -1) {
-          this.multipleFilesList.push(files);
-          this.rdKycModel.filesDTOList.push(files); // Add to filesDTOList array
-        }
-        let timeStamp = this.commonComponent.getTimeStamp();
-        this.rdKycModel.filesDTOList[0].fileName = "RD_KYC_" + this.rdAccId + "_" +timeStamp+ "_"+ file.name ;
-        this.rdKycModel.kycFilePath = "RD_KYC_" + this.rdAccId + "_" +timeStamp+"_"+ file.name; // This will set the last file's name as docPath
-        let index1 = event.files.findIndex((x: any) => x === file);
-        fileUpload.remove(event, index1);
-        fileUpload.clear();
+    this.rdKycModel.multipartFileList = [];
+    
+    let selectedFiles = [...event.files];
+    if (selectedFiles[0].size / 1024 / 1024 > 2) {
+      this.msgs = [{ severity: "warning", summary: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_2MB }];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 2000);
+      fileSizeFlag = true;
+    }
+
+    fileUpload.clear();
+    if (!fileSizeFlag) {
+      for (let file of selectedFiles) {
+        let reader = new FileReader();
+        reader.onloadend = (e) => {
+          this.isFileUploaded = applicationConstants.TRUE;
+          let files = new FileUploadModel();
+          this.uploadFileData = e.currentTarget;
+          files.fileName = file.name;
+          files.fileType = file.type.split("/")[1];
+          files.value = this.uploadFileData.result.split(",")[1];
+          files.imageValue = this.uploadFileData.result;
+
+          let index = this.multipleFilesList.findIndex((x) => x.fileName === files.fileName);
+          if (index === -1) {
+            this.multipleFilesList.push(files);
+            this.rdKycModel.filesDTOList.push(files);
+            this.rdKycModel.multipartFileList.push(files);
+          }
+
+          let timeStamp = this.commonComponent.getTimeStamp();
+          this.rdKycModel.filesDTOList[0].fileName = "RD_KYC_" + this.rdAccId + "_" + timeStamp + "_" + file.name;
+          this.rdKycModel.kycFilePath = "RD_KYC_" + this.rdAccId + "_" + timeStamp + "_" + file.name;
+
+          let index1 = event.files.findIndex((x: any) => x === file);
+          fileUpload.remove(event, index1);
+          fileUpload.clear();
+        };
+        reader.readAsDataURL(file);
       }
-      reader.readAsDataURL(file);
+    } else {
+      setTimeout(() => {
+        this.msgs = [];
+      }, 2000);
     }
   }
 
@@ -588,6 +611,9 @@ export class RecurringDepositKycComponent {
                   this.rdKycModel.multipartFileList = this.fileUploadService.getFile(this.rdKycModel.kycFilePath ,ERP_TRANSACTION_CONSTANTS.TERMDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.rdKycModel.kycFilePath);
                   this.isFileUploaded = applicationConstants.TRUE;
                 }
+                if(this.rdKycModel.kycDocumentTypeName != null && this.rdKycModel.kycDocumentTypeName != undefined){
+                  this.documentNumberDynamicValidation(this.rdKycModel.kycDocumentTypeName );
+                }  
               }
             }
           }
@@ -747,17 +773,38 @@ export class RecurringDepositKycComponent {
    * @param kycDocTypeId 
 
    */
-  kycModelDuplicateCheck(RdKycModel: any) {
+  kycModelDuplicateCheck(rowData: any) {
+    if (this.documentNameList != null && this.documentNameList != undefined && this.documentNameList.length > 0) {
+      let filteredObj = this.documentNameList.find((data: any) => null != data && this.rdKycModel.kycDocumentTypeId != null && data.value == this.rdKycModel.kycDocumentTypeId);
+      if (filteredObj != null && undefined != filteredObj && filteredObj.label != null && filteredObj.label != undefined) {
+        this.rdKycModel.kycDocumentTypeName = filteredObj.label;
+        this.documentNumberDynamicValidation(this.rdKycModel.kycDocumentTypeName);
+      }
+    }
     if (this.kycModelList != null && this.kycModelList != undefined && this.kycModelList.length > 0) {
-      let duplicate
-      if (this.rdAccountsModel.memberTypeName != MemberShipTypesData.INDIVIDUAL) {
-        duplicate = this.kycModelList.find((obj: any) => obj && obj.kycDocumentTypeId === RdKycModel.kycDocumentTypeId && obj.promoterId === RdKycModel.promoterId);
+      let duplicate: any
+      if (this.rdKycModel.memberTypeName != MemberShipTypesData.INDIVIDUAL) {
+        duplicate = this.kycModelList.filter((obj: any) => obj && obj.kycDocumentTypeId === rowData.kycDocumentTypeId && obj.promoterId === rowData.promoterId);
       }
       else {
-        duplicate = this.kycModelList.find((obj: any) => obj && obj.kycDocumentTypeId === RdKycModel.kycDocumentTypeId);
+        duplicate = this.kycModelList.filter((obj: any) => obj && obj.kycDocumentTypeId === rowData.kycDocumentTypeId);
       }
-      if (duplicate != null && duplicate != undefined) {
+      if (this.addDocumentOfKycFalg && duplicate != null && duplicate != undefined && duplicate.length == 1) {
         this.kycForm.reset();
+        this.rdKycModel = new RdKycModel();
+        if (rowData.id != null && rowData != undefined)
+          this.rdKycModel.id = rowData.id;
+        this.msgs = [];
+        this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "duplicate Kyc Types" }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 3000);
+      }
+      else if (!this.addDocumentOfKycFalg && duplicate != null && duplicate != undefined && duplicate.length == 1 && duplicate[0].id != rowData.id) {
+        this.kycForm.reset();
+        this.rdKycModel = new RdKycModel();
+        if (rowData.id != null && rowData != undefined)
+          this.rdKycModel.id = rowData.id;
         this.msgs = [];
         this.msgs = [{ severity: 'error', summary: applicationConstants.STATUS_ERROR, detail: "duplicate Kyc Types" }];
         setTimeout(() => {
@@ -803,6 +850,7 @@ export class RecurringDepositKycComponent {
 
    */
   fileRemoeEvent(){
+    this.isFileUploaded = applicationConstants.FALSE;
     if(this.rdKycModel.filesDTOList != null && this.rdKycModel.filesDTOList != undefined && this.rdKycModel.filesDTOList.length > 0){
      let removeFileIndex = this.rdKycModel.filesDTOList.findIndex((obj:any) => obj && obj.fileName === this.rdKycModel.kycFilePath);
      if(removeFileIndex != null && removeFileIndex != undefined){
@@ -812,8 +860,10 @@ export class RecurringDepositKycComponent {
     }
    }
 
-   onClickkycPhotoCopy() {
+   onClickkycPhotoCopy(rowData :any){
+    this.multipleFilesList = [];
     this.kycPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
   }
 
   kycclosePhoto() {
@@ -823,5 +873,64 @@ export class RecurringDepositKycComponent {
   kycclosePhotoCopy() {
     this.kycPhotoCopyZoom = false;
   }
+    /**
+      * @implements document number dynamic Vaildation
+      * @author Bhargavi
+      */
+    documentNumberDynamicValidation(docTypeName: any) {
+      if (DOCUMENT_TYPES.AADHAR == this.rdKycModel.kycDocumentTypeName) {
+        const controlTow = this.kycForm.get('docNumber');
+        if (controlTow) {
+          controlTow.setValidators([
+            Validators.required,
+            Validators.pattern(applicationConstants.AADHAR_PATTERN)
+          ]);
+          controlTow.updateValueAndValidity();
+        }
+        this.isPanNumber = false;
+      }
+      else if (DOCUMENT_TYPES.PANNUMBER == this.rdKycModel.kycDocumentTypeName) {
+        const controlTow = this.kycForm.get('docNumber');
+        if (controlTow) {
+          controlTow.setValidators([
+            Validators.required,
+            Validators.pattern(applicationConstants.PAN_NUMBER_PATTERN)
+          ]);
+          controlTow.updateValueAndValidity();
+        }
+        this.isPanNumber = true;
+      }
+      else {
+        const controlTow = this.kycForm.get('docNumber');
+        if (controlTow) {
+          controlTow.setValidators([
+            Validators.required,
+          ]);
+          controlTow.updateValueAndValidity();
+        }
+        this.isPanNumber = false;
+      }
+    }
 
+  // Popup Maximize
+          @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+        
+          onDialogResize(event: any) {
+            this.isMaximized = event.maximized;
+        
+            if (this.isMaximized) {
+              // Restore original image size when maximized
+              this.imageElement.nativeElement.style.width = 'auto';
+              this.imageElement.nativeElement.style.height = 'auto';
+              this.imageElement.nativeElement.style.maxWidth = '100%';
+              this.imageElement.nativeElement.style.maxHeight = '100vh';
+            } else {
+              // Fit image inside the dialog without scrollbars
+              this.imageElement.nativeElement.style.width = '100%';
+              this.imageElement.nativeElement.style.height = '100%';
+              this.imageElement.nativeElement.style.maxWidth = '100%';
+              this.imageElement.nativeElement.style.maxHeight = '100%';
+              this.imageElement.nativeElement.style.objectFit = 'contain';
+            }
+          }
 }

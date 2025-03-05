@@ -93,5 +93,6 @@ export const termdeposittransactionconstant = {
 
       RD_FORECLOSURE:"/menu/term_deposit_transaction/rd_foreclosure_closure",
       RD_RENEWAL:"/menu/term_deposit_transaction/rd_renewal",
+      
 
 }

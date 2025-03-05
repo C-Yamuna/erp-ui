@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CommonComponent } from 'src/app/shared/common.component';
@@ -104,6 +104,8 @@ export class MembershipBasicDetailsComponent {
   loanId:any;
   saveButtonDisable: boolean= false;
   isPanNumber: boolean = false;
+  kycPhotoCopyZoom: boolean = false;
+  isMaximized: boolean = false;
 
   constructor(private formBuilder: FormBuilder, private commonComponent: CommonComponent, private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService,
     private membershipBasicDetailsService: MembershipBasicDetailsService, private saoLoanApplicationService: SaoLoanApplicationService, private saoLoanNomineeDetailsService: SaoLoanNomineeDetailsService,
@@ -111,11 +113,10 @@ export class MembershipBasicDetailsComponent {
   ) {
     this.kycForm = this.formBuilder.group({
       // 'promoterName': [{ value: '', disabled: true }],
-      'kycDocumentTypeName': new FormControl('', Validators.required),
-      'documentNumber':new FormControl('',[Validators.required, Validators.pattern(/^[^\s]+(\s.*)?$/)]),
-      
-      'nameAsPerDocument':new FormControl('',[Validators.required,Validators.pattern(applicationConstants.NEW_NAME_PATTERN), Validators.maxLength(40), Validators.pattern(/^[^\s]+(\s.*)?$/)]),
-      'kycFilePath': new FormControl(''),
+      'kycDocumentTypeName':  new FormControl({ value: '', disabled: true }, Validators.required),
+      'documentNumber':new FormControl({ value: '', disabled: true }, [Validators.required, Validators.pattern(/^[^\s]+(\s.*)?$/)]),
+      'nameAsPerDocument':new FormControl({ value: '', disabled: false }, [Validators.pattern(applicationConstants.ALPHA_NAME_PATTERN), Validators.required]),
+      'kycFilePath': new FormControl({ value: '', disabled: false })
      })
   }
   ngOnInit(): void {
@@ -414,6 +415,7 @@ export class MembershipBasicDetailsComponent {
     this.addDocumentOfKycFalg = true;
   }
   toggleEditForm(index: number, modelData: any): void {
+    this.documentNumberDynamicValidation(modelData.documentNumber);
     if (this.editIndex === index) {
       this.editIndex = index;
     } else {
@@ -710,4 +712,37 @@ export class MembershipBasicDetailsComponent {
     this.updateData();
   }
 
+  onClickkycPhotoCopy(rowData :any){
+    this.multipleFilesList = [];
+    this.kycPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
+  }
+  kycclosePhoto(){
+    this.kycPhotoCopyZoom = false;
+  }
+  kycclosePhotoCopy() {
+    this.kycPhotoCopyZoom = false;
+  }
+  
+  // Popup Maximize
+      @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+    
+      onDialogResize(event: any) {
+        this.isMaximized = event.maximized;
+    
+        if (this.isMaximized) {
+          // Restore original image size when maximized
+          this.imageElement.nativeElement.style.width = 'auto';
+          this.imageElement.nativeElement.style.height = 'auto';
+          this.imageElement.nativeElement.style.maxWidth = '100%';
+          this.imageElement.nativeElement.style.maxHeight = '100vh';
+        } else {
+          // Fit image inside the dialog without scrollbars
+          this.imageElement.nativeElement.style.width = '100%';
+          this.imageElement.nativeElement.style.height = '100%';
+          this.imageElement.nativeElement.style.maxWidth = '100%';
+          this.imageElement.nativeElement.style.maxHeight = '100%';
+          this.imageElement.nativeElement.style.objectFit = 'contain';
+        }
+      }
 }

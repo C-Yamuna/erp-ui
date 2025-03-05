@@ -133,6 +133,7 @@ export class ViewSavingBankModel {
     multipartFileList:any;
 
     filesDTOList :any;
+  requiredDocumentsConfigDetailsDTOList: any;
 
 }
 export class CommunicationDetailsModel {
@@ -281,6 +282,8 @@ export class NomineeDetailsModel {
      age: any;
 
     dateOfBirth: any;
+
+    dateOfBirthVal:any;
 
      maritalStatus: any;
     

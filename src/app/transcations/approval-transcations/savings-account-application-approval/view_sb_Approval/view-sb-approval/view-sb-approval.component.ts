@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -12,6 +12,7 @@ import { Responsemodel } from 'src/app/shared/responsemodel';
 import { MemberShipTypesData } from 'src/app/transcations/common-status-data.json';
 import { ERP_TRANSACTION_CONSTANTS } from 'src/app/transcations/erp-transaction-constants';
 import { MemberGroupDetailsModel, MembershipBasicRequiredDetails, MembershipInstitutionDetailsModel } from 'src/app/transcations/savings-bank-transcation/savings-bank-account-creation-stepper/membership-basic-required-details/shared/membership-basic-required-details';
+import { SavingsBankCommunicationModel } from 'src/app/transcations/savings-bank-transcation/savings-bank-account-creation-stepper/savings-bank-communication/shared/savings-bank-communication-model';
 import { MemberGuardianDetailsModelDetaila } from 'src/app/transcations/savings-bank-transcation/savings-bank-account-creation-stepper/savings-bank-nominee/shared/savings-bank-nominee-model';
 
 import { savingsbanktransactionconstant } from 'src/app/transcations/savings-bank-transcation/savingsbank-transaction-constant';
@@ -28,7 +29,7 @@ export class ViewSbApprovalComponent {
   admissionNumber: any;
   id: any;
   viewSavingBankModel : ViewSavingBankModel = new ViewSavingBankModel();
-  communicationDetailsModel : CommunicationDetailsModel = new CommunicationDetailsModel();
+  communicationDetailsModel : SavingsBankCommunicationModel = new SavingsBankCommunicationModel();
   kycDetailsModel : KycDetailsModel = new KycDetailsModel();
   membershipBasicRequiredDetails: MembershipBasicRequiredDetails = new MembershipBasicRequiredDetails();
   memberGuardianDetailsModelDetails: MemberGuardianDetailsModelDetaila = new MemberGuardianDetailsModelDetaila();
@@ -74,6 +75,8 @@ export class ViewSbApprovalComponent {
   photoCopyFlag: boolean = true;
   signatureCopyFlag: boolean = true;
   memberPhotoCopyZoom: boolean = false;
+  groupPhotoCopyZoom: boolean = false;
+  institutionPhotoCopyZoom: boolean = false;
   membreIndividualFlag: boolean = false;
   isKycApproved : any;
   guardainFormEnable: boolean = false;
@@ -87,6 +90,11 @@ export class ViewSbApprovalComponent {
   individualFlag: boolean = false;
   institutionFlag: boolean = false;
   groupFlag: boolean = false;
+  kycPhotoCopyZoom: boolean = false;
+  isMaximized: boolean = false;
+  docPhotoCopyZoom:boolean = false;
+  nomineePhotoCopyZoom:boolean = false;
+  guardianPhotoCopyZoom:boolean = false;
 ;
   constructor(private router: Router, private formBuilder:FormBuilder , private savingsAccountService: SavingsAccountService ,private commonComponent : CommonComponent  ,private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService , private commonFunctionsService :CommonFunctionsService ,private datePipe: DatePipe ,private fileUploadService :FileUploadService , private translate: TranslateService) { 
     this.amountblock = [
@@ -111,7 +119,7 @@ export class ViewSbApprovalComponent {
     this.columns = [
       { field: 'surname', header: 'Surname' },
       { field: 'name', header: 'Name' },
-      { field: 'operatorTypeName', header: 'Operation Type' },
+      // { field: 'operatorTypeName', header: 'Operation Type' },
       { field: 'memDobVal', header: 'Date of Birth' },
       { field: 'age', header: 'Age' },
       { field: 'genderName', header: 'Gender' },
@@ -399,6 +407,12 @@ export class ViewSbApprovalComponent {
   closePhotoCopy() {
     this.memberPhotoCopyZoom = false;
   }
+  groupclosePhotoCopy() {
+    this.groupPhotoCopyZoom = false;
+  }
+  institutionclosePhotoCopy() {
+    this.institutionPhotoCopyZoom = false;
+  }
 
   /**
    * @implement Image Zoom POp up
@@ -406,6 +420,12 @@ export class ViewSbApprovalComponent {
    */
   onClickMemberPhotoCopy(){
     this.memberPhotoCopyZoom = true;
+  }
+  onClickGroupPhotoCopy(){
+    this.groupPhotoCopyZoom = true;
+  }
+  onClickInstitutionPhotoCopy(){
+    this.institutionPhotoCopyZoom = true;
   }
 
   /**
@@ -579,4 +599,43 @@ export class ViewSbApprovalComponent {
 
     }
   }
+
+  onClickkycPhotoCopy(rowData :any){
+    this.multipleFilesList = [];
+    this.kycPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
+  }
+  onClickdoccPhotoCopy(rowData :any){
+    this.multipleFilesList = [];
+    this.docPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
+  }
+  onClicknomineePhotoCopy(){
+    this.nomineePhotoCopyZoom = true;
+  }
+  onClickguardianPhotoCopy(){
+    this.guardianPhotoCopyZoom = true;
+  }
+
+    // Popup Maximize
+                  @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+                  
+                    onDialogResize(event: any) {
+                      this.isMaximized = event.maximized;
+                  
+                      if (this.isMaximized) {
+                        // Restore original image size when maximized
+                        this.imageElement.nativeElement.style.width = 'auto';
+                        this.imageElement.nativeElement.style.height = 'auto';
+                        this.imageElement.nativeElement.style.maxWidth = '100%';
+                        this.imageElement.nativeElement.style.maxHeight = '100vh';
+                      } else {
+                        // Fit image inside the dialog without scrollbars
+                        this.imageElement.nativeElement.style.width = '100%';
+                        this.imageElement.nativeElement.style.height = '100%';
+                        this.imageElement.nativeElement.style.maxWidth = '100%';
+                        this.imageElement.nativeElement.style.maxHeight = '100%';
+                        this.imageElement.nativeElement.style.objectFit = 'contain';
+                      }
+                    }
 }

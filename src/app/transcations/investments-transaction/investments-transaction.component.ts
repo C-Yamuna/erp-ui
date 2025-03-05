@@ -10,6 +10,7 @@ import { Responsemodel } from 'src/app/shared/responsemodel';
 import { InvestmentsTransactionConstant } from './investments-transaction-constants';
 import { applicationConstants } from 'src/app/shared/applicationConstants';
 import { InvestmentApplicationDetailsService } from './deposit-investments/investments-application-details/shared/investment-application-details.service';
+import { CommonStatusData } from '../common-status-data.json';
 
 @Component({
   selector: 'app-investments-transaction',
@@ -60,9 +61,9 @@ export class InvestmentsTransactionComponent implements OnInit {
     ];
 
     this.investmentOperationsList = [
-      { label: "Interest Payment", value: 1 },
-      { label: "Foreclosure", value: 2 },
-      { label: "Closure", value: 3 }
+      { label: "Interest Received", value: 1 },
+      { label: "Foreclosure/Closure", value: 2 },
+      // { label: "Closure", value: 3 }
     ];
 
     this.sharesOperationsList = [
@@ -104,8 +105,8 @@ export class InvestmentsTransactionComponent implements OnInit {
       this.router.navigate([InvestmentsTransactionConstant.INVESTMENTS_INTEREST_PAYMENT], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id) } });
     else if (event.value === 2)
       this.router.navigate([InvestmentsTransactionConstant.INVESTMENTS_FORECLOSURE], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id) } });
-    else if (event.value === 3)
-      this.router.navigate([InvestmentsTransactionConstant.INVESTMENTS_CLOSURE], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id) } });
+    // else if (event.value === 3)
+    //   this.router.navigate([InvestmentsTransactionConstant.INVESTMENTS_CLOSURE], { queryParams: { id: this.encryptDecryptService.encrypt(rowData.id) } });
   }
   navigateToShareWithdraw(event: any, rowData: any){
     if (event.value === 1)
@@ -147,6 +148,34 @@ export class InvestmentsTransactionComponent implements OnInit {
         this.gridListData = this.responseModel.data.map((item: any) => {
           item.depositDate = this.datePipe.transform(item.depositDate,this.orgnizationSetting.datePipe);
           item.maturityDate = this.datePipe.transform(item.maturityDate,this.orgnizationSetting.datePipe);
+
+          //defaualt values as false
+          item.isInprogress = false;
+          item.isSubmissionForApproval = false;
+          item.isApproved = false;
+          item.isRejected = false;
+          item.isRequestForResubmission = false;
+          item.isRequestForClosure = false;
+          item.isRequestForForeClosure = false;
+          item.isClosed = false;
+
+          if (item.statusName === CommonStatusData.IN_PROGRESS) {
+            item.isInprogress = true;
+          }else if (item.statusName === CommonStatusData.SUBMISSION_FOR_APPROVAL) {
+            item.isSubmissionForApproval = true;
+          } else if (item.statusName === CommonStatusData.APPROVED) {
+            item.isApproved = true;
+          } else if (item.statusName === CommonStatusData.REJECTED) {
+            item.isRejected = true;
+          } else if (item.statusName === CommonStatusData.REQUEST_FOR_RESUBMISSION) {
+            item.isRequestForResubmission = true;
+          } else if (item.statusName === CommonStatusData.FORECLOSURE_REQUEST) {
+            item.isRequestForForeClosure = true;
+          } else if (item.statusName === CommonStatusData.CLOSURE_REQUEST) {
+            item.isRequestForClosure = true;
+          } else if (item.statusName === CommonStatusData.CLOSED) {
+            item.isClosed = true;
+          }
           return item;
         });
         this.commonComponent.stopSpinner();

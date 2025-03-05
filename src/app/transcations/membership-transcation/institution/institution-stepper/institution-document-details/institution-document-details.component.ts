@@ -371,11 +371,15 @@ documentForm: FormGroup;
     this.multipleFilesList = [];
     this.requiredDocumentModel.filesDTO = null; // Initialize as a single object
     this.requiredDocumentModel.requiredDocumentFilePath = null;
-    if (event.files.length !== 1) {
-      console.error('Exactly one file must be selected.');
-      return;
+    let file = event.files[0];
+    let fileSizeMB = file.size / (1024 * 1024);
+   
+    if (fileSizeMB > 5) {
+      this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_5MB}];
+      setTimeout(() => {
+        this.msgs = [];
+      }, 3000);
     }
-    let file = event.files[0]; // Only one file
     let reader = new FileReader();
     reader.onloadend = (e) => {
       if (!e.target || !e.target.result) {

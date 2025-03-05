@@ -445,72 +445,150 @@
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="col-12 p-0">
                                 <div class="col-12">
-                                    <div class="col-12 px-0">
+                                    <div class="col-12 p-0">
                                         <div class="row">
-                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
-                                                <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.ACCOUNT_NUMBER' |
-                                                    translate}}</h6>
-                                                <p class="label-input-text">
-                                                    {{fdCumulativeApplicationModel.accountNumber}}
-                                                </p>
+                                            <div class="col-6">
+                                                <div class="d-flex">
+                                                    <span class="card-icon"><i class="fa fa-id-badge"></i></span>
+                                                    <h6 class="sub-heading">
+                                                        {{'TERMDEPOSITSTRANSACTION.APPLICATION_DETAILS' | translate}}
+                                                    </h6>
+                                                </div>
                                             </div>
-                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
-                                                <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.PRODUCT_TYPE' |
-                                                    translate}}</h6>
-                                                <p class="label-input-text">
-                                                    {{fdCumulativeApplicationModel.fdCummulativeProductName}}
-                                                </p>
-                                            </div>
-                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
-                                                <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.ACCOUNT_TYPE' |
-                                                    translate}}</h6>
-                                                <p class="label-input-text">
-                                                    {{fdCumulativeApplicationModel.accountTypeName}}</p>
-                                            </div>
-                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
-                                                <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.RATE_OF_INTEREST' |
-                                                    translate}}</h6>
-                                                <p class="label-input-text">
-                                                    {{fdCumulativeApplicationModel.roi}}</p>
-                                            </div>
-                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
-                                                <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.DEPOSIT_DATE' |
-                                                    translate}}
-                                                </h6>
-                                                <p class="label-input-text">
-                                                    {{fdCumulativeApplicationModel.depositDate}}</p>
-                                            </div>
-                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
-                                                <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.DEPOSIT_AMOUNT' |
-                                                    translate}}
-                                                </h6>
-                                                <p class="label-input-text">
-                                                    {{fdCumulativeApplicationModel.depositAmount}}</p>
-                                            </div>
-                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
-                                                <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.MATURITY_AMOUNT' |
-                                                    translate}}</h6>
-                                                <p class="label-input-text">
-                                                    {{fdCumulativeApplicationModel.maturityAmount}}</p>
-                                            </div>
-                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
-                                                <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.TENURE_IN_MONTHS'
-                                                    | translate}}</h6>
-                                                <p class="label-input-text">
-                                                    {{fdCumulativeApplicationModel.tenureInMonths}}</p>
-                                            </div>
-                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
-                                                <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.MATURITY_DATE' |
-                                                    translate}}</h6>
-                                                <p class="label-input-text">
-                                                    {{fdCumulativeApplicationModel.maturityDate}}</p>
-                                            </div>
-                                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 min-h-50px">
-                                                <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.TENURE_IN_YEARS' |
-                                                    translate}}
-                                                </h6>
-                                                <p class="label-input-text">
-                                                    {{fdCumulativeApplicationModel.tenureInYears}}</p>
+                                        </div>
+
+                                        <div class="col-12 p-0">
+                                            <div class="row">
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.PRODUCT_TYPE' |
+                                                        translate}}</h6>
+                                                    <p class="label-input-text">
+                                                        {{fdCumulativeApplicationModel.fdCummulativeProductName}}
+                                                    </p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.ACCOUNT_NUMBER' |
+                                                        translate}}</h6>
+                                                    <p class="label-input-text">
+                                                        {{fdCumulativeApplicationModel.accountNumber}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.OPERATION_TYPE' |
+                                                        translate}}</h6>
+                                                    <p class="label-input-text">
+                                                        {{fdCumulativeApplicationModel.accountTypeName}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.DEPOSIT_AMOUNT' |
+                                                        translate}}</h6>
+                                                    <p class="label-input-text">
+                                                        {{fdCumulativeApplicationModel.depositAmount}}</p>
+                                                </div>
+
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.DEPOSIT_DATE' |
+                                                        translate}}
+                                                    </h6>
+                                                    <p class="label-input-text">
+                                                        {{fdCumulativeApplicationModel.depositDate}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.TENURE_TYPE' |
+                                                        translate}}
+                                                    </h6>
+                                                    <p class="label-input-text">
+                                                        {{fdCumulativeApplicationModel.tenureTypeName}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 "  *ngIf="yearFlag">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.TENURE_IN_YEARS' |
+                                                        translate}}
+                                                    </h6>
+                                                    <p class="label-input-text">
+                                                        {{fdCumulativeApplicationModel.tenureInYears}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 "  *ngIf="monthFlag">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.TENURE_IN_MONTHS'
+                                                        | translate}}</h6>
+                                                    <p class="label-input-text">
+                                                        {{fdCumulativeApplicationModel.tenureInMonths}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 " *ngIf="daysFlag">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.TENURE_IN_DAYS' |
+                                                        translate}}</h6>
+                                                    <p class="label-input-text">
+                                                        {{fdCumulativeApplicationModel.tenureInDays}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.ROI' |
+                                                        translate}}
+                                                    </h6>
+                                                    <p class="label-input-text">
+                                                        {{fdCumulativeApplicationModel.roi}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.STAFF_ROI' |
+                                                        translate}}
+                                                    </h6>
+                                                    <p class="label-input-text">
+                                                        {{fdCumulativeApplicationModel.staffRoi}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.SENIOR_CITIZEN_ROI' |
+                                                        translate}}
+                                                    </h6>
+                                                    <p class="label-input-text">
+                                                        {{fdCumulativeApplicationModel.seniorCitizenRoi}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.FORECLOSURE_ROI' |
+                                                        translate}}
+                                                    </h6>
+                                                    <p class="label-input-text">
+                                                        {{fdCumulativeApplicationModel.penalRoi}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.MATURITY_AMOUNT' |
+                                                        translate}}
+                                                    </h6>
+                                                    <p class="label-input-text">
+                                                        {{fdCumulativeApplicationModel.maturityAmount}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.MATURITY_DATE' |
+                                                        translate}}
+                                                    </h6>
+                                                    <p class="label-input-text">
+                                                        {{fdCumulativeApplicationModel.maturityDate}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.PAYMENT_TYPE' |
+                                                        translate}}
+                                                    </h6>
+                                                    <p class="label-input-text">
+                                                        {{fdCumulativeApplicationModel.interestPayoutTypeName}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 " *ngIf="interestPayoutFlag">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.INTEREST_TRANSFER_ACCOUNT' |
+                                                        translate}}
+                                                    </h6>
+                                                    <p class="label-input-text">
+                                                        {{fdCumulativeApplicationModel.interestPayoutTransferAccount}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 ">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.IS_AUTO_RENEWAL' |
+                                                        translate}}
+                                                    </h6>
+                                                    <p class="label-input-text">
+                                                        {{fdCumulativeApplicationModel.isAutoRenewal ? 'Yes':'No'}}</p>
+                                                </div>
+                                                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-6 " *ngIf="renewalFlag">
+                                                    <h6 class="label-view">{{'TERMDEPOSITSTRANSACTION.RENEWAL_TYPE' |
+                                                        translate}}
+                                                    </h6>
+                                                    <p class="label-input-text">
+                                                        {{fdCumulativeApplicationModel.renewalTypeName}}</p>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>

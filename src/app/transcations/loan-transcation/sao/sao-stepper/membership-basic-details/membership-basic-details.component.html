@@ -1,14 +1,13 @@
 <div class="col-12">
 
-    <h6 class="sub-heading">{{'ERP.KYC' | translate}}<span class="admission-text">(Admission
-            number:&nbsp;{{admissionNumber}})</span></h6>
+    <h6 class="sub-heading">{{'ERP.KYC' | translate}}</h6>
 
     <form [formGroup]="kycForm" id="exit_types_form">
         <!-- <p-button icon="fa fa-plus" label="{{'ADD KYC DOCUMENT' | translate}}"
                 (click)="addKyc($event)" [disabled]="buttonDisabled"></p-button> -->
         <div class="col-12 px-0">
             <div class="row g-3">
-                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12" *ngFor="let document of kycModelList ; let i = index">
+                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mt-2" *ngFor="let document of kycModelList ; let i = index">
 
                     <!-- view card -->
                     <div class="stepper-kyc-card p-3 mb-2" *ngIf="editIndex != i || editDocumentOfKycFalg">
@@ -19,42 +18,24 @@
                                         <h6 class="label-view">Promoter Name</h6>
                                         <p class="label-input-text">{{document.promoterName}}</p>
                                     </div> -->
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                         <h6 class="label-view">{{'LOAN_TRANSACTION.DOCUMENT_TYPE' | translate}}</h6>
                                         <p class="label-input-text">{{document.kycDocumentTypeName}}</p>
                                     </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                         <h6 class="label-view">{{'LOAN_TRANSACTION.DOCUMENT_NUMBER' | translate}}</h6>
                                         <p class="label-input-text">{{document.documentNumber}}</p>
                                     </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 min-h-50px">
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                         <h6 class="label-view">{{'LOAN_TRANSACTION.NAME_AS_PER_DOCUMENT' | translate}}</h6>
                                         <p class="label-input-text">{{document.nameAsPerDocument}}</p>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end">
-                                <div class="text-right">
-                                    <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn"
-                                        (click)="toggleEditForm(i ,document)" [disabled]="editButtonDisable"></p-button>
-                                </div>
-                                <div class="col-12 px-0">
-                                    <div class="col-12 px-0" *ngFor="let img of document.multipartFileList">
-                                        <div class="col-12 p-0"
-                                            *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png'">
-                                            <a href="{{img.imageValue}}">
-                                                <img src="{{img.imageValue}}" class="upload-img img-fluid"
-                                                    pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                            </a>
-                                        </div>
-                                        <div class="col-12 p-0" *ngIf=" img.fileType =='pdf'">
-                                            <a href="{{img.imageValue}}">
-                                                <img src="assets\images\pdf.png" class="pdf-img img-fluid"
-                                                    pTooltip="{{img.fileName}}" tooltipPosition="bottom">
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end d-flex right-actions">
+                                <div class="cardview-icon icon-size text-right cursor-pointer -mt-1" (click)="onClickkycPhotoCopy(document)"><i class="fa fa-eye mr-3" aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}" tooltipPosition="top"></i></div>
+                                <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn"
+                                    (click)="toggleEditForm(i ,document)" [disabled]="editButtonDisable" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
                             </div>
                         </div>
                     </div>
@@ -67,7 +48,7 @@
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
                                     <label><span class="red">*</span>{{'LOAN_TRANSACTION.DOCUMENT_TYPE' |
-                                        translate}}</label>
+                                        translate}} </label>
                                     <p-dropdown placeholder="{{'ERP.SELECT'| translate}}"
                                         formControlName="kycDocumentTypeName" [options]="documentNameList"
                                         id="docTypeId" [(ngModel)]="saoKycModel.kycDocumentTypeId"
@@ -127,7 +108,7 @@
                            
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-label">
-                                <div class="ml-2"><span class="red">*</span>{{ 'LOANS.DOCUMENT_COPY' | translate }} </div>
+                                <div class="ml-2"><span class="red">*</span>{{ 'LOANS.DOCUMENT_COPY' | translate }} {{ 'LOAN_TRANSACTION.FILE_SIZE_FOR_BOTH' | translate }}</div>
                                 <div class="uplodad-style align-items-center">
                                     <!-- Upload Button Column -->
 
@@ -166,3 +147,22 @@
 
 
 </div>
+
+<!-- KYC Photo Copy -->
+<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="kycPhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
+    <div class="col-12">
+        <div *ngFor="let img of multipleFilesList">
+            <div class="mb-3 imgcustom-class" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
+                <a href="{{img.imageValue}}">
+                    <img src="{{img.imageValue}}" class="doc-photocopy">
+                </a>
+            </div>
+            <div class="mb-3 imgcustom-class" *ngIf=" img.fileType =='pdf'">
+                <a href="{{img.imageValue}}">
+                    <img src="assets\images\pdf.png" class="doc-photocopy">
+                </a>
+            </div>
+
+        </div>
+    </div>
+</p-dialog>

@@ -61,6 +61,7 @@ export class AmountBlockComponent {
   uploadFileData: any;
   isEditDeleteButtonEnable: boolean = false;
   amountBlockUpdateAllow: boolean = false;
+  addBlockAmountPopUpEnable: boolean = false;
 
   constructor(private router: Router, private formBuilder: FormBuilder, private commonFunctionsService :CommonFunctionsService , private translate: TranslateService , private savingBankApplicationService : SavingBankApplicationService ,private datePipe: DatePipe,private fileUploadService :FileUploadService,private commonComponent: CommonComponent,private activateRoute: ActivatedRoute, private encryptDecryptService: EncryptDecryptService,private amountBlockService :AmountBlockService )
   { 
@@ -522,8 +523,6 @@ getAmountBlocksByAccountNumber(accountNumber:any){
             if (sb.blockReqSignedCopyPath != null && sb.blockReqSignedCopyPath != undefined) {
               sb.multipartFileList = this.fileUploadService.getFile(sb.blockReqSignedCopyPath ,ERP_TRANSACTION_CONSTANTS.DEMANDDEPOSITS + ERP_TRANSACTION_CONSTANTS.FILES + "/" + sb.blockReqSignedCopyPath);
             }
-            
-
           }
           return sb
         });
@@ -670,6 +669,14 @@ cancelOrRefresh(){
       this.amountBlockModel.amountInWords = '';
     }
     
+  }
+
+  /**
+   * @implements add block amount
+   * @author jyothi.naidana
+   */
+  addBlockAmount(){
+    this.addBlockAmountPopUpEnable = true;
   }
 
 

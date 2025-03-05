@@ -135,14 +135,34 @@ export class BankDetailsComponent {
     });
   }
 
+  // updateData() {
+  //   this.bankDetailsModel.memberId = this.memberBasicDetailsModel.id
+  //   this.memberBasicDetailsStepperService.changeData({
+  //     formValid: this.bankForm.valid,
+  //     data: this.bankDetailsModel,
+  //     savedId: this.memberId,
+  //     stepperIndex: 8,
+  //     // isDisable: !this.landFlag ? true : false,
+  //   });
+  // }
   updateData() {
     this.bankDetailsModel.memberId = this.memberBasicDetailsModel.id
+    if (this.memberBankDetailsDTOList == null || this.memberBankDetailsDTOList == undefined ||
+      this.memberBankDetailsDTOList.length == 0) {
+      this.buttonsFlag = true;
+    }
+    else {
+      this.buttonsFlag = false;
+    }
+    if (this.landFlag) {
+      this.buttonsFlag = true;
+    }
     this.memberBasicDetailsStepperService.changeData({
-      formValid: this.bankForm.valid,
+      formValid: this.bankForm.valid ,
       data: this.bankDetailsModel,
-      savedId: this.memberId,
+      savedId:this.memberId,
       stepperIndex: 8,
-      // isDisable: !this.landFlag ? true : false,
+      isDisable: this.landFlag
     });
   }
 
@@ -155,11 +175,11 @@ export class BankDetailsComponent {
    * @author yamuna.k
    */
   editVillageRow(row: any) {
-    this.addButton = true;
-    this.editDeleteDisable = true;
+    this.addButton = applicationConstants.TRUE
+    this.editDeleteDisable = applicationConstants.TRUE
     // this.buttonsFlag  = false;
-    // this.landFlag =false
-    // this.updateData();
+    this.landFlag =applicationConstants.TRUE
+    this.updateData();
   }
   addNewEntry() {
     this.newRow = { bankName: '', nameInBank: '', ifscCode: '', accountNumber: '', status: '' }
@@ -171,11 +191,11 @@ export class BankDetailsComponent {
   onRowEditSave() {
     this.bankForm.reset();
     this.addNewEntry();
-    this.editDeleteDisable = true;
-    this.addButton = true;
+    this.editDeleteDisable =applicationConstants.TRUE;
+    this.addButton = applicationConstants.TRUE;
     // this.buttonsFlag  = false;
-    // this.landFlag =false
-    // this.updateData();
+    this.landFlag =applicationConstants.TRUE;
+    this.updateData();
     this.dt._first = 0;
     this.dt.value.unshift(this.newRow);
     this.dt.initRowEdit(this.dt.value[0]);
@@ -190,8 +210,8 @@ export class BankDetailsComponent {
   onRowEditCancel() {
     this.addButton = false;
     this.editDeleteDisable = false;
-    this.buttonsFlag = true;
-    // this.landFlag =true;
+    // this.buttonsFlag = true;
+    this.landFlag =applicationConstants.FALSE;
     this.updateData();
     const index = this.dt.value.indexOf(this.newRow);
 
@@ -214,18 +234,15 @@ export class BankDetailsComponent {
     rowData.memberId = this.memberId;
     rowData.memberType = this.memberBasicDetailsModel.memberTypeId;
     rowData.admissionNumber = this.memberBasicDetailsModel.admissionNumber;
-    this.addButton = false;
-    this.editDeleteDisable = false;
+    this.addButton = applicationConstants.FALSE;
+    this.editDeleteDisable = applicationConstants.FALSE;
+    this.landFlag = applicationConstants.FALSE;
 
     if (rowData.id != null) {
       this.membershipBankDetailsService.updateMembershipBankDetails(rowData).subscribe((response: any) => {
         this.responseModel = response;
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
           this.getMembershipDetailsById(rowData.memberId);
-          // this.buttonsFlag  = true;
-          // this.landFlag =true;;
-          // this.updateData();
-
           this.commonComponent.stopSpinner();
           this.msgs = [{ severity: 'success', summary: applicationConstants.STATUS_SUCCESS, detail: this.responseModel.statusMsg }];
           setTimeout(() => {
@@ -251,8 +268,6 @@ export class BankDetailsComponent {
         this.responseModel = response;
         if (this.responseModel.status === applicationConstants.STATUS_SUCCESS) {
           this.getMembershipDetailsById(rowData.memberId);
-          // this.buttonsFlag  = true;
-          // this.landFlag =true;
           this.memberBankDetailsDTOList.unshift(this.responseModel.data[0]);
           this.memberBankDetailsDTOList.splice(1, 1);
           // this.updateData();

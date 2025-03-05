@@ -80,7 +80,8 @@ export class SavingsAccountTransactionAppovalComponent {
   groupPromotersPopUpFlag: boolean = false;
   institutionPromoterFlag: boolean = false;
   memberPhotoCopyZoom: boolean = false;
-
+  groupPhotoCopyZoom: boolean = false;
+  institutionPhotoCopyZoom: boolean = false;
   admissionNumber : any;
   groupPrmoters: any[] = [];
   groupPrmotersList: any [] = [];
@@ -582,6 +583,12 @@ export class SavingsAccountTransactionAppovalComponent {
   closePhotoCopy() {
     this.memberPhotoCopyZoom = false;
   }
+  groupclosePhotoCopy() {
+    this.groupPhotoCopyZoom = false;
+  }
+  institutionclosePhotoCopy() {
+    this.institutionPhotoCopyZoom = false;
+  }
 
   /**
    * @implement Image Zoom POp up
@@ -589,6 +596,12 @@ export class SavingsAccountTransactionAppovalComponent {
    */
   onClickMemberPhotoCopy(){
     this.memberPhotoCopyZoom = true;
+  }
+  onClickGroupPhotoCopy(){
+    this.groupPhotoCopyZoom = true;
+  }
+  onClickInstitutionPhotoCopy(){
+    this.institutionPhotoCopyZoom = true;
   }
 
   

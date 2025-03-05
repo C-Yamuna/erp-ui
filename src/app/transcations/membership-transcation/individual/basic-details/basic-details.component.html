@@ -13,7 +13,7 @@
 
                         <p-dropdown id="bunit_txt_status" placeholder="Select" [filter]="true"
                             [options]="subProductList" formControlName="subProductId"
-                            [(ngModel)]="memberBasicDetailsModel.subProductId" (onChange)="onChangeProduct()" (onChange) = "formResetOnChangeProduct()">
+                            [(ngModel)]="memberBasicDetailsModel.subProductId" (onChange)="onChangeProduct()" >
                         </p-dropdown>
 
                     </div>
@@ -275,14 +275,15 @@
                 </div>
                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12" *ngIf="show">
                     <div class="form-label">
-                        <span class=""> {{ 'MEMBERSHIP_TRANSACTION.RESOLUTION_COPY' | translate }} </span>
+                        <span class=""> {{ 'MEMBERSHIP_TRANSACTION.RESOLUTION_COPY' | translate }}{{'MEMBERSHIP_TRANSACTION.PDF_SIZE' | translate}} </span>
                         <div class="uplodad-style align-items-center">
                             <!-- Upload Button Column -->
                             <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
                                 id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".pdf"
                                 (onRemove)="fileRemoveEvent('mcrDocumentCopy')"
-                                (onSelect)="fileUploader($event,fileUpload ,'mcrDocumentCopy')">
+                                (onSelect)="fileUploaderForResolution($event,fileUpload,'mcrDocumentCopy')">
                             </p-fileUpload>
+                            <span class="red"> {{fileSizeMsgForResolution}}</span>
                             <div class="col-12  d-flex p-1 contant-body"
                                 *ngFor="let img of memberBasicDetailsModel.multipartFileListForMCRCopyPath">
                                 <div *ngIf="img.fileType=='pdf'">
@@ -302,13 +303,12 @@
 
                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                     <div class="form-label">
-                        <span class=""><span class="red">*</span> {{'MEMBERSHIP_TRANSACTION.PHOTO_COPY' | translate}} </span>
+                        <span class=""><span class="red">*</span> {{ 'MEMBERSHIP_TRANSACTION.PHOTO_COPY' | translate }}{{'MEMBERSHIP_TRANSACTION.IMAGE_SIZE' | translate}}</span>
                         <div class="uplodad-style align-items-center">
-                            <!-- Upload Button Column -->
-                            <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                            <p-fileUpload #fileUploadIndividualPhoto class="qua-upld file-attach semi-bold" name="myfile[]"
                                 id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".png,.jpg,.jpeg"
                                 (onRemove)="fileRemoveEvent('photoCopyPath')"
-                                (onSelect)="fileUploader($event,fileUpload ,'photoCopyPath')">
+                                (onSelect)="fileUploader($event,fileUploadIndividualPhoto,fileUploadIndividualSign ,'photoCopyPath')">
                             </p-fileUpload>
                             <div class="col-12  d-flex p-1 contant-body"
                                 *ngFor="let img of memberBasicDetailsModel.multipartFileListForPhotoCopy">
@@ -319,22 +319,19 @@
                                 <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
                                     tooltipPosition="bottom">
                                     {{img.fileName}}</div>
-
                             </div>
-
                         </div>
                     </div>
-
                 </div>
                 <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12">
                     <div class="form-label">
-                        <span class=""><span class="red">*</span>{{'MEMBERSHIP_TRANSACTION.SIGNATURE_COPY' | translate}}</span>
+                        <span class=""><span class="red">*</span> {{ 'MEMBERSHIP_TRANSACTION.SIGNATURE_COPY' | translate }}{{'MEMBERSHIP_TRANSACTION.IMAGE_SIZE' | translate}}</span>
                         <div class="uplodad-style align-items-center">
                             <!-- Upload Button Column -->
-                            <p-fileUpload #fileUpload class="qua-upld file-attach semi-bold" name="myfile[]"
+                            <p-fileUpload #fileUploadIndividualSign class="qua-upld file-attach semi-bold" name="myfile[]"
                                 id="apply-leave_fileUp_attach" chooseLabel=" " name="file" accept=".png,.jpg,.jpeg"
                                 (onRemove)="fileRemoveEvent('signatureCopyPath')"
-                                (onSelect)="fileUploader($event,fileUpload ,'signatureCopyPath')">
+                                (onSelect)="fileUploader($event,fileUploadIndividualPhoto,fileUploadIndividualSign ,'signatureCopyPath')">
                             </p-fileUpload>
                             <div class="col-12  d-flex p-1 contant-body"
                                 *ngFor="let img of memberBasicDetailsModel.multipartFileListForsignatureCopyPath">
@@ -345,12 +342,9 @@
                                 <div class="docname-texteclipse ml-3" pTooltip="{{img.fileName}}"
                                     tooltipPosition="bottom">
                                     {{img.fileName}}</div>
-
                             </div>
-
                         </div>
                     </div>
-
                 </div>
 
 

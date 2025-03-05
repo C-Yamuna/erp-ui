@@ -195,6 +195,7 @@ export class MemberGroupDetailsModel {
    groupTypeName: any;
     mcrDocumentCopy: any;
     operatorTypeId:any;
+    subProductId:any;
 }
 export class MembershipInstitutionDetailsModel {
 
@@ -285,6 +286,8 @@ export class MembershipInstitutionDetailsModel {
 
 
     operatorTypeId:any;
+
+    subProductId:any;
 
 
 }

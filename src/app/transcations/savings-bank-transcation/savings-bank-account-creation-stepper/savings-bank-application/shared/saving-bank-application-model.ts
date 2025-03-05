@@ -135,6 +135,7 @@ export class SavingBankApplicationModel {
 
   filesDTOList: any;
   isActive: any;
+  requiredDocumentsConfigDetailsDTOList: any;
 
 }
 export class ProductDefinitionModel {
@@ -165,6 +166,10 @@ export class ProductDefinitionModel {
   requiredDocumentsConfigList: any;
   minDepositAmountForAccountOpen:any;
   minBalanceMaintainInAccount:any;
+  isInterestPostingAllowedName: any;
+  isCheckBookIssuingAllowedName: any;
+  isChequeBookOperationsAllowedName: any;
+  isDebitCardIssuingAllowedName: any;
 
 }
 

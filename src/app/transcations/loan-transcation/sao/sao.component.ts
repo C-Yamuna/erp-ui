@@ -135,12 +135,16 @@ getAllSaoLoanApplicationDetailsListByPacsIdAndBranchId() {
       }
       else if(saoLoan.accountStatusName == applicationConstants.REJECTED){
         saoLoan.rejected = true;
+        saoLoan.approved = false;
       }
       else if(saoLoan.accountStatusName == applicationConstants.SUBMISSION_FOR_APPROVAL){
         saoLoan.submissionForApproval = true; 
+        saoLoan.approved = false;
       }
       else if(saoLoan.accountStatusName == applicationConstants.CREATED || saoLoan.accountStatusName == applicationConstants.IN_PROGRESS){
         saoLoan.created = true; 
+        saoLoan.approved = false;
+        saoLoan.approved = false;
       }
      
       saoLoan.multipartFileListForPhotoCopy = null;

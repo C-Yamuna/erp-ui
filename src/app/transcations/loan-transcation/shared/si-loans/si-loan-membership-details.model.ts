@@ -188,6 +188,10 @@ export class MemberGroupDetailsModel {
     photoCopyPath: any;
     signatureCopyPath: any;
     subProductId: any;
+    operatorTypeId:any;
+    operatorTypeName:any;
+    societyAdmissionNumber:any;
+
 
 }
 export class MembershipInstitutionDetailsModel {
@@ -272,6 +276,16 @@ export class MembershipInstitutionDetailsModel {
     pocName: any;
 
     subProductId:any;
+    operatorTypeId:any;
+    operatorTypeName:any;
+
+    institutionType:any;
+
+    institutionTypeName:any;
+
+    isPoc:any;
+
+    isPocName:any;
 
 
 }

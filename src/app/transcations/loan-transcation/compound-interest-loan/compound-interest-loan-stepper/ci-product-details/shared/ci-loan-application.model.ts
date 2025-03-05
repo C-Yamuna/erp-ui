@@ -168,18 +168,18 @@ export class CiLoanApplication {
 
 	ciLoanCommunicationDTO:any;
 
-	ciMemberGuardianDetailsDTO:any;
-  	sanctionDateVal: any;
-  	loanDueDateVal: any;
-  	filesDTOList: any;
-  	multipartFileList: any;
-	collateralTypeName:any;
-  	repaymentFrequencyName: any;
-	loanDueAmount : any;
-  	ciDisbursementDTOList: any ;
-  	loanApprovedDateVal: any;	
-
-	  applicationNumber:any;
+	ciMemberGuardianDetailsDTO: any;
+	sanctionDateVal: any;
+	loanDueDateVal: any;
+	filesDTOList: any;
+	multipartFileList: any;
+	collateralTypeName: any;
+	repaymentFrequencyName: any;
+	loanDueAmount: any;
+	ciDisbursementDTOList: any;
+	loanApprovedDateVal: any;
+	applicationNumber: any;
+	ciRequiredDocumentsConfigDTOList: any;
 	
 	
 }

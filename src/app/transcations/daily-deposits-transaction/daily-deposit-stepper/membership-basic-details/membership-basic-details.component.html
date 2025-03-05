@@ -1,14 +1,12 @@
 <div class="col-12">
     <p-messages label="Info" life="3000" [(value)]="msgs" [showTransitionOptions]="'500ms'"
         [hideTransitionOptions]="'500ms'"></p-messages>
-    <h6 class="sub-heading">{{'ERP.KYC' | translate}}<span class="admission-text">(Admission
-            number:&nbsp;{{admissionNumber}})</span></h6>
+    <h6 class="sub-heading">{{'ERP.KYC' | translate}}</h6>
 
     <form [formGroup]="kycForm" id="exit_types_form">
         <div class="col-12 px-0">
-        <div class="col-12 p-0 pt-2">
             <div class="row g-3">
-                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12"
+                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mt-2"
                     *ngFor="let document of kycModelList ; let i = index">
                     <div class="stepper-kyc-card p-3 mb-2" *ngIf="editIndex != i || editDocumentOfKycFalg">
                         <!-- view card -->
@@ -32,11 +30,11 @@
                             </div>
                             </div>
                             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6 justify-content-end d-flex right-actions">
-                                <div class="cardview-icon icon-size text-right cursor-pointer -mt-1" (click)="onClickkycPhotoCopy()"><i
-                                        class="fa fa-eye mr-3" aria-hidden="true"></i></div>
+                                <div class="cardview-icon icon-size text-right cursor-pointer -mt-1" (click)="onClickkycPhotoCopy(document)" ><i
+                                        class="fa fa-eye mr-3" aria-hidden="true" pTooltip="{{'ERP.VIEW_DOC' | translate}}" tooltipPosition="top"></i></div>
                                 <p-button icon="fa fa-pencil-square-o" class="kyc-edit-btn" (click)="toggleEditForm(i ,document)"
-                                    [disabled]="editButtonDisable"></p-button>
-                                <p-button icon="fa fa-trash" class="kyc-edit-btn ml-3" (click)="deletDilogBox(document)"></p-button>
+                                    [disabled]="editButtonDisable" pTooltip="{{'ERP.EDIT' | translate}}" tooltipPosition="top"></p-button>
+                                <!-- <p-button icon="fa fa-trash" class="kyc-edit-btn ml-3" (click)="deletDilogBox(document)" pTooltip="{{'ERP.DELETE' | translate}}" tooltipPosition="top"></p-button> -->
                             </div>
                             </div>
                     </div>
@@ -110,21 +108,18 @@
                 </div>
             </div>
         </div>
-        </div>
     </form>
 </div>
 
-<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="kycPhotoCopyZoom" styleClass="doc-photo-dialog">
+<p-dialog header="{{'ERP.PHOTO_COPY' | translate}}" [(visible)]="kycPhotoCopyZoom" [modal]="true" [maximizable]="true" (onResize)="onDialogResize($event)" styleClass="doc-photo-dialog">
     <div class="col-12">
-    <div *ngFor="let document of kycModelList ; let i = index">
-    <div *ngFor="let img of document.multipartFilesList">
+    <div *ngFor="let img of multipleFilesList">
         <div class="mb-3" *ngIf="img.fileType=='jpg' || img.fileType=='jpeg' || img.fileType=='png' ">
                 <img src="{{img.imageValue}}" class="doc-photocopy">
         </div>
         <div class="mb-3" *ngIf=" img.fileType =='pdf'">
                 <img src="assets\images\pdf.png" class="doc-photocopy">
         </div>
-    </div>
     </div>
 </div>
 </p-dialog>

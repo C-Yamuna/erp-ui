@@ -77,6 +77,12 @@ export class BasicDetailsComponent {
   subCasteList: any[] = [];
   subQualificationList:any[]=[];
   requiredlist: any[]=[];
+  temSubProductList:  any[]=[];
+  subproductId: any;
+  fileSizeMsgForImage: any;
+  fileSizeMsgForSignature: any;
+  fileSizeMsgForResolution:any;
+  temSubProductLists:  any[]=[];
 
   constructor(private commonComponent: CommonComponent, private formBuilder: FormBuilder, private membershipBasicDetailsService: MembershipBasicDetailsService,
     private activateRoute: ActivatedRoute, private encryptService: EncryptDecryptService, private memberBasicDetailsStepperService: MemberBasicDetailsStepperService,
@@ -109,7 +115,7 @@ export class BasicDetailsComponent {
       'admissionFee': new FormControl(''),
       'isStaff':new FormControl('', Validators.required),
       'societyAdmissionNo': new FormControl('', Validators.required),
-      'resolutionDate': new FormControl('',Validators.required),
+      'resolutionDate': new FormControl(''),
 
     })
   }
@@ -275,9 +281,11 @@ export class BasicDetailsComponent {
             this.msgs = [];
           }, 2000);
         }
+        this.temSubProductList = this.subProductList;
         this.subProductList = this.subProductList.filter((customertype: any) => customertype.status == applicationConstants.ACTIVE).map((count: any) => {
           return { label: count.name, value: count.id }
         });
+       
           
         this.commonComponent.stopSpinner();
       } else {
@@ -540,58 +548,129 @@ export class BasicDetailsComponent {
     const admissionNumber = Math.floor(100000000000 + Math.random() * 900000000000);
     return admissionNumber.toString();
   }
+  
 /**
    * @implements image uploader
    * @param event 
    * @param fileUpload 
    * @author yamuna.k
    */
-fileUploader(event: any, fileUpload: FileUpload, filePathName: any) {
-  this.isFileUploaded = applicationConstants.FALSE;
-  this.multipleFilesList = [];
-  if(this.isEdit && this.memberBasicDetailsModel.filesDTOList == null || this.memberBasicDetailsModel.filesDTOList == undefined){
-    this.memberBasicDetailsModel.filesDTOList = [];
-  }
-  let files: FileUploadModel = new FileUploadModel();
-  for (let file of event.files) {
-    let reader = new FileReader();
-    reader.onloadend = (e) => {
-      let files = new FileUploadModel();
-      this.uploadFileData = e.currentTarget;
-      files.fileName = file.name;
-      files.fileType = file.type.split('/')[1];
-      files.value = this.uploadFileData.result.split(',')[1];
-      files.imageValue = this.uploadFileData.result;
-      this.multipleFilesList.push(files);
-      let timeStamp = this.commonComponent.getTimeStamp();
+  /**
+     * @implements image uploader
+     * @param event ,fileUpload,filePathName
+     * @param fileUpload 
+     * @author yamuna.k
+     */
+    fileUploader(event: any, fileUploadPhoto: FileUpload, fileUploadSign: FileUpload, filePathName: any) {
+      this.isFileUploaded = applicationConstants.FALSE;
+      this.multipleFilesList = [];
+      if (this.isEdit && this.memberBasicDetailsModel.filesDTOList == null || this.memberBasicDetailsModel.filesDTOList == undefined) {
+        this.memberBasicDetailsModel.filesDTOList = [];
+      }
+      let selectedFiles = [...event.files];
+      
+     
       if (filePathName === "photoCopyPath") {
         this.memberBasicDetailsModel.multipartFileListForPhotoCopy = [];
-        this.memberBasicDetailsModel.filesDTOList.push(files);
-        this.memberBasicDetailsModel.photoCopyPath = null;
-        this.memberBasicDetailsModel.filesDTOList[this.memberBasicDetailsModel.filesDTOList.length - 1].fileName = "Member_Photo_Copy" + "_" + timeStamp + "_" + file.name;
-        this.memberBasicDetailsModel.photoCopyPath = "Member_Photo_Copy" + "_" + timeStamp + "_" + file.name; 
+        if (selectedFiles[0].size/1024/1024 > 2) { 
+          this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail:applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_2MB}];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+         }
+         fileUploadPhoto.clear();
       }
       if (filePathName === "signatureCopyPath") {
         this.memberBasicDetailsModel.multipartFileListForsignatureCopyPath = [];
-        this.memberBasicDetailsModel.filesDTOList.push(files);
-        this.memberBasicDetailsModel.signatureCopyPath = null;
-        this.memberBasicDetailsModel.filesDTOList[this.memberBasicDetailsModel.filesDTOList.length - 1].fileName = "Member_Signature_Copy" + "_" + timeStamp + "_" + file.name;
-        this.memberBasicDetailsModel.signatureCopyPath = "Member_Signature_Copy" + "_" + timeStamp + "_" + file.name; 
+        if (selectedFiles[0].size/1024/1024 > 2) {
+          this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail:applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_2MB}];
+          setTimeout(() => {
+            this.msgs = [];
+          }, 2000);
+         }
+         fileUploadSign.clear();
       }
-      if (filePathName === "mcrDocumentCopy") {
-        this.memberBasicDetailsModel.multipartFileListForMCRCopyPath = [];
-
-        this.memberBasicDetailsModel.filesDTOList.push(files);
-        this.memberBasicDetailsModel.mcrDocumentCopy = null;
-        this.memberBasicDetailsModel.filesDTOList[this.memberBasicDetailsModel.filesDTOList.length - 1].fileName = "MCR_Document_Copy" + "_" + timeStamp + "_" + file.name;
-        this.memberBasicDetailsModel.mcrDocumentCopy = "MCR_Document_Copy" + "_" + timeStamp + "_" + file.name; 
+      for (let file of selectedFiles) {
+        let reader = new FileReader();
+        reader.onloadend = (e) => {
+          let files = new FileUploadModel();
+          this.uploadFileData = e.currentTarget;
+          files.fileName = file.name;
+          files.fileType = file.type.split('/')[1];
+          files.value = this.uploadFileData.result.split(',')[1];
+          files.imageValue = this.uploadFileData.result;
+          this.multipleFilesList.push(files);
+          let timeStamp = this.commonComponent.getTimeStamp();
+          if (filePathName === "photoCopyPath") {
+            this.memberBasicDetailsModel.multipartFileListForPhotoCopy.push(files);
+            this.memberBasicDetailsModel.filesDTOList.push(files);
+            this.memberBasicDetailsModel.photoCopyPath = null;
+            this.memberBasicDetailsModel.filesDTOList[this.memberBasicDetailsModel.filesDTOList.length - 1].fileName = "Member_Photo_Copy" + "_" + timeStamp + "_" + file.name;
+            this.memberBasicDetailsModel.photoCopyPath = "Member_Photo_Copy" + "_" + timeStamp + "_" + file.name;
+          }
+          if (filePathName === "signatureCopyPath") {
+            this.memberBasicDetailsModel.multipartFileListForsignatureCopyPath.push(files);
+            this.memberBasicDetailsModel.filesDTOList.push(files);
+            this.memberBasicDetailsModel.signatureCopyPath = null;
+            this.memberBasicDetailsModel.filesDTOList[this.memberBasicDetailsModel.filesDTOList.length - 1].fileName = "Member_Signature_Copy" + "_" + timeStamp + "_" + file.name;
+            this.memberBasicDetailsModel.signatureCopyPath = "Member_Signature_Copy" + "_" + timeStamp + "_" + file.name;
+          }
+         
+          this.updateData();
+        }
+        reader.readAsDataURL(file);
       }
-    
-      this.updateData();
     }
-    reader.readAsDataURL(file);
+     /**
+     * @implements image uploader
+     * @param event ,fileUpload,filePathName
+     * @param fileUpload 
+     * @author yamuna.k
+     */
+  fileUploaderForResolution(event: any, fileUpload: FileUpload, filePathName: any) {
+    this.isFileUploaded = applicationConstants.FALSE;
+    this.multipleFilesList = [];
+    if (this.isEdit && this.memberBasicDetailsModel.filesDTOList == null || this.memberBasicDetailsModel.filesDTOList == undefined) {
+      this.memberBasicDetailsModel.filesDTOList = [];
+    }
+    let selectedFiles = [...event.files];
+    if (filePathName === "mcrDocumentCopy") {
+      this.memberBasicDetailsModel.multipartFileListForMCRCopyPath = [];
+      if (selectedFiles[0].size / 1000000 > 5) {
+        this.msgs = [{ severity: 'warning', summary: applicationConstants.STATUS_WARN, detail: applicationConstants.THE_FILE_SIZE_SHOULD_BE_LESS_THEN_5MB }];
+        setTimeout(() => {
+          this.msgs = [];
+        }, 2000);
+      }
+      fileUpload.clear();
+    }
+
+    for (let file of selectedFiles) {
+      let reader = new FileReader();
+      reader.onloadend = (e) => {
+        let files = new FileUploadModel();
+        this.uploadFileData = e.currentTarget;
+        files.fileName = file.name;
+        files.fileType = file.type.split('/')[1];
+        files.value = this.uploadFileData.result.split(',')[1];
+        files.imageValue = this.uploadFileData.result;
+        this.multipleFilesList.push(files);
+        let timeStamp = this.commonComponent.getTimeStamp();
+        if (filePathName === "mcrDocumentCopy") {
+          this.memberBasicDetailsModel.multipartFileListForMCRCopyPath.push(files);
+          this.memberBasicDetailsModel.filesDTOList.push(files);
+          this.memberBasicDetailsModel.mcrDocumentCopy = null;
+          this.memberBasicDetailsModel.filesDTOList[this.memberBasicDetailsModel.filesDTOList.length - 1].fileName = "MCR_Document_Copy" + "_" + timeStamp + "_" + file.name;
+          this.memberBasicDetailsModel.mcrDocumentCopy = "MCR_Document_Copy" + "_" + timeStamp + "_" + file.name;
+        }
+
+        this.updateData();
+      }
+
+      reader.readAsDataURL(file);
+    }
+
   }
-}
 
 
 /**
@@ -628,14 +707,22 @@ fileRemoveEvent(fileName: any) {
    */
 
 onChangeProduct(){
-  if(this.memberBasicDetailsModel.subProductId == applicationConstants.ACTIVE){
-    this.show = true
-  }
-  else{
-    this.show = false
-    // this.memberBasicDetailsForm.reset();
-
-  }
+  this.temSubProductLists = [];
+  this.temSubProductLists = this.temSubProductList.filter(obj => obj != null && obj != undefined && obj.isAclass == applicationConstants.TRUE && 
+    obj.status == applicationConstants.ACTIVE).map(obj =>{
+      this.subproductId = obj.id;
+    });
+    if(this.temSubProductLists != null && this.temSubProductLists != undefined && this.temSubProductLists.length > 0){
+      if(this.memberBasicDetailsModel.subProductId == this.subproductId){
+        this.show = true
+      }
+      else{
+        this.show = false
+      }
+    }
+    else{
+      this.show = false
+    }
 }
   formResetOnChangeProduct(){
     this.memberBasicDetailsForm.get('surname').reset();
@@ -658,6 +745,7 @@ onChangeProduct(){
     this.memberBasicDetailsForm.get('isStaff').reset();
      this.memberBasicDetailsForm.get('panNumber').reset(); 
      this.memberBasicDetailsForm.get('mobileNumber').reset(); 
+      this.memberBasicDetailsForm.get('societyAdmissionNo').reset(); 
     this.memberBasicDetailsModel.multipartFileListForPhotoCopy = [];
     this.memberBasicDetailsModel.multipartFileListForsignatureCopyPath = [];
     this.memberBasicDetailsModel.multipartFileListForMCRCopyPath = [];
@@ -675,40 +763,63 @@ onChangeProduct(){
     return age;
   }
 
-  // Method to calculate date of birth from age
+  /**
+   * @implements Method to calculate date of birth from age
+   * @author k.yamuna
+   */
   calculateDobFromAge(age: number): Date {
     if (isNaN(age) || age <= 0) {
       return new Date(0);
     }
     const today = new Date();
     const birthYear = today.getFullYear() - age;
-    const dob = new Date(today); 
-    dob.setFullYear(birthYear); 
-    dob.setMonth(0); 
-    dob.setDate(1); 
+    const dob = new Date(birthYear, today.getMonth(), today.getDate());
 
     return dob;
-  }
-  // Method to validate and handle both DOB and Age fields
+} 
+
+ 
+  /**
+   * @implements Method to validate and handle both DOB and Age fields
+   * @author k.yamuna
+   */
   datesValidationCheckAgeAndDob(model: any, type: number): void {
-    if (type === 2) { 
-      if (model.memDobVal) {
-        const calculatedAge = this.calculateAge(model.memDobVal);
-        model.age = calculatedAge; 
+  if (type === 2) {  
+    if (model.memDobVal) {
+      const calculatedAge = this.calculateAge(model.memDobVal);
+      model.age = calculatedAge; 
+      if (model.subProductId === this.subproductId && calculatedAge < 18) {
+        this.memberBasicDetailsForm.get('dob').reset();
+        this.memberBasicDetailsForm.get('age').reset();
+        this.msgs = [{ severity: 'error', detail: applicationConstants.A_CLASS_MEMBER_MUST_BE_18_YEARS_OR_OLDER }];
+        setTimeout(() => { this.msgs = []; }, 2000);
       }
-    } else if (type === 1) { 
-      if (model.age && model.age > 0) {
-        const calculatedDob = this.calculateDobFromAge(model.age);
-        model.memDobVal = calculatedDob; 
-      } else if(model.age != null && model.age <= 0){
+      else if (model.age != null && model.age <= 0) {
         this.memberBasicDetailsForm.get('age').reset();
         this.memberBasicDetailsForm.get('dob').reset();
-        this.msgs = [{ severity: 'error', detail: "Age should not be zero or negative" }];
-        setTimeout(() =>{
-          this.msgs =[];
-        },2000);
-       
+        this.msgs = [{ severity: 'error', detail: applicationConstants.AGE_SHOULD_NOT_BE_ZERO_OR_NEGATIVE}];
+        setTimeout(() => { this.msgs = []; }, 2000);
       }
     }
+  
+  } else if (type === 1) {  
+    if (model.age && model.age > 0) {
+      const calculatedDob = this.calculateDobFromAge(model.age);
+      model.memDobVal = calculatedDob; 
+
+      if (model.subProductId === this.subproductId && model.age < 18) {
+        this.memberBasicDetailsForm.get('dob').reset();
+        this.memberBasicDetailsForm.get('age').reset();
+        this.msgs = [{ severity: 'error', detail:applicationConstants.A_CLASS_MEMBER_MUST_BE_18_YEARS_OR_OLDER}];
+        setTimeout(() => { this.msgs = []; }, 2000);
+      }
+    } else if (model.age != null && model.age <= 0) {
+      this.memberBasicDetailsForm.get('age').reset();
+      this.memberBasicDetailsForm.get('dob').reset();
+      this.msgs = [{ severity: 'error', detail: applicationConstants.AGE_SHOULD_NOT_BE_ZERO_OR_NEGATIVE }];
+      setTimeout(() => { this.msgs = []; }, 2000);
+    }
   }
+}
+
 }

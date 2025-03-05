@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Responsemodel } from 'src/app/shared/responsemodel';
@@ -93,6 +93,7 @@ export class FdNonCumulativeJointHolderDetailsComponent implements OnInit {
   }
   updateData() {
     this.fdNonCumulativeJointHolderModel.jointHolderList = this.jointHolderDetailsList;
+    this.fdNonCumulativeJointHolderModel.jointHolderList.memberTypeName = this.memberTypeName;
     this.fdNonCumulativeApplicationService.changeData({
       formValid: !this.jointAccountForm.valid ? true : false,
       data: this.fdNonCumulativeJointHolderModel,
@@ -132,6 +133,12 @@ export class FdNonCumulativeJointHolderDetailsComponent implements OnInit {
             }
             if (this.fdNonCumulativeApplicationModel.accountNumber != null && this.fdNonCumulativeApplicationModel.accountNumber != undefined) {
               this.accountNumber = this.fdNonCumulativeApplicationModel.accountNumber;
+            }
+            if (this.fdNonCumulativeApplicationModel.admissionNumber != null && this.fdNonCumulativeApplicationModel.admissionNumber != undefined) {
+              this.admissionNumber = this.fdNonCumulativeApplicationModel.admissionNumber;
+            }
+            if (this.fdNonCumulativeApplicationModel.memberTypeName != null && this.fdNonCumulativeApplicationModel.memberTypeName != undefined) {
+              this.memberTypeName = this.fdNonCumulativeApplicationModel.memberTypeName;
             }
             if (this.fdNonCumulativeApplicationModel.fdNonCummulativeJointAccHolderDetailsDTOList != null && this.fdNonCumulativeApplicationModel.fdNonCummulativeJointAccHolderDetailsDTOList != undefined) {
               this.jointHolderDetailsList = this.fdNonCumulativeApplicationModel.fdNonCummulativeJointAccHolderDetailsDTOList;
@@ -185,18 +192,10 @@ export class FdNonCumulativeJointHolderDetailsComponent implements OnInit {
   }
 
   onClear(admissionNumber: any) {
-    // const index = this.admissionNumberList.indexOf(admissionNumber);
-    // if (index >= 0) {
-    //   this.admissionNumberList.splice(index, 1);
-    //   this.jointHolderDetailsList.push(this.responseModel.data);
-    //   const existingIndex = this.jointHolderDetailsList.findIndex(
-    //     promoter => promoter.admissionNumber === admissionNumber);
-    //   this.jointHolderDetailsList[existingIndex] = null;
     this.jointHolderDetailsList = [];
     this.numberOfJointHolders = 0;
     this.selectedAdmissionNumberList = [];
     this.updateData();
-    // }
   }
 
   getAllTypeOfMembershipDetails(pacsId: any, branchId: any) {
@@ -212,6 +211,7 @@ export class FdNonCumulativeJointHolderDetailsComponent implements OnInit {
 
               };
             });
+            this.admissionNumberList= this.admissionNumberList.filter((obj:any) => obj != null && obj.label != this.admissionNumber);
           }
           else {
             this.msgs = [];
@@ -274,5 +274,39 @@ export class FdNonCumulativeJointHolderDetailsComponent implements OnInit {
         this.msgs = [];
       }, 2000);
     });
+  }
+   // Joint Holders Scroll 
+  
+  // Function to determine max visible items before scroll
+  getMaxVisibleItems(): number {
+    return window.innerWidth <= 1024 ? 2 : 3; 
+    // 1024px → Scroll after 2 items, 1440px → Scroll after 3 items
+  }
+  
+  // Function to get dynamic height based on screen width
+  getDynamicHeight(): string {
+    const itemCount = this.jointHolderDetailsList.length;
+    const maxItems = this.getMaxVisibleItems();
+  
+    if (window.innerWidth <= 1024) {
+      return itemCount === 1 ? '25vh' : '47vh';
+    }
+  
+    return itemCount <= maxItems ? `${itemCount * 18}vh` : `${maxItems * 18}vh`;
+  }
+  
+  // Function to enable scrolling after max visible items
+  shouldEnableScroll(): boolean {
+    const itemCount = this.jointHolderDetailsList.length;
+    const maxItems = this.getMaxVisibleItems();
+  
+    return itemCount > maxItems; 
+    // Ensures scroll is enabled correctly after max items
+  }
+  
+  // Ensure updates when window resizes
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    // Forces Angular to detect changes when window resizes
   }
 }

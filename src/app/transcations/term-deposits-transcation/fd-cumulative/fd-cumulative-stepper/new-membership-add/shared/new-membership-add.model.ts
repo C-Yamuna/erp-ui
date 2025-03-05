@@ -148,6 +148,20 @@ export class NewMembershipAdd {
 
      signaturePath?: any;
 
+     resolutionDate: any;
+
+     resolutionCopy:any;
+ 
+     resolutionDateVal: any;
+ 
+     multipartFileListForResolutionCopyPath: any;
+
+     subProductId: any;
+
+     subProductName: any; 
+     
+     societyAdmissionNumber: any;
+
 }
 
 export class MemberGroupDetailsModel{
@@ -231,6 +245,16 @@ export class MemberGroupDetailsModel{
    pocNumber?:any;
 
    pocName?: any;
+
+   subProductId: any;
+
+   subProductName: any; 
+   
+   societyAdmissionNumber: any;
+
+   operatorTypeId: any;
+
+   operatorTypeName: any;
 }
 
 export class MembershipInstitutionDetailsModel {
@@ -316,6 +340,20 @@ export class MembershipInstitutionDetailsModel {
   pocNumber?:any;
 
   pocName?: any;
+
+  subProductId: any;
+
+  subProductName: any; 
+  
+  societyAdmissionNumber: any;
+
+  operatorTypeId: any;
+
+  operatorTypeName: any;
+
+  institutionTypeName: any;
+
+  institutionType: any;
 }
 
 export class GroupPromoterDetailsModel {
@@ -369,6 +407,8 @@ export class GroupPromoterDetailsModel {
   
     filesDTO: any;
 
+    filesDTOList: any;
+
     isExistingMember: any;
 
     uniqueId: any;
@@ -384,6 +424,12 @@ export class GroupPromoterDetailsModel {
     authorizedSignatory: any;
 
     admissionNumber:any;
+
+    isPoc: any;
+
+    isPocName: any;
+
+    endDateVal: any;
   }
 
   export class InstitutionPromoterDetailsModel{
@@ -431,6 +477,8 @@ export class GroupPromoterDetailsModel {
     
      filesDTO:any;
 
+     filesDTOList: any;
+
      uploadImage: any;
 
      uploadSignature: any;
@@ -450,5 +498,11 @@ export class GroupPromoterDetailsModel {
      admissionNumber:any;
 
      startDateVal: any;
+
+     isPoc: any;
+
+     isPocName: any;
+
+     endDateVal: any;
      
 }

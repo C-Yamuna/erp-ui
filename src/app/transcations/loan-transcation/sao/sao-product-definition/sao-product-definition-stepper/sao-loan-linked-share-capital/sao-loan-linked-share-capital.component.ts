@@ -54,7 +54,7 @@ export class SaoLoanLinkedShareCapitalComponent {
       'igstPercentage': new FormControl('',),
       'minSlabAmount':new FormControl('', Validators.required),
       'gstApplicable': new FormControl('', Validators.required),
-      'maxSlabAmount':new FormControl('', ),
+      'maxSlabAmount':new FormControl('', Validators.required),
     });
   }
   ngOnInit() {
@@ -291,22 +291,23 @@ getPreviewDetailsByProductId(id: any) {
   
       return applicationConstants.FALSE;
     }
-     checkForAmount(box : any): void {
-      const minSlabAmount = Number(this.linkedShareCapitalForm.get('minSlabAmount')?.value);
-      const maxSlabAmount = Number(this.linkedShareCapitalForm.get('maxSlabAmount')?.value);
+    checkForAmount(box: any, saoLoanLinkedShareCapitalModel: any): void {
+      const minSlabAmount = saoLoanLinkedShareCapitalModel.minSlabAmount;
+      const maxSlabAmount = saoLoanLinkedShareCapitalModel.maxSlabAmount;
   
-      if (minSlabAmount && maxSlabAmount &&  minSlabAmount > maxSlabAmount) {
+      if (minSlabAmount != undefined && minSlabAmount != '' && maxSlabAmount != undefined && maxSlabAmount != '' &&
+        Number(minSlabAmount) > Number(maxSlabAmount)) {
         this.msgs = [];
-        if(box == BoxNumber.BOX_ONE){
+        if (box == BoxNumber.BOX_ONE) {
           this.msgs.push({ severity: 'warning', detail: applicationConstants.MINIMUM_SLAB_AMOUNT_SHOULD_BE_LESS_THAN_OR_EQUAL_TO_MAXIMUM_SLAB_AMOUNT });
           this.linkedShareCapitalForm.get('minSlabAmount')?.reset();
-        }else if (box == BoxNumber.BOX_TWO) {
-          this.msgs.push({ severity: 'warning', detail: applicationConstants.MAXIMUM_SLAB_AMOUNT_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MINIMUM_SLAB_AMOUNT});
+        } else if (box == BoxNumber.BOX_TWO) {
+          this.msgs.push({ severity: 'warning', detail: applicationConstants.MAXIMUM_SLAB_AMOUNT_SHOULD_BE_GREATER_THAN_OR_EQUAL_TO_MINIMUM_SLAB_AMOUNT });
           this.linkedShareCapitalForm.get('maxSlabAmount')?.reset();
         } setTimeout(() => {
           this.msgs = [];
         }, 1500);
-      this.updateData();
+        this.updateData();
+      }
     }
-}
 }

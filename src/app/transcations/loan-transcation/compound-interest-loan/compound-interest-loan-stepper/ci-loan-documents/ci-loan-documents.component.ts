@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -99,6 +99,8 @@ export class CiLoanDocumentsComponent {
   requiredDocumentsNamesText: any;
   mandatoryDoxsTextShow: boolean = false;
   saveAndNextEnable : boolean = false;
+  isMaximized: boolean = false;
+  docPhotoCopyZoom: boolean = false;
 
   constructor(private router: Router, 
     private formBuilder: FormBuilder,
@@ -365,10 +367,7 @@ export class CiLoanDocumentsComponent {
                 }
               }
             }
-            else {
-              this.addDocumentOfKycFalg = true;
-              this.buttonDisabled = true;
-            }
+            
             //required documents
             if(this.responseModel.data[0].ciRequiredDocumentsConfigDTOList != null && this.responseModel.data[0].ciRequiredDocumentsConfigDTOList != undefined){
               this.documentNameList = this.responseModel.data[0].ciRequiredDocumentsConfigDTOList.filter((docs: any) => docs.status == applicationConstants.ACTIVE).map((count: any) => {
@@ -376,17 +375,28 @@ export class CiLoanDocumentsComponent {
               });
             }
             let i = 0;
-            for( let doc of this.documentNameList){
-              if(i == 0)
-                this.requiredDocumentsNamesText = "Please Upload Mandatory Documents ("
-              if(doc.isRequired){
-                i = i+1;
-                this.requiredDocumentsNamesText = this.requiredDocumentsNamesText+"'"+doc.label+"'";
+            let mandatoryList = this.documentNameList.filter((obj: any) => obj.isRequired == applicationConstants.TRUE);
+            for (let doc of this.documentNameList) {
+              if (i == 0)
+                this.requiredDocumentsNamesText = "'Please Upload Mandatory Required Documents "
+              if (doc.isRequired) {
+                i = i + 1;
+                this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + doc.label;
+                if (i < mandatoryList.length) {
+                  this.requiredDocumentsNamesText = this.requiredDocumentsNamesText + " , "
+                }
               }
             }
-            this.requiredDocumentsNamesText = this.requiredDocumentsNamesText+")";
             if(i > 0){
               this.mandatoryDoxsTextShow = true;
+            }
+            if(this.documentModelList.length >0 ||   mandatoryList.length > 0){
+              this.addDocumentOfKycFalg = true;
+              this.buttonDisabled = true;
+            }
+            else {
+              this.addDocumentOfKycFalg = false;
+              this.buttonDisabled = false;
             }
             if(this.responseModel.data[0].memberTypeName != null && this.responseModel.data[0].memberTypeName != undefined)
               this.memberTypeName = this.responseModel.data[0].memberTypeName;
@@ -577,4 +587,37 @@ export class CiLoanDocumentsComponent {
       }
     }
   }
+
+  onClickdocPhotoCopy(rowData: any) {
+    this.multipleFilesList = [];
+    this.docPhotoCopyZoom = true;
+    this.multipleFilesList = rowData.multipartFileList;
+  }
+    docclosePhoto(){
+      this.docPhotoCopyZoom = false;
+    }
+    docclosePhotoCopy() {
+      this.docPhotoCopyZoom = false;
+    }
+  // Popup Maximize
+          @ViewChild('imageElement') imageElement!: ElementRef<HTMLImageElement>;
+        
+          onDialogResize(event: any) {
+            this.isMaximized = event.maximized;
+        
+            if (this.isMaximized) {
+              // Restore original image size when maximized
+              this.imageElement.nativeElement.style.width = 'auto';
+              this.imageElement.nativeElement.style.height = 'auto';
+              this.imageElement.nativeElement.style.maxWidth = '100%';
+              this.imageElement.nativeElement.style.maxHeight = '100vh';
+            } else {
+              // Fit image inside the dialog without scrollbars
+              this.imageElement.nativeElement.style.width = '100%';
+              this.imageElement.nativeElement.style.height = '100%';
+              this.imageElement.nativeElement.style.maxWidth = '100%';
+              this.imageElement.nativeElement.style.maxHeight = '100%';
+              this.imageElement.nativeElement.style.objectFit = 'contain';
+            }
+          }
 }

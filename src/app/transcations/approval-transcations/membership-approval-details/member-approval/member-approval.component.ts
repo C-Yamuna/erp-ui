@@ -112,6 +112,12 @@ export class MemberApprovalComponent {
   measuringSubUnit: any;
   measuringUnit: any;
   uomModel: LandUom = new LandUom();
+  memberBankDetailsDTOList: any[]=[];
+  groupBankDetailsDTOList: any[]=[];
+  bankDetailsColumns:any[]=[];
+  nomineeFlag:boolean = false;
+  guardianFlag:boolean = false;
+  isKycApproved:any;
   
   constructor(private commonComponent: CommonComponent, private formBuilder: FormBuilder, private membershipBasicDetailsService: MembershipBasicDetailsService,
     private activateRoute: ActivatedRoute, private encryptService: EncryptDecryptService, private datePipe: DatePipe,
@@ -181,6 +187,13 @@ export class MemberApprovalComponent {
       // { field: 'assetFilePath', header: 'ERP.UPLOAD_DOCUMENT' },
 
     ];
+    this.bankDetailsColumns = [
+      { field: 'bankName', header: 'MEMBERSHIP_TRANSACTION.BANK_NAME' },
+      { field: 'nameInBank', header: 'MEMBERSHIP_TRANSACTION.NAME_IN_BANK' },
+      { field: 'ifscCode', header: 'MEMBERSHIP_TRANSACTION.IFSC_CODE' },
+      { field: 'accountNumber', header: 'MEMBERSHIP_TRANSACTION.ACCOUNT_NUMBER' },
+      // { field: 'assetFilePath', header: 'ERP.UPLOAD_DOCUMENT' },
+    ];
     this.getAllStatusList();
     this.orgnizationSetting = this.commonComponent.orgnizationSettings();
     this.commonFunctionsService.data.subscribe((res: any) => {
@@ -218,12 +231,7 @@ export class MemberApprovalComponent {
 
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS && this.responseModel.data && this.responseModel.data.length > 0) {
         this.memberBasicDetailsModel = this.responseModel.data[0];
-        if(this.memberBasicDetailsModel.statusName == CommonStatusData.CREATED || this.memberBasicDetailsModel.statusName == CommonStatusData.SUBMISSION_FOR_APPROVAL){
-          this.isDisableSubmit = true;
-        }
-        else{
-          this.isDisableSubmit = false;
-        }
+
         if (this.memberBasicDetailsModel.photoCopyPath != null && this.memberBasicDetailsModel.photoCopyPath != undefined) {
           this.memberBasicDetailsModel.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.memberBasicDetailsModel.photoCopyPath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.memberBasicDetailsModel.photoCopyPath  );
         }
@@ -238,7 +246,12 @@ export class MemberApprovalComponent {
         }
         if (this.memberBasicDetailsModel.signedCopyPath != null && this.memberBasicDetailsModel.signedCopyPath != undefined) {
           this.memberBasicDetailsModel.multipartFileListsignedCopyPath = this.fileUploadService.getFile(this.memberBasicDetailsModel.signedCopyPath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.memberBasicDetailsModel.signedCopyPath  );
+          this.isDisableSubmit = false;
         }
+        else{
+          this.isDisableSubmit = true;
+        }
+
         if (this.memberBasicDetailsModel.admissionDateVal != undefined && this.memberBasicDetailsModel.admissionDateVal != null) {
           this.memberBasicDetailsModel.admissionDate = this.commonFunctionsService.getUTCEpoch(new Date(this.memberBasicDetailsModel.admissionDateVal));
         }
@@ -247,41 +260,72 @@ export class MemberApprovalComponent {
           this.memberBasicDetailsModel.admissionDateVal = this.datePipe.transform(this.memberBasicDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
         }
 
+        if (this.memberBasicDetailsModel.resolutionDate != null) {
+          this.memberBasicDetailsModel.resolutionDateVal = this.datePipe.transform(this.memberBasicDetailsModel.resolutionDate, this.orgnizationSetting.datePipe);
+        }
+
         if (this.memberBasicDetailsModel.dob != null) {
           this.memberBasicDetailsModel.memDobVal = this.datePipe.transform(this.memberBasicDetailsModel.dob, this.orgnizationSetting.datePipe);
         }
-
+        if (this.memberBasicDetailsModel.isKycApproved != null && this.memberBasicDetailsModel.isKycApproved != undefined && this.memberBasicDetailsModel.isKycApproved) {
+            this.isKycApproved = applicationConstants.KYC_APPROVED_NAME;
+        }
+        else {
+          this.isKycApproved = applicationConstants.KYC_NOT_APPROVED_NAME;
+        }
         if (this.memberBasicDetailsModel.memberShipNomineeDetailsDTOList != null && this.memberBasicDetailsModel.memberShipNomineeDetailsDTOList.length > 0) {
           this.memberNomineeDetailsModel = this.memberBasicDetailsModel.memberShipNomineeDetailsDTOList[0];
+
+          if(this.memberNomineeDetailsModel.nomineeType == applicationConstants.ACTIVE){
+            this.nomineeFlag = true;
+          }
+          else{
+            this.nomineeFlag = false;
+          }
           if(this.memberNomineeDetailsModel.nomineeFilePath != null && this.memberNomineeDetailsModel.nomineeFilePath != undefined)
             this.memberNomineeDetailsModel.multipartFileList = this.fileUploadService.getFile(this.memberNomineeDetailsModel.nomineeFilePath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.memberNomineeDetailsModel.nomineeFilePath);
-
+         
+          if (this.memberNomineeDetailsModel.nomineeDob != null) {
+            this.memberNomineeDetailsModel.nomineeDobVal = this.datePipe.transform(this.memberNomineeDetailsModel.nomineeDob, this.orgnizationSetting.datePipe);
+          }
         }
-        if (this.memberBasicDetailsModel.age != null && this.memberBasicDetailsModel.age != undefined && this.memberBasicDetailsModel.age < 18) {
+        if ((this.memberBasicDetailsModel.age != null && this.memberBasicDetailsModel.age != undefined && this.memberBasicDetailsModel.age < 18) ||
+        this.memberNomineeDetailsModel.nomineeAge != null && this.memberNomineeDetailsModel.nomineeAge < 18) {
           this.guardainEnableFlag = true;
         }
         if (this.memberBasicDetailsModel.memberShipGuadianDetailsDTOList != null && this.memberBasicDetailsModel.memberShipGuadianDetailsDTOList != undefined && this.memberBasicDetailsModel.memberShipGuadianDetailsDTOList.length > 0 && this.memberBasicDetailsModel.memberShipGuadianDetailsDTOList[0] != null && this.memberBasicDetailsModel.memberShipGuadianDetailsDTOList[0] != undefined) {
           this.memberGuardianDetailsDetailsModel = this.memberBasicDetailsModel.memberShipGuadianDetailsDTOList[0];
+
+          if(this.memberGuardianDetailsDetailsModel.guardianType == applicationConstants.ACTIVE){
+            this.guardianFlag = true;
+          }
+          else{
+            this.guardianFlag = false;
+          }
         }
 
         if (this.memberBasicDetailsModel.memberShipGuadianDetailsDTOList != null && this.memberBasicDetailsModel.memberShipGuadianDetailsDTOList.length > 0) {
           this.memberGuardianDetailsDetailsModel = this.memberBasicDetailsModel.memberShipGuadianDetailsDTOList[0];
           if(this.memberGuardianDetailsDetailsModel.uploadFilePath != null && this.memberGuardianDetailsDetailsModel.uploadFilePath != undefined)
             this.memberGuardianDetailsDetailsModel.multipartsFileList = this.fileUploadService.getFile(this.memberGuardianDetailsDetailsModel.uploadFilePath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.memberGuardianDetailsDetailsModel.uploadFilePath);
-
+          if (this.memberGuardianDetailsDetailsModel.guardianDob != null) {
+            this.memberGuardianDetailsDetailsModel.guardianDobVal = this.datePipe.transform(this.memberGuardianDetailsDetailsModel.guardianDob, this.orgnizationSetting.datePipe);
+          }
         }
 
-        this.memberLandDetails = this.memberBasicDetailsModel.memberShipLandDetailsDTO;
-        if (this.memberLandDetails != null && this.memberLandDetails != undefined) {
+          this.memberLandDetails = this.memberBasicDetailsModel.memberShipLandDetailsDTO;
+          if ( this.memberLandDetails != null &&  this.memberLandDetails != undefined) {
 
-          this.memberLandDetailsList = this.memberLandDetails.custLandSurveyDetails.map((member: any) => {
-            if (member.uploadFilePath != null && member.uploadFilePath != undefined)
-              member.multipleFilesList = this.fileUploadService.getFile(member.uploadFilePath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + member.uploadFilePath);
+          this.memberLandDetails.custLandSurveyDetails
+          this.memberLandDetailsList =  this.memberLandDetails.custLandSurveyDetails.map((member:any) =>{
+            if(member.uploadFilePath != null && member.uploadFilePath != undefined)
+              member.multipleFilesList = this.fileUploadService.getFile(member.uploadFilePath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + member.uploadFilePath);
 
             return member;
           }
           );
         }
+
         if (this.memberBasicDetailsModel.memberShipFamilyDetailsDTOList != null && this.memberBasicDetailsModel.memberShipFamilyDetailsDTOList.length > 0) {
           this.membershipFamilyDetailsList = this.memberBasicDetailsModel.memberShipFamilyDetailsDTOList
           this.membershipFamilyDetailsList =    this.membershipFamilyDetailsList.filter((obj:any) => null != obj && obj.dob != null).map((family:any)=>{
@@ -295,18 +339,19 @@ export class MemberApprovalComponent {
 
         if (this.memberBasicDetailsModel.memberShipCommunicationDetailsDTO != null && this.memberBasicDetailsModel.memberShipCommunicationDetailsDTO != undefined) {
           this.memberCommunicationDetailsModel = this.memberBasicDetailsModel.memberShipCommunicationDetailsDTO;
+          // this.concateAddressDetails(this.memberCommunicationDetailsModel);
         }
-      if(this.memberBasicDetailsModel.memberShipKycDetailsDTOList != null &&  this.memberBasicDetailsModel.memberShipKycDetailsDTOList != undefined && this.memberBasicDetailsModel.memberShipKycDetailsDTOList.length > 0){
-        this.kycGridList = this.memberBasicDetailsModel.memberShipKycDetailsDTOList;
-        this.kycGridList  = this.kycGridList.filter(obj => null != obj && null !=obj.status && obj.status === applicationConstants.ACTIVE ).map((kyc:any)=>{
-          this.showFormkyc = false;
-          kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
-          return kyc;
-        });
-      }
-      else{
-        this.showFormkyc = true;
-      }
+        if (this.memberBasicDetailsModel.memberShipKycDetailsDTOList != null && this.memberBasicDetailsModel.memberShipKycDetailsDTOList != undefined && this.memberBasicDetailsModel.memberShipKycDetailsDTOList.length > 0) {
+          this.kycGridList = this.memberBasicDetailsModel.memberShipKycDetailsDTOList;
+          this.kycGridList = this.kycGridList.filter(obj => null != obj && null != obj.status && obj.status === applicationConstants.ACTIVE).map((kyc: any) => {
+            this.showFormkyc = false;
+            kyc.multipartFileList = this.fileUploadService.getFile(kyc.kycFilePath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + kyc.kycFilePath);
+            return kyc;
+          });
+        }
+        else {
+          this.showFormkyc = true;
+        }
         if (this.memberBasicDetailsModel.requiredDocumentDetailsDTOList != null && this.memberBasicDetailsModel.requiredDocumentDetailsDTOList != undefined && this.memberBasicDetailsModel.requiredDocumentDetailsDTOList.length > 0) {
           this.documnetGridList = this.memberBasicDetailsModel.requiredDocumentDetailsDTOList;
           this.documnetGridList = this.documnetGridList.filter((obj: any) => null != obj && null != obj.status && obj.status === applicationConstants.ACTIVE).map((document: any) => {
@@ -328,6 +373,10 @@ export class MemberApprovalComponent {
           });
 
         }
+
+        if (this.memberBasicDetailsModel.memberBankDetailsDTOList != null && this.memberBasicDetailsModel.memberBankDetailsDTOList.length > 0) {
+          this.memberBankDetailsDTOList = this.memberBasicDetailsModel.memberBankDetailsDTOList;
+        }
       }
     });
   }
@@ -339,25 +388,30 @@ export class MemberApprovalComponent {
 
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS && this.responseModel.data && this.responseModel.data.length > 0) {
         this.memberGroupBasicDetails = this.responseModel.data[0];
-        if(this.memberGroupBasicDetails.statusName == CommonStatusData.CREATED || this.memberGroupBasicDetails.statusName == CommonStatusData.SUBMISSION_FOR_APPROVAL){
-          this.isDisableSubmit = true;
-        }
-        else{
-          this.isDisableSubmit = false;
-        }
 
         if (this.memberGroupBasicDetails.resolutionCopyPath != null && this.memberGroupBasicDetails.resolutionCopyPath != undefined) {
           this.memberGroupBasicDetails.multipartFileListForsignatureCopyPath = this.fileUploadService.getFile(this.memberGroupBasicDetails.resolutionCopyPath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.memberGroupBasicDetails.resolutionCopyPath);
         }
+
         if (this.memberGroupBasicDetails.admissionDate != null) {
           this.memberGroupBasicDetails.admissionDateVal = this.datePipe.transform(this.memberGroupBasicDetails.admissionDate, this.orgnizationSetting.datePipe);
         }
+
+        if (this.memberGroupBasicDetails.resolutionDate != null) {
+          this.memberGroupBasicDetails.resolutionDateVal = this.datePipe.transform(this.memberGroupBasicDetails.resolutionDate, this.orgnizationSetting.datePipe);
+        }
+
         if (this.memberGroupBasicDetails.registrationDate != null) {
           this.memberGroupBasicDetails.registrationDateVal = this.datePipe.transform(this.memberGroupBasicDetails.registrationDate, this.orgnizationSetting.datePipe);
         }
         if (this.memberGroupBasicDetails.signedCopyPath != null && this.memberGroupBasicDetails.signedCopyPath != undefined) {
           this.memberGroupBasicDetails.multipartFileListsignedCopyPath = this.fileUploadService.getFile(this.memberGroupBasicDetails.signedCopyPath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.memberGroupBasicDetails.signedCopyPath  );
+          this.isDisableSubmit = false;
         }
+        else{
+          this.isDisableSubmit = true;
+        }
+
         if (this.memberGroupBasicDetails.groupCommunicationList != null && this.memberGroupBasicDetails.groupCommunicationList.length > 0) {
           this.groupCommunicationModel = this.memberGroupBasicDetails.groupCommunicationList[0];
         }
@@ -366,6 +420,8 @@ export class MemberApprovalComponent {
           this.groupPromoterList =    this.groupPromoterList.filter((obj:any) => null != obj && obj.dob != null).map((promoter:any)=>{
             promoter.dob = this.datePipe.transform(promoter.dob, this.orgnizationSetting.datePipe);
             promoter.startDate = this.datePipe.transform(promoter.startDate, this.orgnizationSetting.datePipe);
+            if(promoter.endDate != null && promoter.endDate != undefined)
+            promoter.endDateVal = this.datePipe.transform(promoter.endDate, this.orgnizationSetting.datePipe);
 
             if (promoter.uploadImage != null && promoter.uploadImage != undefined) {
               this.photoCopyFlag =true;
@@ -391,16 +447,19 @@ export class MemberApprovalComponent {
         else{
           this.showFormkyc = true;
         }
-        if (this.memberGroupBasicDetails.requiredDocumentDetailsDTOList != null && this.memberGroupBasicDetails.requiredDocumentDetailsDTOList != undefined && this.memberGroupBasicDetails.requiredDocumentDetailsDTOList.length > 0) {
+        if(this.memberGroupBasicDetails.requiredDocumentDetailsDTOList != null &&  this.memberGroupBasicDetails.requiredDocumentDetailsDTOList != undefined && this.memberGroupBasicDetails.requiredDocumentDetailsDTOList.length > 0){
           this.groupDocumentGridList = this.memberGroupBasicDetails.requiredDocumentDetailsDTOList;
-          this.groupDocumentGridList = this.groupDocumentGridList.filter(obj => null != obj && null != obj.status && obj.status === applicationConstants.ACTIVE).map((document: any) => {
+          this.groupDocumentGridList  = this.groupDocumentGridList.filter(obj => null != obj && null !=obj.status && obj.status === applicationConstants.ACTIVE).map((document:any)=>{
             this.showdocumentForm = false;
-            document.multipartFileList = this.fileUploadService.getFile(document.requiredDocumentFilePath, ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + document.requiredDocumentFilePath);
+            document.multipartFileList = this.fileUploadService.getFile(document.requiredDocumentFilePath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + document.requiredDocumentFilePath);
             return document;
           });
         }
-        else {
+        else{
           this.showdocumentForm = true;
+        }
+        if (this.memberGroupBasicDetails.memberBankDetailsDTOList != null && this.memberGroupBasicDetails.memberBankDetailsDTOList.length > 0) {
+          this.groupBankDetailsDTOList = this.memberGroupBasicDetails.memberBankDetailsDTOList;
         }
       }
     });
@@ -415,19 +474,15 @@ export class MemberApprovalComponent {
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS && this.responseModel.data && this.responseModel.data.length > 0) {
         this.institutionBasicDetailsModel = this.responseModel.data[0];
 
-        if(this.institutionBasicDetailsModel.statusName == CommonStatusData.CREATED || this.institutionBasicDetailsModel.statusName == CommonStatusData.SUBMISSION_FOR_APPROVAL){
-          this.isDisableSubmit = true;
-        }
-        else{
-          this.isDisableSubmit = false;
-        }
-
         if (this.institutionBasicDetailsModel.resolutionCopyPath != null && this.institutionBasicDetailsModel.resolutionCopyPath != undefined) {
           this.institutionBasicDetailsModel.multipartFileListForPhotoCopy = this.fileUploadService.getFile(this.institutionBasicDetailsModel.resolutionCopyPath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionBasicDetailsModel.resolutionCopyPath);
         }
 
         if (this.institutionBasicDetailsModel.admissionDate != null) {
           this.institutionBasicDetailsModel.admissionDateVal = this.datePipe.transform(this.institutionBasicDetailsModel.admissionDate, this.orgnizationSetting.datePipe);
+        }
+        if (this.institutionBasicDetailsModel.resolutionDate != null) {
+          this.institutionBasicDetailsModel.resolutionDateVal = this.datePipe.transform(this.institutionBasicDetailsModel.resolutionDate, this.orgnizationSetting.datePipe);
         }
 
         if (this.institutionBasicDetailsModel.registrationDate != null) {
@@ -440,7 +495,12 @@ export class MemberApprovalComponent {
 
         if (this.institutionBasicDetailsModel.signedCopyPath != null && this.institutionBasicDetailsModel.signedCopyPath != undefined) {
           this.institutionBasicDetailsModel.multipartFileListsignedCopyPath = this.fileUploadService.getFile(this.institutionBasicDetailsModel.signedCopyPath ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + this.institutionBasicDetailsModel.signedCopyPath  );
+          this.isDisableSubmit = false;
         }
+        else{
+          this.isDisableSubmit = true;
+        }
+
         if (this.institutionBasicDetailsModel.institutionKycDetailsDTOList != null && this.institutionBasicDetailsModel.institutionKycDetailsDTOList.length > 0) {
           this.institutionKycList = this.institutionBasicDetailsModel.institutionKycDetailsDTOList;
           this.institutionKycList  = this.institutionKycList.filter(obj => null != obj && null !=obj.status && obj.status === applicationConstants.ACTIVE).map((kyc:any)=>{
@@ -463,12 +523,17 @@ export class MemberApprovalComponent {
         else{
           this.showdocumentForm = true;
         }
-        
+        if (this.memberGroupBasicDetails.memberBankDetailsDTOList != null && this.memberGroupBasicDetails.memberBankDetailsDTOList.length > 0) {
+          this.groupBankDetailsDTOList = this.memberGroupBasicDetails.memberBankDetailsDTOList;
+        }
         if (this.institutionBasicDetailsModel.institutionPromoterList != null && this.institutionBasicDetailsModel.institutionPromoterList.length > 0) {
           this.institutePromoterList = this.institutionBasicDetailsModel.institutionPromoterList;
           this.institutePromoterList =  this.institutePromoterList.filter((obj:any) => null != obj && obj.dob != null).map((promoter:any)=>{
             promoter.dob = this.datePipe.transform(promoter.dob, this.orgnizationSetting.datePipe);
             promoter.startDate = this.datePipe.transform(promoter.startDate, this.orgnizationSetting.datePipe);
+
+            if(promoter.endDate != null && promoter.endDate != undefined)
+              promoter.endDateVal = this.datePipe.transform(promoter.endDate, this.orgnizationSetting.datePipe);
 
             if (promoter.uploadImage != null && promoter.uploadImage != undefined) {
               promoter.multipartFileListForPhotoCopy = this.fileUploadService.getFile(promoter.uploadImage ,ERP_TRANSACTION_CONSTANTS.MEMBERSHIP + ERP_TRANSACTION_CONSTANTS.FILES + "/" + promoter.uploadImage );

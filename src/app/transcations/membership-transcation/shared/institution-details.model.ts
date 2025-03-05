@@ -146,7 +146,7 @@ export class InstituteCommunicationModel{
 
       address2:any;
 
-      pinCode:any;
+      pincode:any;
 
      isSameAddress:any;
 

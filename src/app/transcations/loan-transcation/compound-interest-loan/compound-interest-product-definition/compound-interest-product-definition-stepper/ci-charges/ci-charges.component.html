@@ -108,7 +108,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="ciChargesModel.minSlabAmount"
-                                    formControlName="minSlabAmount" (keyup)="checkForSlabAmount()">
+                                    formControlName="minSlabAmount" (focusout)="checkForSlabAmount(1)">
 
                             </ng-template>
                             <ng-template pTemplate="output">{{ciChargesModel.minSlabAmount}}</ng-template>
@@ -118,7 +118,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="ciChargesModel.maxSlabAmount"
-                                    formControlName="maxSlabAmount" (keyup)="checkForSlabAmount()">
+                                    formControlName="maxSlabAmount" (focusout)="checkForSlabAmount(2)">
 
                             </ng-template>
                             <ng-template pTemplate="output">{{ciChargesModel.maxSlabAmount}}</ng-template>
@@ -140,7 +140,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="ciChargesModel.minCharges"
-                                    formControlName="minCharges"  (keyup)="checkForCharges()">
+                                    formControlName="minCharges"  (focusout)="checkForCharges(1)">
                             </ng-template>
                             <ng-template pTemplate="output">{{ciChargesModel.minCharges}}</ng-template>
                         </p-cellEditor>
@@ -149,7 +149,7 @@
                         <p-cellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="ciChargesModel.maxChrges"
-                                    formControlName="maxChrges"  (keyup)="checkForCharges()">
+                                    formControlName="maxChrges"  (focusout)="checkForCharges(2)">
                             </ng-template>
                             <ng-template pTemplate="output">{{ciChargesModel.maxChrges}}</ng-template>
                         </p-cellEditor>
