@@ -58,4 +58,11 @@ export class SaoCommunicationService {
     let headers = new HttpHeaders({ 'id': id + '', 'communicationTypeId': communicationTypeId + '',})
     return this.commonHttpService.getById(headers,ERP_TRANSACTION_CONSTANTS.LOANS + ERP_TRANSACTION_CONSTANTS.SAO_LOAN_COMMUNICATION + ERP_TRANSACTION_CONSTANTS.GET_BY_LOAN_ID_MEMBER_TYPE);
   }
+   getAllBlock(){
+      return this.commonHttpService.getAll(ERP_TRANSACTION_CONSTANTS.COMMON_MASTER + ERP_TRANSACTION_CONSTANTS.BLOCKS + ERP_TRANSACTION_CONSTANTS.GET_ALL);
+    }
+    getAllDivision(){
+      return this.commonHttpService.getAll(ERP_TRANSACTION_CONSTANTS.COMMON_MASTER + ERP_TRANSACTION_CONSTANTS.BLOCKS + ERP_TRANSACTION_CONSTANTS.GET_ALL);
+    }
+   
 }

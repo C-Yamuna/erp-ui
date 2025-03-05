@@ -162,18 +162,18 @@ export class CommunicationComponent {
       }
     }
     if (this.accountCommunicationModel.stateId != null)
-      this.getAllDistrictsByStateId(this.accountCommunicationModel.stateId, false)
+      this.getAllDistrictsByStateId(this.accountCommunicationModel.permanentStateId, false)
     if (this.accountCommunicationModel.districtId != null)
-      this.getAllSubDistrictByDistrictId(this.accountCommunicationModel.districtId, false)
+      this.getAllSubDistrictByDistrictId(this.accountCommunicationModel.permanentDistrictId, false)
     if (this.accountCommunicationModel.subDistrictId != null)
       this.getAllVillagesBySubDistrictId(this.accountCommunicationModel.subDistrictId, false)
 
     if (this.accountCommunicationModel.stateId != null)
-      this.getAllPermanentDistrictsByStateId(this.accountCommunicationModel.permanentStateId, false)
+      this.getAllPermanentDistrictsByStateId(this.accountCommunicationModel.stateId, false)
     if (this.accountCommunicationModel.districtId != null)
-      this.getAllPermanentSubDistrictByDistrictId(this.accountCommunicationModel.permanentDistrictId, false)
+      this.getAllPermanentSubDistrictByDistrictId(this.accountCommunicationModel.districtId, false)
     if (this.accountCommunicationModel.subDistrictId != null)
-      this.getAllPermanentVillagesBySubDistrictId(this.accountCommunicationModel.permanentSubDistrictId, false)
+      this.getAllPermanentVillagesBySubDistrictId(this.accountCommunicationModel.subDistrictId, false)
   }
 
   getMembershipBasicDetailsByAdmissionNumber(admissionNumber: any) {
@@ -395,23 +395,24 @@ export class CommunicationComponent {
   }
 
   getAllPermanentDistrictsByStateId(id: any, isResetIds: any) {
+    debugger
     if (isResetIds) {
-      this.communicationForm.get('permanentDistrictName').reset();
-      this.communicationForm.get('permanentSubDistrictName').reset();
-      this.communicationForm.get('permanentVillageName').reset();
-      this.permanentDistrictList = [];
-      this.permanentSubDistrictList = [];
-      this.permanentVillageList = [];
+      this.communicationForm.get('districtName').reset();
+      this.communicationForm.get('subDistrictName').reset();
+      this.communicationForm.get('villageName').reset();
+      this.districtsList = [];
+      this.subDistrictList = [];
+      this.villageList = [];
     }
     this.dailyDepositsAccountsService.getDistrictsByStateId(id).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-        this.permanentDistrictList = this.responseModel.data;
-        this.permanentDistrictList = this.permanentDistrictList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+        this.districtsList = this.responseModel.data;
+        this.districtsList = this.districtsList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
           return { label: relationType.name, value: relationType.id };
         });
-        const perState = this.permanentStatesList.find((item: { value: any; }) => item.value === id);
-        this.accountCommunicationModel.permanentStateName = perState.label;
+        const perState = this.statesList.find((item: { value: any; }) => item.value === id);
+        this.accountCommunicationModel.stateName = perState.label;
       }
       else {
         this.msgs = [];
@@ -425,20 +426,20 @@ export class CommunicationComponent {
 
   getAllPermanentSubDistrictByDistrictId(id: any, isResetIds: any) {
     if (isResetIds) {
-      this.communicationForm.get('permanentSubDistrictName').reset();
-      this.communicationForm.get('permanentVillageName').reset();
-      this.permanentSubDistrictList = [];
-      this.permanentVillageList = [];
+      this.communicationForm.get('subDistrictName').reset();
+      this.communicationForm.get('villageName').reset();
+      this.subDistrictList = [];
+      this.villageList = [];
     }
     this.dailyDepositsAccountsService.getSubDistrictByDistrictId(id).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
-        this.permanentSubDistrictList = this.responseModel.data;
-        this.permanentSubDistrictList = this.permanentSubDistrictList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+        this.subDistrictList = this.responseModel.data;
+        this.subDistrictList = this.subDistrictList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
           return { label: relationType.name, value: relationType.id };
         });
-        const perDistrict = this.permanentDistrictList.find((item: { value: any; }) => item.value === id);
-        this.accountCommunicationModel.permanentDistrictName = perDistrict.label;
+        const perDistrict = this.districtsList.find((item: { value: any; }) => item.value === id);
+        this.accountCommunicationModel.districtName = perDistrict.label;
       }
       else {
         this.msgs = [];
@@ -452,20 +453,20 @@ export class CommunicationComponent {
 
   getAllPermanentVillagesBySubDistrictId(id: any, isResetIds: any) {
     if (isResetIds) {
-      this.communicationForm.get('permanentVillageName').reset();
-      this.permanentVillageList = [];
+      this.communicationForm.get('villageName').reset();
+      this.villageList = [];
     }
     this.dailyDepositsAccountsService.getvillagesBySubDistrictId(id).subscribe((response: any) => {
       this.responseModel = response;
       if (this.responseModel != null && this.responseModel != undefined) {
         if (this.responseModel.status == applicationConstants.STATUS_SUCCESS) {
           if (this.responseModel.data[0] != null && this.responseModel.data[0] != undefined) {
-            this.permanentVillageList = this.responseModel.data;
-            this.permanentVillageList = this.permanentVillageList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
+            this.villageList = this.responseModel.data;
+            this.villageList = this.villageList.filter((obj: any) => obj != null).map((relationType: { name: any; id: any; }) => {
               return { label: relationType.name, value: relationType.id };
             });
-            const persubDistrictName = this.permanentSubDistrictList.find((item: { value: any; }) => item.value === id);
-            this.accountCommunicationModel.permanentSubDistrictName = persubDistrictName.label;
+            const subDistrictName = this.subDistrictList.find((item: { value: any; }) => item.value === id);
+            this.accountCommunicationModel.subDistrictName = subDistrictName.label;
           }
           else {
             this.msgs = [];
@@ -480,8 +481,8 @@ export class CommunicationComponent {
   }
 
   getPermanentVillage(id: any) {
-    const perVillage = this.permanentVillageList.find((item: { value: any; }) => item.value === id);
-    this.accountCommunicationModel.permanentVillageName = perVillage.label;
+    const perVillage = this.villageList.find((item: { value: any; }) => item.value === id);
+    this.accountCommunicationModel.villageName = perVillage.label;
   }
 
   sameAsRegisterAddress() {
@@ -489,18 +490,18 @@ export class CommunicationComponent {
       this.accountCommunicationModel.permanentStateId = this.accountCommunicationModel.stateId;
       if (this.accountCommunicationModel.districtId != this.accountCommunicationModel.permanentDistrictId) {
         this.accountCommunicationModel.permanentDistrictId = null;
-        this.getAllPermanentDistrictsByStateId(this.accountCommunicationModel.permanentStateId, false);
+        this.getAllPermanentDistrictsByStateId(this.accountCommunicationModel.stateId, false);
         this.accountCommunicationModel.permanentDistrictId = this.accountCommunicationModel.districtId;
       }
       if (this.accountCommunicationModel.subDistrictId != this.accountCommunicationModel.permanentSubDistrictId) {
         this.accountCommunicationModel.permanentSubDistrictId = null;
-        this.getAllPermanentSubDistrictByDistrictId(this.accountCommunicationModel.permanentDistrictId, false);
-        this.accountCommunicationModel.permanentSubDistrictId = this.accountCommunicationModel.subDistrictId;
+        this.getAllPermanentSubDistrictByDistrictId(this.accountCommunicationModel.districtId, false);
+        this.accountCommunicationModel.subDistrictId = this.accountCommunicationModel.permanentSubDistrictId;
       }
       if (this.accountCommunicationModel.villageId != this.accountCommunicationModel.permanentVillageId) {
         this.accountCommunicationModel.permanentVillageId = null;
-        this.getAllPermanentVillagesBySubDistrictId(this.accountCommunicationModel.permanentSubDistrictId, false);
-        this.accountCommunicationModel.permanentVillageId = this.accountCommunicationModel.villageId;
+        this.getAllPermanentVillagesBySubDistrictId(this.accountCommunicationModel.subDistrictId, false);
+        this.accountCommunicationModel.villageId = this.accountCommunicationModel.permanentVillageId;
       }
       this.getVillage(this.accountCommunicationModel.villageId);
     }
@@ -577,8 +578,8 @@ export class CommunicationComponent {
 
   RegAddressToComAddress() {
     if (this.accountCommunicationModel.isSameAddress == true) {
-      this.accountCommunicationModel.permanentAddress1 = this.accountCommunicationModel.address1;
-      this.accountCommunicationModel.permanentPinCode = this.accountCommunicationModel.pinCode;
+      this.accountCommunicationModel.address1 = this.accountCommunicationModel.permanentAddress1;
+      this.accountCommunicationModel.pinCode = this.accountCommunicationModel.permanentPinCode;
     }
   }
 }

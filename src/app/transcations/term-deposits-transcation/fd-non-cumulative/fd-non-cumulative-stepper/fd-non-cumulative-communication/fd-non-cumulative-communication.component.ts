@@ -124,6 +124,7 @@ export class FdNonCumulativeCommunicationComponent {
 
   // get call from fd non cummulative account by id
   getFdNonCummApplicationById(id: any) {
+    debugger
     this.fdNonCumulativeApplicationService.getFdNonCummApplicationById(id).subscribe((data: any) => {
       this.responseModel = data;
       if (this.responseModel != null && this.responseModel != undefined) {
@@ -166,6 +167,7 @@ export class FdNonCumulativeCommunicationComponent {
   }
 
   setAllFields() {
+    debugger
     if (this.fdNonCumulativeCommunicationModel.isSameAddress != null && this.fdNonCumulativeCommunicationModel.isSameAddress != undefined) {
       if (this.fdNonCumulativeCommunicationModel.isSameAddress == true) {
         this.communicationForm.get('stateName').disable();
@@ -510,6 +512,7 @@ export class FdNonCumulativeCommunicationComponent {
   }
 
   getAllPermanentDistrictsByStateId(id: any, isResetIds: any) {
+    debugger
     if (isResetIds) {
       this.communicationForm.get('permanentDistrictId').reset();
       this.communicationForm.get('permanentSubDistrictId').reset();
@@ -608,6 +611,7 @@ export class FdNonCumulativeCommunicationComponent {
     });
   }
   getPermanentVillage(id: any) {
+    debugger
     this.fdNonCumulativeCommunicationModel.permanentBlockId = null;;
     this.fdNonCumulativeCommunicationModel.permanentDivisionId = null;
     this.fdNonCumulativeCommunicationModel.permanentBlockName = null;;

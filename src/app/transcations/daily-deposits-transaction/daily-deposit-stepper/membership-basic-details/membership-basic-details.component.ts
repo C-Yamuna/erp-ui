@@ -75,8 +75,8 @@ export class MembershipBasicDetailsComponent {
     private dailyDepositsAccountsService: DailyDepositsAccountsService
   ) {
     this.kycForm = this.formBuilder.group({
-      'docNumber': new FormControl('', [Validators.required, Validators.pattern(/^[^\s]+(\s.*)?$/)]),
-      'requiredDocTypeName': new FormControl('', Validators.required),
+      'docNumber': new FormControl({ value: '', disabled: true }),
+      'requiredDocTypeName': new FormControl({ value: '', disabled: true }),
       'nameAsPerDocument': new FormControl('',[Validators.required,Validators.pattern(applicationConstants.NEW_NAME_PATTERN), Validators.maxLength(40), Validators.pattern(/^[^\s]+(\s.*)?$/)]),
       'fileUpload': new FormControl('')
     });
@@ -177,9 +177,10 @@ export class MembershipBasicDetailsComponent {
   }
 
   updateData() {
+    debugger
     if (this.kycModelList != null && this.kycModelList != undefined && this.kycModelList.length > 0) {
       this.kycDuplicate = this.kycModelDuplicateCheck(this.kycModelList);
-      if (this.kycDuplicate) {
+      if (this.kycDuplicate|| this.buttonDisabled) {
         this.isDisableFlag = true;
       }
       else {
@@ -458,6 +459,7 @@ export class MembershipBasicDetailsComponent {
   cancelKyc() {
     this.kycModelList = [];
     // this.addKycButton = false;
+    this.buttonDisabled = false;
     this.editButtonDisable = false;
     this.getAllKycsDetailsRdKycDetails(this.admissionNumber);
   }

@@ -25,6 +25,8 @@ export const ERP_TRANSACTION_CONSTANTS = {
     GET_ALL_GRID: '/get_all_grid',
     DELETE: '/remove',
     ADD_ALL: '/add_all',
+    BLOCKS:'/blocks',
+    DIVISION:'/division',
     TRANSFER_TRANSACTION_DETAILS: '/transfer_transaction_details',
     STANDING_INSTRUCTIONS_PAYMENTS: '/standing_instructions_payments',
     SB_TRANSACTION_DETAILS: '/sb_transaction_details',

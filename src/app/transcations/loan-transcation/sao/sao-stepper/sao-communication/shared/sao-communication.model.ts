@@ -73,5 +73,21 @@ export class SaoCommunication {
   permanentSubDistrictName: any;
 
   permanentVillageName: any;
+
+  divisionId: any;
+
+    blockId: any;
+
+    divisionName: any;
+
+    blockName: any;
+
+    permanentDivisionId: any;
+
+    permanentBlockId: any;
+
+    permanentDivisionName: any;
+
+    permanentBlockName: any;
   
 }

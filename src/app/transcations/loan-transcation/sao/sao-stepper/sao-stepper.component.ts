@@ -1386,7 +1386,7 @@ export class SaoStepperComponent {
     if (activeIndex == 0) {
       this.navigateTo(this.activeIndex, this.loanId);
     }
-    else if (activeIndex == 1) {
+    else if (activeIndex == 1) {  
       this.previousStepFlag = true;
       this.navigateTo(this.activeIndex, this.loanId);
     }
